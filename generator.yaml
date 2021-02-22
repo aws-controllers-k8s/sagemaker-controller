@@ -60,22 +60,38 @@ ignore:
       - Algorithm
       - App
       - AutoMLJob
+      - Action
+      - AppImageConfig
+      - Artifact
       - CodeRepository
       - CompilationJob
+      - Context
+      - DataQualityJobDefinition
+      - DeviceFleet
       - Domain
+      - EdgePackagingJob
       - EndpointConfig
       - Endpoint
       - Experiment
+      - FeatureGroup
       - FlowDefinition
       - HumanTaskUi
       - HyperParameterTuningJob
+      - Image
+      - ImageVersion
       - LabelingJob
+      - ModelBiasJobDefinition
+      - ModelExplainabilityJobDefinition
       - ModelPackage
+      - ModelPackageGroup
+      - ModelQualityJobDefinition
       - MonitoringSchedule
       - NotebookInstanceLifecycleConfig
       - NotebookInstance
+      - Pipeline
       - PresignedDomainUrl
       - PresignedNotebookInstanceUrl
+      - Project
       - TransformJob
       - TrialComponent
       - Trial
