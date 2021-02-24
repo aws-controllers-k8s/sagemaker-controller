@@ -79,6 +79,15 @@ type AutoMLSecurityConfig struct {
 	VPCConfig                             *VPCConfig `json:"vpcConfig,omitempty"`
 }
 
+type CaptureContentTypeHeader struct {
+	CsvContentTypes  []*string `json:"csvContentTypes,omitempty"`
+	JSONContentTypes []*string `json:"jsonContentTypes,omitempty"`
+}
+
+type CaptureOption struct {
+	CaptureMode *string `json:"captureMode,omitempty"`
+}
+
 type Channel struct {
 	ChannelName       *string        `json:"channelName,omitempty"`
 	CompressionType   *string        `json:"compressionType,omitempty"`
@@ -130,11 +139,20 @@ type ContinuousParameterRangeSpecification struct {
 }
 
 type DataCaptureConfig struct {
-	KMSKeyID *string `json:"kmsKeyID,omitempty"`
+	CaptureContentTypeHeader  *CaptureContentTypeHeader `json:"captureContentTypeHeader,omitempty"`
+	CaptureOptions            []*CaptureOption          `json:"captureOptions,omitempty"`
+	DestinationS3URI          *string                   `json:"destinationS3URI,omitempty"`
+	EnableCapture             *bool                     `json:"enableCapture,omitempty"`
+	InitialSamplingPercentage *int64                    `json:"initialSamplingPercentage,omitempty"`
+	KMSKeyID                  *string                   `json:"kmsKeyID,omitempty"`
 }
 
 type DataCaptureConfigSummary struct {
-	KMSKeyID *string `json:"kmsKeyID,omitempty"`
+	CaptureStatus             *string `json:"captureStatus,omitempty"`
+	CurrentSamplingPercentage *int64  `json:"currentSamplingPercentage,omitempty"`
+	DestinationS3URI          *string `json:"destinationS3URI,omitempty"`
+	EnableCapture             *bool   `json:"enableCapture,omitempty"`
+	KMSKeyID                  *string `json:"kmsKeyID,omitempty"`
 }
 
 type DataSource struct {
@@ -173,11 +191,20 @@ type DeployedImage struct {
 	SpecifiedImage *string      `json:"specifiedImage,omitempty"`
 }
 
+type DesiredWeightAndCapacity struct {
+	DesiredInstanceCount *int64   `json:"desiredInstanceCount,omitempty"`
+	DesiredWeight        *float64 `json:"desiredWeight,omitempty"`
+	VariantName          *string  `json:"variantName,omitempty"`
+}
+
 type EndpointConfigSummary struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
+	EndpointConfigARN  *string      `json:"endpointConfigARN,omitempty"`
+	EndpointConfigName *string      `json:"endpointConfigName,omitempty"`
 }
 
 type EndpointInput struct {
+	EndpointName           *string `json:"endpointName,omitempty"`
 	LocalPath              *string `json:"localPath,omitempty"`
 	S3DataDistributionType *string `json:"s3DataDistributionType,omitempty"`
 	S3InputMode            *string `json:"s3InputMode,omitempty"`
@@ -185,6 +212,9 @@ type EndpointInput struct {
 
 type EndpointSummary struct {
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	EndpointARN      *string      `json:"endpointARN,omitempty"`
+	EndpointName     *string      `json:"endpointName,omitempty"`
+	EndpointStatus   *string      `json:"endpointStatus,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
@@ -389,6 +419,7 @@ type MonitoringConstraintsResource struct {
 
 type MonitoringExecutionSummary struct {
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	EndpointName     *string      `json:"endpointName,omitempty"`
 	FailureReason    *string      `json:"failureReason,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	ProcessingJobARN *string      `json:"processingJobARN,omitempty"`
@@ -411,6 +442,7 @@ type MonitoringS3Output struct {
 
 type MonitoringScheduleSummary struct {
 	CreationTime          *metav1.Time `json:"creationTime,omitempty"`
+	EndpointName          *string      `json:"endpointName,omitempty"`
 	LastModifiedTime      *metav1.Time `json:"lastModifiedTime,omitempty"`
 	MonitoringScheduleARN *string      `json:"monitoringScheduleARN,omitempty"`
 }
@@ -521,7 +553,21 @@ type ProcessingStoppingCondition struct {
 }
 
 type ProductionVariant struct {
-	ModelName *string `json:"modelName,omitempty"`
+	AcceleratorType      *string  `json:"acceleratorType,omitempty"`
+	InitialInstanceCount *int64   `json:"initialInstanceCount,omitempty"`
+	InitialVariantWeight *float64 `json:"initialVariantWeight,omitempty"`
+	InstanceType         *string  `json:"instanceType,omitempty"`
+	ModelName            *string  `json:"modelName,omitempty"`
+	VariantName          *string  `json:"variantName,omitempty"`
+}
+
+type ProductionVariantSummary struct {
+	CurrentInstanceCount *int64           `json:"currentInstanceCount,omitempty"`
+	CurrentWeight        *float64         `json:"currentWeight,omitempty"`
+	DeployedImages       []*DeployedImage `json:"deployedImages,omitempty"`
+	DesiredInstanceCount *int64           `json:"desiredInstanceCount,omitempty"`
+	DesiredWeight        *float64         `json:"desiredWeight,omitempty"`
+	VariantName          *string          `json:"variantName,omitempty"`
 }
 
 type RenderingError struct {
@@ -746,6 +792,10 @@ type UserSettings struct {
 type VPCConfig struct {
 	SecurityGroupIDs []*string `json:"securityGroupIDs,omitempty"`
 	Subnets          []*string `json:"subnets,omitempty"`
+}
+
+type VariantProperty struct {
+	VariantPropertyType *string `json:"variantPropertyType,omitempty"`
 }
 
 type Workforce struct {

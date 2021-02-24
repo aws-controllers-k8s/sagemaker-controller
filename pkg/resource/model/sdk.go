@@ -185,6 +185,7 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
+
 	return &resource{ko}, nil
 }
 
@@ -392,6 +393,7 @@ func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
 ) error {
+
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
 		return err
