@@ -9,6 +9,8 @@ rules:
 - apiGroups:
   - sagemaker.services.k8s.aws
   resources:
+  - endpoints
+  - endpointconfigs
   - models
   - processingjobs
   - trainingjobs
@@ -23,6 +25,8 @@ rules:
 - apiGroups:
   - sagemaker.services.k8s.aws
   resources:
+  - endpoints
+  - endpointconfigs
   - models
   - processingjobs
   - trainingjobs

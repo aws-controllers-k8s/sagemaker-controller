@@ -5,6 +5,15 @@ operations:
   StopProcessingJob:
     operation_type: Delete
     resource_name: ProcessingJob
+  CreateEndpoint:
+    set_output_custom_method_name: customCreateEndpointSetOutput
+  DescribeEndpoint:
+    set_output_custom_method_name: customDescribeEndpointSetOutput
+  UpdateEndpoint:
+    custom_implementation: customUpdateEndpoint
+    set_output_custom_method_name: customUpdateEndpointSetOutput
+  DeleteEndpoint:
+    custom_implementation: customDeleteEndpoint
 resources:
   Model:
     exceptions:
@@ -12,6 +21,52 @@ resources:
         404:
           code: ValidationException
           message_prefix: Could not find model
+  EndpointConfig:
+    exceptions:
+      errors:
+        404:
+          code: ValidationException
+          message_prefix: Could not find endpoint configuration
+  Endpoint:
+    update_conditions_custom_method_name: customUpdateConditions
+    exceptions:
+      errors:
+        404:
+          code: ValidationException
+          message_prefix: Could not find endpoint
+    fields:
+      EndpointStatus:
+        is_read_only: true
+        is_printable: true
+        from:
+          operation: DescribeEndpoint
+          path: EndpointStatus
+      FailureReason:
+        is_read_only: true
+        is_printable: true
+        from:
+          operation: DescribeEndpoint
+          path: FailureReason
+      EndpointConfigName:
+        is_read_only: true
+        from:
+          operation: DescribeEndpoint
+          path: EndpointConfigName
+      # CreationTime:
+      #   is_read_only: true
+      #   from:
+      #     operation: DescribeEndpoint
+      #     path: CreationTime
+      # LastModifiedTime:
+      #   is_read_only: true
+      #   from:
+      #     operation: DescribeEndpoint
+      #     path: LastModifiedTime
+      # ProductionVariants:
+      #   is_read_only: true
+      #   from:
+      #     operation: DescribeEndpoint
+      #     path: ProductionVariants
   TrainingJob:
     exceptions:
       errors:
@@ -70,8 +125,8 @@ ignore:
       - DeviceFleet
       - Domain
       - EdgePackagingJob
-      - EndpointConfig
-      - Endpoint
+      # - EndpointConfig
+      # - Endpoint
       - Experiment
       - FeatureGroup
       - FlowDefinition
@@ -80,6 +135,7 @@ ignore:
       - Image
       - ImageVersion
       - LabelingJob
+      # - Model
       - ModelBiasJobDefinition
       - ModelExplainabilityJobDefinition
       - ModelPackage
@@ -91,10 +147,14 @@ ignore:
       - Pipeline
       - PresignedDomainUrl
       - PresignedNotebookInstanceUrl
+      # - ProcessingJob
       - Project
+      # - TrainingJob
       - TransformJob
       - TrialComponent
       - Trial
       - UserProfile
       - Workforce
       - Workteam
+    operations:
+      - UpdateTrainingJob
