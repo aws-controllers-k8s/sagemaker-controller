@@ -335,17 +335,17 @@ const (
 	EndpointSortKey_Status       EndpointSortKey = "Status"
 )
 
-type EndpointStatus string
+type EndpointStatus_SDK string
 
 const (
-	EndpointStatus_OutOfService   EndpointStatus = "OutOfService"
-	EndpointStatus_Creating       EndpointStatus = "Creating"
-	EndpointStatus_Updating       EndpointStatus = "Updating"
-	EndpointStatus_SystemUpdating EndpointStatus = "SystemUpdating"
-	EndpointStatus_RollingBack    EndpointStatus = "RollingBack"
-	EndpointStatus_InService      EndpointStatus = "InService"
-	EndpointStatus_Deleting       EndpointStatus = "Deleting"
-	EndpointStatus_Failed         EndpointStatus = "Failed"
+	EndpointStatus_SDK_OutOfService   EndpointStatus_SDK = "OutOfService"
+	EndpointStatus_SDK_Creating       EndpointStatus_SDK = "Creating"
+	EndpointStatus_SDK_Updating       EndpointStatus_SDK = "Updating"
+	EndpointStatus_SDK_SystemUpdating EndpointStatus_SDK = "SystemUpdating"
+	EndpointStatus_SDK_RollingBack    EndpointStatus_SDK = "RollingBack"
+	EndpointStatus_SDK_InService      EndpointStatus_SDK = "InService"
+	EndpointStatus_SDK_Deleting       EndpointStatus_SDK = "Deleting"
+	EndpointStatus_SDK_Failed         EndpointStatus_SDK = "Failed"
 )
 
 type ExecutionStatus string
