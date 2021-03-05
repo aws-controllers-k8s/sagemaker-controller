@@ -155,6 +155,12 @@ type DataCaptureConfigSummary struct {
 	KMSKeyID                  *string `json:"kmsKeyID,omitempty"`
 }
 
+type DataProcessing struct {
+	InputFilter  *string `json:"inputFilter,omitempty"`
+	JoinSource   *string `json:"joinSource,omitempty"`
+	OutputFilter *string `json:"outputFilter,omitempty"`
+}
+
 type DataSource struct {
 	FileSystemDataSource *FileSystemDataSource `json:"fileSystemDataSource,omitempty"`
 	S3DataSource         *S3DataSource         `json:"s3DataSource,omitempty"`
@@ -377,6 +383,11 @@ type MetricDefinition struct {
 
 type ModelArtifacts struct {
 	S3ModelArtifacts *string `json:"s3ModelArtifacts,omitempty"`
+}
+
+type ModelClientConfig struct {
+	InvocationsMaxRetries       *int64 `json:"invocationsMaxRetries,omitempty"`
+	InvocationsTimeoutInSeconds *int64 `json:"invocationsTimeoutInSeconds,omitempty"`
 }
 
 type ModelPackageContainerDefinition struct {
@@ -692,36 +703,71 @@ type TrainingSpecification struct {
 	TrainingImage               *string             `json:"trainingImage,omitempty"`
 }
 
-type TransformInput struct {
-	CompressionType *string `json:"compressionType,omitempty"`
-	ContentType     *string `json:"contentType,omitempty"`
+type TransformDataSource struct {
+	S3DataSource *TransformS3DataSource `json:"s3DataSource,omitempty"`
 }
 
-type TransformJob struct {
-	AutoMLJobARN       *string           `json:"autoMLJobARN,omitempty"`
-	CreationTime       *metav1.Time      `json:"creationTime,omitempty"`
-	ExperimentConfig   *ExperimentConfig `json:"experimentConfig,omitempty"`
-	FailureReason      *string           `json:"failureReason,omitempty"`
-	LabelingJobARN     *string           `json:"labelingJobARN,omitempty"`
-	ModelName          *string           `json:"modelName,omitempty"`
-	Tags               []*Tag            `json:"tags,omitempty"`
-	TransformEndTime   *metav1.Time      `json:"transformEndTime,omitempty"`
-	TransformStartTime *metav1.Time      `json:"transformStartTime,omitempty"`
+type TransformInput struct {
+	CompressionType *string              `json:"compressionType,omitempty"`
+	ContentType     *string              `json:"contentType,omitempty"`
+	DataSource      *TransformDataSource `json:"dataSource,omitempty"`
+	SplitType       *string              `json:"splitType,omitempty"`
+}
+
+type TransformJobDefinition struct {
+	BatchStrategy           *string             `json:"batchStrategy,omitempty"`
+	Environment             map[string]*string  `json:"environment,omitempty"`
+	MaxConcurrentTransforms *int64              `json:"maxConcurrentTransforms,omitempty"`
+	MaxPayloadInMB          *int64              `json:"maxPayloadInMB,omitempty"`
+	TransformInput          *TransformInput     `json:"transformInput,omitempty"`
+	TransformOutput         *TransformOutput    `json:"transformOutput,omitempty"`
+	TransformResources      *TransformResources `json:"transformResources,omitempty"`
 }
 
 type TransformJobSummary struct {
-	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
-	FailureReason    *string      `json:"failureReason,omitempty"`
-	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
-	TransformEndTime *metav1.Time `json:"transformEndTime,omitempty"`
+	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
+	FailureReason      *string      `json:"failureReason,omitempty"`
+	LastModifiedTime   *metav1.Time `json:"lastModifiedTime,omitempty"`
+	TransformEndTime   *metav1.Time `json:"transformEndTime,omitempty"`
+	TransformJobARN    *string      `json:"transformJobARN,omitempty"`
+	TransformJobName   *string      `json:"transformJobName,omitempty"`
+	TransformJobStatus *string      `json:"transformJobStatus,omitempty"`
+}
+
+type TransformJob_SDK struct {
+	AutoMLJobARN            *string             `json:"autoMLJobARN,omitempty"`
+	BatchStrategy           *string             `json:"batchStrategy,omitempty"`
+	CreationTime            *metav1.Time        `json:"creationTime,omitempty"`
+	DataProcessing          *DataProcessing     `json:"dataProcessing,omitempty"`
+	Environment             map[string]*string  `json:"environment,omitempty"`
+	ExperimentConfig        *ExperimentConfig   `json:"experimentConfig,omitempty"`
+	FailureReason           *string             `json:"failureReason,omitempty"`
+	LabelingJobARN          *string             `json:"labelingJobARN,omitempty"`
+	MaxConcurrentTransforms *int64              `json:"maxConcurrentTransforms,omitempty"`
+	MaxPayloadInMB          *int64              `json:"maxPayloadInMB,omitempty"`
+	ModelClientConfig       *ModelClientConfig  `json:"modelClientConfig,omitempty"`
+	ModelName               *string             `json:"modelName,omitempty"`
+	Tags                    []*Tag              `json:"tags,omitempty"`
+	TransformEndTime        *metav1.Time        `json:"transformEndTime,omitempty"`
+	TransformInput          *TransformInput     `json:"transformInput,omitempty"`
+	TransformJobARN         *string             `json:"transformJobARN,omitempty"`
+	TransformJobName        *string             `json:"transformJobName,omitempty"`
+	TransformJobStatus      *string             `json:"transformJobStatus,omitempty"`
+	TransformOutput         *TransformOutput    `json:"transformOutput,omitempty"`
+	TransformResources      *TransformResources `json:"transformResources,omitempty"`
+	TransformStartTime      *metav1.Time        `json:"transformStartTime,omitempty"`
 }
 
 type TransformOutput struct {
+	Accept       *string `json:"accept,omitempty"`
+	AssembleWith *string `json:"assembleWith,omitempty"`
 	KMSKeyID     *string `json:"kmsKeyID,omitempty"`
 	S3OutputPath *string `json:"s3OutputPath,omitempty"`
 }
 
 type TransformResources struct {
+	InstanceCount  *int64  `json:"instanceCount,omitempty"`
+	InstanceType   *string `json:"instanceType,omitempty"`
 	VolumeKMSKeyID *string `json:"volumeKMSKeyID,omitempty"`
 }
 

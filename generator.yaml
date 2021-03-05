@@ -5,6 +5,9 @@ operations:
   StopProcessingJob:
     operation_type: Delete
     resource_name: ProcessingJob
+  StopTransformJob:
+    operation_type: Delete
+    resource_name: TransformJob
   CreateEndpoint:
     set_output_custom_method_name: customCreateEndpointSetOutput
   DescribeEndpoint:
@@ -110,6 +113,25 @@ resources:
         from:
           operation: DescribeProcessingJob
           path: FailureReason 
+  TransformJob:
+    exceptions:
+      errors:
+          404:
+            code: ValidationException
+            message_prefix: Could not find requested job with name
+    fields:
+      TransformJobStatus:
+          is_read_only: true
+          is_printable: true
+          from:
+            operation: DescribeTransformJob
+            path: TransformJobStatus
+      FailureReason:
+        is_read_only: true
+        is_printable: true
+        from:
+          operation: DescribeTransformJob
+          path: FailureReason
 ignore:
     resource_names:
       - Algorithm
@@ -150,7 +172,7 @@ ignore:
       # - ProcessingJob
       - Project
       # - TrainingJob
-      - TransformJob
+      # - TransformJob
       - TrialComponent
       - Trial
       - UserProfile

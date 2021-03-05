@@ -1162,14 +1162,14 @@ const (
 	TransformInstanceType_ml_m5_24xlarge TransformInstanceType = "ml.m5.24xlarge"
 )
 
-type TransformJobStatus string
+type TransformJobStatus_SDK string
 
 const (
-	TransformJobStatus_InProgress TransformJobStatus = "InProgress"
-	TransformJobStatus_Completed  TransformJobStatus = "Completed"
-	TransformJobStatus_Failed     TransformJobStatus = "Failed"
-	TransformJobStatus_Stopping   TransformJobStatus = "Stopping"
-	TransformJobStatus_Stopped    TransformJobStatus = "Stopped"
+	TransformJobStatus_SDK_InProgress TransformJobStatus_SDK = "InProgress"
+	TransformJobStatus_SDK_Completed  TransformJobStatus_SDK = "Completed"
+	TransformJobStatus_SDK_Failed     TransformJobStatus_SDK = "Failed"
+	TransformJobStatus_SDK_Stopping   TransformJobStatus_SDK = "Stopping"
+	TransformJobStatus_SDK_Stopped    TransformJobStatus_SDK = "Stopped"
 )
 
 type TrialComponentPrimaryStatus string
