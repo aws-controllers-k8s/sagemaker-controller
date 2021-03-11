@@ -14,6 +14,7 @@ rules:
   - models
   - processingjobs
   - trainingjobs
+  - transformjobs
   verbs:
   - get
   - list
