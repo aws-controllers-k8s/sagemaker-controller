@@ -19,6 +19,16 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+type ActionSummary struct {
+	ActionName       *string      `json:"actionName,omitempty"`
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+}
+
+type Alarm struct {
+	AlarmName *string `json:"alarmName,omitempty"`
+}
+
 type AlgorithmSpecification struct {
 	AlgorithmName                    *string             `json:"algorithmName,omitempty"`
 	EnableSageMakerMetricsTimeSeries *bool               `json:"enableSageMakerMetricsTimeSeries,omitempty"`
@@ -35,10 +45,38 @@ type AlgorithmValidationSpecification struct {
 	ValidationRole *string `json:"validationRole,omitempty"`
 }
 
+type AppImageConfigDetails struct {
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+}
+
 type AppSpecification struct {
 	ContainerArguments  []*string `json:"containerArguments,omitempty"`
 	ContainerEntrypoint []*string `json:"containerEntrypoint,omitempty"`
 	ImageURI            *string   `json:"imageURI,omitempty"`
+}
+
+type ArtifactSummary struct {
+	ArtifactName     *string      `json:"artifactName,omitempty"`
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+}
+
+type AssociationSummary struct {
+	CreationTime    *metav1.Time `json:"creationTime,omitempty"`
+	DestinationName *string      `json:"destinationName,omitempty"`
+	SourceName      *string      `json:"sourceName,omitempty"`
+}
+
+type AthenaDatasetDefinition struct {
+	Catalog           *string `json:"catalog,omitempty"`
+	Database          *string `json:"database,omitempty"`
+	KMSKeyID          *string `json:"kmsKeyID,omitempty"`
+	OutputCompression *string `json:"outputCompression,omitempty"`
+	OutputFormat      *string `json:"outputFormat,omitempty"`
+	OutputS3URI       *string `json:"outputS3URI,omitempty"`
+	QueryString       *string `json:"queryString,omitempty"`
+	WorkGroup         *string `json:"workGroup,omitempty"`
 }
 
 type AutoMLCandidate struct {
@@ -77,6 +115,21 @@ type AutoMLSecurityConfig struct {
 	EnableInterContainerTrafficEncryption *bool      `json:"enableInterContainerTrafficEncryption,omitempty"`
 	VolumeKMSKeyID                        *string    `json:"volumeKMSKeyID,omitempty"`
 	VPCConfig                             *VPCConfig `json:"vpcConfig,omitempty"`
+}
+
+type AutoRollbackConfig struct {
+	Alarms []*Alarm `json:"alarms,omitempty"`
+}
+
+type BlueGreenUpdatePolicy struct {
+	MaximumExecutionTimeoutInSeconds *int64                `json:"maximumExecutionTimeoutInSeconds,omitempty"`
+	TerminationWaitInSeconds         *int64                `json:"terminationWaitInSeconds,omitempty"`
+	TrafficRoutingConfiguration      *TrafficRoutingConfig `json:"trafficRoutingConfiguration,omitempty"`
+}
+
+type CapacitySize struct {
+	Type  *string `json:"type_,omitempty"`
+	Value *int64  `json:"value,omitempty"`
 }
 
 type CaptureContentTypeHeader struct {
@@ -126,16 +179,13 @@ type ContainerDefinition struct {
 	Mode              *string            `json:"mode,omitempty"`
 	ModelDataURL      *string            `json:"modelDataURL,omitempty"`
 	ModelPackageName  *string            `json:"modelPackageName,omitempty"`
+	MultiModelConfig  *MultiModelConfig  `json:"multiModelConfig,omitempty"`
 }
 
-type ContinuousParameterRange struct {
-	MaxValue *string `json:"maxValue,omitempty"`
-	MinValue *string `json:"minValue,omitempty"`
-}
-
-type ContinuousParameterRangeSpecification struct {
-	MaxValue *string `json:"maxValue,omitempty"`
-	MinValue *string `json:"minValue,omitempty"`
+type ContextSummary struct {
+	ContextName      *string      `json:"contextName,omitempty"`
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
 type DataCaptureConfig struct {
@@ -161,9 +211,28 @@ type DataProcessing struct {
 	OutputFilter *string `json:"outputFilter,omitempty"`
 }
 
+type DataQualityAppSpecification struct {
+	ContainerEntrypoint             []*string `json:"containerEntrypoint,omitempty"`
+	ImageURI                        *string   `json:"imageURI,omitempty"`
+	PostAnalyticsProcessorSourceURI *string   `json:"postAnalyticsProcessorSourceURI,omitempty"`
+	RecordPreprocessorSourceURI     *string   `json:"recordPreprocessorSourceURI,omitempty"`
+}
+
+type DataQualityBaselineConfig struct {
+	BaseliningJobName *string `json:"baseliningJobName,omitempty"`
+}
+
 type DataSource struct {
 	FileSystemDataSource *FileSystemDataSource `json:"fileSystemDataSource,omitempty"`
 	S3DataSource         *S3DataSource         `json:"s3DataSource,omitempty"`
+}
+
+type DatasetDefinition struct {
+	AthenaDatasetDefinition   *AthenaDatasetDefinition   `json:"athenaDatasetDefinition,omitempty"`
+	DataDistributionType      *string                    `json:"dataDistributionType,omitempty"`
+	InputMode                 *string                    `json:"inputMode,omitempty"`
+	LocalPath                 *string                    `json:"localPath,omitempty"`
+	RedshiftDatasetDefinition *RedshiftDatasetDefinition `json:"redshiftDatasetDefinition,omitempty"`
 }
 
 type DebugHookConfig struct {
@@ -197,10 +266,40 @@ type DeployedImage struct {
 	SpecifiedImage *string      `json:"specifiedImage,omitempty"`
 }
 
+type DeploymentConfig struct {
+	AutoRollbackConfiguration *AutoRollbackConfig    `json:"autoRollbackConfiguration,omitempty"`
+	BlueGreenUpdatePolicy     *BlueGreenUpdatePolicy `json:"blueGreenUpdatePolicy,omitempty"`
+}
+
 type DesiredWeightAndCapacity struct {
 	DesiredInstanceCount *int64   `json:"desiredInstanceCount,omitempty"`
 	DesiredWeight        *float64 `json:"desiredWeight,omitempty"`
 	VariantName          *string  `json:"variantName,omitempty"`
+}
+
+type DeviceFleetSummary struct {
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+}
+
+type DeviceSummary struct {
+	LatestHeartbeat  *metav1.Time `json:"latestHeartbeat,omitempty"`
+	RegistrationTime *metav1.Time `json:"registrationTime,omitempty"`
+}
+
+type EdgeModel struct {
+	LatestInference  *metav1.Time `json:"latestInference,omitempty"`
+	LatestSampleTime *metav1.Time `json:"latestSampleTime,omitempty"`
+}
+
+type EdgeOutputConfig struct {
+	KMSKeyID         *string `json:"kmsKeyID,omitempty"`
+	S3OutputLocation *string `json:"s3OutputLocation,omitempty"`
+}
+
+type EdgePackagingJobSummary struct {
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
 type EndpointConfigSummary struct {
@@ -211,7 +310,10 @@ type EndpointConfigSummary struct {
 
 type EndpointInput struct {
 	EndpointName           *string `json:"endpointName,omitempty"`
+	FeaturesAttribute      *string `json:"featuresAttribute,omitempty"`
+	InferenceAttribute     *string `json:"inferenceAttribute,omitempty"`
 	LocalPath              *string `json:"localPath,omitempty"`
+	ProbabilityAttribute   *string `json:"probabilityAttribute,omitempty"`
 	S3DataDistributionType *string `json:"s3DataDistributionType,omitempty"`
 	S3InputMode            *string `json:"s3InputMode,omitempty"`
 }
@@ -222,6 +324,19 @@ type EndpointSummary struct {
 	EndpointName     *string      `json:"endpointName,omitempty"`
 	EndpointStatus   *string      `json:"endpointStatus,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+}
+
+type Endpoint_SDK struct {
+	CreationTime       *metav1.Time                `json:"creationTime,omitempty"`
+	DataCaptureConfig  *DataCaptureConfigSummary   `json:"dataCaptureConfig,omitempty"`
+	EndpointARN        *string                     `json:"endpointARN,omitempty"`
+	EndpointConfigName *string                     `json:"endpointConfigName,omitempty"`
+	EndpointName       *string                     `json:"endpointName,omitempty"`
+	EndpointStatus     *string                     `json:"endpointStatus,omitempty"`
+	FailureReason      *string                     `json:"failureReason,omitempty"`
+	LastModifiedTime   *metav1.Time                `json:"lastModifiedTime,omitempty"`
+	ProductionVariants []*ProductionVariantSummary `json:"productionVariants,omitempty"`
+	Tags               []*Tag                      `json:"tags,omitempty"`
 }
 
 type Experiment struct {
@@ -243,6 +358,18 @@ type ExperimentSummary struct {
 	DisplayName      *string      `json:"displayName,omitempty"`
 	ExperimentName   *string      `json:"experimentName,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+}
+
+type FeatureGroup struct {
+	FailureReason    *string `json:"failureReason,omitempty"`
+	FeatureGroupName *string `json:"featureGroupName,omitempty"`
+	RoleARN          *string `json:"roleARN,omitempty"`
+	Tags             []*Tag  `json:"tags,omitempty"`
+}
+
+type FeatureGroupSummary struct {
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	FeatureGroupName *string      `json:"featureGroupName,omitempty"`
 }
 
 type FileSystemDataSource struct {
@@ -319,22 +446,28 @@ type HyperParameterTuningJobSummary struct {
 	LastModifiedTime            *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
+type Image struct {
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	FailureReason    *string      `json:"failureReason,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+}
+
 type ImageConfig struct {
 	RepositoryAccessMode *string `json:"repositoryAccessMode,omitempty"`
 }
 
+type ImageVersion struct {
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	FailureReason    *string      `json:"failureReason,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+}
+
+type InferenceExecutionConfig struct {
+	Mode *string `json:"mode,omitempty"`
+}
+
 type InputConfig struct {
 	S3URI *string `json:"s3URI,omitempty"`
-}
-
-type IntegerParameterRange struct {
-	MaxValue *string `json:"maxValue,omitempty"`
-	MinValue *string `json:"minValue,omitempty"`
-}
-
-type IntegerParameterRangeSpecification struct {
-	MaxValue *string `json:"maxValue,omitempty"`
-	MinValue *string `json:"minValue,omitempty"`
 }
 
 type LabelingJobAlgorithmsConfig struct {
@@ -381,13 +514,41 @@ type MetricDefinition struct {
 	Regex *string `json:"regex,omitempty"`
 }
 
+type MetricsSource struct {
+	ContentType *string `json:"contentType,omitempty"`
+	S3URI       *string `json:"s3URI,omitempty"`
+}
+
 type ModelArtifacts struct {
 	S3ModelArtifacts *string `json:"s3ModelArtifacts,omitempty"`
+}
+
+type ModelBiasAppSpecification struct {
+	ConfigURI *string `json:"configURI,omitempty"`
+	ImageURI  *string `json:"imageURI,omitempty"`
+}
+
+type ModelBiasBaselineConfig struct {
+	BaseliningJobName *string `json:"baseliningJobName,omitempty"`
 }
 
 type ModelClientConfig struct {
 	InvocationsMaxRetries       *int64 `json:"invocationsMaxRetries,omitempty"`
 	InvocationsTimeoutInSeconds *int64 `json:"invocationsTimeoutInSeconds,omitempty"`
+}
+
+type ModelExplainabilityAppSpecification struct {
+	ConfigURI *string `json:"configURI,omitempty"`
+	ImageURI  *string `json:"imageURI,omitempty"`
+}
+
+type ModelExplainabilityBaselineConfig struct {
+	BaseliningJobName *string `json:"baseliningJobName,omitempty"`
+}
+
+type ModelPackage struct {
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	Tags             []*Tag       `json:"tags,omitempty"`
 }
 
 type ModelPackageContainerDefinition struct {
@@ -396,12 +557,27 @@ type ModelPackageContainerDefinition struct {
 	ModelDataURL      *string `json:"modelDataURL,omitempty"`
 }
 
+type ModelPackageGroup struct {
+	Tags []*Tag `json:"tags,omitempty"`
+}
+
 type ModelPackageStatusItem struct {
 	FailureReason *string `json:"failureReason,omitempty"`
 }
 
 type ModelPackageValidationSpecification struct {
 	ValidationRole *string `json:"validationRole,omitempty"`
+}
+
+type ModelQualityAppSpecification struct {
+	ContainerEntrypoint             []*string `json:"containerEntrypoint,omitempty"`
+	ImageURI                        *string   `json:"imageURI,omitempty"`
+	PostAnalyticsProcessorSourceURI *string   `json:"postAnalyticsProcessorSourceURI,omitempty"`
+	RecordPreprocessorSourceURI     *string   `json:"recordPreprocessorSourceURI,omitempty"`
+}
+
+type ModelQualityBaselineConfig struct {
+	BaseliningJobName *string `json:"baseliningJobName,omitempty"`
 }
 
 type ModelSummary struct {
@@ -415,6 +591,10 @@ type MonitoringAppSpecification struct {
 	ImageURI                        *string   `json:"imageURI,omitempty"`
 	PostAnalyticsProcessorSourceURI *string   `json:"postAnalyticsProcessorSourceURI,omitempty"`
 	RecordPreprocessorSourceURI     *string   `json:"recordPreprocessorSourceURI,omitempty"`
+}
+
+type MonitoringBaselineConfig struct {
+	BaseliningJobName *string `json:"baseliningJobName,omitempty"`
 }
 
 type MonitoringClusterConfig struct {
@@ -442,6 +622,17 @@ type MonitoringJobDefinition struct {
 	RoleARN       *string        `json:"roleARN,omitempty"`
 }
 
+type MonitoringJobDefinitionSummary struct {
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	EndpointName *string      `json:"endpointName,omitempty"`
+}
+
+type MonitoringNetworkConfig struct {
+	EnableInterContainerTrafficEncryption *bool      `json:"enableInterContainerTrafficEncryption,omitempty"`
+	EnableNetworkIsolation                *bool      `json:"enableNetworkIsolation,omitempty"`
+	VPCConfig                             *VPCConfig `json:"vpcConfig,omitempty"`
+}
+
 type MonitoringOutputConfig struct {
 	KMSKeyID *string `json:"kmsKeyID,omitempty"`
 }
@@ -449,6 +640,15 @@ type MonitoringOutputConfig struct {
 type MonitoringS3Output struct {
 	LocalPath    *string `json:"localPath,omitempty"`
 	S3UploadMode *string `json:"s3UploadMode,omitempty"`
+}
+
+type MonitoringSchedule struct {
+	CreationTime          *metav1.Time `json:"creationTime,omitempty"`
+	EndpointName          *string      `json:"endpointName,omitempty"`
+	FailureReason         *string      `json:"failureReason,omitempty"`
+	LastModifiedTime      *metav1.Time `json:"lastModifiedTime,omitempty"`
+	MonitoringScheduleARN *string      `json:"monitoringScheduleARN,omitempty"`
+	Tags                  []*Tag       `json:"tags,omitempty"`
 }
 
 type MonitoringScheduleSummary struct {
@@ -462,13 +662,30 @@ type MonitoringStatisticsResource struct {
 	S3URI *string `json:"s3URI,omitempty"`
 }
 
+type MultiModelConfig struct {
+	ModelCacheSetting *string `json:"modelCacheSetting,omitempty"`
+}
+
 type NetworkConfig struct {
 	EnableInterContainerTrafficEncryption *bool      `json:"enableInterContainerTrafficEncryption,omitempty"`
 	EnableNetworkIsolation                *bool      `json:"enableNetworkIsolation,omitempty"`
 	VPCConfig                             *VPCConfig `json:"vpcConfig,omitempty"`
 }
 
+type OfflineStoreConfig struct {
+	DisableGlueTableCreation *bool `json:"disableGlueTableCreation,omitempty"`
+}
+
+type OnlineStoreConfig struct {
+	EnableOnlineStore *bool `json:"enableOnlineStore,omitempty"`
+}
+
+type OnlineStoreSecurityConfig struct {
+	KMSKeyID *string `json:"kmsKeyID,omitempty"`
+}
+
 type OutputConfig struct {
+	KMSKeyID         *string `json:"kmsKeyID,omitempty"`
 	S3OutputLocation *string `json:"s3OutputLocation,omitempty"`
 }
 
@@ -482,6 +699,36 @@ type Parent struct {
 	TrialName      *string `json:"trialName,omitempty"`
 }
 
+type Pipeline struct {
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	LastRunTime      *metav1.Time `json:"lastRunTime,omitempty"`
+	RoleARN          *string      `json:"roleARN,omitempty"`
+	Tags             []*Tag       `json:"tags,omitempty"`
+}
+
+type PipelineExecution struct {
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+}
+
+type PipelineExecutionStep struct {
+	EndTime       *metav1.Time `json:"endTime,omitempty"`
+	FailureReason *string      `json:"failureReason,omitempty"`
+	StartTime     *metav1.Time `json:"startTime,omitempty"`
+}
+
+type PipelineExecutionSummary struct {
+	StartTime *metav1.Time `json:"startTime,omitempty"`
+}
+
+type PipelineSummary struct {
+	CreationTime      *metav1.Time `json:"creationTime,omitempty"`
+	LastExecutionTime *metav1.Time `json:"lastExecutionTime,omitempty"`
+	LastModifiedTime  *metav1.Time `json:"lastModifiedTime,omitempty"`
+	RoleARN           *string      `json:"roleARN,omitempty"`
+}
+
 type ProcessingClusterConfig struct {
 	InstanceCount  *int64  `json:"instanceCount,omitempty"`
 	InstanceType   *string `json:"instanceType,omitempty"`
@@ -489,9 +736,19 @@ type ProcessingClusterConfig struct {
 	VolumeSizeInGB *int64  `json:"volumeSizeInGB,omitempty"`
 }
 
+type ProcessingFeatureStoreOutput struct {
+	FeatureGroupName *string `json:"featureGroupName,omitempty"`
+}
+
 type ProcessingInput struct {
-	InputName *string            `json:"inputName,omitempty"`
-	S3Input   *ProcessingS3Input `json:"s3Input,omitempty"`
+	AppManaged        *bool              `json:"appManaged,omitempty"`
+	DatasetDefinition *DatasetDefinition `json:"datasetDefinition,omitempty"`
+	InputName         *string            `json:"inputName,omitempty"`
+	S3Input           *ProcessingS3Input `json:"s3Input,omitempty"`
+}
+
+type ProcessingJobStepMetadata struct {
+	ARN *string `json:"arn,omitempty"`
 }
 
 type ProcessingJobSummary struct {
@@ -531,8 +788,10 @@ type ProcessingJob_SDK struct {
 }
 
 type ProcessingOutput struct {
-	OutputName *string             `json:"outputName,omitempty"`
-	S3Output   *ProcessingS3Output `json:"s3Output,omitempty"`
+	AppManaged         *bool                         `json:"appManaged,omitempty"`
+	FeatureStoreOutput *ProcessingFeatureStoreOutput `json:"featureStoreOutput,omitempty"`
+	OutputName         *string                       `json:"outputName,omitempty"`
+	S3Output           *ProcessingS3Output           `json:"s3Output,omitempty"`
 }
 
 type ProcessingOutputConfig struct {
@@ -564,12 +823,18 @@ type ProcessingStoppingCondition struct {
 }
 
 type ProductionVariant struct {
-	AcceleratorType      *string  `json:"acceleratorType,omitempty"`
-	InitialInstanceCount *int64   `json:"initialInstanceCount,omitempty"`
-	InitialVariantWeight *float64 `json:"initialVariantWeight,omitempty"`
-	InstanceType         *string  `json:"instanceType,omitempty"`
-	ModelName            *string  `json:"modelName,omitempty"`
-	VariantName          *string  `json:"variantName,omitempty"`
+	AcceleratorType      *string                          `json:"acceleratorType,omitempty"`
+	CoreDumpConfig       *ProductionVariantCoreDumpConfig `json:"coreDumpConfig,omitempty"`
+	InitialInstanceCount *int64                           `json:"initialInstanceCount,omitempty"`
+	InitialVariantWeight *float64                         `json:"initialVariantWeight,omitempty"`
+	InstanceType         *string                          `json:"instanceType,omitempty"`
+	ModelName            *string                          `json:"modelName,omitempty"`
+	VariantName          *string                          `json:"variantName,omitempty"`
+}
+
+type ProductionVariantCoreDumpConfig struct {
+	DestinationS3URI *string `json:"destinationS3URI,omitempty"`
+	KMSKeyID         *string `json:"kmsKeyID,omitempty"`
 }
 
 type ProductionVariantSummary struct {
@@ -579,6 +844,52 @@ type ProductionVariantSummary struct {
 	DesiredInstanceCount *int64           `json:"desiredInstanceCount,omitempty"`
 	DesiredWeight        *float64         `json:"desiredWeight,omitempty"`
 	VariantName          *string          `json:"variantName,omitempty"`
+}
+
+type ProfilerConfig struct {
+	ProfilingIntervalInMilliseconds *int64             `json:"profilingIntervalInMilliseconds,omitempty"`
+	ProfilingParameters             map[string]*string `json:"profilingParameters,omitempty"`
+	S3OutputPath                    *string            `json:"s3OutputPath,omitempty"`
+}
+
+type ProfilerConfigForUpdate struct {
+	ProfilingIntervalInMilliseconds *int64             `json:"profilingIntervalInMilliseconds,omitempty"`
+	ProfilingParameters             map[string]*string `json:"profilingParameters,omitempty"`
+	S3OutputPath                    *string            `json:"s3OutputPath,omitempty"`
+}
+
+type ProfilerRuleConfiguration struct {
+	InstanceType          *string            `json:"instanceType,omitempty"`
+	LocalPath             *string            `json:"localPath,omitempty"`
+	RuleConfigurationName *string            `json:"ruleConfigurationName,omitempty"`
+	RuleEvaluatorImage    *string            `json:"ruleEvaluatorImage,omitempty"`
+	RuleParameters        map[string]*string `json:"ruleParameters,omitempty"`
+	S3OutputPath          *string            `json:"s3OutputPath,omitempty"`
+	VolumeSizeInGB        *int64             `json:"volumeSizeInGB,omitempty"`
+}
+
+type ProfilerRuleEvaluationStatus struct {
+	LastModifiedTime      *metav1.Time `json:"lastModifiedTime,omitempty"`
+	RuleConfigurationName *string      `json:"ruleConfigurationName,omitempty"`
+	RuleEvaluationJobARN  *string      `json:"ruleEvaluationJobARN,omitempty"`
+	RuleEvaluationStatus  *string      `json:"ruleEvaluationStatus,omitempty"`
+	StatusDetails         *string      `json:"statusDetails,omitempty"`
+}
+
+type ProjectSummary struct {
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+}
+
+type RedshiftDatasetDefinition struct {
+	ClusterID         *string `json:"clusterID,omitempty"`
+	ClusterRoleARN    *string `json:"clusterRoleARN,omitempty"`
+	Database          *string `json:"database,omitempty"`
+	DBUser            *string `json:"dbUser,omitempty"`
+	KMSKeyID          *string `json:"kmsKeyID,omitempty"`
+	OutputCompression *string `json:"outputCompression,omitempty"`
+	OutputFormat      *string `json:"outputFormat,omitempty"`
+	OutputS3URI       *string `json:"outputS3URI,omitempty"`
+	QueryString       *string `json:"queryString,omitempty"`
 }
 
 type RenderingError struct {
@@ -598,6 +909,12 @@ type S3DataSource struct {
 	S3DataDistributionType *string   `json:"s3DataDistributionType,omitempty"`
 	S3DataType             *string   `json:"s3DataType,omitempty"`
 	S3URI                  *string   `json:"s3URI,omitempty"`
+}
+
+type S3StorageConfig struct {
+	KMSKeyID            *string `json:"kmsKeyID,omitempty"`
+	ResolvedOutputS3URI *string `json:"resolvedOutputS3URI,omitempty"`
+	S3URI               *string `json:"s3URI,omitempty"`
 }
 
 type SecondaryStatusTransition struct {
@@ -641,6 +958,12 @@ type TensorBoardOutputConfig struct {
 	S3OutputPath *string `json:"s3OutputPath,omitempty"`
 }
 
+type TrafficRoutingConfig struct {
+	CanarySize            *CapacitySize `json:"canarySize,omitempty"`
+	Type                  *string       `json:"type_,omitempty"`
+	WaitIntervalInSeconds *int64        `json:"waitIntervalInSeconds,omitempty"`
+}
+
 type TrainingJobDefinition struct {
 	HyperParameters   map[string]*string `json:"hyperParameters,omitempty"`
 	InputDataConfig   []*Channel         `json:"inputDataConfig,omitempty"`
@@ -648,6 +971,10 @@ type TrainingJobDefinition struct {
 	ResourceConfig    *ResourceConfig    `json:"resourceConfig,omitempty"`
 	StoppingCondition *StoppingCondition `json:"stoppingCondition,omitempty"`
 	TrainingInputMode *string            `json:"trainingInputMode,omitempty"`
+}
+
+type TrainingJobStepMetadata struct {
+	ARN *string `json:"arn,omitempty"`
 }
 
 type TrainingJobSummary struct {
@@ -722,6 +1049,10 @@ type TransformJobDefinition struct {
 	TransformInput          *TransformInput     `json:"transformInput,omitempty"`
 	TransformOutput         *TransformOutput    `json:"transformOutput,omitempty"`
 	TransformResources      *TransformResources `json:"transformResources,omitempty"`
+}
+
+type TransformJobStepMetadata struct {
+	ARN *string `json:"arn,omitempty"`
 }
 
 type TransformJobSummary struct {

@@ -58,12 +58,22 @@ spec:
                       type: string
                     modelPackageName:
                       type: string
+                    multiModelConfig:
+                      properties:
+                        modelCacheSetting:
+                          type: string
+                      type: object
                   type: object
                 type: array
               enableNetworkIsolation:
                 type: boolean
               executionRoleARN:
                 type: string
+              inferenceExecutionConfig:
+                properties:
+                  mode:
+                    type: string
+                type: object
               modelName:
                 type: string
               primaryContainer:
@@ -87,6 +97,11 @@ spec:
                     type: string
                   modelPackageName:
                     type: string
+                  multiModelConfig:
+                    properties:
+                      modelCacheSetting:
+                        type: string
+                    type: object
                 type: object
               tags:
                 items:

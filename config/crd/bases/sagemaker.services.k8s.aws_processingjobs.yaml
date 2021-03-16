@@ -90,6 +90,57 @@ spec:
               processingInputs:
                 items:
                   properties:
+                    appManaged:
+                      type: boolean
+                    datasetDefinition:
+                      properties:
+                        athenaDatasetDefinition:
+                          properties:
+                            catalog:
+                              type: string
+                            database:
+                              type: string
+                            kmsKeyID:
+                              type: string
+                            outputCompression:
+                              type: string
+                            outputFormat:
+                              type: string
+                            outputS3URI:
+                              type: string
+                            queryString:
+                              type: string
+                            workGroup:
+                              type: string
+                          type: object
+                        dataDistributionType:
+                          type: string
+                        inputMode:
+                          type: string
+                        localPath:
+                          type: string
+                        redshiftDatasetDefinition:
+                          properties:
+                            clusterID:
+                              type: string
+                            clusterRoleARN:
+                              type: string
+                            database:
+                              type: string
+                            dbUser:
+                              type: string
+                            kmsKeyID:
+                              type: string
+                            outputCompression:
+                              type: string
+                            outputFormat:
+                              type: string
+                            outputS3URI:
+                              type: string
+                            queryString:
+                              type: string
+                          type: object
+                      type: object
                     inputName:
                       type: string
                     s3Input:
@@ -118,6 +169,13 @@ spec:
                   outputs:
                     items:
                       properties:
+                        appManaged:
+                          type: boolean
+                        featureStoreOutput:
+                          properties:
+                            featureGroupName:
+                              type: string
+                          type: object
                         outputName:
                           type: string
                         s3Output:

@@ -75,6 +75,13 @@ spec:
                   properties:
                     acceleratorType:
                       type: string
+                    coreDumpConfig:
+                      properties:
+                        destinationS3URI:
+                          type: string
+                        kmsKeyID:
+                          type: string
+                      type: object
                     initialInstanceCount:
                       format: int64
                       type: integer
