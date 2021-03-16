@@ -22,6 +22,17 @@ const (
 	AWSManagedHumanLoopRequestSource_AWS_Textract_AnalyzeDocument_Forms_V1           AWSManagedHumanLoopRequestSource = "AWS/Textract/AnalyzeDocument/Forms/V1"
 )
 
+type ActionStatus string
+
+const (
+	ActionStatus_Unknown    ActionStatus = "Unknown"
+	ActionStatus_InProgress ActionStatus = "InProgress"
+	ActionStatus_Completed  ActionStatus = "Completed"
+	ActionStatus_Failed     ActionStatus = "Failed"
+	ActionStatus_Stopping   ActionStatus = "Stopping"
+	ActionStatus_Stopped    ActionStatus = "Stopped"
+)
+
 type AlgorithmSortBy string
 
 const (
@@ -37,6 +48,14 @@ const (
 	AlgorithmStatus_Completed  AlgorithmStatus = "Completed"
 	AlgorithmStatus_Failed     AlgorithmStatus = "Failed"
 	AlgorithmStatus_Deleting   AlgorithmStatus = "Deleting"
+)
+
+type AppImageConfigSortKey string
+
+const (
+	AppImageConfigSortKey_CreationTime     AppImageConfigSortKey = "CreationTime"
+	AppImageConfigSortKey_LastModifiedTime AppImageConfigSortKey = "LastModifiedTime"
+	AppImageConfigSortKey_Name             AppImageConfigSortKey = "Name"
 )
 
 type AppInstanceType string
@@ -107,11 +126,47 @@ const (
 	AppType_TensorBoard   AppType = "TensorBoard"
 )
 
+type ArtifactSourceIDType string
+
+const (
+	ArtifactSourceIDType_MD5Hash   ArtifactSourceIDType = "MD5Hash"
+	ArtifactSourceIDType_S3ETag    ArtifactSourceIDType = "S3ETag"
+	ArtifactSourceIDType_S3Version ArtifactSourceIDType = "S3Version"
+	ArtifactSourceIDType_Custom    ArtifactSourceIDType = "Custom"
+)
+
 type AssemblyType string
 
 const (
 	AssemblyType_None AssemblyType = "None"
 	AssemblyType_Line AssemblyType = "Line"
+)
+
+type AssociationEdgeType string
+
+const (
+	AssociationEdgeType_ContributedTo  AssociationEdgeType = "ContributedTo"
+	AssociationEdgeType_AssociatedWith AssociationEdgeType = "AssociatedWith"
+	AssociationEdgeType_DerivedFrom    AssociationEdgeType = "DerivedFrom"
+	AssociationEdgeType_Produced       AssociationEdgeType = "Produced"
+)
+
+type AthenaResultCompressionType string
+
+const (
+	AthenaResultCompressionType_GZIP   AthenaResultCompressionType = "GZIP"
+	AthenaResultCompressionType_SNAPPY AthenaResultCompressionType = "SNAPPY"
+	AthenaResultCompressionType_ZLIB   AthenaResultCompressionType = "ZLIB"
+)
+
+type AthenaResultFormat string
+
+const (
+	AthenaResultFormat_PARQUET  AthenaResultFormat = "PARQUET"
+	AthenaResultFormat_ORC      AthenaResultFormat = "ORC"
+	AthenaResultFormat_AVRO     AthenaResultFormat = "AVRO"
+	AthenaResultFormat_JSON     AthenaResultFormat = "JSON"
+	AthenaResultFormat_TEXTFILE AthenaResultFormat = "TEXTFILE"
 )
 
 type AuthMode string
@@ -225,6 +280,13 @@ const (
 	CandidateStepType_AWS__SageMaker__ProcessingJob CandidateStepType = "AWS::SageMaker::ProcessingJob"
 )
 
+type CapacitySizeType string
+
+const (
+	CapacitySizeType_INSTANCE_COUNT   CapacitySizeType = "INSTANCE_COUNT"
+	CapacitySizeType_CAPACITY_PERCENT CapacitySizeType = "CAPACITY_PERCENT"
+)
+
 type CaptureMode string
 
 const (
@@ -272,6 +334,13 @@ const (
 	CompressionType_Gzip CompressionType = "Gzip"
 )
 
+type ConditionOutcome string
+
+const (
+	ConditionOutcome_True  ConditionOutcome = "True"
+	ConditionOutcome_False ConditionOutcome = "False"
+)
+
 type ContainerMode string
 
 const (
@@ -284,6 +353,13 @@ type ContentClassifier string
 const (
 	ContentClassifier_FreeOfPersonallyIdentifiableInformation ContentClassifier = "FreeOfPersonallyIdentifiableInformation"
 	ContentClassifier_FreeOfAdultContent                      ContentClassifier = "FreeOfAdultContent"
+)
+
+type DataDistributionType string
+
+const (
+	DataDistributionType_FullyReplicated DataDistributionType = "FullyReplicated"
+	DataDistributionType_ShardedByS3Key  DataDistributionType = "ShardedByS3Key"
 )
 
 type DetailedAlgorithmStatus string
@@ -314,10 +390,24 @@ const (
 type DomainStatus string
 
 const (
-	DomainStatus_Deleting  DomainStatus = "Deleting"
-	DomainStatus_Failed    DomainStatus = "Failed"
-	DomainStatus_InService DomainStatus = "InService"
-	DomainStatus_Pending   DomainStatus = "Pending"
+	DomainStatus_Deleting      DomainStatus = "Deleting"
+	DomainStatus_Failed        DomainStatus = "Failed"
+	DomainStatus_InService     DomainStatus = "InService"
+	DomainStatus_Pending       DomainStatus = "Pending"
+	DomainStatus_Updating      DomainStatus = "Updating"
+	DomainStatus_Update_Failed DomainStatus = "Update_Failed"
+	DomainStatus_Delete_Failed DomainStatus = "Delete_Failed"
+)
+
+type EdgePackagingJobStatus string
+
+const (
+	EdgePackagingJobStatus_STARTING   EdgePackagingJobStatus = "STARTING"
+	EdgePackagingJobStatus_INPROGRESS EdgePackagingJobStatus = "INPROGRESS"
+	EdgePackagingJobStatus_COMPLETED  EdgePackagingJobStatus = "COMPLETED"
+	EdgePackagingJobStatus_FAILED     EdgePackagingJobStatus = "FAILED"
+	EdgePackagingJobStatus_STOPPING   EdgePackagingJobStatus = "STOPPING"
+	EdgePackagingJobStatus_STOPPED    EdgePackagingJobStatus = "STOPPED"
 )
 
 type EndpointConfigSortKey string
@@ -360,6 +450,40 @@ const (
 	ExecutionStatus_Stopped                 ExecutionStatus = "Stopped"
 )
 
+type FeatureGroupSortBy string
+
+const (
+	FeatureGroupSortBy_Name               FeatureGroupSortBy = "Name"
+	FeatureGroupSortBy_FeatureGroupStatus FeatureGroupSortBy = "FeatureGroupStatus"
+	FeatureGroupSortBy_OfflineStoreStatus FeatureGroupSortBy = "OfflineStoreStatus"
+	FeatureGroupSortBy_CreationTime       FeatureGroupSortBy = "CreationTime"
+)
+
+type FeatureGroupSortOrder string
+
+const (
+	FeatureGroupSortOrder_Ascending  FeatureGroupSortOrder = "Ascending"
+	FeatureGroupSortOrder_Descending FeatureGroupSortOrder = "Descending"
+)
+
+type FeatureGroupStatus string
+
+const (
+	FeatureGroupStatus_Creating     FeatureGroupStatus = "Creating"
+	FeatureGroupStatus_Created      FeatureGroupStatus = "Created"
+	FeatureGroupStatus_CreateFailed FeatureGroupStatus = "CreateFailed"
+	FeatureGroupStatus_Deleting     FeatureGroupStatus = "Deleting"
+	FeatureGroupStatus_DeleteFailed FeatureGroupStatus = "DeleteFailed"
+)
+
+type FeatureType string
+
+const (
+	FeatureType_Integral   FeatureType = "Integral"
+	FeatureType_Fractional FeatureType = "Fractional"
+	FeatureType_String     FeatureType = "String"
+)
+
 type FileSystemAccessMode string
 
 const (
@@ -393,6 +517,8 @@ const (
 	Framework_PYTORCH    Framework = "PYTORCH"
 	Framework_XGBOOST    Framework = "XGBOOST"
 	Framework_TFLITE     Framework = "TFLITE"
+	Framework_DARKNET    Framework = "DARKNET"
+	Framework_SKLEARN    Framework = "SKLEARN"
 )
 
 type HumanTaskUiStatus string
@@ -448,6 +574,72 @@ type HyperParameterTuningJobWarmStartType string
 const (
 	HyperParameterTuningJobWarmStartType_IdenticalDataAndAlgorithm HyperParameterTuningJobWarmStartType = "IdenticalDataAndAlgorithm"
 	HyperParameterTuningJobWarmStartType_TransferLearning          HyperParameterTuningJobWarmStartType = "TransferLearning"
+)
+
+type ImageSortBy string
+
+const (
+	ImageSortBy_CREATION_TIME      ImageSortBy = "CREATION_TIME"
+	ImageSortBy_LAST_MODIFIED_TIME ImageSortBy = "LAST_MODIFIED_TIME"
+	ImageSortBy_IMAGE_NAME         ImageSortBy = "IMAGE_NAME"
+)
+
+type ImageSortOrder string
+
+const (
+	ImageSortOrder_ASCENDING  ImageSortOrder = "ASCENDING"
+	ImageSortOrder_DESCENDING ImageSortOrder = "DESCENDING"
+)
+
+type ImageStatus string
+
+const (
+	ImageStatus_CREATING      ImageStatus = "CREATING"
+	ImageStatus_CREATED       ImageStatus = "CREATED"
+	ImageStatus_CREATE_FAILED ImageStatus = "CREATE_FAILED"
+	ImageStatus_UPDATING      ImageStatus = "UPDATING"
+	ImageStatus_UPDATE_FAILED ImageStatus = "UPDATE_FAILED"
+	ImageStatus_DELETING      ImageStatus = "DELETING"
+	ImageStatus_DELETE_FAILED ImageStatus = "DELETE_FAILED"
+)
+
+type ImageVersionSortBy string
+
+const (
+	ImageVersionSortBy_CREATION_TIME      ImageVersionSortBy = "CREATION_TIME"
+	ImageVersionSortBy_LAST_MODIFIED_TIME ImageVersionSortBy = "LAST_MODIFIED_TIME"
+	ImageVersionSortBy_VERSION            ImageVersionSortBy = "VERSION"
+)
+
+type ImageVersionSortOrder string
+
+const (
+	ImageVersionSortOrder_ASCENDING  ImageVersionSortOrder = "ASCENDING"
+	ImageVersionSortOrder_DESCENDING ImageVersionSortOrder = "DESCENDING"
+)
+
+type ImageVersionStatus string
+
+const (
+	ImageVersionStatus_CREATING      ImageVersionStatus = "CREATING"
+	ImageVersionStatus_CREATED       ImageVersionStatus = "CREATED"
+	ImageVersionStatus_CREATE_FAILED ImageVersionStatus = "CREATE_FAILED"
+	ImageVersionStatus_DELETING      ImageVersionStatus = "DELETING"
+	ImageVersionStatus_DELETE_FAILED ImageVersionStatus = "DELETE_FAILED"
+)
+
+type InferenceExecutionMode string
+
+const (
+	InferenceExecutionMode_Serial InferenceExecutionMode = "Serial"
+	InferenceExecutionMode_Direct InferenceExecutionMode = "Direct"
+)
+
+type InputMode string
+
+const (
+	InputMode_Pipe InputMode = "Pipe"
+	InputMode_File InputMode = "File"
 )
 
 type InstanceType string
@@ -519,6 +711,24 @@ const (
 	ListCompilationJobsSortBy_Status       ListCompilationJobsSortBy = "Status"
 )
 
+type ListDeviceFleetsSortBy string
+
+const (
+	ListDeviceFleetsSortBy_NAME               ListDeviceFleetsSortBy = "NAME"
+	ListDeviceFleetsSortBy_CREATION_TIME      ListDeviceFleetsSortBy = "CREATION_TIME"
+	ListDeviceFleetsSortBy_LAST_MODIFIED_TIME ListDeviceFleetsSortBy = "LAST_MODIFIED_TIME"
+)
+
+type ListEdgePackagingJobsSortBy string
+
+const (
+	ListEdgePackagingJobsSortBy_NAME               ListEdgePackagingJobsSortBy = "NAME"
+	ListEdgePackagingJobsSortBy_MODEL_NAME         ListEdgePackagingJobsSortBy = "MODEL_NAME"
+	ListEdgePackagingJobsSortBy_CREATION_TIME      ListEdgePackagingJobsSortBy = "CREATION_TIME"
+	ListEdgePackagingJobsSortBy_LAST_MODIFIED_TIME ListEdgePackagingJobsSortBy = "LAST_MODIFIED_TIME"
+	ListEdgePackagingJobsSortBy_STATUS             ListEdgePackagingJobsSortBy = "STATUS"
+)
+
 type ListLabelingJobsForWorkteamSortByOptions string
 
 const (
@@ -539,6 +749,39 @@ const (
 	ListWorkteamsSortByOptions_CreateDate ListWorkteamsSortByOptions = "CreateDate"
 )
 
+type ModelApprovalStatus string
+
+const (
+	ModelApprovalStatus_Approved              ModelApprovalStatus = "Approved"
+	ModelApprovalStatus_Rejected              ModelApprovalStatus = "Rejected"
+	ModelApprovalStatus_PendingManualApproval ModelApprovalStatus = "PendingManualApproval"
+)
+
+type ModelCacheSetting string
+
+const (
+	ModelCacheSetting_Enabled  ModelCacheSetting = "Enabled"
+	ModelCacheSetting_Disabled ModelCacheSetting = "Disabled"
+)
+
+type ModelPackageGroupSortBy string
+
+const (
+	ModelPackageGroupSortBy_Name         ModelPackageGroupSortBy = "Name"
+	ModelPackageGroupSortBy_CreationTime ModelPackageGroupSortBy = "CreationTime"
+)
+
+type ModelPackageGroupStatus string
+
+const (
+	ModelPackageGroupStatus_Pending      ModelPackageGroupStatus = "Pending"
+	ModelPackageGroupStatus_InProgress   ModelPackageGroupStatus = "InProgress"
+	ModelPackageGroupStatus_Completed    ModelPackageGroupStatus = "Completed"
+	ModelPackageGroupStatus_Failed       ModelPackageGroupStatus = "Failed"
+	ModelPackageGroupStatus_Deleting     ModelPackageGroupStatus = "Deleting"
+	ModelPackageGroupStatus_DeleteFailed ModelPackageGroupStatus = "DeleteFailed"
+)
+
 type ModelPackageSortBy string
 
 const (
@@ -556,6 +799,14 @@ const (
 	ModelPackageStatus_Deleting   ModelPackageStatus = "Deleting"
 )
 
+type ModelPackageType string
+
+const (
+	ModelPackageType_Versioned   ModelPackageType = "Versioned"
+	ModelPackageType_Unversioned ModelPackageType = "Unversioned"
+	ModelPackageType_Both        ModelPackageType = "Both"
+)
+
 type ModelSortKey string
 
 const (
@@ -571,12 +822,36 @@ const (
 	MonitoringExecutionSortKey_Status        MonitoringExecutionSortKey = "Status"
 )
 
+type MonitoringJobDefinitionSortKey string
+
+const (
+	MonitoringJobDefinitionSortKey_Name         MonitoringJobDefinitionSortKey = "Name"
+	MonitoringJobDefinitionSortKey_CreationTime MonitoringJobDefinitionSortKey = "CreationTime"
+)
+
+type MonitoringProblemType string
+
+const (
+	MonitoringProblemType_BinaryClassification     MonitoringProblemType = "BinaryClassification"
+	MonitoringProblemType_MulticlassClassification MonitoringProblemType = "MulticlassClassification"
+	MonitoringProblemType_Regression               MonitoringProblemType = "Regression"
+)
+
 type MonitoringScheduleSortKey string
 
 const (
 	MonitoringScheduleSortKey_Name         MonitoringScheduleSortKey = "Name"
 	MonitoringScheduleSortKey_CreationTime MonitoringScheduleSortKey = "CreationTime"
 	MonitoringScheduleSortKey_Status       MonitoringScheduleSortKey = "Status"
+)
+
+type MonitoringType string
+
+const (
+	MonitoringType_DataQuality         MonitoringType = "DataQuality"
+	MonitoringType_ModelQuality        MonitoringType = "ModelQuality"
+	MonitoringType_ModelBias           MonitoringType = "ModelBias"
+	MonitoringType_ModelExplainability MonitoringType = "ModelExplainability"
 )
 
 type NotebookInstanceAcceleratorType string
@@ -647,6 +922,14 @@ const (
 	ObjectiveStatus_Failed    ObjectiveStatus = "Failed"
 )
 
+type OfflineStoreStatusValue string
+
+const (
+	OfflineStoreStatusValue_Active   OfflineStoreStatusValue = "Active"
+	OfflineStoreStatusValue_Blocked  OfflineStoreStatusValue = "Blocked"
+	OfflineStoreStatusValue_Disabled OfflineStoreStatusValue = "Disabled"
+)
+
 type Operator string
 
 const (
@@ -676,6 +959,22 @@ const (
 	ParameterType_Continuous  ParameterType = "Continuous"
 	ParameterType_Categorical ParameterType = "Categorical"
 	ParameterType_FreeText    ParameterType = "FreeText"
+)
+
+type PipelineExecutionStatus string
+
+const (
+	PipelineExecutionStatus_Executing PipelineExecutionStatus = "Executing"
+	PipelineExecutionStatus_Stopping  PipelineExecutionStatus = "Stopping"
+	PipelineExecutionStatus_Stopped   PipelineExecutionStatus = "Stopped"
+	PipelineExecutionStatus_Failed    PipelineExecutionStatus = "Failed"
+	PipelineExecutionStatus_Succeeded PipelineExecutionStatus = "Succeeded"
+)
+
+type PipelineStatus string
+
+const (
+	PipelineStatus_Active PipelineStatus = "Active"
 )
 
 type ProblemType string
@@ -856,11 +1155,61 @@ const (
 	ProductionVariantInstanceType_ml_inf1_24xlarge ProductionVariantInstanceType = "ml.inf1.24xlarge"
 )
 
+type ProfilingStatus string
+
+const (
+	ProfilingStatus_Enabled  ProfilingStatus = "Enabled"
+	ProfilingStatus_Disabled ProfilingStatus = "Disabled"
+)
+
+type ProjectSortBy string
+
+const (
+	ProjectSortBy_Name         ProjectSortBy = "Name"
+	ProjectSortBy_CreationTime ProjectSortBy = "CreationTime"
+)
+
+type ProjectSortOrder string
+
+const (
+	ProjectSortOrder_Ascending  ProjectSortOrder = "Ascending"
+	ProjectSortOrder_Descending ProjectSortOrder = "Descending"
+)
+
+type ProjectStatus string
+
+const (
+	ProjectStatus_Pending          ProjectStatus = "Pending"
+	ProjectStatus_CreateInProgress ProjectStatus = "CreateInProgress"
+	ProjectStatus_CreateCompleted  ProjectStatus = "CreateCompleted"
+	ProjectStatus_CreateFailed     ProjectStatus = "CreateFailed"
+	ProjectStatus_DeleteInProgress ProjectStatus = "DeleteInProgress"
+	ProjectStatus_DeleteFailed     ProjectStatus = "DeleteFailed"
+	ProjectStatus_DeleteCompleted  ProjectStatus = "DeleteCompleted"
+)
+
 type RecordWrapper string
 
 const (
 	RecordWrapper_None     RecordWrapper = "None"
 	RecordWrapper_RecordIO RecordWrapper = "RecordIO"
+)
+
+type RedshiftResultCompressionType string
+
+const (
+	RedshiftResultCompressionType_None   RedshiftResultCompressionType = "None"
+	RedshiftResultCompressionType_GZIP   RedshiftResultCompressionType = "GZIP"
+	RedshiftResultCompressionType_BZIP2  RedshiftResultCompressionType = "BZIP2"
+	RedshiftResultCompressionType_ZSTD   RedshiftResultCompressionType = "ZSTD"
+	RedshiftResultCompressionType_SNAPPY RedshiftResultCompressionType = "SNAPPY"
+)
+
+type RedshiftResultFormat string
+
+const (
+	RedshiftResultFormat_PARQUET RedshiftResultFormat = "PARQUET"
+	RedshiftResultFormat_CSV     RedshiftResultFormat = "CSV"
 )
 
 type RepositoryAccessMode string
@@ -877,6 +1226,12 @@ const (
 	ResourceType_Experiment               ResourceType = "Experiment"
 	ResourceType_ExperimentTrial          ResourceType = "ExperimentTrial"
 	ResourceType_ExperimentTrialComponent ResourceType = "ExperimentTrialComponent"
+	ResourceType_Endpoint                 ResourceType = "Endpoint"
+	ResourceType_ModelPackage             ResourceType = "ModelPackage"
+	ResourceType_ModelPackageGroup        ResourceType = "ModelPackageGroup"
+	ResourceType_Pipeline                 ResourceType = "Pipeline"
+	ResourceType_PipelineExecution        ResourceType = "PipelineExecution"
+	ResourceType_FeatureGroup             ResourceType = "FeatureGroup"
 )
 
 type RetentionType string
@@ -919,6 +1274,13 @@ const (
 	S3DataType_AugmentedManifestFile S3DataType = "AugmentedManifestFile"
 )
 
+type SagemakerServicecatalogStatus string
+
+const (
+	SagemakerServicecatalogStatus_Enabled  SagemakerServicecatalogStatus = "Enabled"
+	SagemakerServicecatalogStatus_Disabled SagemakerServicecatalogStatus = "Disabled"
+)
+
 type ScheduleStatus string
 
 const (
@@ -952,6 +1314,30 @@ const (
 	SecondaryStatus_Failed                   SecondaryStatus = "Failed"
 	SecondaryStatus_Interrupted              SecondaryStatus = "Interrupted"
 	SecondaryStatus_MaxWaitTimeExceeded      SecondaryStatus = "MaxWaitTimeExceeded"
+	SecondaryStatus_Updating                 SecondaryStatus = "Updating"
+)
+
+type SortActionsBy string
+
+const (
+	SortActionsBy_Name         SortActionsBy = "Name"
+	SortActionsBy_CreationTime SortActionsBy = "CreationTime"
+)
+
+type SortArtifactsBy string
+
+const (
+	SortArtifactsBy_CreationTime SortArtifactsBy = "CreationTime"
+)
+
+type SortAssociationsBy string
+
+const (
+	SortAssociationsBy_SourceArn       SortAssociationsBy = "SourceArn"
+	SortAssociationsBy_DestinationArn  SortAssociationsBy = "DestinationArn"
+	SortAssociationsBy_SourceType      SortAssociationsBy = "SourceType"
+	SortAssociationsBy_DestinationType SortAssociationsBy = "DestinationType"
+	SortAssociationsBy_CreationTime    SortAssociationsBy = "CreationTime"
 )
 
 type SortBy string
@@ -960,6 +1346,13 @@ const (
 	SortBy_Name         SortBy = "Name"
 	SortBy_CreationTime SortBy = "CreationTime"
 	SortBy_Status       SortBy = "Status"
+)
+
+type SortContextsBy string
+
+const (
+	SortContextsBy_Name         SortContextsBy = "Name"
+	SortContextsBy_CreationTime SortContextsBy = "CreationTime"
 )
 
 type SortExperimentsBy string
@@ -974,6 +1367,20 @@ type SortOrder string
 const (
 	SortOrder_Ascending  SortOrder = "Ascending"
 	SortOrder_Descending SortOrder = "Descending"
+)
+
+type SortPipelineExecutionsBy string
+
+const (
+	SortPipelineExecutionsBy_CreationTime         SortPipelineExecutionsBy = "CreationTime"
+	SortPipelineExecutionsBy_PipelineExecutionArn SortPipelineExecutionsBy = "PipelineExecutionArn"
+)
+
+type SortPipelinesBy string
+
+const (
+	SortPipelinesBy_Name         SortPipelinesBy = "Name"
+	SortPipelinesBy_CreationTime SortPipelinesBy = "CreationTime"
 )
 
 type SortTrialComponentsBy string
@@ -999,35 +1406,48 @@ const (
 	SplitType_TFRecord SplitType = "TFRecord"
 )
 
+type StepStatus string
+
+const (
+	StepStatus_Starting  StepStatus = "Starting"
+	StepStatus_Executing StepStatus = "Executing"
+	StepStatus_Stopping  StepStatus = "Stopping"
+	StepStatus_Stopped   StepStatus = "Stopped"
+	StepStatus_Failed    StepStatus = "Failed"
+	StepStatus_Succeeded StepStatus = "Succeeded"
+)
+
 type TargetDevice string
 
 const (
-	TargetDevice_lambda        TargetDevice = "lambda"
-	TargetDevice_ml_m4         TargetDevice = "ml_m4"
-	TargetDevice_ml_m5         TargetDevice = "ml_m5"
-	TargetDevice_ml_c4         TargetDevice = "ml_c4"
-	TargetDevice_ml_c5         TargetDevice = "ml_c5"
-	TargetDevice_ml_p2         TargetDevice = "ml_p2"
-	TargetDevice_ml_p3         TargetDevice = "ml_p3"
-	TargetDevice_ml_g4dn       TargetDevice = "ml_g4dn"
-	TargetDevice_ml_inf1       TargetDevice = "ml_inf1"
-	TargetDevice_jetson_tx1    TargetDevice = "jetson_tx1"
-	TargetDevice_jetson_tx2    TargetDevice = "jetson_tx2"
-	TargetDevice_jetson_nano   TargetDevice = "jetson_nano"
-	TargetDevice_jetson_xavier TargetDevice = "jetson_xavier"
-	TargetDevice_rasp3b        TargetDevice = "rasp3b"
-	TargetDevice_imx8qm        TargetDevice = "imx8qm"
-	TargetDevice_deeplens      TargetDevice = "deeplens"
-	TargetDevice_rk3399        TargetDevice = "rk3399"
-	TargetDevice_rk3288        TargetDevice = "rk3288"
-	TargetDevice_aisage        TargetDevice = "aisage"
-	TargetDevice_sbe_c         TargetDevice = "sbe_c"
-	TargetDevice_qcs605        TargetDevice = "qcs605"
-	TargetDevice_qcs603        TargetDevice = "qcs603"
-	TargetDevice_sitara_am57x  TargetDevice = "sitara_am57x"
-	TargetDevice_amba_cv22     TargetDevice = "amba_cv22"
-	TargetDevice_x86_win32     TargetDevice = "x86_win32"
-	TargetDevice_x86_win64     TargetDevice = "x86_win64"
+	TargetDevice_lambda         TargetDevice = "lambda"
+	TargetDevice_ml_m4          TargetDevice = "ml_m4"
+	TargetDevice_ml_m5          TargetDevice = "ml_m5"
+	TargetDevice_ml_c4          TargetDevice = "ml_c4"
+	TargetDevice_ml_c5          TargetDevice = "ml_c5"
+	TargetDevice_ml_p2          TargetDevice = "ml_p2"
+	TargetDevice_ml_p3          TargetDevice = "ml_p3"
+	TargetDevice_ml_g4dn        TargetDevice = "ml_g4dn"
+	TargetDevice_ml_inf1        TargetDevice = "ml_inf1"
+	TargetDevice_jetson_tx1     TargetDevice = "jetson_tx1"
+	TargetDevice_jetson_tx2     TargetDevice = "jetson_tx2"
+	TargetDevice_jetson_nano    TargetDevice = "jetson_nano"
+	TargetDevice_jetson_xavier  TargetDevice = "jetson_xavier"
+	TargetDevice_rasp3b         TargetDevice = "rasp3b"
+	TargetDevice_imx8qm         TargetDevice = "imx8qm"
+	TargetDevice_deeplens       TargetDevice = "deeplens"
+	TargetDevice_rk3399         TargetDevice = "rk3399"
+	TargetDevice_rk3288         TargetDevice = "rk3288"
+	TargetDevice_aisage         TargetDevice = "aisage"
+	TargetDevice_sbe_c          TargetDevice = "sbe_c"
+	TargetDevice_qcs605         TargetDevice = "qcs605"
+	TargetDevice_qcs603         TargetDevice = "qcs603"
+	TargetDevice_sitara_am57x   TargetDevice = "sitara_am57x"
+	TargetDevice_amba_cv22      TargetDevice = "amba_cv22"
+	TargetDevice_x86_win32      TargetDevice = "x86_win32"
+	TargetDevice_x86_win64      TargetDevice = "x86_win64"
+	TargetDevice_coreml         TargetDevice = "coreml"
+	TargetDevice_jacinto_tda4vm TargetDevice = "jacinto_tda4vm"
 )
 
 type TargetPlatformAccelerator string
@@ -1053,6 +1473,13 @@ type TargetPlatformOs string
 const (
 	TargetPlatformOs_ANDROID TargetPlatformOs = "ANDROID"
 	TargetPlatformOs_LINUX   TargetPlatformOs = "LINUX"
+)
+
+type TrafficRoutingConfigType string
+
+const (
+	TrafficRoutingConfigType_ALL_AT_ONCE TrafficRoutingConfigType = "ALL_AT_ONCE"
+	TrafficRoutingConfigType_CANARY      TrafficRoutingConfigType = "CANARY"
 )
 
 type TrainingInputMode string
@@ -1093,6 +1520,7 @@ const (
 	TrainingInstanceType_ml_p3_8xlarge    TrainingInstanceType = "ml.p3.8xlarge"
 	TrainingInstanceType_ml_p3_16xlarge   TrainingInstanceType = "ml.p3.16xlarge"
 	TrainingInstanceType_ml_p3dn_24xlarge TrainingInstanceType = "ml.p3dn.24xlarge"
+	TrainingInstanceType_ml_p4d_24xlarge  TrainingInstanceType = "ml.p4d.24xlarge"
 	TrainingInstanceType_ml_c5_xlarge     TrainingInstanceType = "ml.c5.xlarge"
 	TrainingInstanceType_ml_c5_2xlarge    TrainingInstanceType = "ml.c5.2xlarge"
 	TrainingInstanceType_ml_c5_4xlarge    TrainingInstanceType = "ml.c5.4xlarge"
@@ -1192,10 +1620,13 @@ const (
 type UserProfileStatus string
 
 const (
-	UserProfileStatus_Deleting  UserProfileStatus = "Deleting"
-	UserProfileStatus_Failed    UserProfileStatus = "Failed"
-	UserProfileStatus_InService UserProfileStatus = "InService"
-	UserProfileStatus_Pending   UserProfileStatus = "Pending"
+	UserProfileStatus_Deleting      UserProfileStatus = "Deleting"
+	UserProfileStatus_Failed        UserProfileStatus = "Failed"
+	UserProfileStatus_InService     UserProfileStatus = "InService"
+	UserProfileStatus_Pending       UserProfileStatus = "Pending"
+	UserProfileStatus_Updating      UserProfileStatus = "Updating"
+	UserProfileStatus_Update_Failed UserProfileStatus = "Update_Failed"
+	UserProfileStatus_Delete_Failed UserProfileStatus = "Delete_Failed"
 )
 
 type VariantPropertyType string
