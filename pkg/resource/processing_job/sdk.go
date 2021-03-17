@@ -157,30 +157,105 @@ func (rm *resourceManager) sdkFind(
 		f11 := []*svcapitypes.ProcessingInput{}
 		for _, f11iter := range resp.ProcessingInputs {
 			f11elem := &svcapitypes.ProcessingInput{}
+			if f11iter.AppManaged != nil {
+				f11elem.AppManaged = f11iter.AppManaged
+			}
+			if f11iter.DatasetDefinition != nil {
+				f11elemf1 := &svcapitypes.DatasetDefinition{}
+				if f11iter.DatasetDefinition.AthenaDatasetDefinition != nil {
+					f11elemf1f0 := &svcapitypes.AthenaDatasetDefinition{}
+					if f11iter.DatasetDefinition.AthenaDatasetDefinition.Catalog != nil {
+						f11elemf1f0.Catalog = f11iter.DatasetDefinition.AthenaDatasetDefinition.Catalog
+					}
+					if f11iter.DatasetDefinition.AthenaDatasetDefinition.Database != nil {
+						f11elemf1f0.Database = f11iter.DatasetDefinition.AthenaDatasetDefinition.Database
+					}
+					if f11iter.DatasetDefinition.AthenaDatasetDefinition.KmsKeyId != nil {
+						f11elemf1f0.KMSKeyID = f11iter.DatasetDefinition.AthenaDatasetDefinition.KmsKeyId
+					}
+					if f11iter.DatasetDefinition.AthenaDatasetDefinition.OutputCompression != nil {
+						f11elemf1f0.OutputCompression = f11iter.DatasetDefinition.AthenaDatasetDefinition.OutputCompression
+					}
+					if f11iter.DatasetDefinition.AthenaDatasetDefinition.OutputFormat != nil {
+						f11elemf1f0.OutputFormat = f11iter.DatasetDefinition.AthenaDatasetDefinition.OutputFormat
+					}
+					if f11iter.DatasetDefinition.AthenaDatasetDefinition.OutputS3Uri != nil {
+						f11elemf1f0.OutputS3URI = f11iter.DatasetDefinition.AthenaDatasetDefinition.OutputS3Uri
+					}
+					if f11iter.DatasetDefinition.AthenaDatasetDefinition.QueryString != nil {
+						f11elemf1f0.QueryString = f11iter.DatasetDefinition.AthenaDatasetDefinition.QueryString
+					}
+					if f11iter.DatasetDefinition.AthenaDatasetDefinition.WorkGroup != nil {
+						f11elemf1f0.WorkGroup = f11iter.DatasetDefinition.AthenaDatasetDefinition.WorkGroup
+					}
+					f11elemf1.AthenaDatasetDefinition = f11elemf1f0
+				}
+				if f11iter.DatasetDefinition.DataDistributionType != nil {
+					f11elemf1.DataDistributionType = f11iter.DatasetDefinition.DataDistributionType
+				}
+				if f11iter.DatasetDefinition.InputMode != nil {
+					f11elemf1.InputMode = f11iter.DatasetDefinition.InputMode
+				}
+				if f11iter.DatasetDefinition.LocalPath != nil {
+					f11elemf1.LocalPath = f11iter.DatasetDefinition.LocalPath
+				}
+				if f11iter.DatasetDefinition.RedshiftDatasetDefinition != nil {
+					f11elemf1f4 := &svcapitypes.RedshiftDatasetDefinition{}
+					if f11iter.DatasetDefinition.RedshiftDatasetDefinition.ClusterId != nil {
+						f11elemf1f4.ClusterID = f11iter.DatasetDefinition.RedshiftDatasetDefinition.ClusterId
+					}
+					if f11iter.DatasetDefinition.RedshiftDatasetDefinition.ClusterRoleArn != nil {
+						f11elemf1f4.ClusterRoleARN = f11iter.DatasetDefinition.RedshiftDatasetDefinition.ClusterRoleArn
+					}
+					if f11iter.DatasetDefinition.RedshiftDatasetDefinition.Database != nil {
+						f11elemf1f4.Database = f11iter.DatasetDefinition.RedshiftDatasetDefinition.Database
+					}
+					if f11iter.DatasetDefinition.RedshiftDatasetDefinition.DbUser != nil {
+						f11elemf1f4.DBUser = f11iter.DatasetDefinition.RedshiftDatasetDefinition.DbUser
+					}
+					if f11iter.DatasetDefinition.RedshiftDatasetDefinition.KmsKeyId != nil {
+						f11elemf1f4.KMSKeyID = f11iter.DatasetDefinition.RedshiftDatasetDefinition.KmsKeyId
+					}
+					if f11iter.DatasetDefinition.RedshiftDatasetDefinition.OutputCompression != nil {
+						f11elemf1f4.OutputCompression = f11iter.DatasetDefinition.RedshiftDatasetDefinition.OutputCompression
+					}
+					if f11iter.DatasetDefinition.RedshiftDatasetDefinition.OutputFormat != nil {
+						f11elemf1f4.OutputFormat = f11iter.DatasetDefinition.RedshiftDatasetDefinition.OutputFormat
+					}
+					if f11iter.DatasetDefinition.RedshiftDatasetDefinition.OutputS3Uri != nil {
+						f11elemf1f4.OutputS3URI = f11iter.DatasetDefinition.RedshiftDatasetDefinition.OutputS3Uri
+					}
+					if f11iter.DatasetDefinition.RedshiftDatasetDefinition.QueryString != nil {
+						f11elemf1f4.QueryString = f11iter.DatasetDefinition.RedshiftDatasetDefinition.QueryString
+					}
+					f11elemf1.RedshiftDatasetDefinition = f11elemf1f4
+				}
+				f11elem.DatasetDefinition = f11elemf1
+			}
 			if f11iter.InputName != nil {
 				f11elem.InputName = f11iter.InputName
 			}
 			if f11iter.S3Input != nil {
-				f11elemf1 := &svcapitypes.ProcessingS3Input{}
+				f11elemf3 := &svcapitypes.ProcessingS3Input{}
 				if f11iter.S3Input.LocalPath != nil {
-					f11elemf1.LocalPath = f11iter.S3Input.LocalPath
+					f11elemf3.LocalPath = f11iter.S3Input.LocalPath
 				}
 				if f11iter.S3Input.S3CompressionType != nil {
-					f11elemf1.S3CompressionType = f11iter.S3Input.S3CompressionType
+					f11elemf3.S3CompressionType = f11iter.S3Input.S3CompressionType
 				}
 				if f11iter.S3Input.S3DataDistributionType != nil {
-					f11elemf1.S3DataDistributionType = f11iter.S3Input.S3DataDistributionType
+					f11elemf3.S3DataDistributionType = f11iter.S3Input.S3DataDistributionType
 				}
 				if f11iter.S3Input.S3DataType != nil {
-					f11elemf1.S3DataType = f11iter.S3Input.S3DataType
+					f11elemf3.S3DataType = f11iter.S3Input.S3DataType
 				}
 				if f11iter.S3Input.S3InputMode != nil {
-					f11elemf1.S3InputMode = f11iter.S3Input.S3InputMode
+					f11elemf3.S3InputMode = f11iter.S3Input.S3InputMode
 				}
 				if f11iter.S3Input.S3Uri != nil {
-					f11elemf1.S3URI = f11iter.S3Input.S3Uri
+					f11elemf3.S3URI = f11iter.S3Input.S3Uri
 				}
-				f11elem.S3Input = f11elemf1
+				f11elem.S3Input = f11elemf3
 			}
 			f11 = append(f11, f11elem)
 		}
@@ -208,21 +283,31 @@ func (rm *resourceManager) sdkFind(
 			f15f1 := []*svcapitypes.ProcessingOutput{}
 			for _, f15f1iter := range resp.ProcessingOutputConfig.Outputs {
 				f15f1elem := &svcapitypes.ProcessingOutput{}
+				if f15f1iter.AppManaged != nil {
+					f15f1elem.AppManaged = f15f1iter.AppManaged
+				}
+				if f15f1iter.FeatureStoreOutput != nil {
+					f15f1elemf1 := &svcapitypes.ProcessingFeatureStoreOutput{}
+					if f15f1iter.FeatureStoreOutput.FeatureGroupName != nil {
+						f15f1elemf1.FeatureGroupName = f15f1iter.FeatureStoreOutput.FeatureGroupName
+					}
+					f15f1elem.FeatureStoreOutput = f15f1elemf1
+				}
 				if f15f1iter.OutputName != nil {
 					f15f1elem.OutputName = f15f1iter.OutputName
 				}
 				if f15f1iter.S3Output != nil {
-					f15f1elemf1 := &svcapitypes.ProcessingS3Output{}
+					f15f1elemf3 := &svcapitypes.ProcessingS3Output{}
 					if f15f1iter.S3Output.LocalPath != nil {
-						f15f1elemf1.LocalPath = f15f1iter.S3Output.LocalPath
+						f15f1elemf3.LocalPath = f15f1iter.S3Output.LocalPath
 					}
 					if f15f1iter.S3Output.S3UploadMode != nil {
-						f15f1elemf1.S3UploadMode = f15f1iter.S3Output.S3UploadMode
+						f15f1elemf3.S3UploadMode = f15f1iter.S3Output.S3UploadMode
 					}
 					if f15f1iter.S3Output.S3Uri != nil {
-						f15f1elemf1.S3URI = f15f1iter.S3Output.S3Uri
+						f15f1elemf3.S3URI = f15f1iter.S3Output.S3Uri
 					}
-					f15f1elem.S3Output = f15f1elemf1
+					f15f1elem.S3Output = f15f1elemf3
 				}
 				f15f1 = append(f15f1, f15f1elem)
 			}
@@ -414,30 +499,105 @@ func (rm *resourceManager) newCreateRequestPayload(
 		f4 := []*svcsdk.ProcessingInput{}
 		for _, f4iter := range r.ko.Spec.ProcessingInputs {
 			f4elem := &svcsdk.ProcessingInput{}
+			if f4iter.AppManaged != nil {
+				f4elem.SetAppManaged(*f4iter.AppManaged)
+			}
+			if f4iter.DatasetDefinition != nil {
+				f4elemf1 := &svcsdk.DatasetDefinition{}
+				if f4iter.DatasetDefinition.AthenaDatasetDefinition != nil {
+					f4elemf1f0 := &svcsdk.AthenaDatasetDefinition{}
+					if f4iter.DatasetDefinition.AthenaDatasetDefinition.Catalog != nil {
+						f4elemf1f0.SetCatalog(*f4iter.DatasetDefinition.AthenaDatasetDefinition.Catalog)
+					}
+					if f4iter.DatasetDefinition.AthenaDatasetDefinition.Database != nil {
+						f4elemf1f0.SetDatabase(*f4iter.DatasetDefinition.AthenaDatasetDefinition.Database)
+					}
+					if f4iter.DatasetDefinition.AthenaDatasetDefinition.KMSKeyID != nil {
+						f4elemf1f0.SetKmsKeyId(*f4iter.DatasetDefinition.AthenaDatasetDefinition.KMSKeyID)
+					}
+					if f4iter.DatasetDefinition.AthenaDatasetDefinition.OutputCompression != nil {
+						f4elemf1f0.SetOutputCompression(*f4iter.DatasetDefinition.AthenaDatasetDefinition.OutputCompression)
+					}
+					if f4iter.DatasetDefinition.AthenaDatasetDefinition.OutputFormat != nil {
+						f4elemf1f0.SetOutputFormat(*f4iter.DatasetDefinition.AthenaDatasetDefinition.OutputFormat)
+					}
+					if f4iter.DatasetDefinition.AthenaDatasetDefinition.OutputS3URI != nil {
+						f4elemf1f0.SetOutputS3Uri(*f4iter.DatasetDefinition.AthenaDatasetDefinition.OutputS3URI)
+					}
+					if f4iter.DatasetDefinition.AthenaDatasetDefinition.QueryString != nil {
+						f4elemf1f0.SetQueryString(*f4iter.DatasetDefinition.AthenaDatasetDefinition.QueryString)
+					}
+					if f4iter.DatasetDefinition.AthenaDatasetDefinition.WorkGroup != nil {
+						f4elemf1f0.SetWorkGroup(*f4iter.DatasetDefinition.AthenaDatasetDefinition.WorkGroup)
+					}
+					f4elemf1.SetAthenaDatasetDefinition(f4elemf1f0)
+				}
+				if f4iter.DatasetDefinition.DataDistributionType != nil {
+					f4elemf1.SetDataDistributionType(*f4iter.DatasetDefinition.DataDistributionType)
+				}
+				if f4iter.DatasetDefinition.InputMode != nil {
+					f4elemf1.SetInputMode(*f4iter.DatasetDefinition.InputMode)
+				}
+				if f4iter.DatasetDefinition.LocalPath != nil {
+					f4elemf1.SetLocalPath(*f4iter.DatasetDefinition.LocalPath)
+				}
+				if f4iter.DatasetDefinition.RedshiftDatasetDefinition != nil {
+					f4elemf1f4 := &svcsdk.RedshiftDatasetDefinition{}
+					if f4iter.DatasetDefinition.RedshiftDatasetDefinition.ClusterID != nil {
+						f4elemf1f4.SetClusterId(*f4iter.DatasetDefinition.RedshiftDatasetDefinition.ClusterID)
+					}
+					if f4iter.DatasetDefinition.RedshiftDatasetDefinition.ClusterRoleARN != nil {
+						f4elemf1f4.SetClusterRoleArn(*f4iter.DatasetDefinition.RedshiftDatasetDefinition.ClusterRoleARN)
+					}
+					if f4iter.DatasetDefinition.RedshiftDatasetDefinition.Database != nil {
+						f4elemf1f4.SetDatabase(*f4iter.DatasetDefinition.RedshiftDatasetDefinition.Database)
+					}
+					if f4iter.DatasetDefinition.RedshiftDatasetDefinition.DBUser != nil {
+						f4elemf1f4.SetDbUser(*f4iter.DatasetDefinition.RedshiftDatasetDefinition.DBUser)
+					}
+					if f4iter.DatasetDefinition.RedshiftDatasetDefinition.KMSKeyID != nil {
+						f4elemf1f4.SetKmsKeyId(*f4iter.DatasetDefinition.RedshiftDatasetDefinition.KMSKeyID)
+					}
+					if f4iter.DatasetDefinition.RedshiftDatasetDefinition.OutputCompression != nil {
+						f4elemf1f4.SetOutputCompression(*f4iter.DatasetDefinition.RedshiftDatasetDefinition.OutputCompression)
+					}
+					if f4iter.DatasetDefinition.RedshiftDatasetDefinition.OutputFormat != nil {
+						f4elemf1f4.SetOutputFormat(*f4iter.DatasetDefinition.RedshiftDatasetDefinition.OutputFormat)
+					}
+					if f4iter.DatasetDefinition.RedshiftDatasetDefinition.OutputS3URI != nil {
+						f4elemf1f4.SetOutputS3Uri(*f4iter.DatasetDefinition.RedshiftDatasetDefinition.OutputS3URI)
+					}
+					if f4iter.DatasetDefinition.RedshiftDatasetDefinition.QueryString != nil {
+						f4elemf1f4.SetQueryString(*f4iter.DatasetDefinition.RedshiftDatasetDefinition.QueryString)
+					}
+					f4elemf1.SetRedshiftDatasetDefinition(f4elemf1f4)
+				}
+				f4elem.SetDatasetDefinition(f4elemf1)
+			}
 			if f4iter.InputName != nil {
 				f4elem.SetInputName(*f4iter.InputName)
 			}
 			if f4iter.S3Input != nil {
-				f4elemf1 := &svcsdk.ProcessingS3Input{}
+				f4elemf3 := &svcsdk.ProcessingS3Input{}
 				if f4iter.S3Input.LocalPath != nil {
-					f4elemf1.SetLocalPath(*f4iter.S3Input.LocalPath)
+					f4elemf3.SetLocalPath(*f4iter.S3Input.LocalPath)
 				}
 				if f4iter.S3Input.S3CompressionType != nil {
-					f4elemf1.SetS3CompressionType(*f4iter.S3Input.S3CompressionType)
+					f4elemf3.SetS3CompressionType(*f4iter.S3Input.S3CompressionType)
 				}
 				if f4iter.S3Input.S3DataDistributionType != nil {
-					f4elemf1.SetS3DataDistributionType(*f4iter.S3Input.S3DataDistributionType)
+					f4elemf3.SetS3DataDistributionType(*f4iter.S3Input.S3DataDistributionType)
 				}
 				if f4iter.S3Input.S3DataType != nil {
-					f4elemf1.SetS3DataType(*f4iter.S3Input.S3DataType)
+					f4elemf3.SetS3DataType(*f4iter.S3Input.S3DataType)
 				}
 				if f4iter.S3Input.S3InputMode != nil {
-					f4elemf1.SetS3InputMode(*f4iter.S3Input.S3InputMode)
+					f4elemf3.SetS3InputMode(*f4iter.S3Input.S3InputMode)
 				}
 				if f4iter.S3Input.S3URI != nil {
-					f4elemf1.SetS3Uri(*f4iter.S3Input.S3URI)
+					f4elemf3.SetS3Uri(*f4iter.S3Input.S3URI)
 				}
-				f4elem.SetS3Input(f4elemf1)
+				f4elem.SetS3Input(f4elemf3)
 			}
 			f4 = append(f4, f4elem)
 		}
@@ -455,21 +615,31 @@ func (rm *resourceManager) newCreateRequestPayload(
 			f6f1 := []*svcsdk.ProcessingOutput{}
 			for _, f6f1iter := range r.ko.Spec.ProcessingOutputConfig.Outputs {
 				f6f1elem := &svcsdk.ProcessingOutput{}
+				if f6f1iter.AppManaged != nil {
+					f6f1elem.SetAppManaged(*f6f1iter.AppManaged)
+				}
+				if f6f1iter.FeatureStoreOutput != nil {
+					f6f1elemf1 := &svcsdk.ProcessingFeatureStoreOutput{}
+					if f6f1iter.FeatureStoreOutput.FeatureGroupName != nil {
+						f6f1elemf1.SetFeatureGroupName(*f6f1iter.FeatureStoreOutput.FeatureGroupName)
+					}
+					f6f1elem.SetFeatureStoreOutput(f6f1elemf1)
+				}
 				if f6f1iter.OutputName != nil {
 					f6f1elem.SetOutputName(*f6f1iter.OutputName)
 				}
 				if f6f1iter.S3Output != nil {
-					f6f1elemf1 := &svcsdk.ProcessingS3Output{}
+					f6f1elemf3 := &svcsdk.ProcessingS3Output{}
 					if f6f1iter.S3Output.LocalPath != nil {
-						f6f1elemf1.SetLocalPath(*f6f1iter.S3Output.LocalPath)
+						f6f1elemf3.SetLocalPath(*f6f1iter.S3Output.LocalPath)
 					}
 					if f6f1iter.S3Output.S3UploadMode != nil {
-						f6f1elemf1.SetS3UploadMode(*f6f1iter.S3Output.S3UploadMode)
+						f6f1elemf3.SetS3UploadMode(*f6f1iter.S3Output.S3UploadMode)
 					}
 					if f6f1iter.S3Output.S3URI != nil {
-						f6f1elemf1.SetS3Uri(*f6f1iter.S3Output.S3URI)
+						f6f1elemf3.SetS3Uri(*f6f1iter.S3Output.S3URI)
 					}
-					f6f1elem.SetS3Output(f6f1elemf1)
+					f6f1elem.SetS3Output(f6f1elemf3)
 				}
 				f6f1 = append(f6f1, f6f1elem)
 			}

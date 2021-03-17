@@ -106,6 +106,13 @@ func (rm *resourceManager) sdkFind(
 			if f0iter.ModelPackageName != nil {
 				f0elem.ModelPackageName = f0iter.ModelPackageName
 			}
+			if f0iter.MultiModelConfig != nil {
+				f0elemf7 := &svcapitypes.MultiModelConfig{}
+				if f0iter.MultiModelConfig.ModelCacheSetting != nil {
+					f0elemf7.ModelCacheSetting = f0iter.MultiModelConfig.ModelCacheSetting
+				}
+				f0elem.MultiModelConfig = f0elemf7
+			}
 			f0 = append(f0, f0elem)
 		}
 		ko.Spec.Containers = f0
@@ -115,6 +122,13 @@ func (rm *resourceManager) sdkFind(
 	}
 	if resp.ExecutionRoleArn != nil {
 		ko.Spec.ExecutionRoleARN = resp.ExecutionRoleArn
+	}
+	if resp.InferenceExecutionConfig != nil {
+		f4 := &svcapitypes.InferenceExecutionConfig{}
+		if resp.InferenceExecutionConfig.Mode != nil {
+			f4.Mode = resp.InferenceExecutionConfig.Mode
+		}
+		ko.Spec.InferenceExecutionConfig = f4
 	}
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
@@ -127,61 +141,68 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.ModelName = resp.ModelName
 	}
 	if resp.PrimaryContainer != nil {
-		f6 := &svcapitypes.ContainerDefinition{}
+		f7 := &svcapitypes.ContainerDefinition{}
 		if resp.PrimaryContainer.ContainerHostname != nil {
-			f6.ContainerHostname = resp.PrimaryContainer.ContainerHostname
+			f7.ContainerHostname = resp.PrimaryContainer.ContainerHostname
 		}
 		if resp.PrimaryContainer.Environment != nil {
-			f6f1 := map[string]*string{}
-			for f6f1key, f6f1valiter := range resp.PrimaryContainer.Environment {
-				var f6f1val string
-				f6f1val = *f6f1valiter
-				f6f1[f6f1key] = &f6f1val
+			f7f1 := map[string]*string{}
+			for f7f1key, f7f1valiter := range resp.PrimaryContainer.Environment {
+				var f7f1val string
+				f7f1val = *f7f1valiter
+				f7f1[f7f1key] = &f7f1val
 			}
-			f6.Environment = f6f1
+			f7.Environment = f7f1
 		}
 		if resp.PrimaryContainer.Image != nil {
-			f6.Image = resp.PrimaryContainer.Image
+			f7.Image = resp.PrimaryContainer.Image
 		}
 		if resp.PrimaryContainer.ImageConfig != nil {
-			f6f3 := &svcapitypes.ImageConfig{}
+			f7f3 := &svcapitypes.ImageConfig{}
 			if resp.PrimaryContainer.ImageConfig.RepositoryAccessMode != nil {
-				f6f3.RepositoryAccessMode = resp.PrimaryContainer.ImageConfig.RepositoryAccessMode
+				f7f3.RepositoryAccessMode = resp.PrimaryContainer.ImageConfig.RepositoryAccessMode
 			}
-			f6.ImageConfig = f6f3
+			f7.ImageConfig = f7f3
 		}
 		if resp.PrimaryContainer.Mode != nil {
-			f6.Mode = resp.PrimaryContainer.Mode
+			f7.Mode = resp.PrimaryContainer.Mode
 		}
 		if resp.PrimaryContainer.ModelDataUrl != nil {
-			f6.ModelDataURL = resp.PrimaryContainer.ModelDataUrl
+			f7.ModelDataURL = resp.PrimaryContainer.ModelDataUrl
 		}
 		if resp.PrimaryContainer.ModelPackageName != nil {
-			f6.ModelPackageName = resp.PrimaryContainer.ModelPackageName
+			f7.ModelPackageName = resp.PrimaryContainer.ModelPackageName
 		}
-		ko.Spec.PrimaryContainer = f6
+		if resp.PrimaryContainer.MultiModelConfig != nil {
+			f7f7 := &svcapitypes.MultiModelConfig{}
+			if resp.PrimaryContainer.MultiModelConfig.ModelCacheSetting != nil {
+				f7f7.ModelCacheSetting = resp.PrimaryContainer.MultiModelConfig.ModelCacheSetting
+			}
+			f7.MultiModelConfig = f7f7
+		}
+		ko.Spec.PrimaryContainer = f7
 	}
 	if resp.VpcConfig != nil {
-		f7 := &svcapitypes.VPCConfig{}
+		f8 := &svcapitypes.VPCConfig{}
 		if resp.VpcConfig.SecurityGroupIds != nil {
-			f7f0 := []*string{}
-			for _, f7f0iter := range resp.VpcConfig.SecurityGroupIds {
-				var f7f0elem string
-				f7f0elem = *f7f0iter
-				f7f0 = append(f7f0, &f7f0elem)
+			f8f0 := []*string{}
+			for _, f8f0iter := range resp.VpcConfig.SecurityGroupIds {
+				var f8f0elem string
+				f8f0elem = *f8f0iter
+				f8f0 = append(f8f0, &f8f0elem)
 			}
-			f7.SecurityGroupIDs = f7f0
+			f8.SecurityGroupIDs = f8f0
 		}
 		if resp.VpcConfig.Subnets != nil {
-			f7f1 := []*string{}
-			for _, f7f1iter := range resp.VpcConfig.Subnets {
-				var f7f1elem string
-				f7f1elem = *f7f1iter
-				f7f1 = append(f7f1, &f7f1elem)
+			f8f1 := []*string{}
+			for _, f8f1iter := range resp.VpcConfig.Subnets {
+				var f8f1elem string
+				f8f1elem = *f8f1iter
+				f8f1 = append(f8f1, &f8f1elem)
 			}
-			f7.Subnets = f7f1
+			f8.Subnets = f8f1
 		}
-		ko.Spec.VPCConfig = f7
+		ko.Spec.VPCConfig = f8
 	}
 
 	rm.setStatusDefaults(ko)
@@ -289,6 +310,13 @@ func (rm *resourceManager) newCreateRequestPayload(
 			if f0iter.ModelPackageName != nil {
 				f0elem.SetModelPackageName(*f0iter.ModelPackageName)
 			}
+			if f0iter.MultiModelConfig != nil {
+				f0elemf7 := &svcsdk.MultiModelConfig{}
+				if f0iter.MultiModelConfig.ModelCacheSetting != nil {
+					f0elemf7.SetModelCacheSetting(*f0iter.MultiModelConfig.ModelCacheSetting)
+				}
+				f0elem.SetMultiModelConfig(f0elemf7)
+			}
 			f0 = append(f0, f0elem)
 		}
 		res.SetContainers(f0)
@@ -299,79 +327,93 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.ExecutionRoleARN != nil {
 		res.SetExecutionRoleArn(*r.ko.Spec.ExecutionRoleARN)
 	}
+	if r.ko.Spec.InferenceExecutionConfig != nil {
+		f3 := &svcsdk.InferenceExecutionConfig{}
+		if r.ko.Spec.InferenceExecutionConfig.Mode != nil {
+			f3.SetMode(*r.ko.Spec.InferenceExecutionConfig.Mode)
+		}
+		res.SetInferenceExecutionConfig(f3)
+	}
 	if r.ko.Spec.ModelName != nil {
 		res.SetModelName(*r.ko.Spec.ModelName)
 	}
 	if r.ko.Spec.PrimaryContainer != nil {
-		f4 := &svcsdk.ContainerDefinition{}
+		f5 := &svcsdk.ContainerDefinition{}
 		if r.ko.Spec.PrimaryContainer.ContainerHostname != nil {
-			f4.SetContainerHostname(*r.ko.Spec.PrimaryContainer.ContainerHostname)
+			f5.SetContainerHostname(*r.ko.Spec.PrimaryContainer.ContainerHostname)
 		}
 		if r.ko.Spec.PrimaryContainer.Environment != nil {
-			f4f1 := map[string]*string{}
-			for f4f1key, f4f1valiter := range r.ko.Spec.PrimaryContainer.Environment {
-				var f4f1val string
-				f4f1val = *f4f1valiter
-				f4f1[f4f1key] = &f4f1val
+			f5f1 := map[string]*string{}
+			for f5f1key, f5f1valiter := range r.ko.Spec.PrimaryContainer.Environment {
+				var f5f1val string
+				f5f1val = *f5f1valiter
+				f5f1[f5f1key] = &f5f1val
 			}
-			f4.SetEnvironment(f4f1)
+			f5.SetEnvironment(f5f1)
 		}
 		if r.ko.Spec.PrimaryContainer.Image != nil {
-			f4.SetImage(*r.ko.Spec.PrimaryContainer.Image)
+			f5.SetImage(*r.ko.Spec.PrimaryContainer.Image)
 		}
 		if r.ko.Spec.PrimaryContainer.ImageConfig != nil {
-			f4f3 := &svcsdk.ImageConfig{}
+			f5f3 := &svcsdk.ImageConfig{}
 			if r.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAccessMode != nil {
-				f4f3.SetRepositoryAccessMode(*r.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAccessMode)
+				f5f3.SetRepositoryAccessMode(*r.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAccessMode)
 			}
-			f4.SetImageConfig(f4f3)
+			f5.SetImageConfig(f5f3)
 		}
 		if r.ko.Spec.PrimaryContainer.Mode != nil {
-			f4.SetMode(*r.ko.Spec.PrimaryContainer.Mode)
+			f5.SetMode(*r.ko.Spec.PrimaryContainer.Mode)
 		}
 		if r.ko.Spec.PrimaryContainer.ModelDataURL != nil {
-			f4.SetModelDataUrl(*r.ko.Spec.PrimaryContainer.ModelDataURL)
+			f5.SetModelDataUrl(*r.ko.Spec.PrimaryContainer.ModelDataURL)
 		}
 		if r.ko.Spec.PrimaryContainer.ModelPackageName != nil {
-			f4.SetModelPackageName(*r.ko.Spec.PrimaryContainer.ModelPackageName)
+			f5.SetModelPackageName(*r.ko.Spec.PrimaryContainer.ModelPackageName)
 		}
-		res.SetPrimaryContainer(f4)
+		if r.ko.Spec.PrimaryContainer.MultiModelConfig != nil {
+			f5f7 := &svcsdk.MultiModelConfig{}
+			if r.ko.Spec.PrimaryContainer.MultiModelConfig.ModelCacheSetting != nil {
+				f5f7.SetModelCacheSetting(*r.ko.Spec.PrimaryContainer.MultiModelConfig.ModelCacheSetting)
+			}
+			f5.SetMultiModelConfig(f5f7)
+		}
+		res.SetPrimaryContainer(f5)
 	}
 	if r.ko.Spec.Tags != nil {
-		f5 := []*svcsdk.Tag{}
-		for _, f5iter := range r.ko.Spec.Tags {
-			f5elem := &svcsdk.Tag{}
-			if f5iter.Key != nil {
-				f5elem.SetKey(*f5iter.Key)
+		f6 := []*svcsdk.Tag{}
+		for _, f6iter := range r.ko.Spec.Tags {
+			f6elem := &svcsdk.Tag{}
+			if f6iter.Key != nil {
+				f6elem.SetKey(*f6iter.Key)
 			}
-			if f5iter.Value != nil {
-				f5elem.SetValue(*f5iter.Value)
+			if f6iter.Value != nil {
+				f6elem.SetValue(*f6iter.Value)
 			}
-			f5 = append(f5, f5elem)
+			f6 = append(f6, f6elem)
 		}
-		res.SetTags(f5)
+		res.SetTags(f6)
 	}
 	if r.ko.Spec.VPCConfig != nil {
-		f6 := &svcsdk.VpcConfig{}
+		f7 := &svcsdk.VpcConfig{}
 		if r.ko.Spec.VPCConfig.SecurityGroupIDs != nil {
-			f6f0 := []*string{}
-			for _, f6f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
-				var f6f0elem string
-				f6f0elem = *f6f0iter
-				f6f0 = append(f6f0, &f6f0elem)
+			f7f0 := []*string{}
+			for _, f7f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
+				var f7f0elem string
+				f7f0elem = *f7f0iter
+				f7f0 = append(f7f0, &f7f0elem)
 			}
-			f6.SetSecurityGroupIds(f6f0)
+			f7.SetSecurityGroupIds(f7f0)
 		}
 		if r.ko.Spec.VPCConfig.Subnets != nil {
-			f6f1 := []*string{}
-			for _, f6f1iter := range r.ko.Spec.VPCConfig.Subnets {
-				var f6f1elem string
-				f6f1elem = *f6f1iter
-				f6f1 = append(f6f1, &f6f1elem)
+			f7f1 := []*string{}
+			for _, f7f1iter := range r.ko.Spec.VPCConfig.Subnets {
+				var f7f1elem string
+				f7f1elem = *f7f1iter
+				f7f1 = append(f7f1, &f7f1elem)
 			}
-			f6.SetSubnets(f6f1)
+			f7.SetSubnets(f7f1)
 		}
-		res.SetVpcConfig(f6)
+		res.SetVpcConfig(f7)
 	}
 
 	return res, nil

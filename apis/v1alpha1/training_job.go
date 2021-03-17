@@ -34,7 +34,9 @@ type TrainingJobSpec struct {
 	HyperParameters                       map[string]*string        `json:"hyperParameters,omitempty"`
 	InputDataConfig                       []*Channel                `json:"inputDataConfig,omitempty"`
 	// +kubebuilder:validation:Required
-	OutputDataConfig *OutputDataConfig `json:"outputDataConfig"`
+	OutputDataConfig           *OutputDataConfig            `json:"outputDataConfig"`
+	ProfilerConfig             *ProfilerConfig              `json:"profilerConfig,omitempty"`
+	ProfilerRuleConfigurations []*ProfilerRuleConfiguration `json:"profilerRuleConfigurations,omitempty"`
 	// +kubebuilder:validation:Required
 	ResourceConfig *ResourceConfig `json:"resourceConfig"`
 	// +kubebuilder:validation:Required
