@@ -188,6 +188,40 @@ spec:
                   s3OutputPath:
                     type: string
                 type: object
+              profilerConfig:
+                properties:
+                  profilingIntervalInMilliseconds:
+                    format: int64
+                    type: integer
+                  profilingParameters:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  s3OutputPath:
+                    type: string
+                type: object
+              profilerRuleConfigurations:
+                items:
+                  properties:
+                    instanceType:
+                      type: string
+                    localPath:
+                      type: string
+                    ruleConfigurationName:
+                      type: string
+                    ruleEvaluatorImage:
+                      type: string
+                    ruleParameters:
+                      additionalProperties:
+                        type: string
+                      type: object
+                    s3OutputPath:
+                      type: string
+                    volumeSizeInGB:
+                      format: int64
+                      type: integer
+                  type: object
+                type: array
               resourceConfig:
                 properties:
                   instanceCount:

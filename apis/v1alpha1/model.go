@@ -25,7 +25,8 @@ type ModelSpec struct {
 	Containers             []*ContainerDefinition `json:"containers,omitempty"`
 	EnableNetworkIsolation *bool                  `json:"enableNetworkIsolation,omitempty"`
 	// +kubebuilder:validation:Required
-	ExecutionRoleARN *string `json:"executionRoleARN"`
+	ExecutionRoleARN         *string                   `json:"executionRoleARN"`
+	InferenceExecutionConfig *InferenceExecutionConfig `json:"inferenceExecutionConfig,omitempty"`
 	// +kubebuilder:validation:Required
 	ModelName        *string              `json:"modelName"`
 	PrimaryContainer *ContainerDefinition `json:"primaryContainer,omitempty"`

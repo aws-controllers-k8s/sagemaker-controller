@@ -140,6 +140,16 @@ func (rm *resourceManager) sdkFind(
 			if f5iter.AcceleratorType != nil {
 				f5elem.AcceleratorType = f5iter.AcceleratorType
 			}
+			if f5iter.CoreDumpConfig != nil {
+				f5elemf1 := &svcapitypes.ProductionVariantCoreDumpConfig{}
+				if f5iter.CoreDumpConfig.DestinationS3Uri != nil {
+					f5elemf1.DestinationS3URI = f5iter.CoreDumpConfig.DestinationS3Uri
+				}
+				if f5iter.CoreDumpConfig.KmsKeyId != nil {
+					f5elemf1.KMSKeyID = f5iter.CoreDumpConfig.KmsKeyId
+				}
+				f5elem.CoreDumpConfig = f5elemf1
+			}
 			if f5iter.InitialInstanceCount != nil {
 				f5elem.InitialInstanceCount = f5iter.InitialInstanceCount
 			}
@@ -291,6 +301,16 @@ func (rm *resourceManager) newCreateRequestPayload(
 			f3elem := &svcsdk.ProductionVariant{}
 			if f3iter.AcceleratorType != nil {
 				f3elem.SetAcceleratorType(*f3iter.AcceleratorType)
+			}
+			if f3iter.CoreDumpConfig != nil {
+				f3elemf1 := &svcsdk.ProductionVariantCoreDumpConfig{}
+				if f3iter.CoreDumpConfig.DestinationS3URI != nil {
+					f3elemf1.SetDestinationS3Uri(*f3iter.CoreDumpConfig.DestinationS3URI)
+				}
+				if f3iter.CoreDumpConfig.KMSKeyID != nil {
+					f3elemf1.SetKmsKeyId(*f3iter.CoreDumpConfig.KMSKeyID)
+				}
+				f3elem.SetCoreDumpConfig(f3elemf1)
 			}
 			if f3iter.InitialInstanceCount != nil {
 				f3elem.SetInitialInstanceCount(*f3iter.InitialInstanceCount)
