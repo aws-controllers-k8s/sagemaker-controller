@@ -9,10 +9,15 @@ rules:
 - apiGroups:
   - sagemaker.services.k8s.aws
   resources:
+  - dataqualityjobdefinitions
   - endpoints
   - endpointconfigs
   - hyperparametertuningjobs
   - models
+  - modelbiasjobdefinitions
+  - modelexplainabilityjobdefinitions
+  - modelqualityjobdefinitions
+  - monitoringschedules
   - processingjobs
   - trainingjobs
   - transformjobs
@@ -27,10 +32,15 @@ rules:
 - apiGroups:
   - sagemaker.services.k8s.aws
   resources:
+  - dataqualityjobdefinitions
   - endpoints
   - endpointconfigs
   - hyperparametertuningjobs
   - models
+  - modelbiasjobdefinitions
+  - modelexplainabilityjobdefinitions
+  - modelqualityjobdefinitions
+  - monitoringschedules
   - processingjobs
   - trainingjobs
   - transformjobs

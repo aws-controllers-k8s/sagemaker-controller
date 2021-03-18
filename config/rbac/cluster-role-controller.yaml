@@ -25,6 +25,26 @@ rules:
 - apiGroups:
   - sagemaker.services.k8s.aws
   resources:
+  - dataqualityjobdefinitions
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
+  - dataqualityjobdefinitions/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
   - endpointconfigs
   verbs:
   - create
@@ -66,6 +86,7 @@ rules:
   - sagemaker.services.k8s.aws
   resources:
   - hyperparametertuningjobs
+  - modelbiasjobdefinitions
   verbs:
   - create
   - delete
@@ -78,6 +99,47 @@ rules:
   - sagemaker.services.k8s.aws
   resources:
   - hyperparametertuningjobs/status
+  - modelbiasjobdefinitions/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
+  - modelexplainabilityjobdefinitions
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
+  - modelexplainabilityjobdefinitions/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
+  - modelqualityjobdefinitions
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
+  - modelqualityjobdefinitions/status
   verbs:
   - get
   - patch
@@ -98,6 +160,26 @@ rules:
   - sagemaker.services.k8s.aws
   resources:
   - models/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
+  - monitoringschedules
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
+  - monitoringschedules/status
   verbs:
   - get
   - patch

@@ -143,10 +143,6 @@ resources:
           operation: DescribeTransformJob
           path: FailureReason
   HyperParameterTuningJob:
-    exceptions:
-      errors:
-          404:
-            code: ResourceNotFound
     fields:
       HyperParameterTuningJobStatus:
         is_read_only: true
@@ -170,6 +166,36 @@ resources:
         from:
           operation: DescribeHyperParameterTuningJob
           path: OverallBestTrainingJob
+  DataQualityJobDefinition:
+    exceptions:
+      errors:
+          404:
+            code: ResourceNotFound
+            message_prefix: Monitoring Job Definition
+  ModelQualityJobDefinition:
+    exceptions:
+      errors:
+          404:
+            code: ResourceNotFound
+            message_prefix: Monitoring Job Definition
+  ModelBiasJobDefinition:
+    exceptions:
+      errors:
+          404:
+            code: ResourceNotFound
+            message_prefix: Monitoring Job Definition
+  ModelExplainabilityJobDefinition:
+    exceptions:
+      errors:
+          404:
+            code: ResourceNotFound
+            message_prefix: Monitoring Job Definition
+  MonitoringSchedule:
+    exceptions:
+      errors:
+          404:
+            code: ResourceNotFound
+            message_prefix: Monitoring Schedule
 ignore:
     resource_names:
       - Algorithm
@@ -181,7 +207,7 @@ ignore:
       - CodeRepository
       - CompilationJob
       - Context
-      - DataQualityJobDefinition
+      # - DataQualityJobDefinition
       - DeviceFleet
       - Domain
       - EdgePackagingJob
@@ -196,12 +222,12 @@ ignore:
       - ImageVersion
       - LabelingJob
       # - Model
-      - ModelBiasJobDefinition
-      - ModelExplainabilityJobDefinition
+      # - ModelBiasJobDefinition
+      # - ModelExplainabilityJobDefinition
       - ModelPackage
       - ModelPackageGroup
-      - ModelQualityJobDefinition
-      - MonitoringSchedule
+      # - ModelQualityJobDefinition
+      # - MonitoringSchedule
       - NotebookInstanceLifecycleConfig
       - NotebookInstance
       - Pipeline
