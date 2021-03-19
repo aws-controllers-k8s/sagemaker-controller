@@ -47,6 +47,19 @@ func (rm *resourceManager) customDescribeEndpointSetOutput(
 	ko *svcapitypes.Endpoint,
 ) (*svcapitypes.Endpoint, error) {
 	rm.customSetOutput(r, resp.EndpointStatus, ko)
+	// Workaround: Field config for LatestEndpointConfigName of generator config
+	// does not code generate this correctly since this field is part of Spec
+	// SageMaker users will need following information:
+	// 	 - latestEndpointConfig
+	// 	 - desiredEndpointConfig
+	// 	 - LastEndpointConfigNameForUpdate
+	// 	 - FailureReason
+	// to determine the correct course of action in case of update to Endpoint fails
+	if resp.EndpointConfigName != nil {
+		ko.Status.LatestEndpointConfigName = resp.EndpointConfigName
+	} else {
+		ko.Status.LatestEndpointConfigName = nil
+	}
 	return ko, nil
 }
 
@@ -59,6 +72,8 @@ func (rm *resourceManager) customUpdateEndpointSetOutput(
 	ko *svcapitypes.Endpoint,
 ) (*svcapitypes.Endpoint, error) {
 	rm.customSetOutput(r, aws.String(svcsdk.EndpointStatusUpdating), ko)
+	// no nil check present here since Spec.EndpointConfigName is a required field
+	ko.Status.LastEndpointConfigNameForUpdate = r.ko.Spec.EndpointConfigName
 	return ko, nil
 }
 

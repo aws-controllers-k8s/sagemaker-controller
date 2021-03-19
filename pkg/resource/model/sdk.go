@@ -116,12 +116,18 @@ func (rm *resourceManager) sdkFind(
 			f0 = append(f0, f0elem)
 		}
 		ko.Spec.Containers = f0
+	} else {
+		ko.Spec.Containers = nil
 	}
 	if resp.EnableNetworkIsolation != nil {
 		ko.Spec.EnableNetworkIsolation = resp.EnableNetworkIsolation
+	} else {
+		ko.Spec.EnableNetworkIsolation = nil
 	}
 	if resp.ExecutionRoleArn != nil {
 		ko.Spec.ExecutionRoleARN = resp.ExecutionRoleArn
+	} else {
+		ko.Spec.ExecutionRoleARN = nil
 	}
 	if resp.InferenceExecutionConfig != nil {
 		f4 := &svcapitypes.InferenceExecutionConfig{}
@@ -139,6 +145,8 @@ func (rm *resourceManager) sdkFind(
 	}
 	if resp.ModelName != nil {
 		ko.Spec.ModelName = resp.ModelName
+	} else {
+		ko.Spec.ModelName = nil
 	}
 	if resp.PrimaryContainer != nil {
 		f7 := &svcapitypes.ContainerDefinition{}
@@ -173,6 +181,7 @@ func (rm *resourceManager) sdkFind(
 		if resp.PrimaryContainer.ModelPackageName != nil {
 			f7.ModelPackageName = resp.PrimaryContainer.ModelPackageName
 		}
+<<<<<<< HEAD
 		if resp.PrimaryContainer.MultiModelConfig != nil {
 			f7f7 := &svcapitypes.MultiModelConfig{}
 			if resp.PrimaryContainer.MultiModelConfig.ModelCacheSetting != nil {
@@ -181,6 +190,11 @@ func (rm *resourceManager) sdkFind(
 			f7.MultiModelConfig = f7f7
 		}
 		ko.Spec.PrimaryContainer = f7
+=======
+		ko.Spec.PrimaryContainer = f6
+	} else {
+		ko.Spec.PrimaryContainer = nil
+>>>>>>> bab6733... endpoint: address failed update scenario
 	}
 	if resp.VpcConfig != nil {
 		f8 := &svcapitypes.VPCConfig{}
@@ -202,7 +216,13 @@ func (rm *resourceManager) sdkFind(
 			}
 			f8.Subnets = f8f1
 		}
+<<<<<<< HEAD
 		ko.Spec.VPCConfig = f8
+=======
+		ko.Spec.VPCConfig = f7
+	} else {
+		ko.Spec.VPCConfig = nil
+>>>>>>> bab6733... endpoint: address failed update scenario
 	}
 
 	rm.setStatusDefaults(ko)
@@ -379,6 +399,7 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.SetPrimaryContainer(f5)
 	}
+<<<<<<< HEAD
 	if r.ko.Spec.Tags != nil {
 		f6 := []*svcsdk.Tag{}
 		for _, f6iter := range r.ko.Spec.Tags {
@@ -414,6 +435,29 @@ func (rm *resourceManager) newCreateRequestPayload(
 			f7.SetSubnets(f7f1)
 		}
 		res.SetVpcConfig(f7)
+=======
+	if r.ko.Spec.VPCConfig != nil {
+		f5 := &svcsdk.VpcConfig{}
+		if r.ko.Spec.VPCConfig.SecurityGroupIDs != nil {
+			f5f0 := []*string{}
+			for _, f5f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
+				var f5f0elem string
+				f5f0elem = *f5f0iter
+				f5f0 = append(f5f0, &f5f0elem)
+			}
+			f5.SetSecurityGroupIds(f5f0)
+		}
+		if r.ko.Spec.VPCConfig.Subnets != nil {
+			f5f1 := []*string{}
+			for _, f5f1iter := range r.ko.Spec.VPCConfig.Subnets {
+				var f5f1elem string
+				f5f1elem = *f5f1iter
+				f5f1 = append(f5f1, &f5f1elem)
+			}
+			f5.SetSubnets(f5f1)
+		}
+		res.SetVpcConfig(f5)
+>>>>>>> bab6733... endpoint: address failed update scenario
 	}
 
 	return res, nil

@@ -366,7 +366,6 @@ type Experiment struct {
 	DisplayName      *string      `json:"displayName,omitempty"`
 	ExperimentName   *string      `json:"experimentName,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
-	Tags             []*Tag       `json:"tags,omitempty"`
 }
 
 type ExperimentConfig struct {
@@ -868,7 +867,6 @@ type ProcessingJob_SDK struct {
 	ProcessingStartTime    *metav1.Time                 `json:"processingStartTime,omitempty"`
 	RoleARN                *string                      `json:"roleARN,omitempty"`
 	StoppingCondition      *ProcessingStoppingCondition `json:"stoppingCondition,omitempty"`
-	Tags                   []*Tag                       `json:"tags,omitempty"`
 	TrainingJobARN         *string                      `json:"trainingJobARN,omitempty"`
 }
 
@@ -1038,11 +1036,6 @@ type SubscribedWorkteam struct {
 	SellerName *string `json:"sellerName,omitempty"`
 }
 
-type Tag struct {
-	Key   *string `json:"key,omitempty"`
-	Value *string `json:"value,omitempty"`
-}
-
 type TensorBoardOutputConfig struct {
 	LocalPath    *string `json:"localPath,omitempty"`
 	S3OutputPath *string `json:"s3OutputPath,omitempty"`
@@ -1110,7 +1103,6 @@ type TrainingJob_SDK struct {
 	SecondaryStatus                       *string                      `json:"secondaryStatus,omitempty"`
 	SecondaryStatusTransitions            []*SecondaryStatusTransition `json:"secondaryStatusTransitions,omitempty"`
 	StoppingCondition                     *StoppingCondition           `json:"stoppingCondition,omitempty"`
-	Tags                                  []*Tag                       `json:"tags,omitempty"`
 	TensorBoardOutputConfig               *TensorBoardOutputConfig     `json:"tensorBoardOutputConfig,omitempty"`
 	TrainingEndTime                       *metav1.Time                 `json:"trainingEndTime,omitempty"`
 	TrainingJobARN                        *string                      `json:"trainingJobARN,omitempty"`
@@ -1139,6 +1131,7 @@ type TransformInput struct {
 	SplitType       *string              `json:"splitType,omitempty"`
 }
 
+<<<<<<< HEAD
 type TransformJobDefinition struct {
 	BatchStrategy           *string             `json:"batchStrategy,omitempty"`
 	Environment             map[string]*string  `json:"environment,omitempty"`
@@ -1151,6 +1144,17 @@ type TransformJobDefinition struct {
 
 type TransformJobStepMetadata struct {
 	ARN *string `json:"arn,omitempty"`
+=======
+type TransformJob struct {
+	AutoMLJobARN       *string           `json:"autoMLJobARN,omitempty"`
+	CreationTime       *metav1.Time      `json:"creationTime,omitempty"`
+	ExperimentConfig   *ExperimentConfig `json:"experimentConfig,omitempty"`
+	FailureReason      *string           `json:"failureReason,omitempty"`
+	LabelingJobARN     *string           `json:"labelingJobARN,omitempty"`
+	ModelName          *string           `json:"modelName,omitempty"`
+	TransformEndTime   *metav1.Time      `json:"transformEndTime,omitempty"`
+	TransformStartTime *metav1.Time      `json:"transformStartTime,omitempty"`
+>>>>>>> bab6733... endpoint: address failed update scenario
 }
 
 type TransformJobSummary struct {
@@ -1210,7 +1214,6 @@ type Trial struct {
 	DisplayName      *string      `json:"displayName,omitempty"`
 	ExperimentName   *string      `json:"experimentName,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
-	Tags             []*Tag       `json:"tags,omitempty"`
 	TrialName        *string      `json:"trialName,omitempty"`
 }
 
@@ -1220,7 +1223,6 @@ type TrialComponent struct {
 	EndTime            *metav1.Time `json:"endTime,omitempty"`
 	LastModifiedTime   *metav1.Time `json:"lastModifiedTime,omitempty"`
 	StartTime          *metav1.Time `json:"startTime,omitempty"`
-	Tags               []*Tag       `json:"tags,omitempty"`
 	TrialComponentName *string      `json:"trialComponentName,omitempty"`
 }
 

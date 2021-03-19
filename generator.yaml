@@ -15,6 +15,8 @@ operations:
   UpdateEndpoint:
     custom_implementation: customUpdateEndpoint
     set_output_custom_method_name: customUpdateEndpointSetOutput
+    override_values:
+      RetainAllVariantProperties: true
   DeleteEndpoint:
     custom_implementation: customDeleteEndpoint
   StopHyperParameterTuningJob:
@@ -53,10 +55,15 @@ resources:
         from:
           operation: DescribeEndpoint
           path: FailureReason
-      EndpointConfigName:
+      LatestEndpointConfigName:
         is_read_only: true
         from:
           operation: DescribeEndpoint
+          path: EndpointConfigName
+      LastEndpointConfigNameForUpdate:
+        is_read_only: true
+        from:
+          operation: DescribeEndpointConfig
           path: EndpointConfigName
       # CreationTime:
       #   is_read_only: true
@@ -211,3 +218,8 @@ ignore:
       - Workteam
     operations:
       - UpdateTrainingJob
+<<<<<<< HEAD
+=======
+    shape_names:
+      - TagList
+>>>>>>> bab6733... endpoint: address failed update scenario

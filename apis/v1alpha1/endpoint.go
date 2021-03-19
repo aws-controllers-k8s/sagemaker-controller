@@ -26,7 +26,6 @@ type EndpointSpec struct {
 	EndpointConfigName *string `json:"endpointConfigName"`
 	// +kubebuilder:validation:Required
 	EndpointName *string `json:"endpointName"`
-	Tags         []*Tag  `json:"tags,omitempty"`
 }
 
 // EndpointStatus defines the observed state of Endpoint
@@ -39,10 +38,11 @@ type EndpointStatus struct {
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
-	Conditions         []*ackv1alpha1.Condition `json:"conditions"`
-	EndpointConfigName *string                  `json:"endpointConfigName,omitempty"`
-	EndpointStatus     *string                  `json:"endpointStatus,omitempty"`
-	FailureReason      *string                  `json:"failureReason,omitempty"`
+	Conditions                      []*ackv1alpha1.Condition `json:"conditions"`
+	EndpointStatus                  *string                  `json:"endpointStatus,omitempty"`
+	FailureReason                   *string                  `json:"failureReason,omitempty"`
+	LastEndpointConfigNameForUpdate *string                  `json:"lastEndpointConfigNameForUpdate,omitempty"`
+	LatestEndpointConfigName        *string                  `json:"latestEndpointConfigName,omitempty"`
 }
 
 // Endpoint is the Schema for the Endpoints API

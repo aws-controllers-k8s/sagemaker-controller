@@ -28,7 +28,6 @@ type EndpointConfigSpec struct {
 	KMSKeyID           *string `json:"kmsKeyID,omitempty"`
 	// +kubebuilder:validation:Required
 	ProductionVariants []*ProductionVariant `json:"productionVariants"`
-	Tags               []*Tag               `json:"tags,omitempty"`
 }
 
 // EndpointConfigStatus defines the observed state of EndpointConfig

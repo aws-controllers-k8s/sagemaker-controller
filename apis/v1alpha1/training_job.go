@@ -43,7 +43,6 @@ type TrainingJobSpec struct {
 	RoleARN *string `json:"roleARN"`
 	// +kubebuilder:validation:Required
 	StoppingCondition       *StoppingCondition       `json:"stoppingCondition"`
-	Tags                    []*Tag                   `json:"tags,omitempty"`
 	TensorBoardOutputConfig *TensorBoardOutputConfig `json:"tensorBoardOutputConfig,omitempty"`
 	// +kubebuilder:validation:Required
 	TrainingJobName *string    `json:"trainingJobName"`

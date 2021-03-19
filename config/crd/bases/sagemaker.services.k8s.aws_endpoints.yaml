@@ -47,15 +47,6 @@ spec:
                 type: string
               endpointName:
                 type: string
-              tags:
-                items:
-                  properties:
-                    key:
-                      type: string
-                    value:
-                      type: string
-                  type: object
-                type: array
             required:
             - endpointConfigName
             - endpointName
@@ -119,11 +110,13 @@ spec:
                   - type
                   type: object
                 type: array
-              endpointConfigName:
-                type: string
               endpointStatus:
                 type: string
               failureReason:
+                type: string
+              lastEndpointConfigNameForUpdate:
+                type: string
+              latestEndpointConfigName:
                 type: string
             required:
             - ackResourceMetadata

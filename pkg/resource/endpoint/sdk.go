@@ -80,15 +80,23 @@ func (rm *resourceManager) sdkFind(
 	}
 	if resp.EndpointConfigName != nil {
 		ko.Spec.EndpointConfigName = resp.EndpointConfigName
+	} else {
+		ko.Spec.EndpointConfigName = nil
 	}
 	if resp.EndpointName != nil {
 		ko.Spec.EndpointName = resp.EndpointName
+	} else {
+		ko.Spec.EndpointName = nil
 	}
 	if resp.EndpointStatus != nil {
 		ko.Status.EndpointStatus = resp.EndpointStatus
+	} else {
+		ko.Status.EndpointStatus = nil
 	}
 	if resp.FailureReason != nil {
 		ko.Status.FailureReason = resp.FailureReason
+	} else {
+		ko.Status.FailureReason = nil
 	}
 
 	rm.setStatusDefaults(ko)
@@ -179,20 +187,6 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.EndpointName != nil {
 		res.SetEndpointName(*r.ko.Spec.EndpointName)
 	}
-	if r.ko.Spec.Tags != nil {
-		f2 := []*svcsdk.Tag{}
-		for _, f2iter := range r.ko.Spec.Tags {
-			f2elem := &svcsdk.Tag{}
-			if f2iter.Key != nil {
-				f2elem.SetKey(*f2iter.Key)
-			}
-			if f2iter.Value != nil {
-				f2elem.SetValue(*f2iter.Value)
-			}
-			f2 = append(f2, f2elem)
-		}
-		res.SetTags(f2)
-	}
 
 	return res, nil
 }
@@ -258,6 +252,7 @@ func (rm *resourceManager) newUpdateRequestPayload(
 	if r.ko.Spec.EndpointName != nil {
 		res.SetEndpointName(*r.ko.Spec.EndpointName)
 	}
+	res.SetRetainAllVariantProperties(true)
 
 	return res, nil
 }

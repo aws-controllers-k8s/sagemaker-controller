@@ -36,7 +36,6 @@ type ProcessingJobSpec struct {
 	// +kubebuilder:validation:Required
 	RoleARN           *string                      `json:"roleARN"`
 	StoppingCondition *ProcessingStoppingCondition `json:"stoppingCondition,omitempty"`
-	Tags              []*Tag                       `json:"tags,omitempty"`
 }
 
 // ProcessingJobStatus defines the observed state of ProcessingJob

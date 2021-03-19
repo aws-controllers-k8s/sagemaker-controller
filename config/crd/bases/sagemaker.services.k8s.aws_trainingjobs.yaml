@@ -246,15 +246,6 @@ spec:
                     format: int64
                     type: integer
                 type: object
-              tags:
-                items:
-                  properties:
-                    key:
-                      type: string
-                    value:
-                      type: string
-                  type: object
-                type: array
               tensorBoardOutputConfig:
                 properties:
                   localPath:

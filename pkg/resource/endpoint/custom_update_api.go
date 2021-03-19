@@ -19,21 +19,59 @@ package endpoint
 import (
 	"context"
 	"errors"
+	"fmt"
+	"strings"
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	"github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 )
 
-// customUpdateEndpoint adds specialized logic to requeueAfter until endpoint is in
-// InService state before an updateEndpoint can be called
+var (
+	FailUpdateError = fmt.Errorf("Unable to update Endpoint. Check FailureReason")
+)
+
+// customUpdateEndpoint adds specialized logic to check if controller should
+// proceeed with updateEndpoint call.
+// Update is blocked in the following cases:
+//  1. until EndpointStatus != InService
+//  2. EndpointStatus == Failed
+//  3. A previous update to the Endpoint with same endpointConfigName failed
+// Method returns nil if endpoint can be updated, otherwise error depending on above cases
 func (rm *resourceManager) customUpdateEndpoint(
 	ctx context.Context,
 	desired *resource,
 	latest *resource,
 	diffReporter *ackcompare.Reporter,
 ) (*resource, error) {
-	return nil, rm.endpointStatusAllowUpdates(ctx, latest)
+	latestStatus := latest.ko.Status.EndpointStatus
+	if latestStatus != nil && *latestStatus != svcsdk.EndpointStatusFailed {
+		// Case 1 - requeueAfter until endpoint is in InService state
+		err := rm.endpointStatusAllowUpdates(ctx, latest)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	failureReason := latest.ko.Status.FailureReason
+	latestEndpointConfig := latest.ko.Spec.EndpointConfigName
+	desiredEndpointConfig := desired.ko.Spec.EndpointConfigName
+	lastEndpointConfigForUpdate := desired.ko.Status.LastEndpointConfigNameForUpdate
+
+	// Case 2 - EndpointStatus == Failed
+	if (latestStatus != nil && *latestStatus == svcsdk.EndpointStatusFailed) ||
+		// Case 3 - A previous update to the Endpoint with same endpointConfigName failed
+		// Following checks indicate FailureReason is related to a failed update
+		// Note: Internal service error is an exception for this case
+		// "Request to service failed" means update failed because of ISE and can be retried
+		(latestStatus != nil && failureReason != nil && lastEndpointConfigForUpdate != nil &&
+			!strings.HasPrefix(*failureReason, "Request to service failed") &&
+			*desiredEndpointConfig != *latestEndpointConfig &&
+			*desiredEndpointConfig == *lastEndpointConfigForUpdate) {
+		return nil, FailUpdateError
+	}
+
+	return nil, nil
 }
 
 // customDeleteEndpoint adds specialized logic to requeueAfter until endpoint is in

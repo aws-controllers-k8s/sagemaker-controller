@@ -100,6 +100,8 @@ func (rm *resourceManager) sdkFind(
 			f0.TrainingInputMode = resp.AlgorithmSpecification.TrainingInputMode
 		}
 		ko.Spec.AlgorithmSpecification = f0
+	} else {
+		ko.Spec.AlgorithmSpecification = nil
 	}
 	if resp.CheckpointConfig != nil {
 		f3 := &svcapitypes.CheckpointConfig{}
@@ -110,6 +112,8 @@ func (rm *resourceManager) sdkFind(
 			f3.S3URI = resp.CheckpointConfig.S3Uri
 		}
 		ko.Spec.CheckpointConfig = f3
+	} else {
+		ko.Spec.CheckpointConfig = nil
 	}
 	if resp.DebugHookConfig != nil {
 		f5 := &svcapitypes.DebugHookConfig{}
@@ -149,6 +153,8 @@ func (rm *resourceManager) sdkFind(
 			f5.S3OutputPath = resp.DebugHookConfig.S3OutputPath
 		}
 		ko.Spec.DebugHookConfig = f5
+	} else {
+		ko.Spec.DebugHookConfig = nil
 	}
 	if resp.DebugRuleConfigurations != nil {
 		f6 := []*svcapitypes.DebugRuleConfiguration{}
@@ -184,15 +190,23 @@ func (rm *resourceManager) sdkFind(
 			f6 = append(f6, f6elem)
 		}
 		ko.Spec.DebugRuleConfigurations = f6
+	} else {
+		ko.Spec.DebugRuleConfigurations = nil
 	}
 	if resp.EnableInterContainerTrafficEncryption != nil {
 		ko.Spec.EnableInterContainerTrafficEncryption = resp.EnableInterContainerTrafficEncryption
+	} else {
+		ko.Spec.EnableInterContainerTrafficEncryption = nil
 	}
 	if resp.EnableManagedSpotTraining != nil {
 		ko.Spec.EnableManagedSpotTraining = resp.EnableManagedSpotTraining
+	} else {
+		ko.Spec.EnableManagedSpotTraining = nil
 	}
 	if resp.EnableNetworkIsolation != nil {
 		ko.Spec.EnableNetworkIsolation = resp.EnableNetworkIsolation
+	} else {
+		ko.Spec.EnableNetworkIsolation = nil
 	}
 	if resp.ExperimentConfig != nil {
 		f11 := &svcapitypes.ExperimentConfig{}
@@ -206,9 +220,13 @@ func (rm *resourceManager) sdkFind(
 			f11.TrialName = resp.ExperimentConfig.TrialName
 		}
 		ko.Spec.ExperimentConfig = f11
+	} else {
+		ko.Spec.ExperimentConfig = nil
 	}
 	if resp.FailureReason != nil {
 		ko.Status.FailureReason = resp.FailureReason
+	} else {
+		ko.Status.FailureReason = nil
 	}
 	if resp.HyperParameters != nil {
 		f14 := map[string]*string{}
@@ -218,6 +236,8 @@ func (rm *resourceManager) sdkFind(
 			f14[f14key] = &f14val
 		}
 		ko.Spec.HyperParameters = f14
+	} else {
+		ko.Spec.HyperParameters = nil
 	}
 	if resp.InputDataConfig != nil {
 		f15 := []*svcapitypes.Channel{}
@@ -290,6 +310,8 @@ func (rm *resourceManager) sdkFind(
 			f15 = append(f15, f15elem)
 		}
 		ko.Spec.InputDataConfig = f15
+	} else {
+		ko.Spec.InputDataConfig = nil
 	}
 	if resp.OutputDataConfig != nil {
 		f19 := &svcapitypes.OutputDataConfig{}
@@ -300,6 +322,8 @@ func (rm *resourceManager) sdkFind(
 			f19.S3OutputPath = resp.OutputDataConfig.S3OutputPath
 		}
 		ko.Spec.OutputDataConfig = f19
+	} else {
+		ko.Spec.OutputDataConfig = nil
 	}
 	if resp.ProfilerConfig != nil {
 		f20 := &svcapitypes.ProfilerConfig{}
@@ -369,13 +393,23 @@ func (rm *resourceManager) sdkFind(
 		if resp.ResourceConfig.VolumeSizeInGB != nil {
 			f24.VolumeSizeInGB = resp.ResourceConfig.VolumeSizeInGB
 		}
+<<<<<<< HEAD
 		ko.Spec.ResourceConfig = f24
+=======
+		ko.Spec.ResourceConfig = f20
+	} else {
+		ko.Spec.ResourceConfig = nil
+>>>>>>> bab6733... endpoint: address failed update scenario
 	}
 	if resp.RoleArn != nil {
 		ko.Spec.RoleARN = resp.RoleArn
+	} else {
+		ko.Spec.RoleARN = nil
 	}
 	if resp.SecondaryStatus != nil {
 		ko.Status.SecondaryStatus = resp.SecondaryStatus
+	} else {
+		ko.Status.SecondaryStatus = nil
 	}
 	if resp.StoppingCondition != nil {
 		f28 := &svcapitypes.StoppingCondition{}
@@ -385,7 +419,13 @@ func (rm *resourceManager) sdkFind(
 		if resp.StoppingCondition.MaxWaitTimeInSeconds != nil {
 			f28.MaxWaitTimeInSeconds = resp.StoppingCondition.MaxWaitTimeInSeconds
 		}
+<<<<<<< HEAD
 		ko.Spec.StoppingCondition = f28
+=======
+		ko.Spec.StoppingCondition = f24
+	} else {
+		ko.Spec.StoppingCondition = nil
+>>>>>>> bab6733... endpoint: address failed update scenario
 	}
 	if resp.TensorBoardOutputConfig != nil {
 		f29 := &svcapitypes.TensorBoardOutputConfig{}
@@ -395,7 +435,13 @@ func (rm *resourceManager) sdkFind(
 		if resp.TensorBoardOutputConfig.S3OutputPath != nil {
 			f29.S3OutputPath = resp.TensorBoardOutputConfig.S3OutputPath
 		}
+<<<<<<< HEAD
 		ko.Spec.TensorBoardOutputConfig = f29
+=======
+		ko.Spec.TensorBoardOutputConfig = f25
+	} else {
+		ko.Spec.TensorBoardOutputConfig = nil
+>>>>>>> bab6733... endpoint: address failed update scenario
 	}
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
@@ -406,9 +452,13 @@ func (rm *resourceManager) sdkFind(
 	}
 	if resp.TrainingJobName != nil {
 		ko.Spec.TrainingJobName = resp.TrainingJobName
+	} else {
+		ko.Spec.TrainingJobName = nil
 	}
 	if resp.TrainingJobStatus != nil {
 		ko.Status.TrainingJobStatus = resp.TrainingJobStatus
+	} else {
+		ko.Status.TrainingJobStatus = nil
 	}
 	if resp.VpcConfig != nil {
 		f37 := &svcapitypes.VPCConfig{}
@@ -430,7 +480,13 @@ func (rm *resourceManager) sdkFind(
 			}
 			f37.Subnets = f37f1
 		}
+<<<<<<< HEAD
 		ko.Spec.VPCConfig = f37
+=======
+		ko.Spec.VPCConfig = f33
+	} else {
+		ko.Spec.VPCConfig = nil
+>>>>>>> bab6733... endpoint: address failed update scenario
 	}
 
 	rm.setStatusDefaults(ko)
@@ -813,6 +869,7 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.SetStoppingCondition(f15)
 	}
+<<<<<<< HEAD
 	if r.ko.Spec.Tags != nil {
 		f16 := []*svcsdk.Tag{}
 		for _, f16iter := range r.ko.Spec.Tags {
@@ -836,11 +893,23 @@ func (rm *resourceManager) newCreateRequestPayload(
 			f17.SetS3OutputPath(*r.ko.Spec.TensorBoardOutputConfig.S3OutputPath)
 		}
 		res.SetTensorBoardOutputConfig(f17)
+=======
+	if r.ko.Spec.TensorBoardOutputConfig != nil {
+		f14 := &svcsdk.TensorBoardOutputConfig{}
+		if r.ko.Spec.TensorBoardOutputConfig.LocalPath != nil {
+			f14.SetLocalPath(*r.ko.Spec.TensorBoardOutputConfig.LocalPath)
+		}
+		if r.ko.Spec.TensorBoardOutputConfig.S3OutputPath != nil {
+			f14.SetS3OutputPath(*r.ko.Spec.TensorBoardOutputConfig.S3OutputPath)
+		}
+		res.SetTensorBoardOutputConfig(f14)
+>>>>>>> bab6733... endpoint: address failed update scenario
 	}
 	if r.ko.Spec.TrainingJobName != nil {
 		res.SetTrainingJobName(*r.ko.Spec.TrainingJobName)
 	}
 	if r.ko.Spec.VPCConfig != nil {
+<<<<<<< HEAD
 		f19 := &svcsdk.VpcConfig{}
 		if r.ko.Spec.VPCConfig.SecurityGroupIDs != nil {
 			f19f0 := []*string{}
@@ -861,6 +930,28 @@ func (rm *resourceManager) newCreateRequestPayload(
 			f19.SetSubnets(f19f1)
 		}
 		res.SetVpcConfig(f19)
+=======
+		f16 := &svcsdk.VpcConfig{}
+		if r.ko.Spec.VPCConfig.SecurityGroupIDs != nil {
+			f16f0 := []*string{}
+			for _, f16f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
+				var f16f0elem string
+				f16f0elem = *f16f0iter
+				f16f0 = append(f16f0, &f16f0elem)
+			}
+			f16.SetSecurityGroupIds(f16f0)
+		}
+		if r.ko.Spec.VPCConfig.Subnets != nil {
+			f16f1 := []*string{}
+			for _, f16f1iter := range r.ko.Spec.VPCConfig.Subnets {
+				var f16f1elem string
+				f16f1elem = *f16f1iter
+				f16f1 = append(f16f1, &f16f1elem)
+			}
+			f16.SetSubnets(f16f1)
+		}
+		res.SetVpcConfig(f16)
+>>>>>>> bab6733... endpoint: address failed update scenario
 	}
 
 	return res, nil

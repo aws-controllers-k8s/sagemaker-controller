@@ -30,7 +30,6 @@ type ModelSpec struct {
 	// +kubebuilder:validation:Required
 	ModelName        *string              `json:"modelName"`
 	PrimaryContainer *ContainerDefinition `json:"primaryContainer,omitempty"`
-	Tags             []*Tag               `json:"tags,omitempty"`
 	VPCConfig        *VPCConfig           `json:"vpcConfig,omitempty"`
 }
 

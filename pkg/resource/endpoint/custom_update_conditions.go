@@ -33,7 +33,9 @@ func (rm *resourceManager) customUpdateConditions(
 	err error,
 ) bool {
 	latestStatus := r.ko.Status.EndpointStatus
-	if latestStatus == nil || *latestStatus != svcsdk.EndpointStatusFailed {
+	failureReason := r.ko.Status.FailureReason
+
+	if latestStatus == nil || failureReason == nil {
 		return false
 	}
 	var terminalCondition *ackv1alpha1.Condition = nil
@@ -51,20 +53,23 @@ func (rm *resourceManager) customUpdateConditions(
 			return false
 		}
 	}
-	if terminalCondition == nil {
-		terminalCondition = &ackv1alpha1.Condition{
-			Type:   ackv1alpha1.ConditionTypeTerminal,
-			Status: corev1.ConditionTrue,
-			Reason: aws.String("Endpoint status: Failed. Cannot be updated"),
+
+	if (err != nil && err == FailUpdateError) || (latestStatus != nil && *latestStatus == svcsdk.EndpointStatusFailed) {
+		// setting terminal condition since controller can no longer recover by retrying
+		if terminalCondition == nil {
+			terminalCondition = &ackv1alpha1.Condition{
+				Type: ackv1alpha1.ConditionTypeTerminal,
+			}
+			ko.Status.Conditions = append(ko.Status.Conditions, terminalCondition)
 		}
-
-		failureReason := r.ko.Status.FailureReason
-		if failureReason != nil {
-			terminalCondition.Message = failureReason
+		terminalCondition.Status = corev1.ConditionTrue
+		if *latestStatus == svcsdk.EndpointStatusFailed {
+			terminalCondition.Message = aws.String("Endpoint status: Failed. Cannot be updated")
+		} else {
+			terminalCondition.Message = aws.String(FailUpdateError.Error())
 		}
-
-		ko.Status.Conditions = append(ko.Status.Conditions, terminalCondition)
-
+		return true
 	}
-	return true
+
+	return false
 }
