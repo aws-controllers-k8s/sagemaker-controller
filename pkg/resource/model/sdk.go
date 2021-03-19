@@ -135,6 +135,8 @@ func (rm *resourceManager) sdkFind(
 			f4.Mode = resp.InferenceExecutionConfig.Mode
 		}
 		ko.Spec.InferenceExecutionConfig = f4
+	} else {
+		ko.Spec.InferenceExecutionConfig = nil
 	}
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
@@ -181,7 +183,6 @@ func (rm *resourceManager) sdkFind(
 		if resp.PrimaryContainer.ModelPackageName != nil {
 			f7.ModelPackageName = resp.PrimaryContainer.ModelPackageName
 		}
-<<<<<<< HEAD
 		if resp.PrimaryContainer.MultiModelConfig != nil {
 			f7f7 := &svcapitypes.MultiModelConfig{}
 			if resp.PrimaryContainer.MultiModelConfig.ModelCacheSetting != nil {
@@ -190,11 +191,8 @@ func (rm *resourceManager) sdkFind(
 			f7.MultiModelConfig = f7f7
 		}
 		ko.Spec.PrimaryContainer = f7
-=======
-		ko.Spec.PrimaryContainer = f6
 	} else {
 		ko.Spec.PrimaryContainer = nil
->>>>>>> bab6733... endpoint: address failed update scenario
 	}
 	if resp.VpcConfig != nil {
 		f8 := &svcapitypes.VPCConfig{}
@@ -216,13 +214,9 @@ func (rm *resourceManager) sdkFind(
 			}
 			f8.Subnets = f8f1
 		}
-<<<<<<< HEAD
 		ko.Spec.VPCConfig = f8
-=======
-		ko.Spec.VPCConfig = f7
 	} else {
 		ko.Spec.VPCConfig = nil
->>>>>>> bab6733... endpoint: address failed update scenario
 	}
 
 	rm.setStatusDefaults(ko)
@@ -399,65 +393,27 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.SetPrimaryContainer(f5)
 	}
-<<<<<<< HEAD
-	if r.ko.Spec.Tags != nil {
-		f6 := []*svcsdk.Tag{}
-		for _, f6iter := range r.ko.Spec.Tags {
-			f6elem := &svcsdk.Tag{}
-			if f6iter.Key != nil {
-				f6elem.SetKey(*f6iter.Key)
-			}
-			if f6iter.Value != nil {
-				f6elem.SetValue(*f6iter.Value)
-			}
-			f6 = append(f6, f6elem)
-		}
-		res.SetTags(f6)
-	}
 	if r.ko.Spec.VPCConfig != nil {
-		f7 := &svcsdk.VpcConfig{}
+		f6 := &svcsdk.VpcConfig{}
 		if r.ko.Spec.VPCConfig.SecurityGroupIDs != nil {
-			f7f0 := []*string{}
-			for _, f7f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
-				var f7f0elem string
-				f7f0elem = *f7f0iter
-				f7f0 = append(f7f0, &f7f0elem)
+			f6f0 := []*string{}
+			for _, f6f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
+				var f6f0elem string
+				f6f0elem = *f6f0iter
+				f6f0 = append(f6f0, &f6f0elem)
 			}
-			f7.SetSecurityGroupIds(f7f0)
+			f6.SetSecurityGroupIds(f6f0)
 		}
 		if r.ko.Spec.VPCConfig.Subnets != nil {
-			f7f1 := []*string{}
-			for _, f7f1iter := range r.ko.Spec.VPCConfig.Subnets {
-				var f7f1elem string
-				f7f1elem = *f7f1iter
-				f7f1 = append(f7f1, &f7f1elem)
+			f6f1 := []*string{}
+			for _, f6f1iter := range r.ko.Spec.VPCConfig.Subnets {
+				var f6f1elem string
+				f6f1elem = *f6f1iter
+				f6f1 = append(f6f1, &f6f1elem)
 			}
-			f7.SetSubnets(f7f1)
+			f6.SetSubnets(f6f1)
 		}
-		res.SetVpcConfig(f7)
-=======
-	if r.ko.Spec.VPCConfig != nil {
-		f5 := &svcsdk.VpcConfig{}
-		if r.ko.Spec.VPCConfig.SecurityGroupIDs != nil {
-			f5f0 := []*string{}
-			for _, f5f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
-				var f5f0elem string
-				f5f0elem = *f5f0iter
-				f5f0 = append(f5f0, &f5f0elem)
-			}
-			f5.SetSecurityGroupIds(f5f0)
-		}
-		if r.ko.Spec.VPCConfig.Subnets != nil {
-			f5f1 := []*string{}
-			for _, f5f1iter := range r.ko.Spec.VPCConfig.Subnets {
-				var f5f1elem string
-				f5f1elem = *f5f1iter
-				f5f1 = append(f5f1, &f5f1elem)
-			}
-			f5.SetSubnets(f5f1)
-		}
-		res.SetVpcConfig(f5)
->>>>>>> bab6733... endpoint: address failed update scenario
+		res.SetVpcConfig(f6)
 	}
 
 	return res, nil
@@ -469,7 +425,7 @@ func (rm *resourceManager) sdkUpdate(
 	ctx context.Context,
 	desired *resource,
 	latest *resource,
-	diffReporter *ackcompare.Reporter,
+	delta *ackcompare.Delta,
 ) (*resource, error) {
 	// TODO(jaypipes): Figure this out...
 	return nil, ackerr.NotImplemented

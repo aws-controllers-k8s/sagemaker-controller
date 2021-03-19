@@ -37,6 +37,7 @@ spec:
             description: ModelSpec defines the desired state of Model
             properties:
               containers:
+                description: Specifies the containers in the inference pipeline.
                 items:
                   properties:
                     containerHostname:
@@ -66,17 +67,32 @@ spec:
                   type: object
                 type: array
               enableNetworkIsolation:
+                description: Isolates the model container. No inbound or outbound
+                  network calls can be made to or from the model container.
                 type: boolean
               executionRoleARN:
+                description: "The Amazon Resource Name (ARN) of the IAM role that
+                  Amazon SageMaker can assume to access model artifacts and docker
+                  image for deployment on ML compute instances or for batch transform
+                  jobs. Deploying on ML compute instances is part of model hosting.
+                  For more information, see Amazon SageMaker Roles (https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-roles.html).
+                  \n To be able to pass this role to Amazon SageMaker, the caller
+                  of this API must have the iam:PassRole permission."
                 type: string
               inferenceExecutionConfig:
+                description: Specifies details of how containers in a multi-container
+                  endpoint are called.
                 properties:
                   mode:
                     type: string
                 type: object
               modelName:
+                description: The name of the new model.
                 type: string
               primaryContainer:
+                description: The location of the primary docker image containing inference
+                  code, associated artifacts, and custom environment map that the
+                  inference code uses when the model is deployed for predictions.
                 properties:
                   containerHostname:
                     type: string
@@ -104,6 +120,13 @@ spec:
                     type: object
                 type: object
               vpcConfig:
+                description: A VpcConfig object that specifies the VPC that you want
+                  your model to connect to. Control access to and from your model
+                  container by configuring the VPC. VpcConfig is used in hosting services
+                  and in batch transform. For more information, see Protect Endpoints
+                  by Using an Amazon Virtual Private Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/host-vpc.html)
+                  and Protect Data in Batch Transform Jobs by Using an Amazon Virtual
+                  Private Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/batch-vpc.html).
                 properties:
                   securityGroupIDs:
                     items:

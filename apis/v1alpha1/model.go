@@ -22,15 +22,37 @@ import (
 
 // ModelSpec defines the desired state of Model
 type ModelSpec struct {
-	Containers             []*ContainerDefinition `json:"containers,omitempty"`
-	EnableNetworkIsolation *bool                  `json:"enableNetworkIsolation,omitempty"`
+	// Specifies the containers in the inference pipeline.
+	Containers []*ContainerDefinition `json:"containers,omitempty"`
+	// Isolates the model container. No inbound or outbound network calls can be
+	// made to or from the model container.
+	EnableNetworkIsolation *bool `json:"enableNetworkIsolation,omitempty"`
+	// The Amazon Resource Name (ARN) of the IAM role that Amazon SageMaker can
+	// assume to access model artifacts and docker image for deployment on ML compute
+	// instances or for batch transform jobs. Deploying on ML compute instances
+	// is part of model hosting. For more information, see Amazon SageMaker Roles
+	// (https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-roles.html).
+	//
+	// To be able to pass this role to Amazon SageMaker, the caller of this API
+	// must have the iam:PassRole permission.
 	// +kubebuilder:validation:Required
-	ExecutionRoleARN         *string                   `json:"executionRoleARN"`
+	ExecutionRoleARN *string `json:"executionRoleARN"`
+	// Specifies details of how containers in a multi-container endpoint are called.
 	InferenceExecutionConfig *InferenceExecutionConfig `json:"inferenceExecutionConfig,omitempty"`
+	// The name of the new model.
 	// +kubebuilder:validation:Required
-	ModelName        *string              `json:"modelName"`
+	ModelName *string `json:"modelName"`
+	// The location of the primary docker image containing inference code, associated
+	// artifacts, and custom environment map that the inference code uses when the
+	// model is deployed for predictions.
 	PrimaryContainer *ContainerDefinition `json:"primaryContainer,omitempty"`
-	VPCConfig        *VPCConfig           `json:"vpcConfig,omitempty"`
+	// A VpcConfig object that specifies the VPC that you want your model to connect
+	// to. Control access to and from your model container by configuring the VPC.
+	// VpcConfig is used in hosting services and in batch transform. For more information,
+	// see Protect Endpoints by Using an Amazon Virtual Private Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/host-vpc.html)
+	// and Protect Data in Batch Transform Jobs by Using an Amazon Virtual Private
+	// Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/batch-vpc.html).
+	VPCConfig *VPCConfig `json:"vpcConfig,omitempty"`
 }
 
 // ModelStatus defines the observed state of Model

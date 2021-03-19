@@ -126,9 +126,13 @@ func (rm *resourceManager) sdkFind(
 			f0.TuningJobName = resp.BestTrainingJob.TuningJobName
 		}
 		ko.Status.BestTrainingJob = f0
+	} else {
+		ko.Status.BestTrainingJob = nil
 	}
 	if resp.FailureReason != nil {
 		ko.Status.FailureReason = resp.FailureReason
+	} else {
+		ko.Status.FailureReason = nil
 	}
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
@@ -237,12 +241,18 @@ func (rm *resourceManager) sdkFind(
 			f5.TuningJobCompletionCriteria = f5f5
 		}
 		ko.Spec.HyperParameterTuningJobConfig = f5
+	} else {
+		ko.Spec.HyperParameterTuningJobConfig = nil
 	}
 	if resp.HyperParameterTuningJobName != nil {
 		ko.Spec.HyperParameterTuningJobName = resp.HyperParameterTuningJobName
+	} else {
+		ko.Spec.HyperParameterTuningJobName = nil
 	}
 	if resp.HyperParameterTuningJobStatus != nil {
 		ko.Status.HyperParameterTuningJobStatus = resp.HyperParameterTuningJobStatus
+	} else {
+		ko.Status.HyperParameterTuningJobStatus = nil
 	}
 	if resp.OverallBestTrainingJob != nil {
 		f10 := &svcapitypes.HyperParameterTrainingJobSummary{}
@@ -299,6 +309,8 @@ func (rm *resourceManager) sdkFind(
 			f10.TuningJobName = resp.OverallBestTrainingJob.TuningJobName
 		}
 		ko.Status.OverallBestTrainingJob = f10
+	} else {
+		ko.Status.OverallBestTrainingJob = nil
 	}
 	if resp.TrainingJobDefinition != nil {
 		f11 := &svcapitypes.HyperParameterTrainingJobDefinition{}
@@ -568,6 +580,8 @@ func (rm *resourceManager) sdkFind(
 			f11.VPCConfig = f11f14
 		}
 		ko.Spec.TrainingJobDefinition = f11
+	} else {
+		ko.Spec.TrainingJobDefinition = nil
 	}
 	if resp.TrainingJobDefinitions != nil {
 		f12 := []*svcapitypes.HyperParameterTrainingJobDefinition{}
@@ -841,6 +855,8 @@ func (rm *resourceManager) sdkFind(
 			f12 = append(f12, f12elem)
 		}
 		ko.Spec.TrainingJobDefinitions = f12
+	} else {
+		ko.Spec.TrainingJobDefinitions = nil
 	}
 	if resp.WarmStartConfig != nil {
 		f14 := &svcapitypes.HyperParameterTuningJobWarmStartConfig{}
@@ -859,6 +875,8 @@ func (rm *resourceManager) sdkFind(
 			f14.WarmStartType = resp.WarmStartConfig.WarmStartType
 		}
 		ko.Spec.WarmStartConfig = f14
+	} else {
+		ko.Spec.WarmStartConfig = nil
 	}
 
 	rm.setStatusDefaults(ko)
@@ -1035,579 +1053,565 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.HyperParameterTuningJobName != nil {
 		res.SetHyperParameterTuningJobName(*r.ko.Spec.HyperParameterTuningJobName)
 	}
-	if r.ko.Spec.Tags != nil {
-		f2 := []*svcsdk.Tag{}
-		for _, f2iter := range r.ko.Spec.Tags {
-			f2elem := &svcsdk.Tag{}
-			if f2iter.Key != nil {
-				f2elem.SetKey(*f2iter.Key)
-			}
-			if f2iter.Value != nil {
-				f2elem.SetValue(*f2iter.Value)
-			}
-			f2 = append(f2, f2elem)
-		}
-		res.SetTags(f2)
-	}
 	if r.ko.Spec.TrainingJobDefinition != nil {
-		f3 := &svcsdk.HyperParameterTrainingJobDefinition{}
+		f2 := &svcsdk.HyperParameterTrainingJobDefinition{}
 		if r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification != nil {
-			f3f0 := &svcsdk.HyperParameterAlgorithmSpecification{}
+			f2f0 := &svcsdk.HyperParameterAlgorithmSpecification{}
 			if r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.AlgorithmName != nil {
-				f3f0.SetAlgorithmName(*r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.AlgorithmName)
+				f2f0.SetAlgorithmName(*r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.AlgorithmName)
 			}
 			if r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions != nil {
-				f3f0f1 := []*svcsdk.MetricDefinition{}
-				for _, f3f0f1iter := range r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions {
-					f3f0f1elem := &svcsdk.MetricDefinition{}
-					if f3f0f1iter.Name != nil {
-						f3f0f1elem.SetName(*f3f0f1iter.Name)
+				f2f0f1 := []*svcsdk.MetricDefinition{}
+				for _, f2f0f1iter := range r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions {
+					f2f0f1elem := &svcsdk.MetricDefinition{}
+					if f2f0f1iter.Name != nil {
+						f2f0f1elem.SetName(*f2f0f1iter.Name)
 					}
-					if f3f0f1iter.Regex != nil {
-						f3f0f1elem.SetRegex(*f3f0f1iter.Regex)
+					if f2f0f1iter.Regex != nil {
+						f2f0f1elem.SetRegex(*f2f0f1iter.Regex)
 					}
-					f3f0f1 = append(f3f0f1, f3f0f1elem)
+					f2f0f1 = append(f2f0f1, f2f0f1elem)
 				}
-				f3f0.SetMetricDefinitions(f3f0f1)
+				f2f0.SetMetricDefinitions(f2f0f1)
 			}
 			if r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.TrainingImage != nil {
-				f3f0.SetTrainingImage(*r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.TrainingImage)
+				f2f0.SetTrainingImage(*r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.TrainingImage)
 			}
 			if r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.TrainingInputMode != nil {
-				f3f0.SetTrainingInputMode(*r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.TrainingInputMode)
+				f2f0.SetTrainingInputMode(*r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.TrainingInputMode)
 			}
-			f3.SetAlgorithmSpecification(f3f0)
+			f2.SetAlgorithmSpecification(f2f0)
 		}
 		if r.ko.Spec.TrainingJobDefinition.CheckpointConfig != nil {
-			f3f1 := &svcsdk.CheckpointConfig{}
+			f2f1 := &svcsdk.CheckpointConfig{}
 			if r.ko.Spec.TrainingJobDefinition.CheckpointConfig.LocalPath != nil {
-				f3f1.SetLocalPath(*r.ko.Spec.TrainingJobDefinition.CheckpointConfig.LocalPath)
+				f2f1.SetLocalPath(*r.ko.Spec.TrainingJobDefinition.CheckpointConfig.LocalPath)
 			}
 			if r.ko.Spec.TrainingJobDefinition.CheckpointConfig.S3URI != nil {
-				f3f1.SetS3Uri(*r.ko.Spec.TrainingJobDefinition.CheckpointConfig.S3URI)
+				f2f1.SetS3Uri(*r.ko.Spec.TrainingJobDefinition.CheckpointConfig.S3URI)
 			}
-			f3.SetCheckpointConfig(f3f1)
+			f2.SetCheckpointConfig(f2f1)
 		}
 		if r.ko.Spec.TrainingJobDefinition.DefinitionName != nil {
-			f3.SetDefinitionName(*r.ko.Spec.TrainingJobDefinition.DefinitionName)
+			f2.SetDefinitionName(*r.ko.Spec.TrainingJobDefinition.DefinitionName)
 		}
 		if r.ko.Spec.TrainingJobDefinition.EnableInterContainerTrafficEncryption != nil {
-			f3.SetEnableInterContainerTrafficEncryption(*r.ko.Spec.TrainingJobDefinition.EnableInterContainerTrafficEncryption)
+			f2.SetEnableInterContainerTrafficEncryption(*r.ko.Spec.TrainingJobDefinition.EnableInterContainerTrafficEncryption)
 		}
 		if r.ko.Spec.TrainingJobDefinition.EnableManagedSpotTraining != nil {
-			f3.SetEnableManagedSpotTraining(*r.ko.Spec.TrainingJobDefinition.EnableManagedSpotTraining)
+			f2.SetEnableManagedSpotTraining(*r.ko.Spec.TrainingJobDefinition.EnableManagedSpotTraining)
 		}
 		if r.ko.Spec.TrainingJobDefinition.EnableNetworkIsolation != nil {
-			f3.SetEnableNetworkIsolation(*r.ko.Spec.TrainingJobDefinition.EnableNetworkIsolation)
+			f2.SetEnableNetworkIsolation(*r.ko.Spec.TrainingJobDefinition.EnableNetworkIsolation)
 		}
 		if r.ko.Spec.TrainingJobDefinition.HyperParameterRanges != nil {
-			f3f6 := &svcsdk.ParameterRanges{}
+			f2f6 := &svcsdk.ParameterRanges{}
 			if r.ko.Spec.TrainingJobDefinition.HyperParameterRanges.CategoricalParameterRanges != nil {
-				f3f6f0 := []*svcsdk.CategoricalParameterRange{}
-				for _, f3f6f0iter := range r.ko.Spec.TrainingJobDefinition.HyperParameterRanges.CategoricalParameterRanges {
-					f3f6f0elem := &svcsdk.CategoricalParameterRange{}
-					if f3f6f0iter.Name != nil {
-						f3f6f0elem.SetName(*f3f6f0iter.Name)
+				f2f6f0 := []*svcsdk.CategoricalParameterRange{}
+				for _, f2f6f0iter := range r.ko.Spec.TrainingJobDefinition.HyperParameterRanges.CategoricalParameterRanges {
+					f2f6f0elem := &svcsdk.CategoricalParameterRange{}
+					if f2f6f0iter.Name != nil {
+						f2f6f0elem.SetName(*f2f6f0iter.Name)
 					}
-					if f3f6f0iter.Values != nil {
-						f3f6f0elemf1 := []*string{}
-						for _, f3f6f0elemf1iter := range f3f6f0iter.Values {
-							var f3f6f0elemf1elem string
-							f3f6f0elemf1elem = *f3f6f0elemf1iter
-							f3f6f0elemf1 = append(f3f6f0elemf1, &f3f6f0elemf1elem)
+					if f2f6f0iter.Values != nil {
+						f2f6f0elemf1 := []*string{}
+						for _, f2f6f0elemf1iter := range f2f6f0iter.Values {
+							var f2f6f0elemf1elem string
+							f2f6f0elemf1elem = *f2f6f0elemf1iter
+							f2f6f0elemf1 = append(f2f6f0elemf1, &f2f6f0elemf1elem)
 						}
-						f3f6f0elem.SetValues(f3f6f0elemf1)
+						f2f6f0elem.SetValues(f2f6f0elemf1)
 					}
-					f3f6f0 = append(f3f6f0, f3f6f0elem)
+					f2f6f0 = append(f2f6f0, f2f6f0elem)
 				}
-				f3f6.SetCategoricalParameterRanges(f3f6f0)
+				f2f6.SetCategoricalParameterRanges(f2f6f0)
 			}
 			if r.ko.Spec.TrainingJobDefinition.HyperParameterRanges.ContinuousParameterRanges != nil {
-				f3f6f1 := []*svcsdk.ContinuousParameterRange{}
-				for _, f3f6f1iter := range r.ko.Spec.TrainingJobDefinition.HyperParameterRanges.ContinuousParameterRanges {
-					f3f6f1elem := &svcsdk.ContinuousParameterRange{}
-					if f3f6f1iter.MaxValue != nil {
-						f3f6f1elem.SetMaxValue(*f3f6f1iter.MaxValue)
+				f2f6f1 := []*svcsdk.ContinuousParameterRange{}
+				for _, f2f6f1iter := range r.ko.Spec.TrainingJobDefinition.HyperParameterRanges.ContinuousParameterRanges {
+					f2f6f1elem := &svcsdk.ContinuousParameterRange{}
+					if f2f6f1iter.MaxValue != nil {
+						f2f6f1elem.SetMaxValue(*f2f6f1iter.MaxValue)
 					}
-					if f3f6f1iter.MinValue != nil {
-						f3f6f1elem.SetMinValue(*f3f6f1iter.MinValue)
+					if f2f6f1iter.MinValue != nil {
+						f2f6f1elem.SetMinValue(*f2f6f1iter.MinValue)
 					}
-					if f3f6f1iter.Name != nil {
-						f3f6f1elem.SetName(*f3f6f1iter.Name)
+					if f2f6f1iter.Name != nil {
+						f2f6f1elem.SetName(*f2f6f1iter.Name)
 					}
-					if f3f6f1iter.ScalingType != nil {
-						f3f6f1elem.SetScalingType(*f3f6f1iter.ScalingType)
+					if f2f6f1iter.ScalingType != nil {
+						f2f6f1elem.SetScalingType(*f2f6f1iter.ScalingType)
 					}
-					f3f6f1 = append(f3f6f1, f3f6f1elem)
+					f2f6f1 = append(f2f6f1, f2f6f1elem)
 				}
-				f3f6.SetContinuousParameterRanges(f3f6f1)
+				f2f6.SetContinuousParameterRanges(f2f6f1)
 			}
 			if r.ko.Spec.TrainingJobDefinition.HyperParameterRanges.IntegerParameterRanges != nil {
-				f3f6f2 := []*svcsdk.IntegerParameterRange{}
-				for _, f3f6f2iter := range r.ko.Spec.TrainingJobDefinition.HyperParameterRanges.IntegerParameterRanges {
-					f3f6f2elem := &svcsdk.IntegerParameterRange{}
-					if f3f6f2iter.MaxValue != nil {
-						f3f6f2elem.SetMaxValue(*f3f6f2iter.MaxValue)
+				f2f6f2 := []*svcsdk.IntegerParameterRange{}
+				for _, f2f6f2iter := range r.ko.Spec.TrainingJobDefinition.HyperParameterRanges.IntegerParameterRanges {
+					f2f6f2elem := &svcsdk.IntegerParameterRange{}
+					if f2f6f2iter.MaxValue != nil {
+						f2f6f2elem.SetMaxValue(*f2f6f2iter.MaxValue)
 					}
-					if f3f6f2iter.MinValue != nil {
-						f3f6f2elem.SetMinValue(*f3f6f2iter.MinValue)
+					if f2f6f2iter.MinValue != nil {
+						f2f6f2elem.SetMinValue(*f2f6f2iter.MinValue)
 					}
-					if f3f6f2iter.Name != nil {
-						f3f6f2elem.SetName(*f3f6f2iter.Name)
+					if f2f6f2iter.Name != nil {
+						f2f6f2elem.SetName(*f2f6f2iter.Name)
 					}
-					if f3f6f2iter.ScalingType != nil {
-						f3f6f2elem.SetScalingType(*f3f6f2iter.ScalingType)
+					if f2f6f2iter.ScalingType != nil {
+						f2f6f2elem.SetScalingType(*f2f6f2iter.ScalingType)
 					}
-					f3f6f2 = append(f3f6f2, f3f6f2elem)
+					f2f6f2 = append(f2f6f2, f2f6f2elem)
 				}
-				f3f6.SetIntegerParameterRanges(f3f6f2)
+				f2f6.SetIntegerParameterRanges(f2f6f2)
 			}
-			f3.SetHyperParameterRanges(f3f6)
+			f2.SetHyperParameterRanges(f2f6)
 		}
 		if r.ko.Spec.TrainingJobDefinition.InputDataConfig != nil {
-			f3f7 := []*svcsdk.Channel{}
-			for _, f3f7iter := range r.ko.Spec.TrainingJobDefinition.InputDataConfig {
-				f3f7elem := &svcsdk.Channel{}
-				if f3f7iter.ChannelName != nil {
-					f3f7elem.SetChannelName(*f3f7iter.ChannelName)
+			f2f7 := []*svcsdk.Channel{}
+			for _, f2f7iter := range r.ko.Spec.TrainingJobDefinition.InputDataConfig {
+				f2f7elem := &svcsdk.Channel{}
+				if f2f7iter.ChannelName != nil {
+					f2f7elem.SetChannelName(*f2f7iter.ChannelName)
 				}
-				if f3f7iter.CompressionType != nil {
-					f3f7elem.SetCompressionType(*f3f7iter.CompressionType)
+				if f2f7iter.CompressionType != nil {
+					f2f7elem.SetCompressionType(*f2f7iter.CompressionType)
 				}
-				if f3f7iter.ContentType != nil {
-					f3f7elem.SetContentType(*f3f7iter.ContentType)
+				if f2f7iter.ContentType != nil {
+					f2f7elem.SetContentType(*f2f7iter.ContentType)
 				}
-				if f3f7iter.DataSource != nil {
-					f3f7elemf3 := &svcsdk.DataSource{}
-					if f3f7iter.DataSource.FileSystemDataSource != nil {
-						f3f7elemf3f0 := &svcsdk.FileSystemDataSource{}
-						if f3f7iter.DataSource.FileSystemDataSource.DirectoryPath != nil {
-							f3f7elemf3f0.SetDirectoryPath(*f3f7iter.DataSource.FileSystemDataSource.DirectoryPath)
+				if f2f7iter.DataSource != nil {
+					f2f7elemf3 := &svcsdk.DataSource{}
+					if f2f7iter.DataSource.FileSystemDataSource != nil {
+						f2f7elemf3f0 := &svcsdk.FileSystemDataSource{}
+						if f2f7iter.DataSource.FileSystemDataSource.DirectoryPath != nil {
+							f2f7elemf3f0.SetDirectoryPath(*f2f7iter.DataSource.FileSystemDataSource.DirectoryPath)
 						}
-						if f3f7iter.DataSource.FileSystemDataSource.FileSystemAccessMode != nil {
-							f3f7elemf3f0.SetFileSystemAccessMode(*f3f7iter.DataSource.FileSystemDataSource.FileSystemAccessMode)
+						if f2f7iter.DataSource.FileSystemDataSource.FileSystemAccessMode != nil {
+							f2f7elemf3f0.SetFileSystemAccessMode(*f2f7iter.DataSource.FileSystemDataSource.FileSystemAccessMode)
 						}
-						if f3f7iter.DataSource.FileSystemDataSource.FileSystemID != nil {
-							f3f7elemf3f0.SetFileSystemId(*f3f7iter.DataSource.FileSystemDataSource.FileSystemID)
+						if f2f7iter.DataSource.FileSystemDataSource.FileSystemID != nil {
+							f2f7elemf3f0.SetFileSystemId(*f2f7iter.DataSource.FileSystemDataSource.FileSystemID)
 						}
-						if f3f7iter.DataSource.FileSystemDataSource.FileSystemType != nil {
-							f3f7elemf3f0.SetFileSystemType(*f3f7iter.DataSource.FileSystemDataSource.FileSystemType)
+						if f2f7iter.DataSource.FileSystemDataSource.FileSystemType != nil {
+							f2f7elemf3f0.SetFileSystemType(*f2f7iter.DataSource.FileSystemDataSource.FileSystemType)
 						}
-						f3f7elemf3.SetFileSystemDataSource(f3f7elemf3f0)
+						f2f7elemf3.SetFileSystemDataSource(f2f7elemf3f0)
 					}
-					if f3f7iter.DataSource.S3DataSource != nil {
-						f3f7elemf3f1 := &svcsdk.S3DataSource{}
-						if f3f7iter.DataSource.S3DataSource.AttributeNames != nil {
-							f3f7elemf3f1f0 := []*string{}
-							for _, f3f7elemf3f1f0iter := range f3f7iter.DataSource.S3DataSource.AttributeNames {
-								var f3f7elemf3f1f0elem string
-								f3f7elemf3f1f0elem = *f3f7elemf3f1f0iter
-								f3f7elemf3f1f0 = append(f3f7elemf3f1f0, &f3f7elemf3f1f0elem)
+					if f2f7iter.DataSource.S3DataSource != nil {
+						f2f7elemf3f1 := &svcsdk.S3DataSource{}
+						if f2f7iter.DataSource.S3DataSource.AttributeNames != nil {
+							f2f7elemf3f1f0 := []*string{}
+							for _, f2f7elemf3f1f0iter := range f2f7iter.DataSource.S3DataSource.AttributeNames {
+								var f2f7elemf3f1f0elem string
+								f2f7elemf3f1f0elem = *f2f7elemf3f1f0iter
+								f2f7elemf3f1f0 = append(f2f7elemf3f1f0, &f2f7elemf3f1f0elem)
 							}
-							f3f7elemf3f1.SetAttributeNames(f3f7elemf3f1f0)
+							f2f7elemf3f1.SetAttributeNames(f2f7elemf3f1f0)
 						}
-						if f3f7iter.DataSource.S3DataSource.S3DataDistributionType != nil {
-							f3f7elemf3f1.SetS3DataDistributionType(*f3f7iter.DataSource.S3DataSource.S3DataDistributionType)
+						if f2f7iter.DataSource.S3DataSource.S3DataDistributionType != nil {
+							f2f7elemf3f1.SetS3DataDistributionType(*f2f7iter.DataSource.S3DataSource.S3DataDistributionType)
 						}
-						if f3f7iter.DataSource.S3DataSource.S3DataType != nil {
-							f3f7elemf3f1.SetS3DataType(*f3f7iter.DataSource.S3DataSource.S3DataType)
+						if f2f7iter.DataSource.S3DataSource.S3DataType != nil {
+							f2f7elemf3f1.SetS3DataType(*f2f7iter.DataSource.S3DataSource.S3DataType)
 						}
-						if f3f7iter.DataSource.S3DataSource.S3URI != nil {
-							f3f7elemf3f1.SetS3Uri(*f3f7iter.DataSource.S3DataSource.S3URI)
+						if f2f7iter.DataSource.S3DataSource.S3URI != nil {
+							f2f7elemf3f1.SetS3Uri(*f2f7iter.DataSource.S3DataSource.S3URI)
 						}
-						f3f7elemf3.SetS3DataSource(f3f7elemf3f1)
+						f2f7elemf3.SetS3DataSource(f2f7elemf3f1)
 					}
-					f3f7elem.SetDataSource(f3f7elemf3)
+					f2f7elem.SetDataSource(f2f7elemf3)
 				}
-				if f3f7iter.InputMode != nil {
-					f3f7elem.SetInputMode(*f3f7iter.InputMode)
+				if f2f7iter.InputMode != nil {
+					f2f7elem.SetInputMode(*f2f7iter.InputMode)
 				}
-				if f3f7iter.RecordWrapperType != nil {
-					f3f7elem.SetRecordWrapperType(*f3f7iter.RecordWrapperType)
+				if f2f7iter.RecordWrapperType != nil {
+					f2f7elem.SetRecordWrapperType(*f2f7iter.RecordWrapperType)
 				}
-				if f3f7iter.ShuffleConfig != nil {
-					f3f7elemf6 := &svcsdk.ShuffleConfig{}
-					if f3f7iter.ShuffleConfig.Seed != nil {
-						f3f7elemf6.SetSeed(*f3f7iter.ShuffleConfig.Seed)
+				if f2f7iter.ShuffleConfig != nil {
+					f2f7elemf6 := &svcsdk.ShuffleConfig{}
+					if f2f7iter.ShuffleConfig.Seed != nil {
+						f2f7elemf6.SetSeed(*f2f7iter.ShuffleConfig.Seed)
 					}
-					f3f7elem.SetShuffleConfig(f3f7elemf6)
+					f2f7elem.SetShuffleConfig(f2f7elemf6)
 				}
-				f3f7 = append(f3f7, f3f7elem)
+				f2f7 = append(f2f7, f2f7elem)
 			}
-			f3.SetInputDataConfig(f3f7)
+			f2.SetInputDataConfig(f2f7)
 		}
 		if r.ko.Spec.TrainingJobDefinition.OutputDataConfig != nil {
-			f3f8 := &svcsdk.OutputDataConfig{}
+			f2f8 := &svcsdk.OutputDataConfig{}
 			if r.ko.Spec.TrainingJobDefinition.OutputDataConfig.KMSKeyID != nil {
-				f3f8.SetKmsKeyId(*r.ko.Spec.TrainingJobDefinition.OutputDataConfig.KMSKeyID)
+				f2f8.SetKmsKeyId(*r.ko.Spec.TrainingJobDefinition.OutputDataConfig.KMSKeyID)
 			}
 			if r.ko.Spec.TrainingJobDefinition.OutputDataConfig.S3OutputPath != nil {
-				f3f8.SetS3OutputPath(*r.ko.Spec.TrainingJobDefinition.OutputDataConfig.S3OutputPath)
+				f2f8.SetS3OutputPath(*r.ko.Spec.TrainingJobDefinition.OutputDataConfig.S3OutputPath)
 			}
-			f3.SetOutputDataConfig(f3f8)
+			f2.SetOutputDataConfig(f2f8)
 		}
 		if r.ko.Spec.TrainingJobDefinition.ResourceConfig != nil {
-			f3f9 := &svcsdk.ResourceConfig{}
+			f2f9 := &svcsdk.ResourceConfig{}
 			if r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceCount != nil {
-				f3f9.SetInstanceCount(*r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceCount)
+				f2f9.SetInstanceCount(*r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceCount)
 			}
 			if r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType != nil {
-				f3f9.SetInstanceType(*r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType)
+				f2f9.SetInstanceType(*r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType)
 			}
 			if r.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID != nil {
-				f3f9.SetVolumeKmsKeyId(*r.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID)
+				f2f9.SetVolumeKmsKeyId(*r.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID)
 			}
 			if r.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeSizeInGB != nil {
-				f3f9.SetVolumeSizeInGB(*r.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeSizeInGB)
+				f2f9.SetVolumeSizeInGB(*r.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeSizeInGB)
 			}
-			f3.SetResourceConfig(f3f9)
+			f2.SetResourceConfig(f2f9)
 		}
 		if r.ko.Spec.TrainingJobDefinition.RoleARN != nil {
-			f3.SetRoleArn(*r.ko.Spec.TrainingJobDefinition.RoleARN)
+			f2.SetRoleArn(*r.ko.Spec.TrainingJobDefinition.RoleARN)
 		}
 		if r.ko.Spec.TrainingJobDefinition.StaticHyperParameters != nil {
-			f3f11 := map[string]*string{}
-			for f3f11key, f3f11valiter := range r.ko.Spec.TrainingJobDefinition.StaticHyperParameters {
-				var f3f11val string
-				f3f11val = *f3f11valiter
-				f3f11[f3f11key] = &f3f11val
+			f2f11 := map[string]*string{}
+			for f2f11key, f2f11valiter := range r.ko.Spec.TrainingJobDefinition.StaticHyperParameters {
+				var f2f11val string
+				f2f11val = *f2f11valiter
+				f2f11[f2f11key] = &f2f11val
 			}
-			f3.SetStaticHyperParameters(f3f11)
+			f2.SetStaticHyperParameters(f2f11)
 		}
 		if r.ko.Spec.TrainingJobDefinition.StoppingCondition != nil {
-			f3f12 := &svcsdk.StoppingCondition{}
+			f2f12 := &svcsdk.StoppingCondition{}
 			if r.ko.Spec.TrainingJobDefinition.StoppingCondition.MaxRuntimeInSeconds != nil {
-				f3f12.SetMaxRuntimeInSeconds(*r.ko.Spec.TrainingJobDefinition.StoppingCondition.MaxRuntimeInSeconds)
+				f2f12.SetMaxRuntimeInSeconds(*r.ko.Spec.TrainingJobDefinition.StoppingCondition.MaxRuntimeInSeconds)
 			}
 			if r.ko.Spec.TrainingJobDefinition.StoppingCondition.MaxWaitTimeInSeconds != nil {
-				f3f12.SetMaxWaitTimeInSeconds(*r.ko.Spec.TrainingJobDefinition.StoppingCondition.MaxWaitTimeInSeconds)
+				f2f12.SetMaxWaitTimeInSeconds(*r.ko.Spec.TrainingJobDefinition.StoppingCondition.MaxWaitTimeInSeconds)
 			}
-			f3.SetStoppingCondition(f3f12)
+			f2.SetStoppingCondition(f2f12)
 		}
 		if r.ko.Spec.TrainingJobDefinition.TuningObjective != nil {
-			f3f13 := &svcsdk.HyperParameterTuningJobObjective{}
+			f2f13 := &svcsdk.HyperParameterTuningJobObjective{}
 			if r.ko.Spec.TrainingJobDefinition.TuningObjective.MetricName != nil {
-				f3f13.SetMetricName(*r.ko.Spec.TrainingJobDefinition.TuningObjective.MetricName)
+				f2f13.SetMetricName(*r.ko.Spec.TrainingJobDefinition.TuningObjective.MetricName)
 			}
 			if r.ko.Spec.TrainingJobDefinition.TuningObjective.Type != nil {
-				f3f13.SetType(*r.ko.Spec.TrainingJobDefinition.TuningObjective.Type)
+				f2f13.SetType(*r.ko.Spec.TrainingJobDefinition.TuningObjective.Type)
 			}
-			f3.SetTuningObjective(f3f13)
+			f2.SetTuningObjective(f2f13)
 		}
 		if r.ko.Spec.TrainingJobDefinition.VPCConfig != nil {
-			f3f14 := &svcsdk.VpcConfig{}
+			f2f14 := &svcsdk.VpcConfig{}
 			if r.ko.Spec.TrainingJobDefinition.VPCConfig.SecurityGroupIDs != nil {
-				f3f14f0 := []*string{}
-				for _, f3f14f0iter := range r.ko.Spec.TrainingJobDefinition.VPCConfig.SecurityGroupIDs {
-					var f3f14f0elem string
-					f3f14f0elem = *f3f14f0iter
-					f3f14f0 = append(f3f14f0, &f3f14f0elem)
+				f2f14f0 := []*string{}
+				for _, f2f14f0iter := range r.ko.Spec.TrainingJobDefinition.VPCConfig.SecurityGroupIDs {
+					var f2f14f0elem string
+					f2f14f0elem = *f2f14f0iter
+					f2f14f0 = append(f2f14f0, &f2f14f0elem)
 				}
-				f3f14.SetSecurityGroupIds(f3f14f0)
+				f2f14.SetSecurityGroupIds(f2f14f0)
 			}
 			if r.ko.Spec.TrainingJobDefinition.VPCConfig.Subnets != nil {
-				f3f14f1 := []*string{}
-				for _, f3f14f1iter := range r.ko.Spec.TrainingJobDefinition.VPCConfig.Subnets {
-					var f3f14f1elem string
-					f3f14f1elem = *f3f14f1iter
-					f3f14f1 = append(f3f14f1, &f3f14f1elem)
+				f2f14f1 := []*string{}
+				for _, f2f14f1iter := range r.ko.Spec.TrainingJobDefinition.VPCConfig.Subnets {
+					var f2f14f1elem string
+					f2f14f1elem = *f2f14f1iter
+					f2f14f1 = append(f2f14f1, &f2f14f1elem)
 				}
-				f3f14.SetSubnets(f3f14f1)
+				f2f14.SetSubnets(f2f14f1)
 			}
-			f3.SetVpcConfig(f3f14)
+			f2.SetVpcConfig(f2f14)
 		}
-		res.SetTrainingJobDefinition(f3)
+		res.SetTrainingJobDefinition(f2)
 	}
 	if r.ko.Spec.TrainingJobDefinitions != nil {
-		f4 := []*svcsdk.HyperParameterTrainingJobDefinition{}
-		for _, f4iter := range r.ko.Spec.TrainingJobDefinitions {
-			f4elem := &svcsdk.HyperParameterTrainingJobDefinition{}
-			if f4iter.AlgorithmSpecification != nil {
-				f4elemf0 := &svcsdk.HyperParameterAlgorithmSpecification{}
-				if f4iter.AlgorithmSpecification.AlgorithmName != nil {
-					f4elemf0.SetAlgorithmName(*f4iter.AlgorithmSpecification.AlgorithmName)
+		f3 := []*svcsdk.HyperParameterTrainingJobDefinition{}
+		for _, f3iter := range r.ko.Spec.TrainingJobDefinitions {
+			f3elem := &svcsdk.HyperParameterTrainingJobDefinition{}
+			if f3iter.AlgorithmSpecification != nil {
+				f3elemf0 := &svcsdk.HyperParameterAlgorithmSpecification{}
+				if f3iter.AlgorithmSpecification.AlgorithmName != nil {
+					f3elemf0.SetAlgorithmName(*f3iter.AlgorithmSpecification.AlgorithmName)
 				}
-				if f4iter.AlgorithmSpecification.MetricDefinitions != nil {
-					f4elemf0f1 := []*svcsdk.MetricDefinition{}
-					for _, f4elemf0f1iter := range f4iter.AlgorithmSpecification.MetricDefinitions {
-						f4elemf0f1elem := &svcsdk.MetricDefinition{}
-						if f4elemf0f1iter.Name != nil {
-							f4elemf0f1elem.SetName(*f4elemf0f1iter.Name)
+				if f3iter.AlgorithmSpecification.MetricDefinitions != nil {
+					f3elemf0f1 := []*svcsdk.MetricDefinition{}
+					for _, f3elemf0f1iter := range f3iter.AlgorithmSpecification.MetricDefinitions {
+						f3elemf0f1elem := &svcsdk.MetricDefinition{}
+						if f3elemf0f1iter.Name != nil {
+							f3elemf0f1elem.SetName(*f3elemf0f1iter.Name)
 						}
-						if f4elemf0f1iter.Regex != nil {
-							f4elemf0f1elem.SetRegex(*f4elemf0f1iter.Regex)
+						if f3elemf0f1iter.Regex != nil {
+							f3elemf0f1elem.SetRegex(*f3elemf0f1iter.Regex)
 						}
-						f4elemf0f1 = append(f4elemf0f1, f4elemf0f1elem)
+						f3elemf0f1 = append(f3elemf0f1, f3elemf0f1elem)
 					}
-					f4elemf0.SetMetricDefinitions(f4elemf0f1)
+					f3elemf0.SetMetricDefinitions(f3elemf0f1)
 				}
-				if f4iter.AlgorithmSpecification.TrainingImage != nil {
-					f4elemf0.SetTrainingImage(*f4iter.AlgorithmSpecification.TrainingImage)
+				if f3iter.AlgorithmSpecification.TrainingImage != nil {
+					f3elemf0.SetTrainingImage(*f3iter.AlgorithmSpecification.TrainingImage)
 				}
-				if f4iter.AlgorithmSpecification.TrainingInputMode != nil {
-					f4elemf0.SetTrainingInputMode(*f4iter.AlgorithmSpecification.TrainingInputMode)
+				if f3iter.AlgorithmSpecification.TrainingInputMode != nil {
+					f3elemf0.SetTrainingInputMode(*f3iter.AlgorithmSpecification.TrainingInputMode)
 				}
-				f4elem.SetAlgorithmSpecification(f4elemf0)
+				f3elem.SetAlgorithmSpecification(f3elemf0)
 			}
-			if f4iter.CheckpointConfig != nil {
-				f4elemf1 := &svcsdk.CheckpointConfig{}
-				if f4iter.CheckpointConfig.LocalPath != nil {
-					f4elemf1.SetLocalPath(*f4iter.CheckpointConfig.LocalPath)
+			if f3iter.CheckpointConfig != nil {
+				f3elemf1 := &svcsdk.CheckpointConfig{}
+				if f3iter.CheckpointConfig.LocalPath != nil {
+					f3elemf1.SetLocalPath(*f3iter.CheckpointConfig.LocalPath)
 				}
-				if f4iter.CheckpointConfig.S3URI != nil {
-					f4elemf1.SetS3Uri(*f4iter.CheckpointConfig.S3URI)
+				if f3iter.CheckpointConfig.S3URI != nil {
+					f3elemf1.SetS3Uri(*f3iter.CheckpointConfig.S3URI)
 				}
-				f4elem.SetCheckpointConfig(f4elemf1)
+				f3elem.SetCheckpointConfig(f3elemf1)
 			}
-			if f4iter.DefinitionName != nil {
-				f4elem.SetDefinitionName(*f4iter.DefinitionName)
+			if f3iter.DefinitionName != nil {
+				f3elem.SetDefinitionName(*f3iter.DefinitionName)
 			}
-			if f4iter.EnableInterContainerTrafficEncryption != nil {
-				f4elem.SetEnableInterContainerTrafficEncryption(*f4iter.EnableInterContainerTrafficEncryption)
+			if f3iter.EnableInterContainerTrafficEncryption != nil {
+				f3elem.SetEnableInterContainerTrafficEncryption(*f3iter.EnableInterContainerTrafficEncryption)
 			}
-			if f4iter.EnableManagedSpotTraining != nil {
-				f4elem.SetEnableManagedSpotTraining(*f4iter.EnableManagedSpotTraining)
+			if f3iter.EnableManagedSpotTraining != nil {
+				f3elem.SetEnableManagedSpotTraining(*f3iter.EnableManagedSpotTraining)
 			}
-			if f4iter.EnableNetworkIsolation != nil {
-				f4elem.SetEnableNetworkIsolation(*f4iter.EnableNetworkIsolation)
+			if f3iter.EnableNetworkIsolation != nil {
+				f3elem.SetEnableNetworkIsolation(*f3iter.EnableNetworkIsolation)
 			}
-			if f4iter.HyperParameterRanges != nil {
-				f4elemf6 := &svcsdk.ParameterRanges{}
-				if f4iter.HyperParameterRanges.CategoricalParameterRanges != nil {
-					f4elemf6f0 := []*svcsdk.CategoricalParameterRange{}
-					for _, f4elemf6f0iter := range f4iter.HyperParameterRanges.CategoricalParameterRanges {
-						f4elemf6f0elem := &svcsdk.CategoricalParameterRange{}
-						if f4elemf6f0iter.Name != nil {
-							f4elemf6f0elem.SetName(*f4elemf6f0iter.Name)
+			if f3iter.HyperParameterRanges != nil {
+				f3elemf6 := &svcsdk.ParameterRanges{}
+				if f3iter.HyperParameterRanges.CategoricalParameterRanges != nil {
+					f3elemf6f0 := []*svcsdk.CategoricalParameterRange{}
+					for _, f3elemf6f0iter := range f3iter.HyperParameterRanges.CategoricalParameterRanges {
+						f3elemf6f0elem := &svcsdk.CategoricalParameterRange{}
+						if f3elemf6f0iter.Name != nil {
+							f3elemf6f0elem.SetName(*f3elemf6f0iter.Name)
 						}
-						if f4elemf6f0iter.Values != nil {
-							f4elemf6f0elemf1 := []*string{}
-							for _, f4elemf6f0elemf1iter := range f4elemf6f0iter.Values {
-								var f4elemf6f0elemf1elem string
-								f4elemf6f0elemf1elem = *f4elemf6f0elemf1iter
-								f4elemf6f0elemf1 = append(f4elemf6f0elemf1, &f4elemf6f0elemf1elem)
+						if f3elemf6f0iter.Values != nil {
+							f3elemf6f0elemf1 := []*string{}
+							for _, f3elemf6f0elemf1iter := range f3elemf6f0iter.Values {
+								var f3elemf6f0elemf1elem string
+								f3elemf6f0elemf1elem = *f3elemf6f0elemf1iter
+								f3elemf6f0elemf1 = append(f3elemf6f0elemf1, &f3elemf6f0elemf1elem)
 							}
-							f4elemf6f0elem.SetValues(f4elemf6f0elemf1)
+							f3elemf6f0elem.SetValues(f3elemf6f0elemf1)
 						}
-						f4elemf6f0 = append(f4elemf6f0, f4elemf6f0elem)
+						f3elemf6f0 = append(f3elemf6f0, f3elemf6f0elem)
 					}
-					f4elemf6.SetCategoricalParameterRanges(f4elemf6f0)
+					f3elemf6.SetCategoricalParameterRanges(f3elemf6f0)
 				}
-				if f4iter.HyperParameterRanges.ContinuousParameterRanges != nil {
-					f4elemf6f1 := []*svcsdk.ContinuousParameterRange{}
-					for _, f4elemf6f1iter := range f4iter.HyperParameterRanges.ContinuousParameterRanges {
-						f4elemf6f1elem := &svcsdk.ContinuousParameterRange{}
-						if f4elemf6f1iter.MaxValue != nil {
-							f4elemf6f1elem.SetMaxValue(*f4elemf6f1iter.MaxValue)
+				if f3iter.HyperParameterRanges.ContinuousParameterRanges != nil {
+					f3elemf6f1 := []*svcsdk.ContinuousParameterRange{}
+					for _, f3elemf6f1iter := range f3iter.HyperParameterRanges.ContinuousParameterRanges {
+						f3elemf6f1elem := &svcsdk.ContinuousParameterRange{}
+						if f3elemf6f1iter.MaxValue != nil {
+							f3elemf6f1elem.SetMaxValue(*f3elemf6f1iter.MaxValue)
 						}
-						if f4elemf6f1iter.MinValue != nil {
-							f4elemf6f1elem.SetMinValue(*f4elemf6f1iter.MinValue)
+						if f3elemf6f1iter.MinValue != nil {
+							f3elemf6f1elem.SetMinValue(*f3elemf6f1iter.MinValue)
 						}
-						if f4elemf6f1iter.Name != nil {
-							f4elemf6f1elem.SetName(*f4elemf6f1iter.Name)
+						if f3elemf6f1iter.Name != nil {
+							f3elemf6f1elem.SetName(*f3elemf6f1iter.Name)
 						}
-						if f4elemf6f1iter.ScalingType != nil {
-							f4elemf6f1elem.SetScalingType(*f4elemf6f1iter.ScalingType)
+						if f3elemf6f1iter.ScalingType != nil {
+							f3elemf6f1elem.SetScalingType(*f3elemf6f1iter.ScalingType)
 						}
-						f4elemf6f1 = append(f4elemf6f1, f4elemf6f1elem)
+						f3elemf6f1 = append(f3elemf6f1, f3elemf6f1elem)
 					}
-					f4elemf6.SetContinuousParameterRanges(f4elemf6f1)
+					f3elemf6.SetContinuousParameterRanges(f3elemf6f1)
 				}
-				if f4iter.HyperParameterRanges.IntegerParameterRanges != nil {
-					f4elemf6f2 := []*svcsdk.IntegerParameterRange{}
-					for _, f4elemf6f2iter := range f4iter.HyperParameterRanges.IntegerParameterRanges {
-						f4elemf6f2elem := &svcsdk.IntegerParameterRange{}
-						if f4elemf6f2iter.MaxValue != nil {
-							f4elemf6f2elem.SetMaxValue(*f4elemf6f2iter.MaxValue)
+				if f3iter.HyperParameterRanges.IntegerParameterRanges != nil {
+					f3elemf6f2 := []*svcsdk.IntegerParameterRange{}
+					for _, f3elemf6f2iter := range f3iter.HyperParameterRanges.IntegerParameterRanges {
+						f3elemf6f2elem := &svcsdk.IntegerParameterRange{}
+						if f3elemf6f2iter.MaxValue != nil {
+							f3elemf6f2elem.SetMaxValue(*f3elemf6f2iter.MaxValue)
 						}
-						if f4elemf6f2iter.MinValue != nil {
-							f4elemf6f2elem.SetMinValue(*f4elemf6f2iter.MinValue)
+						if f3elemf6f2iter.MinValue != nil {
+							f3elemf6f2elem.SetMinValue(*f3elemf6f2iter.MinValue)
 						}
-						if f4elemf6f2iter.Name != nil {
-							f4elemf6f2elem.SetName(*f4elemf6f2iter.Name)
+						if f3elemf6f2iter.Name != nil {
+							f3elemf6f2elem.SetName(*f3elemf6f2iter.Name)
 						}
-						if f4elemf6f2iter.ScalingType != nil {
-							f4elemf6f2elem.SetScalingType(*f4elemf6f2iter.ScalingType)
+						if f3elemf6f2iter.ScalingType != nil {
+							f3elemf6f2elem.SetScalingType(*f3elemf6f2iter.ScalingType)
 						}
-						f4elemf6f2 = append(f4elemf6f2, f4elemf6f2elem)
+						f3elemf6f2 = append(f3elemf6f2, f3elemf6f2elem)
 					}
-					f4elemf6.SetIntegerParameterRanges(f4elemf6f2)
+					f3elemf6.SetIntegerParameterRanges(f3elemf6f2)
 				}
-				f4elem.SetHyperParameterRanges(f4elemf6)
+				f3elem.SetHyperParameterRanges(f3elemf6)
 			}
-			if f4iter.InputDataConfig != nil {
-				f4elemf7 := []*svcsdk.Channel{}
-				for _, f4elemf7iter := range f4iter.InputDataConfig {
-					f4elemf7elem := &svcsdk.Channel{}
-					if f4elemf7iter.ChannelName != nil {
-						f4elemf7elem.SetChannelName(*f4elemf7iter.ChannelName)
+			if f3iter.InputDataConfig != nil {
+				f3elemf7 := []*svcsdk.Channel{}
+				for _, f3elemf7iter := range f3iter.InputDataConfig {
+					f3elemf7elem := &svcsdk.Channel{}
+					if f3elemf7iter.ChannelName != nil {
+						f3elemf7elem.SetChannelName(*f3elemf7iter.ChannelName)
 					}
-					if f4elemf7iter.CompressionType != nil {
-						f4elemf7elem.SetCompressionType(*f4elemf7iter.CompressionType)
+					if f3elemf7iter.CompressionType != nil {
+						f3elemf7elem.SetCompressionType(*f3elemf7iter.CompressionType)
 					}
-					if f4elemf7iter.ContentType != nil {
-						f4elemf7elem.SetContentType(*f4elemf7iter.ContentType)
+					if f3elemf7iter.ContentType != nil {
+						f3elemf7elem.SetContentType(*f3elemf7iter.ContentType)
 					}
-					if f4elemf7iter.DataSource != nil {
-						f4elemf7elemf3 := &svcsdk.DataSource{}
-						if f4elemf7iter.DataSource.FileSystemDataSource != nil {
-							f4elemf7elemf3f0 := &svcsdk.FileSystemDataSource{}
-							if f4elemf7iter.DataSource.FileSystemDataSource.DirectoryPath != nil {
-								f4elemf7elemf3f0.SetDirectoryPath(*f4elemf7iter.DataSource.FileSystemDataSource.DirectoryPath)
+					if f3elemf7iter.DataSource != nil {
+						f3elemf7elemf3 := &svcsdk.DataSource{}
+						if f3elemf7iter.DataSource.FileSystemDataSource != nil {
+							f3elemf7elemf3f0 := &svcsdk.FileSystemDataSource{}
+							if f3elemf7iter.DataSource.FileSystemDataSource.DirectoryPath != nil {
+								f3elemf7elemf3f0.SetDirectoryPath(*f3elemf7iter.DataSource.FileSystemDataSource.DirectoryPath)
 							}
-							if f4elemf7iter.DataSource.FileSystemDataSource.FileSystemAccessMode != nil {
-								f4elemf7elemf3f0.SetFileSystemAccessMode(*f4elemf7iter.DataSource.FileSystemDataSource.FileSystemAccessMode)
+							if f3elemf7iter.DataSource.FileSystemDataSource.FileSystemAccessMode != nil {
+								f3elemf7elemf3f0.SetFileSystemAccessMode(*f3elemf7iter.DataSource.FileSystemDataSource.FileSystemAccessMode)
 							}
-							if f4elemf7iter.DataSource.FileSystemDataSource.FileSystemID != nil {
-								f4elemf7elemf3f0.SetFileSystemId(*f4elemf7iter.DataSource.FileSystemDataSource.FileSystemID)
+							if f3elemf7iter.DataSource.FileSystemDataSource.FileSystemID != nil {
+								f3elemf7elemf3f0.SetFileSystemId(*f3elemf7iter.DataSource.FileSystemDataSource.FileSystemID)
 							}
-							if f4elemf7iter.DataSource.FileSystemDataSource.FileSystemType != nil {
-								f4elemf7elemf3f0.SetFileSystemType(*f4elemf7iter.DataSource.FileSystemDataSource.FileSystemType)
+							if f3elemf7iter.DataSource.FileSystemDataSource.FileSystemType != nil {
+								f3elemf7elemf3f0.SetFileSystemType(*f3elemf7iter.DataSource.FileSystemDataSource.FileSystemType)
 							}
-							f4elemf7elemf3.SetFileSystemDataSource(f4elemf7elemf3f0)
+							f3elemf7elemf3.SetFileSystemDataSource(f3elemf7elemf3f0)
 						}
-						if f4elemf7iter.DataSource.S3DataSource != nil {
-							f4elemf7elemf3f1 := &svcsdk.S3DataSource{}
-							if f4elemf7iter.DataSource.S3DataSource.AttributeNames != nil {
-								f4elemf7elemf3f1f0 := []*string{}
-								for _, f4elemf7elemf3f1f0iter := range f4elemf7iter.DataSource.S3DataSource.AttributeNames {
-									var f4elemf7elemf3f1f0elem string
-									f4elemf7elemf3f1f0elem = *f4elemf7elemf3f1f0iter
-									f4elemf7elemf3f1f0 = append(f4elemf7elemf3f1f0, &f4elemf7elemf3f1f0elem)
+						if f3elemf7iter.DataSource.S3DataSource != nil {
+							f3elemf7elemf3f1 := &svcsdk.S3DataSource{}
+							if f3elemf7iter.DataSource.S3DataSource.AttributeNames != nil {
+								f3elemf7elemf3f1f0 := []*string{}
+								for _, f3elemf7elemf3f1f0iter := range f3elemf7iter.DataSource.S3DataSource.AttributeNames {
+									var f3elemf7elemf3f1f0elem string
+									f3elemf7elemf3f1f0elem = *f3elemf7elemf3f1f0iter
+									f3elemf7elemf3f1f0 = append(f3elemf7elemf3f1f0, &f3elemf7elemf3f1f0elem)
 								}
-								f4elemf7elemf3f1.SetAttributeNames(f4elemf7elemf3f1f0)
+								f3elemf7elemf3f1.SetAttributeNames(f3elemf7elemf3f1f0)
 							}
-							if f4elemf7iter.DataSource.S3DataSource.S3DataDistributionType != nil {
-								f4elemf7elemf3f1.SetS3DataDistributionType(*f4elemf7iter.DataSource.S3DataSource.S3DataDistributionType)
+							if f3elemf7iter.DataSource.S3DataSource.S3DataDistributionType != nil {
+								f3elemf7elemf3f1.SetS3DataDistributionType(*f3elemf7iter.DataSource.S3DataSource.S3DataDistributionType)
 							}
-							if f4elemf7iter.DataSource.S3DataSource.S3DataType != nil {
-								f4elemf7elemf3f1.SetS3DataType(*f4elemf7iter.DataSource.S3DataSource.S3DataType)
+							if f3elemf7iter.DataSource.S3DataSource.S3DataType != nil {
+								f3elemf7elemf3f1.SetS3DataType(*f3elemf7iter.DataSource.S3DataSource.S3DataType)
 							}
-							if f4elemf7iter.DataSource.S3DataSource.S3URI != nil {
-								f4elemf7elemf3f1.SetS3Uri(*f4elemf7iter.DataSource.S3DataSource.S3URI)
+							if f3elemf7iter.DataSource.S3DataSource.S3URI != nil {
+								f3elemf7elemf3f1.SetS3Uri(*f3elemf7iter.DataSource.S3DataSource.S3URI)
 							}
-							f4elemf7elemf3.SetS3DataSource(f4elemf7elemf3f1)
+							f3elemf7elemf3.SetS3DataSource(f3elemf7elemf3f1)
 						}
-						f4elemf7elem.SetDataSource(f4elemf7elemf3)
+						f3elemf7elem.SetDataSource(f3elemf7elemf3)
 					}
-					if f4elemf7iter.InputMode != nil {
-						f4elemf7elem.SetInputMode(*f4elemf7iter.InputMode)
+					if f3elemf7iter.InputMode != nil {
+						f3elemf7elem.SetInputMode(*f3elemf7iter.InputMode)
 					}
-					if f4elemf7iter.RecordWrapperType != nil {
-						f4elemf7elem.SetRecordWrapperType(*f4elemf7iter.RecordWrapperType)
+					if f3elemf7iter.RecordWrapperType != nil {
+						f3elemf7elem.SetRecordWrapperType(*f3elemf7iter.RecordWrapperType)
 					}
-					if f4elemf7iter.ShuffleConfig != nil {
-						f4elemf7elemf6 := &svcsdk.ShuffleConfig{}
-						if f4elemf7iter.ShuffleConfig.Seed != nil {
-							f4elemf7elemf6.SetSeed(*f4elemf7iter.ShuffleConfig.Seed)
+					if f3elemf7iter.ShuffleConfig != nil {
+						f3elemf7elemf6 := &svcsdk.ShuffleConfig{}
+						if f3elemf7iter.ShuffleConfig.Seed != nil {
+							f3elemf7elemf6.SetSeed(*f3elemf7iter.ShuffleConfig.Seed)
 						}
-						f4elemf7elem.SetShuffleConfig(f4elemf7elemf6)
+						f3elemf7elem.SetShuffleConfig(f3elemf7elemf6)
 					}
-					f4elemf7 = append(f4elemf7, f4elemf7elem)
+					f3elemf7 = append(f3elemf7, f3elemf7elem)
 				}
-				f4elem.SetInputDataConfig(f4elemf7)
+				f3elem.SetInputDataConfig(f3elemf7)
 			}
-			if f4iter.OutputDataConfig != nil {
-				f4elemf8 := &svcsdk.OutputDataConfig{}
-				if f4iter.OutputDataConfig.KMSKeyID != nil {
-					f4elemf8.SetKmsKeyId(*f4iter.OutputDataConfig.KMSKeyID)
+			if f3iter.OutputDataConfig != nil {
+				f3elemf8 := &svcsdk.OutputDataConfig{}
+				if f3iter.OutputDataConfig.KMSKeyID != nil {
+					f3elemf8.SetKmsKeyId(*f3iter.OutputDataConfig.KMSKeyID)
 				}
-				if f4iter.OutputDataConfig.S3OutputPath != nil {
-					f4elemf8.SetS3OutputPath(*f4iter.OutputDataConfig.S3OutputPath)
+				if f3iter.OutputDataConfig.S3OutputPath != nil {
+					f3elemf8.SetS3OutputPath(*f3iter.OutputDataConfig.S3OutputPath)
 				}
-				f4elem.SetOutputDataConfig(f4elemf8)
+				f3elem.SetOutputDataConfig(f3elemf8)
 			}
-			if f4iter.ResourceConfig != nil {
-				f4elemf9 := &svcsdk.ResourceConfig{}
-				if f4iter.ResourceConfig.InstanceCount != nil {
-					f4elemf9.SetInstanceCount(*f4iter.ResourceConfig.InstanceCount)
+			if f3iter.ResourceConfig != nil {
+				f3elemf9 := &svcsdk.ResourceConfig{}
+				if f3iter.ResourceConfig.InstanceCount != nil {
+					f3elemf9.SetInstanceCount(*f3iter.ResourceConfig.InstanceCount)
 				}
-				if f4iter.ResourceConfig.InstanceType != nil {
-					f4elemf9.SetInstanceType(*f4iter.ResourceConfig.InstanceType)
+				if f3iter.ResourceConfig.InstanceType != nil {
+					f3elemf9.SetInstanceType(*f3iter.ResourceConfig.InstanceType)
 				}
-				if f4iter.ResourceConfig.VolumeKMSKeyID != nil {
-					f4elemf9.SetVolumeKmsKeyId(*f4iter.ResourceConfig.VolumeKMSKeyID)
+				if f3iter.ResourceConfig.VolumeKMSKeyID != nil {
+					f3elemf9.SetVolumeKmsKeyId(*f3iter.ResourceConfig.VolumeKMSKeyID)
 				}
-				if f4iter.ResourceConfig.VolumeSizeInGB != nil {
-					f4elemf9.SetVolumeSizeInGB(*f4iter.ResourceConfig.VolumeSizeInGB)
+				if f3iter.ResourceConfig.VolumeSizeInGB != nil {
+					f3elemf9.SetVolumeSizeInGB(*f3iter.ResourceConfig.VolumeSizeInGB)
 				}
-				f4elem.SetResourceConfig(f4elemf9)
+				f3elem.SetResourceConfig(f3elemf9)
 			}
-			if f4iter.RoleARN != nil {
-				f4elem.SetRoleArn(*f4iter.RoleARN)
+			if f3iter.RoleARN != nil {
+				f3elem.SetRoleArn(*f3iter.RoleARN)
 			}
-			if f4iter.StaticHyperParameters != nil {
-				f4elemf11 := map[string]*string{}
-				for f4elemf11key, f4elemf11valiter := range f4iter.StaticHyperParameters {
-					var f4elemf11val string
-					f4elemf11val = *f4elemf11valiter
-					f4elemf11[f4elemf11key] = &f4elemf11val
+			if f3iter.StaticHyperParameters != nil {
+				f3elemf11 := map[string]*string{}
+				for f3elemf11key, f3elemf11valiter := range f3iter.StaticHyperParameters {
+					var f3elemf11val string
+					f3elemf11val = *f3elemf11valiter
+					f3elemf11[f3elemf11key] = &f3elemf11val
 				}
-				f4elem.SetStaticHyperParameters(f4elemf11)
+				f3elem.SetStaticHyperParameters(f3elemf11)
 			}
-			if f4iter.StoppingCondition != nil {
-				f4elemf12 := &svcsdk.StoppingCondition{}
-				if f4iter.StoppingCondition.MaxRuntimeInSeconds != nil {
-					f4elemf12.SetMaxRuntimeInSeconds(*f4iter.StoppingCondition.MaxRuntimeInSeconds)
+			if f3iter.StoppingCondition != nil {
+				f3elemf12 := &svcsdk.StoppingCondition{}
+				if f3iter.StoppingCondition.MaxRuntimeInSeconds != nil {
+					f3elemf12.SetMaxRuntimeInSeconds(*f3iter.StoppingCondition.MaxRuntimeInSeconds)
 				}
-				if f4iter.StoppingCondition.MaxWaitTimeInSeconds != nil {
-					f4elemf12.SetMaxWaitTimeInSeconds(*f4iter.StoppingCondition.MaxWaitTimeInSeconds)
+				if f3iter.StoppingCondition.MaxWaitTimeInSeconds != nil {
+					f3elemf12.SetMaxWaitTimeInSeconds(*f3iter.StoppingCondition.MaxWaitTimeInSeconds)
 				}
-				f4elem.SetStoppingCondition(f4elemf12)
+				f3elem.SetStoppingCondition(f3elemf12)
 			}
-			if f4iter.TuningObjective != nil {
-				f4elemf13 := &svcsdk.HyperParameterTuningJobObjective{}
-				if f4iter.TuningObjective.MetricName != nil {
-					f4elemf13.SetMetricName(*f4iter.TuningObjective.MetricName)
+			if f3iter.TuningObjective != nil {
+				f3elemf13 := &svcsdk.HyperParameterTuningJobObjective{}
+				if f3iter.TuningObjective.MetricName != nil {
+					f3elemf13.SetMetricName(*f3iter.TuningObjective.MetricName)
 				}
-				if f4iter.TuningObjective.Type != nil {
-					f4elemf13.SetType(*f4iter.TuningObjective.Type)
+				if f3iter.TuningObjective.Type != nil {
+					f3elemf13.SetType(*f3iter.TuningObjective.Type)
 				}
-				f4elem.SetTuningObjective(f4elemf13)
+				f3elem.SetTuningObjective(f3elemf13)
 			}
-			if f4iter.VPCConfig != nil {
-				f4elemf14 := &svcsdk.VpcConfig{}
-				if f4iter.VPCConfig.SecurityGroupIDs != nil {
-					f4elemf14f0 := []*string{}
-					for _, f4elemf14f0iter := range f4iter.VPCConfig.SecurityGroupIDs {
-						var f4elemf14f0elem string
-						f4elemf14f0elem = *f4elemf14f0iter
-						f4elemf14f0 = append(f4elemf14f0, &f4elemf14f0elem)
+			if f3iter.VPCConfig != nil {
+				f3elemf14 := &svcsdk.VpcConfig{}
+				if f3iter.VPCConfig.SecurityGroupIDs != nil {
+					f3elemf14f0 := []*string{}
+					for _, f3elemf14f0iter := range f3iter.VPCConfig.SecurityGroupIDs {
+						var f3elemf14f0elem string
+						f3elemf14f0elem = *f3elemf14f0iter
+						f3elemf14f0 = append(f3elemf14f0, &f3elemf14f0elem)
 					}
-					f4elemf14.SetSecurityGroupIds(f4elemf14f0)
+					f3elemf14.SetSecurityGroupIds(f3elemf14f0)
 				}
-				if f4iter.VPCConfig.Subnets != nil {
-					f4elemf14f1 := []*string{}
-					for _, f4elemf14f1iter := range f4iter.VPCConfig.Subnets {
-						var f4elemf14f1elem string
-						f4elemf14f1elem = *f4elemf14f1iter
-						f4elemf14f1 = append(f4elemf14f1, &f4elemf14f1elem)
+				if f3iter.VPCConfig.Subnets != nil {
+					f3elemf14f1 := []*string{}
+					for _, f3elemf14f1iter := range f3iter.VPCConfig.Subnets {
+						var f3elemf14f1elem string
+						f3elemf14f1elem = *f3elemf14f1iter
+						f3elemf14f1 = append(f3elemf14f1, &f3elemf14f1elem)
 					}
-					f4elemf14.SetSubnets(f4elemf14f1)
+					f3elemf14.SetSubnets(f3elemf14f1)
 				}
-				f4elem.SetVpcConfig(f4elemf14)
+				f3elem.SetVpcConfig(f3elemf14)
 			}
-			f4 = append(f4, f4elem)
+			f3 = append(f3, f3elem)
 		}
-		res.SetTrainingJobDefinitions(f4)
+		res.SetTrainingJobDefinitions(f3)
 	}
 	if r.ko.Spec.WarmStartConfig != nil {
-		f5 := &svcsdk.HyperParameterTuningJobWarmStartConfig{}
+		f4 := &svcsdk.HyperParameterTuningJobWarmStartConfig{}
 		if r.ko.Spec.WarmStartConfig.ParentHyperParameterTuningJobs != nil {
-			f5f0 := []*svcsdk.ParentHyperParameterTuningJob{}
-			for _, f5f0iter := range r.ko.Spec.WarmStartConfig.ParentHyperParameterTuningJobs {
-				f5f0elem := &svcsdk.ParentHyperParameterTuningJob{}
-				if f5f0iter.HyperParameterTuningJobName != nil {
-					f5f0elem.SetHyperParameterTuningJobName(*f5f0iter.HyperParameterTuningJobName)
+			f4f0 := []*svcsdk.ParentHyperParameterTuningJob{}
+			for _, f4f0iter := range r.ko.Spec.WarmStartConfig.ParentHyperParameterTuningJobs {
+				f4f0elem := &svcsdk.ParentHyperParameterTuningJob{}
+				if f4f0iter.HyperParameterTuningJobName != nil {
+					f4f0elem.SetHyperParameterTuningJobName(*f4f0iter.HyperParameterTuningJobName)
 				}
-				f5f0 = append(f5f0, f5f0elem)
+				f4f0 = append(f4f0, f4f0elem)
 			}
-			f5.SetParentHyperParameterTuningJobs(f5f0)
+			f4.SetParentHyperParameterTuningJobs(f4f0)
 		}
 		if r.ko.Spec.WarmStartConfig.WarmStartType != nil {
-			f5.SetWarmStartType(*r.ko.Spec.WarmStartConfig.WarmStartType)
+			f4.SetWarmStartType(*r.ko.Spec.WarmStartConfig.WarmStartType)
 		}
-		res.SetWarmStartConfig(f5)
+		res.SetWarmStartConfig(f4)
 	}
 
 	return res, nil
@@ -1619,7 +1623,7 @@ func (rm *resourceManager) sdkUpdate(
 	ctx context.Context,
 	desired *resource,
 	latest *resource,
-	diffReporter *ackcompare.Reporter,
+	delta *ackcompare.Delta,
 ) (*resource, error) {
 	// TODO(jaypipes): Figure this out...
 	return nil, ackerr.NotImplemented

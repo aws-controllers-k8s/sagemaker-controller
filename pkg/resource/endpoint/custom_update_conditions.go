@@ -64,7 +64,7 @@ func (rm *resourceManager) customUpdateConditions(
 		}
 		terminalCondition.Status = corev1.ConditionTrue
 		if *latestStatus == svcsdk.EndpointStatusFailed {
-			terminalCondition.Message = aws.String("Endpoint status: Failed. Cannot be updated")
+			terminalCondition.Message = aws.String("Cannot update endpoint with Failed status")
 		} else {
 			terminalCondition.Message = aws.String(FailUpdateError.Error())
 		}

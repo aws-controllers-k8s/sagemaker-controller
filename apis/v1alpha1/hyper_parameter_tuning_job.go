@@ -22,14 +22,44 @@ import (
 
 // HyperParameterTuningJobSpec defines the desired state of HyperParameterTuningJob
 type HyperParameterTuningJobSpec struct {
+	// The HyperParameterTuningJobConfig object that describes the tuning job, including
+	// the search strategy, the objective metric used to evaluate training jobs,
+	// ranges of parameters to search, and resource limits for the tuning job. For
+	// more information, see How Hyperparameter Tuning Works (https://docs.aws.amazon.com/sagemaker/latest/dg/automatic-model-tuning-how-it-works.html).
 	// +kubebuilder:validation:Required
 	HyperParameterTuningJobConfig *HyperParameterTuningJobConfig `json:"hyperParameterTuningJobConfig"`
+	// The name of the tuning job. This name is the prefix for the names of all
+	// training jobs that this tuning job launches. The name must be unique within
+	// the same AWS account and AWS Region. The name must have 1 to 32 characters.
+	// Valid characters are a-z, A-Z, 0-9, and : + = @ _ % - (hyphen). The name
+	// is not case sensitive.
 	// +kubebuilder:validation:Required
-	HyperParameterTuningJobName *string                                 `json:"hyperParameterTuningJobName"`
-	Tags                        []*Tag                                  `json:"tags,omitempty"`
-	TrainingJobDefinition       *HyperParameterTrainingJobDefinition    `json:"trainingJobDefinition,omitempty"`
-	TrainingJobDefinitions      []*HyperParameterTrainingJobDefinition  `json:"trainingJobDefinitions,omitempty"`
-	WarmStartConfig             *HyperParameterTuningJobWarmStartConfig `json:"warmStartConfig,omitempty"`
+	HyperParameterTuningJobName *string `json:"hyperParameterTuningJobName"`
+	// The HyperParameterTrainingJobDefinition object that describes the training
+	// jobs that this tuning job launches, including static hyperparameters, input
+	// data configuration, output data configuration, resource configuration, and
+	// stopping condition.
+	TrainingJobDefinition *HyperParameterTrainingJobDefinition `json:"trainingJobDefinition,omitempty"`
+	// A list of the HyperParameterTrainingJobDefinition objects launched for this
+	// tuning job.
+	TrainingJobDefinitions []*HyperParameterTrainingJobDefinition `json:"trainingJobDefinitions,omitempty"`
+	// Specifies the configuration for starting the hyperparameter tuning job using
+	// one or more previous tuning jobs as a starting point. The results of previous
+	// tuning jobs are used to inform which combinations of hyperparameters to search
+	// over in the new tuning job.
+	//
+	// All training jobs launched by the new hyperparameter tuning job are evaluated
+	// by using the objective metric. If you specify IDENTICAL_DATA_AND_ALGORITHM
+	// as the WarmStartType value for the warm start configuration, the training
+	// job that performs the best in the new tuning job is compared to the best
+	// training jobs from the parent tuning jobs. From these, the training job that
+	// performs the best as measured by the objective metric is returned as the
+	// overall best training job.
+	//
+	// All training jobs launched by parent hyperparameter tuning jobs and the new
+	// hyperparameter tuning jobs count against the limit of training jobs for the
+	// tuning job.
+	WarmStartConfig *HyperParameterTuningJobWarmStartConfig `json:"warmStartConfig,omitempty"`
 }
 
 // HyperParameterTuningJobStatus defines the observed state of HyperParameterTuningJob
@@ -42,11 +72,20 @@ type HyperParameterTuningJobStatus struct {
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
-	Conditions                    []*ackv1alpha1.Condition          `json:"conditions"`
-	BestTrainingJob               *HyperParameterTrainingJobSummary `json:"bestTrainingJob,omitempty"`
-	FailureReason                 *string                           `json:"failureReason,omitempty"`
-	HyperParameterTuningJobStatus *string                           `json:"hyperParameterTuningJobStatus,omitempty"`
-	OverallBestTrainingJob        *HyperParameterTrainingJobSummary `json:"overallBestTrainingJob,omitempty"`
+	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	// A TrainingJobSummary object that describes the training job that completed
+	// with the best current HyperParameterTuningJobObjective.
+	BestTrainingJob *HyperParameterTrainingJobSummary `json:"bestTrainingJob,omitempty"`
+	// If the tuning job failed, the reason it failed.
+	FailureReason *string `json:"failureReason,omitempty"`
+	// The status of the tuning job: InProgress, Completed, Failed, Stopping, or
+	// Stopped.
+	HyperParameterTuningJobStatus *string `json:"hyperParameterTuningJobStatus,omitempty"`
+	// If the hyperparameter tuning job is an warm start tuning job with a WarmStartType
+	// of IDENTICAL_DATA_AND_ALGORITHM, this is the TrainingJobSummary for the training
+	// job with the best objective metric value of all training jobs launched by
+	// this tuning job and all parent jobs specified for the warm start tuning job.
+	OverallBestTrainingJob *HyperParameterTrainingJobSummary `json:"overallBestTrainingJob,omitempty"`
 }
 
 // HyperParameterTuningJob is the Schema for the HyperParameterTuningJobs API

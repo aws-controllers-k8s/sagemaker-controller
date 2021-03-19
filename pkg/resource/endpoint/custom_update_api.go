@@ -29,12 +29,14 @@ import (
 
 var (
 	FailUpdateError = fmt.Errorf("Unable to update Endpoint. Check FailureReason")
+
+	FailureReasonInternalServiceErrorPrefix = "Request to service failed"
 )
 
 // customUpdateEndpoint adds specialized logic to check if controller should
 // proceeed with updateEndpoint call.
 // Update is blocked in the following cases:
-//  1. until EndpointStatus != InService
+//  1. while EndpointStatus != InService
 //  2. EndpointStatus == Failed
 //  3. A previous update to the Endpoint with same endpointConfigName failed
 // Method returns nil if endpoint can be updated, otherwise error depending on above cases
@@ -42,10 +44,14 @@ func (rm *resourceManager) customUpdateEndpoint(
 	ctx context.Context,
 	desired *resource,
 	latest *resource,
-	diffReporter *ackcompare.Reporter,
+	delta *ackcompare.Delta,
 ) (*resource, error) {
 	latestStatus := latest.ko.Status.EndpointStatus
-	if latestStatus != nil && *latestStatus != svcsdk.EndpointStatusFailed {
+	if latestStatus == nil {
+		return nil, nil
+	}
+
+	if *latestStatus != svcsdk.EndpointStatusFailed {
 		// Case 1 - requeueAfter until endpoint is in InService state
 		err := rm.endpointStatusAllowUpdates(ctx, latest)
 		if err != nil {
@@ -59,15 +65,23 @@ func (rm *resourceManager) customUpdateEndpoint(
 	lastEndpointConfigForUpdate := desired.ko.Status.LastEndpointConfigNameForUpdate
 
 	// Case 2 - EndpointStatus == Failed
-	if (latestStatus != nil && *latestStatus == svcsdk.EndpointStatusFailed) ||
+	if *latestStatus == svcsdk.EndpointStatusFailed ||
 		// Case 3 - A previous update to the Endpoint with same endpointConfigName failed
 		// Following checks indicate FailureReason is related to a failed update
 		// Note: Internal service error is an exception for this case
 		// "Request to service failed" means update failed because of ISE and can be retried
-		(latestStatus != nil && failureReason != nil && lastEndpointConfigForUpdate != nil &&
-			!strings.HasPrefix(*failureReason, "Request to service failed") &&
+		(failureReason != nil && lastEndpointConfigForUpdate != nil &&
+			!strings.HasPrefix(*failureReason, FailureReasonInternalServiceErrorPrefix) &&
 			*desiredEndpointConfig != *latestEndpointConfig &&
 			*desiredEndpointConfig == *lastEndpointConfigForUpdate) {
+		// 1. FailureReason alone does mean an update failed it can appear because of other reasons(patching/scaling failed)
+		// 2. *desiredEndpointConfig == *lastEndpointConfigForUpdate only tells us an update was tried with lastEndpointConfigForUpdate
+		// but does not tell us anything if the update was successful or not in the past because it is set if updateEndpoint returns 200 (aync operation).
+		// 3. Now, sdkUpdate can execute because of change in any field in Spec (like tags/deploymentConfig in future)
+
+		// 1 & 2 does not guarantee an update Failed. Hence we need to look at `*latestEndpointConfigName` to determine if the update was unsuccessful
+		// `*desiredEndpointConfig != *latestEndpointConfig` + `*desiredEndpointConfig == *lastEndpointConfigForUpdate`+ `FailureReason != nil` indicate that an update is needed,
+		// has already been tried and failed.
 		return nil, FailUpdateError
 	}
 

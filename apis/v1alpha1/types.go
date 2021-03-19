@@ -358,7 +358,6 @@ type Endpoint_SDK struct {
 	FailureReason      *string                     `json:"failureReason,omitempty"`
 	LastModifiedTime   *metav1.Time                `json:"lastModifiedTime,omitempty"`
 	ProductionVariants []*ProductionVariantSummary `json:"productionVariants,omitempty"`
-	Tags               []*Tag                      `json:"tags,omitempty"`
 }
 
 type Experiment struct {
@@ -385,7 +384,6 @@ type FeatureGroup struct {
 	FailureReason    *string `json:"failureReason,omitempty"`
 	FeatureGroupName *string `json:"featureGroupName,omitempty"`
 	RoleARN          *string `json:"roleARN,omitempty"`
-	Tags             []*Tag  `json:"tags,omitempty"`
 }
 
 type FeatureGroupSummary struct {
@@ -616,17 +614,12 @@ type ModelExplainabilityBaselineConfig struct {
 
 type ModelPackage struct {
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
-	Tags             []*Tag       `json:"tags,omitempty"`
 }
 
 type ModelPackageContainerDefinition struct {
 	ContainerHostname *string `json:"containerHostname,omitempty"`
 	Image             *string `json:"image,omitempty"`
 	ModelDataURL      *string `json:"modelDataURL,omitempty"`
-}
-
-type ModelPackageGroup struct {
-	Tags []*Tag `json:"tags,omitempty"`
 }
 
 type ModelPackageStatusItem struct {
@@ -716,7 +709,6 @@ type MonitoringSchedule struct {
 	FailureReason         *string      `json:"failureReason,omitempty"`
 	LastModifiedTime      *metav1.Time `json:"lastModifiedTime,omitempty"`
 	MonitoringScheduleARN *string      `json:"monitoringScheduleARN,omitempty"`
-	Tags                  []*Tag       `json:"tags,omitempty"`
 }
 
 type MonitoringScheduleSummary struct {
@@ -788,7 +780,6 @@ type Pipeline struct {
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	LastRunTime      *metav1.Time `json:"lastRunTime,omitempty"`
 	RoleARN          *string      `json:"roleARN,omitempty"`
-	Tags             []*Tag       `json:"tags,omitempty"`
 }
 
 type PipelineExecution struct {
@@ -1131,7 +1122,6 @@ type TransformInput struct {
 	SplitType       *string              `json:"splitType,omitempty"`
 }
 
-<<<<<<< HEAD
 type TransformJobDefinition struct {
 	BatchStrategy           *string             `json:"batchStrategy,omitempty"`
 	Environment             map[string]*string  `json:"environment,omitempty"`
@@ -1144,17 +1134,6 @@ type TransformJobDefinition struct {
 
 type TransformJobStepMetadata struct {
 	ARN *string `json:"arn,omitempty"`
-=======
-type TransformJob struct {
-	AutoMLJobARN       *string           `json:"autoMLJobARN,omitempty"`
-	CreationTime       *metav1.Time      `json:"creationTime,omitempty"`
-	ExperimentConfig   *ExperimentConfig `json:"experimentConfig,omitempty"`
-	FailureReason      *string           `json:"failureReason,omitempty"`
-	LabelingJobARN     *string           `json:"labelingJobARN,omitempty"`
-	ModelName          *string           `json:"modelName,omitempty"`
-	TransformEndTime   *metav1.Time      `json:"transformEndTime,omitempty"`
-	TransformStartTime *metav1.Time      `json:"transformStartTime,omitempty"`
->>>>>>> bab6733... endpoint: address failed update scenario
 }
 
 type TransformJobSummary struct {
@@ -1180,7 +1159,6 @@ type TransformJob_SDK struct {
 	MaxPayloadInMB          *int64              `json:"maxPayloadInMB,omitempty"`
 	ModelClientConfig       *ModelClientConfig  `json:"modelClientConfig,omitempty"`
 	ModelName               *string             `json:"modelName,omitempty"`
-	Tags                    []*Tag              `json:"tags,omitempty"`
 	TransformEndTime        *metav1.Time        `json:"transformEndTime,omitempty"`
 	TransformInput          *TransformInput     `json:"transformInput,omitempty"`
 	TransformJobARN         *string             `json:"transformJobARN,omitempty"`

@@ -71,6 +71,11 @@ func (rm *resourceManager) sdkFind(
 	// the original Kubernetes object we passed to the function
 	ko := r.ko.DeepCopy()
 
+	if resp.CreationTime != nil {
+		ko.Status.CreationTime = &metav1.Time{*resp.CreationTime}
+	} else {
+		ko.Status.CreationTime = nil
+	}
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
 	}
@@ -97,6 +102,53 @@ func (rm *resourceManager) sdkFind(
 		ko.Status.FailureReason = resp.FailureReason
 	} else {
 		ko.Status.FailureReason = nil
+	}
+	if resp.LastModifiedTime != nil {
+		ko.Status.LastModifiedTime = &metav1.Time{*resp.LastModifiedTime}
+	} else {
+		ko.Status.LastModifiedTime = nil
+	}
+	if resp.ProductionVariants != nil {
+		f9 := []*svcapitypes.ProductionVariantSummary{}
+		for _, f9iter := range resp.ProductionVariants {
+			f9elem := &svcapitypes.ProductionVariantSummary{}
+			if f9iter.CurrentInstanceCount != nil {
+				f9elem.CurrentInstanceCount = f9iter.CurrentInstanceCount
+			}
+			if f9iter.CurrentWeight != nil {
+				f9elem.CurrentWeight = f9iter.CurrentWeight
+			}
+			if f9iter.DeployedImages != nil {
+				f9elemf2 := []*svcapitypes.DeployedImage{}
+				for _, f9elemf2iter := range f9iter.DeployedImages {
+					f9elemf2elem := &svcapitypes.DeployedImage{}
+					if f9elemf2iter.ResolutionTime != nil {
+						f9elemf2elem.ResolutionTime = &metav1.Time{*f9elemf2iter.ResolutionTime}
+					}
+					if f9elemf2iter.ResolvedImage != nil {
+						f9elemf2elem.ResolvedImage = f9elemf2iter.ResolvedImage
+					}
+					if f9elemf2iter.SpecifiedImage != nil {
+						f9elemf2elem.SpecifiedImage = f9elemf2iter.SpecifiedImage
+					}
+					f9elemf2 = append(f9elemf2, f9elemf2elem)
+				}
+				f9elem.DeployedImages = f9elemf2
+			}
+			if f9iter.DesiredInstanceCount != nil {
+				f9elem.DesiredInstanceCount = f9iter.DesiredInstanceCount
+			}
+			if f9iter.DesiredWeight != nil {
+				f9elem.DesiredWeight = f9iter.DesiredWeight
+			}
+			if f9iter.VariantName != nil {
+				f9elem.VariantName = f9iter.VariantName
+			}
+			f9 = append(f9, f9elem)
+		}
+		ko.Status.ProductionVariants = f9
+	} else {
+		ko.Status.ProductionVariants = nil
 	}
 
 	rm.setStatusDefaults(ko)
@@ -197,10 +249,10 @@ func (rm *resourceManager) sdkUpdate(
 	ctx context.Context,
 	desired *resource,
 	latest *resource,
-	diffReporter *ackcompare.Reporter,
+	delta *ackcompare.Delta,
 ) (*resource, error) {
 
-	customResp, customRespErr := rm.customUpdateEndpoint(ctx, desired, latest, diffReporter)
+	customResp, customRespErr := rm.customUpdateEndpoint(ctx, desired, latest, delta)
 	if customResp != nil || customRespErr != nil {
 		return customResp, customRespErr
 	}

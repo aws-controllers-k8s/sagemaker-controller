@@ -65,21 +65,21 @@ resources:
         from:
           operation: DescribeEndpointConfig
           path: EndpointConfigName
-      # CreationTime:
-      #   is_read_only: true
-      #   from:
-      #     operation: DescribeEndpoint
-      #     path: CreationTime
-      # LastModifiedTime:
-      #   is_read_only: true
-      #   from:
-      #     operation: DescribeEndpoint
-      #     path: LastModifiedTime
-      # ProductionVariants:
-      #   is_read_only: true
-      #   from:
-      #     operation: DescribeEndpoint
-      #     path: ProductionVariants
+      CreationTime:
+        is_read_only: true
+        from:
+          operation: DescribeEndpoint
+          path: CreationTime
+      LastModifiedTime:
+        is_read_only: true
+        from:
+          operation: DescribeEndpoint
+          path: LastModifiedTime
+      ProductionVariants:
+        is_read_only: true
+        from:
+          operation: DescribeEndpoint
+          path: ProductionVariants
   TrainingJob:
     exceptions:
       errors:
@@ -218,8 +218,5 @@ ignore:
       - Workteam
     operations:
       - UpdateTrainingJob
-<<<<<<< HEAD
-=======
     shape_names:
       - TagList
->>>>>>> bab6733... endpoint: address failed update scenario
