@@ -191,6 +191,19 @@ resources:
             code: ResourceNotFound
             message_prefix: Monitoring Job Definition
   MonitoringSchedule:
+    fields:
+      MonitoringScheduleStatus:
+        is_read_only: true
+        is_printable: true
+        from:
+          operation: DescribeMonitoringSchedule
+          path: MonitoringScheduleStatus
+      FailureReason:
+        is_read_only: true
+        is_printable: true
+        from:
+          operation: DescribeMonitoringSchedule
+          path: FailureReason
     exceptions:
       errors:
           404:

@@ -61,7 +61,7 @@ func (rm *resourceManager) sdkFind(
 	resp, respErr := rm.sdkapi.DescribeModelExplainabilityJobDefinitionWithContext(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeModelExplainabilityJobDefinition", respErr)
 	if respErr != nil {
-		if awsErr, ok := ackerr.AWSError(respErr); ok && awsErr.Code() == "UNKNOWN" {
+		if awsErr, ok := ackerr.AWSError(respErr); ok && awsErr.Code() == "ResourceNotFound" && strings.HasPrefix(awsErr.Message(), "Monitoring Job Definition") {
 			return nil, ackerr.NotFound
 		}
 		return nil, respErr
@@ -493,7 +493,7 @@ func (rm *resourceManager) sdkUpdate(
 	ctx context.Context,
 	desired *resource,
 	latest *resource,
-	diffReporter *ackcompare.Reporter,
+	delta *ackcompare.Delta,
 ) (*resource, error) {
 	// TODO(jaypipes): Figure this out...
 	return nil, ackerr.NotImplemented

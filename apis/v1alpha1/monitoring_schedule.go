@@ -39,12 +39,16 @@ type MonitoringScheduleStatus struct {
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
-	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	Conditions               []*ackv1alpha1.Condition `json:"conditions"`
+	FailureReason            *string                  `json:"failureReason,omitempty"`
+	MonitoringScheduleStatus *string                  `json:"monitoringScheduleStatus,omitempty"`
 }
 
 // MonitoringSchedule is the Schema for the MonitoringSchedules API
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="FailureReason",type=string,JSONPath=`.status.failureReason`
+// +kubebuilder:printcolumn:name="MonitoringScheduleStatus",type=string,JSONPath=`.status.monitoringScheduleStatus`
 type MonitoringSchedule struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

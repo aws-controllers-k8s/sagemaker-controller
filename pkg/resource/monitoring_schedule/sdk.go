@@ -71,6 +71,9 @@ func (rm *resourceManager) sdkFind(
 	// the original Kubernetes object we passed to the function
 	ko := r.ko.DeepCopy()
 
+	if resp.FailureReason != nil {
+		ko.Status.FailureReason = resp.FailureReason
+	}
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
 	}
@@ -294,6 +297,9 @@ func (rm *resourceManager) sdkFind(
 	}
 	if resp.MonitoringScheduleName != nil {
 		ko.Spec.MonitoringScheduleName = resp.MonitoringScheduleName
+	}
+	if resp.MonitoringScheduleStatus != nil {
+		ko.Status.MonitoringScheduleStatus = resp.MonitoringScheduleStatus
 	}
 
 	rm.setStatusDefaults(ko)
@@ -607,7 +613,7 @@ func (rm *resourceManager) sdkUpdate(
 	ctx context.Context,
 	desired *resource,
 	latest *resource,
-	diffReporter *ackcompare.Reporter,
+	delta *ackcompare.Delta,
 ) (*resource, error) {
 
 	input, err := rm.newUpdateRequestPayload(ctx, desired)

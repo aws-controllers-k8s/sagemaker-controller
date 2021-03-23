@@ -16,7 +16,14 @@ spec:
     singular: monitoringschedule
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .status.failureReason
+      name: FailureReason
+      type: string
+    - jsonPath: .status.monitoringScheduleStatus
+      name: MonitoringScheduleStatus
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: MonitoringSchedule is the Schema for the MonitoringSchedules
@@ -251,6 +258,10 @@ spec:
                   - type
                   type: object
                 type: array
+              failureReason:
+                type: string
+              monitoringScheduleStatus:
+                type: string
             required:
             - ackResourceMetadata
             - conditions
