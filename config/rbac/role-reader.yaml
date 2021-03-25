@@ -11,6 +11,7 @@ rules:
   resources:
   - endpoints
   - endpointconfigs
+  - hyperparametertuningjobs
   - models
   - processingjobs
   - trainingjobs
