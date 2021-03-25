@@ -552,14 +552,14 @@ const (
 	HyperParameterTuningJobSortByOptions_CreationTime HyperParameterTuningJobSortByOptions = "CreationTime"
 )
 
-type HyperParameterTuningJobStatus string
+type HyperParameterTuningJobStatus_SDK string
 
 const (
-	HyperParameterTuningJobStatus_Completed  HyperParameterTuningJobStatus = "Completed"
-	HyperParameterTuningJobStatus_InProgress HyperParameterTuningJobStatus = "InProgress"
-	HyperParameterTuningJobStatus_Failed     HyperParameterTuningJobStatus = "Failed"
-	HyperParameterTuningJobStatus_Stopped    HyperParameterTuningJobStatus = "Stopped"
-	HyperParameterTuningJobStatus_Stopping   HyperParameterTuningJobStatus = "Stopping"
+	HyperParameterTuningJobStatus_SDK_Completed  HyperParameterTuningJobStatus_SDK = "Completed"
+	HyperParameterTuningJobStatus_SDK_InProgress HyperParameterTuningJobStatus_SDK = "InProgress"
+	HyperParameterTuningJobStatus_SDK_Failed     HyperParameterTuningJobStatus_SDK = "Failed"
+	HyperParameterTuningJobStatus_SDK_Stopped    HyperParameterTuningJobStatus_SDK = "Stopped"
+	HyperParameterTuningJobStatus_SDK_Stopping   HyperParameterTuningJobStatus_SDK = "Stopping"
 )
 
 type HyperParameterTuningJobStrategyType string

@@ -83,6 +83,7 @@ type AutoMLCandidate struct {
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
 	EndTime          *metav1.Time `json:"endTime,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	ObjectiveStatus  *string      `json:"objectiveStatus,omitempty"`
 }
 
 type AutoMLChannel struct {
@@ -141,6 +142,15 @@ type CaptureOption struct {
 	CaptureMode *string `json:"captureMode,omitempty"`
 }
 
+type CategoricalParameterRange struct {
+	Name   *string   `json:"name,omitempty"`
+	Values []*string `json:"values,omitempty"`
+}
+
+type CategoricalParameterRangeSpecification struct {
+	Values []*string `json:"values,omitempty"`
+}
+
 type Channel struct {
 	ChannelName       *string        `json:"channelName,omitempty"`
 	CompressionType   *string        `json:"compressionType,omitempty"`
@@ -186,6 +196,18 @@ type ContextSummary struct {
 	ContextName      *string      `json:"contextName,omitempty"`
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+}
+
+type ContinuousParameterRange struct {
+	MaxValue    *string `json:"maxValue,omitempty"`
+	MinValue    *string `json:"minValue,omitempty"`
+	Name        *string `json:"name,omitempty"`
+	ScalingType *string `json:"scalingType,omitempty"`
+}
+
+type ContinuousParameterRangeSpecification struct {
+	MaxValue *string `json:"maxValue,omitempty"`
+	MinValue *string `json:"minValue,omitempty"`
 }
 
 type DataCaptureConfig struct {
@@ -379,8 +401,14 @@ type FileSystemDataSource struct {
 	FileSystemType       *string `json:"fileSystemType,omitempty"`
 }
 
+type FinalAutoMLJobObjectiveMetric struct {
+	Value *float64 `json:"value,omitempty"`
+}
+
 type FinalHyperParameterTuningJobObjectiveMetric struct {
-	MetricName *string `json:"metricName,omitempty"`
+	MetricName *string  `json:"metricName,omitempty"`
+	Type       *string  `json:"type_,omitempty"`
+	Value      *float64 `json:"value,omitempty"`
 }
 
 type FlowDefinitionOutputConfig struct {
@@ -411,39 +439,68 @@ type HyperParameterSpecification struct {
 }
 
 type HyperParameterTrainingJobDefinition struct {
-	CheckpointConfig                      *CheckpointConfig  `json:"checkpointConfig,omitempty"`
-	EnableInterContainerTrafficEncryption *bool              `json:"enableInterContainerTrafficEncryption,omitempty"`
-	EnableManagedSpotTraining             *bool              `json:"enableManagedSpotTraining,omitempty"`
-	EnableNetworkIsolation                *bool              `json:"enableNetworkIsolation,omitempty"`
-	InputDataConfig                       []*Channel         `json:"inputDataConfig,omitempty"`
-	OutputDataConfig                      *OutputDataConfig  `json:"outputDataConfig,omitempty"`
-	ResourceConfig                        *ResourceConfig    `json:"resourceConfig,omitempty"`
-	RoleARN                               *string            `json:"roleARN,omitempty"`
-	StaticHyperParameters                 map[string]*string `json:"staticHyperParameters,omitempty"`
-	StoppingCondition                     *StoppingCondition `json:"stoppingCondition,omitempty"`
-	VPCConfig                             *VPCConfig         `json:"vpcConfig,omitempty"`
+	AlgorithmSpecification                *HyperParameterAlgorithmSpecification `json:"algorithmSpecification,omitempty"`
+	CheckpointConfig                      *CheckpointConfig                     `json:"checkpointConfig,omitempty"`
+	DefinitionName                        *string                               `json:"definitionName,omitempty"`
+	EnableInterContainerTrafficEncryption *bool                                 `json:"enableInterContainerTrafficEncryption,omitempty"`
+	EnableManagedSpotTraining             *bool                                 `json:"enableManagedSpotTraining,omitempty"`
+	EnableNetworkIsolation                *bool                                 `json:"enableNetworkIsolation,omitempty"`
+	HyperParameterRanges                  *ParameterRanges                      `json:"hyperParameterRanges,omitempty"`
+	InputDataConfig                       []*Channel                            `json:"inputDataConfig,omitempty"`
+	OutputDataConfig                      *OutputDataConfig                     `json:"outputDataConfig,omitempty"`
+	ResourceConfig                        *ResourceConfig                       `json:"resourceConfig,omitempty"`
+	RoleARN                               *string                               `json:"roleARN,omitempty"`
+	StaticHyperParameters                 map[string]*string                    `json:"staticHyperParameters,omitempty"`
+	StoppingCondition                     *StoppingCondition                    `json:"stoppingCondition,omitempty"`
+	TuningObjective                       *HyperParameterTuningJobObjective     `json:"tuningObjective,omitempty"`
+	VPCConfig                             *VPCConfig                            `json:"vpcConfig,omitempty"`
 }
 
 type HyperParameterTrainingJobSummary struct {
-	CreationTime         *metav1.Time       `json:"creationTime,omitempty"`
-	FailureReason        *string            `json:"failureReason,omitempty"`
-	TrainingEndTime      *metav1.Time       `json:"trainingEndTime,omitempty"`
-	TrainingJobARN       *string            `json:"trainingJobARN,omitempty"`
-	TrainingJobName      *string            `json:"trainingJobName,omitempty"`
-	TrainingJobStatus    *string            `json:"trainingJobStatus,omitempty"`
-	TrainingStartTime    *metav1.Time       `json:"trainingStartTime,omitempty"`
-	TunedHyperParameters map[string]*string `json:"tunedHyperParameters,omitempty"`
+	CreationTime                                *metav1.Time                                 `json:"creationTime,omitempty"`
+	FailureReason                               *string                                      `json:"failureReason,omitempty"`
+	FinalHyperParameterTuningJobObjectiveMetric *FinalHyperParameterTuningJobObjectiveMetric `json:"finalHyperParameterTuningJobObjectiveMetric,omitempty"`
+	ObjectiveStatus                             *string                                      `json:"objectiveStatus,omitempty"`
+	TrainingEndTime                             *metav1.Time                                 `json:"trainingEndTime,omitempty"`
+	TrainingJobARN                              *string                                      `json:"trainingJobARN,omitempty"`
+	TrainingJobDefinitionName                   *string                                      `json:"trainingJobDefinitionName,omitempty"`
+	TrainingJobName                             *string                                      `json:"trainingJobName,omitempty"`
+	TrainingJobStatus                           *string                                      `json:"trainingJobStatus,omitempty"`
+	TrainingStartTime                           *metav1.Time                                 `json:"trainingStartTime,omitempty"`
+	TunedHyperParameters                        map[string]*string                           `json:"tunedHyperParameters,omitempty"`
+	TuningJobName                               *string                                      `json:"tuningJobName,omitempty"`
+}
+
+type HyperParameterTuningJobConfig struct {
+	HyperParameterTuningJobObjective *HyperParameterTuningJobObjective `json:"hyperParameterTuningJobObjective,omitempty"`
+	ParameterRanges                  *ParameterRanges                  `json:"parameterRanges,omitempty"`
+	ResourceLimits                   *ResourceLimits                   `json:"resourceLimits,omitempty"`
+	Strategy                         *string                           `json:"strategy,omitempty"`
+	TrainingJobEarlyStoppingType     *string                           `json:"trainingJobEarlyStoppingType,omitempty"`
+	TuningJobCompletionCriteria      *TuningJobCompletionCriteria      `json:"tuningJobCompletionCriteria,omitempty"`
 }
 
 type HyperParameterTuningJobObjective struct {
 	MetricName *string `json:"metricName,omitempty"`
+	Type       *string `json:"type_,omitempty"`
 }
 
 type HyperParameterTuningJobSummary struct {
-	CreationTime                *metav1.Time `json:"creationTime,omitempty"`
-	HyperParameterTuningEndTime *metav1.Time `json:"hyperParameterTuningEndTime,omitempty"`
-	HyperParameterTuningJobARN  *string      `json:"hyperParameterTuningJobARN,omitempty"`
-	LastModifiedTime            *metav1.Time `json:"lastModifiedTime,omitempty"`
+	CreationTime                  *metav1.Time               `json:"creationTime,omitempty"`
+	HyperParameterTuningEndTime   *metav1.Time               `json:"hyperParameterTuningEndTime,omitempty"`
+	HyperParameterTuningJobARN    *string                    `json:"hyperParameterTuningJobARN,omitempty"`
+	HyperParameterTuningJobName   *string                    `json:"hyperParameterTuningJobName,omitempty"`
+	HyperParameterTuningJobStatus *string                    `json:"hyperParameterTuningJobStatus,omitempty"`
+	LastModifiedTime              *metav1.Time               `json:"lastModifiedTime,omitempty"`
+	ObjectiveStatusCounters       *ObjectiveStatusCounters   `json:"objectiveStatusCounters,omitempty"`
+	ResourceLimits                *ResourceLimits            `json:"resourceLimits,omitempty"`
+	Strategy                      *string                    `json:"strategy,omitempty"`
+	TrainingJobStatusCounters     *TrainingJobStatusCounters `json:"trainingJobStatusCounters,omitempty"`
+}
+
+type HyperParameterTuningJobWarmStartConfig struct {
+	ParentHyperParameterTuningJobs []*ParentHyperParameterTuningJob `json:"parentHyperParameterTuningJobs,omitempty"`
+	WarmStartType                  *string                          `json:"warmStartType,omitempty"`
 }
 
 type Image struct {
@@ -468,6 +525,18 @@ type InferenceExecutionConfig struct {
 
 type InputConfig struct {
 	S3URI *string `json:"s3URI,omitempty"`
+}
+
+type IntegerParameterRange struct {
+	MaxValue    *string `json:"maxValue,omitempty"`
+	MinValue    *string `json:"minValue,omitempty"`
+	Name        *string `json:"name,omitempty"`
+	ScalingType *string `json:"scalingType,omitempty"`
+}
+
+type IntegerParameterRangeSpecification struct {
+	MaxValue *string `json:"maxValue,omitempty"`
+	MinValue *string `json:"minValue,omitempty"`
 }
 
 type LabelingJobAlgorithmsConfig struct {
@@ -672,6 +741,12 @@ type NetworkConfig struct {
 	VPCConfig                             *VPCConfig `json:"vpcConfig,omitempty"`
 }
 
+type ObjectiveStatusCounters struct {
+	Failed    *int64 `json:"failed,omitempty"`
+	Pending   *int64 `json:"pending,omitempty"`
+	Succeeded *int64 `json:"succeeded,omitempty"`
+}
+
 type OfflineStoreConfig struct {
 	DisableGlueTableCreation *bool `json:"disableGlueTableCreation,omitempty"`
 }
@@ -694,9 +769,19 @@ type OutputDataConfig struct {
 	S3OutputPath *string `json:"s3OutputPath,omitempty"`
 }
 
+type ParameterRanges struct {
+	CategoricalParameterRanges []*CategoricalParameterRange `json:"categoricalParameterRanges,omitempty"`
+	ContinuousParameterRanges  []*ContinuousParameterRange  `json:"continuousParameterRanges,omitempty"`
+	IntegerParameterRanges     []*IntegerParameterRange     `json:"integerParameterRanges,omitempty"`
+}
+
 type Parent struct {
 	ExperimentName *string `json:"experimentName,omitempty"`
 	TrialName      *string `json:"trialName,omitempty"`
+}
+
+type ParentHyperParameterTuningJob struct {
+	HyperParameterTuningJobName *string `json:"hyperParameterTuningJobName,omitempty"`
 }
 
 type Pipeline struct {
@@ -904,6 +989,11 @@ type ResourceConfig struct {
 	VolumeSizeInGB *int64  `json:"volumeSizeInGB,omitempty"`
 }
 
+type ResourceLimits struct {
+	MaxNumberOfTrainingJobs *int64 `json:"maxNumberOfTrainingJobs,omitempty"`
+	MaxParallelTrainingJobs *int64 `json:"maxParallelTrainingJobs,omitempty"`
+}
+
 type S3DataSource struct {
 	AttributeNames         []*string `json:"attributeNames,omitempty"`
 	S3DataDistributionType *string   `json:"s3DataDistributionType,omitempty"`
@@ -971,6 +1061,14 @@ type TrainingJobDefinition struct {
 	ResourceConfig    *ResourceConfig    `json:"resourceConfig,omitempty"`
 	StoppingCondition *StoppingCondition `json:"stoppingCondition,omitempty"`
 	TrainingInputMode *string            `json:"trainingInputMode,omitempty"`
+}
+
+type TrainingJobStatusCounters struct {
+	Completed         *int64 `json:"completed,omitempty"`
+	InProgress        *int64 `json:"inProgress,omitempty"`
+	NonRetryableError *int64 `json:"nonRetryableError,omitempty"`
+	RetryableError    *int64 `json:"retryableError,omitempty"`
+	Stopped           *int64 `json:"stopped,omitempty"`
 }
 
 type TrainingJobStepMetadata struct {
@@ -1150,6 +1248,10 @@ type TrialSummary struct {
 	DisplayName      *string      `json:"displayName,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	TrialName        *string      `json:"trialName,omitempty"`
+}
+
+type TuningJobCompletionCriteria struct {
+	TargetObjectiveMetricValue *float64 `json:"targetObjectiveMetricValue,omitempty"`
 }
 
 type UiConfig struct {
