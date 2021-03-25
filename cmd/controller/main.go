@@ -31,6 +31,7 @@ import (
 
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/endpoint"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/endpoint_config"
+	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/hyper_parameter_tuning_job"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/model"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/processing_job"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/training_job"

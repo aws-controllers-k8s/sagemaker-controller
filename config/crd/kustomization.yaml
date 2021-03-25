@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - bases/sagemaker.services.k8s.aws_endpoints.yaml
   - bases/sagemaker.services.k8s.aws_endpointconfigs.yaml
+  - bases/sagemaker.services.k8s.aws_hyperparametertuningjobs.yaml
   - bases/sagemaker.services.k8s.aws_models.yaml
   - bases/sagemaker.services.k8s.aws_processingjobs.yaml
   - bases/sagemaker.services.k8s.aws_trainingjobs.yaml

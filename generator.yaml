@@ -17,6 +17,9 @@ operations:
     set_output_custom_method_name: customUpdateEndpointSetOutput
   DeleteEndpoint:
     custom_implementation: customDeleteEndpoint
+  StopHyperParameterTuningJob:
+    operation_type: Delete
+    resource_name: HyperParameterTuningJob
 resources:
   Model:
     exceptions:
@@ -132,6 +135,34 @@ resources:
         from:
           operation: DescribeTransformJob
           path: FailureReason
+  HyperParameterTuningJob:
+    exceptions:
+      errors:
+          404:
+            code: ResourceNotFound
+    fields:
+      HyperParameterTuningJobStatus:
+        is_read_only: true
+        is_printable: true
+        from:
+          operation: DescribeHyperParameterTuningJob
+          path: HyperParameterTuningJobStatus
+      FailureReason:
+        is_read_only: true
+        is_printable: true
+        from:
+          operation: DescribeHyperParameterTuningJob
+          path: FailureReason
+      BestTrainingJob:
+        is_read_only: true
+        from:
+          operation: DescribeHyperParameterTuningJob
+          path: BestTrainingJob
+      OverallBestTrainingJob:
+        is_read_only: true
+        from:
+          operation: DescribeHyperParameterTuningJob
+          path: OverallBestTrainingJob
 ignore:
     resource_names:
       - Algorithm
@@ -153,7 +184,7 @@ ignore:
       - FeatureGroup
       - FlowDefinition
       - HumanTaskUi
-      - HyperParameterTuningJob
+      # - HyperParameterTuningJob
       - Image
       - ImageVersion
       - LabelingJob
