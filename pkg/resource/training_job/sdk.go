@@ -100,6 +100,8 @@ func (rm *resourceManager) sdkFind(
 			f0.TrainingInputMode = resp.AlgorithmSpecification.TrainingInputMode
 		}
 		ko.Spec.AlgorithmSpecification = f0
+	} else {
+		ko.Spec.AlgorithmSpecification = nil
 	}
 	if resp.CheckpointConfig != nil {
 		f3 := &svcapitypes.CheckpointConfig{}
@@ -110,6 +112,8 @@ func (rm *resourceManager) sdkFind(
 			f3.S3URI = resp.CheckpointConfig.S3Uri
 		}
 		ko.Spec.CheckpointConfig = f3
+	} else {
+		ko.Spec.CheckpointConfig = nil
 	}
 	if resp.DebugHookConfig != nil {
 		f5 := &svcapitypes.DebugHookConfig{}
@@ -149,6 +153,8 @@ func (rm *resourceManager) sdkFind(
 			f5.S3OutputPath = resp.DebugHookConfig.S3OutputPath
 		}
 		ko.Spec.DebugHookConfig = f5
+	} else {
+		ko.Spec.DebugHookConfig = nil
 	}
 	if resp.DebugRuleConfigurations != nil {
 		f6 := []*svcapitypes.DebugRuleConfiguration{}
@@ -184,15 +190,23 @@ func (rm *resourceManager) sdkFind(
 			f6 = append(f6, f6elem)
 		}
 		ko.Spec.DebugRuleConfigurations = f6
+	} else {
+		ko.Spec.DebugRuleConfigurations = nil
 	}
 	if resp.EnableInterContainerTrafficEncryption != nil {
 		ko.Spec.EnableInterContainerTrafficEncryption = resp.EnableInterContainerTrafficEncryption
+	} else {
+		ko.Spec.EnableInterContainerTrafficEncryption = nil
 	}
 	if resp.EnableManagedSpotTraining != nil {
 		ko.Spec.EnableManagedSpotTraining = resp.EnableManagedSpotTraining
+	} else {
+		ko.Spec.EnableManagedSpotTraining = nil
 	}
 	if resp.EnableNetworkIsolation != nil {
 		ko.Spec.EnableNetworkIsolation = resp.EnableNetworkIsolation
+	} else {
+		ko.Spec.EnableNetworkIsolation = nil
 	}
 	if resp.ExperimentConfig != nil {
 		f11 := &svcapitypes.ExperimentConfig{}
@@ -206,9 +220,13 @@ func (rm *resourceManager) sdkFind(
 			f11.TrialName = resp.ExperimentConfig.TrialName
 		}
 		ko.Spec.ExperimentConfig = f11
+	} else {
+		ko.Spec.ExperimentConfig = nil
 	}
 	if resp.FailureReason != nil {
 		ko.Status.FailureReason = resp.FailureReason
+	} else {
+		ko.Status.FailureReason = nil
 	}
 	if resp.HyperParameters != nil {
 		f14 := map[string]*string{}
@@ -218,6 +236,8 @@ func (rm *resourceManager) sdkFind(
 			f14[f14key] = &f14val
 		}
 		ko.Spec.HyperParameters = f14
+	} else {
+		ko.Spec.HyperParameters = nil
 	}
 	if resp.InputDataConfig != nil {
 		f15 := []*svcapitypes.Channel{}
@@ -290,6 +310,8 @@ func (rm *resourceManager) sdkFind(
 			f15 = append(f15, f15elem)
 		}
 		ko.Spec.InputDataConfig = f15
+	} else {
+		ko.Spec.InputDataConfig = nil
 	}
 	if resp.OutputDataConfig != nil {
 		f19 := &svcapitypes.OutputDataConfig{}
@@ -300,6 +322,8 @@ func (rm *resourceManager) sdkFind(
 			f19.S3OutputPath = resp.OutputDataConfig.S3OutputPath
 		}
 		ko.Spec.OutputDataConfig = f19
+	} else {
+		ko.Spec.OutputDataConfig = nil
 	}
 	if resp.ProfilerConfig != nil {
 		f20 := &svcapitypes.ProfilerConfig{}
@@ -319,6 +343,8 @@ func (rm *resourceManager) sdkFind(
 			f20.S3OutputPath = resp.ProfilerConfig.S3OutputPath
 		}
 		ko.Spec.ProfilerConfig = f20
+	} else {
+		ko.Spec.ProfilerConfig = nil
 	}
 	if resp.ProfilerRuleConfigurations != nil {
 		f21 := []*svcapitypes.ProfilerRuleConfiguration{}
@@ -354,6 +380,8 @@ func (rm *resourceManager) sdkFind(
 			f21 = append(f21, f21elem)
 		}
 		ko.Spec.ProfilerRuleConfigurations = f21
+	} else {
+		ko.Spec.ProfilerRuleConfigurations = nil
 	}
 	if resp.ResourceConfig != nil {
 		f24 := &svcapitypes.ResourceConfig{}
@@ -370,12 +398,18 @@ func (rm *resourceManager) sdkFind(
 			f24.VolumeSizeInGB = resp.ResourceConfig.VolumeSizeInGB
 		}
 		ko.Spec.ResourceConfig = f24
+	} else {
+		ko.Spec.ResourceConfig = nil
 	}
 	if resp.RoleArn != nil {
 		ko.Spec.RoleARN = resp.RoleArn
+	} else {
+		ko.Spec.RoleARN = nil
 	}
 	if resp.SecondaryStatus != nil {
 		ko.Status.SecondaryStatus = resp.SecondaryStatus
+	} else {
+		ko.Status.SecondaryStatus = nil
 	}
 	if resp.StoppingCondition != nil {
 		f28 := &svcapitypes.StoppingCondition{}
@@ -386,6 +420,8 @@ func (rm *resourceManager) sdkFind(
 			f28.MaxWaitTimeInSeconds = resp.StoppingCondition.MaxWaitTimeInSeconds
 		}
 		ko.Spec.StoppingCondition = f28
+	} else {
+		ko.Spec.StoppingCondition = nil
 	}
 	if resp.TensorBoardOutputConfig != nil {
 		f29 := &svcapitypes.TensorBoardOutputConfig{}
@@ -396,6 +432,8 @@ func (rm *resourceManager) sdkFind(
 			f29.S3OutputPath = resp.TensorBoardOutputConfig.S3OutputPath
 		}
 		ko.Spec.TensorBoardOutputConfig = f29
+	} else {
+		ko.Spec.TensorBoardOutputConfig = nil
 	}
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
@@ -406,9 +444,13 @@ func (rm *resourceManager) sdkFind(
 	}
 	if resp.TrainingJobName != nil {
 		ko.Spec.TrainingJobName = resp.TrainingJobName
+	} else {
+		ko.Spec.TrainingJobName = nil
 	}
 	if resp.TrainingJobStatus != nil {
 		ko.Status.TrainingJobStatus = resp.TrainingJobStatus
+	} else {
+		ko.Status.TrainingJobStatus = nil
 	}
 	if resp.VpcConfig != nil {
 		f37 := &svcapitypes.VPCConfig{}
@@ -431,6 +473,8 @@ func (rm *resourceManager) sdkFind(
 			f37.Subnets = f37f1
 		}
 		ko.Spec.VPCConfig = f37
+	} else {
+		ko.Spec.VPCConfig = nil
 	}
 
 	rm.setStatusDefaults(ko)
@@ -813,54 +857,40 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.SetStoppingCondition(f15)
 	}
-	if r.ko.Spec.Tags != nil {
-		f16 := []*svcsdk.Tag{}
-		for _, f16iter := range r.ko.Spec.Tags {
-			f16elem := &svcsdk.Tag{}
-			if f16iter.Key != nil {
-				f16elem.SetKey(*f16iter.Key)
-			}
-			if f16iter.Value != nil {
-				f16elem.SetValue(*f16iter.Value)
-			}
-			f16 = append(f16, f16elem)
-		}
-		res.SetTags(f16)
-	}
 	if r.ko.Spec.TensorBoardOutputConfig != nil {
-		f17 := &svcsdk.TensorBoardOutputConfig{}
+		f16 := &svcsdk.TensorBoardOutputConfig{}
 		if r.ko.Spec.TensorBoardOutputConfig.LocalPath != nil {
-			f17.SetLocalPath(*r.ko.Spec.TensorBoardOutputConfig.LocalPath)
+			f16.SetLocalPath(*r.ko.Spec.TensorBoardOutputConfig.LocalPath)
 		}
 		if r.ko.Spec.TensorBoardOutputConfig.S3OutputPath != nil {
-			f17.SetS3OutputPath(*r.ko.Spec.TensorBoardOutputConfig.S3OutputPath)
+			f16.SetS3OutputPath(*r.ko.Spec.TensorBoardOutputConfig.S3OutputPath)
 		}
-		res.SetTensorBoardOutputConfig(f17)
+		res.SetTensorBoardOutputConfig(f16)
 	}
 	if r.ko.Spec.TrainingJobName != nil {
 		res.SetTrainingJobName(*r.ko.Spec.TrainingJobName)
 	}
 	if r.ko.Spec.VPCConfig != nil {
-		f19 := &svcsdk.VpcConfig{}
+		f18 := &svcsdk.VpcConfig{}
 		if r.ko.Spec.VPCConfig.SecurityGroupIDs != nil {
-			f19f0 := []*string{}
-			for _, f19f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
-				var f19f0elem string
-				f19f0elem = *f19f0iter
-				f19f0 = append(f19f0, &f19f0elem)
+			f18f0 := []*string{}
+			for _, f18f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
+				var f18f0elem string
+				f18f0elem = *f18f0iter
+				f18f0 = append(f18f0, &f18f0elem)
 			}
-			f19.SetSecurityGroupIds(f19f0)
+			f18.SetSecurityGroupIds(f18f0)
 		}
 		if r.ko.Spec.VPCConfig.Subnets != nil {
-			f19f1 := []*string{}
-			for _, f19f1iter := range r.ko.Spec.VPCConfig.Subnets {
-				var f19f1elem string
-				f19f1elem = *f19f1iter
-				f19f1 = append(f19f1, &f19f1elem)
+			f18f1 := []*string{}
+			for _, f18f1iter := range r.ko.Spec.VPCConfig.Subnets {
+				var f18f1elem string
+				f18f1elem = *f18f1iter
+				f18f1 = append(f18f1, &f18f1elem)
 			}
-			f19.SetSubnets(f19f1)
+			f18.SetSubnets(f18f1)
 		}
-		res.SetVpcConfig(f19)
+		res.SetVpcConfig(f18)
 	}
 
 	return res, nil
@@ -872,7 +902,7 @@ func (rm *resourceManager) sdkUpdate(
 	ctx context.Context,
 	desired *resource,
 	latest *resource,
-	diffReporter *ackcompare.Reporter,
+	delta *ackcompare.Delta,
 ) (*resource, error) {
 	// TODO(jaypipes): Figure this out...
 	return nil, ackerr.NotImplemented

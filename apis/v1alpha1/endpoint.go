@@ -22,11 +22,14 @@ import (
 
 // EndpointSpec defines the desired state of Endpoint
 type EndpointSpec struct {
+	// The name of an endpoint configuration. For more information, see CreateEndpointConfig.
 	// +kubebuilder:validation:Required
 	EndpointConfigName *string `json:"endpointConfigName"`
+	// The name of the endpoint.The name must be unique within an AWS Region in
+	// your AWS account. The name is case-insensitive in CreateEndpoint, but the
+	// case is preserved and must be matched in .
 	// +kubebuilder:validation:Required
 	EndpointName *string `json:"endpointName"`
-	Tags         []*Tag  `json:"tags,omitempty"`
 }
 
 // EndpointStatus defines the observed state of Endpoint
@@ -39,17 +42,56 @@ type EndpointStatus struct {
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
-	Conditions         []*ackv1alpha1.Condition `json:"conditions"`
-	EndpointConfigName *string                  `json:"endpointConfigName,omitempty"`
-	EndpointStatus     *string                  `json:"endpointStatus,omitempty"`
-	FailureReason      *string                  `json:"failureReason,omitempty"`
+	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	// A timestamp that shows when the endpoint was created.
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	// The status of the endpoint.
+	//
+	//    * OutOfService: Endpoint is not available to take incoming requests.
+	//
+	//    * Creating: CreateEndpoint is executing.
+	//
+	//    * Updating: UpdateEndpoint or UpdateEndpointWeightsAndCapacities is executing.
+	//
+	//    * SystemUpdating: Endpoint is undergoing maintenance and cannot be updated
+	//    or deleted or re-scaled until it has completed. This maintenance operation
+	//    does not change any customer-specified values such as VPC config, KMS
+	//    encryption, model, instance type, or instance count.
+	//
+	//    * RollingBack: Endpoint fails to scale up or down or change its variant
+	//    weight and is in the process of rolling back to its previous configuration.
+	//    Once the rollback completes, endpoint returns to an InService status.
+	//    This transitional status only applies to an endpoint that has autoscaling
+	//    enabled and is undergoing variant weight or capacity changes as part of
+	//    an UpdateEndpointWeightsAndCapacities call or when the UpdateEndpointWeightsAndCapacities
+	//    operation is called explicitly.
+	//
+	//    * InService: Endpoint is available to process incoming requests.
+	//
+	//    * Deleting: DeleteEndpoint is executing.
+	//
+	//    * Failed: Endpoint could not be created, updated, or re-scaled. Use DescribeEndpointOutput$FailureReason
+	//    for information about the failure. DeleteEndpoint is the only operation
+	//    that can be performed on a failed endpoint.
+	EndpointStatus *string `json:"endpointStatus,omitempty"`
+	// If the status of the endpoint is Failed, the reason why it failed.
+	FailureReason *string `json:"failureReason,omitempty"`
+	// Name of the Amazon SageMaker endpoint configuration.
+	LastEndpointConfigNameForUpdate *string `json:"lastEndpointConfigNameForUpdate,omitempty"`
+	// A timestamp that shows when the endpoint was last modified.
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	// The name of the endpoint configuration associated with this endpoint.
+	LatestEndpointConfigName *string `json:"latestEndpointConfigName,omitempty"`
+	// An array of ProductionVariantSummary objects, one for each model hosted behind
+	// this endpoint.
+	ProductionVariants []*ProductionVariantSummary `json:"productionVariants,omitempty"`
 }
 
 // Endpoint is the Schema for the Endpoints API
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:printcolumn:name="EndpointStatus",type=string,JSONPath=`.status.endpointStatus`
 // +kubebuilder:printcolumn:name="FailureReason",type=string,JSONPath=`.status.failureReason`
+// +kubebuilder:printcolumn:name="EndpointStatus",type=string,JSONPath=`.status.endpointStatus`
 type Endpoint struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
