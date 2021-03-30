@@ -44,6 +44,8 @@ spec:
             description: ProcessingJobSpec defines the desired state of ProcessingJob
             properties:
               appSpecification:
+                description: Configures the processing job to run a specified Docker
+                  container image.
                 properties:
                   containerArguments:
                     items:
@@ -59,6 +61,8 @@ spec:
               environment:
                 additionalProperties:
                   type: string
+                description: The environment variables to set in the Docker container.
+                  Up to 100 key and values entries in the map are supported.
                 type: object
               experimentConfig:
                 properties:
@@ -70,6 +74,10 @@ spec:
                     type: string
                 type: object
               networkConfig:
+                description: Networking options for a processing job, such as whether
+                  to allow inbound and outbound network calls to and from processing
+                  containers, and the VPC subnets and security groups to use for VPC-enabled
+                  processing jobs.
                 properties:
                   enableInterContainerTrafficEncryption:
                     type: boolean
@@ -88,6 +96,8 @@ spec:
                     type: object
                 type: object
               processingInputs:
+                description: An array of inputs configuring the data to download into
+                  the processing container.
                 items:
                   properties:
                     appManaged:
@@ -161,8 +171,11 @@ spec:
                   type: object
                 type: array
               processingJobName:
+                description: The name of the processing job. The name must be unique
+                  within an AWS Region in the AWS account.
                 type: string
               processingOutputConfig:
+                description: Output configuration for the processing job.
                 properties:
                   kmsKeyID:
                     type: string
@@ -191,6 +204,9 @@ spec:
                     type: array
                 type: object
               processingResources:
+                description: Identifies the resources, ML compute instances, and ML
+                  storage volumes to deploy for a processing job. In distributed training,
+                  you specify more than one instance.
                 properties:
                   clusterConfig:
                     properties:
@@ -207,22 +223,17 @@ spec:
                     type: object
                 type: object
               roleARN:
+                description: The Amazon Resource Name (ARN) of an IAM role that Amazon
+                  SageMaker can assume to perform tasks on your behalf.
                 type: string
               stoppingCondition:
+                description: The time limit for how long the processing job is allowed
+                  to run.
                 properties:
                   maxRuntimeInSeconds:
                     format: int64
                     type: integer
                 type: object
-              tags:
-                items:
-                  properties:
-                    key:
-                      type: string
-                    value:
-                      type: string
-                  type: object
-                type: array
             required:
             - appSpecification
             - processingJobName
@@ -289,8 +300,11 @@ spec:
                   type: object
                 type: array
               failureReason:
+                description: A string, up to one KB in size, that contains the reason
+                  a processing job failed, if it failed.
                 type: string
               processingJobStatus:
+                description: Provides the status of a processing job.
                 type: string
             required:
             - ackResourceMetadata

@@ -95,6 +95,8 @@ func (rm *resourceManager) sdkFind(
 			f0.ImageURI = resp.AppSpecification.ImageUri
 		}
 		ko.Spec.AppSpecification = f0
+	} else {
+		ko.Spec.AppSpecification = nil
 	}
 	if resp.Environment != nil {
 		f3 := map[string]*string{}
@@ -104,6 +106,8 @@ func (rm *resourceManager) sdkFind(
 			f3[f3key] = &f3val
 		}
 		ko.Spec.Environment = f3
+	} else {
+		ko.Spec.Environment = nil
 	}
 	if resp.ExperimentConfig != nil {
 		f5 := &svcapitypes.ExperimentConfig{}
@@ -117,9 +121,13 @@ func (rm *resourceManager) sdkFind(
 			f5.TrialName = resp.ExperimentConfig.TrialName
 		}
 		ko.Spec.ExperimentConfig = f5
+	} else {
+		ko.Spec.ExperimentConfig = nil
 	}
 	if resp.FailureReason != nil {
 		ko.Status.FailureReason = resp.FailureReason
+	} else {
+		ko.Status.FailureReason = nil
 	}
 	if resp.NetworkConfig != nil {
 		f9 := &svcapitypes.NetworkConfig{}
@@ -152,6 +160,8 @@ func (rm *resourceManager) sdkFind(
 			f9.VPCConfig = f9f2
 		}
 		ko.Spec.NetworkConfig = f9
+	} else {
+		ko.Spec.NetworkConfig = nil
 	}
 	if resp.ProcessingInputs != nil {
 		f11 := []*svcapitypes.ProcessingInput{}
@@ -260,6 +270,8 @@ func (rm *resourceManager) sdkFind(
 			f11 = append(f11, f11elem)
 		}
 		ko.Spec.ProcessingInputs = f11
+	} else {
+		ko.Spec.ProcessingInputs = nil
 	}
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
@@ -270,9 +282,13 @@ func (rm *resourceManager) sdkFind(
 	}
 	if resp.ProcessingJobName != nil {
 		ko.Spec.ProcessingJobName = resp.ProcessingJobName
+	} else {
+		ko.Spec.ProcessingJobName = nil
 	}
 	if resp.ProcessingJobStatus != nil {
 		ko.Status.ProcessingJobStatus = resp.ProcessingJobStatus
+	} else {
+		ko.Status.ProcessingJobStatus = nil
 	}
 	if resp.ProcessingOutputConfig != nil {
 		f15 := &svcapitypes.ProcessingOutputConfig{}
@@ -314,6 +330,8 @@ func (rm *resourceManager) sdkFind(
 			f15.Outputs = f15f1
 		}
 		ko.Spec.ProcessingOutputConfig = f15
+	} else {
+		ko.Spec.ProcessingOutputConfig = nil
 	}
 	if resp.ProcessingResources != nil {
 		f16 := &svcapitypes.ProcessingResources{}
@@ -334,9 +352,13 @@ func (rm *resourceManager) sdkFind(
 			f16.ClusterConfig = f16f0
 		}
 		ko.Spec.ProcessingResources = f16
+	} else {
+		ko.Spec.ProcessingResources = nil
 	}
 	if resp.RoleArn != nil {
 		ko.Spec.RoleARN = resp.RoleArn
+	} else {
+		ko.Spec.RoleARN = nil
 	}
 	if resp.StoppingCondition != nil {
 		f19 := &svcapitypes.ProcessingStoppingCondition{}
@@ -344,6 +366,8 @@ func (rm *resourceManager) sdkFind(
 			f19.MaxRuntimeInSeconds = resp.StoppingCondition.MaxRuntimeInSeconds
 		}
 		ko.Spec.StoppingCondition = f19
+	} else {
+		ko.Spec.StoppingCondition = nil
 	}
 
 	rm.setStatusDefaults(ko)
@@ -677,20 +701,6 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.SetStoppingCondition(f9)
 	}
-	if r.ko.Spec.Tags != nil {
-		f10 := []*svcsdk.Tag{}
-		for _, f10iter := range r.ko.Spec.Tags {
-			f10elem := &svcsdk.Tag{}
-			if f10iter.Key != nil {
-				f10elem.SetKey(*f10iter.Key)
-			}
-			if f10iter.Value != nil {
-				f10elem.SetValue(*f10iter.Value)
-			}
-			f10 = append(f10, f10elem)
-		}
-		res.SetTags(f10)
-	}
 
 	return res, nil
 }
@@ -701,7 +711,7 @@ func (rm *resourceManager) sdkUpdate(
 	ctx context.Context,
 	desired *resource,
 	latest *resource,
-	diffReporter *ackcompare.Reporter,
+	delta *ackcompare.Delta,
 ) (*resource, error) {
 	// TODO(jaypipes): Figure this out...
 	return nil, ackerr.NotImplemented

@@ -73,6 +73,8 @@ func (rm *resourceManager) sdkFind(
 
 	if resp.BatchStrategy != nil {
 		ko.Spec.BatchStrategy = resp.BatchStrategy
+	} else {
+		ko.Spec.BatchStrategy = nil
 	}
 	if resp.DataProcessing != nil {
 		f3 := &svcapitypes.DataProcessing{}
@@ -86,6 +88,8 @@ func (rm *resourceManager) sdkFind(
 			f3.OutputFilter = resp.DataProcessing.OutputFilter
 		}
 		ko.Spec.DataProcessing = f3
+	} else {
+		ko.Spec.DataProcessing = nil
 	}
 	if resp.Environment != nil {
 		f4 := map[string]*string{}
@@ -95,6 +99,8 @@ func (rm *resourceManager) sdkFind(
 			f4[f4key] = &f4val
 		}
 		ko.Spec.Environment = f4
+	} else {
+		ko.Spec.Environment = nil
 	}
 	if resp.ExperimentConfig != nil {
 		f5 := &svcapitypes.ExperimentConfig{}
@@ -108,15 +114,23 @@ func (rm *resourceManager) sdkFind(
 			f5.TrialName = resp.ExperimentConfig.TrialName
 		}
 		ko.Spec.ExperimentConfig = f5
+	} else {
+		ko.Spec.ExperimentConfig = nil
 	}
 	if resp.FailureReason != nil {
 		ko.Status.FailureReason = resp.FailureReason
+	} else {
+		ko.Status.FailureReason = nil
 	}
 	if resp.MaxConcurrentTransforms != nil {
 		ko.Spec.MaxConcurrentTransforms = resp.MaxConcurrentTransforms
+	} else {
+		ko.Spec.MaxConcurrentTransforms = nil
 	}
 	if resp.MaxPayloadInMB != nil {
 		ko.Spec.MaxPayloadInMB = resp.MaxPayloadInMB
+	} else {
+		ko.Spec.MaxPayloadInMB = nil
 	}
 	if resp.ModelClientConfig != nil {
 		f10 := &svcapitypes.ModelClientConfig{}
@@ -127,9 +141,13 @@ func (rm *resourceManager) sdkFind(
 			f10.InvocationsTimeoutInSeconds = resp.ModelClientConfig.InvocationsTimeoutInSeconds
 		}
 		ko.Spec.ModelClientConfig = f10
+	} else {
+		ko.Spec.ModelClientConfig = nil
 	}
 	if resp.ModelName != nil {
 		ko.Spec.ModelName = resp.ModelName
+	} else {
+		ko.Spec.ModelName = nil
 	}
 	if resp.TransformInput != nil {
 		f13 := &svcapitypes.TransformInput{}
@@ -157,6 +175,8 @@ func (rm *resourceManager) sdkFind(
 			f13.SplitType = resp.TransformInput.SplitType
 		}
 		ko.Spec.TransformInput = f13
+	} else {
+		ko.Spec.TransformInput = nil
 	}
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
@@ -167,9 +187,13 @@ func (rm *resourceManager) sdkFind(
 	}
 	if resp.TransformJobName != nil {
 		ko.Spec.TransformJobName = resp.TransformJobName
+	} else {
+		ko.Spec.TransformJobName = nil
 	}
 	if resp.TransformJobStatus != nil {
 		ko.Status.TransformJobStatus = resp.TransformJobStatus
+	} else {
+		ko.Status.TransformJobStatus = nil
 	}
 	if resp.TransformOutput != nil {
 		f17 := &svcapitypes.TransformOutput{}
@@ -186,6 +210,8 @@ func (rm *resourceManager) sdkFind(
 			f17.S3OutputPath = resp.TransformOutput.S3OutputPath
 		}
 		ko.Spec.TransformOutput = f17
+	} else {
+		ko.Spec.TransformOutput = nil
 	}
 	if resp.TransformResources != nil {
 		f18 := &svcapitypes.TransformResources{}
@@ -199,6 +225,8 @@ func (rm *resourceManager) sdkFind(
 			f18.VolumeKMSKeyID = resp.TransformResources.VolumeKmsKeyId
 		}
 		ko.Spec.TransformResources = f18
+	} else {
+		ko.Spec.TransformResources = nil
 	}
 
 	rm.setStatusDefaults(ko)
@@ -328,78 +356,64 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.ModelName != nil {
 		res.SetModelName(*r.ko.Spec.ModelName)
 	}
-	if r.ko.Spec.Tags != nil {
-		f8 := []*svcsdk.Tag{}
-		for _, f8iter := range r.ko.Spec.Tags {
-			f8elem := &svcsdk.Tag{}
-			if f8iter.Key != nil {
-				f8elem.SetKey(*f8iter.Key)
-			}
-			if f8iter.Value != nil {
-				f8elem.SetValue(*f8iter.Value)
-			}
-			f8 = append(f8, f8elem)
-		}
-		res.SetTags(f8)
-	}
 	if r.ko.Spec.TransformInput != nil {
-		f9 := &svcsdk.TransformInput{}
+		f8 := &svcsdk.TransformInput{}
 		if r.ko.Spec.TransformInput.CompressionType != nil {
-			f9.SetCompressionType(*r.ko.Spec.TransformInput.CompressionType)
+			f8.SetCompressionType(*r.ko.Spec.TransformInput.CompressionType)
 		}
 		if r.ko.Spec.TransformInput.ContentType != nil {
-			f9.SetContentType(*r.ko.Spec.TransformInput.ContentType)
+			f8.SetContentType(*r.ko.Spec.TransformInput.ContentType)
 		}
 		if r.ko.Spec.TransformInput.DataSource != nil {
-			f9f2 := &svcsdk.TransformDataSource{}
+			f8f2 := &svcsdk.TransformDataSource{}
 			if r.ko.Spec.TransformInput.DataSource.S3DataSource != nil {
-				f9f2f0 := &svcsdk.TransformS3DataSource{}
+				f8f2f0 := &svcsdk.TransformS3DataSource{}
 				if r.ko.Spec.TransformInput.DataSource.S3DataSource.S3DataType != nil {
-					f9f2f0.SetS3DataType(*r.ko.Spec.TransformInput.DataSource.S3DataSource.S3DataType)
+					f8f2f0.SetS3DataType(*r.ko.Spec.TransformInput.DataSource.S3DataSource.S3DataType)
 				}
 				if r.ko.Spec.TransformInput.DataSource.S3DataSource.S3URI != nil {
-					f9f2f0.SetS3Uri(*r.ko.Spec.TransformInput.DataSource.S3DataSource.S3URI)
+					f8f2f0.SetS3Uri(*r.ko.Spec.TransformInput.DataSource.S3DataSource.S3URI)
 				}
-				f9f2.SetS3DataSource(f9f2f0)
+				f8f2.SetS3DataSource(f8f2f0)
 			}
-			f9.SetDataSource(f9f2)
+			f8.SetDataSource(f8f2)
 		}
 		if r.ko.Spec.TransformInput.SplitType != nil {
-			f9.SetSplitType(*r.ko.Spec.TransformInput.SplitType)
+			f8.SetSplitType(*r.ko.Spec.TransformInput.SplitType)
 		}
-		res.SetTransformInput(f9)
+		res.SetTransformInput(f8)
 	}
 	if r.ko.Spec.TransformJobName != nil {
 		res.SetTransformJobName(*r.ko.Spec.TransformJobName)
 	}
 	if r.ko.Spec.TransformOutput != nil {
-		f11 := &svcsdk.TransformOutput{}
+		f10 := &svcsdk.TransformOutput{}
 		if r.ko.Spec.TransformOutput.Accept != nil {
-			f11.SetAccept(*r.ko.Spec.TransformOutput.Accept)
+			f10.SetAccept(*r.ko.Spec.TransformOutput.Accept)
 		}
 		if r.ko.Spec.TransformOutput.AssembleWith != nil {
-			f11.SetAssembleWith(*r.ko.Spec.TransformOutput.AssembleWith)
+			f10.SetAssembleWith(*r.ko.Spec.TransformOutput.AssembleWith)
 		}
 		if r.ko.Spec.TransformOutput.KMSKeyID != nil {
-			f11.SetKmsKeyId(*r.ko.Spec.TransformOutput.KMSKeyID)
+			f10.SetKmsKeyId(*r.ko.Spec.TransformOutput.KMSKeyID)
 		}
 		if r.ko.Spec.TransformOutput.S3OutputPath != nil {
-			f11.SetS3OutputPath(*r.ko.Spec.TransformOutput.S3OutputPath)
+			f10.SetS3OutputPath(*r.ko.Spec.TransformOutput.S3OutputPath)
 		}
-		res.SetTransformOutput(f11)
+		res.SetTransformOutput(f10)
 	}
 	if r.ko.Spec.TransformResources != nil {
-		f12 := &svcsdk.TransformResources{}
+		f11 := &svcsdk.TransformResources{}
 		if r.ko.Spec.TransformResources.InstanceCount != nil {
-			f12.SetInstanceCount(*r.ko.Spec.TransformResources.InstanceCount)
+			f11.SetInstanceCount(*r.ko.Spec.TransformResources.InstanceCount)
 		}
 		if r.ko.Spec.TransformResources.InstanceType != nil {
-			f12.SetInstanceType(*r.ko.Spec.TransformResources.InstanceType)
+			f11.SetInstanceType(*r.ko.Spec.TransformResources.InstanceType)
 		}
 		if r.ko.Spec.TransformResources.VolumeKMSKeyID != nil {
-			f12.SetVolumeKmsKeyId(*r.ko.Spec.TransformResources.VolumeKMSKeyID)
+			f11.SetVolumeKmsKeyId(*r.ko.Spec.TransformResources.VolumeKMSKeyID)
 		}
-		res.SetTransformResources(f12)
+		res.SetTransformResources(f11)
 	}
 
 	return res, nil
@@ -411,7 +425,7 @@ func (rm *resourceManager) sdkUpdate(
 	ctx context.Context,
 	desired *resource,
 	latest *resource,
-	diffReporter *ackcompare.Reporter,
+	delta *ackcompare.Delta,
 ) (*resource, error) {
 	// TODO(jaypipes): Figure this out...
 	return nil, ackerr.NotImplemented

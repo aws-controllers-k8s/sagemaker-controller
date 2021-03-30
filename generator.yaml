@@ -15,6 +15,8 @@ operations:
   UpdateEndpoint:
     custom_implementation: customUpdateEndpoint
     set_output_custom_method_name: customUpdateEndpointSetOutput
+    override_values:
+      RetainAllVariantProperties: true
   DeleteEndpoint:
     custom_implementation: customDeleteEndpoint
   StopHyperParameterTuningJob:
@@ -53,26 +55,31 @@ resources:
         from:
           operation: DescribeEndpoint
           path: FailureReason
-      EndpointConfigName:
+      LatestEndpointConfigName:
         is_read_only: true
         from:
           operation: DescribeEndpoint
           path: EndpointConfigName
-      # CreationTime:
-      #   is_read_only: true
-      #   from:
-      #     operation: DescribeEndpoint
-      #     path: CreationTime
-      # LastModifiedTime:
-      #   is_read_only: true
-      #   from:
-      #     operation: DescribeEndpoint
-      #     path: LastModifiedTime
-      # ProductionVariants:
-      #   is_read_only: true
-      #   from:
-      #     operation: DescribeEndpoint
-      #     path: ProductionVariants
+      LastEndpointConfigNameForUpdate:
+        is_read_only: true
+        from:
+          operation: DescribeEndpointConfig
+          path: EndpointConfigName
+      CreationTime:
+        is_read_only: true
+        from:
+          operation: DescribeEndpoint
+          path: CreationTime
+      LastModifiedTime:
+        is_read_only: true
+        from:
+          operation: DescribeEndpoint
+          path: LastModifiedTime
+      ProductionVariants:
+        is_read_only: true
+        from:
+          operation: DescribeEndpoint
+          path: ProductionVariants
   TrainingJob:
     exceptions:
       errors:
@@ -211,3 +218,5 @@ ignore:
       - Workteam
     operations:
       - UpdateTrainingJob
+    shape_names:
+      - TagList

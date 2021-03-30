@@ -22,22 +22,72 @@ import (
 
 // TransformJobSpec defines the desired state of TransformJob
 type TransformJobSpec struct {
-	BatchStrategy           *string            `json:"batchStrategy,omitempty"`
-	DataProcessing          *DataProcessing    `json:"dataProcessing,omitempty"`
-	Environment             map[string]*string `json:"environment,omitempty"`
-	ExperimentConfig        *ExperimentConfig  `json:"experimentConfig,omitempty"`
-	MaxConcurrentTransforms *int64             `json:"maxConcurrentTransforms,omitempty"`
-	MaxPayloadInMB          *int64             `json:"maxPayloadInMB,omitempty"`
-	ModelClientConfig       *ModelClientConfig `json:"modelClientConfig,omitempty"`
+	// Specifies the number of records to include in a mini-batch for an HTTP inference
+	// request. A record is a single unit of input data that inference can be made
+	// on. For example, a single line in a CSV file is a record.
+	//
+	// To enable the batch strategy, you must set the SplitType property to Line,
+	// RecordIO, or TFRecord.
+	//
+	// To use only one record when making an HTTP invocation request to a container,
+	// set BatchStrategy to SingleRecord and SplitType to Line.
+	//
+	// To fit as many records in a mini-batch as can fit within the MaxPayloadInMB
+	// limit, set BatchStrategy to MultiRecord and SplitType to Line.
+	BatchStrategy *string `json:"batchStrategy,omitempty"`
+	// The data structure used to specify the data to be used for inference in a
+	// batch transform job and to associate the data that is relevant to the prediction
+	// results in the output. The input filter provided allows you to exclude input
+	// data that is not needed for inference in a batch transform job. The output
+	// filter provided allows you to include input data relevant to interpreting
+	// the predictions in the output from the job. For more information, see Associate
+	// Prediction Results with their Corresponding Input Records (https://docs.aws.amazon.com/sagemaker/latest/dg/batch-transform-data-processing.html).
+	DataProcessing *DataProcessing `json:"dataProcessing,omitempty"`
+	// The environment variables to set in the Docker container. We support up to
+	// 16 key and values entries in the map.
+	Environment map[string]*string `json:"environment,omitempty"`
+
+	ExperimentConfig *ExperimentConfig `json:"experimentConfig,omitempty"`
+	// The maximum number of parallel requests that can be sent to each instance
+	// in a transform job. If MaxConcurrentTransforms is set to 0 or left unset,
+	// Amazon SageMaker checks the optional execution-parameters to determine the
+	// settings for your chosen algorithm. If the execution-parameters endpoint
+	// is not enabled, the default value is 1. For more information on execution-parameters,
+	// see How Containers Serve Requests (https://docs.aws.amazon.com/sagemaker/latest/dg/your-algorithms-batch-code.html#your-algorithms-batch-code-how-containe-serves-requests).
+	// For built-in algorithms, you don't need to set a value for MaxConcurrentTransforms.
+	MaxConcurrentTransforms *int64 `json:"maxConcurrentTransforms,omitempty"`
+	// The maximum allowed size of the payload, in MB. A payload is the data portion
+	// of a record (without metadata). The value in MaxPayloadInMB must be greater
+	// than, or equal to, the size of a single record. To estimate the size of a
+	// record in MB, divide the size of your dataset by the number of records. To
+	// ensure that the records fit within the maximum payload size, we recommend
+	// using a slightly larger value. The default value is 6 MB.
+	//
+	// For cases where the payload might be arbitrarily large and is transmitted
+	// using HTTP chunked encoding, set the value to 0. This feature works only
+	// in supported algorithms. Currently, Amazon SageMaker built-in algorithms
+	// do not support HTTP chunked encoding.
+	MaxPayloadInMB *int64 `json:"maxPayloadInMB,omitempty"`
+	// Configures the timeout and maximum number of retries for processing a transform
+	// job invocation.
+	ModelClientConfig *ModelClientConfig `json:"modelClientConfig,omitempty"`
+	// The name of the model that you want to use for the transform job. ModelName
+	// must be the name of an existing Amazon SageMaker model within an AWS Region
+	// in an AWS account.
 	// +kubebuilder:validation:Required
 	ModelName *string `json:"modelName"`
-	Tags      []*Tag  `json:"tags,omitempty"`
+	// Describes the input source and the way the transform job consumes it.
 	// +kubebuilder:validation:Required
 	TransformInput *TransformInput `json:"transformInput"`
+	// The name of the transform job. The name must be unique within an AWS Region
+	// in an AWS account.
 	// +kubebuilder:validation:Required
 	TransformJobName *string `json:"transformJobName"`
+	// Describes the results of the transform job.
 	// +kubebuilder:validation:Required
 	TransformOutput *TransformOutput `json:"transformOutput"`
+	// Describes the resources, including ML instance types and ML instance count,
+	// to use for the transform job.
 	// +kubebuilder:validation:Required
 	TransformResources *TransformResources `json:"transformResources"`
 }
@@ -52,9 +102,15 @@ type TransformJobStatus struct {
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
-	Conditions         []*ackv1alpha1.Condition `json:"conditions"`
-	FailureReason      *string                  `json:"failureReason,omitempty"`
-	TransformJobStatus *string                  `json:"transformJobStatus,omitempty"`
+	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	// If the transform job failed, FailureReason describes why it failed. A transform
+	// job creates a log file, which includes error messages, and stores it as an
+	// Amazon S3 object. For more information, see Log Amazon SageMaker Events with
+	// Amazon CloudWatch (https://docs.aws.amazon.com/sagemaker/latest/dg/logging-cloudwatch.html).
+	FailureReason *string `json:"failureReason,omitempty"`
+	// The status of the transform job. If the transform job failed, the reason
+	// is returned in the FailureReason field.
+	TransformJobStatus *string `json:"transformJobStatus,omitempty"`
 }
 
 // TransformJob is the Schema for the TransformJobs API

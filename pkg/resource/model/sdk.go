@@ -116,12 +116,18 @@ func (rm *resourceManager) sdkFind(
 			f0 = append(f0, f0elem)
 		}
 		ko.Spec.Containers = f0
+	} else {
+		ko.Spec.Containers = nil
 	}
 	if resp.EnableNetworkIsolation != nil {
 		ko.Spec.EnableNetworkIsolation = resp.EnableNetworkIsolation
+	} else {
+		ko.Spec.EnableNetworkIsolation = nil
 	}
 	if resp.ExecutionRoleArn != nil {
 		ko.Spec.ExecutionRoleARN = resp.ExecutionRoleArn
+	} else {
+		ko.Spec.ExecutionRoleARN = nil
 	}
 	if resp.InferenceExecutionConfig != nil {
 		f4 := &svcapitypes.InferenceExecutionConfig{}
@@ -129,6 +135,8 @@ func (rm *resourceManager) sdkFind(
 			f4.Mode = resp.InferenceExecutionConfig.Mode
 		}
 		ko.Spec.InferenceExecutionConfig = f4
+	} else {
+		ko.Spec.InferenceExecutionConfig = nil
 	}
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
@@ -139,6 +147,8 @@ func (rm *resourceManager) sdkFind(
 	}
 	if resp.ModelName != nil {
 		ko.Spec.ModelName = resp.ModelName
+	} else {
+		ko.Spec.ModelName = nil
 	}
 	if resp.PrimaryContainer != nil {
 		f7 := &svcapitypes.ContainerDefinition{}
@@ -181,6 +191,8 @@ func (rm *resourceManager) sdkFind(
 			f7.MultiModelConfig = f7f7
 		}
 		ko.Spec.PrimaryContainer = f7
+	} else {
+		ko.Spec.PrimaryContainer = nil
 	}
 	if resp.VpcConfig != nil {
 		f8 := &svcapitypes.VPCConfig{}
@@ -203,6 +215,8 @@ func (rm *resourceManager) sdkFind(
 			f8.Subnets = f8f1
 		}
 		ko.Spec.VPCConfig = f8
+	} else {
+		ko.Spec.VPCConfig = nil
 	}
 
 	rm.setStatusDefaults(ko)
@@ -379,41 +393,27 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.SetPrimaryContainer(f5)
 	}
-	if r.ko.Spec.Tags != nil {
-		f6 := []*svcsdk.Tag{}
-		for _, f6iter := range r.ko.Spec.Tags {
-			f6elem := &svcsdk.Tag{}
-			if f6iter.Key != nil {
-				f6elem.SetKey(*f6iter.Key)
-			}
-			if f6iter.Value != nil {
-				f6elem.SetValue(*f6iter.Value)
-			}
-			f6 = append(f6, f6elem)
-		}
-		res.SetTags(f6)
-	}
 	if r.ko.Spec.VPCConfig != nil {
-		f7 := &svcsdk.VpcConfig{}
+		f6 := &svcsdk.VpcConfig{}
 		if r.ko.Spec.VPCConfig.SecurityGroupIDs != nil {
-			f7f0 := []*string{}
-			for _, f7f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
-				var f7f0elem string
-				f7f0elem = *f7f0iter
-				f7f0 = append(f7f0, &f7f0elem)
+			f6f0 := []*string{}
+			for _, f6f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
+				var f6f0elem string
+				f6f0elem = *f6f0iter
+				f6f0 = append(f6f0, &f6f0elem)
 			}
-			f7.SetSecurityGroupIds(f7f0)
+			f6.SetSecurityGroupIds(f6f0)
 		}
 		if r.ko.Spec.VPCConfig.Subnets != nil {
-			f7f1 := []*string{}
-			for _, f7f1iter := range r.ko.Spec.VPCConfig.Subnets {
-				var f7f1elem string
-				f7f1elem = *f7f1iter
-				f7f1 = append(f7f1, &f7f1elem)
+			f6f1 := []*string{}
+			for _, f6f1iter := range r.ko.Spec.VPCConfig.Subnets {
+				var f6f1elem string
+				f6f1elem = *f6f1iter
+				f6f1 = append(f6f1, &f6f1elem)
 			}
-			f7.SetSubnets(f7f1)
+			f6.SetSubnets(f6f1)
 		}
-		res.SetVpcConfig(f7)
+		res.SetVpcConfig(f6)
 	}
 
 	return res, nil
@@ -425,7 +425,7 @@ func (rm *resourceManager) sdkUpdate(
 	ctx context.Context,
 	desired *resource,
 	latest *resource,
-	diffReporter *ackcompare.Reporter,
+	delta *ackcompare.Delta,
 ) (*resource, error) {
 	// TODO(jaypipes): Figure this out...
 	return nil, ackerr.NotImplemented

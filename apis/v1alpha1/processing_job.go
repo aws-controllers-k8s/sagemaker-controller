@@ -22,21 +22,37 @@ import (
 
 // ProcessingJobSpec defines the desired state of ProcessingJob
 type ProcessingJobSpec struct {
+	// Configures the processing job to run a specified Docker container image.
 	// +kubebuilder:validation:Required
-	AppSpecification *AppSpecification  `json:"appSpecification"`
-	Environment      map[string]*string `json:"environment,omitempty"`
-	ExperimentConfig *ExperimentConfig  `json:"experimentConfig,omitempty"`
-	NetworkConfig    *NetworkConfig     `json:"networkConfig,omitempty"`
+	AppSpecification *AppSpecification `json:"appSpecification"`
+	// The environment variables to set in the Docker container. Up to 100 key and
+	// values entries in the map are supported.
+	Environment map[string]*string `json:"environment,omitempty"`
+
+	ExperimentConfig *ExperimentConfig `json:"experimentConfig,omitempty"`
+	// Networking options for a processing job, such as whether to allow inbound
+	// and outbound network calls to and from processing containers, and the VPC
+	// subnets and security groups to use for VPC-enabled processing jobs.
+	NetworkConfig *NetworkConfig `json:"networkConfig,omitempty"`
+	// An array of inputs configuring the data to download into the processing container.
 	ProcessingInputs []*ProcessingInput `json:"processingInputs,omitempty"`
+	// The name of the processing job. The name must be unique within an AWS Region
+	// in the AWS account.
 	// +kubebuilder:validation:Required
-	ProcessingJobName      *string                 `json:"processingJobName"`
+	ProcessingJobName *string `json:"processingJobName"`
+	// Output configuration for the processing job.
 	ProcessingOutputConfig *ProcessingOutputConfig `json:"processingOutputConfig,omitempty"`
+	// Identifies the resources, ML compute instances, and ML storage volumes to
+	// deploy for a processing job. In distributed training, you specify more than
+	// one instance.
 	// +kubebuilder:validation:Required
 	ProcessingResources *ProcessingResources `json:"processingResources"`
+	// The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
+	// to perform tasks on your behalf.
 	// +kubebuilder:validation:Required
-	RoleARN           *string                      `json:"roleARN"`
+	RoleARN *string `json:"roleARN"`
+	// The time limit for how long the processing job is allowed to run.
 	StoppingCondition *ProcessingStoppingCondition `json:"stoppingCondition,omitempty"`
-	Tags              []*Tag                       `json:"tags,omitempty"`
 }
 
 // ProcessingJobStatus defines the observed state of ProcessingJob
@@ -49,9 +65,12 @@ type ProcessingJobStatus struct {
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
-	Conditions          []*ackv1alpha1.Condition `json:"conditions"`
-	FailureReason       *string                  `json:"failureReason,omitempty"`
-	ProcessingJobStatus *string                  `json:"processingJobStatus,omitempty"`
+	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	// A string, up to one KB in size, that contains the reason a processing job
+	// failed, if it failed.
+	FailureReason *string `json:"failureReason,omitempty"`
+	// Provides the status of a processing job.
+	ProcessingJobStatus *string `json:"processingJobStatus,omitempty"`
 }
 
 // ProcessingJob is the Schema for the ProcessingJobs API

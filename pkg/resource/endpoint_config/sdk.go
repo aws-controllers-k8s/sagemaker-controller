@@ -119,6 +119,8 @@ func (rm *resourceManager) sdkFind(
 			f1.KMSKeyID = resp.DataCaptureConfig.KmsKeyId
 		}
 		ko.Spec.DataCaptureConfig = f1
+	} else {
+		ko.Spec.DataCaptureConfig = nil
 	}
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
@@ -129,9 +131,13 @@ func (rm *resourceManager) sdkFind(
 	}
 	if resp.EndpointConfigName != nil {
 		ko.Spec.EndpointConfigName = resp.EndpointConfigName
+	} else {
+		ko.Spec.EndpointConfigName = nil
 	}
 	if resp.KmsKeyId != nil {
 		ko.Spec.KMSKeyID = resp.KmsKeyId
+	} else {
+		ko.Spec.KMSKeyID = nil
 	}
 	if resp.ProductionVariants != nil {
 		f5 := []*svcapitypes.ProductionVariant{}
@@ -168,6 +174,8 @@ func (rm *resourceManager) sdkFind(
 			f5 = append(f5, f5elem)
 		}
 		ko.Spec.ProductionVariants = f5
+	} else {
+		ko.Spec.ProductionVariants = nil
 	}
 
 	rm.setStatusDefaults(ko)
@@ -331,20 +339,6 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.SetProductionVariants(f3)
 	}
-	if r.ko.Spec.Tags != nil {
-		f4 := []*svcsdk.Tag{}
-		for _, f4iter := range r.ko.Spec.Tags {
-			f4elem := &svcsdk.Tag{}
-			if f4iter.Key != nil {
-				f4elem.SetKey(*f4iter.Key)
-			}
-			if f4iter.Value != nil {
-				f4elem.SetValue(*f4iter.Value)
-			}
-			f4 = append(f4, f4elem)
-		}
-		res.SetTags(f4)
-	}
 
 	return res, nil
 }
@@ -355,7 +349,7 @@ func (rm *resourceManager) sdkUpdate(
 	ctx context.Context,
 	desired *resource,
 	latest *resource,
-	diffReporter *ackcompare.Reporter,
+	delta *ackcompare.Delta,
 ) (*resource, error) {
 	// TODO(jaypipes): Figure this out...
 	return nil, ackerr.NotImplemented
