@@ -938,6 +938,12 @@ func (rm *resourceManager) sdkCreate(
 
 	rm.setStatusDefaults(ko)
 
+	// custom set output from response
+	ko, err = rm.customCreateHyperParameterTuningJobSetOutput(ctx, r, resp, ko)
+	if err != nil {
+		return nil, err
+	}
+
 	return &resource{ko}, nil
 }
 

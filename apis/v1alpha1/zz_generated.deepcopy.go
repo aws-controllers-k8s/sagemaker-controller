@@ -6373,6 +6373,17 @@ func (in *TrainingJobStatus) DeepCopyInto(out *TrainingJobStatus) {
 			}
 		}
 	}
+	if in.DebugRuleEvaluationStatuses != nil {
+		in, out := &in.DebugRuleEvaluationStatuses, &out.DebugRuleEvaluationStatuses
+		*out = make([]*DebugRuleEvaluationStatus, len(*in))
+		for i := range *in {
+			if (*in)[i] != nil {
+				in, out := &(*in)[i], &(*out)[i]
+				*out = new(DebugRuleEvaluationStatus)
+				(*in).DeepCopyInto(*out)
+			}
+		}
+	}
 	if in.FailureReason != nil {
 		in, out := &in.FailureReason, &out.FailureReason
 		*out = new(string)

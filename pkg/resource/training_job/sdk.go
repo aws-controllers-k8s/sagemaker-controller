@@ -193,6 +193,31 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.DebugRuleConfigurations = nil
 	}
+	if resp.DebugRuleEvaluationStatuses != nil {
+		f7 := []*svcapitypes.DebugRuleEvaluationStatus{}
+		for _, f7iter := range resp.DebugRuleEvaluationStatuses {
+			f7elem := &svcapitypes.DebugRuleEvaluationStatus{}
+			if f7iter.LastModifiedTime != nil {
+				f7elem.LastModifiedTime = &metav1.Time{*f7iter.LastModifiedTime}
+			}
+			if f7iter.RuleConfigurationName != nil {
+				f7elem.RuleConfigurationName = f7iter.RuleConfigurationName
+			}
+			if f7iter.RuleEvaluationJobArn != nil {
+				f7elem.RuleEvaluationJobARN = f7iter.RuleEvaluationJobArn
+			}
+			if f7iter.RuleEvaluationStatus != nil {
+				f7elem.RuleEvaluationStatus = f7iter.RuleEvaluationStatus
+			}
+			if f7iter.StatusDetails != nil {
+				f7elem.StatusDetails = f7iter.StatusDetails
+			}
+			f7 = append(f7, f7elem)
+		}
+		ko.Status.DebugRuleEvaluationStatuses = f7
+	} else {
+		ko.Status.DebugRuleEvaluationStatuses = nil
+	}
 	if resp.EnableInterContainerTrafficEncryption != nil {
 		ko.Spec.EnableInterContainerTrafficEncryption = resp.EnableInterContainerTrafficEncryption
 	} else {
@@ -546,6 +571,12 @@ func (rm *resourceManager) sdkCreate(
 	}
 
 	rm.setStatusDefaults(ko)
+
+	// custom set output from response
+	ko, err = rm.customCreateTrainingJobSetOutput(ctx, r, resp, ko)
+	if err != nil {
+		return nil, err
+	}
 
 	return &resource{ko}, nil
 }

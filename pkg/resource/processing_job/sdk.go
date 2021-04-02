@@ -429,6 +429,12 @@ func (rm *resourceManager) sdkCreate(
 
 	rm.setStatusDefaults(ko)
 
+	// custom set output from response
+	ko, err = rm.customCreateProcessingJobSetOutput(ctx, r, resp, ko)
+	if err != nil {
+		return nil, err
+	}
+
 	return &resource{ko}, nil
 }
 

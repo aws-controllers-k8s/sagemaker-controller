@@ -157,6 +157,8 @@ type TrainingJobStatus struct {
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	// Evaluation status of Debugger rules for debugging on a training job.
+	DebugRuleEvaluationStatuses []*DebugRuleEvaluationStatus `json:"debugRuleEvaluationStatuses,omitempty"`
 	// If the training job failed, the reason it failed.
 	FailureReason *string `json:"failureReason,omitempty"`
 	// Provides detailed information about the state of the training job. For detailed
@@ -238,6 +240,7 @@ type TrainingJobStatus struct {
 // TrainingJob is the Schema for the TrainingJobs API
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="FailureReason",type=string,JSONPath=`.status.failureReason`
 // +kubebuilder:printcolumn:name="SecondaryStatus",type=string,JSONPath=`.status.secondaryStatus`
 // +kubebuilder:printcolumn:name="TrainingJobStatus",type=string,JSONPath=`.status.trainingJobStatus`
 type TrainingJob struct {

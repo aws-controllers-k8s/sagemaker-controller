@@ -1,13 +1,22 @@
 operations:
+  CreateTrainingJob:
+    set_output_custom_method_name: customCreateTrainingJobSetOutput
   StopTrainingJob:
     operation_type: Delete
     resource_name: TrainingJob
+    set_output_custom_method_name: customStopTrainingJobSetOutput
+  CreateProcessingJob:
+    set_output_custom_method_name: customCreateProcessingJobSetOutput
   StopProcessingJob:
     operation_type: Delete
     resource_name: ProcessingJob
+    set_output_custom_method_name: customStopProcessingJobSetOutput
+  CreateTransformJob:
+    set_output_custom_method_name: customCreateTransformJobSetOutput
   StopTransformJob:
     operation_type: Delete
     resource_name: TransformJob
+    set_output_custom_method_name: customStopTransformJobSetOutput
   CreateEndpoint:
     set_output_custom_method_name: customCreateEndpointSetOutput
   DescribeEndpoint:
@@ -19,9 +28,12 @@ operations:
       RetainAllVariantProperties: true
   DeleteEndpoint:
     custom_implementation: customDeleteEndpoint
+  CreateHyperParameterTuningJob:
+    set_output_custom_method_name: customCreateHyperParameterTuningJobSetOutput
   StopHyperParameterTuningJob:
     operation_type: Delete
     resource_name: HyperParameterTuningJob
+    set_output_custom_method_name: customStopHyperParameterTuningJobSetOutput
 resources:
   Model:
     exceptions:
@@ -155,8 +167,16 @@ resources:
         from:
           operation: DescribeTrainingJob
           path: SecondaryStatus
+      DebugRuleEvaluationStatuses:
+        is_read_only: true
+        # TODO: a list is not printable, but we should be able to select statuses
+        #is_printable: true
+        from:
+          operation: DescribeTrainingJob
+          path: DebugRuleEvaluationStatuses 
       FailureReason:
         is_read_only: true
+        is_printable: true
         from:
           operation: DescribeTrainingJob
           path: FailureReason 
