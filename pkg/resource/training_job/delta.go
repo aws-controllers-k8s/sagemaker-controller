@@ -265,10 +265,6 @@ func newResourceDelta(
 			}
 		}
 	}
-<<<<<<< HEAD
-=======
-
->>>>>>> Update to runtime 0.0.5 and add read-only fields
 	if ackcompare.HasNilDifference(a.ko.Spec.TensorBoardOutputConfig, b.ko.Spec.TensorBoardOutputConfig) {
 		delta.Add("Spec.TensorBoardOutputConfig", a.ko.Spec.TensorBoardOutputConfig, b.ko.Spec.TensorBoardOutputConfig)
 	} else if a.ko.Spec.TensorBoardOutputConfig != nil && b.ko.Spec.TensorBoardOutputConfig != nil {

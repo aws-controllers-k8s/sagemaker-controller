@@ -39,6 +39,8 @@ spec:
               state of ModelExplainabilityJobDefinition
             properties:
               jobDefinitionName:
+                description: The name of the model explainability job definition.
+                  The name must be unique within an AWS Region in the AWS account.
                 type: string
               jobResources:
                 properties:
@@ -57,6 +59,8 @@ spec:
                     type: object
                 type: object
               modelExplainabilityAppSpecification:
+                description: Configures the model explainability job to run a specified
+                  Docker container image.
                 properties:
                   configURI:
                     type: string
@@ -68,6 +72,8 @@ spec:
                     type: string
                 type: object
               modelExplainabilityBaselineConfig:
+                description: The baseline configuration for a model explainability
+                  job.
                 properties:
                   baseliningJobName:
                     type: string
@@ -78,6 +84,7 @@ spec:
                     type: object
                 type: object
               modelExplainabilityJobInput:
+                description: Inputs for the model explainability job.
                 properties:
                   endpointInput:
                     properties:
@@ -123,6 +130,7 @@ spec:
                     type: array
                 type: object
               networkConfig:
+                description: Networking options for a model explainability job.
                 properties:
                   enableInterContainerTrafficEncryption:
                     type: boolean
@@ -141,6 +149,8 @@ spec:
                     type: object
                 type: object
               roleARN:
+                description: The Amazon Resource Name (ARN) of an IAM role that Amazon
+                  SageMaker can assume to perform tasks on your behalf.
                 type: string
               stoppingCondition:
                 properties:
@@ -148,15 +158,6 @@ spec:
                     format: int64
                     type: integer
                 type: object
-              tags:
-                items:
-                  properties:
-                    key:
-                      type: string
-                    value:
-                      type: string
-                  type: object
-                type: array
             required:
             - jobDefinitionName
             - jobResources
@@ -226,6 +227,8 @@ spec:
                   type: object
                 type: array
               jobDefinitionARN:
+                description: The Amazon Resource Name (ARN) of the model explainability
+                  job.
                 type: string
             required:
             - ackResourceMetadata

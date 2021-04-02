@@ -61,7 +61,7 @@ func (rm *resourceManager) sdkFind(
 	resp, respErr := rm.sdkapi.DescribeMonitoringScheduleWithContext(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeMonitoringSchedule", respErr)
 	if respErr != nil {
-		if awsErr, ok := ackerr.AWSError(respErr); ok && awsErr.Code() == "ResourceNotFound" && strings.HasPrefix(awsErr.Message(), "Monitoring Schedule") {
+		if awsErr, ok := ackerr.AWSError(respErr); ok && awsErr.Code() == "ResourceNotFound" {
 			return nil, ackerr.NotFound
 		}
 		return nil, respErr
@@ -73,6 +73,8 @@ func (rm *resourceManager) sdkFind(
 
 	if resp.FailureReason != nil {
 		ko.Status.FailureReason = resp.FailureReason
+	} else {
+		ko.Status.FailureReason = nil
 	}
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
@@ -294,12 +296,18 @@ func (rm *resourceManager) sdkFind(
 			f6.ScheduleConfig = f6f3
 		}
 		ko.Spec.MonitoringScheduleConfig = f6
+	} else {
+		ko.Spec.MonitoringScheduleConfig = nil
 	}
 	if resp.MonitoringScheduleName != nil {
 		ko.Spec.MonitoringScheduleName = resp.MonitoringScheduleName
+	} else {
+		ko.Spec.MonitoringScheduleName = nil
 	}
 	if resp.MonitoringScheduleStatus != nil {
 		ko.Status.MonitoringScheduleStatus = resp.MonitoringScheduleStatus
+	} else {
+		ko.Status.MonitoringScheduleStatus = nil
 	}
 
 	rm.setStatusDefaults(ko)
@@ -588,20 +596,6 @@ func (rm *resourceManager) newCreateRequestPayload(
 	}
 	if r.ko.Spec.MonitoringScheduleName != nil {
 		res.SetMonitoringScheduleName(*r.ko.Spec.MonitoringScheduleName)
-	}
-	if r.ko.Spec.Tags != nil {
-		f2 := []*svcsdk.Tag{}
-		for _, f2iter := range r.ko.Spec.Tags {
-			f2elem := &svcsdk.Tag{}
-			if f2iter.Key != nil {
-				f2elem.SetKey(*f2iter.Key)
-			}
-			if f2iter.Value != nil {
-				f2elem.SetValue(*f2iter.Value)
-			}
-			f2 = append(f2, f2elem)
-		}
-		res.SetTags(f2)
 	}
 
 	return res, nil

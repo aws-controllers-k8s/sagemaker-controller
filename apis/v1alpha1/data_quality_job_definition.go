@@ -22,22 +22,32 @@ import (
 
 // DataQualityJobDefinitionSpec defines the desired state of DataQualityJobDefinition
 type DataQualityJobDefinitionSpec struct {
+	// Specifies the container that runs the monitoring job.
 	// +kubebuilder:validation:Required
 	DataQualityAppSpecification *DataQualityAppSpecification `json:"dataQualityAppSpecification"`
-	DataQualityBaselineConfig   *DataQualityBaselineConfig   `json:"dataQualityBaselineConfig,omitempty"`
+	// Configures the constraints and baselines for the monitoring job.
+	DataQualityBaselineConfig *DataQualityBaselineConfig `json:"dataQualityBaselineConfig,omitempty"`
+	// A list of inputs for the monitoring job. Currently endpoints are supported
+	// as monitoring inputs.
 	// +kubebuilder:validation:Required
 	DataQualityJobInput *DataQualityJobInput `json:"dataQualityJobInput"`
+
 	// +kubebuilder:validation:Required
 	DataQualityJobOutputConfig *MonitoringOutputConfig `json:"dataQualityJobOutputConfig"`
+	// The name for the monitoring job definition.
 	// +kubebuilder:validation:Required
 	JobDefinitionName *string `json:"jobDefinitionName"`
+
 	// +kubebuilder:validation:Required
-	JobResources  *MonitoringResources     `json:"jobResources"`
+	JobResources *MonitoringResources `json:"jobResources"`
+	// Specifies networking configuration for the monitoring job.
 	NetworkConfig *MonitoringNetworkConfig `json:"networkConfig,omitempty"`
+	// The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
+	// to perform tasks on your behalf.
 	// +kubebuilder:validation:Required
-	RoleARN           *string                      `json:"roleARN"`
+	RoleARN *string `json:"roleARN"`
+
 	StoppingCondition *MonitoringStoppingCondition `json:"stoppingCondition,omitempty"`
-	Tags              []*Tag                       `json:"tags,omitempty"`
 }
 
 // DataQualityJobDefinitionStatus defines the observed state of DataQualityJobDefinition
@@ -50,8 +60,9 @@ type DataQualityJobDefinitionStatus struct {
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
-	Conditions       []*ackv1alpha1.Condition `json:"conditions"`
-	JobDefinitionARN *string                  `json:"jobDefinitionARN,omitempty"`
+	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	// The Amazon Resource Name (ARN) of the job definition.
+	JobDefinitionARN *string `json:"jobDefinitionARN,omitempty"`
 }
 
 // DataQualityJobDefinition is the Schema for the DataQualityJobDefinitions API

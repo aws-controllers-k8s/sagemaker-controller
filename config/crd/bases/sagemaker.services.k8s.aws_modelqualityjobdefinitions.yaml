@@ -39,6 +39,7 @@ spec:
               ModelQualityJobDefinition
             properties:
               jobDefinitionName:
+                description: The name of the monitoring job definition.
                 type: string
               jobResources:
                 properties:
@@ -57,6 +58,7 @@ spec:
                     type: object
                 type: object
               modelQualityAppSpecification:
+                description: The container that runs the monitoring job.
                 properties:
                   containerArguments:
                     items:
@@ -80,6 +82,8 @@ spec:
                     type: string
                 type: object
               modelQualityBaselineConfig:
+                description: Specifies the constraints and baselines for the monitoring
+                  job.
                 properties:
                   baseliningJobName:
                     type: string
@@ -90,6 +94,8 @@ spec:
                     type: object
                 type: object
               modelQualityJobInput:
+                description: A list of the inputs that are monitored. Currently endpoints
+                  are supported.
                 properties:
                   endpointInput:
                     properties:
@@ -140,6 +146,8 @@ spec:
                     type: array
                 type: object
               networkConfig:
+                description: Specifies the network configuration for the monitoring
+                  job.
                 properties:
                   enableInterContainerTrafficEncryption:
                     type: boolean
@@ -158,6 +166,8 @@ spec:
                     type: object
                 type: object
               roleARN:
+                description: The Amazon Resource Name (ARN) of an IAM role that Amazon
+                  SageMaker can assume to perform tasks on your behalf.
                 type: string
               stoppingCondition:
                 properties:
@@ -165,15 +175,6 @@ spec:
                     format: int64
                     type: integer
                 type: object
-              tags:
-                items:
-                  properties:
-                    key:
-                      type: string
-                    value:
-                      type: string
-                  type: object
-                type: array
             required:
             - jobDefinitionName
             - jobResources
@@ -243,6 +244,8 @@ spec:
                   type: object
                 type: array
               jobDefinitionARN:
+                description: The Amazon Resource Name (ARN) of the model quality monitoring
+                  job.
                 type: string
             required:
             - ackResourceMetadata

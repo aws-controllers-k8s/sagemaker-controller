@@ -22,22 +22,31 @@ import (
 
 // ModelQualityJobDefinitionSpec defines the desired state of ModelQualityJobDefinition
 type ModelQualityJobDefinitionSpec struct {
+	// The name of the monitoring job definition.
 	// +kubebuilder:validation:Required
 	JobDefinitionName *string `json:"jobDefinitionName"`
+
 	// +kubebuilder:validation:Required
 	JobResources *MonitoringResources `json:"jobResources"`
+	// The container that runs the monitoring job.
 	// +kubebuilder:validation:Required
 	ModelQualityAppSpecification *ModelQualityAppSpecification `json:"modelQualityAppSpecification"`
-	ModelQualityBaselineConfig   *ModelQualityBaselineConfig   `json:"modelQualityBaselineConfig,omitempty"`
+	// Specifies the constraints and baselines for the monitoring job.
+	ModelQualityBaselineConfig *ModelQualityBaselineConfig `json:"modelQualityBaselineConfig,omitempty"`
+	// A list of the inputs that are monitored. Currently endpoints are supported.
 	// +kubebuilder:validation:Required
 	ModelQualityJobInput *ModelQualityJobInput `json:"modelQualityJobInput"`
+
 	// +kubebuilder:validation:Required
-	ModelQualityJobOutputConfig *MonitoringOutputConfig  `json:"modelQualityJobOutputConfig"`
-	NetworkConfig               *MonitoringNetworkConfig `json:"networkConfig,omitempty"`
+	ModelQualityJobOutputConfig *MonitoringOutputConfig `json:"modelQualityJobOutputConfig"`
+	// Specifies the network configuration for the monitoring job.
+	NetworkConfig *MonitoringNetworkConfig `json:"networkConfig,omitempty"`
+	// The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
+	// to perform tasks on your behalf.
 	// +kubebuilder:validation:Required
-	RoleARN           *string                      `json:"roleARN"`
+	RoleARN *string `json:"roleARN"`
+
 	StoppingCondition *MonitoringStoppingCondition `json:"stoppingCondition,omitempty"`
-	Tags              []*Tag                       `json:"tags,omitempty"`
 }
 
 // ModelQualityJobDefinitionStatus defines the observed state of ModelQualityJobDefinition
@@ -50,8 +59,9 @@ type ModelQualityJobDefinitionStatus struct {
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
-	Conditions       []*ackv1alpha1.Condition `json:"conditions"`
-	JobDefinitionARN *string                  `json:"jobDefinitionARN,omitempty"`
+	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	// The Amazon Resource Name (ARN) of the model quality monitoring job.
+	JobDefinitionARN *string `json:"jobDefinitionARN,omitempty"`
 }
 
 // ModelQualityJobDefinition is the Schema for the ModelQualityJobDefinitions API

@@ -39,6 +39,7 @@ spec:
               DataQualityJobDefinition
             properties:
               dataQualityAppSpecification:
+                description: Specifies the container that runs the monitoring job.
                 properties:
                   containerArguments:
                     items:
@@ -60,6 +61,8 @@ spec:
                     type: string
                 type: object
               dataQualityBaselineConfig:
+                description: Configures the constraints and baselines for the monitoring
+                  job.
                 properties:
                   baseliningJobName:
                     type: string
@@ -75,6 +78,8 @@ spec:
                     type: object
                 type: object
               dataQualityJobInput:
+                description: A list of inputs for the monitoring job. Currently endpoints
+                  are supported as monitoring inputs.
                 properties:
                   endpointInput:
                     properties:
@@ -120,6 +125,7 @@ spec:
                     type: array
                 type: object
               jobDefinitionName:
+                description: The name for the monitoring job definition.
                 type: string
               jobResources:
                 properties:
@@ -138,6 +144,8 @@ spec:
                     type: object
                 type: object
               networkConfig:
+                description: Specifies networking configuration for the monitoring
+                  job.
                 properties:
                   enableInterContainerTrafficEncryption:
                     type: boolean
@@ -156,6 +164,8 @@ spec:
                     type: object
                 type: object
               roleARN:
+                description: The Amazon Resource Name (ARN) of an IAM role that Amazon
+                  SageMaker can assume to perform tasks on your behalf.
                 type: string
               stoppingCondition:
                 properties:
@@ -163,15 +173,6 @@ spec:
                     format: int64
                     type: integer
                 type: object
-              tags:
-                items:
-                  properties:
-                    key:
-                      type: string
-                    value:
-                      type: string
-                  type: object
-                type: array
             required:
             - dataQualityAppSpecification
             - dataQualityJobInput
@@ -241,6 +242,7 @@ spec:
                   type: object
                 type: array
               jobDefinitionARN:
+                description: The Amazon Resource Name (ARN) of the job definition.
                 type: string
             required:
             - ackResourceMetadata

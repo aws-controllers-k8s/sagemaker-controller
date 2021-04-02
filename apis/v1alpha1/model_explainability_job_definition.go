@@ -22,22 +22,33 @@ import (
 
 // ModelExplainabilityJobDefinitionSpec defines the desired state of ModelExplainabilityJobDefinition
 type ModelExplainabilityJobDefinitionSpec struct {
+	// The name of the model explainability job definition. The name must be unique
+	// within an AWS Region in the AWS account.
 	// +kubebuilder:validation:Required
 	JobDefinitionName *string `json:"jobDefinitionName"`
+
 	// +kubebuilder:validation:Required
 	JobResources *MonitoringResources `json:"jobResources"`
+	// Configures the model explainability job to run a specified Docker container
+	// image.
 	// +kubebuilder:validation:Required
 	ModelExplainabilityAppSpecification *ModelExplainabilityAppSpecification `json:"modelExplainabilityAppSpecification"`
-	ModelExplainabilityBaselineConfig   *ModelExplainabilityBaselineConfig   `json:"modelExplainabilityBaselineConfig,omitempty"`
+	// The baseline configuration for a model explainability job.
+	ModelExplainabilityBaselineConfig *ModelExplainabilityBaselineConfig `json:"modelExplainabilityBaselineConfig,omitempty"`
+	// Inputs for the model explainability job.
 	// +kubebuilder:validation:Required
 	ModelExplainabilityJobInput *ModelExplainabilityJobInput `json:"modelExplainabilityJobInput"`
+
 	// +kubebuilder:validation:Required
-	ModelExplainabilityJobOutputConfig *MonitoringOutputConfig  `json:"modelExplainabilityJobOutputConfig"`
-	NetworkConfig                      *MonitoringNetworkConfig `json:"networkConfig,omitempty"`
+	ModelExplainabilityJobOutputConfig *MonitoringOutputConfig `json:"modelExplainabilityJobOutputConfig"`
+	// Networking options for a model explainability job.
+	NetworkConfig *MonitoringNetworkConfig `json:"networkConfig,omitempty"`
+	// The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
+	// to perform tasks on your behalf.
 	// +kubebuilder:validation:Required
-	RoleARN           *string                      `json:"roleARN"`
+	RoleARN *string `json:"roleARN"`
+
 	StoppingCondition *MonitoringStoppingCondition `json:"stoppingCondition,omitempty"`
-	Tags              []*Tag                       `json:"tags,omitempty"`
 }
 
 // ModelExplainabilityJobDefinitionStatus defines the observed state of ModelExplainabilityJobDefinition
@@ -50,8 +61,9 @@ type ModelExplainabilityJobDefinitionStatus struct {
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
-	Conditions       []*ackv1alpha1.Condition `json:"conditions"`
-	JobDefinitionARN *string                  `json:"jobDefinitionARN,omitempty"`
+	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	// The Amazon Resource Name (ARN) of the model explainability job.
+	JobDefinitionARN *string `json:"jobDefinitionARN,omitempty"`
 }
 
 // ModelExplainabilityJobDefinition is the Schema for the ModelExplainabilityJobDefinitions API

@@ -22,22 +22,32 @@ import (
 
 // ModelBiasJobDefinitionSpec defines the desired state of ModelBiasJobDefinition
 type ModelBiasJobDefinitionSpec struct {
+	// The name of the bias job definition. The name must be unique within an AWS
+	// Region in the AWS account.
 	// +kubebuilder:validation:Required
 	JobDefinitionName *string `json:"jobDefinitionName"`
+
 	// +kubebuilder:validation:Required
 	JobResources *MonitoringResources `json:"jobResources"`
+	// Configures the model bias job to run a specified Docker container image.
 	// +kubebuilder:validation:Required
 	ModelBiasAppSpecification *ModelBiasAppSpecification `json:"modelBiasAppSpecification"`
-	ModelBiasBaselineConfig   *ModelBiasBaselineConfig   `json:"modelBiasBaselineConfig,omitempty"`
+	// The baseline configuration for a model bias job.
+	ModelBiasBaselineConfig *ModelBiasBaselineConfig `json:"modelBiasBaselineConfig,omitempty"`
+	// Inputs for the model bias job.
 	// +kubebuilder:validation:Required
 	ModelBiasJobInput *ModelBiasJobInput `json:"modelBiasJobInput"`
+
 	// +kubebuilder:validation:Required
-	ModelBiasJobOutputConfig *MonitoringOutputConfig  `json:"modelBiasJobOutputConfig"`
-	NetworkConfig            *MonitoringNetworkConfig `json:"networkConfig,omitempty"`
+	ModelBiasJobOutputConfig *MonitoringOutputConfig `json:"modelBiasJobOutputConfig"`
+	// Networking options for a model bias job.
+	NetworkConfig *MonitoringNetworkConfig `json:"networkConfig,omitempty"`
+	// The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
+	// to perform tasks on your behalf.
 	// +kubebuilder:validation:Required
-	RoleARN           *string                      `json:"roleARN"`
+	RoleARN *string `json:"roleARN"`
+
 	StoppingCondition *MonitoringStoppingCondition `json:"stoppingCondition,omitempty"`
-	Tags              []*Tag                       `json:"tags,omitempty"`
 }
 
 // ModelBiasJobDefinitionStatus defines the observed state of ModelBiasJobDefinition
@@ -50,8 +60,9 @@ type ModelBiasJobDefinitionStatus struct {
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
-	Conditions       []*ackv1alpha1.Condition `json:"conditions"`
-	JobDefinitionARN *string                  `json:"jobDefinitionARN,omitempty"`
+	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	// The Amazon Resource Name (ARN) of the model bias job.
+	JobDefinitionARN *string `json:"jobDefinitionARN,omitempty"`
 }
 
 // ModelBiasJobDefinition is the Schema for the ModelBiasJobDefinitions API

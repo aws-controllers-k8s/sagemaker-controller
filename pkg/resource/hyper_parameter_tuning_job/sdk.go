@@ -61,7 +61,7 @@ func (rm *resourceManager) sdkFind(
 	resp, respErr := rm.sdkapi.DescribeHyperParameterTuningJobWithContext(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeHyperParameterTuningJob", respErr)
 	if respErr != nil {
-		if awsErr, ok := ackerr.AWSError(respErr); ok && awsErr.Code() == "ResourceNotFound" {
+		if awsErr, ok := ackerr.AWSError(respErr); ok && awsErr.Code() == "UNKNOWN" {
 			return nil, ackerr.NotFound
 		}
 		return nil, respErr

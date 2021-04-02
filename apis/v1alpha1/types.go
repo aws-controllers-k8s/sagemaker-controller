@@ -770,12 +770,11 @@ type MonitoringS3Output struct {
 	S3URI        *string `json:"s3URI,omitempty"`
 }
 
-type MonitoringSchedule struct {
-	CreationTime          *metav1.Time `json:"creationTime,omitempty"`
-	EndpointName          *string      `json:"endpointName,omitempty"`
-	FailureReason         *string      `json:"failureReason,omitempty"`
-	LastModifiedTime      *metav1.Time `json:"lastModifiedTime,omitempty"`
-	MonitoringScheduleARN *string      `json:"monitoringScheduleARN,omitempty"`
+type MonitoringScheduleConfig struct {
+	MonitoringJobDefinition     *MonitoringJobDefinition `json:"monitoringJobDefinition,omitempty"`
+	MonitoringJobDefinitionName *string                  `json:"monitoringJobDefinitionName,omitempty"`
+	MonitoringType              *string                  `json:"monitoringType,omitempty"`
+	ScheduleConfig              *ScheduleConfig          `json:"scheduleConfig,omitempty"`
 }
 
 type MonitoringScheduleSummary struct {
@@ -800,7 +799,6 @@ type MonitoringSchedule_SDK struct {
 	MonitoringScheduleName         *string                     `json:"monitoringScheduleName,omitempty"`
 	MonitoringScheduleStatus       *string                     `json:"monitoringScheduleStatus,omitempty"`
 	MonitoringType                 *string                     `json:"monitoringType,omitempty"`
-	Tags                           []*Tag                      `json:"tags,omitempty"`
 }
 
 type MonitoringStatisticsResource struct {

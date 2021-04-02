@@ -61,7 +61,7 @@ func (rm *resourceManager) sdkFind(
 	resp, respErr := rm.sdkapi.DescribeModelBiasJobDefinitionWithContext(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeModelBiasJobDefinition", respErr)
 	if respErr != nil {
-		if awsErr, ok := ackerr.AWSError(respErr); ok && awsErr.Code() == "ResourceNotFound" && strings.HasPrefix(awsErr.Message(), "Monitoring Job Definition") {
+		if awsErr, ok := ackerr.AWSError(respErr); ok && awsErr.Code() == "ResourceNotFound" {
 			return nil, ackerr.NotFound
 		}
 		return nil, respErr
@@ -73,9 +73,13 @@ func (rm *resourceManager) sdkFind(
 
 	if resp.JobDefinitionArn != nil {
 		ko.Status.JobDefinitionARN = resp.JobDefinitionArn
+	} else {
+		ko.Status.JobDefinitionARN = nil
 	}
 	if resp.JobDefinitionName != nil {
 		ko.Spec.JobDefinitionName = resp.JobDefinitionName
+	} else {
+		ko.Spec.JobDefinitionName = nil
 	}
 	if resp.JobResources != nil {
 		f3 := &svcapitypes.MonitoringResources{}
@@ -96,6 +100,8 @@ func (rm *resourceManager) sdkFind(
 			f3.ClusterConfig = f3f0
 		}
 		ko.Spec.JobResources = f3
+	} else {
+		ko.Spec.JobResources = nil
 	}
 	if resp.ModelBiasAppSpecification != nil {
 		f4 := &svcapitypes.ModelBiasAppSpecification{}
@@ -115,6 +121,8 @@ func (rm *resourceManager) sdkFind(
 			f4.ImageURI = resp.ModelBiasAppSpecification.ImageUri
 		}
 		ko.Spec.ModelBiasAppSpecification = f4
+	} else {
+		ko.Spec.ModelBiasAppSpecification = nil
 	}
 	if resp.ModelBiasBaselineConfig != nil {
 		f5 := &svcapitypes.ModelBiasBaselineConfig{}
@@ -129,6 +137,8 @@ func (rm *resourceManager) sdkFind(
 			f5.ConstraintsResource = f5f1
 		}
 		ko.Spec.ModelBiasBaselineConfig = f5
+	} else {
+		ko.Spec.ModelBiasBaselineConfig = nil
 	}
 	if resp.ModelBiasJobInput != nil {
 		f6 := &svcapitypes.ModelBiasJobInput{}
@@ -174,6 +184,8 @@ func (rm *resourceManager) sdkFind(
 			f6.GroundTruthS3Input = f6f1
 		}
 		ko.Spec.ModelBiasJobInput = f6
+	} else {
+		ko.Spec.ModelBiasJobInput = nil
 	}
 	if resp.ModelBiasJobOutputConfig != nil {
 		f7 := &svcapitypes.MonitoringOutputConfig{}
@@ -202,6 +214,8 @@ func (rm *resourceManager) sdkFind(
 			f7.MonitoringOutputs = f7f1
 		}
 		ko.Spec.ModelBiasJobOutputConfig = f7
+	} else {
+		ko.Spec.ModelBiasJobOutputConfig = nil
 	}
 	if resp.NetworkConfig != nil {
 		f8 := &svcapitypes.MonitoringNetworkConfig{}
@@ -234,9 +248,13 @@ func (rm *resourceManager) sdkFind(
 			f8.VPCConfig = f8f2
 		}
 		ko.Spec.NetworkConfig = f8
+	} else {
+		ko.Spec.NetworkConfig = nil
 	}
 	if resp.RoleArn != nil {
 		ko.Spec.RoleARN = resp.RoleArn
+	} else {
+		ko.Spec.RoleARN = nil
 	}
 	if resp.StoppingCondition != nil {
 		f10 := &svcapitypes.MonitoringStoppingCondition{}
@@ -244,6 +262,8 @@ func (rm *resourceManager) sdkFind(
 			f10.MaxRuntimeInSeconds = resp.StoppingCondition.MaxRuntimeInSeconds
 		}
 		ko.Spec.StoppingCondition = f10
+	} else {
+		ko.Spec.StoppingCondition = nil
 	}
 
 	rm.setStatusDefaults(ko)
@@ -297,6 +317,8 @@ func (rm *resourceManager) sdkCreate(
 
 	if resp.JobDefinitionArn != nil {
 		ko.Status.JobDefinitionARN = resp.JobDefinitionArn
+	} else {
+		ko.Status.JobDefinitionARN = nil
 	}
 
 	rm.setStatusDefaults(ko)
@@ -482,20 +504,6 @@ func (rm *resourceManager) newCreateRequestPayload(
 			f8.SetMaxRuntimeInSeconds(*r.ko.Spec.StoppingCondition.MaxRuntimeInSeconds)
 		}
 		res.SetStoppingCondition(f8)
-	}
-	if r.ko.Spec.Tags != nil {
-		f9 := []*svcsdk.Tag{}
-		for _, f9iter := range r.ko.Spec.Tags {
-			f9elem := &svcsdk.Tag{}
-			if f9iter.Key != nil {
-				f9elem.SetKey(*f9iter.Key)
-			}
-			if f9iter.Value != nil {
-				f9elem.SetValue(*f9iter.Value)
-			}
-			f9 = append(f9, f9elem)
-		}
-		res.SetTags(f9)
 	}
 
 	return res, nil

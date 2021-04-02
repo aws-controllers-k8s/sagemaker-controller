@@ -22,11 +22,14 @@ import (
 
 // MonitoringScheduleSpec defines the desired state of MonitoringSchedule
 type MonitoringScheduleSpec struct {
+	// The configuration object that specifies the monitoring schedule and defines
+	// the monitoring job.
 	// +kubebuilder:validation:Required
 	MonitoringScheduleConfig *MonitoringScheduleConfig `json:"monitoringScheduleConfig"`
+	// The name of the monitoring schedule. The name must be unique within an AWS
+	// Region within an AWS account.
 	// +kubebuilder:validation:Required
 	MonitoringScheduleName *string `json:"monitoringScheduleName"`
-	Tags                   []*Tag  `json:"tags,omitempty"`
 }
 
 // MonitoringScheduleStatus defines the observed state of MonitoringSchedule
@@ -39,9 +42,12 @@ type MonitoringScheduleStatus struct {
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
-	Conditions               []*ackv1alpha1.Condition `json:"conditions"`
-	FailureReason            *string                  `json:"failureReason,omitempty"`
-	MonitoringScheduleStatus *string                  `json:"monitoringScheduleStatus,omitempty"`
+	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	// A string, up to one KB in size, that contains the reason a monitoring job
+	// failed, if it failed.
+	FailureReason *string `json:"failureReason,omitempty"`
+	// The status of an monitoring job.
+	MonitoringScheduleStatus *string `json:"monitoringScheduleStatus,omitempty"`
 }
 
 // MonitoringSchedule is the Schema for the MonitoringSchedules API

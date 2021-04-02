@@ -45,6 +45,8 @@ spec:
             description: MonitoringScheduleSpec defines the desired state of MonitoringSchedule
             properties:
               monitoringScheduleConfig:
+                description: The configuration object that specifies the monitoring
+                  schedule and defines the monitoring job.
                 properties:
                   monitoringJobDefinition:
                     properties:
@@ -185,16 +187,9 @@ spec:
                     type: object
                 type: object
               monitoringScheduleName:
+                description: The name of the monitoring schedule. The name must be
+                  unique within an AWS Region within an AWS account.
                 type: string
-              tags:
-                items:
-                  properties:
-                    key:
-                      type: string
-                    value:
-                      type: string
-                  type: object
-                type: array
             required:
             - monitoringScheduleConfig
             - monitoringScheduleName
@@ -259,8 +254,11 @@ spec:
                   type: object
                 type: array
               failureReason:
+                description: A string, up to one KB in size, that contains the reason
+                  a monitoring job failed, if it failed.
                 type: string
               monitoringScheduleStatus:
+                description: The status of an monitoring job.
                 type: string
             required:
             - ackResourceMetadata
