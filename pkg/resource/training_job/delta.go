@@ -131,6 +131,13 @@ func newResourceDelta(
 			delta.Add("Spec.EnableNetworkIsolation", a.ko.Spec.EnableNetworkIsolation, b.ko.Spec.EnableNetworkIsolation)
 		}
 	}
+	if ackcompare.HasNilDifference(a.ko.Spec.Environment, b.ko.Spec.Environment) {
+		delta.Add("Spec.Environment", a.ko.Spec.Environment, b.ko.Spec.Environment)
+	} else if a.ko.Spec.Environment != nil && b.ko.Spec.Environment != nil {
+		if !ackcompare.MapStringStringPEqual(a.ko.Spec.Environment, b.ko.Spec.Environment) {
+			delta.Add("Spec.Environment", a.ko.Spec.Environment, b.ko.Spec.Environment)
+		}
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.ExperimentConfig, b.ko.Spec.ExperimentConfig) {
 		delta.Add("Spec.ExperimentConfig", a.ko.Spec.ExperimentConfig, b.ko.Spec.ExperimentConfig)
 	} else if a.ko.Spec.ExperimentConfig != nil && b.ko.Spec.ExperimentConfig != nil {

@@ -186,16 +186,19 @@ const (
 type AutoMLJobSecondaryStatus string
 
 const (
-	AutoMLJobSecondaryStatus_Starting                      AutoMLJobSecondaryStatus = "Starting"
-	AutoMLJobSecondaryStatus_AnalyzingData                 AutoMLJobSecondaryStatus = "AnalyzingData"
-	AutoMLJobSecondaryStatus_FeatureEngineering            AutoMLJobSecondaryStatus = "FeatureEngineering"
-	AutoMLJobSecondaryStatus_ModelTuning                   AutoMLJobSecondaryStatus = "ModelTuning"
-	AutoMLJobSecondaryStatus_MaxCandidatesReached          AutoMLJobSecondaryStatus = "MaxCandidatesReached"
-	AutoMLJobSecondaryStatus_Failed                        AutoMLJobSecondaryStatus = "Failed"
-	AutoMLJobSecondaryStatus_Stopped                       AutoMLJobSecondaryStatus = "Stopped"
-	AutoMLJobSecondaryStatus_MaxAutoMLJobRuntimeReached    AutoMLJobSecondaryStatus = "MaxAutoMLJobRuntimeReached"
-	AutoMLJobSecondaryStatus_Stopping                      AutoMLJobSecondaryStatus = "Stopping"
-	AutoMLJobSecondaryStatus_CandidateDefinitionsGenerated AutoMLJobSecondaryStatus = "CandidateDefinitionsGenerated"
+	AutoMLJobSecondaryStatus_Starting                       AutoMLJobSecondaryStatus = "Starting"
+	AutoMLJobSecondaryStatus_AnalyzingData                  AutoMLJobSecondaryStatus = "AnalyzingData"
+	AutoMLJobSecondaryStatus_FeatureEngineering             AutoMLJobSecondaryStatus = "FeatureEngineering"
+	AutoMLJobSecondaryStatus_ModelTuning                    AutoMLJobSecondaryStatus = "ModelTuning"
+	AutoMLJobSecondaryStatus_MaxCandidatesReached           AutoMLJobSecondaryStatus = "MaxCandidatesReached"
+	AutoMLJobSecondaryStatus_Failed                         AutoMLJobSecondaryStatus = "Failed"
+	AutoMLJobSecondaryStatus_Stopped                        AutoMLJobSecondaryStatus = "Stopped"
+	AutoMLJobSecondaryStatus_MaxAutoMLJobRuntimeReached     AutoMLJobSecondaryStatus = "MaxAutoMLJobRuntimeReached"
+	AutoMLJobSecondaryStatus_Stopping                       AutoMLJobSecondaryStatus = "Stopping"
+	AutoMLJobSecondaryStatus_CandidateDefinitionsGenerated  AutoMLJobSecondaryStatus = "CandidateDefinitionsGenerated"
+	AutoMLJobSecondaryStatus_GeneratingExplainabilityReport AutoMLJobSecondaryStatus = "GeneratingExplainabilityReport"
+	AutoMLJobSecondaryStatus_Completed                      AutoMLJobSecondaryStatus = "Completed"
+	AutoMLJobSecondaryStatus_ExplainabilityError            AutoMLJobSecondaryStatus = "ExplainabilityError"
 )
 
 type AutoMLJobStatus string
@@ -1429,6 +1432,7 @@ const (
 	TargetDevice_ml_p3          TargetDevice = "ml_p3"
 	TargetDevice_ml_g4dn        TargetDevice = "ml_g4dn"
 	TargetDevice_ml_inf1        TargetDevice = "ml_inf1"
+	TargetDevice_ml_eia2        TargetDevice = "ml_eia2"
 	TargetDevice_jetson_tx1     TargetDevice = "jetson_tx1"
 	TargetDevice_jetson_tx2     TargetDevice = "jetson_tx2"
 	TargetDevice_jetson_nano    TargetDevice = "jetson_nano"

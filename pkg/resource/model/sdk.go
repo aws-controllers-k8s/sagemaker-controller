@@ -95,6 +95,13 @@ func (rm *resourceManager) sdkFind(
 				if f0iter.ImageConfig.RepositoryAccessMode != nil {
 					f0elemf3.RepositoryAccessMode = f0iter.ImageConfig.RepositoryAccessMode
 				}
+				if f0iter.ImageConfig.RepositoryAuthConfig != nil {
+					f0elemf3f1 := &svcapitypes.RepositoryAuthConfig{}
+					if f0iter.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderArn != nil {
+						f0elemf3f1.RepositoryCredentialsProviderARN = f0iter.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderArn
+					}
+					f0elemf3.RepositoryAuthConfig = f0elemf3f1
+				}
 				f0elem.ImageConfig = f0elemf3
 			}
 			if f0iter.Mode != nil {
@@ -171,6 +178,13 @@ func (rm *resourceManager) sdkFind(
 			f7f3 := &svcapitypes.ImageConfig{}
 			if resp.PrimaryContainer.ImageConfig.RepositoryAccessMode != nil {
 				f7f3.RepositoryAccessMode = resp.PrimaryContainer.ImageConfig.RepositoryAccessMode
+			}
+			if resp.PrimaryContainer.ImageConfig.RepositoryAuthConfig != nil {
+				f7f3f1 := &svcapitypes.RepositoryAuthConfig{}
+				if resp.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderArn != nil {
+					f7f3f1.RepositoryCredentialsProviderARN = resp.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderArn
+				}
+				f7f3.RepositoryAuthConfig = f7f3f1
 			}
 			f7.ImageConfig = f7f3
 		}
@@ -313,6 +327,13 @@ func (rm *resourceManager) newCreateRequestPayload(
 				if f0iter.ImageConfig.RepositoryAccessMode != nil {
 					f0elemf3.SetRepositoryAccessMode(*f0iter.ImageConfig.RepositoryAccessMode)
 				}
+				if f0iter.ImageConfig.RepositoryAuthConfig != nil {
+					f0elemf3f1 := &svcsdk.RepositoryAuthConfig{}
+					if f0iter.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN != nil {
+						f0elemf3f1.SetRepositoryCredentialsProviderArn(*f0iter.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN)
+					}
+					f0elemf3.SetRepositoryAuthConfig(f0elemf3f1)
+				}
 				f0elem.SetImageConfig(f0elemf3)
 			}
 			if f0iter.Mode != nil {
@@ -372,6 +393,13 @@ func (rm *resourceManager) newCreateRequestPayload(
 			f5f3 := &svcsdk.ImageConfig{}
 			if r.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAccessMode != nil {
 				f5f3.SetRepositoryAccessMode(*r.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAccessMode)
+			}
+			if r.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig != nil {
+				f5f3f1 := &svcsdk.RepositoryAuthConfig{}
+				if r.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN != nil {
+					f5f3f1.SetRepositoryCredentialsProviderArn(*r.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN)
+				}
+				f5f3.SetRepositoryAuthConfig(f5f3f1)
 			}
 			f5.SetImageConfig(f5f3)
 		}
