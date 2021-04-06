@@ -507,7 +507,8 @@ type Image struct {
 }
 
 type ImageConfig struct {
-	RepositoryAccessMode *string `json:"repositoryAccessMode,omitempty"`
+	RepositoryAccessMode *string               `json:"repositoryAccessMode,omitempty"`
+	RepositoryAuthConfig *RepositoryAuthConfig `json:"repositoryAuthConfig,omitempty"`
 }
 
 type ImageVersion struct {
@@ -971,6 +972,10 @@ type RenderingError struct {
 	Message *string `json:"message,omitempty"`
 }
 
+type RepositoryAuthConfig struct {
+	RepositoryCredentialsProviderARN *string `json:"repositoryCredentialsProviderARN,omitempty"`
+}
+
 type ResourceConfig struct {
 	InstanceCount  *int64  `json:"instanceCount,omitempty"`
 	InstanceType   *string `json:"instanceType,omitempty"`
@@ -1080,6 +1085,7 @@ type TrainingJob_SDK struct {
 	EnableInterContainerTrafficEncryption *bool                        `json:"enableInterContainerTrafficEncryption,omitempty"`
 	EnableManagedSpotTraining             *bool                        `json:"enableManagedSpotTraining,omitempty"`
 	EnableNetworkIsolation                *bool                        `json:"enableNetworkIsolation,omitempty"`
+	Environment                           map[string]*string           `json:"environment,omitempty"`
 	ExperimentConfig                      *ExperimentConfig            `json:"experimentConfig,omitempty"`
 	FailureReason                         *string                      `json:"failureReason,omitempty"`
 	FinalMetricDataList                   []*MetricData                `json:"finalMetricDataList,omitempty"`

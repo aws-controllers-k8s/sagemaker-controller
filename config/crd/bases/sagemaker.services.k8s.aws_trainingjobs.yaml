@@ -17,11 +17,11 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
-    - jsonPath: .status.trainingJobStatus
-      name: TrainingJobStatus
-      type: string
     - jsonPath: .status.secondaryStatus
       name: SecondaryStatus
+      type: string
+    - jsonPath: .status.trainingJobStatus
+      name: TrainingJobStatus
       type: string
     name: v1alpha1
     schema:
@@ -154,6 +154,11 @@ spec:
                   through the specified VPC, but the training container does not have
                   network access.
                 type: boolean
+              environment:
+                additionalProperties:
+                  type: string
+                description: The environment variables to set in the Docker container.
+                type: object
               experimentConfig:
                 properties:
                   experimentName:

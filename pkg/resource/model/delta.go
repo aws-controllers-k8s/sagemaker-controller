@@ -98,6 +98,17 @@ func newResourceDelta(
 					delta.Add("Spec.PrimaryContainer.ImageConfig.RepositoryAccessMode", a.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAccessMode, b.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAccessMode)
 				}
 			}
+			if ackcompare.HasNilDifference(a.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig, b.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig) {
+				delta.Add("Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig", a.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig, b.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig)
+			} else if a.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig != nil && b.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN, b.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN) {
+					delta.Add("Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN", a.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN, b.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN)
+				} else if a.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN != nil && b.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN != nil {
+					if *a.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN != *b.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN {
+						delta.Add("Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN", a.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN, b.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN)
+					}
+				}
+			}
 		}
 		if ackcompare.HasNilDifference(a.ko.Spec.PrimaryContainer.Mode, b.ko.Spec.PrimaryContainer.Mode) {
 			delta.Add("Spec.PrimaryContainer.Mode", a.ko.Spec.PrimaryContainer.Mode, b.ko.Spec.PrimaryContainer.Mode)
