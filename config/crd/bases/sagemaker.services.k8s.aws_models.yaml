@@ -52,6 +52,11 @@ spec:
                       properties:
                         repositoryAccessMode:
                           type: string
+                        repositoryAuthConfig:
+                          properties:
+                            repositoryCredentialsProviderARN:
+                              type: string
+                          type: object
                       type: object
                     mode:
                       type: string
@@ -106,6 +111,11 @@ spec:
                     properties:
                       repositoryAccessMode:
                         type: string
+                      repositoryAuthConfig:
+                        properties:
+                          repositoryCredentialsProviderARN:
+                            type: string
+                        type: object
                     type: object
                   mode:
                     type: string
