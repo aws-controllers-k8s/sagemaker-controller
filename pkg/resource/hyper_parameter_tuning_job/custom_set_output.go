@@ -27,7 +27,7 @@ import (
 )
 
 // customCreateHyperParameterTuningJobSetOutput sets the resource in TempOutofSync if HyperParameterTuningJob is
-// in creating state. At this stage we know call to createEndpoint was successful.
+// in creating state. At this stage we know call to createHyperParameterTuningJob was successful.
 func (rm *resourceManager) customCreateHyperParameterTuningJobSetOutput(
 	ctx context.Context,
 	r *resource,
@@ -38,8 +38,20 @@ func (rm *resourceManager) customCreateHyperParameterTuningJobSetOutput(
 	return ko, nil
 }
 
+// customDescribeHyperParameterTuningJobSetOutput sets the resource in TempOutofSync if
+// HyperParameterTuningJob is being modified by AWS.
+func (rm *resourceManager) customDescribeHyperParameterTuningJobSetOutput(
+	ctx context.Context,
+	r *resource,
+	resp *svcsdk.DescribeHyperParameterTuningJobOutput,
+	ko *svcapitypes.HyperParameterTuningJob,
+) (*svcapitypes.HyperParameterTuningJob, error) {
+	rm.customSetOutput(r, resp.HyperParameterTuningJobStatus, ko)
+	return ko, nil
+}
+
 // customStopHyperParameterTuningJobSetOutput sets the resource in TempOutofSync if HyperParameterTuningJob is
-// in creating state. At this stage we know call to createEndpoint was successful.
+// in stopping state.
 func (rm *resourceManager) customStopHyperParameterTuningJobSetOutput(
 	ctx context.Context,
 	r *resource,
@@ -65,6 +77,7 @@ func (rm *resourceManager) customSetOutput(
 	syncConditionStatus := corev1.ConditionUnknown
 	if *hyperParameterTuningJobStatus == svcsdk.HyperParameterTuningJobStatusCompleted || *hyperParameterTuningJobStatus == svcsdk.HyperParameterTuningJobStatusStopped {
 		syncConditionStatus = corev1.ConditionTrue
+	} else {
 		syncConditionStatus = corev1.ConditionFalse
 	}
 

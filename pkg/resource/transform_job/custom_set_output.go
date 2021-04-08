@@ -27,7 +27,7 @@ import (
 )
 
 // customCreateTransformJobSetOutput sets the resource in TempOutofSync if TransformJob is
-// in creating state. At this stage we know call to createEndpoint was successful.
+// in creating state. At this stage we know call to createTransformJob was successful.
 func (rm *resourceManager) customCreateTransformJobSetOutput(
 	ctx context.Context,
 	r *resource,
@@ -38,8 +38,20 @@ func (rm *resourceManager) customCreateTransformJobSetOutput(
 	return ko, nil
 }
 
+// customDescribeTransformJobSetOutput sets the resource in TempOutofSync if
+// TransformJob is being modified by AWS.
+func (rm *resourceManager) customDescribeTransformJobSetOutput(
+	ctx context.Context,
+	r *resource,
+	resp *svcsdk.DescribeTransformJobOutput,
+	ko *svcapitypes.TransformJob,
+) (*svcapitypes.TransformJob, error) {
+	rm.customSetOutput(r, resp.TransformJobStatus, ko)
+	return ko, nil
+}
+
 // customStopTransformJobSetOutput sets the resource in TempOutofSync if TransformJob is
-// in creating state. At this stage we know call to createEndpoint was successful.
+// in stopping state. At this stage we know call to deleteTransformJob was successful.
 func (rm *resourceManager) customStopTransformJobSetOutput(
 	ctx context.Context,
 	r *resource,

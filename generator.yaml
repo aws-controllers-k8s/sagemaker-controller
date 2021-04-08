@@ -1,18 +1,24 @@
 operations:
   CreateTrainingJob:
     set_output_custom_method_name: customCreateTrainingJobSetOutput
+  DescribeTrainingJob:
+    set_output_custom_method_name: customDescribeTrainingJobSetOutput
   StopTrainingJob:
     operation_type: Delete
     resource_name: TrainingJob
     set_output_custom_method_name: customStopTrainingJobSetOutput
   CreateProcessingJob:
     set_output_custom_method_name: customCreateProcessingJobSetOutput
+  DescribeProcessingJob:
+    set_output_custom_method_name: customDescribeProcessingJobSetOutput
   StopProcessingJob:
     operation_type: Delete
     resource_name: ProcessingJob
     set_output_custom_method_name: customStopProcessingJobSetOutput
   CreateTransformJob:
     set_output_custom_method_name: customCreateTransformJobSetOutput
+  DescribeTransformJob:
+    set_output_custom_method_name: customDescribeTransformJobSetOutput
   StopTransformJob:
     operation_type: Delete
     resource_name: TransformJob
@@ -30,6 +36,8 @@ operations:
     custom_implementation: customDeleteEndpoint
   CreateHyperParameterTuningJob:
     set_output_custom_method_name: customCreateHyperParameterTuningJobSetOutput
+  DescribeHyperParameterTuningJob:
+    set_output_custom_method_name: customDescribeHyperParameterTuningJobSetOutput
   StopHyperParameterTuningJob:
     operation_type: Delete
     resource_name: HyperParameterTuningJob

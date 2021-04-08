@@ -27,7 +27,7 @@ import (
 )
 
 // customCreateTrainingJobSetOutput sets the resource in TempOutofSync if TrainingJob is
-// in creating state. At this stage we know call to createEndpoint was successful.
+// in creating state. At this stage we know call to createTrainingJob was successful.
 func (rm *resourceManager) customCreateTrainingJobSetOutput(
 	ctx context.Context,
 	r *resource,
@@ -38,8 +38,26 @@ func (rm *resourceManager) customCreateTrainingJobSetOutput(
 	return ko, nil
 }
 
-// customCreateTrainingJobSetOutput sets the resource in TempOutofSync if TrainingJob is
-// in creating state. At this stage we know call to createEndpoint was successful.
+// customDescribeTrainingJobSetOutput sets the resource in TempOutofSync if
+// TrainingJob is being modified by AWS. It has an additional check on the debugger status.
+func (rm *resourceManager) customDescribeTrainingJobSetOutput(
+	ctx context.Context,
+	r *resource,
+	resp *svcsdk.DescribeTrainingJobOutput,
+	ko *svcapitypes.TrainingJob,
+) (*svcapitypes.TrainingJob, error) {
+	trainingJobStatus := resp.TrainingJobStatus
+	if resp.DebugRuleEvaluationStatuses != nil && resp.DebugRuleEvaluationStatuses[0].RuleEvaluationStatus != nil {
+		debuggerStatus := resp.DebugRuleEvaluationStatuses[0].RuleEvaluationStatus
+		rm.customSetOutput(r, debuggerStatus, ko)
+	} else {
+		rm.customSetOutput(r, trainingJobStatus, ko)
+	}
+	return ko, nil
+}
+
+// customStopTrainingJobSetOutput sets the resource in TempOutofSync if TrainingJob is
+// in stopping state. At this stage we know call to deleteTrainingJob was successful.
 func (rm *resourceManager) customStopTrainingJobSetOutput(
 	ctx context.Context,
 	r *resource,
@@ -62,8 +80,9 @@ func (rm *resourceManager) customSetOutput(
 		return
 	}
 
+	// TODO: Re-check debugger statuses that shouldn't be requeued.
 	syncConditionStatus := corev1.ConditionUnknown
-	if *trainingJobStatus == svcsdk.TrainingJobStatusCompleted || *trainingJobStatus == svcsdk.TrainingJobStatusStopped {
+	if *trainingJobStatus == svcsdk.TrainingJobStatusCompleted || *trainingJobStatus == svcsdk.TrainingJobStatusStopped || *trainingJobStatus == svcsdk.RuleEvaluationStatusNoIssuesFound {
 		syncConditionStatus = corev1.ConditionTrue
 	} else {
 		syncConditionStatus = corev1.ConditionFalse

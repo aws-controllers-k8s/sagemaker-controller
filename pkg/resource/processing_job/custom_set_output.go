@@ -38,6 +38,18 @@ func (rm *resourceManager) customCreateProcessingJobSetOutput(
 	return ko, nil
 }
 
+// customDescribeProcessingJobSetOutput sets the resource in TempOutofSync if
+// ProcessingJob is being modified by AWS.
+func (rm *resourceManager) customDescribeProcessingJobSetOutput(
+	ctx context.Context,
+	r *resource,
+	resp *svcsdk.DescribeProcessingJobOutput,
+	ko *svcapitypes.ProcessingJob,
+) (*svcapitypes.ProcessingJob, error) {
+	rm.customSetOutput(r, resp.ProcessingJobStatus, ko)
+	return ko, nil
+}
+
 // customStopProcessingJobSetOutput sets the resource in TempOutofSync if ProcessingJob is
 // in stopping state. At this stage we know call to stopProcessingJob was successful.
 func (rm *resourceManager) customStopProcessingJobSetOutput(

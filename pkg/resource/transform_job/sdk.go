@@ -231,6 +231,12 @@ func (rm *resourceManager) sdkFind(
 
 	rm.setStatusDefaults(ko)
 
+	// custom set output from response
+	ko, err = rm.customDescribeTransformJobSetOutput(ctx, r, resp, ko)
+	if err != nil {
+		return nil, err
+	}
+
 	return &resource{ko}, nil
 }
 
