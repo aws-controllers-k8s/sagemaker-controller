@@ -1,0 +1,47 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  creationTimestamp: null
+  name: ack-sagemaker-writer
+  namespace: {{ .Release.Namespace }}
+rules:
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
+  - endpoints
+
+  - endpointconfigs
+
+  - hyperparametertuningjobs
+
+  - models
+
+  - processingjobs
+
+  - trainingjobs
+
+  - transformjobs
+
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
+  - endpoints
+  - endpointconfigs
+  - hyperparametertuningjobs
+  - models
+  - processingjobs
+  - trainingjobs
+  - transformjobs
+  verbs:
+  - get
+  - patch
+  - update
