@@ -129,6 +129,20 @@ resources:
           404:
             code: ValidationException
             message_prefix: Could not find requested job with name
+      terminal_codes:
+        - ResourceLimitExceeded
+        - ResourceNotFound
+        - ResourceInUse
+        - OptInRequired
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+        - MissingAction
+        - InvalidClientTokenId
+        - InvalidQueryParameter
+        - MalformedQueryString
+        - InvalidAction
+        - UnrecognizedClientException
     fields:
       TransformJobStatus:
           is_read_only: true
