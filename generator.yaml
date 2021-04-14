@@ -29,12 +29,40 @@ resources:
         404:
           code: ValidationException
           message_prefix: Could not find model
+      terminal_codes:
+        - ResourceLimitExceeded
+        - ResourceNotFound
+        - ResourceInUse
+        - OptInRequired
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+        - MissingAction
+        - InvalidClientTokenId
+        - InvalidQueryParameter
+        - MalformedQueryString
+        - InvalidAction
+        - UnrecognizedClientException
   EndpointConfig:
     exceptions:
       errors:
         404:
           code: ValidationException
           message_prefix: Could not find endpoint configuration
+      terminal_codes:
+        - ResourceLimitExceeded
+        - ResourceNotFound
+        - ResourceInUse
+        - OptInRequired
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+        - MissingAction
+        - InvalidClientTokenId
+        - InvalidQueryParameter
+        - MalformedQueryString
+        - InvalidAction
+        - UnrecognizedClientException
   Endpoint:
     update_conditions_custom_method_name: customUpdateConditions
     exceptions:
@@ -42,6 +70,20 @@ resources:
         404:
           code: ValidationException
           message_prefix: Could not find endpoint
+      terminal_codes:
+        - ResourceLimitExceeded
+        - ResourceNotFound
+        - ResourceInUse
+        - OptInRequired
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+        - MissingAction
+        - InvalidClientTokenId
+        - InvalidQueryParameter
+        - MalformedQueryString
+        - InvalidAction
+        - UnrecognizedClientException
     fields:
       EndpointStatus:
         is_read_only: true
@@ -86,6 +128,20 @@ resources:
           404:
             code: ValidationException
             message_prefix: Requested resource not found
+      terminal_codes:
+        - ResourceLimitExceeded
+        - ResourceNotFound
+        - ResourceInUse
+        - OptInRequired
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+        - MissingAction
+        - InvalidClientTokenId
+        - InvalidQueryParameter
+        - MalformedQueryString
+        - InvalidAction
+        - UnrecognizedClientException
     fields:
       TrainingJobStatus:
           is_read_only: true
@@ -110,6 +166,20 @@ resources:
           404:
             code: ValidationException
             message_prefix: Could not find requested job
+      terminal_codes:
+        - ResourceLimitExceeded
+        - ResourceNotFound
+        - ResourceInUse
+        - OptInRequired
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+        - MissingAction
+        - InvalidClientTokenId
+        - InvalidQueryParameter
+        - MalformedQueryString
+        - InvalidAction
+        - UnrecognizedClientException
     fields:
       ProcessingJobStatus:
         is_read_only: true
@@ -161,6 +231,20 @@ resources:
       errors:
           404:
             code: ResourceNotFound
+      terminal_codes:
+        - ResourceLimitExceeded
+        - ResourceNotFound
+        - ResourceInUse
+        - OptInRequired
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+        - MissingAction
+        - InvalidClientTokenId
+        - InvalidQueryParameter
+        - MalformedQueryString
+        - InvalidAction
+        - UnrecognizedClientException
     fields:
       HyperParameterTuningJobStatus:
         is_read_only: true
