@@ -50,18 +50,6 @@ func (rm *resourceManager) customDescribeTransformJobSetOutput(
 	return ko, nil
 }
 
-// customStopTransformJobSetOutput sets the resource in TempOutofSync if TransformJob is
-// in stopping state. At this stage we know call to deleteTransformJob was successful.
-func (rm *resourceManager) customStopTransformJobSetOutput(
-	ctx context.Context,
-	r *resource,
-	resp *svcsdk.StopTransformJobOutput,
-	ko *svcapitypes.TransformJob,
-) (*svcapitypes.TransformJob, error) {
-	rm.customSetOutput(r, aws.String(svcsdk.TransformJobStatusStopping), ko)
-	return ko, nil
-}
-
 // customSetOutput sets ConditionTypeResourceSynced condition to True or False
 // based on the transformJobStatus on AWS so the reconciler can determine if a
 // requeue is needed
@@ -75,7 +63,7 @@ func (rm *resourceManager) customSetOutput(
 	}
 
 	syncConditionStatus := corev1.ConditionUnknown
-	if *transformJobStatus == svcsdk.TransformJobStatusCompleted || *transformJobStatus == svcsdk.TransformJobStatusStopped {
+	if *transformJobStatus == svcsdk.TransformJobStatusCompleted || *transformJobStatus == svcsdk.TransformJobStatusStopped || *transformJobStatus == svcsdk.TransformJobStatusFailed {
 		syncConditionStatus = corev1.ConditionTrue
 	} else {
 		syncConditionStatus = corev1.ConditionFalse
@@ -95,12 +83,10 @@ func (rm *resourceManager) customSetOutput(
 
 	if resourceSyncedCondition == nil {
 		resourceSyncedCondition = &ackv1alpha1.Condition{
-			Type:   ackv1alpha1.ConditionTypeResourceSynced,
-			Status: syncConditionStatus,
+			Type: ackv1alpha1.ConditionTypeResourceSynced,
 		}
 		ko.Status.Conditions = append(ko.Status.Conditions, resourceSyncedCondition)
-	} else {
-		resourceSyncedCondition.Status = syncConditionStatus
 	}
+	resourceSyncedCondition.Status = syncConditionStatus
 
 }

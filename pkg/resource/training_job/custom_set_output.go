@@ -47,24 +47,21 @@ func (rm *resourceManager) customDescribeTrainingJobSetOutput(
 	ko *svcapitypes.TrainingJob,
 ) (*svcapitypes.TrainingJob, error) {
 	trainingJobStatus := resp.TrainingJobStatus
-	if resp.DebugRuleEvaluationStatuses != nil && resp.DebugRuleEvaluationStatuses[0].RuleEvaluationStatus != nil {
-		debuggerStatus := resp.DebugRuleEvaluationStatuses[0].RuleEvaluationStatus
-		rm.customSetOutput(r, debuggerStatus, ko)
-	} else {
+	debuggerRuleInProgress := false
+	if resp.DebugRuleEvaluationStatuses != nil {
+		for _, rule := range resp.DebugRuleEvaluationStatuses {
+			if rule.RuleEvaluationStatus != nil && *rule.RuleEvaluationStatus == svcsdk.RuleEvaluationStatusInProgress {
+				debuggerRuleInProgress = true
+				rm.customSetOutput(r, aws.String(svcsdk.TrainingJobStatusInProgress), ko)
+				break
+			}
+		}
+	}
+
+	if !debuggerRuleInProgress {
 		rm.customSetOutput(r, trainingJobStatus, ko)
 	}
-	return ko, nil
-}
 
-// customStopTrainingJobSetOutput sets the resource in TempOutofSync if TrainingJob is
-// in stopping state. At this stage we know call to deleteTrainingJob was successful.
-func (rm *resourceManager) customStopTrainingJobSetOutput(
-	ctx context.Context,
-	r *resource,
-	resp *svcsdk.StopTrainingJobOutput,
-	ko *svcapitypes.TrainingJob,
-) (*svcapitypes.TrainingJob, error) {
-	rm.customSetOutput(r, aws.String(svcsdk.TrainingJobStatusStopping), ko)
 	return ko, nil
 }
 
@@ -80,9 +77,8 @@ func (rm *resourceManager) customSetOutput(
 		return
 	}
 
-	// TODO: Re-check debugger statuses that shouldn't be requeued.
 	syncConditionStatus := corev1.ConditionUnknown
-	if *trainingJobStatus == svcsdk.TrainingJobStatusCompleted || *trainingJobStatus == svcsdk.TrainingJobStatusStopped || *trainingJobStatus == svcsdk.RuleEvaluationStatusNoIssuesFound {
+	if *trainingJobStatus == svcsdk.TrainingJobStatusCompleted || *trainingJobStatus == svcsdk.TrainingJobStatusStopped || *trainingJobStatus == svcsdk.TrainingJobStatusFailed {
 		syncConditionStatus = corev1.ConditionTrue
 	} else {
 		syncConditionStatus = corev1.ConditionFalse
@@ -102,12 +98,10 @@ func (rm *resourceManager) customSetOutput(
 
 	if resourceSyncedCondition == nil {
 		resourceSyncedCondition = &ackv1alpha1.Condition{
-			Type:   ackv1alpha1.ConditionTypeResourceSynced,
-			Status: syncConditionStatus,
+			Type: ackv1alpha1.ConditionTypeResourceSynced,
 		}
 		ko.Status.Conditions = append(ko.Status.Conditions, resourceSyncedCondition)
-	} else {
-		resourceSyncedCondition.Status = syncConditionStatus
 	}
+	resourceSyncedCondition.Status = syncConditionStatus
 
 }

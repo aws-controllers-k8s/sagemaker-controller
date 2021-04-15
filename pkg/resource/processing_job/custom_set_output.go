@@ -50,18 +50,6 @@ func (rm *resourceManager) customDescribeProcessingJobSetOutput(
 	return ko, nil
 }
 
-// customStopProcessingJobSetOutput sets the resource in TempOutofSync if ProcessingJob is
-// in stopping state. At this stage we know call to stopProcessingJob was successful.
-func (rm *resourceManager) customStopProcessingJobSetOutput(
-	ctx context.Context,
-	r *resource,
-	resp *svcsdk.StopProcessingJobOutput,
-	ko *svcapitypes.ProcessingJob,
-) (*svcapitypes.ProcessingJob, error) {
-	rm.customSetOutput(r, aws.String(svcsdk.ProcessingJobStatusStopping), ko)
-	return ko, nil
-}
-
 // customSetOutput sets ConditionTypeResourceSynced condition to True or False
 // based on the processingJobStatus on AWS so the reconciler can determine if a
 // requeue is needed
@@ -75,7 +63,7 @@ func (rm *resourceManager) customSetOutput(
 	}
 
 	syncConditionStatus := corev1.ConditionUnknown
-	if *processingJobStatus == svcsdk.ProcessingJobStatusCompleted || *processingJobStatus == svcsdk.ProcessingJobStatusStopped {
+	if *processingJobStatus == svcsdk.ProcessingJobStatusCompleted || *processingJobStatus == svcsdk.ProcessingJobStatusStopped || *processingJobStatus == svcsdk.ProcessingJobStatusFailed {
 		syncConditionStatus = corev1.ConditionTrue
 	} else {
 		syncConditionStatus = corev1.ConditionFalse
@@ -95,12 +83,10 @@ func (rm *resourceManager) customSetOutput(
 
 	if resourceSyncedCondition == nil {
 		resourceSyncedCondition = &ackv1alpha1.Condition{
-			Type:   ackv1alpha1.ConditionTypeResourceSynced,
-			Status: syncConditionStatus,
+			Type: ackv1alpha1.ConditionTypeResourceSynced,
 		}
 		ko.Status.Conditions = append(ko.Status.Conditions, resourceSyncedCondition)
-	} else {
-		resourceSyncedCondition.Status = syncConditionStatus
 	}
+	resourceSyncedCondition.Status = syncConditionStatus
 
 }

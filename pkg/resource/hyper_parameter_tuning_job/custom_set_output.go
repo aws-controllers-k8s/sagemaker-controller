@@ -50,18 +50,6 @@ func (rm *resourceManager) customDescribeHyperParameterTuningJobSetOutput(
 	return ko, nil
 }
 
-// customStopHyperParameterTuningJobSetOutput sets the resource in TempOutofSync if HyperParameterTuningJob is
-// in stopping state.
-func (rm *resourceManager) customStopHyperParameterTuningJobSetOutput(
-	ctx context.Context,
-	r *resource,
-	resp *svcsdk.StopHyperParameterTuningJobOutput,
-	ko *svcapitypes.HyperParameterTuningJob,
-) (*svcapitypes.HyperParameterTuningJob, error) {
-	rm.customSetOutput(r, aws.String(svcsdk.HyperParameterTuningJobStatusStopping), ko)
-	return ko, nil
-}
-
 // customSetOutput sets ConditionTypeResourceSynced condition to True or False
 // based on the hyperParameterTuningJobStatus on AWS so the reconciler can determine if a
 // requeue is needed
@@ -75,7 +63,7 @@ func (rm *resourceManager) customSetOutput(
 	}
 
 	syncConditionStatus := corev1.ConditionUnknown
-	if *hyperParameterTuningJobStatus == svcsdk.HyperParameterTuningJobStatusCompleted || *hyperParameterTuningJobStatus == svcsdk.HyperParameterTuningJobStatusStopped {
+	if *hyperParameterTuningJobStatus == svcsdk.HyperParameterTuningJobStatusCompleted || *hyperParameterTuningJobStatus == svcsdk.HyperParameterTuningJobStatusStopped || *hyperParameterTuningJobStatus == svcsdk.HyperParameterTuningJobStatusFailed {
 		syncConditionStatus = corev1.ConditionTrue
 	} else {
 		syncConditionStatus = corev1.ConditionFalse
@@ -95,12 +83,10 @@ func (rm *resourceManager) customSetOutput(
 
 	if resourceSyncedCondition == nil {
 		resourceSyncedCondition = &ackv1alpha1.Condition{
-			Type:   ackv1alpha1.ConditionTypeResourceSynced,
-			Status: syncConditionStatus,
+			Type: ackv1alpha1.ConditionTypeResourceSynced,
 		}
 		ko.Status.Conditions = append(ko.Status.Conditions, resourceSyncedCondition)
-	} else {
-		resourceSyncedCondition.Status = syncConditionStatus
 	}
+	resourceSyncedCondition.Status = syncConditionStatus
 
 }
