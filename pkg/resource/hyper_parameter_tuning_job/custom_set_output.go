@@ -17,38 +17,11 @@
 package hyper_parameter_tuning_job
 
 import (
-	"context"
-
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
-	"github.com/aws/aws-sdk-go/aws"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 	corev1 "k8s.io/api/core/v1"
 )
-
-// customCreateHyperParameterTuningJobSetOutput sets the resource in TempOutofSync if HyperParameterTuningJob is
-// in creating state. At this stage we know call to createHyperParameterTuningJob was successful.
-func (rm *resourceManager) customCreateHyperParameterTuningJobSetOutput(
-	ctx context.Context,
-	r *resource,
-	resp *svcsdk.CreateHyperParameterTuningJobOutput,
-	ko *svcapitypes.HyperParameterTuningJob,
-) (*svcapitypes.HyperParameterTuningJob, error) {
-	rm.customSetOutput(r, aws.String(svcsdk.HyperParameterTuningJobStatusInProgress), ko)
-	return ko, nil
-}
-
-// customDescribeHyperParameterTuningJobSetOutput sets the resource in TempOutofSync if
-// HyperParameterTuningJob is being modified by AWS.
-func (rm *resourceManager) customDescribeHyperParameterTuningJobSetOutput(
-	ctx context.Context,
-	r *resource,
-	resp *svcsdk.DescribeHyperParameterTuningJobOutput,
-	ko *svcapitypes.HyperParameterTuningJob,
-) (*svcapitypes.HyperParameterTuningJob, error) {
-	rm.customSetOutput(r, resp.HyperParameterTuningJobStatus, ko)
-	return ko, nil
-}
 
 // customSetOutput sets ConditionTypeResourceSynced condition to True or False
 // based on the hyperParameterTuningJobStatus on AWS so the reconciler can determine if a

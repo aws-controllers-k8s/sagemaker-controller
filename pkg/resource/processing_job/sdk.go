@@ -372,12 +372,7 @@ func (rm *resourceManager) sdkFind(
 
 	rm.setStatusDefaults(ko)
 
-	// custom set output from response
-	ko, err = rm.customDescribeProcessingJobSetOutput(ctx, r, resp, ko)
-	if err != nil {
-		return nil, err
-	}
-
+	rm.customSetOutput(r, resp.ProcessingJobStatus, ko)
 	return &resource{ko}, nil
 }
 
@@ -435,12 +430,7 @@ func (rm *resourceManager) sdkCreate(
 
 	rm.setStatusDefaults(ko)
 
-	// custom set output from response
-	ko, err = rm.customCreateProcessingJobSetOutput(ctx, r, resp, ko)
-	if err != nil {
-		return nil, err
-	}
-
+	rm.customSetOutput(r, aws.String(svcsdk.ProcessingJobStatusInProgress), ko)
 	return &resource{ko}, nil
 }
 
@@ -734,6 +724,12 @@ func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
 ) error {
+	// Call StopProcessingJob only if the job is InProgress, otherwise just return nil to mark the
+	// resource Unmanaged
+	latestStatus := r.ko.Status.ProcessingJobStatus
+	if latestStatus != nil && *latestStatus != svcsdk.ProcessingJobStatusInProgress {
+		return nil
+	}
 
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {

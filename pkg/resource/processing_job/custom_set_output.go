@@ -17,38 +17,11 @@
 package processing_job
 
 import (
-	"context"
-
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
-	"github.com/aws/aws-sdk-go/aws"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 	corev1 "k8s.io/api/core/v1"
 )
-
-// customCreateProcessingJobSetOutput sets the resource in TempOutofSync if ProcessingJob is
-// in creating state. At this stage we know call to createProcessingJob was successful.
-func (rm *resourceManager) customCreateProcessingJobSetOutput(
-	ctx context.Context,
-	r *resource,
-	resp *svcsdk.CreateProcessingJobOutput,
-	ko *svcapitypes.ProcessingJob,
-) (*svcapitypes.ProcessingJob, error) {
-	rm.customSetOutput(r, aws.String(svcsdk.ProcessingJobStatusInProgress), ko)
-	return ko, nil
-}
-
-// customDescribeProcessingJobSetOutput sets the resource in TempOutofSync if
-// ProcessingJob is being modified by AWS.
-func (rm *resourceManager) customDescribeProcessingJobSetOutput(
-	ctx context.Context,
-	r *resource,
-	resp *svcsdk.DescribeProcessingJobOutput,
-	ko *svcapitypes.ProcessingJob,
-) (*svcapitypes.ProcessingJob, error) {
-	rm.customSetOutput(r, resp.ProcessingJobStatus, ko)
-	return ko, nil
-}
 
 // customSetOutput sets ConditionTypeResourceSynced condition to True or False
 // based on the processingJobStatus on AWS so the reconciler can determine if a
