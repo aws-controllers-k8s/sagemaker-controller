@@ -290,6 +290,90 @@ resources:
         from:
           operation: DescribeHyperParameterTuningJob
           path: OverallBestTrainingJob
+  DataQualityJobDefinition:
+    exceptions:
+      errors:
+          404:
+            code: ResourceNotFound
+      terminal_codes:
+        - ResourceLimitExceeded
+        - ResourceNotFound
+        - ResourceInUse
+        - OptInRequired
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+        - MissingAction
+        - InvalidQueryParameter
+        - MalformedQueryString
+        - InvalidAction
+        - UnrecognizedClientException
+    fields:
+      JobDefinitionArn:
+        is_arn: true
+  ModelBiasJobDefinition:
+    exceptions:
+      errors:
+          404:
+            code: ResourceNotFound
+      terminal_codes:
+        - ResourceLimitExceeded
+        - ResourceNotFound
+        - ResourceInUse
+        - OptInRequired
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+        - MissingAction
+        - InvalidQueryParameter
+        - MalformedQueryString
+        - InvalidAction
+        - UnrecognizedClientException
+    fields:
+      JobDefinitionArn:
+        is_arn: true
+  ModelExplainabilityJobDefinition:
+    exceptions:
+      errors:
+          404:
+            code: ResourceNotFound
+      terminal_codes:
+        - ResourceLimitExceeded
+        - ResourceNotFound
+        - ResourceInUse
+        - OptInRequired
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+        - MissingAction
+        - InvalidQueryParameter
+        - MalformedQueryString
+        - InvalidAction
+        - UnrecognizedClientException
+    fields:
+      JobDefinitionArn:
+        is_arn: true
+  ModelQualityJobDefinition:
+    exceptions:
+      errors:
+          404:
+            code: ResourceNotFound
+      terminal_codes:
+        - ResourceLimitExceeded
+        - ResourceNotFound
+        - ResourceInUse
+        - OptInRequired
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+        - MissingAction
+        - InvalidQueryParameter
+        - MalformedQueryString
+        - InvalidAction
+        - UnrecognizedClientException
+    fields:
+      JobDefinitionArn:
+        is_arn: true
 ignore:
     resource_names:
       - Algorithm
@@ -301,7 +385,7 @@ ignore:
       - CodeRepository
       - CompilationJob
       - Context
-      - DataQualityJobDefinition
+      # - DataQualityJobDefinition
       - DeviceFleet
       - Domain
       - EdgePackagingJob
@@ -316,11 +400,11 @@ ignore:
       - ImageVersion
       - LabelingJob
       # - Model
-      - ModelBiasJobDefinition
-      - ModelExplainabilityJobDefinition
+      # - ModelBiasJobDefinition
+      # - ModelExplainabilityJobDefinition
       - ModelPackage
       - ModelPackageGroup
-      - ModelQualityJobDefinition
+      # - ModelQualityJobDefinition
       - MonitoringSchedule
       - NotebookInstanceLifecycleConfig
       - NotebookInstance
