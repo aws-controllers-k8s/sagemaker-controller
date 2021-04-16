@@ -17,6 +17,9 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
+    - jsonPath: .status.failureReason
+      name: FailureReason
+      type: string
     - jsonPath: .status.secondaryStatus
       name: SecondaryStatus
       type: string
@@ -428,6 +431,24 @@ spec:
                   required:
                   - status
                   - type
+                  type: object
+                type: array
+              debugRuleEvaluationStatuses:
+                description: Evaluation status of Debugger rules for debugging on
+                  a training job.
+                items:
+                  properties:
+                    lastModifiedTime:
+                      format: date-time
+                      type: string
+                    ruleConfigurationName:
+                      type: string
+                    ruleEvaluationJobARN:
+                      type: string
+                    ruleEvaluationStatus:
+                      type: string
+                    statusDetails:
+                      type: string
                   type: object
                 type: array
               failureReason:

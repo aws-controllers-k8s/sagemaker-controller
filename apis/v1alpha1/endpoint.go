@@ -90,8 +90,8 @@ type EndpointStatus struct {
 // Endpoint is the Schema for the Endpoints API
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:printcolumn:name="FailureReason",type=string,JSONPath=`.status.failureReason`
 // +kubebuilder:printcolumn:name="EndpointStatus",type=string,JSONPath=`.status.endpointStatus`
+// +kubebuilder:printcolumn:name="FailureReason",type=string,JSONPath=`.status.failureReason`
 type Endpoint struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
