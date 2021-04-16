@@ -1,9 +1,9 @@
 apiVersion: sagemaker.services.k8s.aws/v1alpha1
 kind: EndpointConfig
 metadata:
-  name: $CONFIG_NAME
+  name: $ENDPOINT_CONFIG_NAME
 spec:
-  endpointConfigName: $CONFIG_NAME
+  endpointConfigName: $ENDPOINT_CONFIG_NAME
   productionVariants:
     - variantName: variant-1
       modelName: $MODEL_NAME

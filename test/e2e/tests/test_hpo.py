@@ -28,10 +28,6 @@ HPO_JOB_STATUS_CREATED = ("InProgress", "Completed")
 HPO_JOB_STATUS_STOPPED = ("Stopped", "Stopping")
 
 
-def _sagemaker_client():
-    return boto3.client("sagemaker")
-
-
 @pytest.fixture(scope="module")
 def xgboost_hpojob():
     resource_name = random_suffix_name("xgboost-hpojob", 32)
@@ -53,9 +49,9 @@ def xgboost_hpojob():
         k8s.delete_custom_resource(reference)
 
 
-def get_sagemaker_hpo_job(hpo_job_name: str):
+def get_sagemaker_hpo_job(sagemaker_client, hpo_job_name):
     try:
-        hpo_desc = _sagemaker_client().describe_hyper_parameter_tuning_job(
+        hpo_desc = sagemaker_client.describe_hyper_parameter_tuning_job(
             HyperParameterTuningJobName=hpo_job_name
         )
         return hpo_desc
@@ -69,14 +65,14 @@ def get_sagemaker_hpo_job(hpo_job_name: str):
 @service_marker
 @pytest.mark.canary
 class TestHPO:
-    def test_create_hpo(self, xgboost_hpojob):
+    def test_create_hpo(self, sagemaker_client, xgboost_hpojob):
         (reference, resource) = xgboost_hpojob
         assert k8s.get_resource_exists(reference)
 
         hpo_job_name = resource["spec"].get("hyperParameterTuningJobName", None)
         assert hpo_job_name is not None
 
-        hpo_sm_desc = get_sagemaker_hpo_job(hpo_job_name)
+        hpo_sm_desc = get_sagemaker_hpo_job(sagemaker_client, hpo_job_name)
         assert (
             k8s.get_resource_arn(resource) == hpo_sm_desc["HyperParameterTuningJobArn"]
         )
@@ -86,5 +82,5 @@ class TestHPO:
         _, deleted = k8s.delete_custom_resource(reference)
         assert deleted is True
 
-        hpo_sm_desc = get_sagemaker_hpo_job(hpo_job_name)
+        hpo_sm_desc = get_sagemaker_hpo_job(sagemaker_client, hpo_job_name)
         assert hpo_sm_desc["HyperParameterTuningJobStatus"] in HPO_JOB_STATUS_STOPPED

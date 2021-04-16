@@ -11,7 +11,7 @@
 # express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
-import os
+import boto3
 import pytest
 
 from acktest import k8s
@@ -44,3 +44,8 @@ def pytest_collection_modifyitems(config, items):
 @pytest.fixture(scope="class")
 def k8s_client():
     return k8s._get_k8s_api_client()
+
+
+@pytest.fixture(scope="module")
+def sagemaker_client():
+    return boto3.client("sagemaker")

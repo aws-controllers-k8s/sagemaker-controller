@@ -30,11 +30,6 @@ RESOURCE_PLURAL = "trainingjobs"
 
 
 @pytest.fixture(scope="module")
-def sagemaker_client():
-    return boto3.client("sagemaker")
-
-
-@pytest.fixture(scope="module")
 def xgboost_trainingjob():
     resource_name = random_suffix_name("xgboost-trainingjob", 32)
 

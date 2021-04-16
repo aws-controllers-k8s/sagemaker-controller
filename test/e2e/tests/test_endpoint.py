@@ -25,17 +25,14 @@ from acktest.k8s import resource as k8s
 
 from e2e import (
     service_marker,
-    CONFIG_RESOURCE_PLURAL,
+    ENDPOINT_CONFIG_RESOURCE_PLURAL,
     MODEL_RESOURCE_PLURAL,
     ENDPOINT_RESOURCE_PLURAL,
     create_sagemaker_resource,
+    wait_sagemaker_endpoint_status,
+    wait_resource_endpoint_status,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
-
-
-@pytest.fixture(scope="module")
-def sagemaker_client():
-    return boto3.client("sagemaker")
 
 
 @pytest.fixture(scope="module")
@@ -56,10 +53,12 @@ def single_container_model(name_suffix):
         replacements=replacements,
     )
     assert model_resource is not None
+    assert k8s.get_resource_arn(model_resource) is not None
 
     yield (model_reference, model_resource)
 
-    k8s.delete_custom_resource(model_reference)
+    _, deleted = k8s.delete_custom_resource(model_reference)
+    assert deleted
 
 
 @pytest.fixture(scope="module")
@@ -69,20 +68,22 @@ def multi_variant_config(name_suffix, single_container_model):
     model_resource_name = model_resource["spec"].get("modelName", None)
 
     replacements = REPLACEMENT_VALUES.copy()
-    replacements["CONFIG_NAME"] = config_resource_name
+    replacements["ENDPOINT_CONFIG_NAME"] = config_resource_name
     replacements["MODEL_NAME"] = model_resource_name
 
     config_reference, config_spec, config_resource = create_sagemaker_resource(
-        resource_plural=CONFIG_RESOURCE_PLURAL,
+        resource_plural=ENDPOINT_CONFIG_RESOURCE_PLURAL,
         resource_name=config_resource_name,
         spec_file="endpoint_config_multi_variant",
         replacements=replacements,
     )
     assert config_resource is not None
+    assert k8s.get_resource_arn(config_resource) is not None
 
     yield (config_reference, config_resource)
 
-    k8s.delete_custom_resource(config_reference)
+    _, deleted = k8s.delete_custom_resource(config_reference)
+    assert deleted
 
 
 @pytest.fixture(scope="module")
@@ -92,20 +93,22 @@ def single_variant_config(name_suffix, single_container_model):
     model_resource_name = model_resource["spec"].get("modelName", None)
 
     replacements = REPLACEMENT_VALUES.copy()
-    replacements["CONFIG_NAME"] = config_resource_name
+    replacements["ENDPOINT_CONFIG_NAME"] = config_resource_name
     replacements["MODEL_NAME"] = model_resource_name
 
     config_reference, config_spec, config_resource = create_sagemaker_resource(
-        resource_plural=CONFIG_RESOURCE_PLURAL,
+        resource_plural=ENDPOINT_CONFIG_RESOURCE_PLURAL,
         resource_name=config_resource_name,
         spec_file="endpoint_config_single_variant",
         replacements=replacements,
     )
     assert config_resource is not None
+    assert k8s.get_resource_arn(config_resource) is not None
 
     yield (config_reference, config_resource)
 
-    k8s.delete_custom_resource(config_reference)
+    _, deleted = k8s.delete_custom_resource(config_reference)
+    assert deleted
 
 
 @pytest.fixture(scope="module")
@@ -116,7 +119,7 @@ def xgboost_endpoint(name_suffix, single_variant_config):
 
     replacements = REPLACEMENT_VALUES.copy()
     replacements["ENDPOINT_NAME"] = endpoint_resource_name
-    replacements["CONFIG_NAME"] = config_resource_name
+    replacements["ENDPOINT_CONFIG_NAME"] = config_resource_name
 
     reference, spec, resource = create_sagemaker_resource(
         resource_plural=ENDPOINT_RESOURCE_PLURAL,
@@ -131,7 +134,8 @@ def xgboost_endpoint(name_suffix, single_variant_config):
 
     # Delete the k8s resource if not already deleted by tests
     if k8s.get_resource_exists(reference):
-        k8s.delete_custom_resource(reference)
+        _, deleted = k8s.delete_custom_resource(reference)
+        assert deleted
 
 
 @pytest.fixture(scope="module")
@@ -158,30 +162,29 @@ def faulty_config(name_suffix, single_container_model):
     )
     assert model_resource is not None
     model_resource = k8s.get_resource(model_reference)
-    assert (
-        "ackResourceMetadata" in model_resource["status"]
-        and "arn" in model_resource["status"]["ackResourceMetadata"]
-    )
+    assert k8s.get_resource_arn(model_resource) is not None
     s3.delete_object(model_bucket, model_destination_key)
 
     config_resource_name = name_suffix + "-faulty-config"
     (_, model_resource) = single_container_model
     model_resource_name = model_resource["spec"].get("modelName", None)
 
-    replacements["CONFIG_NAME"] = config_resource_name
+    replacements["ENDPOINT_CONFIG_NAME"] = config_resource_name
 
     config_reference, config_spec, config_resource = create_sagemaker_resource(
-        resource_plural=CONFIG_RESOURCE_PLURAL,
+        resource_plural=ENDPOINT_CONFIG_RESOURCE_PLURAL,
         resource_name=config_resource_name,
         spec_file="endpoint_config_multi_variant",
         replacements=replacements,
     )
     assert config_resource is not None
+    assert k8s.get_resource_arn(config_resource) is not None
 
     yield (config_reference, config_resource)
 
-    k8s.delete_custom_resource(model_reference)
-    k8s.delete_custom_resource(config_reference)
+    for cr in (model_reference, config_reference):
+        _, deleted = k8s.delete_custom_resource(cr)
+        assert deleted
 
 
 @service_marker
@@ -207,57 +210,14 @@ class TestEndpoint:
             )
             return None
 
-    def _wait_resource_endpoint_status(
-        self,
-        reference: k8s.CustomResourceReference,
-        expected_status: str,
-        wait_periods: int = 30,
-    ):
-        resource_status = None
-        for _ in range(wait_periods):
-            time.sleep(30)
-            resource = k8s.get_resource(reference)
-            assert "endpointStatus" in resource["status"]
-            resource_status = resource["status"]["endpointStatus"]
-            if resource_status == expected_status:
-                break
-        else:
-            logging.error(
-                f"Wait for endpoint resource status: {expected_status} timed out. Actual status: {resource_status}"
-            )
-
-        return resource_status
-
-    def _wait_sagemaker_endpoint_status(
-        self,
-        sagemaker_client,
-        endpoint_name,
-        expected_status: str,
-        wait_periods: int = 60,
-    ):
-        actual_status = None
-        for _ in range(wait_periods):
-            time.sleep(30)
-            actual_status = sagemaker_client.describe_endpoint(
-                EndpointName=endpoint_name
-            )["EndpointStatus"]
-            if actual_status == expected_status:
-                break
-        else:
-            logging.error(
-                f"Wait for sagemaker endpoint status: {expected_status} timed out. Actual status: {actual_status}"
-            )
-
-        return actual_status
-
     def _assert_endpoint_status_in_sync(
         self, sagemaker_client, endpoint_name, reference, expected_status
     ):
         assert (
-            self._wait_sagemaker_endpoint_status(
+            wait_sagemaker_endpoint_status(
                 sagemaker_client, endpoint_name, expected_status
             )
-            == self._wait_resource_endpoint_status(reference, expected_status, 2)
+            == wait_resource_endpoint_status(reference, expected_status, 2)
             == expected_status
         )
 
@@ -410,16 +370,21 @@ class TestEndpoint:
         endpoint_name = resource["spec"].get("endpointName", None)
 
         _, deleted = k8s.delete_custom_resource(reference)
-        assert deleted is True
+        assert deleted
 
         # resource is removed from management from controller side if call to deleteEndpoint succeeds.
         # Sagemaker also removes a 'Deleting' endpoint pretty quickly, but there might be a lag
-        # If we see errors in this part of test, can add a loop in future or consider changing controller
-        # to wait for SageMaker
-        time.sleep(10)
-        assert (
-            self._describe_sagemaker_endpoint(sagemaker_client, endpoint_name) is None
-        )
+        # We wait maximum of 30 seconds for this clean up to happen
+        endpoint_deleted = False
+        for _ in range(3):
+            time.sleep(10)
+            if (
+                self._describe_sagemaker_endpoint(sagemaker_client, endpoint_name)
+                is None
+            ):
+                endpoint_deleted = True
+                break
+        assert endpoint_deleted
 
     def test_driver(
         self,

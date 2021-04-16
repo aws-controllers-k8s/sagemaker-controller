@@ -31,11 +31,6 @@ RESOURCE_PLURAL = "transformjobs"
 
 
 @pytest.fixture(scope="module")
-def sagemaker_client():
-    return boto3.client("sagemaker")
-
-
-@pytest.fixture(scope="module")
 def xgboost_transformjob(sagemaker_client):
     # Create model using boto3 for TransformJob
     transform_model_file = (
