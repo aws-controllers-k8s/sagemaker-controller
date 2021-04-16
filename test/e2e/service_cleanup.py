@@ -4,7 +4,7 @@
 # not use this file except in compliance with the License. A copy of the
 # License is located at
 #
-#	 http://aws.amazon.com/apache2.0/
+# 	 http://aws.amazon.com/apache2.0/
 #
 # or in the "license" file accompanying this file. This file is distributed
 # on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
@@ -24,7 +24,8 @@ from e2e import bootstrap_directory
 from e2e.bootstrap_resources import TestBootstrapResources
 
 # Regex to match the role name from a role ARN
-IAM_ROLE_ARN_REGEX = r'^arn:aws:iam::\d{12}:(?:root|user|role\/([A-Za-z0-9-]+))$'
+IAM_ROLE_ARN_REGEX = r"^arn:aws:iam::\d{12}:(?:root|user|role\/([A-Za-z0-9-]+))$"
+
 
 def delete_execution_role(role_arn: str):
     region = get_region()
@@ -32,19 +33,22 @@ def delete_execution_role(role_arn: str):
 
     role_name = re.match(IAM_ROLE_ARN_REGEX, role_arn).group(1)
     managedPolicy = iam.list_attached_role_policies(RoleName=role_name)
-    for each in managedPolicy['AttachedPolicies']:
-        iam.detach_role_policy(RoleName=role_name, PolicyArn=each['PolicyArn'])
+    for each in managedPolicy["AttachedPolicies"]:
+        iam.detach_role_policy(RoleName=role_name, PolicyArn=each["PolicyArn"])
 
     inlinePolicy = iam.list_role_policies(RoleName=role_name)
-    for each in inlinePolicy['PolicyNames']:
-        iam.delete_role_policy(RoleName=role_name,PolicyName=each)
+    for each in inlinePolicy["PolicyNames"]:
+        iam.delete_role_policy(RoleName=role_name, PolicyName=each)
 
     instanceProfiles = iam.list_instance_profiles_for_role(RoleName=role_name)
-    for each in instanceProfiles['InstanceProfiles']:
-        iam.remove_role_from_instance_profile(RoleName =role_name,InstanceProfileName=each['InstanceProfileName'])
+    for each in instanceProfiles["InstanceProfiles"]:
+        iam.remove_role_from_instance_profile(
+            RoleName=role_name, InstanceProfileName=each["InstanceProfileName"]
+        )
     iam.delete_role(RoleName=role_name)
 
     logging.info(f"Deleted SageMaker execution role {role_name}")
+
 
 def delete_data_bucket(bucket_name: str):
     region = get_region()
@@ -60,9 +64,7 @@ def delete_data_bucket(bucket_name: str):
 def service_cleanup(config: dict):
     logging.getLogger().setLevel(logging.INFO)
 
-    resources = TestBootstrapResources(
-        **config
-    )
+    resources = TestBootstrapResources(**config)
 
     try:
         delete_data_bucket(resources.DataBucketName)
@@ -72,8 +74,11 @@ def service_cleanup(config: dict):
     try:
         delete_execution_role(resources.ExecutionRoleARN)
     except:
-        logging.exception(f"Unable to delete execution role {resources.ExecutionRoleARN}")
+        logging.exception(
+            f"Unable to delete execution role {resources.ExecutionRoleARN}"
+        )
 
-if __name__ == "__main__":   
+
+if __name__ == "__main__":
     bootstrap_config = resources.read_bootstrap_config(bootstrap_directory)
-    service_cleanup(bootstrap_config) 
+    service_cleanup(bootstrap_config)
