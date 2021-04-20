@@ -29,11 +29,6 @@ from e2e.replacement_values import REPLACEMENT_VALUES
 
 
 @pytest.fixture(scope="module")
-def sagemaker_client():
-    return boto3.client("sagemaker")
-
-
-@pytest.fixture(scope="module")
 def xgboost_model():
     resource_name = random_suffix_name("xgboost-model", 32)
 
