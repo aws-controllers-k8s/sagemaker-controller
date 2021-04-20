@@ -30,11 +30,6 @@ RESOURCE_PLURAL = "processingjobs"
 
 
 @pytest.fixture(scope="module")
-def sagemaker_client():
-    return boto3.client("sagemaker")
-
-
-@pytest.fixture(scope="module")
 def kmeans_processing_job():
     resource_name = random_suffix_name("kmeans-processingjob", 32)
 

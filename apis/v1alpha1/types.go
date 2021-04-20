@@ -234,14 +234,22 @@ type DataProcessing struct {
 }
 
 type DataQualityAppSpecification struct {
-	ContainerEntrypoint             []*string `json:"containerEntrypoint,omitempty"`
-	ImageURI                        *string   `json:"imageURI,omitempty"`
-	PostAnalyticsProcessorSourceURI *string   `json:"postAnalyticsProcessorSourceURI,omitempty"`
-	RecordPreprocessorSourceURI     *string   `json:"recordPreprocessorSourceURI,omitempty"`
+	ContainerArguments              []*string          `json:"containerArguments,omitempty"`
+	ContainerEntrypoint             []*string          `json:"containerEntrypoint,omitempty"`
+	Environment                     map[string]*string `json:"environment,omitempty"`
+	ImageURI                        *string            `json:"imageURI,omitempty"`
+	PostAnalyticsProcessorSourceURI *string            `json:"postAnalyticsProcessorSourceURI,omitempty"`
+	RecordPreprocessorSourceURI     *string            `json:"recordPreprocessorSourceURI,omitempty"`
 }
 
 type DataQualityBaselineConfig struct {
-	BaseliningJobName *string `json:"baseliningJobName,omitempty"`
+	BaseliningJobName   *string                        `json:"baseliningJobName,omitempty"`
+	ConstraintsResource *MonitoringConstraintsResource `json:"constraintsResource,omitempty"`
+	StatisticsResource  *MonitoringStatisticsResource  `json:"statisticsResource,omitempty"`
+}
+
+type DataQualityJobInput struct {
+	EndpointInput *EndpointInput `json:"endpointInput,omitempty"`
 }
 
 type DataSource struct {
@@ -331,13 +339,16 @@ type EndpointConfigSummary struct {
 }
 
 type EndpointInput struct {
-	EndpointName           *string `json:"endpointName,omitempty"`
-	FeaturesAttribute      *string `json:"featuresAttribute,omitempty"`
-	InferenceAttribute     *string `json:"inferenceAttribute,omitempty"`
-	LocalPath              *string `json:"localPath,omitempty"`
-	ProbabilityAttribute   *string `json:"probabilityAttribute,omitempty"`
-	S3DataDistributionType *string `json:"s3DataDistributionType,omitempty"`
-	S3InputMode            *string `json:"s3InputMode,omitempty"`
+	EndTimeOffset                 *string  `json:"endTimeOffset,omitempty"`
+	EndpointName                  *string  `json:"endpointName,omitempty"`
+	FeaturesAttribute             *string  `json:"featuresAttribute,omitempty"`
+	InferenceAttribute            *string  `json:"inferenceAttribute,omitempty"`
+	LocalPath                     *string  `json:"localPath,omitempty"`
+	ProbabilityAttribute          *string  `json:"probabilityAttribute,omitempty"`
+	ProbabilityThresholdAttribute *float64 `json:"probabilityThresholdAttribute,omitempty"`
+	S3DataDistributionType        *string  `json:"s3DataDistributionType,omitempty"`
+	S3InputMode                   *string  `json:"s3InputMode,omitempty"`
+	StartTimeOffset               *string  `json:"startTimeOffset,omitempty"`
 }
 
 type EndpointSummary struct {
@@ -591,12 +602,19 @@ type ModelArtifacts struct {
 }
 
 type ModelBiasAppSpecification struct {
-	ConfigURI *string `json:"configURI,omitempty"`
-	ImageURI  *string `json:"imageURI,omitempty"`
+	ConfigURI   *string            `json:"configURI,omitempty"`
+	Environment map[string]*string `json:"environment,omitempty"`
+	ImageURI    *string            `json:"imageURI,omitempty"`
 }
 
 type ModelBiasBaselineConfig struct {
-	BaseliningJobName *string `json:"baseliningJobName,omitempty"`
+	BaseliningJobName   *string                        `json:"baseliningJobName,omitempty"`
+	ConstraintsResource *MonitoringConstraintsResource `json:"constraintsResource,omitempty"`
+}
+
+type ModelBiasJobInput struct {
+	EndpointInput      *EndpointInput                `json:"endpointInput,omitempty"`
+	GroundTruthS3Input *MonitoringGroundTruthS3Input `json:"groundTruthS3Input,omitempty"`
 }
 
 type ModelClientConfig struct {
@@ -605,12 +623,18 @@ type ModelClientConfig struct {
 }
 
 type ModelExplainabilityAppSpecification struct {
-	ConfigURI *string `json:"configURI,omitempty"`
-	ImageURI  *string `json:"imageURI,omitempty"`
+	ConfigURI   *string            `json:"configURI,omitempty"`
+	Environment map[string]*string `json:"environment,omitempty"`
+	ImageURI    *string            `json:"imageURI,omitempty"`
 }
 
 type ModelExplainabilityBaselineConfig struct {
-	BaseliningJobName *string `json:"baseliningJobName,omitempty"`
+	BaseliningJobName   *string                        `json:"baseliningJobName,omitempty"`
+	ConstraintsResource *MonitoringConstraintsResource `json:"constraintsResource,omitempty"`
+}
+
+type ModelExplainabilityJobInput struct {
+	EndpointInput *EndpointInput `json:"endpointInput,omitempty"`
 }
 
 type ModelPackage struct {
@@ -632,14 +656,23 @@ type ModelPackageValidationSpecification struct {
 }
 
 type ModelQualityAppSpecification struct {
-	ContainerEntrypoint             []*string `json:"containerEntrypoint,omitempty"`
-	ImageURI                        *string   `json:"imageURI,omitempty"`
-	PostAnalyticsProcessorSourceURI *string   `json:"postAnalyticsProcessorSourceURI,omitempty"`
-	RecordPreprocessorSourceURI     *string   `json:"recordPreprocessorSourceURI,omitempty"`
+	ContainerArguments              []*string          `json:"containerArguments,omitempty"`
+	ContainerEntrypoint             []*string          `json:"containerEntrypoint,omitempty"`
+	Environment                     map[string]*string `json:"environment,omitempty"`
+	ImageURI                        *string            `json:"imageURI,omitempty"`
+	PostAnalyticsProcessorSourceURI *string            `json:"postAnalyticsProcessorSourceURI,omitempty"`
+	ProblemType                     *string            `json:"problemType,omitempty"`
+	RecordPreprocessorSourceURI     *string            `json:"recordPreprocessorSourceURI,omitempty"`
 }
 
 type ModelQualityBaselineConfig struct {
-	BaseliningJobName *string `json:"baseliningJobName,omitempty"`
+	BaseliningJobName   *string                        `json:"baseliningJobName,omitempty"`
+	ConstraintsResource *MonitoringConstraintsResource `json:"constraintsResource,omitempty"`
+}
+
+type ModelQualityJobInput struct {
+	EndpointInput      *EndpointInput                `json:"endpointInput,omitempty"`
+	GroundTruthS3Input *MonitoringGroundTruthS3Input `json:"groundTruthS3Input,omitempty"`
 }
 
 type ModelSummary struct {
@@ -649,6 +682,7 @@ type ModelSummary struct {
 }
 
 type MonitoringAppSpecification struct {
+	ContainerArguments              []*string `json:"containerArguments,omitempty"`
 	ContainerEntrypoint             []*string `json:"containerEntrypoint,omitempty"`
 	ImageURI                        *string   `json:"imageURI,omitempty"`
 	PostAnalyticsProcessorSourceURI *string   `json:"postAnalyticsProcessorSourceURI,omitempty"`
@@ -656,7 +690,9 @@ type MonitoringAppSpecification struct {
 }
 
 type MonitoringBaselineConfig struct {
-	BaseliningJobName *string `json:"baseliningJobName,omitempty"`
+	BaseliningJobName   *string                        `json:"baseliningJobName,omitempty"`
+	ConstraintsResource *MonitoringConstraintsResource `json:"constraintsResource,omitempty"`
+	StatisticsResource  *MonitoringStatisticsResource  `json:"statisticsResource,omitempty"`
 }
 
 type MonitoringClusterConfig struct {
@@ -671,22 +707,37 @@ type MonitoringConstraintsResource struct {
 }
 
 type MonitoringExecutionSummary struct {
-	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
-	EndpointName     *string      `json:"endpointName,omitempty"`
-	FailureReason    *string      `json:"failureReason,omitempty"`
-	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
-	ProcessingJobARN *string      `json:"processingJobARN,omitempty"`
-	ScheduledTime    *metav1.Time `json:"scheduledTime,omitempty"`
+	CreationTime                *metav1.Time `json:"creationTime,omitempty"`
+	EndpointName                *string      `json:"endpointName,omitempty"`
+	FailureReason               *string      `json:"failureReason,omitempty"`
+	LastModifiedTime            *metav1.Time `json:"lastModifiedTime,omitempty"`
+	MonitoringJobDefinitionName *string      `json:"monitoringJobDefinitionName,omitempty"`
+	ProcessingJobARN            *string      `json:"processingJobARN,omitempty"`
+	ScheduledTime               *metav1.Time `json:"scheduledTime,omitempty"`
+}
+
+type MonitoringGroundTruthS3Input struct {
+	S3URI *string `json:"s3URI,omitempty"`
+}
+
+type MonitoringInput struct {
+	EndpointInput *EndpointInput `json:"endpointInput,omitempty"`
 }
 
 type MonitoringJobDefinition struct {
-	NetworkConfig *NetworkConfig `json:"networkConfig,omitempty"`
-	RoleARN       *string        `json:"roleARN,omitempty"`
+	Environment            map[string]*string           `json:"environment,omitempty"`
+	MonitoringOutputConfig *MonitoringOutputConfig      `json:"monitoringOutputConfig,omitempty"`
+	MonitoringResources    *MonitoringResources         `json:"monitoringResources,omitempty"`
+	NetworkConfig          *NetworkConfig               `json:"networkConfig,omitempty"`
+	RoleARN                *string                      `json:"roleARN,omitempty"`
+	StoppingCondition      *MonitoringStoppingCondition `json:"stoppingCondition,omitempty"`
 }
 
 type MonitoringJobDefinitionSummary struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
-	EndpointName *string      `json:"endpointName,omitempty"`
+	CreationTime                *metav1.Time `json:"creationTime,omitempty"`
+	EndpointName                *string      `json:"endpointName,omitempty"`
+	MonitoringJobDefinitionARN  *string      `json:"monitoringJobDefinitionARN,omitempty"`
+	MonitoringJobDefinitionName *string      `json:"monitoringJobDefinitionName,omitempty"`
 }
 
 type MonitoringNetworkConfig struct {
@@ -695,13 +746,23 @@ type MonitoringNetworkConfig struct {
 	VPCConfig                             *VPCConfig `json:"vpcConfig,omitempty"`
 }
 
+type MonitoringOutput struct {
+	S3Output *MonitoringS3Output `json:"s3Output,omitempty"`
+}
+
 type MonitoringOutputConfig struct {
-	KMSKeyID *string `json:"kmsKeyID,omitempty"`
+	KMSKeyID          *string             `json:"kmsKeyID,omitempty"`
+	MonitoringOutputs []*MonitoringOutput `json:"monitoringOutputs,omitempty"`
+}
+
+type MonitoringResources struct {
+	ClusterConfig *MonitoringClusterConfig `json:"clusterConfig,omitempty"`
 }
 
 type MonitoringS3Output struct {
 	LocalPath    *string `json:"localPath,omitempty"`
 	S3UploadMode *string `json:"s3UploadMode,omitempty"`
+	S3URI        *string `json:"s3URI,omitempty"`
 }
 
 type MonitoringSchedule struct {
@@ -712,15 +773,24 @@ type MonitoringSchedule struct {
 	MonitoringScheduleARN *string      `json:"monitoringScheduleARN,omitempty"`
 }
 
+type MonitoringScheduleConfig struct {
+	MonitoringJobDefinitionName *string `json:"monitoringJobDefinitionName,omitempty"`
+}
+
 type MonitoringScheduleSummary struct {
-	CreationTime          *metav1.Time `json:"creationTime,omitempty"`
-	EndpointName          *string      `json:"endpointName,omitempty"`
-	LastModifiedTime      *metav1.Time `json:"lastModifiedTime,omitempty"`
-	MonitoringScheduleARN *string      `json:"monitoringScheduleARN,omitempty"`
+	CreationTime                *metav1.Time `json:"creationTime,omitempty"`
+	EndpointName                *string      `json:"endpointName,omitempty"`
+	LastModifiedTime            *metav1.Time `json:"lastModifiedTime,omitempty"`
+	MonitoringJobDefinitionName *string      `json:"monitoringJobDefinitionName,omitempty"`
+	MonitoringScheduleARN       *string      `json:"monitoringScheduleARN,omitempty"`
 }
 
 type MonitoringStatisticsResource struct {
 	S3URI *string `json:"s3URI,omitempty"`
+}
+
+type MonitoringStoppingCondition struct {
+	MaxRuntimeInSeconds *int64 `json:"maxRuntimeInSeconds,omitempty"`
 }
 
 type MultiModelConfig struct {
