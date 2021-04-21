@@ -216,12 +216,7 @@ func (rm *resourceManager) sdkCreate(
 
 	rm.setStatusDefaults(ko)
 
-	// custom set output from response
-	ko, err = rm.customCreateEndpointSetOutput(ctx, r, resp, ko)
-	if err != nil {
-		return nil, err
-	}
-
+	rm.customSetOutput(r, aws.String(svcsdk.EndpointStatusCreating), ko)
 	return &resource{ko}, nil
 }
 

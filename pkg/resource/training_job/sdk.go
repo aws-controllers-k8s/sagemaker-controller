@@ -578,12 +578,7 @@ func (rm *resourceManager) sdkCreate(
 
 	rm.setStatusDefaults(ko)
 
-	// custom set output from response
-	ko, err = rm.customCreateTrainingJobSetOutput(ctx, r, resp, ko)
-	if err != nil {
-		return nil, err
-	}
-
+	rm.customSetOutput(r, aws.String(svcsdk.TrainingJobStatusInProgress), ko)
 	return &resource{ko}, nil
 }
 
@@ -970,6 +965,12 @@ func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
 ) error {
+	// Call StopTrainingJob only if the job is InProgress, otherwise just return nil to mark the
+	// resource Unmanaged
+	latestStatus := r.ko.Status.TrainingJobStatus
+	if latestStatus != nil && *latestStatus != svcsdk.TrainingJobStatusInProgress {
+		return nil
+	}
 
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {

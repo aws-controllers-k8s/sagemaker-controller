@@ -26,19 +26,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 )
 
-// customCreateTrainingJobSetOutput sets the resource in TempOutofSync if TrainingJob is
-// in creating state. At this stage we know call to createTrainingJob was successful.
-func (rm *resourceManager) customCreateTrainingJobSetOutput(
-	ctx context.Context,
-	r *resource,
-	resp *svcsdk.CreateTrainingJobOutput,
-	ko *svcapitypes.TrainingJob,
-) (*svcapitypes.TrainingJob, error) {
-	rm.customSetOutput(r, aws.String(svcsdk.TrainingJobStatusInProgress), ko)
-	return ko, nil
-}
-
-// customDescribeTrainingJobSetOutput sets the resource in TempOutofSync if
+// customDescribeTrainingJobSetOutput sets the resource ResourceSynced condition to False if
 // TrainingJob is being modified by AWS. It has an additional check on the debugger status.
 func (rm *resourceManager) customDescribeTrainingJobSetOutput(
 	ctx context.Context,

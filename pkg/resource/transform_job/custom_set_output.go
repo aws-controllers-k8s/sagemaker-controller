@@ -17,38 +17,11 @@
 package transform_job
 
 import (
-	"context"
-
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
-	"github.com/aws/aws-sdk-go/aws"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 	corev1 "k8s.io/api/core/v1"
 )
-
-// customCreateTransformJobSetOutput sets the resource in TempOutofSync if TransformJob is
-// in creating state. At this stage we know call to createTransformJob was successful.
-func (rm *resourceManager) customCreateTransformJobSetOutput(
-	ctx context.Context,
-	r *resource,
-	resp *svcsdk.CreateTransformJobOutput,
-	ko *svcapitypes.TransformJob,
-) (*svcapitypes.TransformJob, error) {
-	rm.customSetOutput(r, aws.String(svcsdk.TransformJobStatusInProgress), ko)
-	return ko, nil
-}
-
-// customDescribeTransformJobSetOutput sets the resource in TempOutofSync if
-// TransformJob is being modified by AWS.
-func (rm *resourceManager) customDescribeTransformJobSetOutput(
-	ctx context.Context,
-	r *resource,
-	resp *svcsdk.DescribeTransformJobOutput,
-	ko *svcapitypes.TransformJob,
-) (*svcapitypes.TransformJob, error) {
-	rm.customSetOutput(r, resp.TransformJobStatus, ko)
-	return ko, nil
-}
 
 // customSetOutput sets ConditionTypeResourceSynced condition to True or False
 // based on the transformJobStatus on AWS so the reconciler can determine if a
