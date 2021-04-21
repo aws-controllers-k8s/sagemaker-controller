@@ -1,27 +1,15 @@
 operations:
-  CreateTrainingJob:
-    set_output_custom_method_name: customCreateTrainingJobSetOutput
   DescribeTrainingJob:
     set_output_custom_method_name: customDescribeTrainingJobSetOutput
   StopTrainingJob:
     operation_type: Delete
     resource_name: TrainingJob
-  CreateProcessingJob:
-    set_output_custom_method_name: customCreateProcessingJobSetOutput
-  DescribeProcessingJob:
-    set_output_custom_method_name: customDescribeProcessingJobSetOutput
   StopProcessingJob:
     operation_type: Delete
     resource_name: ProcessingJob
-  CreateTransformJob:
-    set_output_custom_method_name: customCreateTransformJobSetOutput
-  DescribeTransformJob:
-    set_output_custom_method_name: customDescribeTransformJobSetOutput
   StopTransformJob:
     operation_type: Delete
     resource_name: TransformJob
-  CreateEndpoint:
-    set_output_custom_method_name: customCreateEndpointSetOutput
   DescribeEndpoint:
     set_output_custom_method_name: customDescribeEndpointSetOutput
   UpdateEndpoint:
@@ -31,10 +19,6 @@ operations:
       RetainAllVariantProperties: true
   DeleteEndpoint:
     custom_implementation: customDeleteEndpoint
-  CreateHyperParameterTuningJob:
-    set_output_custom_method_name: customCreateHyperParameterTuningJobSetOutput
-  DescribeHyperParameterTuningJob:
-    set_output_custom_method_name: customDescribeHyperParameterTuningJobSetOutput
   StopHyperParameterTuningJob:
     operation_type: Delete
     resource_name: HyperParameterTuningJob
@@ -100,6 +84,9 @@ resources:
         - MalformedQueryString
         - InvalidAction
         - UnrecognizedClientException
+    hooks:
+      sdk_create_post_set_output:
+        code: rm.customSetOutput(r, aws.String(svcsdk.EndpointStatusCreating), ko)
     fields:
       EndpointStatus:
         is_read_only: true
@@ -158,6 +145,11 @@ resources:
         - MalformedQueryString
         - InvalidAction
         - UnrecognizedClientException
+    hooks:
+      sdk_create_post_set_output:
+        code: rm.customSetOutput(r, aws.String(svcsdk.TrainingJobStatusInProgress), ko)
+      sdk_delete_pre_build_request:
+        template_path: training_job/sdk_delete_pre_build_request.go.tpl
     fields:
       TrainingJobStatus:
           is_read_only: true
@@ -202,6 +194,13 @@ resources:
         - MalformedQueryString
         - InvalidAction
         - UnrecognizedClientException
+    hooks:
+      sdk_delete_pre_build_request:
+        template_path: processing_job/sdk_delete_pre_build_request.go.tpl
+      sdk_create_post_set_output:
+        code: rm.customSetOutput(r, aws.String(svcsdk.ProcessingJobStatusInProgress), ko)
+      sdk_read_one_post_set_output:
+        code: rm.customSetOutput(r, resp.ProcessingJobStatus, ko)
     fields:
       ProcessingJobStatus:
         is_read_only: true
@@ -235,6 +234,13 @@ resources:
         - MalformedQueryString
         - InvalidAction
         - UnrecognizedClientException
+    hooks:
+      sdk_delete_pre_build_request:
+        template_path: transform_job/sdk_delete_pre_build_request.go.tpl
+      sdk_create_post_set_output:
+        code: rm.customSetOutput(r, aws.String(svcsdk.TransformJobStatusInProgress), ko)
+      sdk_read_one_post_set_output:
+        code: rm.customSetOutput(r, resp.TransformJobStatus, ko)
     fields:
       TransformJobStatus:
           is_read_only: true
@@ -267,6 +273,13 @@ resources:
         - MalformedQueryString
         - InvalidAction
         - UnrecognizedClientException
+    hooks:
+      sdk_delete_pre_build_request:
+        template_path: hyper_parameter_tuning_job/sdk_delete_pre_build_request.go.tpl
+      sdk_create_post_set_output:
+        code: rm.customSetOutput(r, aws.String(svcsdk.HyperParameterTuningJobStatusInProgress), ko)
+      sdk_read_one_post_set_output:
+        code: rm.customSetOutput(r, resp.HyperParameterTuningJobStatus, ko)
     fields:
       HyperParameterTuningJobStatus:
         is_read_only: true

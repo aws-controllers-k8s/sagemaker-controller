@@ -26,19 +26,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 )
 
-// customCreateEndpointSetOutput sets the resource in TempOutofSync if endpoint is
-// in creating state. At this stage we know call to createEndpoint was successful.
-func (rm *resourceManager) customCreateEndpointSetOutput(
-	ctx context.Context,
-	r *resource,
-	resp *svcsdk.CreateEndpointOutput,
-	ko *svcapitypes.Endpoint,
-) (*svcapitypes.Endpoint, error) {
-	rm.customSetOutput(r, aws.String(svcsdk.EndpointStatusCreating), ko)
-	return ko, nil
-}
-
-// customDescribeEndpointSetOutput sets the resource in TempOutofSync if endpoint is
+// customDescribeEndpointSetOutput sets the resource ResourceSynced condition to False if endpoint is
 // being modified by AWS
 func (rm *resourceManager) customDescribeEndpointSetOutput(
 	ctx context.Context,
@@ -63,7 +51,7 @@ func (rm *resourceManager) customDescribeEndpointSetOutput(
 	return ko, nil
 }
 
-// customUpdateEndpointSetOutput sets the resource in TempOutofSync if endpoint is
+// customUpdateEndpointSetOutput sets the resource ResourceSynced condition to False if endpoint is
 // being updated. At this stage we know call to updateEndpoint was successful.
 func (rm *resourceManager) customUpdateEndpointSetOutput(
 	ctx context.Context,

@@ -231,12 +231,7 @@ func (rm *resourceManager) sdkFind(
 
 	rm.setStatusDefaults(ko)
 
-	// custom set output from response
-	ko, err = rm.customDescribeTransformJobSetOutput(ctx, r, resp, ko)
-	if err != nil {
-		return nil, err
-	}
-
+	rm.customSetOutput(r, resp.TransformJobStatus, ko)
 	return &resource{ko}, nil
 }
 
@@ -294,12 +289,7 @@ func (rm *resourceManager) sdkCreate(
 
 	rm.setStatusDefaults(ko)
 
-	// custom set output from response
-	ko, err = rm.customCreateTransformJobSetOutput(ctx, r, resp, ko)
-	if err != nil {
-		return nil, err
-	}
-
+	rm.customSetOutput(r, aws.String(svcsdk.TransformJobStatusInProgress), ko)
 	return &resource{ko}, nil
 }
 
@@ -448,6 +438,12 @@ func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
 ) error {
+	// Call StopTranformJob only if the job is InProgress, otherwise just return nil to mark the
+	// resource Unmanaged
+	latestStatus := r.ko.Status.TransformJobStatus
+	if latestStatus != nil && *latestStatus != svcsdk.TransformJobStatusInProgress {
+		return nil
+	}
 
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
