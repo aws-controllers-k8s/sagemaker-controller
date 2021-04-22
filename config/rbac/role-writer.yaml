@@ -17,6 +17,7 @@ rules:
   - modelbiasjobdefinitions
   - modelexplainabilityjobdefinitions
   - modelqualityjobdefinitions
+  - monitoringschedules
   - processingjobs
   - trainingjobs
   - transformjobs
@@ -39,6 +40,7 @@ rules:
   - modelbiasjobdefinitions
   - modelexplainabilityjobdefinitions
   - modelqualityjobdefinitions
+  - monitoringschedules
   - processingjobs
   - trainingjobs
   - transformjobs
