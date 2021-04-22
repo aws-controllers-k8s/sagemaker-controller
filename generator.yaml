@@ -84,6 +84,8 @@ resources:
         - MalformedQueryString
         - InvalidAction
         - UnrecognizedClientException
+        # Custom error
+        - EndpointUpdateError
     hooks:
       sdk_create_post_set_output:
         code: rm.customSetOutput(r, aws.String(svcsdk.EndpointStatusCreating), ko)
