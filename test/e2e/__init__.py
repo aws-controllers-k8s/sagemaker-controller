@@ -57,11 +57,15 @@ def create_sagemaker_resource(
 
 
 def wait_for_status(
-    expected_status: str, wait_periods: int, get_status_method, *method_args
+    expected_status: str,
+    wait_periods: int,
+    period_length: int,
+    get_status_method,
+    *method_args,
 ):
     actual_status = None
     for _ in range(wait_periods):
-        time.sleep(30)
+        time.sleep(period_length)
         actual_status = get_status_method(*method_args)
         if actual_status == expected_status:
             break
@@ -90,10 +94,12 @@ def wait_sagemaker_endpoint_status(
     endpoint_name,
     expected_status: str,
     wait_periods: int = 60,
+    period_length: int = 30,
 ):
     return wait_for_status(
         expected_status,
         wait_periods,
+        period_length,
         get_endpoint_sagemaker_status,
         sagemaker_client,
         endpoint_name,
@@ -104,7 +110,12 @@ def wait_resource_endpoint_status(
     reference: k8s.CustomResourceReference,
     expected_status: str,
     wait_periods: int = 30,
+    period_length: int = 30,
 ):
     return wait_for_status(
-        expected_status, wait_periods, get_endpoint_resource_status, reference
+        expected_status,
+        wait_periods,
+        period_length,
+        get_endpoint_resource_status,
+        reference,
     )

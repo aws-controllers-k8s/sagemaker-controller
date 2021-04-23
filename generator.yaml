@@ -387,6 +387,64 @@ resources:
     fields:
       JobDefinitionArn:
         is_arn: true
+  MonitoringSchedule:
+    update_conditions_custom_method_name: customUpdateConditions
+    exceptions:
+      errors:
+          404:
+            code: ResourceNotFound
+      terminal_codes:
+        - ResourceLimitExceeded
+        - ResourceNotFound
+        - ResourceInUse
+        - OptInRequired
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+        - MissingAction
+        - InvalidQueryParameter
+        - MalformedQueryString
+        - InvalidAction
+        - UnrecognizedClientException
+    hooks:
+      sdk_create_post_set_output:
+        code: rm.customSetOutput(r, aws.String("Pending"), ko)
+      sdk_read_one_post_set_output:
+        code: rm.customSetOutput(r, resp.MonitoringScheduleStatus, ko)
+      sdk_update_pre_build_request:
+        template_path: monitoring_schedule/sdk_update_pre_build_request.go.tpl
+      sdk_update_post_set_output:
+        code: rm.customSetOutput(desired, aws.String("Pending"), ko)
+      sdk_delete_pre_build_request:
+        template_path: monitoring_schedule/sdk_delete_pre_build_request.go.tpl
+    fields:
+      MonitoringScheduleStatus:
+        is_read_only: true
+        is_printable: true
+        from:
+          operation: DescribeMonitoringSchedule
+          path: MonitoringScheduleStatus
+      FailureReason:
+        is_read_only: true
+        is_printable: true
+        from:
+          operation: DescribeMonitoringSchedule
+          path: FailureReason
+      CreationTime:
+        is_read_only: true
+        from:
+          operation: DescribeMonitoringSchedule
+          path: CreationTime
+      LastModifiedTime:
+        is_read_only: true
+        from:
+          operation: DescribeMonitoringSchedule
+          path: LastModifiedTime
+      LastMonitoringExecutionSummary:
+        is_read_only: true
+        from:
+          operation: DescribeMonitoringSchedule
+          path: LastMonitoringExecutionSummary
 ignore:
     resource_names:
       - Algorithm
@@ -418,7 +476,7 @@ ignore:
       - ModelPackage
       - ModelPackageGroup
       # - ModelQualityJobDefinition
-      - MonitoringSchedule
+      # - MonitoringSchedule
       - NotebookInstanceLifecycleConfig
       - NotebookInstance
       - Pipeline
