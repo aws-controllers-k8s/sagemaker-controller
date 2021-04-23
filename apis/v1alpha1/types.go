@@ -711,7 +711,10 @@ type MonitoringExecutionSummary struct {
 	EndpointName                *string      `json:"endpointName,omitempty"`
 	FailureReason               *string      `json:"failureReason,omitempty"`
 	LastModifiedTime            *metav1.Time `json:"lastModifiedTime,omitempty"`
+	MonitoringExecutionStatus   *string      `json:"monitoringExecutionStatus,omitempty"`
 	MonitoringJobDefinitionName *string      `json:"monitoringJobDefinitionName,omitempty"`
+	MonitoringScheduleName      *string      `json:"monitoringScheduleName,omitempty"`
+	MonitoringType              *string      `json:"monitoringType,omitempty"`
 	ProcessingJobARN            *string      `json:"processingJobARN,omitempty"`
 	ScheduledTime               *metav1.Time `json:"scheduledTime,omitempty"`
 }
@@ -725,12 +728,15 @@ type MonitoringInput struct {
 }
 
 type MonitoringJobDefinition struct {
-	Environment            map[string]*string           `json:"environment,omitempty"`
-	MonitoringOutputConfig *MonitoringOutputConfig      `json:"monitoringOutputConfig,omitempty"`
-	MonitoringResources    *MonitoringResources         `json:"monitoringResources,omitempty"`
-	NetworkConfig          *NetworkConfig               `json:"networkConfig,omitempty"`
-	RoleARN                *string                      `json:"roleARN,omitempty"`
-	StoppingCondition      *MonitoringStoppingCondition `json:"stoppingCondition,omitempty"`
+	BaselineConfig             *MonitoringBaselineConfig    `json:"baselineConfig,omitempty"`
+	Environment                map[string]*string           `json:"environment,omitempty"`
+	MonitoringAppSpecification *MonitoringAppSpecification  `json:"monitoringAppSpecification,omitempty"`
+	MonitoringInputs           []*MonitoringInput           `json:"monitoringInputs,omitempty"`
+	MonitoringOutputConfig     *MonitoringOutputConfig      `json:"monitoringOutputConfig,omitempty"`
+	MonitoringResources        *MonitoringResources         `json:"monitoringResources,omitempty"`
+	NetworkConfig              *NetworkConfig               `json:"networkConfig,omitempty"`
+	RoleARN                    *string                      `json:"roleARN,omitempty"`
+	StoppingCondition          *MonitoringStoppingCondition `json:"stoppingCondition,omitempty"`
 }
 
 type MonitoringJobDefinitionSummary struct {
@@ -765,16 +771,11 @@ type MonitoringS3Output struct {
 	S3URI        *string `json:"s3URI,omitempty"`
 }
 
-type MonitoringSchedule struct {
-	CreationTime          *metav1.Time `json:"creationTime,omitempty"`
-	EndpointName          *string      `json:"endpointName,omitempty"`
-	FailureReason         *string      `json:"failureReason,omitempty"`
-	LastModifiedTime      *metav1.Time `json:"lastModifiedTime,omitempty"`
-	MonitoringScheduleARN *string      `json:"monitoringScheduleARN,omitempty"`
-}
-
 type MonitoringScheduleConfig struct {
-	MonitoringJobDefinitionName *string `json:"monitoringJobDefinitionName,omitempty"`
+	MonitoringJobDefinition     *MonitoringJobDefinition `json:"monitoringJobDefinition,omitempty"`
+	MonitoringJobDefinitionName *string                  `json:"monitoringJobDefinitionName,omitempty"`
+	MonitoringType              *string                  `json:"monitoringType,omitempty"`
+	ScheduleConfig              *ScheduleConfig          `json:"scheduleConfig,omitempty"`
 }
 
 type MonitoringScheduleSummary struct {
@@ -783,6 +784,22 @@ type MonitoringScheduleSummary struct {
 	LastModifiedTime            *metav1.Time `json:"lastModifiedTime,omitempty"`
 	MonitoringJobDefinitionName *string      `json:"monitoringJobDefinitionName,omitempty"`
 	MonitoringScheduleARN       *string      `json:"monitoringScheduleARN,omitempty"`
+	MonitoringScheduleName      *string      `json:"monitoringScheduleName,omitempty"`
+	MonitoringScheduleStatus    *string      `json:"monitoringScheduleStatus,omitempty"`
+	MonitoringType              *string      `json:"monitoringType,omitempty"`
+}
+
+type MonitoringSchedule_SDK struct {
+	CreationTime                   *metav1.Time                `json:"creationTime,omitempty"`
+	EndpointName                   *string                     `json:"endpointName,omitempty"`
+	FailureReason                  *string                     `json:"failureReason,omitempty"`
+	LastModifiedTime               *metav1.Time                `json:"lastModifiedTime,omitempty"`
+	LastMonitoringExecutionSummary *MonitoringExecutionSummary `json:"lastMonitoringExecutionSummary,omitempty"`
+	MonitoringScheduleARN          *string                     `json:"monitoringScheduleARN,omitempty"`
+	MonitoringScheduleConfig       *MonitoringScheduleConfig   `json:"monitoringScheduleConfig,omitempty"`
+	MonitoringScheduleName         *string                     `json:"monitoringScheduleName,omitempty"`
+	MonitoringScheduleStatus       *string                     `json:"monitoringScheduleStatus,omitempty"`
+	MonitoringType                 *string                     `json:"monitoringType,omitempty"`
 }
 
 type MonitoringStatisticsResource struct {
@@ -1069,6 +1086,10 @@ type S3StorageConfig struct {
 	KMSKeyID            *string `json:"kmsKeyID,omitempty"`
 	ResolvedOutputS3URI *string `json:"resolvedOutputS3URI,omitempty"`
 	S3URI               *string `json:"s3URI,omitempty"`
+}
+
+type ScheduleConfig struct {
+	ScheduleExpression *string `json:"scheduleExpression,omitempty"`
 }
 
 type SecondaryStatusTransition struct {
