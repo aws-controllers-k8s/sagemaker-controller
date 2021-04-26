@@ -73,14 +73,10 @@ func (rm *resourceManager) customSetOutput(
 	}
 
 	var resourceSyncedCondition *ackv1alpha1.Condition = nil
-	if ko.Status.Conditions == nil {
-		ko.Status.Conditions = []*ackv1alpha1.Condition{}
-	} else {
-		for _, condition := range ko.Status.Conditions {
-			if condition.Type == ackv1alpha1.ConditionTypeResourceSynced {
-				resourceSyncedCondition = condition
-				break
-			}
+	for _, condition := range ko.Status.Conditions {
+		if condition.Type == ackv1alpha1.ConditionTypeResourceSynced {
+			resourceSyncedCondition = condition
+			break
 		}
 	}
 

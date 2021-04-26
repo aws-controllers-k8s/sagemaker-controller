@@ -34,6 +34,8 @@ from e2e import (
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 
+FAIL_UPDATE_ERROR_MESSAGE = "unable to update endpoint. check FailureReason"
+
 
 @pytest.fixture(scope="module")
 def name_suffix():
@@ -286,7 +288,7 @@ class TestEndpoint:
             endpoint_reference,
             "ACK.Terminal",
             "True",
-            "Unable to update Endpoint. Check FailureReason",
+            FAIL_UPDATE_ERROR_MESSAGE,
         )
 
         endpoint_resource = k8s.get_resource(endpoint_reference)

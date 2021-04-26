@@ -19,16 +19,16 @@ package endpoint
 import (
 	"context"
 	"errors"
-	"fmt"
 	"strings"
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	"github.com/aws-controllers-k8s/runtime/pkg/requeue"
+	"github.com/aws/aws-sdk-go/aws/awserr"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 )
 
 var (
-	FailUpdateError = fmt.Errorf("Unable to update Endpoint. Check FailureReason")
+	FailUpdateError = awserr.New("EndpointUpdateError", "unable to update endpoint. check FailureReason", nil)
 
 	FailureReasonInternalServiceErrorPrefix = "Request to service failed"
 )
