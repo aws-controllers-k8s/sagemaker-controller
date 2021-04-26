@@ -33,43 +33,32 @@ func (rm *resourceManager) customUpdateConditions(
 	err error,
 ) bool {
 	latestStatus := r.ko.Status.EndpointStatus
-	failureReason := r.ko.Status.FailureReason
 
-	if latestStatus == nil || failureReason == nil {
+	if latestStatus == nil || *latestStatus != svcsdk.EndpointStatusFailed {
 		return false
 	}
 	var terminalCondition *ackv1alpha1.Condition = nil
-	if ko.Status.Conditions == nil {
-		ko.Status.Conditions = []*ackv1alpha1.Condition{}
-	} else {
-		for _, condition := range ko.Status.Conditions {
-			if condition.Type == ackv1alpha1.ConditionTypeTerminal {
-				terminalCondition = condition
-				break
-			}
-		}
-		if terminalCondition != nil && terminalCondition.Status == corev1.ConditionTrue {
-			// some other exception already put the resource in terminal condition
-			return false
+
+	for _, condition := range ko.Status.Conditions {
+		if condition.Type == ackv1alpha1.ConditionTypeTerminal {
+			terminalCondition = condition
+			break
 		}
 	}
-
-	if (err != nil && err == FailUpdateError) || (latestStatus != nil && *latestStatus == svcsdk.EndpointStatusFailed) {
-		// setting terminal condition since controller can no longer recover by retrying
-		if terminalCondition == nil {
-			terminalCondition = &ackv1alpha1.Condition{
-				Type: ackv1alpha1.ConditionTypeTerminal,
-			}
-			ko.Status.Conditions = append(ko.Status.Conditions, terminalCondition)
-		}
-		terminalCondition.Status = corev1.ConditionTrue
-		if *latestStatus == svcsdk.EndpointStatusFailed {
-			terminalCondition.Message = aws.String("Cannot update endpoint with Failed status")
-		} else {
-			terminalCondition.Message = aws.String(FailUpdateError.Error())
-		}
-		return true
+	if terminalCondition != nil && terminalCondition.Status == corev1.ConditionTrue {
+		// some other exception already put the resource in terminal condition
+		return false
 	}
 
-	return false
+	// setting terminal condition since controller can no longer recover by retrying
+	if terminalCondition == nil {
+		terminalCondition = &ackv1alpha1.Condition{
+			Type: ackv1alpha1.ConditionTypeTerminal,
+		}
+		ko.Status.Conditions = append(ko.Status.Conditions, terminalCondition)
+	}
+	terminalCondition.Status = corev1.ConditionTrue
+	terminalCondition.Message = aws.String("endpoint status: Failed. check FailureReason")
+
+	return true
 }
