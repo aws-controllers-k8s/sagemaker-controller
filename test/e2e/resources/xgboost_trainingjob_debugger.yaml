@@ -63,7 +63,7 @@ spec:
           value: "5" 
   debugRuleConfigurations:
     - ruleConfigurationName: LossNotDecreasing
-      ruleEvaluatorImage: $DEBUGGER_IMAGE_URIS
+      ruleEvaluatorImage: $DEBUGGER_IMAGE_URI
       ruleParameters:
         collection_names: metrics
         num_steps: "10"
