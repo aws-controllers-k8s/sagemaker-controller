@@ -27,5 +27,7 @@ LIST_JOB_STATUS_STOPPED = (
 JOB_STATUS_INPROGRESS: str = "InProgress"
 JOB_STATUS_COMPLETED: str = "Completed"
 DEBUGGERJOB_STATUS_COMPLETED: str = (
-        "NoIssuesFound"
+        "NoIssuesFound", 
+        "Completed",
+        "CompletedWithIssues"
     )

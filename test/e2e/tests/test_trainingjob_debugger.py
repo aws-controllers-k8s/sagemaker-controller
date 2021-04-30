@@ -24,16 +24,14 @@ from e2e import (
     service_marker,
     create_sagemaker_resource,
     wait_for_status,
+    sagemaker_client,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.bootstrap_resources import get_bootstrap_resources
-from e2e.common.config import *
+from e2e.common import config as cfg
 from time import sleep
 
 RESOURCE_PLURAL = "trainingjobs"
-
-def _sagemaker_client():
-    return boto3.client("sagemaker")
 
 @pytest.fixture(scope="function")
 def xgboost_training_job_debugger():
@@ -58,7 +56,7 @@ def xgboost_training_job_debugger():
 
 def get_sagemaker_training_job(training_job_name: str):
     try:
-        training_job = _sagemaker_client().describe_training_job(
+        training_job = sagemaker_client().describe_training_job(
             TrainingJobName=training_job_name
         )
         return training_job
@@ -89,7 +87,6 @@ def get_training_debugger_resource_status(reference: k8s.CustomResourceReference
     return resource_status
 
 @service_marker
-@pytest.mark.canary
 class TestTrainingDebuggerJob:
     def _wait_sagemaker_training_status(
         self, 
@@ -172,30 +169,6 @@ class TestTrainingDebuggerJob:
             == self._wait_resource_training_debugger_status(reference, expected_status)
             == expected_status
         )
-    
-    def test_stopped(self, xgboost_training_job_debugger):
-        (reference, resource) = xgboost_training_job_debugger
-        assert k8s.get_resource_exists(reference)
-
-        training_job_name = resource["spec"].get("trainingJobName", None)
-        assert training_job_name is not None
-
-        training_job_desc = get_sagemaker_training_job(training_job_name)
-
-        assert k8s.get_resource_arn(resource) == training_job_desc["TrainingJobArn"]
-        assert training_job_desc["TrainingJobStatus"] == JOB_STATUS_INPROGRESS
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
-
-        self._assert_training_status_in_sync(
-            training_job_name, reference, JOB_STATUS_INPROGRESS
-        )
-
-        # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(reference)
-        assert deleted is True
-
-        training_job_desc = get_sagemaker_training_job(training_job_name)
-        assert training_job_desc["TrainingJobStatus"] in LIST_JOB_STATUS_STOPPED
 
     def test_completed(self, xgboost_training_job_debugger):
         (reference, resource) = xgboost_training_job_debugger
@@ -207,17 +180,17 @@ class TestTrainingDebuggerJob:
         training_job_desc = get_sagemaker_training_job(training_job_name)
 
         assert k8s.get_resource_arn(resource) == training_job_desc["TrainingJobArn"]
-        assert training_job_desc["TrainingJobStatus"] == JOB_STATUS_INPROGRESS
+        assert training_job_desc["TrainingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
         self._assert_training_status_in_sync(
-            training_job_name, reference, JOB_STATUS_COMPLETED
+            training_job_name, reference, cfg.JOB_STATUS_COMPLETED
         )
         # TODO: This test is failing
-        #assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
         self._assert_training_debugger_status_in_sync(
-            training_job_name, reference, DEBUGGERJOB_STATUS_COMPLETED
+            training_job_name, reference, cfg.DEBUGGERJOB_STATUS_COMPLETED
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 

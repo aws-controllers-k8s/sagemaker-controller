@@ -24,16 +24,14 @@ from e2e import (
     service_marker,
     create_sagemaker_resource,
     wait_for_status,
+    sagemaker_client,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.bootstrap_resources import get_bootstrap_resources
-from e2e.common.config import *
+from e2e.common import config as cfg
 from time import sleep
 
 RESOURCE_PLURAL = "hyperparametertuningjobs"
-
-def _sagemaker_client():
-    return boto3.client('sagemaker')
 
 @pytest.fixture(scope="function")
 def xgboost_hpojob():
@@ -58,7 +56,7 @@ def xgboost_hpojob():
 
 def get_sagemaker_hpo_job(hpo_job_name: str):
     try:
-        hpo_desc = _sagemaker_client().describe_hyper_parameter_tuning_job(
+        hpo_desc = sagemaker_client().describe_hyper_parameter_tuning_job(
             HyperParameterTuningJobName=hpo_job_name
         )
         return hpo_desc
@@ -117,7 +115,7 @@ class TestHPO:
             == expected_status
         )
 
-    def test_hpo(self, xgboost_hpojob):
+    def test_stopped(self, xgboost_hpojob):
         (reference, resource) = xgboost_hpojob
         assert k8s.get_resource_exists(reference)
     
@@ -126,11 +124,11 @@ class TestHPO:
 
         hpo_sm_desc = get_sagemaker_hpo_job(hpo_job_name)
         assert k8s.get_resource_arn(resource) == hpo_sm_desc["HyperParameterTuningJobArn"]
-        assert hpo_sm_desc["HyperParameterTuningJobStatus"] in self.list_status_created
+        assert hpo_sm_desc["HyperParameterTuningJobStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
         self._assert_hpo_status_in_sync(
-            hpo_job_name, reference, self.status_inprogress
+            hpo_job_name, reference, cfg.JOB_STATUS_INPROGRESS
         )
 
         # Delete the k8s resource.
@@ -138,9 +136,9 @@ class TestHPO:
         assert deleted is True
 
         hpo_sm_desc = get_sagemaker_hpo_job(hpo_job_name)
-        assert hpo_sm_desc["HyperParameterTuningJobStatus"] in self.list_status_stopped
+        assert hpo_sm_desc["HyperParameterTuningJobStatus"] in cfg.LIST_JOB_STATUS_STOPPED
 
-    def test_completed_hpo(self, xgboost_hpojob):
+    def test_completed(self, xgboost_hpojob):
         (reference, resource) = xgboost_hpojob
         assert k8s.get_resource_exists(reference)
 
@@ -151,11 +149,11 @@ class TestHPO:
         assert (
             k8s.get_resource_arn(resource) == hpo_sm_desc["HyperParameterTuningJobArn"]
         )
-        assert hpo_sm_desc["HyperParameterTuningJobStatus"] in self.list_status_created
+        assert hpo_sm_desc["HyperParameterTuningJobStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
         
         self._assert_hpo_status_in_sync(
-            hpo_job_name, reference, self.status_completed
+            hpo_job_name, reference, cfg.JOB_STATUS_COMPLETED
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 

@@ -24,16 +24,14 @@ from e2e import (
     service_marker,
     wait_for_status,
     create_sagemaker_resource,
+    sagemaker_client,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.bootstrap_resources import get_bootstrap_resources
-from e2e.common.config import *
+from e2e.common import config as cfg
 from time import sleep
 
 RESOURCE_PLURAL = "trainingjobs"
-
-def _sagemaker_client():
-    return boto3.client("sagemaker")
 
 @pytest.fixture(scope="function")
 def xgboost_training_job():
@@ -77,6 +75,7 @@ def get_training_resource_status(reference: k8s.CustomResourceReference):
     assert "trainingJobStatus" in resource["status"]
     return resource["status"]["trainingJobStatus"]
 
+@pytest.mark.canary
 @service_marker
 class TestTrainingJob:
     def _wait_resource_training_status(
@@ -130,11 +129,11 @@ class TestTrainingJob:
         training_job_desc = get_sagemaker_training_job(training_job_name)
 
         assert k8s.get_resource_arn(resource) == training_job_desc["TrainingJobArn"]
-        assert training_job_desc["TrainingJobStatus"] == JOB_STATUS_INPROGRESS
+        assert training_job_desc["TrainingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
         self._assert_training_status_in_sync(
-            training_job_name, reference, JOB_STATUS_INPROGRESS
+            training_job_name, reference, cfg.JOB_STATUS_INPROGRESS
         )
 
         # Delete the k8s resource.
@@ -142,7 +141,7 @@ class TestTrainingJob:
         assert deleted is True
 
         training_job_desc = get_sagemaker_training_job(training_job_name)
-        assert training_job_desc["TrainingJobStatus"] in LIST_JOB_STATUS_STOPPED
+        assert training_job_desc["TrainingJobStatus"] in cfg.LIST_JOB_STATUS_STOPPED
 
     def test_completed(self, xgboost_training_job):
         (reference, resource) = xgboost_training_job
@@ -154,11 +153,11 @@ class TestTrainingJob:
         training_job_desc = get_sagemaker_training_job(training_job_name)
 
         assert k8s.get_resource_arn(resource) == training_job_desc["TrainingJobArn"]
-        assert training_job_desc["TrainingJobStatus"] == JOB_STATUS_INPROGRESS
+        assert training_job_desc["TrainingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
         self._assert_training_status_in_sync(
-            training_job_name, reference, JOB_STATUS_COMPLETED
+            training_job_name, reference, cfg.JOB_STATUS_COMPLETED
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
