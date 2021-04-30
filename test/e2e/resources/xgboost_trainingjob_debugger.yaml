@@ -63,7 +63,7 @@ spec:
           value: "5" 
   debugRuleConfigurations:
     - ruleConfigurationName: LossNotDecreasing
-      ruleEvaluatorImage: $XGBOOST_DEBUGGER_IMAGE_URIS
+      ruleEvaluatorImage: $DEBUGGER_IMAGE_URIS
       ruleParameters:
         collection_names: metrics
         num_steps: "10"

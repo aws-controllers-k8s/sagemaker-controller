@@ -18,18 +18,16 @@ import pytest
 import logging
 from typing import Dict
 
-from acktest.resources import random_suffix_name, load_resource_file
+from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
 from e2e import (
-    resource_directory,
-    CRD_GROUP,
-    CRD_VERSION,
     service_marker,
     create_sagemaker_resource,
     wait_for_status,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.bootstrap_resources import get_bootstrap_resources
+from e2e.common.config import *
 from time import sleep
 
 RESOURCE_PLURAL = "hyperparametertuningjobs"
@@ -37,32 +35,26 @@ RESOURCE_PLURAL = "hyperparametertuningjobs"
 def _sagemaker_client():
     return boto3.client('sagemaker')
 
-def _make_hpojob():
-    resource_name = random_suffix_name("xgboost-hpojob", 32)
-
-    replacements = REPLACEMENT_VALUES.copy()
-    replacements["HPO_JOB_NAME"] = resource_name
-
-    data = load_resource_file(
-        resource_directory, "xgboost_hpojob", additional_replacements=replacements
-    )
-
-    reference = k8s.CustomResourceReference(
-        CRD_GROUP, CRD_VERSION, RESOURCE_PLURAL, resource_name, namespace="default"
-    )
-
-    return reference, data
-
 @pytest.fixture(scope="function")
 def xgboost_hpojob():
-    hpo_job, data = _make_hpojob()
-    resource = k8s.create_custom_resource(hpo_job, data)
-    resource = k8s.wait_resource_consumed_by_controller(hpo_job)
+    resource_name = random_suffix_name("xgboost-hpojob", 32)
+    replacements = REPLACEMENT_VALUES.copy()
+    replacements["HPO_JOB_NAME"] = resource_name
+    reference, _, resource = create_sagemaker_resource(
+        resource_plural=RESOURCE_PLURAL,
+        resource_name=resource_name,
+        spec_file="xgboost_hpojob",
+        replacements=replacements,
+    )
 
-    yield (hpo_job, resource) 
+    assert resource is not None
+    assert k8s.get_resource_arn(resource) is not None
 
-    if k8s.get_resource_exists(hpo_job):
-        k8s.delete_custom_resource(hpo_job)
+    yield (reference, resource) 
+
+    if k8s.get_resource_exists(reference):
+        _, deleted = k8s.delete_custom_resource(reference)
+        assert deleted
 
 def get_sagemaker_hpo_job(hpo_job_name: str):
     try:
@@ -88,11 +80,6 @@ def get_hpo_resource_status(reference: k8s.CustomResourceReference):
 @service_marker
 @pytest.mark.canary
 class TestHPO:
-    list_status_created = ("InProgress", "Completed")
-    list_status_stopped = ("Stopped", "Stopping")
-    status_inprogress: str = "InProgress"
-    status_completed: str = "Completed"
-
     def _wait_resource_hpo_status(
         self,
         reference: k8s.CustomResourceReference,

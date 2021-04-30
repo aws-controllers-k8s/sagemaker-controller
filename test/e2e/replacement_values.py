@@ -42,7 +42,7 @@ XGBOOST_IMAGE_URIS = {
     "sa-east-1": "737474898029.dkr.ecr.sa-east-1.amazonaws.com",
 }
 
-XGBOOST_DEBUGGER_IMAGE_URIS = {
+DEBUGGER_IMAGE_URIS = {
     "us-west-1": 	    "685455198987.dkr.ecr.us-west-1.amazonaws.com",
     "us-west-2": 	    "895741380848.dkr.ecr.us-west-2.amazonaws.com",
     "us-east-1": 	    "503895931360.dkr.ecr.us-east-1.amazonaws.com",
@@ -66,7 +66,7 @@ XGBOOST_DEBUGGER_IMAGE_URIS = {
 }
 
 # https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-algo-docker-registry-paths.html
-XGBOOST_TRANSFORM_MODEL_V1_IMAGE_URIS = {
+XGBOOST_V1_IMAGE_URIS = {
     "us-west-1": "632365934929.dkr.ecr.us-west-1.amazonaws.com",
     "us-west-2": "433757028032.dkr.ecr.us-west-2.amazonaws.com",
     "us-east-1": "811284229777.dkr.ecr.us-east-1.amazonaws.com",
@@ -169,8 +169,8 @@ CLARIFY_IMAGE_URIS = {
 REPLACEMENT_VALUES = {
     "SAGEMAKER_DATA_BUCKET": get_bootstrap_resources().DataBucketName,
     "XGBOOST_IMAGE_URI": f"{XGBOOST_IMAGE_URIS[get_region()]}/sagemaker-xgboost:1.0-1-cpu-py3",
-    "XGBOOST_DEBUGGER_IMAGE_URI": f"{XGBOOST_DEBUGGER_IMAGE_URIS[get_region()]}/sagemaker-debugger-rules:latest",
-    "XGBOOST_TRANSFORM_MODEL_V1_IMAGE_URI": f"{XGBOOST_TRANSFORM_MODEL_V1_IMAGE_URIS[get_region()]}/xgboost:latest",
+    "DEBUGGER_IMAGE_URI": f"{DEBUGGER_IMAGE_URIS[get_region()]}/sagemaker-debugger-rules:latest",
+    "XGBOOST_V1_IMAGE_URI": f"{XGBOOST_V1_IMAGE_URIS[get_region()]}/xgboost:latest",
     "PYTORCH_TRAIN_IMAGE_URI": f"{PYTORCH_TRAIN_IMAGE_URIS[get_region()]}/pytorch-training:1.5.0-cpu-py36-ubuntu16.04",
     "SAGEMAKER_EXECUTION_ROLE_ARN": get_bootstrap_resources().ExecutionRoleARN,
     "MODEL_MONITOR_ANALYZER_IMAGE_URI": f"{MODEL_MONITOR_IMAGE_URIS[get_region()]}/sagemaker-model-monitor-analyzer",

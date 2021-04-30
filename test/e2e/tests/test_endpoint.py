@@ -25,14 +25,12 @@ from acktest.k8s import resource as k8s
 
 from e2e import (
     service_marker,
-    ENDPOINT_CONFIG_RESOURCE_PLURAL,
-    MODEL_RESOURCE_PLURAL,
-    ENDPOINT_RESOURCE_PLURAL,
     create_sagemaker_resource,
     wait_sagemaker_endpoint_status,
     wait_resource_endpoint_status,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
+from e2e.common.config import *
 
 FAIL_UPDATE_ERROR_MESSAGE = "unable to update endpoint. check FailureReason"
 

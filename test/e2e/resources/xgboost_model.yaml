@@ -7,7 +7,7 @@ spec:
   primaryContainer:
     containerHostname: xgboost
     modelDataURL: s3://$SAGEMAKER_DATA_BUCKET/sagemaker/model/xgboost-mnist-model.tar.gz
-    image: $XGBOOST_TRANSFORM_MODEL_V1_IMAGE_URI
+    image: $XGBOOST_V1_IMAGE_URI
     environment:
       my_var: my_value
       my_var2: my_value2

@@ -18,18 +18,16 @@ import pytest
 import logging
 from typing import Dict
 
-from acktest.resources import random_suffix_name, load_resource_file
+from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
 from e2e import (
-    resource_directory,
-    CRD_GROUP,
-    CRD_VERSION,
     service_marker,
     create_sagemaker_resource,
     wait_for_status
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.bootstrap_resources import get_bootstrap_resources
+from e2e.common.config import *
 from time import sleep
 
 RESOURCE_PLURAL = "processingjobs"
@@ -37,33 +35,26 @@ RESOURCE_PLURAL = "processingjobs"
 def _sagemaker_client():
     return boto3.client("sagemaker")
 
-def _make_processing_job():
-    resource_name = random_suffix_name("kmeans-processingjob", 32)
-
-    replacements = REPLACEMENT_VALUES.copy()
-    replacements["PROCESSING_JOB_NAME"] = resource_name
-
-    data = load_resource_file(
-        resource_directory, "kmeans_processingjob", additional_replacements=replacements
-    )
-
-    # Create the k8s resource
-    reference = k8s.CustomResourceReference(
-        CRD_GROUP, CRD_VERSION, RESOURCE_PLURAL, resource_name, namespace="default"
-    )
-
-    return reference, data
-
 @pytest.fixture(scope="function")
 def kmeans_processing_job():
-    (processing_job, data) = _make_processing_job()
-    resource = k8s.create_custom_resource(processing_job, data)
-    resource = k8s.wait_resource_consumed_by_controller(processing_job)
+    resource_name = random_suffix_name("kmeans-processingjob", 32)
+    replacements = REPLACEMENT_VALUES.copy()
+    replacements["PROCESSING_JOB_NAME"] = resource_name
+    reference, _, resource = create_sagemaker_resource(
+        resource_plural=RESOURCE_PLURAL,
+        resource_name=resource_name,
+        spec_file="kmeans_processingjob",
+        replacements=replacements,
+    )
 
-    yield (processing_job, resource) 
+    assert resource is not None
+    assert k8s.get_resource_arn(resource) is not None
 
-    if k8s.get_resource_exists(processing_job):
-        k8s.delete_custom_resource(processing_job)
+    yield (reference, resource) 
+
+    if k8s.get_resource_exists(reference):
+        _, deleted = k8s.delete_custom_resource(reference)
+        assert deleted
 
 def get_sagemaker_processing_job(processing_job_name: str):
     try:
@@ -89,11 +80,6 @@ def get_processing_resource_status(reference: k8s.CustomResourceReference):
 @service_marker
 @pytest.mark.canary
 class TestProcessingJob:
-    list_status_created = ("InProgress", "Completed")
-    list_status_stopped = ("Stopped", "Stopping")
-    status_inprogress: str = "InProgress"
-    status_completed: str = "Completed"
-
     def _wait_resource_processing_status(
         self,
         reference: k8s.CustomResourceReference,
@@ -131,7 +117,7 @@ class TestProcessingJob:
             == expected_status
         )
 
-    def test_processing_job(self, kmeans_processing_job):
+    def test_stopped(self, kmeans_processing_job):
         (reference, resource) = kmeans_processing_job
         assert k8s.get_resource_exists(reference)
 
@@ -141,11 +127,11 @@ class TestProcessingJob:
         processing_job_desc = get_sagemaker_processing_job(processing_job_name)
 
         assert k8s.get_resource_arn(resource) == processing_job_desc["ProcessingJobArn"]
-        assert processing_job_desc["ProcessingJobStatus"] in self.list_status_created
+        assert processing_job_desc["ProcessingJobStatus"] == JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
         self._assert_processing_status_in_sync(
-            processing_job_name, reference, self.status_inprogress
+            processing_job_name, reference, JOB_STATUS_INPROGRESS
         )
 
         # Delete the k8s resource.
@@ -153,9 +139,9 @@ class TestProcessingJob:
         assert deleted is True
 
         processing_job_desc = get_sagemaker_processing_job(processing_job_name)
-        assert processing_job_desc["ProcessingJobStatus"] in self.list_status_stopped
+        assert processing_job_desc["ProcessingJobStatus"] in LIST_JOB_STATUS_STOPPED
 
-    def test_completed_processing_job(self, kmeans_processing_job):
+    def test_completed(self, kmeans_processing_job):
         (reference, resource) = kmeans_processing_job
         assert k8s.get_resource_exists(reference)
 
@@ -165,11 +151,11 @@ class TestProcessingJob:
         processing_job_desc = get_sagemaker_processing_job(processing_job_name)
 
         assert k8s.get_resource_arn(resource) == processing_job_desc["ProcessingJobArn"]
-        assert processing_job_desc["ProcessingJobStatus"] in self.list_status_created
+        assert processing_job_desc["ProcessingJobStatus"] == JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
         self._assert_processing_status_in_sync(
-            processing_job_name, reference, self.status_completed
+            processing_job_name, reference, JOB_STATUS_COMPLETED
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 

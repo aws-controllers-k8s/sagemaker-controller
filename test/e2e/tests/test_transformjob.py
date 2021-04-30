@@ -18,25 +18,18 @@ import pytest
 import logging
 from typing import Dict
 
-from acktest.resources import random_suffix_name, load_resource_file
+from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
 from e2e import (
-    resource_directory,
-    CRD_GROUP,
-    CRD_VERSION,
     service_marker,
     create_sagemaker_resource,
     wait_for_status,
-    MODEL_RESOURCE_PLURAL,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.bootstrap_resources import get_bootstrap_resources
 from time import sleep
 
 RESOURCE_PLURAL = 'transformjobs'
-
-def _sagemaker_client():
-    return boto3.client('sagemaker')
 
 def _make_model():
     model_resource_name = random_suffix_name("xgboost-model", 32)
@@ -55,7 +48,9 @@ def _make_model():
 
     return model_resource_name
 
-def _make_transformjob():
+#TODO: This method can also move to a common file. 
+@pytest.fixture(scope="function")
+def xgboost_transformjob():
     model_name = _make_model()
     resource_name = random_suffix_name("xgboost-transformjob", 32)
 
@@ -63,28 +58,25 @@ def _make_transformjob():
     replacements["MODEL_NAME"] = model_name
     replacements["TRANSFORM_JOB_NAME"] = resource_name
 
-    data = load_resource_file(
-        resource_directory, "xgboost_transformjob", additional_replacements=replacements
+    reference, _, resource = create_sagemaker_resource(
+        resource_plural=RESOURCE_PLURAL,
+        resource_name=resource_name,
+        spec_file="xgboost_transformjob",
+        replacements=replacements,
     )
 
-    reference = k8s.CustomResourceReference(
-        CRD_GROUP, CRD_VERSION, RESOURCE_PLURAL, resource_name, namespace="default"
-    )
+    assert resource is not None
+    assert k8s.get_resource_arn(resource) is not None
 
-    return reference, data
+    yield (reference, resource) 
 
-@pytest.fixture(scope="function")
-def xgboost_transformjob():
-    transform_job, data = _make_transformjob()
-    resource = k8s.create_custom_resource(transform_job, data)
-    resource = k8s.wait_resource_consumed_by_controller(transform_job)
-
-    yield (transform_job, resource) 
-
-
+    if k8s.get_resource_exists(reference):
+        _, deleted = k8s.delete_custom_resource(reference)
+        assert deleted
+        
 def get_sagemaker_transform_job(transform_job_name: str):
     try:
-        transform_desc = boto3.client('sagemaker').describe_transform_job(
+        transform_desc = _sagemaker_client().describe_transform_job(
             TransformJobName=transform_job_name
         )
         return transform_desc
@@ -106,11 +98,6 @@ def get_transform_resource_status(reference: k8s.CustomResourceReference):
 @service_marker
 @pytest.mark.canary
 class TestTransformJob:
-    list_status_created = ("InProgress", "Completed")
-    list_status_stopped = ("Stopped", "Stopping")
-    status_inprogress: str = "InProgress"
-    status_completed: str = "Completed"
-
     def _wait_resource_transform_status(
         self,
         reference: k8s.CustomResourceReference,
@@ -152,7 +139,7 @@ class TestTransformJob:
             == expected_status
         )
 
-    def test_transform(self, xgboost_transformjob):
+    def test_stopped(self, xgboost_transformjob):
         (reference, resource) = xgboost_transformjob
         assert k8s.get_resource_exists(reference)
     
@@ -161,11 +148,11 @@ class TestTransformJob:
 
         transform_sm_desc = get_sagemaker_transform_job(transform_job_name)
         assert k8s.get_resource_arn(resource) == transform_sm_desc["TransformJobArn"]
-        assert transform_sm_desc["TransformJobStatus"] in self.list_status_created
+        assert transform_sm_desc["TransformJobStatus"] == JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
         self._assert_transform_status_in_sync(
-            transform_job_name, reference, self.status_inprogress
+            transform_job_name, reference, JOB_STATUS_INPROGRESS
         )
 
         # Delete the k8s resource.
@@ -173,9 +160,9 @@ class TestTransformJob:
         assert deleted is True
 
         transform_sm_desc = get_sagemaker_transform_job(transform_job_name)
-        assert transform_sm_desc["TransformJobStatus"] in self.list_status_stopped
+        assert transform_sm_desc["TransformJobStatus"] in LIST_JOB_STATUS_STOPPED
 
-    def test_completed_transform(self, xgboost_transformjob):
+    def test_completed(self, xgboost_transformjob):
         (reference, resource) = xgboost_transformjob
         assert k8s.get_resource_exists(reference)
 
@@ -186,11 +173,11 @@ class TestTransformJob:
         assert (
             k8s.get_resource_arn(resource) == transform_sm_desc["TransformJobArn"]
         )
-        assert transform_sm_desc["TransformJobStatus"] in self.list_status_created
+        assert transform_sm_desc["TransformJobStatus"] == JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
         
         self._assert_transform_status_in_sync(
-            transform_job_name, reference, self.status_completed
+            transform_job_name, reference, JOB_STATUS_COMPLETED
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 

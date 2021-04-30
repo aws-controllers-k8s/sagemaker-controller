@@ -23,11 +23,10 @@ from acktest.k8s import resource as k8s
 
 from e2e import (
     service_marker,
-    ENDPOINT_CONFIG_RESOURCE_PLURAL,
-    MODEL_RESOURCE_PLURAL,
     create_sagemaker_resource,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
+from e2e.common.config import *
 
 
 @pytest.fixture(scope="module")
