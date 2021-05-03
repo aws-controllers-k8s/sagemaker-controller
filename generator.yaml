@@ -326,6 +326,8 @@ resources:
     fields:
       JobDefinitionArn:
         is_arn: true
+      JobDefinitionName:
+        is_name: true
   ModelBiasJobDefinition:
     exceptions:
       errors:
@@ -347,6 +349,8 @@ resources:
     fields:
       JobDefinitionArn:
         is_arn: true
+      JobDefinitionName:
+        is_name: true
   ModelExplainabilityJobDefinition:
     exceptions:
       errors:
@@ -368,6 +372,8 @@ resources:
     fields:
       JobDefinitionArn:
         is_arn: true
+      JobDefinitionName:
+        is_name: true
   ModelQualityJobDefinition:
     exceptions:
       errors:
@@ -389,6 +395,8 @@ resources:
     fields:
       JobDefinitionArn:
         is_arn: true
+      JobDefinitionName:
+        is_name: true
   MonitoringSchedule:
     update_conditions_custom_method_name: customUpdateConditions
     exceptions:

@@ -23,3 +23,7 @@ LIST_JOB_STATUS_STOPPED = ("Stopped", "Stopping", "Completed")
 JOB_STATUS_INPROGRESS: str = "InProgress"
 JOB_STATUS_COMPLETED: str = "Completed"
 DEBUGGERJOB_STATUS_COMPLETED: str = "NoIssuesFound"
+
+ENDPOINT_STATUS_INSERVICE = "InService"
+ENDPOINT_STATUS_CREATING = "Creating"
+ENDPOINT_STATUS_UPDATING = "Updating"
