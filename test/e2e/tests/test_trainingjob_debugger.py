@@ -33,6 +33,7 @@ from time import sleep
 
 RESOURCE_PLURAL = "trainingjobs"
 
+
 @pytest.fixture(scope="function")
 def xgboost_training_job_debugger():
     resource_name = random_suffix_name("xgboost-trainingjob-debugger", 32)
@@ -48,11 +49,12 @@ def xgboost_training_job_debugger():
     assert resource is not None
     assert k8s.get_resource_arn(resource) is not None
 
-    yield (reference, resource) 
+    yield (reference, resource)
 
     if k8s.get_resource_exists(reference):
         _, deleted = k8s.delete_custom_resource(reference)
         assert deleted
+
 
 def get_sagemaker_training_job(training_job_name: str):
     try:
@@ -66,30 +68,37 @@ def get_sagemaker_training_job(training_job_name: str):
         )
         return None
 
+
 # TODO: Move to __init__.py
 def get_training_sagemaker_status(training_job_name: str):
     training_sm_desc = get_sagemaker_training_job(training_job_name)
     return training_sm_desc["TrainingJobStatus"]
+
 
 def get_training_resource_status(reference: k8s.CustomResourceReference):
     resource = k8s.get_resource(reference)
     assert "trainingJobStatus" in resource["status"]
     return resource["status"]["trainingJobStatus"]
 
+
 def get_training_debugger_sagemaker_status(training_job_name: str):
     training_sm_desc = get_sagemaker_training_job(training_job_name)
     return training_sm_desc["DebugRuleEvaluationStatuses"][0]["RuleEvaluationStatus"]
 
+
 def get_training_debugger_resource_status(reference: k8s.CustomResourceReference):
     resource = k8s.get_resource(reference)
-    resource_status = resource["status"]["debugRuleEvaluationStatuses"][0]["ruleEvaluationStatus"]
+    resource_status = resource["status"]["debugRuleEvaluationStatuses"][0][
+        "ruleEvaluationStatus"
+    ]
     assert resource_status is not None
     return resource_status
+
 
 @service_marker
 class TestTrainingDebuggerJob:
     def _wait_sagemaker_training_status(
-        self, 
+        self,
         training_job_name,
         expected_status: str,
         wait_periods: int = 30,
@@ -102,7 +111,7 @@ class TestTrainingDebuggerJob:
             get_training_sagemaker_status,
             training_job_name,
         )
-    
+
     def _wait_resource_training_status(
         self,
         reference: k8s.CustomResourceReference,
@@ -111,26 +120,24 @@ class TestTrainingDebuggerJob:
         period_length: int = 30,
     ):
         return wait_for_status(
-            expected_status, 
+            expected_status,
             wait_periods,
-            period_length, 
-            get_training_resource_status, 
-            reference
-    )
+            period_length,
+            get_training_resource_status,
+            reference,
+        )
 
     def _assert_training_status_in_sync(
         self, training_job_name, reference, expected_status
     ):
         assert (
-            self._wait_sagemaker_training_status(
-                training_job_name, expected_status
-            ) 
+            self._wait_sagemaker_training_status(training_job_name, expected_status)
             == self._wait_resource_training_status(reference, expected_status)
             == expected_status
         )
 
     def _wait_sagemaker_training_debugger_status(
-        self, 
+        self,
         training_job_name,
         expected_status: str,
         wait_periods: int = 30,
@@ -143,7 +150,7 @@ class TestTrainingDebuggerJob:
             get_training_debugger_sagemaker_status,
             training_job_name,
         )
-    
+
     def _wait_resource_training_debugger_status(
         self,
         reference: k8s.CustomResourceReference,
@@ -152,12 +159,12 @@ class TestTrainingDebuggerJob:
         period_length: int = 30,
     ):
         return wait_for_status(
-            expected_status, 
+            expected_status,
             wait_periods,
             period_length,
-            get_training_debugger_resource_status, 
-            reference
-    )
+            get_training_debugger_resource_status,
+            reference,
+        )
 
     def _assert_training_debugger_status_in_sync(
         self, training_job_name, reference, expected_status

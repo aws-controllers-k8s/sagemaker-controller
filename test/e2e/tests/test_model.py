@@ -28,6 +28,7 @@ from e2e import (
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
 
+
 @pytest.fixture(scope="module")
 def xgboost_model():
     resource_name = random_suffix_name("xgboost-model", 32)

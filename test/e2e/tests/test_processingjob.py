@@ -23,7 +23,7 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    wait_for_status, 
+    wait_for_status,
     sagemaker_client,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
@@ -32,6 +32,7 @@ from e2e.common import config as cfg
 from time import sleep
 
 RESOURCE_PLURAL = "processingjobs"
+
 
 @pytest.fixture(scope="function")
 def kmeans_processing_job():
@@ -48,11 +49,12 @@ def kmeans_processing_job():
     assert resource is not None
     assert k8s.get_resource_arn(resource) is not None
 
-    yield (reference, resource) 
+    yield (reference, resource)
 
     if k8s.get_resource_exists(reference):
         _, deleted = k8s.delete_custom_resource(reference)
         assert deleted
+
 
 def get_sagemaker_processing_job(processing_job_name: str):
     try:
@@ -66,14 +68,17 @@ def get_sagemaker_processing_job(processing_job_name: str):
         )
         return None
 
+
 def get_processing_sagemaker_status(processing_job_name: str):
     processing_sm_desc = get_sagemaker_processing_job(processing_job_name)
     return processing_sm_desc["ProcessingJobStatus"]
+
 
 def get_processing_resource_status(reference: k8s.CustomResourceReference):
     resource = k8s.get_resource(reference)
     assert "processingJobStatus" in resource["status"]
     return resource["status"]["processingJobStatus"]
+
 
 @service_marker
 @pytest.mark.canary
@@ -86,11 +91,15 @@ class TestProcessingJob:
         period_length: int = 30,
     ):
         return wait_for_status(
-        expected_status, wait_periods, period_length, get_processing_resource_status, reference
-    )
+            expected_status,
+            wait_periods,
+            period_length,
+            get_processing_resource_status,
+            reference,
+        )
 
     def _wait_sagemaker_processing_status(
-        self, 
+        self,
         processing_job_name,
         expected_status: str,
         wait_periods: int = 30,
@@ -108,9 +117,7 @@ class TestProcessingJob:
         self, processing_job_name, reference, expected_status
     ):
         assert (
-            self._wait_sagemaker_processing_status(
-                processing_job_name, expected_status
-            )
+            self._wait_sagemaker_processing_status(processing_job_name, expected_status)
             == self._wait_resource_processing_status(reference, expected_status)
             == expected_status
         )

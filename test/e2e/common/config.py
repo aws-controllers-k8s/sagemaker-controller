@@ -18,16 +18,12 @@ MODEL_RESOURCE_PLURAL = "models"
 ENDPOINT_RESOURCE_PLURAL = "endpoints"
 DATA_QUALITY_JOB_DEFINITION_RESOURCE_PLURAL = "dataqualityjobdefinitions"
 
-# Job Type Resource Statuses 
-LIST_JOB_STATUS_STOPPED = (
-    "Stopped", 
-    "Stopping", 
-    "Completed"
-    )
+# Job Type Resource Statuses
+LIST_JOB_STATUS_STOPPED = ("Stopped", "Stopping", "Completed")
 JOB_STATUS_INPROGRESS: str = "InProgress"
 JOB_STATUS_COMPLETED: str = "Completed"
 DEBUGGERJOB_STATUS_COMPLETED: str = (
-        "NoIssuesFound", 
-        "Completed",
-        "CompletedWithIssues"
-    )
+    "NoIssuesFound",
+    "Completed",
+    "CompletedWithIssues",
+)

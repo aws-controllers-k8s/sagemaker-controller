@@ -29,8 +29,10 @@ service_marker = pytest.mark.service(arg=SERVICE_NAME)
 bootstrap_directory = Path(__file__).parent
 resource_directory = Path(__file__).parent / "resources"
 
+
 def sagemaker_client():
     return boto3.client("sagemaker")
+
 
 def create_sagemaker_resource(
     resource_plural, resource_name, spec_file, replacements, namespace="default"
