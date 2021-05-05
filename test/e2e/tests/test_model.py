@@ -23,9 +23,9 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    MODEL_RESOURCE_PLURAL,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
+from e2e.common import config as cfg
 
 
 @pytest.fixture(scope="module")
@@ -36,7 +36,7 @@ def xgboost_model():
     replacements["MODEL_NAME"] = resource_name
 
     reference, spec, resource = create_sagemaker_resource(
-        resource_plural=MODEL_RESOURCE_PLURAL,
+        resource_plural=cfg.MODEL_RESOURCE_PLURAL,
         resource_name=resource_name,
         spec_file="xgboost_model",
         replacements=replacements,

@@ -25,14 +25,12 @@ from acktest.k8s import resource as k8s
 
 from e2e import (
     service_marker,
-    ENDPOINT_CONFIG_RESOURCE_PLURAL,
-    MODEL_RESOURCE_PLURAL,
-    ENDPOINT_RESOURCE_PLURAL,
     create_sagemaker_resource,
     wait_sagemaker_endpoint_status,
     wait_resource_endpoint_status,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
+from e2e.common import config as cfg
 
 FAIL_UPDATE_ERROR_MESSAGE = "unable to update endpoint. check FailureReason"
 
@@ -49,7 +47,7 @@ def single_container_model(name_suffix):
     replacements["MODEL_NAME"] = model_resource_name
 
     model_reference, model_spec, model_resource = create_sagemaker_resource(
-        resource_plural=MODEL_RESOURCE_PLURAL,
+        resource_plural=cfg.MODEL_RESOURCE_PLURAL,
         resource_name=model_resource_name,
         spec_file="xgboost_model",
         replacements=replacements,
@@ -74,7 +72,7 @@ def multi_variant_config(name_suffix, single_container_model):
     replacements["MODEL_NAME"] = model_resource_name
 
     config_reference, config_spec, config_resource = create_sagemaker_resource(
-        resource_plural=ENDPOINT_CONFIG_RESOURCE_PLURAL,
+        resource_plural=cfg.ENDPOINT_CONFIG_RESOURCE_PLURAL,
         resource_name=config_resource_name,
         spec_file="endpoint_config_multi_variant",
         replacements=replacements,
@@ -99,7 +97,7 @@ def single_variant_config(name_suffix, single_container_model):
     replacements["MODEL_NAME"] = model_resource_name
 
     config_reference, config_spec, config_resource = create_sagemaker_resource(
-        resource_plural=ENDPOINT_CONFIG_RESOURCE_PLURAL,
+        resource_plural=cfg.ENDPOINT_CONFIG_RESOURCE_PLURAL,
         resource_name=config_resource_name,
         spec_file="endpoint_config_single_variant",
         replacements=replacements,
@@ -124,7 +122,7 @@ def xgboost_endpoint(name_suffix, single_variant_config):
     replacements["ENDPOINT_CONFIG_NAME"] = config_resource_name
 
     reference, spec, resource = create_sagemaker_resource(
-        resource_plural=ENDPOINT_RESOURCE_PLURAL,
+        resource_plural=cfg.ENDPOINT_RESOURCE_PLURAL,
         resource_name=endpoint_resource_name,
         spec_file="endpoint_base",
         replacements=replacements,
@@ -157,7 +155,7 @@ def faulty_config(name_suffix, single_container_model):
     replacements["MODEL_NAME"] = model_resource_name
     replacements["MODEL_LOCATION"] = f"s3://{model_bucket}/{model_destination_key}"
     model_reference, model_spec, model_resource = create_sagemaker_resource(
-        resource_plural=MODEL_RESOURCE_PLURAL,
+        resource_plural=cfg.MODEL_RESOURCE_PLURAL,
         resource_name=model_resource_name,
         spec_file="xgboost_model_with_model_location",
         replacements=replacements,
@@ -174,7 +172,7 @@ def faulty_config(name_suffix, single_container_model):
     replacements["ENDPOINT_CONFIG_NAME"] = config_resource_name
 
     config_reference, config_spec, config_resource = create_sagemaker_resource(
-        resource_plural=ENDPOINT_CONFIG_RESOURCE_PLURAL,
+        resource_plural=cfg.ENDPOINT_CONFIG_RESOURCE_PLURAL,
         resource_name=config_resource_name,
         spec_file="endpoint_config_multi_variant",
         replacements=replacements,

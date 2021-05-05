@@ -47,6 +47,6 @@ spec:
           s3UploadMode: EndOfJob
       - outputName: valid_data
         s3Output:
-          s3URI: s3://{DATA_BUCKET}/sagemaker/processing/output/
+          s3URI: s3://$SAGEMAKER_DATA_BUCKET/sagemaker/processing/output/
           localPath: /opt/ml/processing/output_valid/
           s3UploadMode: EndOfJob

@@ -42,6 +42,54 @@ XGBOOST_IMAGE_URIS = {
     "sa-east-1": "737474898029.dkr.ecr.sa-east-1.amazonaws.com",
 }
 
+DEBUGGER_IMAGE_URIS = {
+    "us-west-1": "685455198987.dkr.ecr.us-west-1.amazonaws.com",
+    "us-west-2": "895741380848.dkr.ecr.us-west-2.amazonaws.com",
+    "us-east-1": "503895931360.dkr.ecr.us-east-1.amazonaws.com",
+    "us-east-2": "915447279597.dkr.ecr.us-east-2.amazonaws.com",
+    "ap-east-1": "199566480951.dkr.ecr.ap-east-1.amazonaws.com",
+    "ap-northeast-1": "430734990657.dkr.ecr.ap-northeast-1.amazonaws.com",
+    "ap-northeast-2": "578805364391.dkr.ecr.ap-northeast-2.amazonaws.com",
+    "ap-south-1": "904829902805.dkr.ecr.ap-south-1.amazonaws.com",
+    "ap-southeast-1": "972752614525.dkr.ecr.ap-southeast-1.amazonaws.com",
+    "ap-southeast-2": "184798709955.dkr.ecr.ap-southeast-2.amazonaws.com",
+    "ca-central-1": "519511493484.dkr.ecr.ca-central-1.amazonaws.com",
+    "cn-north-1": "618459771430.dkr.ecr.cn-north-1.amazonaws.com.cn",
+    "cn-northwest-1": "658757709296.dkr.ecr.cn-northwest-1.amazonaws.com.cn",
+    "eu-central-1": "482524230118.dkr.ecr.eu-central-1.amazonaws.com",
+    "eu-north-1": "314864569078.dkr.ecr.eu-north-1.amazonaws.com",
+    "eu-west-1": "929884845733.dkr.ecr.eu-west-1.amazonaws.com",
+    "eu-west-2": "250201462417.dkr.ecr.eu-west-2.amazonaws.com",
+    "eu-west-3": "447278800020.dkr.ecr.eu-west-3.amazonaws.com",
+    "me-south-1": "986000313247.dkr.ecr.me-south-1.amazonaws.com",
+    "sa-east-1": "818342061345.dkr.ecr.sa-east-1.amazonaws.com",
+}
+
+# https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-algo-docker-registry-paths.html
+XGBOOST_V1_IMAGE_URIS = {
+    "us-west-1": "632365934929.dkr.ecr.us-west-1.amazonaws.com",
+    "us-west-2": "433757028032.dkr.ecr.us-west-2.amazonaws.com",
+    "us-east-1": "811284229777.dkr.ecr.us-east-1.amazonaws.com",
+    "us-east-2": "825641698319.dkr.ecr.us-east-2.amazonaws.com",
+    "ap-east-1": "286214385809.dkr.ecr.ap-east-1.amazonaws.com",
+    "ap-northeast-1": "501404015308.dkr.ecr.ap-northeast-1.amazonaws.com",
+    "ap-northeast-2": "306986355934.dkr.ecr.ap-northeast-2.amazonaws.com",
+    "ap-south-1": "991648021394.dkr.ecr.ap-south-1.amazonaws.com",
+    "ap-southeast-1": "475088953585.dkr.ecr.ap-southeast-1.amazonaws.com",
+    "ap-southeast-2": "544295431143.dkr.ecr.ap-southeast-2.amazonaws.com",
+    "ca-central-1": "469771592824.dkr.ecr.ca-central-1.amazonaws.com",
+    "cn-north-1": "390948362332.dkr.ecr.cn-north-1.amazonaws.com",
+    "cn-northwest-1": "387376663083.dkr.ecr.cn-northwest-1.amazonaws.com",
+    "eu-central-1": "813361260812.dkr.ecr.eu-central-1.amazonaws.com",
+    "eu-north-1": "669576153137.dkr.ecr.eu-north-1.amazonaws.com",
+    "eu-west-1": "685385470294.dkr.ecr.eu-west-1.amazonaws.com",
+    "eu-west-2": "644912444149.dkr.ecr.eu-west-2.amazonaws.com",
+    "eu-west-3": "749696950732.dkr.ecr.eu-west-3.amazonaws.com",
+    "me-south-1": "249704162688.dkr.ecr.me-south-1.amazonaws.com",
+    "sa-east-1": "855470959533.dkr.ecr.sa-east-1.amazonaws.com",
+}
+
+
 PYTORCH_TRAIN_IMAGE_URIS = {
     "us-east-1": "763104351884.dkr.ecr.us-east-1.amazonaws.com",
     "us-east-2": "763104351884.dkr.ecr.us-east-2.amazonaws.com",
@@ -121,6 +169,8 @@ CLARIFY_IMAGE_URIS = {
 REPLACEMENT_VALUES = {
     "SAGEMAKER_DATA_BUCKET": get_bootstrap_resources().DataBucketName,
     "XGBOOST_IMAGE_URI": f"{XGBOOST_IMAGE_URIS[get_region()]}/sagemaker-xgboost:1.0-1-cpu-py3",
+    "DEBUGGER_IMAGE_URI": f"{DEBUGGER_IMAGE_URIS[get_region()]}/sagemaker-debugger-rules:latest",
+    "XGBOOST_V1_IMAGE_URI": f"{XGBOOST_V1_IMAGE_URIS[get_region()]}/xgboost:latest",
     "PYTORCH_TRAIN_IMAGE_URI": f"{PYTORCH_TRAIN_IMAGE_URIS[get_region()]}/pytorch-training:1.5.0-cpu-py36-ubuntu16.04",
     "SAGEMAKER_EXECUTION_ROLE_ARN": get_bootstrap_resources().ExecutionRoleARN,
     "MODEL_MONITOR_ANALYZER_IMAGE_URI": f"{MODEL_MONITOR_IMAGE_URIS[get_region()]}/sagemaker-model-monitor-analyzer",

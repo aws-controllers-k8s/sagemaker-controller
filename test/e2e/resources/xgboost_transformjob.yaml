@@ -4,7 +4,6 @@ metadata:
   name: $TRANSFORM_JOB_NAME
 spec:
   transformJobName: $TRANSFORM_JOB_NAME
-  roleARN: $SAGEMAKER_EXECUTION_ROLE_ARN
   modelName: $MODEL_NAME
   transformInput:
     contentType: text/csv
