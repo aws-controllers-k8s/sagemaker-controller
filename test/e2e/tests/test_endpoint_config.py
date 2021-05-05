@@ -23,11 +23,10 @@ from acktest.k8s import resource as k8s
 
 from e2e import (
     service_marker,
-    ENDPOINT_CONFIG_RESOURCE_PLURAL,
-    MODEL_RESOURCE_PLURAL,
     create_sagemaker_resource,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
+from e2e.common.config import config as cfg
 
 
 @pytest.fixture(scope="module")
@@ -40,7 +39,7 @@ def single_variant_config():
     replacements["MODEL_NAME"] = model_resource_name
 
     model_reference, model_spec, model_resource = create_sagemaker_resource(
-        resource_plural=MODEL_RESOURCE_PLURAL,
+        resource_plural=cfg.MODEL_RESOURCE_PLURAL,
         resource_name=model_resource_name,
         spec_file="xgboost_model",
         replacements=replacements,
@@ -49,7 +48,7 @@ def single_variant_config():
     assert k8s.get_resource_arn(model_resource) is not None
 
     config_reference, config_spec, config_resource = create_sagemaker_resource(
-        resource_plural=ENDPOINT_CONFIG_RESOURCE_PLURAL,
+        resource_plural=cfg.ENDPOINT_CONFIG_RESOURCE_PLURAL,
         resource_name=config_resource_name,
         spec_file="endpoint_config_single_variant",
         replacements=replacements,

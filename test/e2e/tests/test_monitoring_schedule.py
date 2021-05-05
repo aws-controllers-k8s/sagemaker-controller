@@ -144,7 +144,9 @@ class TestMonitoringSchedule:
             == expected_status
         )
 
-    def test_smoke(self, sagemaker_client, xgboost_churn_data_quality_monitoring_schedule):
+    def test_smoke(
+        self, sagemaker_client, xgboost_churn_data_quality_monitoring_schedule
+    ):
         (reference, resource, spec) = xgboost_churn_data_quality_monitoring_schedule
         assert k8s.get_resource_exists(reference)
 

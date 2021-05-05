@@ -16,10 +16,6 @@
 import pytest
 
 from e2e import (
-    ENDPOINT_CONFIG_RESOURCE_PLURAL,
-    MODEL_RESOURCE_PLURAL,
-    ENDPOINT_RESOURCE_PLURAL,
-    DATA_QUALITY_JOB_DEFINITION_RESOURCE_PLURAL,
     create_sagemaker_resource,
     wait_sagemaker_endpoint_status,
 )
@@ -27,6 +23,7 @@ from e2e import (
 from e2e.replacement_values import REPLACEMENT_VALUES
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
+from e2e.common import config as cfg
 
 
 @pytest.fixture(scope="module")
@@ -48,7 +45,7 @@ def xgboost_churn_endpoint(sagemaker_client):
     ] = f"s3://{data_bucket}/sagemaker/model/xgb-churn-prediction-model.tar.gz"
 
     model_reference, model_spec, model_resource = create_sagemaker_resource(
-        resource_plural=MODEL_RESOURCE_PLURAL,
+        resource_plural=cfg.MODEL_RESOURCE_PLURAL,
         resource_name=model_resource_name,
         spec_file="xgboost_model_with_model_location",
         replacements=replacements,
@@ -61,7 +58,7 @@ def xgboost_churn_endpoint(sagemaker_client):
         endpoint_config_spec,
         endpoint_config_resource,
     ) = create_sagemaker_resource(
-        resource_plural=ENDPOINT_CONFIG_RESOURCE_PLURAL,
+        resource_plural=cfg.ENDPOINT_CONFIG_RESOURCE_PLURAL,
         resource_name=endpoint_config_resource_name,
         spec_file="endpoint_config_data_capture_single_variant",
         replacements=replacements,
@@ -70,7 +67,7 @@ def xgboost_churn_endpoint(sagemaker_client):
     assert k8s.get_resource_arn(endpoint_config_resource) is not None
 
     endpoint_reference, endpoint_spec, endpoint_resource = create_sagemaker_resource(
-        resource_plural=ENDPOINT_RESOURCE_PLURAL,
+        resource_plural=cfg.ENDPOINT_RESOURCE_PLURAL,
         resource_name=endpoint_resource_name,
         spec_file="endpoint_base",
         replacements=replacements,
@@ -100,7 +97,7 @@ def xgboost_churn_data_quality_job_definition(xgboost_churn_endpoint):
     replacements["ENDPOINT_NAME"] = endpoint_name
 
     job_definition_reference, _, resource = create_sagemaker_resource(
-        resource_plural=DATA_QUALITY_JOB_DEFINITION_RESOURCE_PLURAL,
+        resource_plural=cfg.DATA_QUALITY_JOB_DEFINITION_RESOURCE_PLURAL,
         resource_name=resource_name,
         spec_file="data_quality_job_definition_xgboost_churn",
         replacements=replacements,

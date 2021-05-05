@@ -23,16 +23,15 @@ SERVICE_NAME = "sagemaker"
 CRD_GROUP = "sagemaker.services.k8s.aws"
 CRD_VERSION = "v1alpha1"
 
-ENDPOINT_CONFIG_RESOURCE_PLURAL = "endpointconfigs"
-MODEL_RESOURCE_PLURAL = "models"
-ENDPOINT_RESOURCE_PLURAL = "endpoints"
-DATA_QUALITY_JOB_DEFINITION_RESOURCE_PLURAL = "dataqualityjobdefinitions"
-
 # PyTest marker for the current service
 service_marker = pytest.mark.service(arg=SERVICE_NAME)
 
 bootstrap_directory = Path(__file__).parent
 resource_directory = Path(__file__).parent / "resources"
+
+
+def sagemaker_client():
+    return boto3.client("sagemaker")
 
 
 def create_sagemaker_resource(
