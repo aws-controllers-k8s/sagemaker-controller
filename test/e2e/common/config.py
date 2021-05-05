@@ -22,8 +22,4 @@ DATA_QUALITY_JOB_DEFINITION_RESOURCE_PLURAL = "dataqualityjobdefinitions"
 LIST_JOB_STATUS_STOPPED = ("Stopped", "Stopping", "Completed")
 JOB_STATUS_INPROGRESS: str = "InProgress"
 JOB_STATUS_COMPLETED: str = "Completed"
-DEBUGGERJOB_STATUS_COMPLETED: str = (
-    "NoIssuesFound",
-    "Completed",
-    "CompletedWithIssues",
-)
+DEBUGGERJOB_STATUS_COMPLETED: str = "NoIssuesFound"
