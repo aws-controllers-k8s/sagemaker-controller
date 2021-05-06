@@ -1,2 +1,2 @@
-acktest @ git+https://github.com/aws-controllers-k8s/test-infra.git@955d7831ee374a212250179e95a5f3b75e555fd9
+acktest @ git+https://github.com/surajkota/test-infra.git@refresh-token
 black==20.8b1
