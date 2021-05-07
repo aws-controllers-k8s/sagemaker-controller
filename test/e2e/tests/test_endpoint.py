@@ -26,8 +26,7 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    wait_sagemaker_endpoint_status,
-    wait_resource_endpoint_status,
+    assert_endpoint_status_in_sync,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
@@ -190,10 +189,6 @@ def faulty_config(name_suffix, single_container_model):
 @service_marker
 @pytest.mark.canary
 class TestEndpoint:
-    status_creating: str = "Creating"
-    status_inservice: str = "InService"
-    status_udpating: str = "Updating"
-
     def _get_resource_endpoint_arn(self, resource: Dict):
         assert (
             "ackResourceMetadata" in resource["status"]
@@ -209,17 +204,6 @@ class TestEndpoint:
                 f"SageMaker could not find a endpoint with the name {endpoint_name}"
             )
             return None
-
-    def _assert_endpoint_status_in_sync(
-        self, sagemaker_client, endpoint_name, reference, expected_status
-    ):
-        assert (
-            wait_sagemaker_endpoint_status(
-                sagemaker_client, endpoint_name, expected_status
-            )
-            == wait_resource_endpoint_status(reference, expected_status, 2)
-            == expected_status
-        )
 
     def create_endpoint_test(self, sagemaker_client, xgboost_endpoint):
         (reference, resource, _) = xgboost_endpoint
@@ -237,13 +221,13 @@ class TestEndpoint:
         )
 
         # endpoint transitions Creating -> InService state
-        self._assert_endpoint_status_in_sync(
-            sagemaker_client, endpoint_name, reference, self.status_creating
+        assert_endpoint_status_in_sync(
+            endpoint_name, reference, cfg.ENDPOINT_STATUS_CREATING
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
-        self._assert_endpoint_status_in_sync(
-            sagemaker_client, endpoint_name, reference, self.status_inservice
+        assert_endpoint_status_in_sync(
+            endpoint_name, reference, cfg.ENDPOINT_STATUS_INSERVICE
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
@@ -261,11 +245,10 @@ class TestEndpoint:
         assert endpoint_resource is not None
 
         # endpoint transitions Updating -> InService state
-        self._assert_endpoint_status_in_sync(
-            sagemaker_client,
+        assert_endpoint_status_in_sync(
             endpoint_reference.name,
             endpoint_reference,
-            self.status_udpating,
+            cfg.ENDPOINT_STATUS_UPDATING,
         )
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "False")
         endpoint_resource = k8s.get_resource(endpoint_reference)
@@ -274,11 +257,10 @@ class TestEndpoint:
             == faulty_config_name
         )
 
-        self._assert_endpoint_status_in_sync(
-            sagemaker_client,
+        assert_endpoint_status_in_sync(
             endpoint_reference.name,
             endpoint_reference,
-            self.status_inservice,
+            cfg.ENDPOINT_STATUS_INSERVICE,
         )
 
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "True")
@@ -323,11 +305,10 @@ class TestEndpoint:
         assert endpoint_resource is not None
 
         # endpoint transitions Updating -> InService state
-        self._assert_endpoint_status_in_sync(
-            sagemaker_client,
+        assert_endpoint_status_in_sync(
             endpoint_reference.name,
             endpoint_reference,
-            self.status_udpating,
+            cfg.ENDPOINT_STATUS_UPDATING,
         )
 
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "False")
@@ -340,11 +321,10 @@ class TestEndpoint:
             == new_config_name
         )
 
-        self._assert_endpoint_status_in_sync(
-            sagemaker_client,
+        assert_endpoint_status_in_sync(
             endpoint_reference.name,
             endpoint_reference,
-            self.status_inservice,
+            cfg.ENDPOINT_STATUS_INSERVICE,
         )
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "True")
         assert k8s.assert_condition_state_message(
