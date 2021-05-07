@@ -1,0 +1,29 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      # Make all shell scripts executable. This is required when running code copied from S3
+      - find ./ -type f -name "*.sh" -exec chmod +x {} \;
+
+      # Get cached test image
+      - aws ecr get-login-password --region $CLUSTER_REGION | docker login --username AWS --password-stdin $ECR_CACHE_URI || true
+      - docker pull ${ECR_CACHE_URI}:latest --quiet || true
+
+      # Login to dockerhub to avoid hitting throttle limit
+      - docker login -u $DOCKER_CONFIG_USERNAME -p $DOCKER_CONFIG_PASSWORD
+
+      # Build test image
+      - >
+        docker build -f ./test/canary/Dockerfile.canary . -t ${ECR_CACHE_URI}:latest
+        --build-arg SERVICE="${SERVICE##*/}" --quiet
+        || echo "Docker Build Failed" || true
+  build:
+    commands:
+      # Run tests
+      - docker run --name ack-canary $(env | cut -f1 -d= | sed 's/^/-e /') --mount type=bind,source="$(pwd)/",target="/${SERVICE}-controller/" ${ECR_CACHE_URI}:latest
+      
+      # Push test image to cache ECR repo
+      - docker push ${ECR_CACHE_URI}:latest || true
+      
+      

@@ -26,7 +26,7 @@ from e2e import (
     create_sagemaker_resource,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
-from e2e.common.config import config as cfg
+from e2e.common import config as cfg
 
 
 @pytest.fixture(scope="module")
