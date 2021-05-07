@@ -1,23 +1,17 @@
-# Deploy ACK Helm Charts 
+#!/usr/bin/env bash
 
-# Inputs to this file as environment variables 
-# SERVICE_REPO_PATH_DOCKER
-# OIDC_ROLE_ARN
-# SERVICE
-# SERVICE_REGION
+# Deploy ACK Helm Charts
 
-cd $SERVICE_REPO_PATH_DOCKER
+function install_helm_chart() {
+    local service="$1"
+    local oidc_role_arn="$2"
+    local region="$3"
+    local namespace="$4"
 
-yq w -i helm/values.yaml "serviceAccount.annotations" ""
-yq w -i helm/values.yaml 'serviceAccount.annotations."eks.amazonaws.com/role-arn"' "$OIDC_ROLE_ARN"
-yq w -i helm/values.yaml "aws.region" $SERVICE_REGION
+    yq w -i helm/values.yaml "serviceAccount.annotations" ""
+    yq w -i helm/values.yaml 'serviceAccount.annotations."eks.amazonaws.com/role-arn"' "$oidc_role_arn"
+    yq w -i helm/values.yaml "aws.region" $region
 
-export ACK_K8S_NAMESPACE=${NAMESPACE:-"ack-system"}
-kubectl create namespace $ACK_K8S_NAMESPACE
-
-helm delete -n $ACK_K8S_NAMESPACE ack-$SERVICE-controller 
-helm install -n $ACK_K8S_NAMESPACE ack-$SERVICE-controller helm 
-
-echo "Make sure helm charts are deployed properly"
-kubectl -n $ACK_K8S_NAMESPACE get pods 
-kubectl get crds
+    kubectl create namespace $namespace
+    helm install -n $namespace ack-$service-controller helm
+}

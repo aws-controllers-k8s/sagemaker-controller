@@ -1,7 +1,7 @@
 FROM ubuntu:18.04
 
 # Build time parameters 
-ARG SERVICE_REPO_NAME
+ARG SERVICE=sagemaker
 
 RUN apt-get update && apt-get install -y curl \
     wget \
@@ -33,17 +33,18 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.6/b
 RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp && mv /tmp/eksctl /bin
 
 # Install Helm 
-RUN curl -q -L "https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz" | tar zxf - -C /usr/local/bin/
-RUN mv /usr/local/bin/linux-amd64/helm /usr/local/bin/helm \
+RUN curl -q -L "https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz" | tar zxf - -C /usr/local/bin/ \
+ && mv /usr/local/bin/linux-amd64/helm /usr/local/bin/helm \
  && rm -r /usr/local/bin/linux-amd64 \
  && chmod +x /usr/local/bin/helm 
 
-COPY ./ /$SERVICE_REPO_NAME
-ENV SERVICE_REPO_PATH_DOCKER=/$SERVICE_REPO_NAME
+ENV SERVICE_REPO_PATH=/$SERVICE-controller
+COPY ./test/e2e/requirements.txt requirements.txt
 
-RUN ln -s /usr/bin/python3.8 /usr/bin/python
+RUN ln -s /usr/bin/python3.8 /usr/bin/python \
+ && python -m pip install --upgrade pip
 
-RUN python -m pip install -r $SERVICE_REPO_PATH_DOCKER/test/e2e/requirements.txt
+RUN python -m pip install -r requirements.txt
 
-WORKDIR /$SERVICE_REPO_NAME
+WORKDIR /$SERVICE_REPO_PATH
 CMD ["./test/canary/scripts/run_test.sh"]

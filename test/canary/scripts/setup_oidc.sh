@@ -1,42 +1,67 @@
-# OIDC Setup 
+#!/usr/bin/env bash
+# OIDC Setup
 
-# Inputs to this file as environment variables 
-# CLUSTER_REGION
-# CLUSTER_NAME
+# A function to get the OIDC_ID associated with an EKS cluster
+function get_oidc_id() {
+  local cluster_name="$1"
+  local region = "$2"
+  eksctl utils associate-iam-oidc-provider --cluster $cluster_name --region $region --approve
+  local oidc_url=$(aws eks describe-cluster --region $region --name $cluster_name  --query "cluster.identity.oidc.issuer" --output text | cut -c9-)
+  echo "${oidc_url}"
+}
 
-NAMESPACE=${NAMESPACE:-"ack-system"}
 
-AWS_ACC_NUM=$(aws sts get-caller-identity --output text --query "Account")
-aws --region $CLUSTER_REGION eks update-kubeconfig --name $CLUSTER_NAME
-eksctl utils associate-iam-oidc-provider --cluster $CLUSTER_NAME --region $CLUSTER_REGION --approve
+function generate_trust_policy() {
+  local oidc_url="$1"
+  local namespace="$2"
+  local account_id=$(aws sts get-caller-identity --output text --query "Account")
 
-OIDC_URL=$(aws eks describe-cluster --region $CLUSTER_REGION --name $CLUSTER_NAME  --query "cluster.identity.oidc.issuer" --output text | cut -c9-)
-
-cat <<EOF > trust.json
+  cat <<EOF > trust.json
 {
   "Version": "2012-10-17",
   "Statement": [
     {
       "Effect": "Allow",
       "Principal": {
-        "Federated": "arn:aws:iam::$AWS_ACC_NUM:oidc-provider/$OIDC_URL"
+        "Federated": "arn:aws:iam::${account_id}:oidc-provider/${oidc_url}"
       },
       "Action": "sts:AssumeRoleWithWebIdentity",
       "Condition": {
         "StringEquals": {
-          "$OIDC_URL:aud": "sts.amazonaws.com",
-          "$OIDC_URL:sub": ["system:serviceaccount:${NAMESPACE}:ack-sagemaker-controller"]
+          "${oidc_url}:aud": "sts.amazonaws.com",
+          "${oidc_url}:sub": ["system:serviceaccount:${namespace}:ack-sagemaker-controller"]
         }
       }
     }
   ]
 }
 EOF
+}
 
+function create_oidc_role() {
+  local cluster_name="$1"
+  local region="$2"
+  local namespace="$3"
+  local oidc_role_name=ack-oidc-role-$cluster_name-$namespace
+  
+  # Create role only if it does not exist
+  set +e
+  aws iam get-role --role-name ${oidc_role_name}
+  exit_code=$?
+  set -euo pipefail
 
-# TODO : check if iam role exists 
-aws iam create-role --role-name ack-oidc-role-$CLUSTER_NAME --assume-role-policy-document file://trust.json
-aws iam attach-role-policy --role-name ack-oidc-role-$CLUSTER_NAME --policy-arn arn:aws:iam::aws:policy/AmazonSageMakerFullAccess
-aws iam attach-role-policy --role-name ack-oidc-role-$CLUSTER_NAME --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess
-
-export OIDC_ROLE_ARN=$(aws iam get-role --role-name ack-oidc-role-$CLUSTER_NAME --output text --query 'Role.Arn')
+  if [[ $exit_code -eq 0 ]]; then
+    echo "A role for this cluster and namespace already exists in this account, assuming sagemaker access and proceeding."
+  else
+    echo "Creating new IAM role: $oidc_role_name"
+    local oidc_url=$(get_oidc_id "$cluster_name" "$region")
+    local trustfile="trust.json"
+    generate_trust_policy "$oidc_url" "$namespace"
+    aws iam create-role --role-name "$oidc_role_name" --assume-role-policy-document file://${trustfile}
+    aws iam attach-role-policy --role-name "$oidc_role_name" --policy-arn arn:aws:iam::aws:policy/AmazonSageMakerFullAccess
+    aws iam attach-role-policy --role-name "$oidc_role_name" --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess
+    rm "${trustfile}" 
+  fi
+  local oidc_role_arn=$(aws iam get-role --role-name $oidc_role_name --output text --query 'Role.Arn')
+  export OIDC_ROLE_ARN=$oidc_role_arn
+}
