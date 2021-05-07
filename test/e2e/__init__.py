@@ -21,6 +21,7 @@ from acktest.k8s import resource as k8s
 
 SERVICE_NAME = "sagemaker"
 CRD_GROUP = "sagemaker.services.k8s.aws"
+ADOPTED_RESOURCE_CRD_GROUP = "services.k8s.aws"
 CRD_VERSION = "v1alpha1"
 
 # PyTest marker for the current service
@@ -28,7 +29,6 @@ service_marker = pytest.mark.service(arg=SERVICE_NAME)
 
 bootstrap_directory = Path(__file__).parent
 resource_directory = Path(__file__).parent / "resources"
-
 
 def sagemaker_client():
     return boto3.client("sagemaker")
@@ -48,6 +48,25 @@ def create_sagemaker_resource(
         resource_plural,
         resource_name,
         spec_file,
+        replacements,
+        namespace,
+    )
+
+    return reference, spec, resource
+
+
+def create_adopted_resource(replacements, namespace="default"):
+    """
+    Wrapper around k8s.load_and_create_resource to create a Adopoted resource
+    """
+
+    reference, spec, resource = k8s.load_and_create_resource(
+        resource_directory,
+        ADOPTED_RESOURCE_CRD_GROUP,
+        CRD_VERSION,
+        "adoptedresources",
+        replacements["ADOPTED_RESOURCE_NAME"],
+        "adopted_resource_base",
         replacements,
         namespace,
     )
@@ -76,10 +95,9 @@ def wait_for_status(
     return actual_status
 
 
-def get_endpoint_sagemaker_status(sagemaker_client, endpoint_name):
-    return sagemaker_client.describe_endpoint(EndpointName=endpoint_name)[
-        "EndpointStatus"
-    ]
+def get_endpoint_sagemaker_status(endpoint_name):
+    response = sagemaker_client().describe_endpoint(EndpointName=endpoint_name)
+    return response["EndpointStatus"]
 
 
 def get_endpoint_resource_status(reference: k8s.CustomResourceReference):
@@ -89,7 +107,6 @@ def get_endpoint_resource_status(reference: k8s.CustomResourceReference):
 
 
 def wait_sagemaker_endpoint_status(
-    sagemaker_client,
     endpoint_name,
     expected_status: str,
     wait_periods: int = 60,
@@ -100,7 +117,6 @@ def wait_sagemaker_endpoint_status(
         wait_periods,
         period_length,
         get_endpoint_sagemaker_status,
-        sagemaker_client,
         endpoint_name,
     )
 
@@ -117,4 +133,14 @@ def wait_resource_endpoint_status(
         period_length,
         get_endpoint_resource_status,
         reference,
+    )
+
+
+def assert_endpoint_status_in_sync(
+    endpoint_name, reference, expected_status
+):
+    assert (
+        wait_sagemaker_endpoint_status(endpoint_name, expected_status)
+        == wait_resource_endpoint_status(reference, expected_status, 2)
+        == expected_status
     )

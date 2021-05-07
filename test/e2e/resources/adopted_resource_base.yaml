@@ -1,0 +1,12 @@
+apiVersion: services.k8s.aws/v1alpha1
+kind: AdoptedResource
+metadata:
+  name: $ADOPTED_RESOURCE_NAME
+spec:  
+  aws:
+    nameOrID: $TARGET_RESOURCE_AWS
+  kubernetes:
+    group: sagemaker.services.k8s.aws
+    kind: $RESOURCE_KIND
+    metadata:
+      name: $TARGET_RESOURCE_K8S
