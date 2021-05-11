@@ -13,5 +13,6 @@ function install_helm_chart() {
     yq w -i helm/values.yaml "aws.region" $region
 
     kubectl create namespace $namespace
-    helm install -n $namespace ack-$service-controller helm
+    kubectl apply -f helm/crds
+    helm install -n $namespace ack-$service-controller --skip-crds helm
 }
