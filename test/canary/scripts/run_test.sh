@@ -47,7 +47,9 @@ function cleanup {
   print_controller_logs
 
   helm delete -n $NAMESPACE ack-$SERVICE-controller
-  kubectl delete -f helm/crds
+  pushd $SERVICE_REPO_PATH
+    kubectl delete -f helm/crds
+  popd
   kubectl delete namespace $NAMESPACE
 
   cd $E2E_DIR
