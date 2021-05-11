@@ -4,8 +4,8 @@
 # A function to get the OIDC_ID associated with an EKS cluster
 function get_oidc_id() {
   local cluster_name="$1"
-  local region = "$2"
-  eksctl utils associate-iam-oidc-provider --cluster $cluster_name --region $region --approve
+  local region="$2"
+  eksctl utils associate-iam-oidc-provider --cluster $cluster_name --region $region --approve > /dev/null
   local oidc_url=$(aws eks describe-cluster --region $region --name $cluster_name  --query "cluster.identity.oidc.issuer" --output text | cut -c9-)
   echo "${oidc_url}"
 }
