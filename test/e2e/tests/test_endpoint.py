@@ -13,7 +13,7 @@
 """Integration tests for the SageMaker Endpoint API.
 """
 
-import boto3
+import botocore
 import pytest
 import logging
 import time
@@ -56,7 +56,7 @@ def single_container_model(name_suffix):
 
     yield (model_reference, model_resource)
 
-    _, deleted = k8s.delete_custom_resource(model_reference)
+    _, deleted = k8s.delete_custom_resource(model_reference, 3, 10)
     assert deleted
 
 
@@ -81,7 +81,7 @@ def multi_variant_config(name_suffix, single_container_model):
 
     yield (config_reference, config_resource)
 
-    _, deleted = k8s.delete_custom_resource(config_reference)
+    _, deleted = k8s.delete_custom_resource(config_reference, 3, 10)
     assert deleted
 
 
@@ -106,7 +106,7 @@ def single_variant_config(name_suffix, single_container_model):
 
     yield (config_reference, config_resource)
 
-    _, deleted = k8s.delete_custom_resource(config_reference)
+    _, deleted = k8s.delete_custom_resource(config_reference, 3, 10)
     assert deleted
 
 
@@ -133,7 +133,7 @@ def xgboost_endpoint(name_suffix, single_variant_config):
 
     # Delete the k8s resource if not already deleted by tests
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference)
+        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted
 
 
@@ -182,7 +182,7 @@ def faulty_config(name_suffix, single_container_model):
     yield (config_reference, config_resource)
 
     for cr in (model_reference, config_reference):
-        _, deleted = k8s.delete_custom_resource(cr)
+        _, deleted = k8s.delete_custom_resource(cr, 3, 10)
         assert deleted
 
 
@@ -199,9 +199,9 @@ class TestEndpoint:
     def _describe_sagemaker_endpoint(self, sagemaker_client, endpoint_name: str):
         try:
             return sagemaker_client.describe_endpoint(EndpointName=endpoint_name)
-        except BaseException:
+        except botocore.exceptions.ClientError as error:
             logging.error(
-                f"SageMaker could not find a endpoint with the name {endpoint_name}"
+                f"SageMaker could not find a endpoint with the name {endpoint_name}. Error {error}"
             )
             return None
 
@@ -349,7 +349,7 @@ class TestEndpoint:
         (reference, resource, _) = xgboost_endpoint
         endpoint_name = resource["spec"].get("endpointName", None)
 
-        _, deleted = k8s.delete_custom_resource(reference)
+        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted
 
         # resource is removed from management from controller side if call to deleteEndpoint succeeds.

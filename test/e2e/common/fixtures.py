@@ -81,7 +81,7 @@ def xgboost_churn_endpoint(sagemaker_client):
     yield endpoint_spec
 
     for cr in (model_reference, endpoint_config_reference, endpoint_reference):
-        _, deleted = k8s.delete_custom_resource(cr)
+        _, deleted = k8s.delete_custom_resource(cr, 3, 10)
         assert deleted
 
 
@@ -109,5 +109,5 @@ def xgboost_churn_data_quality_job_definition(xgboost_churn_endpoint):
     yield (job_definition_reference, resource)
 
     if k8s.get_resource_exists(job_definition_reference):
-        _, deleted = k8s.delete_custom_resource(job_definition_reference)
+        _, deleted = k8s.delete_custom_resource(job_definition_reference, 3, 10)
         assert deleted

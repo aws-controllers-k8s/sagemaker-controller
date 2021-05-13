@@ -159,7 +159,7 @@ def adopted_endpoint(sdk_endpoint):
 
     for cr in (adopt_model_reference, adopt_config_reference, adopt_endpoint_reference):
         if k8s.get_resource_exists(cr):
-            _, deleted = k8s.delete_custom_resource(cr)
+            _, deleted = k8s.delete_custom_resource(cr, 3, 10)
             assert deleted
 
 
