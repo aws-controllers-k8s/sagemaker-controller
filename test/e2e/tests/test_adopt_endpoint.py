@@ -30,14 +30,16 @@ from e2e import (
     create_adopted_resource,
     wait_sagemaker_endpoint_status,
     assert_endpoint_status_in_sync,
-    sagemaker_client
+    sagemaker_client,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
 
+
 @pytest.fixture(scope="module")
 def name_suffix():
     return random_suffix_name("sdk-endpoint", 32)
+
 
 def sdk_make_model(model_name):
     data_bucket = REPLACEMENT_VALUES["SAGEMAKER_DATA_BUCKET"]
@@ -55,6 +57,7 @@ def sdk_make_model(model_name):
     model_response = sagemaker_client().create_model(**model_input)
     assert model_response.get("ModelArn", None) is not None
     return model_input, model_response
+
 
 def sdk_make_endpoint_config(model_name, endpoint_config_name):
     endpoint_config_input = {
@@ -75,6 +78,7 @@ def sdk_make_endpoint_config(model_name, endpoint_config_name):
     assert endpoint_config_response.get("EndpointConfigArn", None) is not None
     return endpoint_config_input, endpoint_config_response
 
+
 def sdk_make_endpoint(endpoint_name, endpoint_config_name):
     endpoint_input = {
         "EndpointName": endpoint_name,
@@ -85,6 +89,7 @@ def sdk_make_endpoint(endpoint_name, endpoint_config_name):
 
     return endpoint_input, endpoint_response
 
+
 @pytest.fixture(scope="module")
 def sdk_endpoint(name_suffix):
     model_name = name_suffix + "-model"
@@ -92,8 +97,12 @@ def sdk_endpoint(name_suffix):
     endpoint_name = name_suffix
 
     model_input, model_response = sdk_make_model(model_name)
-    endpoint_config_input, endpoint_config_response = sdk_make_endpoint_config(model_name, endpoint_config_name)
-    endpoint_input, endpoint_response = sdk_make_endpoint(endpoint_name, endpoint_config_name)
+    endpoint_config_input, endpoint_config_response = sdk_make_endpoint_config(
+        model_name, endpoint_config_name
+    )
+    endpoint_input, endpoint_response = sdk_make_endpoint(
+        endpoint_name, endpoint_config_name
+    )
 
     yield (
         model_input,
@@ -103,9 +112,7 @@ def sdk_endpoint(name_suffix):
         endpoint_input,
         endpoint_response,
     )
-    wait_sagemaker_endpoint_status(
-        endpoint_name, cfg.ENDPOINT_STATUS_INSERVICE
-    )
+    wait_sagemaker_endpoint_status(endpoint_name, cfg.ENDPOINT_STATUS_INSERVICE)
     sagemaker_client().delete_endpoint(EndpointName=endpoint_name)
     sagemaker_client().delete_endpoint_config(EndpointConfigName=endpoint_config_name)
     sagemaker_client().delete_model(ModelName=model_name)
@@ -234,7 +241,11 @@ class TestAdoptedEndpoint:
         )
 
         endpoint_reference = k8s.create_reference(
-            CRD_GROUP, CRD_VERSION, cfg.ENDPOINT_RESOURCE_PLURAL, endpoint_name, namespace
+            CRD_GROUP,
+            CRD_VERSION,
+            cfg.ENDPOINT_RESOURCE_PLURAL,
+            endpoint_name,
+            namespace,
         )
         endpoint_resource = k8s.wait_resource_consumed_by_controller(endpoint_reference)
         assert endpoint_resource is not None

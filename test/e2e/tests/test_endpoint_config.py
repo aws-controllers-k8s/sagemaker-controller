@@ -22,11 +22,7 @@ from typing import Dict
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
 
-from e2e import (
-    service_marker,
-    create_sagemaker_resource,
-    sagemaker_client
-)
+from e2e import service_marker, create_sagemaker_resource, sagemaker_client
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
 
@@ -65,6 +61,7 @@ def single_variant_config():
         _, deleted = k8s.delete_custom_resource(config_reference, 3, 10)
         assert deleted
 
+
 def get_sagemaker_endpoint_config(config_name: str):
     try:
         return sagemaker_client().describe_endpoint_config(
@@ -86,11 +83,13 @@ class TestEndpointConfig:
 
         config_name = resource["spec"].get("endpointConfigName", None)
 
-        assert k8s.get_resource_arn(resource) == get_sagemaker_endpoint_config(config_name)["EndpointConfigArn"]
+        assert (
+            k8s.get_resource_arn(resource)
+            == get_sagemaker_endpoint_config(config_name)["EndpointConfigArn"]
+        )
 
         # Delete the k8s resource.
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted
 
         assert get_sagemaker_endpoint_config(config_name) is None
-
