@@ -98,10 +98,16 @@ spec:
                 description: An list of ProductionVariant objects, one for each model
                   that you want to host at this endpoint.
                 items:
+                  description: Identifies a model that you want to host and the resources
+                    to deploy for hosting it. If you are deploying multiple models,
+                    tell Amazon SageMaker how to distribute traffic among the models
+                    by specifying variant weights.
                   properties:
                     acceleratorType:
                       type: string
                     coreDumpConfig:
+                      description: Specifies configuration for a core dump from the
+                        model container when the process crashes.
                       properties:
                         destinationS3URI:
                           type: string

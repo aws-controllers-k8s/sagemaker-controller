@@ -39,6 +39,7 @@ spec:
               containers:
                 description: Specifies the containers in the inference pipeline.
                 items:
+                  description: Describes the container, as part of model definition.
                   properties:
                     containerHostname:
                       type: string
@@ -49,10 +50,20 @@ spec:
                     image:
                       type: string
                     imageConfig:
+                      description: Specifies whether the model container is in Amazon
+                        ECR or a private Docker registry accessible from your Amazon
+                        Virtual Private Cloud (VPC).
                       properties:
                         repositoryAccessMode:
                           type: string
                         repositoryAuthConfig:
+                          description: Specifies an authentication configuration for
+                            the private docker registry where your model image is
+                            hosted. Specify a value for this property only if you
+                            specified Vpc as the value for the RepositoryAccessMode
+                            field of the ImageConfig object that you passed to a call
+                            to CreateModel and the private Docker registry where the
+                            model image is hosted requires authentication.
                           properties:
                             repositoryCredentialsProviderARN:
                               type: string
@@ -65,6 +76,8 @@ spec:
                     modelPackageName:
                       type: string
                     multiModelConfig:
+                      description: Specifies additional configuration for hosting
+                        multi-model endpoints.
                       properties:
                         modelCacheSetting:
                           type: string
@@ -108,10 +121,20 @@ spec:
                   image:
                     type: string
                   imageConfig:
+                    description: Specifies whether the model container is in Amazon
+                      ECR or a private Docker registry accessible from your Amazon
+                      Virtual Private Cloud (VPC).
                     properties:
                       repositoryAccessMode:
                         type: string
                       repositoryAuthConfig:
+                        description: Specifies an authentication configuration for
+                          the private docker registry where your model image is hosted.
+                          Specify a value for this property only if you specified
+                          Vpc as the value for the RepositoryAccessMode field of the
+                          ImageConfig object that you passed to a call to CreateModel
+                          and the private Docker registry where the model image is
+                          hosted requires authentication.
                         properties:
                           repositoryCredentialsProviderARN:
                             type: string
@@ -124,6 +147,8 @@ spec:
                   modelPackageName:
                     type: string
                   multiModelConfig:
+                    description: Specifies additional configuration for hosting multi-model
+                      endpoints.
                     properties:
                       modelCacheSetting:
                         type: string

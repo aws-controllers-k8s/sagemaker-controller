@@ -65,6 +65,9 @@ spec:
                   Up to 100 key and values entries in the map are supported.
                 type: object
               experimentConfig:
+                description: "Associates a SageMaker job as a trial component with
+                  an experiment and trial. Specified when you call the following APIs:
+                  \n    * CreateProcessingJob \n    * CreateTrainingJob \n    * CreateTransformJob"
                 properties:
                   experimentName:
                     type: string
@@ -84,6 +87,13 @@ spec:
                   enableNetworkIsolation:
                     type: boolean
                   vpcConfig:
+                    description: Specifies a VPC that your training jobs and hosted
+                      models have access to. Control access to and from your training
+                      and model containers by configuring the VPC. For more information,
+                      see Protect Endpoints by Using an Amazon Virtual Private Cloud
+                      (https://docs.aws.amazon.com/sagemaker/latest/dg/host-vpc.html)
+                      and Protect Training Jobs by Using an Amazon Virtual Private
+                      Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/train-vpc.html).
                     properties:
                       securityGroupIDs:
                         items:
@@ -99,28 +109,46 @@ spec:
                 description: An array of inputs configuring the data to download into
                   the processing container.
                 items:
+                  description: The inputs for a processing job. The processing input
+                    must specify exactly one of either S3Input or DatasetDefinition
+                    types.
                   properties:
                     appManaged:
                       type: boolean
                     datasetDefinition:
+                      description: Configuration for Dataset Definition inputs. The
+                        Dataset Definition input must specify exactly one of either
+                        AthenaDatasetDefinition or RedshiftDatasetDefinition types.
                       properties:
                         athenaDatasetDefinition:
+                          description: Configuration for Athena Dataset Definition
+                            input.
                           properties:
                             catalog:
+                              description: The name of the data catalog used in Athena
+                                query execution.
                               type: string
                             database:
+                              description: The name of the database used in the Athena
+                                query execution.
                               type: string
                             kmsKeyID:
                               type: string
                             outputCompression:
+                              description: The compression used for Athena query results.
                               type: string
                             outputFormat:
+                              description: The data storage format for Athena query
+                                results.
                               type: string
                             outputS3URI:
                               type: string
                             queryString:
+                              description: The SQL query statements, to be executed.
                               type: string
                             workGroup:
+                              description: The name of the workgroup in which the
+                                Athena query is being started.
                               type: string
                           type: object
                         dataDistributionType:
@@ -130,30 +158,44 @@ spec:
                         localPath:
                           type: string
                         redshiftDatasetDefinition:
+                          description: Configuration for Redshift Dataset Definition
+                            input.
                           properties:
                             clusterID:
+                              description: The Redshift cluster Identifier.
                               type: string
                             clusterRoleARN:
                               type: string
                             database:
+                              description: The name of the Redshift database used
+                                in Redshift query execution.
                               type: string
                             dbUser:
+                              description: The database user name used in Redshift
+                                query execution.
                               type: string
                             kmsKeyID:
                               type: string
                             outputCompression:
+                              description: The compression used for Redshift query
+                                results.
                               type: string
                             outputFormat:
+                              description: The data storage format for Redshift query
+                                results.
                               type: string
                             outputS3URI:
                               type: string
                             queryString:
+                              description: The SQL query statements to be executed.
                               type: string
                           type: object
                       type: object
                     inputName:
                       type: string
                     s3Input:
+                      description: Configuration for downloading input data from Amazon
+                        S3 into the processing container.
                       properties:
                         localPath:
                           type: string
@@ -181,10 +223,15 @@ spec:
                     type: string
                   outputs:
                     items:
+                      description: Describes the results of a processing job. The
+                        processing output must specify exactly one of either S3Output
+                        or FeatureStoreOutput types.
                       properties:
                         appManaged:
                           type: boolean
                         featureStoreOutput:
+                          description: Configuration for processing job outputs in
+                            Amazon SageMaker Feature Store.
                           properties:
                             featureGroupName:
                               type: string
@@ -192,6 +239,8 @@ spec:
                         outputName:
                           type: string
                         s3Output:
+                          description: Configuration for uploading output data to
+                            Amazon S3 from the processing container.
                           properties:
                             localPath:
                               type: string
@@ -209,6 +258,8 @@ spec:
                   you specify more than one instance.
                 properties:
                   clusterConfig:
+                    description: Configuration for the cluster used to run a processing
+                      job.
                     properties:
                       instanceCount:
                         format: int64

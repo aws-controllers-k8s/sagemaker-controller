@@ -239,7 +239,7 @@ func (rm *resourceManager) sdkFind(
 }
 
 // requiredFieldsMissingFromReadOneInput returns true if there are any fields
-// for the ReadOne Input shape that are required by not present in the
+// for the ReadOne Input shape that are required but not present in the
 // resource's Spec or Status
 func (rm *resourceManager) requiredFieldsMissingFromReadOneInput(
 	r *resource,

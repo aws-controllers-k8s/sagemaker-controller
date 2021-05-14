@@ -49,17 +49,26 @@ spec:
                   schedule and defines the monitoring job.
                 properties:
                   monitoringJobDefinition:
+                    description: Defines the monitoring job.
                     properties:
                       baselineConfig:
+                        description: Configuration for monitoring constraints and
+                          monitoring statistics. These baseline resources are compared
+                          against the results of the current job from the series of
+                          jobs scheduled to collect data periodically.
                         properties:
                           baseliningJobName:
                             type: string
                           constraintsResource:
+                            description: The constraints resource for a monitoring
+                              job.
                             properties:
                               s3URI:
                                 type: string
                             type: object
                           statisticsResource:
+                            description: The statistics resource for a monitoring
+                              job.
                             properties:
                               s3URI:
                                 type: string
@@ -70,6 +79,8 @@ spec:
                           type: string
                         type: object
                       monitoringAppSpecification:
+                        description: Container image configuration object for the
+                          monitoring job.
                         properties:
                           containerArguments:
                             items:
@@ -88,8 +99,10 @@ spec:
                         type: object
                       monitoringInputs:
                         items:
+                          description: The inputs for a monitoring job.
                           properties:
                             endpointInput:
+                              description: Input object for the endpoint
                               properties:
                                 endTimeOffset:
                                   type: string
@@ -115,13 +128,17 @@ spec:
                           type: object
                         type: array
                       monitoringOutputConfig:
+                        description: The output configuration for monitoring jobs.
                         properties:
                           kmsKeyID:
                             type: string
                           monitoringOutputs:
                             items:
+                              description: The output object for a monitoring job.
                               properties:
                                 s3Output:
+                                  description: Information about where and how you
+                                    want to store the results of a monitoring job.
                                   properties:
                                     localPath:
                                       type: string
@@ -134,8 +151,12 @@ spec:
                             type: array
                         type: object
                       monitoringResources:
+                        description: Identifies the resources to deploy for a monitoring
+                          job.
                         properties:
                           clusterConfig:
+                            description: Configuration for the cluster used to run
+                              model monitoring jobs.
                             properties:
                               instanceCount:
                                 format: int64
@@ -150,12 +171,24 @@ spec:
                             type: object
                         type: object
                       networkConfig:
+                        description: Networking options for a job, such as network
+                          traffic encryption between containers, whether to allow
+                          inbound and outbound network calls to and from containers,
+                          and the VPC subnets and security groups to use for VPC-enabled
+                          jobs.
                         properties:
                           enableInterContainerTrafficEncryption:
                             type: boolean
                           enableNetworkIsolation:
                             type: boolean
                           vpcConfig:
+                            description: Specifies a VPC that your training jobs and
+                              hosted models have access to. Control access to and
+                              from your training and model containers by configuring
+                              the VPC. For more information, see Protect Endpoints
+                              by Using an Amazon Virtual Private Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/host-vpc.html)
+                              and Protect Training Jobs by Using an Amazon Virtual
+                              Private Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/train-vpc.html).
                             properties:
                               securityGroupIDs:
                                 items:
@@ -170,6 +203,8 @@ spec:
                       roleARN:
                         type: string
                       stoppingCondition:
+                        description: A time limit for how long the monitoring job
+                          is allowed to run before stopping.
                         properties:
                           maxRuntimeInSeconds:
                             format: int64
@@ -181,6 +216,7 @@ spec:
                   monitoringType:
                     type: string
                   scheduleConfig:
+                    description: Configuration details about the monitoring schedule.
                     properties:
                       scheduleExpression:
                         type: string
