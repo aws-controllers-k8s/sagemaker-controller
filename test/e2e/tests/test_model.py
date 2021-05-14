@@ -51,6 +51,7 @@ def xgboost_model():
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted
 
+
 def get_sagemaker_model(model_name: str):
     try:
         return sagemaker_client().describe_model(ModelName=model_name)
@@ -59,6 +60,8 @@ def get_sagemaker_model(model_name: str):
             f"SageMaker could not find a model with the name {model_name}. Error {error}"
         )
         return None
+
+
 @service_marker
 @pytest.mark.canary
 class TestModel:
@@ -68,11 +71,13 @@ class TestModel:
 
         model_name = resource["spec"].get("modelName", None)
 
-        assert k8s.get_resource_arn(resource) == get_sagemaker_model(model_name)["ModelArn"]
+        assert (
+            k8s.get_resource_arn(resource)
+            == get_sagemaker_model(model_name)["ModelArn"]
+        )
 
         # Delete the k8s resource.
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted
 
         assert get_sagemaker_model(model_name) is None
-

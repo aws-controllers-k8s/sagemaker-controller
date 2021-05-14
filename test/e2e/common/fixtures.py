@@ -74,9 +74,7 @@ def xgboost_churn_endpoint(sagemaker_client):
     )
     assert endpoint_resource is not None
     assert k8s.get_resource_arn(endpoint_resource) is not None
-    wait_sagemaker_endpoint_status(
-        replacements["ENDPOINT_NAME"], "InService"
-    )
+    wait_sagemaker_endpoint_status(replacements["ENDPOINT_NAME"], "InService")
 
     yield endpoint_spec
 

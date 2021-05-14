@@ -30,6 +30,7 @@ service_marker = pytest.mark.service(arg=SERVICE_NAME)
 bootstrap_directory = Path(__file__).parent
 resource_directory = Path(__file__).parent / "resources"
 
+
 def sagemaker_client():
     return boto3.client("sagemaker")
 
@@ -136,9 +137,7 @@ def wait_resource_endpoint_status(
     )
 
 
-def assert_endpoint_status_in_sync(
-    endpoint_name, reference, expected_status
-):
+def assert_endpoint_status_in_sync(endpoint_name, reference, expected_status):
     assert (
         wait_sagemaker_endpoint_status(endpoint_name, expected_status)
         == wait_resource_endpoint_status(reference, expected_status, 2)
