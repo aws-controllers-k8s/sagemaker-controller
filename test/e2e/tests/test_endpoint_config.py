@@ -13,7 +13,8 @@
 """Integration tests for the SageMaker EndpointConfig API.
 """
 
-import boto3
+from _pytest import config
+import botocore
 import pytest
 import logging
 from typing import Dict
@@ -24,6 +25,7 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
+    sagemaker_client
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
@@ -57,59 +59,38 @@ def single_variant_config():
 
     yield (config_reference, config_resource)
 
-    k8s.delete_custom_resource(model_reference)
+    k8s.delete_custom_resource(model_reference, 3, 10)
     # Delete the k8s resource if not already deleted by tests
     if k8s.get_resource_exists(config_reference):
-        k8s.delete_custom_resource(config_reference)
+        _, deleted = k8s.delete_custom_resource(config_reference, 3, 10)
+        assert deleted
+
+def get_sagemaker_endpoint_config(config_name: str):
+    try:
+        return sagemaker_client().describe_endpoint_config(
+            EndpointConfigName=config_name
+        )
+    except botocore.exceptions.ClientError as error:
+        logging.error(
+            f"SageMaker could not find a config with the name {config_name}. Error {error}"
+        )
+        return None
 
 
 @service_marker
 @pytest.mark.canary
 class TestEndpointConfig:
-    def _get_resource_endpoint_config_arn(self, resource: Dict):
-        assert (
-            "ackResourceMetadata" in resource["status"]
-            and "arn" in resource["status"]["ackResourceMetadata"]
-        )
-        return resource["status"]["ackResourceMetadata"]["arn"]
-
-    def _get_sagemaker_endpoint_config_arn(self, sagemaker_client, config_name: str):
-        try:
-            response = sagemaker_client.describe_endpoint_config(
-                EndpointConfigName=config_name
-            )
-            return response["EndpointConfigArn"]
-        except BaseException:
-            logging.error(
-                f"SageMaker could not find a config with the name {config_name}"
-            )
-            return None
-
     def test_create_endpoint_config(self, single_variant_config):
         (reference, resource) = single_variant_config
         assert k8s.get_resource_exists(reference)
 
-    def test_config_has_correct_arn(self, sagemaker_client, single_variant_config):
-        (reference, _) = single_variant_config
-        resource = k8s.get_resource(reference)
         config_name = resource["spec"].get("endpointConfigName", None)
 
-        assert config_name is not None
-
-        assert self._get_resource_endpoint_config_arn(
-            resource
-        ) == self._get_sagemaker_endpoint_config_arn(sagemaker_client, config_name)
-
-    def test_config_is_deleted(self, sagemaker_client, single_variant_config):
-        (reference, _) = single_variant_config
-        resource = k8s.get_resource(reference)
-        config_name = resource["spec"].get("endpointConfigName", None)
+        assert k8s.get_resource_arn(resource) == get_sagemaker_endpoint_config(config_name)["EndpointConfigArn"]
 
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(reference)
-        assert deleted is True
+        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        assert deleted
 
-        assert (
-            self._get_sagemaker_endpoint_config_arn(sagemaker_client, config_name)
-            is None
-        )
+        assert get_sagemaker_endpoint_config(config_name) is None
+

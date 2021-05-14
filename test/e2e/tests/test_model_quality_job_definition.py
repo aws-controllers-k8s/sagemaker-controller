@@ -13,6 +13,7 @@
 """Integration tests for the SageMaker ModelQualityJobDefinition API.
 """
 
+import botocore
 import pytest
 import logging
 
@@ -52,7 +53,7 @@ def xgboost_churn_model_quality_job_definition(xgboost_churn_endpoint):
     yield (reference, resource)
 
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(job_definition_reference)
+        _, deleted = k8s.delete_custom_resource(job_definition_reference, 3, 10)
         assert deleted
 
 
@@ -63,9 +64,9 @@ def describe_sagemaker_model_quality_job_definition(
         return sagemaker_client.describe_model_quality_job_definition(
             JobDefinitionName=job_definition_name
         )
-    except BaseException:
+    except botocore.exceptions.ClientError as error:
         logging.error(
-            f"Could not find Model Quality Job Definition with name {job_definition_name}"
+            f"Could not find Model Quality Job Definition with name {job_definition_name}. Error {error}"
         )
         return None
 
@@ -86,7 +87,7 @@ class TestModelQualityJobDefinition:
         )
 
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(reference)
+        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted
         assert (
             describe_sagemaker_model_quality_job_definition(

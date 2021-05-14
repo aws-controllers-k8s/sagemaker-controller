@@ -13,7 +13,7 @@
 """Integration tests for the SageMaker ProcessingJob API.
 """
 
-import boto3
+import botocore
 import pytest
 import logging
 from typing import Dict
@@ -52,7 +52,7 @@ def kmeans_processing_job():
     yield (reference, resource)
 
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference)
+        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted
 
 
@@ -62,9 +62,9 @@ def get_sagemaker_processing_job(processing_job_name: str):
             ProcessingJobName=processing_job_name
         )
         return processing_job
-    except BaseException:
+    except botocore.exceptions.ClientError as error:
         logging.error(
-            f"SageMaker could not find a processing job with the name {processing_job_name}"
+            f"SageMaker could not find a processing job with the name {processing_job_name}. Error {error}"
         )
         return None
 
@@ -140,7 +140,7 @@ class TestProcessingJob:
         )
 
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(reference)
+        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted is True
 
         processing_job_desc = get_sagemaker_processing_job(processing_job_name)
@@ -165,5 +165,5 @@ class TestProcessingJob:
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
         # Check that you can delete a completed resource from k8s
-        _, deleted = k8s.delete_custom_resource(reference)
+        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted is True

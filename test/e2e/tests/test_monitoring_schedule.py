@@ -13,6 +13,7 @@
 """Integration tests for the SageMaker MonitoringSchedule API.
 """
 
+import botocore
 import time
 import pytest
 import logging
@@ -58,7 +59,7 @@ def xgboost_churn_data_quality_monitoring_schedule(
     yield (reference, resource, spec)
 
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference)
+        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted
 
 
@@ -68,9 +69,9 @@ def describe_sagemaker_monitoring_schedule(sagemaker_client, monitoring_schedule
             MonitoringScheduleName=monitoring_schedule_name
         )
         return response
-    except BaseException:
+    except botocore.exceptions.ClientError as error:
         logging.error(
-            f"Could not find Monitoring Schedule with name {monitoring_schedule_name}"
+            f"Could not find Monitoring Schedule with name {monitoring_schedule_name}. Error {error}"
         )
         return None
 
@@ -203,7 +204,7 @@ class TestMonitoringSchedule:
         )
 
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(reference)
+        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted
 
         # 30 sec wait for server-side cleanup

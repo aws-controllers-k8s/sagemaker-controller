@@ -159,7 +159,7 @@ def adopted_endpoint(sdk_endpoint):
 
     for cr in (adopt_model_reference, adopt_config_reference, adopt_endpoint_reference):
         if k8s.get_resource_exists(cr):
-            _, deleted = k8s.delete_custom_resource(cr)
+            _, deleted = k8s.delete_custom_resource(cr, 3, 10)
             assert deleted
 
 
@@ -201,7 +201,7 @@ class TestAdoptedEndpoint:
         model_reference = k8s.create_reference(
             CRD_GROUP, CRD_VERSION, cfg.MODEL_RESOURCE_PLURAL, model_name, namespace
         )
-        model_resource = k8s.get_resource(model_reference)
+        model_resource = k8s.wait_resource_consumed_by_controller(model_reference)
         assert model_resource is not None
 
         assert model_resource["spec"].get("modelName", None) == model_name
@@ -221,7 +221,7 @@ class TestAdoptedEndpoint:
             endpoint_config_name,
             namespace,
         )
-        config_resource = k8s.get_resource(config_reference)
+        config_resource = k8s.wait_resource_consumed_by_controller(config_reference)
         assert config_resource is not None
 
         assert (
@@ -236,7 +236,7 @@ class TestAdoptedEndpoint:
         endpoint_reference = k8s.create_reference(
             CRD_GROUP, CRD_VERSION, cfg.ENDPOINT_RESOURCE_PLURAL, endpoint_name, namespace
         )
-        endpoint_resource = k8s.get_resource(endpoint_reference)
+        endpoint_resource = k8s.wait_resource_consumed_by_controller(endpoint_reference)
         assert endpoint_resource is not None
 
         assert endpoint_resource["spec"].get("endpointName", None) == endpoint_name
