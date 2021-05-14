@@ -15,6 +15,7 @@
 
 import pytest
 import logging
+import botocore
 
 from e2e import service_marker
 from e2e.common.fixtures import (
@@ -34,9 +35,9 @@ def describe_sagemaker_data_quality_job_definition(
         return sagemaker_client.describe_data_quality_job_definition(
             JobDefinitionName=job_definition_name
         )
-    except BaseException:
+    except botocore.exceptions.ClientError as error:
         logging.error(
-            f"Could not find Data Quality Job Definition with name {job_definition_name}"
+            f"Could not find Data Quality Job Definition with name {job_definition_name}. Error {error}"
         )
         return None
 
@@ -57,7 +58,7 @@ class TestDataQualityJobDefinition:
         )
 
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(reference)
+        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted
         assert (
             describe_sagemaker_data_quality_job_definition(
