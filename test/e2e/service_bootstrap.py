@@ -93,9 +93,20 @@ def create_data_bucket() -> str:
     # duplicate_bucket_contents(source_bucket, destination_bucket)
     # workaround to copy if buckets are across regions
     # TODO: check if there is a better way and merge to test-infra
-    subprocess.call(['mkdir',f'{temp_dir}'])
-    subprocess.call(['aws', 's3', 'sync', f's3://{SAGEMAKER_SOURCE_DATA_BUCKET}', f'./{temp_dir}/', '--quiet'])
-    subprocess.call(['aws', 's3', 'sync', f'./{temp_dir}/', f's3://{bucket_name}', '--quiet'])
+    subprocess.call(["mkdir", f"{temp_dir}"])
+    subprocess.call(
+        [
+            "aws",
+            "s3",
+            "sync",
+            f"s3://{SAGEMAKER_SOURCE_DATA_BUCKET}",
+            f"./{temp_dir}/",
+            "--quiet",
+        ]
+    )
+    subprocess.call(
+        ["aws", "s3", "sync", f"./{temp_dir}/", f"s3://{bucket_name}", "--quiet"]
+    )
 
     logging.info(f"Synced data bucket")
 
