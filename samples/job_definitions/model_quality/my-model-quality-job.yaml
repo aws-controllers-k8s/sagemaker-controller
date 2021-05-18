@@ -1,0 +1,42 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: ModelQualityJobDefinition
+metadata:
+  name: <YOUR JOB NAME>
+spec:
+  jobDefinitionName: <YOUR JOB NAME>
+  jobResources:
+    clusterConfig:
+      instanceCount: 1
+      instanceType: ml.m5.large
+      volumeSizeInGB: 20
+  modelQualityAppSpecification:
+    # The URL and tag of your ECR container
+    # If you are not on us-west-2 you can find an imageURI here https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-algo-docker-registry-paths.html
+    imageURI: 159807026194.dkr.ecr.us-west-2.amazonaws.com/sagemaker-model-monitor-analyzer  
+    problemType: BinaryClassification
+  modelQualityBaselineConfig:
+    constraintsResource:
+      # The input path to your constraints resource
+      s3URI: "s3://<YOUR BUCKET/PATH>"
+  modelQualityJobInput:
+    endpointInput:
+      # Endpoint name in SageMaker
+      endpointName: <YOUR ENDPOINT NAME> 
+      localPath: "/opt/ml/processing/input_data"
+      s3InputMode: File
+      s3DataDistributionType: FullyReplicated
+      probabilityThresholdAttribute: 0.5
+      probabilityAttribute: "0"
+    groundTruthS3Input:
+      s3URI: "s3://<YOUR BUCKET/PATH>"
+  modelQualityJobOutputConfig:
+    monitoringOutputs:
+    - s3Output:
+        localPath: "/opt/ml/processing/output"
+        s3URI: "s3://<YOUR BUCKET>/sagemaker/model_quality_job_definition/results"
+        s3UploadMode: Continuous
+  stoppingCondition:
+    maxRuntimeInSeconds: 1800
+  # A role with SageMaker and S3 access
+  # Example arn:aws:iam::123456789:role/service-role/AmazonSageMaker-ExecutionRole
+  roleARN: <YOUR SAGEMAKER ROLE ARN>

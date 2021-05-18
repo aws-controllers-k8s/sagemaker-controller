@@ -1,0 +1,8 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: Endpoint
+metadata:
+  name: <YOUR ENDPOINT NAME>
+spec:
+  endpointName: <YOUR ENDPOINT NAME>
+  # Must already exist in SageMaker
+  endpointConfigName: <YOUR ENDPOINT CONFIG NAME> 

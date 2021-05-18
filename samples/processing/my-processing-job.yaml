@@ -1,0 +1,58 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: ProcessingJob
+metadata:
+  name: <YOUR JOB NAME>
+spec:
+  # Name that will appear in SageMaker console
+  processingJobName: <YOUR JOB NAME> 
+  # A role with SageMaker and S3 access
+  # example arn:aws:iam::1234567890:role/service-role/AmazonSageMaker-ExecutionRole
+  roleARN: <YOUR SAGEMAKER ROLE ARN> 
+  appSpecification:
+    # The URL and tag of your ECR container   
+    # If you are not on us-west-2 you can find an imageURI here https://github.com/aws/deep-learning-containers/blob/master/available_images.md
+    imageURI: 763104351884.dkr.ecr.us-west-2.amazonaws.com/pytorch-training:1.5.0-cpu-py36-ubuntu16.04
+    containerEntrypoint:
+      - python
+      - /opt/ml/processing/code/kmeans_preprocessing.py 
+  processingResources:
+    clusterConfig:
+      instanceCount: 1  
+      instanceType: "ml.m5.large"
+      volumeSizeInGB: 20
+  processingInputs:
+    - inputName: mnist_tar
+      s3Input:
+        s3URI: s3://sagemaker-sample-data-us-west-2/algorithms/kmeans/mnist/mnist.pkl.gz 
+        localPath: /opt/ml/processing/input
+        s3DataType: S3Prefix
+        s3InputMode: File
+        s3CompressionType: None
+    - inputName: source_code
+      s3Input:
+        # The input path of our source code
+        s3URI: s3://<YOUR BUCKET/PATH>
+        localPath: /opt/ml/processing/code
+        s3DataType: S3Prefix
+        s3InputMode: File
+        s3CompressionType: None
+  processingOutputConfig:
+    outputs:
+      - outputName: train_data
+        s3Output:
+          # The output path of our training data
+          s3URI: s3://<YOUR BUCKET>/sagemaker/processing/output/ 
+          localPath: /opt/ml/processing/output_train/
+          s3UploadMode: EndOfJob
+      - outputName: test_data
+        s3Output:
+          # The output path of our test data
+          s3URI: s3://<YOUR BUCKET>/sagemaker/processing/output/  
+          localPath: /opt/ml/processing/output_test/
+          s3UploadMode: EndOfJob
+      - outputName: valid_data
+        s3Output:
+          # The output path of our validation data
+          s3URI: s3://<YOUR BUCKET>/sagemaker/processing/output/ 
+          localPath: /opt/ml/processing/output_valid/
+          s3UploadMode: EndOfJob

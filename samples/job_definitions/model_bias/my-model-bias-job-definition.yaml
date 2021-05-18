@@ -1,0 +1,43 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: ModelBiasJobDefinition
+metadata:
+  name: <YOUR JOB NAME>
+spec:
+  jobDefinitionName: <YOUR JOB NAME>
+  jobResources:
+    clusterConfig:
+      instanceCount: 1
+      instanceType: ml.m5.large
+      volumeSizeInGB: 30
+  modelBiasAppSpecification:
+    # The URL and tag of your ECR container 
+    # If you are not on us-west-2 you can find an imageURI here https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-algo-docker-registry-paths.html
+    imageURI: 306415355426.dkr.ecr.us-west-2.amazonaws.com/sagemaker-clarify-processing:1.0 
+    configURI: s3://<YOUR BUCKET/PATH>
+  modelBiasBaselineConfig:
+    constraintsResource:
+      # The input path to your constraints resource
+      s3URI: "s3://<YOUR BUCKET/PATH>"
+  modelBiasJobInput:
+    endpointInput:
+      # Name of endpoint in SageMaker
+      endpointName: <YOUR ENDPOINT NAME> 
+      localPath: "/opt/ml/processing/input/endpoint"
+      s3InputMode: File
+      s3DataDistributionType: FullyReplicated
+      probabilityThresholdAttribute: 0.8
+      startTimeOffset: "-PT1H"
+      endTimeOffset: "-PT0H"
+    groundTruthS3Input:
+      s3URI: "s3://<YOUR BUCKET/PATH>"
+  modelBiasJobOutputConfig:
+    monitoringOutputs:
+    - s3Output:
+        localPath: "/opt/ml/processing/output"
+        s3URI: "s3://<YOUR BUCKET/OUTPUT>"
+        s3UploadMode: Continuous
+  stoppingCondition:
+    maxRuntimeInSeconds: 1800
+  # A role with SageMaker and S3 access
+  # Example  arn:aws:iam::1234567890:role/service-role/AmazonSageMaker-ExecutionRole
+  roleARN: <YOUR SAGEMAKER ROLE ARN>

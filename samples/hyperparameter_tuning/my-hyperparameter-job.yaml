@@ -1,0 +1,91 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: HyperParameterTuningJob
+metadata:
+  name: <YOUR JOB NAME>
+spec:
+  hyperParameterTuningJobName: <YOUR JOB NAME>
+  hyperParameterTuningJobConfig:
+    strategy: Bayesian 
+    # Modify this parameter to meet your own script's needs
+    hyperParameterTuningJobObjective:
+     # Modify these parameters to meet your own script's needs
+      type_: Minimize
+      metricName: validation:error
+    resourceLimits:
+      maxNumberOfTrainingJobs: 10
+      maxParallelTrainingJobs: 5
+    parameterRanges:
+      integerParameterRanges: 
+      # Modify these parameters to meet your own script's needs
+      - name : num_round
+        minValue: '10'
+        maxValue: '20'
+        scalingType: Linear
+      continuousParameterRanges: []
+      categoricalParameterRanges: []
+  trainingJobDefinition:
+    staticHyperParameters:  
+    # Modify these parameters to meet your own script's needs
+      base_score: '0.5'
+      booster: gbtree
+      csv_weights: '0'
+      dsplit: row
+      grow_policy: depthwise
+      lambda_bias: '0.0'
+      max_bin: '256'
+      max_leaves: '0'
+      normalize_type: tree
+      objective: reg:linear
+      one_drop: '0'
+      prob_buffer_row: '1.0'
+      process_type: default
+      rate_drop: '0.0'
+      refresh_leaf: '1'
+      sample_type: uniform
+      scale_pos_weight: '1.0'
+      silent: '0'
+      sketch_eps: '0.03'
+      skip_drop: '0.0'
+      tree_method: auto
+      tweedie_variance_power: '1.5'
+      updater: grow_colmaker,prune
+    algorithmSpecification:
+    # The URL and tag of your ECR container
+    # If you are not on us-west-2 you can find an imageURI here https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-algo-docker-registry-paths.html
+      trainingImage: 433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:1
+      trainingInputMode: File
+    # A role with SageMaker and S3 access
+    # example arn:aws:iam::1234567890:role/service-role/AmazonSageMaker-ExecutionRole
+    roleARN: <YOUR SAGEMAKER ROLE ARN> 
+    inputDataConfig:
+    - channelName: train
+      dataSource:
+        s3DataSource:
+          s3DataType: S3Prefix
+          # The source of the training data
+          s3URI: s3://<YOUR BUCKET/PATH>
+          s3DataDistributionType: FullyReplicated
+      contentType: text/csv
+      compressionType: None
+      recordWrapperType: None
+      inputMode: File
+    - channelName: validation
+      dataSource:
+        s3DataSource:
+          s3DataType: S3Prefix
+          # The source of the validation data
+          s3URI: s3://<YOUR BUCKET/PATH>
+          s3DataDistributionType: FullyReplicated
+      contentType: text/csv
+      compressionType: None
+      recordWrapperType: None
+      inputMode: File
+    outputDataConfig:
+      # The output path of our model
+      s3OutputPath: s3://<YOUR BUCKET/OUTPUT> 
+    resourceConfig:
+      instanceType: ml.m4.xlarge
+      instanceCount: 1
+      volumeSizeInGB: 25
+    enableNetworkIsolation: true
+    enableInterContainerTrafficEncryption: false
