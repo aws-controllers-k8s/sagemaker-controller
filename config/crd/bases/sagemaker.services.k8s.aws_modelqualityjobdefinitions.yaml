@@ -42,8 +42,11 @@ spec:
                 description: The name of the monitoring job definition.
                 type: string
               jobResources:
+                description: Identifies the resources to deploy for a monitoring job.
                 properties:
                   clusterConfig:
+                    description: Configuration for the cluster used to run model monitoring
+                      jobs.
                     properties:
                       instanceCount:
                         format: int64
@@ -88,6 +91,7 @@ spec:
                   baseliningJobName:
                     type: string
                   constraintsResource:
+                    description: The constraints resource for a monitoring job.
                     properties:
                       s3URI:
                         type: string
@@ -98,6 +102,7 @@ spec:
                   are supported.
                 properties:
                   endpointInput:
+                    description: Input object for the endpoint
                     properties:
                       endTimeOffset:
                         type: string
@@ -121,19 +126,25 @@ spec:
                         type: string
                     type: object
                   groundTruthS3Input:
+                    description: The ground truth labels for the dataset used for
+                      the monitoring job.
                     properties:
                       s3URI:
                         type: string
                     type: object
                 type: object
               modelQualityJobOutputConfig:
+                description: The output configuration for monitoring jobs.
                 properties:
                   kmsKeyID:
                     type: string
                   monitoringOutputs:
                     items:
+                      description: The output object for a monitoring job.
                       properties:
                         s3Output:
+                          description: Information about where and how you want to
+                            store the results of a monitoring job.
                           properties:
                             localPath:
                               type: string
@@ -154,6 +165,13 @@ spec:
                   enableNetworkIsolation:
                     type: boolean
                   vpcConfig:
+                    description: Specifies a VPC that your training jobs and hosted
+                      models have access to. Control access to and from your training
+                      and model containers by configuring the VPC. For more information,
+                      see Protect Endpoints by Using an Amazon Virtual Private Cloud
+                      (https://docs.aws.amazon.com/sagemaker/latest/dg/host-vpc.html)
+                      and Protect Training Jobs by Using an Amazon Virtual Private
+                      Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/train-vpc.html).
                     properties:
                       securityGroupIDs:
                         items:
@@ -170,6 +188,8 @@ spec:
                   SageMaker can assume to perform tasks on your behalf.
                 type: string
               stoppingCondition:
+                description: A time limit for how long the monitoring job is allowed
+                  to run before stopping.
                 properties:
                   maxRuntimeInSeconds:
                     format: int64

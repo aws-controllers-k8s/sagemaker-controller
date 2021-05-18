@@ -53,6 +53,11 @@ spec:
                   How Hyperparameter Tuning Works (https://docs.aws.amazon.com/sagemaker/latest/dg/automatic-model-tuning-how-it-works.html).
                 properties:
                   hyperParameterTuningJobObjective:
+                    description: Defines the objective metric for a hyperparameter
+                      tuning job. Hyperparameter tuning uses the value of this metric
+                      to evaluate the training jobs it launches, and returns the training
+                      job that results in either the highest or lowest value for this
+                      metric, depending on the value you specify for the Type parameter.
                     properties:
                       metricName:
                         type: string
@@ -60,9 +65,19 @@ spec:
                         type: string
                     type: object
                   parameterRanges:
+                    description: "Specifies ranges of integer, continuous, and categorical
+                      hyperparameters that a hyperparameter tuning job searches. The
+                      hyperparameter tuning job launches training jobs with hyperparameter
+                      values within these ranges to find the combination of values
+                      that result in the training job with the best performance as
+                      measured by the objective metric of the hyperparameter tuning
+                      job. \n You can specify a maximum of 20 hyperparameters that
+                      a hyperparameter tuning job can search over. Every possible
+                      value of a categorical parameter range counts against this limit."
                     properties:
                       categoricalParameterRanges:
                         items:
+                          description: A list of categorical hyperparameters to tune.
                           properties:
                             name:
                               type: string
@@ -74,6 +89,7 @@ spec:
                         type: array
                       continuousParameterRanges:
                         items:
+                          description: A list of continuous hyperparameters to tune.
                           properties:
                             maxValue:
                               type: string
@@ -87,6 +103,8 @@ spec:
                         type: array
                       integerParameterRanges:
                         items:
+                          description: For a hyperparameter of the integer type, specifies
+                            the range that a hyperparameter tuning job searches.
                           properties:
                             maxValue:
                               type: string
@@ -100,6 +118,9 @@ spec:
                         type: array
                     type: object
                   resourceLimits:
+                    description: Specifies the maximum number of training jobs and
+                      parallel training jobs that a hyperparameter tuning job can
+                      launch.
                     properties:
                       maxNumberOfTrainingJobs:
                         format: int64
@@ -109,10 +130,14 @@ spec:
                         type: integer
                     type: object
                   strategy:
+                    description: The strategy hyperparameter tuning uses to find the
+                      best combination of hyperparameters for your model. Currently,
+                      the only supported value is Bayesian.
                     type: string
                   trainingJobEarlyStoppingType:
                     type: string
                   tuningJobCompletionCriteria:
+                    description: The job completion criteria.
                     properties:
                       targetObjectiveMetricValue:
                         type: number
@@ -132,11 +157,19 @@ spec:
                   resource configuration, and stopping condition.
                 properties:
                   algorithmSpecification:
+                    description: Specifies which training algorithm to use for training
+                      jobs that a hyperparameter tuning job launches and the metrics
+                      to monitor.
                     properties:
                       algorithmName:
                         type: string
                       metricDefinitions:
                         items:
+                          description: Specifies a metric that the training algorithm
+                            writes to stderr or stdout . Amazon SageMakerhyperparameter
+                            tuning captures all defined metrics. You specify one metric
+                            that a hyperparameter tuning job uses as its objective
+                            metric to choose the best training job.
                           properties:
                             name:
                               type: string
@@ -150,6 +183,8 @@ spec:
                         type: string
                     type: object
                   checkpointConfig:
+                    description: Contains information about the output location for
+                      managed spot training checkpoint data.
                     properties:
                       localPath:
                         type: string
@@ -165,9 +200,19 @@ spec:
                   enableNetworkIsolation:
                     type: boolean
                   hyperParameterRanges:
+                    description: "Specifies ranges of integer, continuous, and categorical
+                      hyperparameters that a hyperparameter tuning job searches. The
+                      hyperparameter tuning job launches training jobs with hyperparameter
+                      values within these ranges to find the combination of values
+                      that result in the training job with the best performance as
+                      measured by the objective metric of the hyperparameter tuning
+                      job. \n You can specify a maximum of 20 hyperparameters that
+                      a hyperparameter tuning job can search over. Every possible
+                      value of a categorical parameter range counts against this limit."
                     properties:
                       categoricalParameterRanges:
                         items:
+                          description: A list of categorical hyperparameters to tune.
                           properties:
                             name:
                               type: string
@@ -179,6 +224,7 @@ spec:
                         type: array
                       continuousParameterRanges:
                         items:
+                          description: A list of continuous hyperparameters to tune.
                           properties:
                             maxValue:
                               type: string
@@ -192,6 +238,8 @@ spec:
                         type: array
                       integerParameterRanges:
                         items:
+                          description: For a hyperparameter of the integer type, specifies
+                            the range that a hyperparameter tuning job searches.
                           properties:
                             maxValue:
                               type: string
@@ -206,6 +254,8 @@ spec:
                     type: object
                   inputDataConfig:
                     items:
+                      description: A channel is a named input source that training
+                        algorithms can consume.
                       properties:
                         channelName:
                           type: string
@@ -214,8 +264,11 @@ spec:
                         contentType:
                           type: string
                         dataSource:
+                          description: Describes the location of the channel data.
                           properties:
                             fileSystemDataSource:
+                              description: Specifies a file system data source for
+                                a channel.
                               properties:
                                 directoryPath:
                                   type: string
@@ -227,6 +280,7 @@ spec:
                                   type: string
                               type: object
                             s3DataSource:
+                              description: Describes the S3 data source.
                               properties:
                                 attributeNames:
                                   items:
@@ -245,6 +299,23 @@ spec:
                         recordWrapperType:
                           type: string
                         shuffleConfig:
+                          description: "A configuration for a shuffle option for input
+                            data in a channel. If you use S3Prefix for S3DataType,
+                            the results of the S3 key prefix matches are shuffled.
+                            If you use ManifestFile, the order of the S3 object references
+                            in the ManifestFile is shuffled. If you use AugmentedManifestFile,
+                            the order of the JSON lines in the AugmentedManifestFile
+                            is shuffled. The shuffling order is determined using the
+                            Seed value. \n For Pipe input mode, when ShuffleConfig
+                            is specified shuffling is done at the start of every epoch.
+                            With large datasets, this ensures that the order of the
+                            training data is different for each epoch, and it helps
+                            reduce bias and possible overfitting. In a multi-node
+                            training job when ShuffleConfig is combined with S3DataDistributionType
+                            of ShardedByS3Key, the data is shuffled across nodes so
+                            that the content sent to a particular node on the first
+                            epoch might be sent to a different node on the second
+                            epoch."
                           properties:
                             seed:
                               format: int64
@@ -253,6 +324,8 @@ spec:
                       type: object
                     type: array
                   outputDataConfig:
+                    description: Provides information about how to store model training
+                      results (model artifacts).
                     properties:
                       kmsKeyID:
                         type: string
@@ -260,6 +333,8 @@ spec:
                         type: string
                     type: object
                   resourceConfig:
+                    description: Describes the resources, including ML compute instances
+                      and ML storage volumes, to use for model training.
                     properties:
                       instanceCount:
                         format: int64
@@ -279,6 +354,26 @@ spec:
                       type: string
                     type: object
                   stoppingCondition:
+                    description: "Specifies a limit to how long a model training or
+                      compilation job can run. It also specifies how long you are
+                      willing to wait for a managed spot training job to complete.
+                      When the job reaches the time limit, Amazon SageMaker ends the
+                      training or compilation job. Use this API to cap model training
+                      costs. \n To stop a job, Amazon SageMaker sends the algorithm
+                      the SIGTERM signal, which delays job termination for 120 seconds.
+                      Algorithms can use this 120-second window to save the model
+                      artifacts, so the results of training are not lost. \n The training
+                      algorithms provided by Amazon SageMaker automatically save the
+                      intermediate results of a model training job when possible.
+                      This attempt to save artifacts is only a best effort case as
+                      model might not be in a state from which it can be saved. For
+                      example, if training has just started, the model might not be
+                      ready to save. When saved, this intermediate data is a valid
+                      model artifact. You can use it to create a model with CreateModel.
+                      \n The Neural Topic Model (NTM) currently does not support saving
+                      intermediate model artifacts. When training NTMs, make sure
+                      that the maximum runtime is sufficient for the training job
+                      to complete."
                     properties:
                       maxRuntimeInSeconds:
                         format: int64
@@ -288,6 +383,11 @@ spec:
                         type: integer
                     type: object
                   tuningObjective:
+                    description: Defines the objective metric for a hyperparameter
+                      tuning job. Hyperparameter tuning uses the value of this metric
+                      to evaluate the training jobs it launches, and returns the training
+                      job that results in either the highest or lowest value for this
+                      metric, depending on the value you specify for the Type parameter.
                     properties:
                       metricName:
                         type: string
@@ -295,6 +395,13 @@ spec:
                         type: string
                     type: object
                   vpcConfig:
+                    description: Specifies a VPC that your training jobs and hosted
+                      models have access to. Control access to and from your training
+                      and model containers by configuring the VPC. For more information,
+                      see Protect Endpoints by Using an Amazon Virtual Private Cloud
+                      (https://docs.aws.amazon.com/sagemaker/latest/dg/host-vpc.html)
+                      and Protect Training Jobs by Using an Amazon Virtual Private
+                      Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/train-vpc.html).
                     properties:
                       securityGroupIDs:
                         items:
@@ -310,13 +417,23 @@ spec:
                 description: A list of the HyperParameterTrainingJobDefinition objects
                   launched for this tuning job.
                 items:
+                  description: Defines the training jobs launched by a hyperparameter
+                    tuning job.
                   properties:
                     algorithmSpecification:
+                      description: Specifies which training algorithm to use for training
+                        jobs that a hyperparameter tuning job launches and the metrics
+                        to monitor.
                       properties:
                         algorithmName:
                           type: string
                         metricDefinitions:
                           items:
+                            description: Specifies a metric that the training algorithm
+                              writes to stderr or stdout . Amazon SageMakerhyperparameter
+                              tuning captures all defined metrics. You specify one
+                              metric that a hyperparameter tuning job uses as its
+                              objective metric to choose the best training job.
                             properties:
                               name:
                                 type: string
@@ -330,6 +447,8 @@ spec:
                           type: string
                       type: object
                     checkpointConfig:
+                      description: Contains information about the output location
+                        for managed spot training checkpoint data.
                       properties:
                         localPath:
                           type: string
@@ -345,9 +464,21 @@ spec:
                     enableNetworkIsolation:
                       type: boolean
                     hyperParameterRanges:
+                      description: "Specifies ranges of integer, continuous, and categorical
+                        hyperparameters that a hyperparameter tuning job searches.
+                        The hyperparameter tuning job launches training jobs with
+                        hyperparameter values within these ranges to find the combination
+                        of values that result in the training job with the best performance
+                        as measured by the objective metric of the hyperparameter
+                        tuning job. \n You can specify a maximum of 20 hyperparameters
+                        that a hyperparameter tuning job can search over. Every possible
+                        value of a categorical parameter range counts against this
+                        limit."
                       properties:
                         categoricalParameterRanges:
                           items:
+                            description: A list of categorical hyperparameters to
+                              tune.
                             properties:
                               name:
                                 type: string
@@ -359,6 +490,7 @@ spec:
                           type: array
                         continuousParameterRanges:
                           items:
+                            description: A list of continuous hyperparameters to tune.
                             properties:
                               maxValue:
                                 type: string
@@ -372,6 +504,9 @@ spec:
                           type: array
                         integerParameterRanges:
                           items:
+                            description: For a hyperparameter of the integer type,
+                              specifies the range that a hyperparameter tuning job
+                              searches.
                             properties:
                               maxValue:
                                 type: string
@@ -386,6 +521,8 @@ spec:
                       type: object
                     inputDataConfig:
                       items:
+                        description: A channel is a named input source that training
+                          algorithms can consume.
                         properties:
                           channelName:
                             type: string
@@ -394,8 +531,11 @@ spec:
                           contentType:
                             type: string
                           dataSource:
+                            description: Describes the location of the channel data.
                             properties:
                               fileSystemDataSource:
+                                description: Specifies a file system data source for
+                                  a channel.
                                 properties:
                                   directoryPath:
                                     type: string
@@ -407,6 +547,7 @@ spec:
                                     type: string
                                 type: object
                               s3DataSource:
+                                description: Describes the S3 data source.
                                 properties:
                                   attributeNames:
                                     items:
@@ -425,6 +566,24 @@ spec:
                           recordWrapperType:
                             type: string
                           shuffleConfig:
+                            description: "A configuration for a shuffle option for
+                              input data in a channel. If you use S3Prefix for S3DataType,
+                              the results of the S3 key prefix matches are shuffled.
+                              If you use ManifestFile, the order of the S3 object
+                              references in the ManifestFile is shuffled. If you use
+                              AugmentedManifestFile, the order of the JSON lines in
+                              the AugmentedManifestFile is shuffled. The shuffling
+                              order is determined using the Seed value. \n For Pipe
+                              input mode, when ShuffleConfig is specified shuffling
+                              is done at the start of every epoch. With large datasets,
+                              this ensures that the order of the training data is
+                              different for each epoch, and it helps reduce bias and
+                              possible overfitting. In a multi-node training job when
+                              ShuffleConfig is combined with S3DataDistributionType
+                              of ShardedByS3Key, the data is shuffled across nodes
+                              so that the content sent to a particular node on the
+                              first epoch might be sent to a different node on the
+                              second epoch."
                             properties:
                               seed:
                                 format: int64
@@ -433,6 +592,8 @@ spec:
                         type: object
                       type: array
                     outputDataConfig:
+                      description: Provides information about how to store model training
+                        results (model artifacts).
                       properties:
                         kmsKeyID:
                           type: string
@@ -440,6 +601,8 @@ spec:
                           type: string
                       type: object
                     resourceConfig:
+                      description: Describes the resources, including ML compute instances
+                        and ML storage volumes, to use for model training.
                       properties:
                         instanceCount:
                           format: int64
@@ -459,6 +622,26 @@ spec:
                         type: string
                       type: object
                     stoppingCondition:
+                      description: "Specifies a limit to how long a model training
+                        or compilation job can run. It also specifies how long you
+                        are willing to wait for a managed spot training job to complete.
+                        When the job reaches the time limit, Amazon SageMaker ends
+                        the training or compilation job. Use this API to cap model
+                        training costs. \n To stop a job, Amazon SageMaker sends the
+                        algorithm the SIGTERM signal, which delays job termination
+                        for 120 seconds. Algorithms can use this 120-second window
+                        to save the model artifacts, so the results of training are
+                        not lost. \n The training algorithms provided by Amazon SageMaker
+                        automatically save the intermediate results of a model training
+                        job when possible. This attempt to save artifacts is only
+                        a best effort case as model might not be in a state from which
+                        it can be saved. For example, if training has just started,
+                        the model might not be ready to save. When saved, this intermediate
+                        data is a valid model artifact. You can use it to create a
+                        model with CreateModel. \n The Neural Topic Model (NTM) currently
+                        does not support saving intermediate model artifacts. When
+                        training NTMs, make sure that the maximum runtime is sufficient
+                        for the training job to complete."
                       properties:
                         maxRuntimeInSeconds:
                           format: int64
@@ -468,6 +651,12 @@ spec:
                           type: integer
                       type: object
                     tuningObjective:
+                      description: Defines the objective metric for a hyperparameter
+                        tuning job. Hyperparameter tuning uses the value of this metric
+                        to evaluate the training jobs it launches, and returns the
+                        training job that results in either the highest or lowest
+                        value for this metric, depending on the value you specify
+                        for the Type parameter.
                       properties:
                         metricName:
                           type: string
@@ -475,6 +664,13 @@ spec:
                           type: string
                       type: object
                     vpcConfig:
+                      description: Specifies a VPC that your training jobs and hosted
+                        models have access to. Control access to and from your training
+                        and model containers by configuring the VPC. For more information,
+                        see Protect Endpoints by Using an Amazon Virtual Private Cloud
+                        (https://docs.aws.amazon.com/sagemaker/latest/dg/host-vpc.html)
+                        and Protect Training Jobs by Using an Amazon Virtual Private
+                        Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/train-vpc.html).
                       properties:
                         securityGroupIDs:
                           items:
@@ -505,6 +701,9 @@ spec:
                 properties:
                   parentHyperParameterTuningJobs:
                     items:
+                      description: A previously completed or stopped hyperparameter
+                        tuning job to be used as a starting point for a new hyperparameter
+                        tuning job.
                       properties:
                         hyperParameterTuningJobName:
                           type: string
@@ -554,6 +753,10 @@ spec:
                   failureReason:
                     type: string
                   finalHyperParameterTuningJobObjectiveMetric:
+                    description: Shows the final value for the objective metric for
+                      a training job that was launched by a hyperparameter tuning
+                      job. You define the objective metric in the HyperParameterTuningJobObjective
+                      parameter of HyperParameterTuningJobConfig.
                     properties:
                       metricName:
                         type: string
@@ -638,6 +841,10 @@ spec:
                   failureReason:
                     type: string
                   finalHyperParameterTuningJobObjectiveMetric:
+                    description: Shows the final value for the objective metric for
+                      a training job that was launched by a hyperparameter tuning
+                      job. You define the objective metric in the HyperParameterTuningJobObjective
+                      parameter of HyperParameterTuningJobConfig.
                     properties:
                       metricName:
                         type: string

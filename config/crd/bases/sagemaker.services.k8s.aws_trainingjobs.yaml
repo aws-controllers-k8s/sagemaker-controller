@@ -60,6 +60,11 @@ spec:
                     type: boolean
                   metricDefinitions:
                     items:
+                      description: Specifies a metric that the training algorithm
+                        writes to stderr or stdout . Amazon SageMakerhyperparameter
+                        tuning captures all defined metrics. You specify one metric
+                        that a hyperparameter tuning job uses as its objective metric
+                        to choose the best training job.
                       properties:
                         name:
                           type: string
@@ -82,9 +87,16 @@ spec:
                     type: string
                 type: object
               debugHookConfig:
+                description: Configuration information for the Debugger hook parameters,
+                  metric and tensor collections, and storage paths. To learn more
+                  about how to configure the DebugHookConfig parameter, see Use the
+                  SageMaker and Debugger Configuration API Operations to Create, Update,
+                  and Debug Your Training Job (https://docs.aws.amazon.com/sagemaker/latest/dg/debugger-createtrainingjob-api.html).
                 properties:
                   collectionConfigurations:
                     items:
+                      description: Configuration information for the Debugger output
+                        tensor collections.
                       properties:
                         collectionName:
                           type: string
@@ -107,6 +119,10 @@ spec:
                 description: Configuration information for Debugger rules for debugging
                   output tensors.
                 items:
+                  description: Configuration information for SageMaker Debugger rules
+                    for debugging. To learn more about how to configure the DebugRuleConfiguration
+                    parameter, see Use the SageMaker and Debugger Configuration API
+                    Operations to Create, Update, and Debug Your Training Job (https://docs.aws.amazon.com/sagemaker/latest/dg/debugger-createtrainingjob-api.html).
                   properties:
                     instanceType:
                       type: string
@@ -163,6 +179,9 @@ spec:
                 description: The environment variables to set in the Docker container.
                 type: object
               experimentConfig:
+                description: "Associates a SageMaker job as a trial component with
+                  an experiment and trial. Specified when you call the following APIs:
+                  \n    * CreateProcessingJob \n    * CreateTrainingJob \n    * CreateTransformJob"
                 properties:
                   experimentName:
                     type: string
@@ -198,6 +217,8 @@ spec:
                   data files will be made available as input streams. They do not
                   need to be downloaded."
                 items:
+                  description: A channel is a named input source that training algorithms
+                    can consume.
                   properties:
                     channelName:
                       type: string
@@ -206,8 +227,10 @@ spec:
                     contentType:
                       type: string
                     dataSource:
+                      description: Describes the location of the channel data.
                       properties:
                         fileSystemDataSource:
+                          description: Specifies a file system data source for a channel.
                           properties:
                             directoryPath:
                               type: string
@@ -219,6 +242,7 @@ spec:
                               type: string
                           type: object
                         s3DataSource:
+                          description: Describes the S3 data source.
                           properties:
                             attributeNames:
                               items:
@@ -237,6 +261,22 @@ spec:
                     recordWrapperType:
                       type: string
                     shuffleConfig:
+                      description: "A configuration for a shuffle option for input
+                        data in a channel. If you use S3Prefix for S3DataType, the
+                        results of the S3 key prefix matches are shuffled. If you
+                        use ManifestFile, the order of the S3 object references in
+                        the ManifestFile is shuffled. If you use AugmentedManifestFile,
+                        the order of the JSON lines in the AugmentedManifestFile is
+                        shuffled. The shuffling order is determined using the Seed
+                        value. \n For Pipe input mode, when ShuffleConfig is specified
+                        shuffling is done at the start of every epoch. With large
+                        datasets, this ensures that the order of the training data
+                        is different for each epoch, and it helps reduce bias and
+                        possible overfitting. In a multi-node training job when ShuffleConfig
+                        is combined with S3DataDistributionType of ShardedByS3Key,
+                        the data is shuffled across nodes so that the content sent
+                        to a particular node on the first epoch might be sent to a
+                        different node on the second epoch."
                       properties:
                         seed:
                           format: int64
@@ -255,6 +295,8 @@ spec:
                     type: string
                 type: object
               profilerConfig:
+                description: Configuration information for Debugger system monitoring,
+                  framework profiling, and storage paths.
                 properties:
                   profilingIntervalInMilliseconds:
                     format: int64
@@ -270,6 +312,7 @@ spec:
                 description: Configuration information for Debugger rules for profiling
                   system and framework metrics.
                 items:
+                  description: Configuration information for profiling rules.
                   properties:
                     instanceType:
                       type: string
@@ -340,6 +383,8 @@ spec:
                     type: integer
                 type: object
               tensorBoardOutputConfig:
+                description: Configuration of storage locations for the Debugger TensorBoard
+                  output data.
                 properties:
                   localPath:
                     type: string
@@ -437,6 +482,7 @@ spec:
                 description: Evaluation status of Debugger rules for debugging on
                   a training job.
                 items:
+                  description: Information about the status of the rule evaluation.
                   properties:
                     lastModifiedTime:
                       format: date-time

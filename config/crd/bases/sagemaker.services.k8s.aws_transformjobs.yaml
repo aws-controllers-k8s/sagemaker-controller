@@ -79,6 +79,9 @@ spec:
                   We support up to 16 key and values entries in the map.
                 type: object
               experimentConfig:
+                description: "Associates a SageMaker job as a trial component with
+                  an experiment and trial. Specified when you call the following APIs:
+                  \n    * CreateProcessingJob \n    * CreateTrainingJob \n    * CreateTransformJob"
                 properties:
                   experimentName:
                     type: string
@@ -137,8 +140,10 @@ spec:
                   contentType:
                     type: string
                   dataSource:
+                    description: Describes the location of the channel data.
                     properties:
                       s3DataSource:
+                        description: Describes the S3 data source.
                         properties:
                           s3DataType:
                             type: string
