@@ -1,0 +1,13 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: MonitoringSchedule
+metadata:
+  name: my-monitoring-schedule
+spec:
+  monitoringScheduleName: my-monitoring-schedule
+  monitoringScheduleConfig:
+    monitoringType: <YOUR MONITORING_TYPE>
+    # ModelBias
+    monitoringJobDefinitionName: <YOUR JOB NAME>
+    # example Name of ModelBias training job
+    scheduleConfig:
+      scheduleExpression: "cron(0 * ? * * *)"

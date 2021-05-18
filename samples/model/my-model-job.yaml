@@ -1,0 +1,17 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: Model
+metadata:
+  name: my-xgboost-model
+spec:
+  modelName: my-xgboost-model
+  primaryContainer:
+    containerHostname: xgboost
+    modelDataURL: s3://<YOUR BUCKET>/sagemaker/model/xgb-churn-prediction-model.tar.gz
+    #source-data-bucket-718865417152-us-west-2
+    image: <YOUR ECR IMAGE> # The URL and tag of your ECR container  
+    # 433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:1
+    environment:
+      my_var: my_value
+      my_var2: my_value2
+  executionRoleARN: <YOUR SAGEMAKER ROLE ARN>
+  # Example arn:aws:iam::1234567890:role/service-role/AmazonSageMaker-ExecutionRole

@@ -1,0 +1,39 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: DataQualityJobDefinition
+metadata:
+  name: my-data-quality-job
+spec:
+  jobDefinitionName: my-data-quality-job
+  jobResources:
+    clusterConfig:
+      instanceCount: 1
+      instanceType: ml.m5.large
+      volumeSizeInGB: 20
+  dataQualityAppSpecification:
+    imageURI: <YOUR ECR IMAGE>  # The URL and tag of your ECR container  
+    # 159807026194.dkr.ecr.us-west-2.amazonaws.com/sagemaker-model-monitor-analyzer
+    postAnalyticsProcessorSourceURI: "s3://<YOUR BUCKET>/sagemaker/data_quality_job_definition/code/postprocessor.py"
+      # source-data-bucket-718865417152-us-west-2
+  dataQualityBaselineConfig:
+    constraintsResource:
+      s3URI: "s3://<YOUR BUCKET>/sagemaker/data_quality_job_definition/baselining/constraints.json"
+      # source-data-bucket-718865417152-us-west-2
+    statisticsResource:
+      s3URI: "s3://<YOUR BUCKET>/sagemaker/data_quality_job_definition/baselining/statistics.json"
+      # source-data-bucket-718865417152-us-west-2
+  dataQualityJobInput:
+    endpointInput:
+      endpointName: <YOUR ENDPOINT NAME> # Name of endpoint in SageMaker
+      localPath: "/opt/ml/processing/input/endpoint"
+      s3InputMode: File
+      s3DataDistributionType: FullyReplicated
+  dataQualityJobOutputConfig:
+    monitoringOutputs:
+    - s3Output:
+        localPath: "/opt/ml/processing/output"
+        s3URI: "s3://<YOUR BUCKET>/sagemaker/data_quality_job_definition/reports"
+        s3UploadMode: Continuous
+  stoppingCondition:
+    maxRuntimeInSeconds: 1800
+  roleARN: 
+  # Example arn:aws:iam::1234567890:role/service-role/AmazonSageMaker-ExecutionRole

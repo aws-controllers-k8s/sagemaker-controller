@@ -1,0 +1,88 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: HyperParameterTuningJob
+metadata:
+  name: my-hyperparameter-job
+spec:
+  hyperParameterTuningJobName: my-hyperparamater-job
+  hyperParameterTuningJobConfig:
+    strategy: Bayesian
+    hyperParameterTuningJobObjective:
+      type_: Minimize
+      metricName: validation:error
+    resourceLimits:
+      maxNumberOfTrainingJobs: 10
+      maxParallelTrainingJobs: 5
+    parameterRanges:
+      integerParameterRanges: # Modify these parameters to meet your own script's needs
+      - name : num_round
+        minValue: '10'
+        maxValue: '20'
+        scalingType: Linear
+      continuousParameterRanges: []
+      categoricalParameterRanges: []
+  trainingJobDefinition:
+    staticHyperParameters:  # Modify these parameters to meet your own script's needs
+      base_score: '0.5'
+      booster: gbtree
+      csv_weights: '0'
+      dsplit: row
+      grow_policy: depthwise
+      lambda_bias: '0.0'
+      max_bin: '256'
+      max_leaves: '0'
+      normalize_type: tree
+      objective: reg:linear
+      one_drop: '0'
+      prob_buffer_row: '1.0'
+      process_type: default
+      rate_drop: '0.0'
+      refresh_leaf: '1'
+      sample_type: uniform
+      scale_pos_weight: '1.0'
+      silent: '0'
+      sketch_eps: '0.03'
+      skip_drop: '0.0'
+      tree_method: auto
+      tweedie_variance_power: '1.5'
+      updater: grow_colmaker,prune
+    algorithmSpecification:
+      trainingImage: <YOUR ECR IMAGE> # The URL and tag of your ECR container
+      # 433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:1
+      trainingInputMode: File
+    roleARN: <YOUR SAGEMAKER ROLE ARN> # A role with SageMaker and S3 access
+    # example arn:aws:iam::1234567890:role/service-role/AmazonSageMaker-ExecutionRole
+    inputDataConfig:
+    - channelName: train
+      dataSource:
+        s3DataSource:
+          s3DataType: S3Prefix
+          s3URI: s3://<YOUR BUCKET>/sagemaker/input/train/ # The source of the training data
+          # source-data-bucket-718865417152-us-west-2
+          s3DataDistributionType: FullyReplicated
+      contentType: text/csv
+      compressionType: None
+      recordWrapperType: None
+      inputMode: File
+    - channelName: validation
+      dataSource:
+        s3DataSource:
+          s3DataType: S3Prefix
+          s3URI: s3://<YOUR BUCKET>/sagemaker/training/validation # The source of the validation data
+          # source-data-bucket-718865417152-us-west-2
+          s3DataDistributionType: FullyReplicated
+      contentType: text/csv
+      compressionType: None
+      recordWrapperType: None
+      inputMode: File
+    outputDataConfig:
+      s3OutputPath: s3://<YOUR BUCKET>/output # The output path of our model
+    resourceConfig:
+      instanceType: ml.m4.xlarge
+      instanceCount: 1
+      volumeSizeInGB: 25
+    stoppingCondition:
+      maxRuntimeInSeconds: 3599
+      maxWaitTimeInSeconds: 3600
+    enableManagedSpotTraining: true # Optional field 
+    enableNetworkIsolation: true
+    enableInterContainerTrafficEncryption: false
