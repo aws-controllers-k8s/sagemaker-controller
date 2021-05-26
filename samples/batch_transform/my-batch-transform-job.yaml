@@ -1,0 +1,22 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: TransformJob
+metadata:
+  name: <YOUR JOB NAME>
+spec:
+  # Name that will appear in SageMaker console
+  transformJobName: <YOUR JOB NAME> 
+  # Name of your model in SageMaker
+  modelName: <YOUR MODEL NAME>   
+  transformInput:
+    contentType: text/csv
+    dataSource:
+      s3DataSource:
+        s3DataType: S3Prefix
+        # The source of the transform data
+        s3URI: s3://<YOUR BUCKET/PATH>
+  transformOutput:
+    # The output path of our transform
+    s3OutputPath: s3://<YOUR BUCKET/OUTPUT>
+  transformResources:
+    instanceCount: 1
+    instanceType: ml.m4.xlarge
