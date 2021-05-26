@@ -90,23 +90,29 @@ def create_data_bucket() -> str:
     source_bucket = s3_resource.Bucket(SAGEMAKER_SOURCE_DATA_BUCKET)
     destination_bucket = s3_resource.Bucket(bucket_name)
     temp_dir = "/tmp/ack_s3_data"
-    # duplicate_bucket_contents(source_bucket, destination_bucket)
-    # workaround to copy if buckets are across regions
-    # TODO: check if there is a better way and merge to test-infra
-    subprocess.call(["mkdir", f"{temp_dir}"])
-    subprocess.call(
-        [
-            "aws",
-            "s3",
-            "sync",
-            f"s3://{SAGEMAKER_SOURCE_DATA_BUCKET}",
-            f"./{temp_dir}/",
-            "--quiet",
-        ]
-    )
-    subprocess.call(
-        ["aws", "s3", "sync", f"./{temp_dir}/", f"s3://{bucket_name}", "--quiet"]
-    )
+    # awscli is not installed in test-infra container hence use boto3 to copy in us-west-2
+    if region == "us-west-2":
+        duplicate_bucket_contents(source_bucket, destination_bucket)
+        # above method does an async copy
+        # TODO: find a way to remove random wait
+        time.sleep(180)
+    else:
+        # workaround to copy if buckets are across regions
+        # TODO: check if there is a better way and merge to test-infra
+        subprocess.call(["mkdir", f"{temp_dir}"])
+        subprocess.call(
+            [
+                "aws",
+                "s3",
+                "sync",
+                f"s3://{SAGEMAKER_SOURCE_DATA_BUCKET}",
+                f"./{temp_dir}/",
+                "--quiet",
+            ]
+        )
+        subprocess.call(
+            ["aws", "s3", "sync", f"./{temp_dir}/", f"s3://{bucket_name}", "--quiet"]
+        )
 
     logging.info(f"Synced data bucket")
 
