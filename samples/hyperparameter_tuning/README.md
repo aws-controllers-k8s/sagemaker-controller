@@ -4,9 +4,7 @@ This sample demonstrates how to start hyperparameter jobs using your own hyperpa
 
 ## Prerequisites
 
-This sample assumes that you have already configured an Kubernetes cluster with the ACK operator. It also assumes that you have installed `kubectl` - you can find a link on our [installation page](To do).
-
-In order to follow this script, you must first create a hyperparameter script packaged in a Dockerfile that is [compatible with Amazon SageMaker](https://docs.aws.amazon.com/sagemaker/latest/dg/amazon-sagemaker-containers.html). Here is a list of available [containers](https://github.com/aws/deep-learning-containers/blob/master/available_images.md)
+This sample assumes that you have completed the [common prerequisties](/samples/README.md).
 
 ### Get an Image
 

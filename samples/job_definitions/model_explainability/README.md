@@ -4,7 +4,7 @@ This sample demonstrates how to start model-explainability job definitions using
 
 ## Prerequisites
 
-This sample assumes that you have already configured an Kubernetes cluster with the ACK operator. It also assumes that you have installed `kubectl` - you can find a link on our [installation page](To do).
+This sample assumes that you have completed the [common prerequisties](/samples/README.md).
 
 You will also need an [Endpoint](/samples/endpoint/README.md) configured in SageMaker and you will need to run a baselining job to generate baseline constraints only.
 

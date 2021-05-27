@@ -4,7 +4,7 @@ This sample demonstrates how to start processing jobs using your own processing 
 
 ## Prerequisites
 
-This sample assumes that you have already configured an Kubernetes cluster with the ACK operator. It also assumes that you have installed `kubectl` - you can find a link on our [installation page](To do).
+This sample assumes that you have completed the [common prerequisties](/samples/README.md).
 
 You will need to upload [kmeans_preprocessing.py](/samples/processing/kmeans_preprocessing.py) to an S3 bucket and update the s3Input s3URI path.
 
