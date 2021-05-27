@@ -118,7 +118,7 @@ class TestTrainingJob:
     ):
         assert (
             self._wait_sagemaker_training_status(training_job_name, expected_status)
-            == self._wait_resource_training_status(reference, expected_status)
+            == self._wait_resource_training_status(reference, expected_status, 2)
             == expected_status
         )
 

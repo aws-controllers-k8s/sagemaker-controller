@@ -83,6 +83,7 @@ def get_training_resource_status(reference: k8s.CustomResourceReference):
 
 def get_training_debugger_sagemaker_status(training_job_name: str):
     training_sm_desc = get_sagemaker_training_job(training_job_name)
+    print(training_sm_desc)
     return training_sm_desc["DebugRuleEvaluationStatuses"][0]["RuleEvaluationStatus"]
 
 
@@ -132,7 +133,7 @@ class TestTrainingDebuggerJob:
     ):
         assert (
             self._wait_sagemaker_training_status(training_job_name, expected_status)
-            == self._wait_resource_training_status(reference, expected_status)
+            == self._wait_resource_training_status(reference, expected_status, 2)
             == expected_status
         )
 
@@ -173,7 +174,7 @@ class TestTrainingDebuggerJob:
             self._wait_sagemaker_training_debugger_status(
                 training_job_name, expected_status
             )
-            == self._wait_resource_training_debugger_status(reference, expected_status)
+            == self._wait_resource_training_debugger_status(reference, expected_status, 2)
             == expected_status
         )
 
@@ -182,6 +183,7 @@ class TestTrainingDebuggerJob:
         assert k8s.get_resource_exists(reference)
 
         training_job_name = resource["spec"].get("trainingJobName", None)
+        print("debugger training job name", training_job_name)
         assert training_job_name is not None
 
         training_job_desc = get_sagemaker_training_job(training_job_name)
@@ -193,7 +195,6 @@ class TestTrainingDebuggerJob:
         self._assert_training_status_in_sync(
             training_job_name, reference, cfg.JOB_STATUS_COMPLETED
         )
-        # TODO: This test is failing
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
         self._assert_training_debugger_status_in_sync(
