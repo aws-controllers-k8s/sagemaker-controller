@@ -4,10 +4,23 @@ This sample demonstrates how to start jobs using your own script, packaged in a 
 
 ## Prerequisites    
 
-This sample assumes that you have already configured an Kubernetes cluster with the ACK operator. It also assumes that you have installed `kubectl` - you can find a link on our [installation page](To do).
+Follow the instructions on our [installation page](/README.md#getting-started) to create a Kubernetes cluster and install sagemaker controller.
 
-You will also need an IAM role which has permissions to access your S3 resources and SageMaker. If you have not yet created a role with these permissions, you can find an example policy at [Amazon SageMaker Roles](https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-roles.html#sagemaker-roles-createtrainingjob-perms).
+Run the following commands to create a SageMaker execution IAM role which is used by SageMaker service to access AWS resources. 
 
+```
+export SAGEMAKER_EXECUTION_ROLE_NAME=ack-sagemaker-execution-role-$CLUSTER_NAME
+
+TRUST="{ \"Version\": \"2012-10-17\", \"Statement\": [ { \"Effect\": \"Allow\", \"Principal\": { \"Service\": \"sagemaker.amazonaws.com\" }, \"Action\": \"sts:AssumeRole\" } ] }"
+aws iam create-role --role-name ${SAGEMAKER_EXECUTION_ROLE_NAME} --assume-role-policy-document "$TRUST"
+aws iam attach-role-policy --role-name ${SAGEMAKER_EXECUTION_ROLE_NAME} --policy-arn arn:aws:iam::aws:policy/AmazonSageMakerFullAccess
+aws iam attach-role-policy --role-name ${SAGEMAKER_EXECUTION_ROLE_NAME} --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess
+
+SAGEMAKER_EXECUTION_ROLE_ARN=$(aws iam get-role --role-name ${SAGEMAKER_EXECUTION_ROLE_NAME} --output text --query 'Role.Arn')
+
+echo $SAGEMAKER_EXECUTION_ROLE_ARN
+```
+Note down the execution role ARN to use in samples
 ### Creating your first Job
 
 The easiest way to start is taking a look at the sample training jobs and its corresponding [README](/samples/training/README.md)

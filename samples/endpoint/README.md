@@ -4,7 +4,7 @@ This sample demonstrates how to create Endpoints using your own Endpoint_base/co
 
 ## Prerequisites
 
-This sample assumes that you have already configured an Kubernetes cluster with the ACK operator. It also assumes that you have installed `kubectl` - you can find a link on our [installation page](To do).
+This sample assumes that you have completed the [common prerequisties](/samples/README.md).
 
 You will also need a model in SageMaker for this sample. If you do not have one you must first create a [model](/samples/model/README.md)
 

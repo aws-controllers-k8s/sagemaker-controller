@@ -4,7 +4,7 @@ This sample demonstrates how to start training jobs using your own training scri
 
 ## Prerequisites
 
-This sample assumes that you have already configured an Kubernetes cluster with the ACK operator. It also assumes that you have installed `kubectl` - you can find a link on our [installation page](To do).
+This sample assumes that you have completed the [common prerequisties](/samples/README.md).
 
 ### Get an Image
 
