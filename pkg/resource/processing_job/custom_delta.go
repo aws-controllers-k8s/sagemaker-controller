@@ -14,6 +14,7 @@
 package processing_job
 
 import (
+	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 )
 
@@ -21,11 +22,11 @@ func customSetDefaults(
 	a *resource,
 	b *resource,
 ) {
-	if a.ko.Spec.StoppingCondition == nil && b.ko.Spec.StoppingCondition != nil {
+	if ackcompare.IsNil(a.ko.Spec.StoppingCondition) && ackcompare.IsNotNil(b.ko.Spec.StoppingCondition) {
 		a.ko.Spec.StoppingCondition = &svcapitypes.ProcessingStoppingCondition{}
 	}
 
-	if a.ko.Spec.StoppingCondition.MaxRuntimeInSeconds == nil && b.ko.Spec.StoppingCondition.MaxRuntimeInSeconds != nil{
+	if ackcompare.IsNil(a.ko.Spec.StoppingCondition.MaxRuntimeInSeconds) && ackcompare.IsNotNil(b.ko.Spec.StoppingCondition.MaxRuntimeInSeconds) {
 		a.ko.Spec.StoppingCondition.MaxRuntimeInSeconds = b.ko.Spec.StoppingCondition.MaxRuntimeInSeconds
 	}
 }

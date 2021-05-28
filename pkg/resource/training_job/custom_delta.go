@@ -13,31 +13,32 @@
 
 package training_job
 
+import (
+	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+)
+
 func customSetDefaults(
 	a *resource,
 	b *resource,
 ) {
-	if a.ko.Spec.EnableInterContainerTrafficEncryption == nil && b.ko.Spec.EnableInterContainerTrafficEncryption != nil {
+	if ackcompare.IsNil(a.ko.Spec.EnableInterContainerTrafficEncryption) && ackcompare.IsNotNil(b.ko.Spec.EnableInterContainerTrafficEncryption) {
 		a.ko.Spec.EnableInterContainerTrafficEncryption = b.ko.Spec.EnableInterContainerTrafficEncryption
 	}
 
-	if a.ko.Spec.EnableManagedSpotTraining == nil && b.ko.Spec.EnableManagedSpotTraining != nil {
+	if ackcompare.IsNil(a.ko.Spec.EnableManagedSpotTraining) && ackcompare.IsNotNil(b.ko.Spec.EnableManagedSpotTraining) {
 		a.ko.Spec.EnableManagedSpotTraining = b.ko.Spec.EnableManagedSpotTraining
 	}
 
-	if a.ko.Spec.EnableNetworkIsolation == nil && b.ko.Spec.EnableNetworkIsolation != nil {
+	if ackcompare.IsNil(a.ko.Spec.EnableNetworkIsolation) && ackcompare.IsNotNil(b.ko.Spec.EnableNetworkIsolation) {
 		a.ko.Spec.EnableNetworkIsolation = b.ko.Spec.EnableNetworkIsolation
 	}
 
-	if a.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries == nil && b.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries != nil {
+	if ackcompare.IsNil(a.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries) && ackcompare.IsNotNil(b.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries) {
 		a.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries = b.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries
 	}
 
-	if a.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries == nil && b.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries != nil {
-		a.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries = b.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries
-	}
-
-	if a.ko.Spec.OutputDataConfig.KMSKeyID == nil && b.ko.Spec.OutputDataConfig.KMSKeyID != nil {
+	// The KMS Key is an empty string by default but cannot be nil.
+	if ackcompare.IsNil(a.ko.Spec.OutputDataConfig.KMSKeyID) && ackcompare.IsNotNil(b.ko.Spec.OutputDataConfig.KMSKeyID) {
 		a.ko.Spec.OutputDataConfig.KMSKeyID = b.ko.Spec.OutputDataConfig.KMSKeyID
 	}
 }

@@ -14,6 +14,7 @@
 package transform_job
 
 import (
+	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 )
 
@@ -21,36 +22,35 @@ func customSetDefaults(
 	a *resource,
 	b *resource,
 ) {
-	if a.ko.Spec.TransformInput.CompressionType == nil && b.ko.Spec.TransformInput.CompressionType != nil {
+	if ackcompare.IsNil(a.ko.Spec.TransformInput.CompressionType) && ackcompare.IsNotNil(b.ko.Spec.TransformInput.CompressionType) {
 		a.ko.Spec.TransformInput.CompressionType = b.ko.Spec.TransformInput.CompressionType
 	}
 
-	if a.ko.Spec.TransformInput.SplitType == nil && b.ko.Spec.TransformInput.SplitType != nil {
+	if ackcompare.IsNil(a.ko.Spec.TransformInput.SplitType) && ackcompare.IsNotNil(b.ko.Spec.TransformInput.SplitType) {
 		a.ko.Spec.TransformInput.SplitType = b.ko.Spec.TransformInput.SplitType
 	}
 
-	if a.ko.Spec.DataProcessing == nil && b.ko.Spec.DataProcessing != nil {
+	if ackcompare.IsNil(a.ko.Spec.DataProcessing) && ackcompare.IsNotNil(b.ko.Spec.DataProcessing) {
 		a.ko.Spec.DataProcessing = &svcapitypes.DataProcessing{}
 	}
-	if a.ko.Spec.DataProcessing.InputFilter == nil && b.ko.Spec.DataProcessing.InputFilter != nil {
+	if ackcompare.IsNil(a.ko.Spec.DataProcessing.InputFilter) && ackcompare.IsNotNil(b.ko.Spec.DataProcessing.InputFilter) {
 		a.ko.Spec.DataProcessing.InputFilter = b.ko.Spec.DataProcessing.InputFilter
 	}
-	if a.ko.Spec.DataProcessing.JoinSource == nil && b.ko.Spec.DataProcessing.JoinSource != nil {
+	if ackcompare.IsNil(a.ko.Spec.DataProcessing.JoinSource) && ackcompare.IsNotNil(b.ko.Spec.DataProcessing.JoinSource) {
 		a.ko.Spec.DataProcessing.JoinSource = b.ko.Spec.DataProcessing.JoinSource
 	}
-	if a.ko.Spec.DataProcessing.OutputFilter == nil && b.ko.Spec.DataProcessing.OutputFilter != nil {
+	if ackcompare.IsNil(a.ko.Spec.DataProcessing.OutputFilter) && ackcompare.IsNotNil(b.ko.Spec.DataProcessing.OutputFilter) {
 		a.ko.Spec.DataProcessing.OutputFilter = b.ko.Spec.DataProcessing.OutputFilter
 	}
 
-	if a.ko.Spec.TransformOutput == nil && b.ko.Spec.TransformOutput != nil{
+	if ackcompare.IsNil(a.ko.Spec.TransformOutput) && ackcompare.IsNotNil(b.ko.Spec.TransformOutput) {
 		a.ko.Spec.TransformOutput = &svcapitypes.TransformOutput{}
 	}
-	if a.ko.Spec.TransformOutput.AssembleWith == nil && b.ko.Spec.TransformOutput.AssembleWith != nil {
+	if ackcompare.IsNil(a.ko.Spec.TransformOutput.AssembleWith) && ackcompare.IsNotNil(b.ko.Spec.TransformOutput.AssembleWith) {
 		a.ko.Spec.TransformOutput.AssembleWith = b.ko.Spec.TransformOutput.AssembleWith
 	}
-	if a.ko.Spec.TransformOutput.KMSKeyID == nil && b.ko.Spec.TransformOutput.KMSKeyID != nil {
+	if ackcompare.IsNil(a.ko.Spec.TransformOutput.KMSKeyID) && ackcompare.IsNotNil(b.ko.Spec.TransformOutput.KMSKeyID) {
 		a.ko.Spec.TransformOutput.KMSKeyID = b.ko.Spec.TransformOutput.KMSKeyID
 	}
-
 
 }

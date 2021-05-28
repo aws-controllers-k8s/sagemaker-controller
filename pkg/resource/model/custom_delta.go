@@ -13,16 +13,24 @@
 
 package model
 
+import (
+	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
+)
+
 func customSetDefaults(
 	a *resource,
 	b *resource,
 ) {
-	// TODO: This throws a nil pointer error
-	// if a.ko.Spec.PrimaryContainer.Mode == nil && b.ko.Spec.PrimaryContainer.Mode != nil {
-	// 	a.ko.Spec.PrimaryContainer.Mode = b.ko.Spec.PrimaryContainer.Mode
-	// }
+	if ackcompare.IsNil(a.ko.Spec.PrimaryContainer) && ackcompare.IsNotNil(b.ko.Spec.PrimaryContainer) {
+		a.ko.Spec.PrimaryContainer = &svcapitypes.ContainerDefinition{}
+	}
 
-	if a.ko.Spec.EnableNetworkIsolation == nil && b.ko.Spec.EnableNetworkIsolation != nil {
+	if ackcompare.IsNil(a.ko.Spec.PrimaryContainer.Mode) && ackcompare.IsNotNil(b.ko.Spec.PrimaryContainer.Mode) {
+		a.ko.Spec.PrimaryContainer.Mode = b.ko.Spec.PrimaryContainer.Mode
+	}
+
+	if ackcompare.IsNil(a.ko.Spec.EnableNetworkIsolation) && ackcompare.IsNotNil(b.ko.Spec.EnableNetworkIsolation) {
 		a.ko.Spec.EnableNetworkIsolation = b.ko.Spec.EnableNetworkIsolation
 	}
 }
