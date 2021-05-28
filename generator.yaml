@@ -26,7 +26,7 @@ resources:
   Model:
     hooks:
       delta_pre_compare:
-        code: customSetDefaultsModel(a)
+        code: customSetDefaults(a, b)
     exceptions:
       errors:
         404:
@@ -152,7 +152,7 @@ resources:
         - UnrecognizedClientException
     hooks:
       delta_pre_compare:
-        code: customSetDefaultsTrainingJob(a)
+        code: customSetDefaults(a, b)
       sdk_create_post_set_output:
         code: rm.customSetOutput(r, aws.String(svcsdk.TrainingJobStatusInProgress), ko)
       sdk_delete_pre_build_request:
@@ -203,7 +203,7 @@ resources:
         - UnrecognizedClientException
     hooks:
       delta_pre_compare:
-        code: customSetDefaultsProcessingJob(a)
+        code: customSetDefaults(a, b)
       sdk_delete_pre_build_request:
         template_path: processing_job/sdk_delete_pre_build_request.go.tpl
       sdk_create_post_set_output:
@@ -245,7 +245,7 @@ resources:
         - UnrecognizedClientException
     hooks:
       delta_pre_compare:
-        code: customSetDefaultsTransformJob(a)
+        code: customSetDefaults(a, b)
       sdk_delete_pre_build_request:
         template_path: transform_job/sdk_delete_pre_build_request.go.tpl
       sdk_create_post_set_output:
@@ -285,8 +285,6 @@ resources:
         - InvalidAction
         - UnrecognizedClientException
     hooks:
-      delta_pre_compare:
-        code: customSetDefaultsHPO(a)
       sdk_delete_pre_build_request:
         template_path: hyper_parameter_tuning_job/sdk_delete_pre_build_request.go.tpl
       sdk_create_post_set_output:

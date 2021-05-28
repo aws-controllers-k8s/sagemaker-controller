@@ -31,7 +31,7 @@ func newResourceDelta(
 		delta.Add("", a, b)
 		return delta
 	}
-	customSetDefaultsTrainingJob(a)
+	customSetDefaults(a, b)
 
 	if ackcompare.HasNilDifference(a.ko.Spec.AlgorithmSpecification, b.ko.Spec.AlgorithmSpecification) {
 		delta.Add("Spec.AlgorithmSpecification", a.ko.Spec.AlgorithmSpecification, b.ko.Spec.AlgorithmSpecification)
