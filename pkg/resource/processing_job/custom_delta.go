@@ -22,11 +22,14 @@ func customSetDefaults(
 	a *resource,
 	b *resource,
 ) {
+	// StoppingCondition is not a required field, so first create it
 	if ackcompare.IsNil(a.ko.Spec.StoppingCondition) && ackcompare.IsNotNil(b.ko.Spec.StoppingCondition) {
 		a.ko.Spec.StoppingCondition = &svcapitypes.ProcessingStoppingCondition{}
 	}
 
-	if ackcompare.IsNil(a.ko.Spec.StoppingCondition.MaxRuntimeInSeconds) && ackcompare.IsNotNil(b.ko.Spec.StoppingCondition.MaxRuntimeInSeconds) {
-		a.ko.Spec.StoppingCondition.MaxRuntimeInSeconds = b.ko.Spec.StoppingCondition.MaxRuntimeInSeconds
+	if ackcompare.IsNotNil(a.ko.Spec.StoppingCondition) && ackcompare.IsNotNil(b.ko.Spec.StoppingCondition) {
+		if ackcompare.IsNil(a.ko.Spec.StoppingCondition.MaxRuntimeInSeconds) && ackcompare.IsNotNil(b.ko.Spec.StoppingCondition.MaxRuntimeInSeconds) {
+			a.ko.Spec.StoppingCondition.MaxRuntimeInSeconds = b.ko.Spec.StoppingCondition.MaxRuntimeInSeconds
+		}
 	}
 }

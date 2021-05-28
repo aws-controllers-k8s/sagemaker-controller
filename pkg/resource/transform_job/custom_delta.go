@@ -22,6 +22,7 @@ func customSetDefaults(
 	a *resource,
 	b *resource,
 ) {
+	// TransformInput is a required field.
 	if ackcompare.IsNil(a.ko.Spec.TransformInput.CompressionType) && ackcompare.IsNotNil(b.ko.Spec.TransformInput.CompressionType) {
 		a.ko.Spec.TransformInput.CompressionType = b.ko.Spec.TransformInput.CompressionType
 	}
@@ -30,27 +31,35 @@ func customSetDefaults(
 		a.ko.Spec.TransformInput.SplitType = b.ko.Spec.TransformInput.SplitType
 	}
 
+	// DataProcessing is not a required field, so first create it.
 	if ackcompare.IsNil(a.ko.Spec.DataProcessing) && ackcompare.IsNotNil(b.ko.Spec.DataProcessing) {
 		a.ko.Spec.DataProcessing = &svcapitypes.DataProcessing{}
 	}
-	if ackcompare.IsNil(a.ko.Spec.DataProcessing.InputFilter) && ackcompare.IsNotNil(b.ko.Spec.DataProcessing.InputFilter) {
-		a.ko.Spec.DataProcessing.InputFilter = b.ko.Spec.DataProcessing.InputFilter
-	}
-	if ackcompare.IsNil(a.ko.Spec.DataProcessing.JoinSource) && ackcompare.IsNotNil(b.ko.Spec.DataProcessing.JoinSource) {
-		a.ko.Spec.DataProcessing.JoinSource = b.ko.Spec.DataProcessing.JoinSource
-	}
-	if ackcompare.IsNil(a.ko.Spec.DataProcessing.OutputFilter) && ackcompare.IsNotNil(b.ko.Spec.DataProcessing.OutputFilter) {
-		a.ko.Spec.DataProcessing.OutputFilter = b.ko.Spec.DataProcessing.OutputFilter
+
+	if ackcompare.IsNotNil(a.ko.Spec.DataProcessing) && ackcompare.IsNotNil(b.ko.Spec.DataProcessing) {
+		if ackcompare.IsNil(a.ko.Spec.DataProcessing.InputFilter) && ackcompare.IsNotNil(b.ko.Spec.DataProcessing.InputFilter) {
+			a.ko.Spec.DataProcessing.InputFilter = b.ko.Spec.DataProcessing.InputFilter
+		}
+		if ackcompare.IsNil(a.ko.Spec.DataProcessing.JoinSource) && ackcompare.IsNotNil(b.ko.Spec.DataProcessing.JoinSource) {
+			a.ko.Spec.DataProcessing.JoinSource = b.ko.Spec.DataProcessing.JoinSource
+		}
+		if ackcompare.IsNil(a.ko.Spec.DataProcessing.OutputFilter) && ackcompare.IsNotNil(b.ko.Spec.DataProcessing.OutputFilter) {
+			a.ko.Spec.DataProcessing.OutputFilter = b.ko.Spec.DataProcessing.OutputFilter
+		}
 	}
 
+	// TODO: TransformOutput is a required field, so this check should not be required
 	if ackcompare.IsNil(a.ko.Spec.TransformOutput) && ackcompare.IsNotNil(b.ko.Spec.TransformOutput) {
 		a.ko.Spec.TransformOutput = &svcapitypes.TransformOutput{}
 	}
-	if ackcompare.IsNil(a.ko.Spec.TransformOutput.AssembleWith) && ackcompare.IsNotNil(b.ko.Spec.TransformOutput.AssembleWith) {
-		a.ko.Spec.TransformOutput.AssembleWith = b.ko.Spec.TransformOutput.AssembleWith
-	}
-	if ackcompare.IsNil(a.ko.Spec.TransformOutput.KMSKeyID) && ackcompare.IsNotNil(b.ko.Spec.TransformOutput.KMSKeyID) {
-		a.ko.Spec.TransformOutput.KMSKeyID = b.ko.Spec.TransformOutput.KMSKeyID
+
+	if ackcompare.IsNotNil(a.ko.Spec.TransformOutput) && ackcompare.IsNotNil(b.ko.Spec.TransformOutput) {
+		if ackcompare.IsNil(a.ko.Spec.TransformOutput.AssembleWith) && ackcompare.IsNotNil(b.ko.Spec.TransformOutput.AssembleWith) {
+			a.ko.Spec.TransformOutput.AssembleWith = b.ko.Spec.TransformOutput.AssembleWith
+		}
+		if ackcompare.IsNil(a.ko.Spec.TransformOutput.KMSKeyID) && ackcompare.IsNotNil(b.ko.Spec.TransformOutput.KMSKeyID) {
+			a.ko.Spec.TransformOutput.KMSKeyID = b.ko.Spec.TransformOutput.KMSKeyID
+		}
 	}
 
 }

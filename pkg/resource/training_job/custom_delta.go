@@ -33,12 +33,17 @@ func customSetDefaults(
 		a.ko.Spec.EnableNetworkIsolation = b.ko.Spec.EnableNetworkIsolation
 	}
 
-	if ackcompare.IsNil(a.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries) && ackcompare.IsNotNil(b.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries) {
-		a.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries = b.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries
+	// AlgorithmSpecification is a required field
+	if ackcompare.IsNotNil(a.ko.Spec.AlgorithmSpecification) && ackcompare.IsNotNil(b.ko.Spec.AlgorithmSpecification) {
+		if ackcompare.IsNil(a.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries) && ackcompare.IsNotNil(b.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries) {
+			a.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries = b.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries
+		}
 	}
 
-	// The KMS Key is an empty string by default but cannot be nil.
-	if ackcompare.IsNil(a.ko.Spec.OutputDataConfig.KMSKeyID) && ackcompare.IsNotNil(b.ko.Spec.OutputDataConfig.KMSKeyID) {
-		a.ko.Spec.OutputDataConfig.KMSKeyID = b.ko.Spec.OutputDataConfig.KMSKeyID
+	// OutputDataConfig is a required field but the KMS Key is an empty string by default, it cannot be nil.
+	if ackcompare.IsNotNil(a.ko.Spec.OutputDataConfig) && ackcompare.IsNotNil(b.ko.Spec.OutputDataConfig) {
+		if ackcompare.IsNil(a.ko.Spec.OutputDataConfig.KMSKeyID) && ackcompare.IsNotNil(b.ko.Spec.OutputDataConfig.KMSKeyID) {
+			a.ko.Spec.OutputDataConfig.KMSKeyID = b.ko.Spec.OutputDataConfig.KMSKeyID
+		}
 	}
 }

@@ -22,12 +22,15 @@ func customSetDefaults(
 	a *resource,
 	b *resource,
 ) {
+	// PrimaryContainer is not a required field, so this check is required
 	if ackcompare.IsNil(a.ko.Spec.PrimaryContainer) && ackcompare.IsNotNil(b.ko.Spec.PrimaryContainer) {
 		a.ko.Spec.PrimaryContainer = &svcapitypes.ContainerDefinition{}
 	}
 
-	if ackcompare.IsNil(a.ko.Spec.PrimaryContainer.Mode) && ackcompare.IsNotNil(b.ko.Spec.PrimaryContainer.Mode) {
-		a.ko.Spec.PrimaryContainer.Mode = b.ko.Spec.PrimaryContainer.Mode
+	if ackcompare.IsNotNil(a.ko.Spec.PrimaryContainer) && ackcompare.IsNotNil(b.ko.Spec.PrimaryContainer) {
+		if ackcompare.IsNil(a.ko.Spec.PrimaryContainer.Mode) && ackcompare.IsNotNil(b.ko.Spec.PrimaryContainer.Mode) {
+			a.ko.Spec.PrimaryContainer.Mode = b.ko.Spec.PrimaryContainer.Mode
+		}
 	}
 
 	if ackcompare.IsNil(a.ko.Spec.EnableNetworkIsolation) && ackcompare.IsNotNil(b.ko.Spec.EnableNetworkIsolation) {
