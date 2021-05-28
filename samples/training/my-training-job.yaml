@@ -38,16 +38,16 @@ spec:
         s3DataSource:
           s3DataType: S3Prefix
           # The input path of our train data 
-          s3URI: s3://<YOUR BUCKET/PATH>
+          s3URI: s3://<YOUR BUCKET>/sagemaker/xgboost/train
           s3DataDistributionType: FullyReplicated
-      contentType: text/csv
+      contentType: text/libsvm
       compressionType: None
     - channelName: validation
       dataSource:
         s3DataSource:
           s3DataType: S3Prefix
           # The input path of our validation data 
-          s3URI: s3://<YOUR BUCKET/PATH>
+          s3URI: s3://<YOUR BUCKET>/sagemaker/xgboost/validation
           s3DataDistributionType: FullyReplicated
-      contentType: text/csv
+      contentType: text/libsvm
       compressionType: None

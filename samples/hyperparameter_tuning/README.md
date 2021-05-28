@@ -4,7 +4,14 @@ This sample demonstrates how to start hyperparameter jobs using your own hyperpa
 
 ## Prerequisites
 
-This sample assumes that you have completed the [common prerequisties](/samples/README.md).
+This sample assumes that you have completed the [common prerequisites](/samples/README.md).
+
+### Upload S3 Data
+
+You will need training data uploaded to an S3 bucket. Make sure you have AWS credentials and and have the bucket in the same region where you plan to create SageMaker resources. Run the following python script to upload sample data to your S3 bucket.
+```
+python3 ../training/s3_sample_data.py $S3_BUCKET_NAME
+```
 
 ### Get an Image
 
@@ -20,6 +27,7 @@ A container image URL and tag looks has the following structure:
 In the `my-hyperparameter-job.yaml` file, modify the placeholder values with those associated with your account and hyperparameter job.
 
 ### Enabling Spot Training
+
 In the `my-hyperparameter-job.yaml` file under `spec.trainingJobDefinition` add `enableManagedSpotTraining` and set the value to true. You will also need to specify a `spec.trainingJobDefinition.stoppingCondition.maxRuntimeInSeconds` and `spec.trainingJobDefinition.stoppingCondition.maxWaittimeInSeconds`
 
 ## Submitting your Hyperparameter Job

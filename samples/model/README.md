@@ -4,7 +4,7 @@ This sample demonstrates how to start models/create a model using your own model
 
 ## Prerequisites
 
-This sample assumes that you have completed the [common prerequisties](/samples/README.md).
+This sample assumes that you have completed the [common prerequisites](/samples/README.md).
 
 ### Get an Image
 
