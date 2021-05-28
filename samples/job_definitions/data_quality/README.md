@@ -4,7 +4,7 @@ This sample demonstrates how to start data quality job definitions using your ow
 
 ## Prerequisites
 
-This sample assumes that you have completed the [common prerequisties](/samples/README.md).
+This sample assumes that you have completed the [common prerequisites](/samples/README.md).
 
 You will need an [Endpoint](/samples/endpoint/README.md) configured in SageMaker and you will need to run a baselining job to generate baseline statistics and constraints.
 

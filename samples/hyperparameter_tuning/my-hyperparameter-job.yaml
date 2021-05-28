@@ -63,9 +63,9 @@ spec:
         s3DataSource:
           s3DataType: S3Prefix
           # The source of the training data
-          s3URI: s3://<YOUR BUCKET/PATH>
+          s3URI: s3://<YOUR BUCKET>/sagemaker/xgboost/train
           s3DataDistributionType: FullyReplicated
-      contentType: text/csv
+      contentType: text/libsvm
       compressionType: None
       recordWrapperType: None
       inputMode: File
@@ -74,9 +74,9 @@ spec:
         s3DataSource:
           s3DataType: S3Prefix
           # The source of the validation data
-          s3URI: s3://<YOUR BUCKET/PATH>
+          s3URI: s3://<YOUR BUCKET>/sagemaker/xgboost/validation
           s3DataDistributionType: FullyReplicated
-      contentType: text/csv
+      contentType: text/libsvm
       compressionType: None
       recordWrapperType: None
       inputMode: File
@@ -87,5 +87,7 @@ spec:
       instanceType: ml.m4.xlarge
       instanceCount: 1
       volumeSizeInGB: 25
+    stoppingCondition:
+      maxRuntimeInSeconds: 3600
     enableNetworkIsolation: true
     enableInterContainerTrafficEncryption: false

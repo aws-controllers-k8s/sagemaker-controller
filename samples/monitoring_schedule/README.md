@@ -4,7 +4,7 @@ This sample demonstrates how to start Monitoring scheduling using your own Monit
 
 ## Prerequisites
 
-This sample assumes that you have completed the [common prerequisties](/samples/README.md). It also assumes you have a job definition of one of these [types](/samples/job_definitions).
+This sample assumes that you have completed the [common prerequisites](/samples/README.md). It also assumes you have a job definition of one of these [types](/samples/job_definitions).
 
 ### Updating the Monitoring Specification
 

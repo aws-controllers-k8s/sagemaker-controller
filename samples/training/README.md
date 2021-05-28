@@ -4,7 +4,14 @@ This sample demonstrates how to start training jobs using your own training scri
 
 ## Prerequisites
 
-This sample assumes that you have completed the [common prerequisties](/samples/README.md).
+This sample assumes that you have completed the [common prerequisites](/samples/README.md).
+
+###  Upload S3 Data
+
+You will need training data uploaded to an S3 bucket. Make sure you have AWS credentials and and have the bucket in the same region where you plan to create SageMaker resources. Run the following python script to upload sample data to your S3 bucket.
+```
+python3 s3_sample_data.py $S3_BUCKET_NAME
+```
 
 ### Get an Image
 

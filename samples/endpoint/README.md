@@ -4,7 +4,7 @@ This sample demonstrates how to create Endpoints using your own Endpoint_base/co
 
 ## Prerequisites
 
-This sample assumes that you have completed the [common prerequisties](/samples/README.md).
+This sample assumes that you have completed the [common prerequisites](/samples/README.md).
 
 You will also need a model in SageMaker for this sample. If you do not have one you must first create a [model](/samples/model/README.md)
 
