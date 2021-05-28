@@ -6,6 +6,13 @@ This sample demonstrates how to start models/create a model using your own model
 
 This sample assumes that you have completed the [common prerequisites](/samples/README.md).
 
+### Upload S3 Data
+
+You will need a model uploaded to an S3 bucket. Make sure you have AWS credentials and and have the bucket in the same region where you plan to create SageMaker resources. Run the following python script to upload sample data to your S3 bucket.
+```
+python3 s3_sample_model.py $S3_BUCKET_NAME
+```
+
 ### Get an Image
 
 All SageMaker models are run from within a container with all necessary dependencies and modules pre-installed and with the model scripts referencing the acceptable input and output directories. Sample container images are [available](https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-algo-docker-registry-paths.html).

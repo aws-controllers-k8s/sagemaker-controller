@@ -7,10 +7,10 @@ spec:
   primaryContainer:
     containerHostname: xgboost
     # The source of the model data
-    modelDataURL: s3://<YOUR BUCKET/PATH>
+    modelDataURL: s3://<YOUR BUCKET>/sagemaker/xgboost/model/xgb-churn-prediction-model.tar.gz
     # The URL and tag of your ECR container  
     # If you are not on us-west-2 you can find an imageURI here https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-algo-docker-registry-paths.html
-    image: 433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:1
+    image: 246618743249.dkr.ecr.us-west-2.amazonaws.com/sagemaker-xgboost:0.90-2-cpu-py3
     environment:
       my_var: my_value
       my_var2: my_value2
