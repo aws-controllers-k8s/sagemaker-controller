@@ -31,6 +31,7 @@ func newResourceDelta(
 		delta.Add("", a, b)
 		return delta
 	}
+	customSetDefaults(a, b)
 
 	if ackcompare.HasNilDifference(a.ko.Spec.EnableNetworkIsolation, b.ko.Spec.EnableNetworkIsolation) {
 		delta.Add("Spec.EnableNetworkIsolation", a.ko.Spec.EnableNetworkIsolation, b.ko.Spec.EnableNetworkIsolation)

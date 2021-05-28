@@ -24,6 +24,9 @@ operations:
     resource_name: HyperParameterTuningJob
 resources:
   Model:
+    hooks:
+      delta_pre_compare:
+        code: customSetDefaults(a, b)
     exceptions:
       errors:
         404:
@@ -148,6 +151,8 @@ resources:
         - InvalidAction
         - UnrecognizedClientException
     hooks:
+      delta_pre_compare:
+        code: customSetDefaults(a, b)
       sdk_create_post_set_output:
         code: rm.customSetOutput(r, aws.String(svcsdk.TrainingJobStatusInProgress), ko)
       sdk_delete_pre_build_request:
@@ -197,6 +202,8 @@ resources:
         - InvalidAction
         - UnrecognizedClientException
     hooks:
+      delta_pre_compare:
+        code: customSetDefaults(a, b)
       sdk_delete_pre_build_request:
         template_path: processing_job/sdk_delete_pre_build_request.go.tpl
       sdk_create_post_set_output:
@@ -237,6 +244,8 @@ resources:
         - InvalidAction
         - UnrecognizedClientException
     hooks:
+      delta_pre_compare:
+        code: customSetDefaults(a, b)
       sdk_delete_pre_build_request:
         template_path: transform_job/sdk_delete_pre_build_request.go.tpl
       sdk_create_post_set_output:

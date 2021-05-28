@@ -31,6 +31,7 @@ func newResourceDelta(
 		delta.Add("", a, b)
 		return delta
 	}
+	customSetDefaults(a, b)
 
 	if ackcompare.HasNilDifference(a.ko.Spec.AppSpecification, b.ko.Spec.AppSpecification) {
 		delta.Add("Spec.AppSpecification", a.ko.Spec.AppSpecification, b.ko.Spec.AppSpecification)
