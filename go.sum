@@ -23,8 +23,8 @@ github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883/go.mod h1:rCTlJbsFo
 github.com/armon/consul-api v0.0.0-20180202201655-eb2c6b5be1b6/go.mod h1:grANhF5doyWs3UAsr3K4I6qtAmlQcZDesFNEHPZAzj8=
 github.com/asaskevich/govalidator v0.0.0-20180720115003-f9ffefc3facf/go.mod h1:lB+ZfQJz7igIIfQNfa7Ml4HSf2uFQQRzpGGRXenZAgY=
 github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a/go.mod h1:lB+ZfQJz7igIIfQNfa7Ml4HSf2uFQQRzpGGRXenZAgY=
-github.com/aws-controllers-k8s/runtime v0.2.1-0.20210527234121-a3e2184a6be7 h1:BbMM37IAVNctZdtkL0clsl5KbKtOyLWPWaFvS+tdhlA=
-github.com/aws-controllers-k8s/runtime v0.2.1-0.20210527234121-a3e2184a6be7/go.mod h1:xA2F18PJerBHaqrS4de1lpP7skeSMeStkmh+3x5sWvw=
+github.com/aws-controllers-k8s/runtime v0.2.1 h1:vItjQ5/pZjr8Z7cR35sQKcSjQy19mF3qOfbUitWMt1A=
+github.com/aws-controllers-k8s/runtime v0.2.1/go.mod h1:xA2F18PJerBHaqrS4de1lpP7skeSMeStkmh+3x5sWvw=
 github.com/aws/aws-sdk-go v1.37.4 h1:tWxrpMK/oRSXVnjUzhGeCWLR00fW0WF4V4sycYPPrJ8=
 github.com/aws/aws-sdk-go v1.37.4/go.mod h1:hcU610XS61/+aQV88ixoOzUoG7v3b31pl2zKMmprdro=
 github.com/aws/aws-sdk-go v1.38.11 h1:jmxKh557ZRc+Z8fALnGrL01Ctjks2aSUFLb7n/BZoEs=
