@@ -186,7 +186,7 @@ kubectl apply -f $CHART_EXPORT_PATH/ack-$SERVICE-controller/crds
 Create a namespace and install the helm chart
 ```sh
 export ACK_K8S_NAMESPACE=ack-system
-helm install -n $ACK_K8S_NAMESPACE --create-namespace $ACK_K8S_NAMESPACE --skip-crds ack-$SERVICE-controller \
+helm install -n $ACK_K8S_NAMESPACE --create-namespace --skip-crds ack-$SERVICE-controller \
  $CHART_EXPORT_PATH/ack-$SERVICE-controller 
 ```
 

@@ -9,7 +9,7 @@ Follow the instructions on our [installation page](/README.md#getting-started) t
 Run the following commands to create a SageMaker execution IAM role which is used by SageMaker service to access AWS resources. 
 
 ```
-export SAGEMAKER_EXECUTION_ROLE_NAME=ack-sagemaker-execution-role-$CLUSTER_NAME
+export SAGEMAKER_EXECUTION_ROLE_NAME=ack-sagemaker-execution-role
 
 TRUST="{ \"Version\": \"2012-10-17\", \"Statement\": [ { \"Effect\": \"Allow\", \"Principal\": { \"Service\": \"sagemaker.amazonaws.com\" }, \"Action\": \"sts:AssumeRole\" } ] }"
 aws iam create-role --role-name ${SAGEMAKER_EXECUTION_ROLE_NAME} --assume-role-policy-document "$TRUST"
