@@ -31,6 +31,7 @@ func newResourceDelta(
 		delta.Add("", a, b)
 		return delta
 	}
+	customSetDefaults(a, b)
 
 	if ackcompare.HasNilDifference(a.ko.Spec.HyperParameterTuningJobConfig, b.ko.Spec.HyperParameterTuningJobConfig) {
 		delta.Add("Spec.HyperParameterTuningJobConfig", a.ko.Spec.HyperParameterTuningJobConfig, b.ko.Spec.HyperParameterTuningJobConfig)
