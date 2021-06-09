@@ -18,7 +18,7 @@ from dataclasses import dataclass
 from acktest.resources import read_bootstrap_config
 from e2e import bootstrap_directory
 
-SAGEMAKER_SOURCE_DATA_BUCKET = "source-data-bucket-718865417152-us-west-2"
+SAGEMAKER_SOURCE_DATA_BUCKET = "source-data-bucket-592697580195-us-west-2"
 
 
 @dataclass
