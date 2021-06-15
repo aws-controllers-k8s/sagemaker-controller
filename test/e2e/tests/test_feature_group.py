@@ -61,8 +61,9 @@ def feature_group():
     yield (reference, resource)
     
     # Delete the k8s resource if not already deleted by tests
+    # At 10 a second wait period instead of 15, we sometimes see time out errors.
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        _, deleted = k8s.delete_custom_resource(reference, 3, 15)
         assert deleted
 
 def get_sagemaker_feature_group(feature_group_name: str):

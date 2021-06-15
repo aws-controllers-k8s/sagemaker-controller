@@ -469,14 +469,14 @@ const (
 	FeatureGroupSortOrder_Descending FeatureGroupSortOrder = "Descending"
 )
 
-type FeatureGroupStatus string
+type FeatureGroupStatus_SDK string
 
 const (
-	FeatureGroupStatus_Creating     FeatureGroupStatus = "Creating"
-	FeatureGroupStatus_Created      FeatureGroupStatus = "Created"
-	FeatureGroupStatus_CreateFailed FeatureGroupStatus = "CreateFailed"
-	FeatureGroupStatus_Deleting     FeatureGroupStatus = "Deleting"
-	FeatureGroupStatus_DeleteFailed FeatureGroupStatus = "DeleteFailed"
+	FeatureGroupStatus_SDK_Creating     FeatureGroupStatus_SDK = "Creating"
+	FeatureGroupStatus_SDK_Created      FeatureGroupStatus_SDK = "Created"
+	FeatureGroupStatus_SDK_CreateFailed FeatureGroupStatus_SDK = "CreateFailed"
+	FeatureGroupStatus_SDK_Deleting     FeatureGroupStatus_SDK = "Deleting"
+	FeatureGroupStatus_SDK_DeleteFailed FeatureGroupStatus_SDK = "DeleteFailed"
 )
 
 type FeatureType string
