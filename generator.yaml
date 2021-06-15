@@ -466,6 +466,53 @@ resources:
         from:
           operation: DescribeMonitoringSchedule
           path: LastMonitoringExecutionSummary
+  FeatureGroup:
+    exceptions:
+      errors:
+          404:
+            code: ResourceNotFound
+            message_prefix: Resource Not Found
+      terminal_codes:
+        - ResourceInUse
+        - ResourceLimitExceeded
+        - ResourceNotFound
+        - InvalidAction
+        - InvalidClientTokenId
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - InvalidQueryParameter
+        - MalformedQueryString
+        - MissingAction
+        - MissingParameter
+        - OptInRequired
+        - AccessDeniedException
+        - IncompleteSignature
+        - MissingAuthenticationToken
+        - NotAuthorized
+        - ValidationError
+    fields:
+      FeatureGroupArn:
+        is_arn: true
+      FeatureGroupName:
+        is_name: true
+      CreationTime:
+        is_read_only: true
+        from:
+          operation: DescribeFeatureGroup
+          path: CreationTime
+      FailureReason:
+        is_read_only: true
+        is_printable: true
+        from:
+          operation: DescribeFeatureGroup
+          path: FailureReason
+      FeatureGroupStatus:
+        is_read_only: true
+        is_printable: true
+        from:
+          operation: DescribeFeatureGroup
+          path: FeatureGroupStatus
+       
 ignore:
     resource_names:
       - Algorithm
@@ -484,7 +531,7 @@ ignore:
       # - EndpointConfig
       # - Endpoint
       - Experiment
-      - FeatureGroup
+      # - FeatureGroup
       - FlowDefinition
       - HumanTaskUi
       # - HyperParameterTuningJob
