@@ -89,6 +89,8 @@ class TestFeatureGroup:
         # time out errors at a 10 second wait period.
         _, deleted = k8s.delete_custom_resource(reference, 3, 15)
         assert deleted
+        # TODO: Once the delete requeue PR is merged,
+        # verify that it works for DeleteFailed state
         
         assert get_sagemaker_feature_group(feature_group_name) is None
         
