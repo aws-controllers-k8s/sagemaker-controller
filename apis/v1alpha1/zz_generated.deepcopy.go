@@ -2695,10 +2695,6 @@ func (in *FeatureGroupStatus) DeepCopyInto(out *FeatureGroupStatus) {
 			}
 		}
 	}
-	if in.CreationTime != nil {
-		in, out := &in.CreationTime, &out.CreationTime
-		*out = (*in).DeepCopy()
-	}
 	if in.FailureReason != nil {
 		in, out := &in.FailureReason, &out.FailureReason
 		*out = new(string)

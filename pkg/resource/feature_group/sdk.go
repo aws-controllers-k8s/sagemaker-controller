@@ -71,11 +71,6 @@ func (rm *resourceManager) sdkFind(
 	// the original Kubernetes object we passed to the function
 	ko := r.ko.DeepCopy()
 
-	if resp.CreationTime != nil {
-		ko.Status.CreationTime = &metav1.Time{*resp.CreationTime}
-	} else {
-		ko.Status.CreationTime = nil
-	}
 	if resp.Description != nil {
 		ko.Spec.Description = resp.Description
 	} else {

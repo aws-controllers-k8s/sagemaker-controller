@@ -490,16 +490,10 @@ resources:
         - MissingAuthenticationToken
         - NotAuthorized
         - ValidationError
+    hooks:
+      delta_pre_compare:
+        code: customSetDefaults(a, b)
     fields:
-      FeatureGroupArn:
-        is_arn: true
-      FeatureGroupName:
-        is_name: true
-      CreationTime:
-        is_read_only: true
-        from:
-          operation: DescribeFeatureGroup
-          path: CreationTime
       FailureReason:
         is_read_only: true
         is_printable: true
