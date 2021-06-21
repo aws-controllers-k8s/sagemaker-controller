@@ -29,6 +29,13 @@ func customSetDefaults(
 		}
 	}
 
+	// DataCatalogConfig has a timestamped generated default value, it cannot be null.
+	if ackcompare.IsNotNil(a.ko.Spec.OfflineStoreConfig) && ackcompare.IsNotNil(b.ko.Spec.OfflineStoreConfig) {
+		if ackcompare.IsNil(a.ko.Spec.OfflineStoreConfig.DataCatalogConfig) && ackcompare.IsNotNil(b.ko.Spec.OfflineStoreConfig.DataCatalogConfig) {
+			a.ko.Spec.OfflineStoreConfig.DataCatalogConfig = b.ko.Spec.OfflineStoreConfig.DataCatalogConfig
+		}
+	}
+
 	// ResolvedOutputS3URI has a timestamped generated default value, it cannot be null.
 	if ackcompare.IsNotNil(a.ko.Spec.OfflineStoreConfig) && ackcompare.IsNotNil(b.ko.Spec.OfflineStoreConfig) {
 		if ackcompare.IsNotNil(a.ko.Spec.OfflineStoreConfig.S3StorageConfig) && ackcompare.IsNotNil(b.ko.Spec.OfflineStoreConfig.S3StorageConfig) {
