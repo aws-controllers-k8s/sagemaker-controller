@@ -18,10 +18,11 @@ spec:
   versions:
   - additionalPrinterColumns:
     - jsonPath: .status.failureReason
-      name: FailureReason
+      name: FAILURE-REASON
+      priority: 1
       type: string
     - jsonPath: .status.monitoringScheduleStatus
-      name: MonitoringScheduleStatus
+      name: STATUS
       type: string
     name: v1alpha1
     schema:
@@ -42,7 +43,9 @@ spec:
           metadata:
             type: object
           spec:
-            description: MonitoringScheduleSpec defines the desired state of MonitoringSchedule
+            description: "MonitoringScheduleSpec defines the desired state of MonitoringSchedule.
+              \n A schedule for a model monitoring job. For information about model
+              monitor, see Amazon SageMaker Model Monitor (https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor.html)."
             properties:
               monitoringScheduleConfig:
                 description: The configuration object that specifies the monitoring

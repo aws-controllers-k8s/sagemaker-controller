@@ -18,10 +18,11 @@ spec:
   versions:
   - additionalPrinterColumns:
     - jsonPath: .status.failureReason
-      name: FailureReason
+      name: FAILURE-REASON
+      priority: 1
       type: string
     - jsonPath: .status.hyperParameterTuningJobStatus
-      name: HyperParameterTuningJobStatus
+      name: STATUS
       type: string
     name: v1alpha1
     schema:
@@ -43,7 +44,7 @@ spec:
             type: object
           spec:
             description: HyperParameterTuningJobSpec defines the desired state of
-              HyperParameterTuningJob
+              HyperParameterTuningJob.
             properties:
               hyperParameterTuningJobConfig:
                 description: The HyperParameterTuningJobConfig object that describes

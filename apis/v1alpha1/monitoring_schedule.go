@@ -20,7 +20,10 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// MonitoringScheduleSpec defines the desired state of MonitoringSchedule
+// MonitoringScheduleSpec defines the desired state of MonitoringSchedule.
+//
+// A schedule for a model monitoring job. For information about model monitor,
+// see Amazon SageMaker Model Monitor (https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor.html).
 type MonitoringScheduleSpec struct {
 	// The configuration object that specifies the monitoring schedule and defines
 	// the monitoring job.
@@ -59,8 +62,8 @@ type MonitoringScheduleStatus struct {
 // MonitoringSchedule is the Schema for the MonitoringSchedules API
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:printcolumn:name="FailureReason",type=string,JSONPath=`.status.failureReason`
-// +kubebuilder:printcolumn:name="MonitoringScheduleStatus",type=string,JSONPath=`.status.monitoringScheduleStatus`
+// +kubebuilder:printcolumn:name="FAILURE-REASON",type=string,priority=1,JSONPath=`.status.failureReason`
+// +kubebuilder:printcolumn:name="STATUS",type=string,priority=0,JSONPath=`.status.monitoringScheduleStatus`
 type MonitoringSchedule struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
