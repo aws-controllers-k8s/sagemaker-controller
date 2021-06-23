@@ -36,7 +36,7 @@ spec:
             type: object
           spec:
             description: ModelExplainabilityJobDefinitionSpec defines the desired
-              state of ModelExplainabilityJobDefinition
+              state of ModelExplainabilityJobDefinition.
             properties:
               jobDefinitionName:
                 description: The name of the model explainability job definition.

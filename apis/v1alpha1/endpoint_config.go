@@ -20,7 +20,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EndpointConfigSpec defines the desired state of EndpointConfig
+// EndpointConfigSpec defines the desired state of EndpointConfig.
 type EndpointConfigSpec struct {
 	DataCaptureConfig *DataCaptureConfig `json:"dataCaptureConfig,omitempty"`
 	// The name of the endpoint configuration. You specify this name in a CreateEndpoint

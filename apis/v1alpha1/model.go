@@ -20,7 +20,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// ModelSpec defines the desired state of Model
+// ModelSpec defines the desired state of Model.
 type ModelSpec struct {
 	// Specifies the containers in the inference pipeline.
 	Containers []*ContainerDefinition `json:"containers,omitempty"`

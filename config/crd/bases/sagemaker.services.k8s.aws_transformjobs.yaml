@@ -18,10 +18,11 @@ spec:
   versions:
   - additionalPrinterColumns:
     - jsonPath: .status.failureReason
-      name: FailureReason
+      name: FAILURE-REASON
+      priority: 1
       type: string
     - jsonPath: .status.transformJobStatus
-      name: TransformJobStatus
+      name: STATUS
       type: string
     name: v1alpha1
     schema:
@@ -41,7 +42,9 @@ spec:
           metadata:
             type: object
           spec:
-            description: TransformJobSpec defines the desired state of TransformJob
+            description: "TransformJobSpec defines the desired state of TransformJob.
+              \n A batch transform job. For information about SageMaker batch transform,
+              see Use Batch Transform (https://docs.aws.amazon.com/sagemaker/latest/dg/batch-transform.html)."
             properties:
               batchStrategy:
                 description: "Specifies the number of records to include in a mini-batch

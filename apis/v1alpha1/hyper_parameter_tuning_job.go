@@ -20,7 +20,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// HyperParameterTuningJobSpec defines the desired state of HyperParameterTuningJob
+// HyperParameterTuningJobSpec defines the desired state of HyperParameterTuningJob.
 type HyperParameterTuningJobSpec struct {
 	// The HyperParameterTuningJobConfig object that describes the tuning job, including
 	// the search strategy, the objective metric used to evaluate training jobs,
@@ -91,8 +91,8 @@ type HyperParameterTuningJobStatus struct {
 // HyperParameterTuningJob is the Schema for the HyperParameterTuningJobs API
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:printcolumn:name="FailureReason",type=string,JSONPath=`.status.failureReason`
-// +kubebuilder:printcolumn:name="HyperParameterTuningJobStatus",type=string,JSONPath=`.status.hyperParameterTuningJobStatus`
+// +kubebuilder:printcolumn:name="FAILURE-REASON",type=string,priority=1,JSONPath=`.status.failureReason`
+// +kubebuilder:printcolumn:name="STATUS",type=string,priority=0,JSONPath=`.status.hyperParameterTuningJobStatus`
 type HyperParameterTuningJob struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

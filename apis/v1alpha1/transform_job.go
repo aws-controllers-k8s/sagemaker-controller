@@ -20,7 +20,10 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// TransformJobSpec defines the desired state of TransformJob
+// TransformJobSpec defines the desired state of TransformJob.
+//
+// A batch transform job. For information about SageMaker batch transform, see
+// Use Batch Transform (https://docs.aws.amazon.com/sagemaker/latest/dg/batch-transform.html).
 type TransformJobSpec struct {
 	// Specifies the number of records to include in a mini-batch for an HTTP inference
 	// request. A record is a single unit of input data that inference can be made
@@ -116,8 +119,8 @@ type TransformJobStatus struct {
 // TransformJob is the Schema for the TransformJobs API
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:printcolumn:name="FailureReason",type=string,JSONPath=`.status.failureReason`
-// +kubebuilder:printcolumn:name="TransformJobStatus",type=string,JSONPath=`.status.transformJobStatus`
+// +kubebuilder:printcolumn:name="FAILURE-REASON",type=string,priority=1,JSONPath=`.status.failureReason`
+// +kubebuilder:printcolumn:name="STATUS",type=string,priority=0,JSONPath=`.status.transformJobStatus`
 type TransformJob struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

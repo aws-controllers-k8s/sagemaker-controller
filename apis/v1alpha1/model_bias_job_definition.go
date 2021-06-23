@@ -20,7 +20,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// ModelBiasJobDefinitionSpec defines the desired state of ModelBiasJobDefinition
+// ModelBiasJobDefinitionSpec defines the desired state of ModelBiasJobDefinition.
 type ModelBiasJobDefinitionSpec struct {
 	// The name of the bias job definition. The name must be unique within an AWS
 	// Region in the AWS account.

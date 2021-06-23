@@ -20,7 +20,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// DataQualityJobDefinitionSpec defines the desired state of DataQualityJobDefinition
+// DataQualityJobDefinitionSpec defines the desired state of DataQualityJobDefinition.
 type DataQualityJobDefinitionSpec struct {
 	// Specifies the container that runs the monitoring job.
 	// +kubebuilder:validation:Required
