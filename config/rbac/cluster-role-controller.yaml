@@ -145,6 +145,26 @@ rules:
 - apiGroups:
   - sagemaker.services.k8s.aws
   resources:
+  - modelpackagegroups
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
+  - modelpackagegroups/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
   - modelqualityjobdefinitions
   verbs:
   - create

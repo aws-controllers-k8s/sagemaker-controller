@@ -10,6 +10,7 @@ resources:
   - bases/sagemaker.services.k8s.aws_models.yaml
   - bases/sagemaker.services.k8s.aws_modelbiasjobdefinitions.yaml
   - bases/sagemaker.services.k8s.aws_modelexplainabilityjobdefinitions.yaml
+  - bases/sagemaker.services.k8s.aws_modelpackagegroups.yaml
   - bases/sagemaker.services.k8s.aws_modelqualityjobdefinitions.yaml
   - bases/sagemaker.services.k8s.aws_monitoringschedules.yaml
   - bases/sagemaker.services.k8s.aws_processingjobs.yaml
