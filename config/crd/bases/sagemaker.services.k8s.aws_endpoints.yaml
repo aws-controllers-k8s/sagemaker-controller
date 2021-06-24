@@ -16,14 +16,7 @@ spec:
     singular: endpoint
   scope: Namespaced
   versions:
-  - additionalPrinterColumns:
-    - jsonPath: .status.endpointStatus
-      name: EndpointStatus
-      type: string
-    - jsonPath: .status.failureReason
-      name: FailureReason
-      type: string
-    name: v1alpha1
+  - name: v1alpha1
     schema:
       openAPIV3Schema:
         description: Endpoint is the Schema for the Endpoints API
@@ -41,7 +34,8 @@ spec:
           metadata:
             type: object
           spec:
-            description: EndpointSpec defines the desired state of Endpoint
+            description: "EndpointSpec defines the desired state of Endpoint. \n A
+              hosted endpoint for real-time inference."
             properties:
               endpointConfigName:
                 description: The name of an endpoint configuration. For more information,

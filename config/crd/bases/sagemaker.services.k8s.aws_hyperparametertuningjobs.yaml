@@ -16,14 +16,7 @@ spec:
     singular: hyperparametertuningjob
   scope: Namespaced
   versions:
-  - additionalPrinterColumns:
-    - jsonPath: .status.failureReason
-      name: FailureReason
-      type: string
-    - jsonPath: .status.hyperParameterTuningJobStatus
-      name: HyperParameterTuningJobStatus
-      type: string
-    name: v1alpha1
+  - name: v1alpha1
     schema:
       openAPIV3Schema:
         description: HyperParameterTuningJob is the Schema for the HyperParameterTuningJobs
@@ -43,7 +36,7 @@ spec:
             type: object
           spec:
             description: HyperParameterTuningJobSpec defines the desired state of
-              HyperParameterTuningJob
+              HyperParameterTuningJob.
             properties:
               hyperParameterTuningJobConfig:
                 description: The HyperParameterTuningJobConfig object that describes

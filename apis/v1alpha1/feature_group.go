@@ -20,7 +20,12 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// FeatureGroupSpec defines the desired state of FeatureGroup
+// FeatureGroupSpec defines the desired state of FeatureGroup.
+//
+// Amazon SageMaker Feature Store stores features in a collection called Feature
+// Group. A Feature Group can be visualized as a table which has rows, with
+// a unique identifier for each row where each column in the table is a feature.
+// In principle, a Feature Group is composed of features and values per features.
 type FeatureGroupSpec struct {
 	// A free-form description of a FeatureGroup.
 	Description *string `json:"description,omitempty"`
@@ -121,8 +126,6 @@ type FeatureGroupStatus struct {
 // FeatureGroup is the Schema for the FeatureGroups API
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:printcolumn:name="FailureReason",type=string,JSONPath=`.status.failureReason`
-// +kubebuilder:printcolumn:name="FeatureGroupStatus",type=string,JSONPath=`.status.featureGroupStatus`
 type FeatureGroup struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

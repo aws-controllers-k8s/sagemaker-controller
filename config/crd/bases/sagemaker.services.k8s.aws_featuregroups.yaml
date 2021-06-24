@@ -16,14 +16,7 @@ spec:
     singular: featuregroup
   scope: Namespaced
   versions:
-  - additionalPrinterColumns:
-    - jsonPath: .status.failureReason
-      name: FailureReason
-      type: string
-    - jsonPath: .status.featureGroupStatus
-      name: FeatureGroupStatus
-      type: string
-    name: v1alpha1
+  - name: v1alpha1
     schema:
       openAPIV3Schema:
         description: FeatureGroup is the Schema for the FeatureGroups API
@@ -41,7 +34,12 @@ spec:
           metadata:
             type: object
           spec:
-            description: FeatureGroupSpec defines the desired state of FeatureGroup
+            description: "FeatureGroupSpec defines the desired state of FeatureGroup.
+              \n Amazon SageMaker Feature Store stores features in a collection called
+              Feature Group. A Feature Group can be visualized as a table which has
+              rows, with a unique identifier for each row where each column in the
+              table is a feature. In principle, a Feature Group is composed of features
+              and values per features."
             properties:
               description:
                 description: A free-form description of a FeatureGroup.

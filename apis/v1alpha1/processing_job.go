@@ -20,7 +20,10 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// ProcessingJobSpec defines the desired state of ProcessingJob
+// ProcessingJobSpec defines the desired state of ProcessingJob.
+//
+// An Amazon SageMaker processing job that is used to analyze data and evaluate
+// models. For more information, see Process Data and Evaluate Models (https://docs.aws.amazon.com/sagemaker/latest/dg/processing-job.html).
 type ProcessingJobSpec struct {
 	// Configures the processing job to run a specified Docker container image.
 	// +kubebuilder:validation:Required
@@ -76,8 +79,6 @@ type ProcessingJobStatus struct {
 // ProcessingJob is the Schema for the ProcessingJobs API
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:printcolumn:name="FailureReason",type=string,JSONPath=`.status.failureReason`
-// +kubebuilder:printcolumn:name="ProcessingJobStatus",type=string,JSONPath=`.status.processingJobStatus`
 type ProcessingJob struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

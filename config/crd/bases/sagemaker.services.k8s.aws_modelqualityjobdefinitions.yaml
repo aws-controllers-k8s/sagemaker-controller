@@ -36,7 +36,7 @@ spec:
             type: object
           spec:
             description: ModelQualityJobDefinitionSpec defines the desired state of
-              ModelQualityJobDefinition
+              ModelQualityJobDefinition.
             properties:
               jobDefinitionName:
                 description: The name of the monitoring job definition.

@@ -20,7 +20,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// ModelQualityJobDefinitionSpec defines the desired state of ModelQualityJobDefinition
+// ModelQualityJobDefinitionSpec defines the desired state of ModelQualityJobDefinition.
 type ModelQualityJobDefinitionSpec struct {
 	// The name of the monitoring job definition.
 	// +kubebuilder:validation:Required

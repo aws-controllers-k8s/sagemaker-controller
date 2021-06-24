@@ -16,17 +16,7 @@ spec:
     singular: trainingjob
   scope: Namespaced
   versions:
-  - additionalPrinterColumns:
-    - jsonPath: .status.failureReason
-      name: FailureReason
-      type: string
-    - jsonPath: .status.secondaryStatus
-      name: SecondaryStatus
-      type: string
-    - jsonPath: .status.trainingJobStatus
-      name: TrainingJobStatus
-      type: string
-    name: v1alpha1
+  - name: v1alpha1
     schema:
       openAPIV3Schema:
         description: TrainingJob is the Schema for the TrainingJobs API
@@ -44,7 +34,8 @@ spec:
           metadata:
             type: object
           spec:
-            description: TrainingJobSpec defines the desired state of TrainingJob
+            description: "TrainingJobSpec defines the desired state of TrainingJob.
+              \n Contains information about a training job."
             properties:
               algorithmSpecification:
                 description: The registry path of the Docker image that contains the
