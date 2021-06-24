@@ -488,11 +488,7 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 		"MissingAction",
 		"MissingParameter",
 		"OptInRequired",
-		"AccessDeniedException",
-		"IncompleteSignature",
-		"MissingAuthenticationToken",
-		"NotAuthorized",
-		"ValidationError":
+		"AccessDeniedException":
 		return true
 	default:
 		return false

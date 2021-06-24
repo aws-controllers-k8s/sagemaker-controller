@@ -16,7 +16,15 @@ spec:
     singular: featuregroup
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .status.failureReason
+      name: FAILURE-REASON
+      priority: 1
+      type: string
+    - jsonPath: .status.featureGroupStatus
+      name: STATUS
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: FeatureGroup is the Schema for the FeatureGroups API
