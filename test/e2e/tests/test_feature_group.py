@@ -78,10 +78,17 @@ class TestFeatureGroup:
         assert k8s.get_resource_exists(reference)
         
         feature_group_name = resource["spec"].get("featureGroupName", None)
+
+        feature_group_describe_response = get_sagemaker_feature_group(feature_group_name)
         
         assert (
             k8s.get_resource_arn(resource)
-            == get_sagemaker_feature_group(feature_group_name)["FeatureGroupArn"]
+            == feature_group_describe_response["FeatureGroupArn"]
+        )
+
+        assert (
+            "Created"
+            == feature_group_describe_response["FeatureGroupStatus"]
         )
         
         # Delete the k8s resource.
