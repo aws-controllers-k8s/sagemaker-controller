@@ -20,7 +20,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// ModelExplainabilityJobDefinitionSpec defines the desired state of ModelExplainabilityJobDefinition
+// ModelExplainabilityJobDefinitionSpec defines the desired state of ModelExplainabilityJobDefinition.
 type ModelExplainabilityJobDefinitionSpec struct {
 	// The name of the model explainability job definition. The name must be unique
 	// within an AWS Region in the AWS account.

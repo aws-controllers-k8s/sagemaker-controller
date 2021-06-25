@@ -17,11 +17,12 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
-    - jsonPath: .status.endpointStatus
-      name: EndpointStatus
-      type: string
     - jsonPath: .status.failureReason
-      name: FailureReason
+      name: FAILURE-REASON
+      priority: 1
+      type: string
+    - jsonPath: .status.endpointStatus
+      name: STATUS
       type: string
     name: v1alpha1
     schema:
@@ -41,7 +42,8 @@ spec:
           metadata:
             type: object
           spec:
-            description: EndpointSpec defines the desired state of Endpoint
+            description: "EndpointSpec defines the desired state of Endpoint. \n A
+              hosted endpoint for real-time inference."
             properties:
               endpointConfigName:
                 description: The name of an endpoint configuration. For more information,

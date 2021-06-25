@@ -18,13 +18,14 @@ spec:
   versions:
   - additionalPrinterColumns:
     - jsonPath: .status.failureReason
-      name: FailureReason
+      name: FAILURE-REASON
+      priority: 1
       type: string
     - jsonPath: .status.secondaryStatus
-      name: SecondaryStatus
+      name: SECONDARY-STATUS
       type: string
     - jsonPath: .status.trainingJobStatus
-      name: TrainingJobStatus
+      name: STATUS
       type: string
     name: v1alpha1
     schema:
@@ -44,7 +45,8 @@ spec:
           metadata:
             type: object
           spec:
-            description: TrainingJobSpec defines the desired state of TrainingJob
+            description: "TrainingJobSpec defines the desired state of TrainingJob.
+              \n Contains information about a training job."
             properties:
               algorithmSpecification:
                 description: The registry path of the Docker image that contains the

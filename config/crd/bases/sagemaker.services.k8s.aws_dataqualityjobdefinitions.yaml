@@ -36,7 +36,7 @@ spec:
             type: object
           spec:
             description: DataQualityJobDefinitionSpec defines the desired state of
-              DataQualityJobDefinition
+              DataQualityJobDefinition.
             properties:
               dataQualityAppSpecification:
                 description: Specifies the container that runs the monitoring job.
