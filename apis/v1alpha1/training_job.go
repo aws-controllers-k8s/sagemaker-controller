@@ -20,7 +20,9 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// TrainingJobSpec defines the desired state of TrainingJob
+// TrainingJobSpec defines the desired state of TrainingJob.
+//
+// Contains information about a training job.
 type TrainingJobSpec struct {
 	// The registry path of the Docker image that contains the training algorithm
 	// and algorithm-specific metadata, including the input mode. For more information

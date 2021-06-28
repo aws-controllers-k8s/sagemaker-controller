@@ -45,7 +45,8 @@ spec:
           metadata:
             type: object
           spec:
-            description: TrainingJobSpec defines the desired state of TrainingJob
+            description: "TrainingJobSpec defines the desired state of TrainingJob.
+              \n Contains information about a training job."
             properties:
               algorithmSpecification:
                 description: The registry path of the Docker image that contains the

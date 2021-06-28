@@ -34,7 +34,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: EndpointConfigSpec defines the desired state of EndpointConfig
+            description: EndpointConfigSpec defines the desired state of EndpointConfig.
             properties:
               dataCaptureConfig:
                 properties:

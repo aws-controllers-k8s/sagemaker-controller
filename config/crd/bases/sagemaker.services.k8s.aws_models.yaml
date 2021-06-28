@@ -34,7 +34,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: ModelSpec defines the desired state of Model
+            description: ModelSpec defines the desired state of Model.
             properties:
               containers:
                 description: Specifies the containers in the inference pipeline.

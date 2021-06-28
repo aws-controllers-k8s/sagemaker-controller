@@ -20,7 +20,9 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EndpointSpec defines the desired state of Endpoint
+// EndpointSpec defines the desired state of Endpoint.
+//
+// A hosted endpoint for real-time inference.
 type EndpointSpec struct {
 	// The name of an endpoint configuration. For more information, see CreateEndpointConfig.
 	// +kubebuilder:validation:Required

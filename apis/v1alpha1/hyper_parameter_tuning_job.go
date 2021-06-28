@@ -20,7 +20,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// HyperParameterTuningJobSpec defines the desired state of HyperParameterTuningJob
+// HyperParameterTuningJobSpec defines the desired state of HyperParameterTuningJob.
 type HyperParameterTuningJobSpec struct {
 	// The HyperParameterTuningJobConfig object that describes the tuning job, including
 	// the search strategy, the objective metric used to evaluate training jobs,

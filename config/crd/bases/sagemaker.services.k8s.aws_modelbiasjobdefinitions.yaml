@@ -35,7 +35,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: ModelBiasJobDefinitionSpec defines the desired state of ModelBiasJobDefinition
+            description: ModelBiasJobDefinitionSpec defines the desired state of ModelBiasJobDefinition.
             properties:
               jobDefinitionName:
                 description: The name of the bias job definition. The name must be
