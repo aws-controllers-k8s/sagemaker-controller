@@ -16,7 +16,15 @@ spec:
     singular: processingjob
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .status.failureReason
+      name: FAILURE-REASON
+      priority: 1
+      type: string
+    - jsonPath: .status.processingJobStatus
+      name: STATUS
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: ProcessingJob is the Schema for the ProcessingJobs API
@@ -34,10 +42,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: "ProcessingJobSpec defines the desired state of ProcessingJob.
-              \n An Amazon SageMaker processing job that is used to analyze data and
-              evaluate models. For more information, see Process Data and Evaluate
-              Models (https://docs.aws.amazon.com/sagemaker/latest/dg/processing-job.html)."
+            description: ProcessingJobSpec defines the desired state of ProcessingJob
             properties:
               appSpecification:
                 description: Configures the processing job to run a specified Docker

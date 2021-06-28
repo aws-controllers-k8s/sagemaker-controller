@@ -22,14 +22,12 @@ import (
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
-	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
 	"github.com/aws/aws-sdk-go/aws"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
-	svcsdkapi "github.com/aws/aws-sdk-go/service/sagemaker"
 )
 
 // Hack to avoid import errors during build...
@@ -41,17 +39,13 @@ var (
 	_ = &svcapitypes.Endpoint{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
-	_ = svcsdkapi.New
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
 func (rm *resourceManager) sdkFind(
 	ctx context.Context,
 	r *resource,
-) (latest *resource, err error) {
-	rlog := ackrtlog.FromContext(ctx)
-	exit := rlog.Trace("rm.sdkFind")
-	defer exit(err)
+) (*resource, error) {
 	// If any required fields in the input shape are missing, AWS resource is
 	// not created yet. Return NotFound here to indicate to callers that the
 	// resource isn't yet created.
@@ -64,14 +58,13 @@ func (rm *resourceManager) sdkFind(
 		return nil, err
 	}
 
-	var resp *svcsdkapi.DescribeEndpointOutput
-	resp, err = rm.sdkapi.DescribeEndpointWithContext(ctx, input)
-	rm.metrics.RecordAPICall("READ_ONE", "DescribeEndpoint", err)
-	if err != nil {
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ValidationException" && strings.HasPrefix(awsErr.Message(), "Could not find endpoint") {
+	resp, respErr := rm.sdkapi.DescribeEndpointWithContext(ctx, input)
+	rm.metrics.RecordAPICall("READ_ONE", "DescribeEndpoint", respErr)
+	if respErr != nil {
+		if awsErr, ok := ackerr.AWSError(respErr); ok && awsErr.Code() == "ValidationException" && strings.HasPrefix(awsErr.Message(), "Could not find endpoint") {
 			return nil, ackerr.NotFound
 		}
-		return nil, err
+		return nil, respErr
 	}
 
 	// Merge in the information we read from the API call above to the copy of
@@ -159,11 +152,13 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
+
 	// custom set output from response
 	ko, err = rm.customDescribeEndpointSetOutput(ctx, r, resp, ko)
 	if err != nil {
 		return nil, err
 	}
+
 	return &resource{ko}, nil
 }
 
@@ -192,29 +187,24 @@ func (rm *resourceManager) newDescribeRequestPayload(
 }
 
 // sdkCreate creates the supplied resource in the backend AWS service API and
-// returns a copy of the resource with resource fields (in both Spec and
-// Status) filled in with values from the CREATE API operation's Output shape.
+// returns a new resource with any fields in the Status field filled in
 func (rm *resourceManager) sdkCreate(
 	ctx context.Context,
-	desired *resource,
-) (created *resource, err error) {
-	rlog := ackrtlog.FromContext(ctx)
-	exit := rlog.Trace("rm.sdkCreate")
-	defer exit(err)
-	input, err := rm.newCreateRequestPayload(ctx, desired)
+	r *resource,
+) (*resource, error) {
+	input, err := rm.newCreateRequestPayload(ctx, r)
 	if err != nil {
 		return nil, err
 	}
 
-	var resp *svcsdkapi.CreateEndpointOutput
-	resp, err = rm.sdkapi.CreateEndpointWithContext(ctx, input)
-	rm.metrics.RecordAPICall("CREATE", "CreateEndpoint", err)
-	if err != nil {
-		return nil, err
+	resp, respErr := rm.sdkapi.CreateEndpointWithContext(ctx, input)
+	rm.metrics.RecordAPICall("CREATE", "CreateEndpoint", respErr)
+	if respErr != nil {
+		return nil, respErr
 	}
 	// Merge in the information we read from the API call above to the copy of
 	// the original Kubernetes object we passed to the function
-	ko := desired.ko.DeepCopy()
+	ko := r.ko.DeepCopy()
 
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
@@ -225,6 +215,7 @@ func (rm *resourceManager) sdkCreate(
 	}
 
 	rm.setStatusDefaults(ko)
+
 	rm.customSetOutput(desired, aws.String(svcsdk.EndpointStatusCreating), ko)
 	return &resource{ko}, nil
 }
@@ -254,24 +245,22 @@ func (rm *resourceManager) sdkUpdate(
 	desired *resource,
 	latest *resource,
 	delta *ackcompare.Delta,
-) (updated *resource, err error) {
-	rlog := ackrtlog.FromContext(ctx)
-	exit := rlog.Trace("rm.sdkUpdate")
-	defer exit(err)
-	updated, err = rm.customUpdateEndpoint(ctx, desired, latest, delta)
-	if updated != nil || err != nil {
-		return updated, err
+) (*resource, error) {
+
+	customResp, customRespErr := rm.customUpdateEndpoint(ctx, desired, latest, delta)
+	if customResp != nil || customRespErr != nil {
+		return customResp, customRespErr
 	}
+
 	input, err := rm.newUpdateRequestPayload(ctx, desired)
 	if err != nil {
 		return nil, err
 	}
 
-	var resp *svcsdkapi.UpdateEndpointOutput
-	resp, err = rm.sdkapi.UpdateEndpointWithContext(ctx, input)
-	rm.metrics.RecordAPICall("UPDATE", "UpdateEndpoint", err)
-	if err != nil {
-		return nil, err
+	resp, respErr := rm.sdkapi.UpdateEndpointWithContext(ctx, input)
+	rm.metrics.RecordAPICall("UPDATE", "UpdateEndpoint", respErr)
+	if respErr != nil {
+		return nil, respErr
 	}
 	// Merge in the information we read from the API call above to the copy of
 	// the original Kubernetes object we passed to the function
@@ -286,11 +275,13 @@ func (rm *resourceManager) sdkUpdate(
 	}
 
 	rm.setStatusDefaults(ko)
+
 	// custom set output from response
 	ko, err = rm.customUpdateEndpointSetOutput(ctx, desired, resp, ko)
 	if err != nil {
 		return nil, err
 	}
+
 	return &resource{ko}, nil
 }
 
@@ -317,20 +308,20 @@ func (rm *resourceManager) newUpdateRequestPayload(
 func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
-) (err error) {
-	rlog := ackrtlog.FromContext(ctx)
-	exit := rlog.Trace("rm.sdkDelete")
-	defer exit(err)
-	if err = rm.customDeleteEndpoint(ctx, r); err != nil {
-		return err
+) error {
+
+	customRespErr := rm.customDeleteEndpoint(ctx, r)
+	if customRespErr != nil {
+		return customRespErr
 	}
+
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
 		return err
 	}
-	_, err = rm.sdkapi.DeleteEndpointWithContext(ctx, input)
-	rm.metrics.RecordAPICall("DELETE", "DeleteEndpoint", err)
-	return err
+	_, respErr := rm.sdkapi.DeleteEndpointWithContext(ctx, input)
+	rm.metrics.RecordAPICall("DELETE", "DeleteEndpoint", respErr)
+	return respErr
 }
 
 // newDeleteRequestPayload returns an SDK-specific struct for the HTTP request

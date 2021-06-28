@@ -16,7 +16,15 @@ spec:
     singular: transformjob
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .status.failureReason
+      name: FAILURE-REASON
+      priority: 1
+      type: string
+    - jsonPath: .status.transformJobStatus
+      name: STATUS
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: TransformJob is the Schema for the TransformJobs API
@@ -34,9 +42,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: "TransformJobSpec defines the desired state of TransformJob.
-              \n A batch transform job. For information about SageMaker batch transform,
-              see Use Batch Transform (https://docs.aws.amazon.com/sagemaker/latest/dg/batch-transform.html)."
+            description: TransformJobSpec defines the desired state of TransformJob
             properties:
               batchStrategy:
                 description: "Specifies the number of records to include in a mini-batch
