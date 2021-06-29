@@ -42,7 +42,9 @@ spec:
           metadata:
             type: object
           spec:
-            description: TransformJobSpec defines the desired state of TransformJob
+            description: "TransformJobSpec defines the desired state of TransformJob.
+              \n A batch transform job. For information about SageMaker batch transform,
+              see Use Batch Transform (https://docs.aws.amazon.com/sagemaker/latest/dg/batch-transform.html)."
             properties:
               batchStrategy:
                 description: "Specifies the number of records to include in a mini-batch

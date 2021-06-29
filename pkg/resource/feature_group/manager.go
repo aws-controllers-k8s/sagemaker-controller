@@ -18,16 +18,16 @@ package feature_group
 import (
 	"context"
 	"fmt"
-	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
-	corev1 "k8s.io/api/core/v1"
 
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	ackcfg "github.com/aws-controllers-k8s/runtime/pkg/config"
+	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackmetrics "github.com/aws-controllers-k8s/runtime/pkg/metrics"
 	acktypes "github.com/aws-controllers-k8s/runtime/pkg/types"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/go-logr/logr"
+	corev1 "k8s.io/api/core/v1"
 
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 	svcsdkapi "github.com/aws/aws-sdk-go/service/sagemaker/sagemakeriface"
@@ -197,7 +197,7 @@ func (rm *resourceManager) onError(
 	r *resource,
 	err error,
 ) (acktypes.AWSResource, error) {
-	r1, updated := rm.updateConditions(r, err)
+	r1, updated := rm.updateConditions(r, false, err)
 	if !updated {
 		return r, err
 	}
@@ -217,7 +217,7 @@ func (rm *resourceManager) onError(
 func (rm *resourceManager) onSuccess(
 	r *resource,
 ) (acktypes.AWSResource, error) {
-	r1, updated := rm.updateConditions(r, nil)
+	r1, updated := rm.updateConditions(r, true, nil)
 	if !updated {
 		return r, nil
 	}
