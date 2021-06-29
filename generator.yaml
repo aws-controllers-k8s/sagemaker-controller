@@ -504,7 +504,6 @@ resources:
         - MissingAction
         - MissingParameter
         - OptInRequired
-        - AccessDeniedException
     hooks:
       delta_pre_compare:
         code: customSetDefaults(a, b)

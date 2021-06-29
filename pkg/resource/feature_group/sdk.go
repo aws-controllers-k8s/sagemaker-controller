@@ -493,8 +493,7 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 		"MalformedQueryString",
 		"MissingAction",
 		"MissingParameter",
-		"OptInRequired",
-		"AccessDeniedException":
+		"OptInRequired":
 		return true
 	default:
 		return false
