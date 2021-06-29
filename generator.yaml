@@ -490,7 +490,6 @@ resources:
       errors:
           404:
             code: ResourceNotFound
-            message_prefix: Resource Not Found
       terminal_codes:
         - ResourceInUse
         - ResourceLimitExceeded
@@ -523,7 +522,6 @@ resources:
         from:
           operation: DescribeFeatureGroup
           path: FeatureGroupStatus
-       
 ignore:
     resource_names:
       - Algorithm

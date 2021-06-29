@@ -66,7 +66,7 @@ func (rm *resourceManager) sdkFind(
 	resp, err = rm.sdkapi.DescribeFeatureGroupWithContext(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeFeatureGroup", err)
 	if err != nil {
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ResourceNotFound" && strings.HasPrefix(awsErr.Message(), "Resource Not Found") {
+		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ResourceNotFound" {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
