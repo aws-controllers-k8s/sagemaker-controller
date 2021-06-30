@@ -30,7 +30,7 @@ from e2e import (
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 
-RESOURCE_NAME_BASE = "feature-group"
+RESOURCE_NAME_PREFIX = "feature-group"
 RESOURCE_PLURAL = "featuregroups"
 SPEC_FILE = "feature_group"
 FEATURE_GROUP_STATUS_CREATED = "CREATED"
@@ -42,7 +42,7 @@ WAIT_PERIOD_LENGTH = 15
 @pytest.fixture(scope="module")
 def feature_group():
     """Creates a feature group from a SPEC_FILE."""
-    feature_group_name = random_suffix_name(RESOURCE_NAME_BASE, 32)
+    feature_group_name = random_suffix_name(RESOURCE_NAME_PREFIX, 32)
     replacements = REPLACEMENT_VALUES.copy()
     replacements["FEATURE_GROUP_NAME"] = feature_group_name
     reference, spec, resource = create_sagemaker_resource(
@@ -112,11 +112,13 @@ class TestFeatureGroup:
                 feature_group_name, FEATURE_GROUP_STATUS_CREATED
             )
         )
+        # TODO: add resource side checks.
         
         # Delete the k8s resource.
         _, deleted = k8s.delete_custom_resource(reference, WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH)
         assert deleted
+        # TODO: Implement logic to requeueOnDelete.
         # TODO: Once the delete requeue PR is merged,
-        # verify that it works for DeleteFailed state
+        # verify that it works for DeleteFailed state.
         
         assert get_sagemaker_feature_group(feature_group_name) is None
