@@ -224,6 +224,12 @@ func (rm *resourceManager) sdkCreate(
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkCreate")
 	defer exit(err)
+
+	// If creating, requeue with wait untill status becomes created.
+	if isCreating(desired) {
+		return nil, requeueWaitWhileCreating
+	}
+
 	input, err := rm.newCreateRequestPayload(ctx, desired)
 	if err != nil {
 		return nil, err
@@ -232,6 +238,17 @@ func (rm *resourceManager) sdkCreate(
 	var resp *svcsdk.CreateFeatureGroupOutput
 	_ = resp
 	resp, err = rm.sdkapi.CreateFeatureGroupWithContext(ctx, input)
+
+	// If creating, requeue with wait untill status becomes created.
+	if err == nil {
+		if foundResource, err := rm.sdkFind(ctx, desired); err != ackerr.NotFound {
+			if isCreating(foundResource) {
+				return nil, requeueWaitWhileCreating
+			}
+			return nil, err
+		}
+	}
+
 	rm.metrics.RecordAPICall("CREATE", "CreateFeatureGroup", err)
 	if err != nil {
 		return nil, err
@@ -464,7 +481,9 @@ func (rm *resourceManager) updateConditions(
 	}
 	// Required to avoid the "declared but not used" error in the default case
 	_ = syncCondition
-	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil {
+	// custom update conditions
+	customUpdate := rm.CustomUpdateConditions(ko, r, err)
+	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil || customUpdate {
 		return &resource{ko}, true // updated
 	}
 	return nil, false // not updated
