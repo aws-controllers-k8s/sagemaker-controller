@@ -187,6 +187,7 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
+	rm.customSetOutput(&resource{ko})
 	return &resource{ko}, nil
 }
 
@@ -479,7 +480,9 @@ func (rm *resourceManager) updateConditions(
 	}
 	// Required to avoid the "declared but not used" error in the default case
 	_ = syncCondition
-	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil {
+	// custom update conditions
+	customUpdate := rm.CustomUpdateConditions(ko, r, err)
+	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil || customUpdate {
 		return &resource{ko}, true // updated
 	}
 	return nil, false // not updated

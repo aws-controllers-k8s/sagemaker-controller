@@ -11,10 +11,7 @@
 // express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-// Use this file if conditions need to be updated based on the latest status
-// of resource which is not evident from API response
-
-package monitoring_schedule
+package feature_group
 
 import (
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
@@ -22,18 +19,17 @@ import (
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 )
 
-// CustomUpdateConditions sets conditions (terminal) on supplied monitoring schedule.
+// CustomUpdateConditions sets conditions (terminal) on supplied feature group.
 // it examines supplied resource to determine conditions.
 // It returns true if conditions are updated.
 func (rm *resourceManager) CustomUpdateConditions(
-	ko *svcapitypes.MonitoringSchedule,
+	ko *svcapitypes.FeatureGroup,
 	r *resource,
 	err error,
 ) bool {
-	latestStatus := r.ko.Status.MonitoringScheduleStatus
-	terminalStatus := svcsdk.ScheduleStatusFailed
+	latestStatus := r.ko.Status.FeatureGroupStatus
+	terminalStatus := svcsdk.FeatureGroupStatusCreateFailed
 	conditionManager := &resource{ko}
-	resourceName := resourceGK.Kind
 	// If the latestStatus == terminalStatus we will set
 	// the terminal condition and terminal message.
 	return svccommon.SetTerminalState(conditionManager, latestStatus, &resourceName, terminalStatus)
