@@ -4617,10 +4617,6 @@ func (in *ModelPackageGroupStatus) DeepCopyInto(out *ModelPackageGroupStatus) {
 			}
 		}
 	}
-	if in.CreationTime != nil {
-		in, out := &in.CreationTime, &out.CreationTime
-		*out = (*in).DeepCopy()
-	}
 	if in.ModelPackageGroupStatus != nil {
 		in, out := &in.ModelPackageGroupStatus, &out.ModelPackageGroupStatus
 		*out = new(string)

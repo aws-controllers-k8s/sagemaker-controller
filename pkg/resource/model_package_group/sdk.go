@@ -29,7 +29,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
-	svcsdkapi "github.com/aws/aws-sdk-go/service/sagemaker"
 )
 
 // Hack to avoid import errors during build...
@@ -41,7 +40,6 @@ var (
 	_ = &svcapitypes.ModelPackageGroup{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
-	_ = svcsdkapi.New
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -64,7 +62,7 @@ func (rm *resourceManager) sdkFind(
 		return nil, err
 	}
 
-	var resp *svcsdkapi.DescribeModelPackageGroupOutput
+	var resp *svcsdk.DescribeModelPackageGroupOutput
 	resp, err = rm.sdkapi.DescribeModelPackageGroupWithContext(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeModelPackageGroup", err)
 	if err != nil {
@@ -78,11 +76,6 @@ func (rm *resourceManager) sdkFind(
 	// the original Kubernetes object we passed to the function
 	ko := r.ko.DeepCopy()
 
-	if resp.CreationTime != nil {
-		ko.Status.CreationTime = &metav1.Time{*resp.CreationTime}
-	} else {
-		ko.Status.CreationTime = nil
-	}
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
 	}
@@ -109,12 +102,12 @@ func (rm *resourceManager) sdkFind(
 	rm.setStatusDefaults(ko)
 	if isModelPackageGroupPending(&resource{ko}) {
 		msg := "ModelPackageGroup is currently pending"
-		setSyncedCondition(r, corev1.ConditionFalse, &msg, nil)
+		setSyncedCondition(&resource{ko}, corev1.ConditionFalse, &msg, nil)
 		return &resource{ko}, requeueWaitWhilePending
 	}
 	if isModelPackageGroupInProgress(&resource{ko}) {
 		msg := "ModelPackageGroup is currently in progress"
-		setSyncedCondition(r, corev1.ConditionFalse, &msg, nil)
+		setSyncedCondition(&resource{ko}, corev1.ConditionFalse, &msg, nil)
 		return &resource{ko}, requeueWaitWhileInProgress
 	}
 	ModelPackageGroupCustomSetOutput(&resource{ko})
@@ -160,7 +153,8 @@ func (rm *resourceManager) sdkCreate(
 		return nil, err
 	}
 
-	var resp *svcsdkapi.CreateModelPackageGroupOutput
+	var resp *svcsdk.CreateModelPackageGroupOutput
+	_ = resp
 	resp, err = rm.sdkapi.CreateModelPackageGroupWithContext(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateModelPackageGroup", err)
 	if err != nil {
@@ -283,6 +277,7 @@ func (rm *resourceManager) setStatusDefaults(
 // else it returns nil, false
 func (rm *resourceManager) updateConditions(
 	r *resource,
+	onSuccess bool,
 	err error,
 ) (*resource, bool) {
 	ko := r.ko.DeepCopy()
@@ -291,12 +286,16 @@ func (rm *resourceManager) updateConditions(
 	// Terminal condition
 	var terminalCondition *ackv1alpha1.Condition = nil
 	var recoverableCondition *ackv1alpha1.Condition = nil
+	var syncCondition *ackv1alpha1.Condition = nil
 	for _, condition := range ko.Status.Conditions {
 		if condition.Type == ackv1alpha1.ConditionTypeTerminal {
 			terminalCondition = condition
 		}
 		if condition.Type == ackv1alpha1.ConditionTypeRecoverable {
 			recoverableCondition = condition
+		}
+		if condition.Type == ackv1alpha1.ConditionTypeResourceSynced {
+			syncCondition = condition
 		}
 	}
 
@@ -338,7 +337,9 @@ func (rm *resourceManager) updateConditions(
 			recoverableCondition.Message = nil
 		}
 	}
-	if terminalCondition != nil || recoverableCondition != nil {
+	// Required to avoid the "declared but not used" error in the default case
+	_ = syncCondition
+	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil {
 		return &resource{ko}, true // updated
 	}
 	return nil, false // not updated

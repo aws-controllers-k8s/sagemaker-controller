@@ -42,8 +42,6 @@ type ModelPackageGroupStatus struct {
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
-	// The time that the model group was created.
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	// The status of the model group.
 	ModelPackageGroupStatus *string `json:"modelPackageGroupStatus,omitempty"`
 }

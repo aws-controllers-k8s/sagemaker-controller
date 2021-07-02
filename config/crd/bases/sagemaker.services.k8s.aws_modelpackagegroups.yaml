@@ -109,10 +109,6 @@ spec:
                   - type
                   type: object
                 type: array
-              creationTime:
-                description: The time that the model group was created.
-                format: date-time
-                type: string
               modelPackageGroupStatus:
                 description: The status of the model group.
                 type: string
