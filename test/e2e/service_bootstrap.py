@@ -55,11 +55,6 @@ def create_execution_role() -> str:
     iam.attach_role_policy(
         RoleName=role_name, PolicyArn="arn:aws:iam::aws:policy/AmazonS3FullAccess"
     )
-    # This policy accommodates use of the feature group controller.
-    iam.attach_role_policy(
-        RoleName=role_name,
-        PolicyArn="arn:aws:iam::aws:policy/AmazonSageMakerFeatureStoreAccess"
-    )
 
     iam_resource = iam.get_role(RoleName=role_name)
     resource_arn = iam_resource["Role"]["Arn"]
