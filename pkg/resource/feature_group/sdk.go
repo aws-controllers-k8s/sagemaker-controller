@@ -366,6 +366,16 @@ func (rm *resourceManager) sdkDelete(
 	}
 	_, err = rm.sdkapi.DeleteFeatureGroupWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteFeatureGroup", err)
+	// If a delete failed, requeue on delete.
+	if err == nil {
+		if foundResource, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
+			if isDeleteFailed(foundResource) {
+				return requeueWaitWhileDeleteFailed
+			}
+			return err
+		}
+	}
+
 	return err
 }
 

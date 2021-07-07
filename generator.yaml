@@ -510,6 +510,8 @@ resources:
     hooks:
       delta_pre_compare:
         code: customSetDefaults(a, b)
+      sdk_delete_post_request:
+        template_path: feature_group/sdk_delete_post_request.go.tpl
     fields:
       FailureReason:
         is_read_only: true
