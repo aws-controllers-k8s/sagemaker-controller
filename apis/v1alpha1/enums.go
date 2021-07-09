@@ -774,15 +774,15 @@ const (
 	ModelPackageGroupSortBy_CreationTime ModelPackageGroupSortBy = "CreationTime"
 )
 
-type ModelPackageGroupStatus string
+type ModelPackageGroupStatus_SDK string
 
 const (
-	ModelPackageGroupStatus_Pending      ModelPackageGroupStatus = "Pending"
-	ModelPackageGroupStatus_InProgress   ModelPackageGroupStatus = "InProgress"
-	ModelPackageGroupStatus_Completed    ModelPackageGroupStatus = "Completed"
-	ModelPackageGroupStatus_Failed       ModelPackageGroupStatus = "Failed"
-	ModelPackageGroupStatus_Deleting     ModelPackageGroupStatus = "Deleting"
-	ModelPackageGroupStatus_DeleteFailed ModelPackageGroupStatus = "DeleteFailed"
+	ModelPackageGroupStatus_SDK_Pending      ModelPackageGroupStatus_SDK = "Pending"
+	ModelPackageGroupStatus_SDK_InProgress   ModelPackageGroupStatus_SDK = "InProgress"
+	ModelPackageGroupStatus_SDK_Completed    ModelPackageGroupStatus_SDK = "Completed"
+	ModelPackageGroupStatus_SDK_Failed       ModelPackageGroupStatus_SDK = "Failed"
+	ModelPackageGroupStatus_SDK_Deleting     ModelPackageGroupStatus_SDK = "Deleting"
+	ModelPackageGroupStatus_SDK_DeleteFailed ModelPackageGroupStatus_SDK = "DeleteFailed"
 )
 
 type ModelPackageSortBy string
@@ -792,14 +792,14 @@ const (
 	ModelPackageSortBy_CreationTime ModelPackageSortBy = "CreationTime"
 )
 
-type ModelPackageStatus string
+type ModelPackageStatus_SDK string
 
 const (
-	ModelPackageStatus_Pending    ModelPackageStatus = "Pending"
-	ModelPackageStatus_InProgress ModelPackageStatus = "InProgress"
-	ModelPackageStatus_Completed  ModelPackageStatus = "Completed"
-	ModelPackageStatus_Failed     ModelPackageStatus = "Failed"
-	ModelPackageStatus_Deleting   ModelPackageStatus = "Deleting"
+	ModelPackageStatus_SDK_Pending    ModelPackageStatus_SDK = "Pending"
+	ModelPackageStatus_SDK_InProgress ModelPackageStatus_SDK = "InProgress"
+	ModelPackageStatus_SDK_Completed  ModelPackageStatus_SDK = "Completed"
+	ModelPackageStatus_SDK_Failed     ModelPackageStatus_SDK = "Failed"
+	ModelPackageStatus_SDK_Deleting   ModelPackageStatus_SDK = "Deleting"
 )
 
 type ModelPackageType string

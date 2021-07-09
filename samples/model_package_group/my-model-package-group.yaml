@@ -1,0 +1,7 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: ModelPackageGroup
+metadata:
+  name: <YOUR MODEL PACKAGE GROUP NAME>
+spec:
+  modelPackageGroupName: <YOUR MODEL PACKAGE GROUP NAME>
+  modelPackageGroupDescription: "Description for model package group"
