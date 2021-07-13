@@ -1,0 +1,33 @@
+{
+  "CreationTime": "2021-07-28T00:32:45.698Z",
+  "Description": null,
+  "EventTimeFeatureName": "EventTime",
+  "FailureReason": null,
+  "FeatureDefinitions": [
+    {
+      "FeatureName": "TransactionID",
+      "FeatureType": "Integral"
+    },
+    {
+      "FeatureName": "EventTime",
+      "FeatureType": "Fractional"
+    }
+  ],
+  "FeatureGroupArn": "arn:aws:sagemaker:us-west-2:123456789012:feature-group/unit-testing-feature-group",
+  "FeatureGroupName": "unit-testing-feature-group",
+  "FeatureGroupStatus": "Creating",
+  "NextToken": null,
+  "OfflineStoreConfig": {
+    "DataCatalogConfig": null,
+    "DisableGlueTableCreation": false,
+    "S3StorageConfig": {
+      "KmsKeyId": null,
+      "ResolvedOutputS3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/feature-group-data/123456789012/sagemaker/us-west-2/offline-store/unit-testing-feature-group-1627432365/data",
+      "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/feature-group-data"
+    }
+  },
+  "OfflineStoreStatus": null,
+  "OnlineStoreConfig": null,
+  "RecordIdentifierFeatureName": "TransactionID",
+  "RoleArn": "arn:aws:iam::123456789012:role/ack-sagemaker-execution-role"
+}

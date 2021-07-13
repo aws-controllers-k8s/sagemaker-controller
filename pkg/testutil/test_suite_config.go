@@ -51,7 +51,7 @@ type Fixture struct {
 // ServiceAPI represents details about the the service sdk api and fixture path to mock its response
 type ServiceAPI struct {
 	Operation       string           `json:"operation"`
-	Output          string           `json:"output_fixture"`
+	Output          string           `json:"output_fixture,omitempty"`
 	ServiceAPIError *ServiceAPIError `json:"error,omitempty"`
 }
 

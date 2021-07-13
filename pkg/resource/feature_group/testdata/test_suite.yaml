@@ -2,16 +2,89 @@ tests:
   - name: "Feature group create test."
     description: "Feature group CRD tests"
     scenarios:
-     - name: "Create=InvalidInput"
-       description: "Given one of the parameters is invalid, ko.Status shows a terminal condition"
-       given:
-         desired_state: "feature_group/v1alpha1/fg_invalid_before_create.yaml"
-         svc_api:
-           - operation: CreateFeatureGroupWithContext
-             error:
-               code: InvalidParameterValue
-               message: "The feature group name must start with an alphanumeric character."
-       invoke: Create
-       expect:
-         latest_state: "feature_group/v1alpha1/fg_invalid_create_attempted.yaml"
-         error: resource is in terminal condition
+      - name: "Create=InvalidInput"
+        description: "Given one of the parameters is invalid, ko.Status shows a terminal condition"
+        given:
+          desired_state: "feature_group/v1alpha1/fg_invalid_before_create.yaml"
+          svc_api:
+            - operation: CreateFeatureGroupWithContext
+              error:
+                code: InvalidParameterValue
+                message: "The feature group name must start with an alphanumeric character."
+        invoke: Create
+        expect:
+          latest_state: "feature_group/v1alpha1/fg_invalid_create_attempted.yaml"
+          error: resource is in terminal condition
+      - name: "Create=Sucess"
+        description: "Create a new feature group successfully (feature group ARN in the status ackResourceMetadata)."
+        given:
+          desired_state: "feature_group/v1alpha1/fg_before_create.yaml"
+          svc_api:
+            - operation: CreateFeatureGroupWithContext
+              output_fixture: "feature_group/create/fg_before_create.json"
+        invoke: Create
+        expect:
+          latest_state: "feature_group/v1alpha1/fg_create_initiated.yaml"
+          error: nil
+      - name: "ReadOne=NewlyCreated"
+        description: "A create initialized feature group enters the creating state with the ACK.ResourceSynced set to false, and the offlineStorageConfig disableGlueTableCreation, s3StorageConfig.resolvedOutputS3URI should be updated."
+        given:
+          # Feature group is creating, but creating has not yet finished
+          desired_state: "feature_group/v1alpha1/fg_create_initiated.yaml" 
+          svc_api:
+            - operation: DescribeFeatureGroupWithContext
+              output_fixture: "feature_group/read_one/fg_creating.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "feature_group/v1alpha1/fg_creating_state.yaml"
+          error: nil
+      - name: "ReadOne=CreateFailed"
+        description: "A feature group in the creating state which enters the create failed state will have the terminal condition set to True."
+        given:
+          # Feature group is creating, but creating has not yet finished
+          desired_state: "feature_group/v1alpha1/fg_creating_state.yaml" 
+          svc_api:
+            - operation: DescribeFeatureGroupWithContext
+              output_fixture: "feature_group/read_one/fg_create_failed.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "feature_group/v1alpha1/fg_create_failed_state.yaml"
+          error: nil
+      - name: "ReadOne=Created"
+        description: "A feature group in the creating state which enters the created state will have the ACK.ResourceSynced condition set to true, and the offlineStoreConfig dataCatalogConfig should be updated in the spec."
+        given:
+          # Feature group is creating, but creating has not yet finished
+          desired_state: "feature_group/v1alpha1/fg_creating_state.yaml" 
+          svc_api:
+            - operation: DescribeFeatureGroupWithContext
+              output_fixture: "feature_group/read_one/fg_created.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "feature_group/v1alpha1/fg_created_state.yaml"
+          error: nil
+      - name: "Delete=RequiresRequeueWhileCreating"
+        description: "Deleting a feature group in a modifying condition (creating) should result in a requeue on delete."
+        given:
+          desired_state: "feature_group/v1alpha1/fg_creating_state.yaml"
+        invoke: Delete
+        expect:
+          error: "FeatureGroup in Creating state cannot be modified or deleted."
+      - name: "Delete=RequiresRequeueWhileDeleting"
+        description: "Deleting a feature group in a modifying condition (deleting) should result in a requeue on delete."
+        given:
+          desired_state: "feature_group/v1alpha1/fg_deleting_state.yaml"
+        invoke: Delete
+        expect:
+          error: "FeatureGroup in Deleting state cannot be modified or deleted."
+      - name: "Delete=Immediate"
+        description: "Deleting a feature group in the created state should enter the deleting state."
+        given:
+          desired_state: "feature_group/v1alpha1/fg_created_state.yaml"
+          svc_api:
+          - operation: DeleteFeatureGroupWithContext
+          # If there is no output_fixture or error, the mock returns nil for the object and the error
+          - operation: DescribeFeatureGroupWithContext
+            output_fixture: "feature_group/read_one/fg_deleting.json"
+        invoke: Delete
+        expect:
+          error: "FeatureGroup is deleting."
