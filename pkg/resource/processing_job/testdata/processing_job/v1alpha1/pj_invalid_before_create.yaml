@@ -1,0 +1,59 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: ProcessingJob
+metadata:
+  name: unit-testing-processing-job
+spec:
+  processingJobName: !-intentionally-invalid-name
+  roleARN: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
+  environment:
+    my_var: my_value
+    my_var2: my_value2
+  appSpecification:
+    imageURI: 763104351884.dkr.ecr.us-west-2.amazonaws.com
+    containerEntrypoint:
+      - python
+      - /opt/ml/processing/code/kmeans_preprocessing.py
+  processingResources:
+    clusterConfig:
+      instanceCount: 1
+      instanceType: "ml.m5.large"
+      volumeSizeInGB: 20
+  processingInputs:
+    - inputName: mnist_tar
+      s3Input:
+        s3URI: s3://sagemaker-sample-data-us-west-2/algorithms/kmeans/mnist/mnist.pkl.gz
+        localPath: /opt/ml/processing/input
+        s3DataType: S3Prefix
+        s3InputMode: File
+        s3CompressionType: None
+    - inputName: source_code
+      s3Input:
+        s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/processing/kmeans_preprocessing.py
+        localPath: /opt/ml/processing/code
+        s3DataType: S3Prefix
+        s3InputMode: File
+        s3CompressionType: None
+  processingOutputConfig:
+    outputs:
+      - outputName: train_data
+        s3Output:
+          s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/processing/output/
+          localPath: /opt/ml/processing/output_train/
+          s3UploadMode: EndOfJob
+      - outputName: test_data
+        s3Output:
+          s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/processing/output/
+          localPath: /opt/ml/processing/output_test/
+          s3UploadMode: EndOfJob
+      - outputName: valid_data
+        s3Output:
+          s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/processing/output/
+          localPath: /opt/ml/processing/output_valid/
+          s3UploadMode: EndOfJob
+  tags:
+    - key: confidentiality
+      value: public
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

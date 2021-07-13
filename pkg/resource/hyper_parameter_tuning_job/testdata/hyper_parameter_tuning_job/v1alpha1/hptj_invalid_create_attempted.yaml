@@ -1,0 +1,35 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: HyperParameterTuningJob
+metadata:
+  creationTimestamp: null
+  name: unit-testing-hyper-parameter-tuning-job
+spec:
+  hyperParameterTuningJobConfig:
+    hyperParameterTuningJobObjective:
+      metricName: validation:error
+      type_: Minimize
+    parameterRanges:
+      integerParameterRanges:
+      - maxValue: "20"
+        minValue: "10"
+        name: num_round
+        scalingType: Linear
+    resourceLimits:
+      maxNumberOfTrainingJobs: 2
+      maxParallelTrainingJobs: 1
+    strategy: Bayesian
+    trainingJobEarlyStoppingType: Auto
+  hyperParameterTuningJobName: ""
+  trainingJobDefinition:
+    algorithmSpecification:
+      trainingImage: 246618743249.dkr.ecr.us-west-2.amazonaws.com
+      trainingInputMode: File
+    staticHyperParameters:
+      base_score: "0.5"
+status:
+  ackResourceMetadata:
+    ownerAccountID: ""
+  conditions:
+  - message: The hyper parameter tuning job name must start with an alphanumeric character.
+    status: "True"
+    type: ACK.Terminal

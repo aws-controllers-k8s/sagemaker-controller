@@ -11,15 +11,15 @@
 // express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-package feature_group
+package endpoint
 
 import (
 	"errors"
 	"fmt"
-
+	
+	mocksvcsdkapi "github.com/aws-controllers-k8s/sagemaker-controller/test/mocks/aws-sdk-go/sagemaker"
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
 	"github.com/ghodss/yaml"
-	mocksvcsdkapi "github.com/aws-controllers-k8s/sagemaker-controller/test/mocks/aws-sdk-go/sagemaker"
 	"github.com/aws-controllers-k8s/sagemaker-controller/pkg/testutil"
 	acktypes "github.com/aws-controllers-k8s/runtime/pkg/types"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
@@ -35,24 +35,24 @@ import (
 // provideResourceManagerWithMockSDKAPI accepts MockSageMakerAPI and returns pointer to resourceManager
 // the returned resourceManager is configured to use mockapi api.
 func provideResourceManagerWithMockSDKAPI(mockSageMakerAPI *mocksvcsdkapi.SageMakerAPI) *resourceManager {
-     zapOptions := ctrlrtzap.Options{
-     	    Development: true,
-	    Level:       zapcore.InfoLevel,
-     }
-     fakeLogger := ctrlrtzap.New(ctrlrtzap.UseFlagOptions(&zapOptions))
-     return &resourceManager{
-     	    rr:           nil,
-	    awsAccountID: "",
-	    awsRegion:    "",
-	    sess:         nil,
-	    sdkapi:       mockSageMakerAPI,
-	    log:          fakeLogger,
-	    metrics:      ackmetrics.NewMetrics("sagemaker"),
-     }
+	zapOptions := ctrlrtzap.Options{
+		Development: true,
+		Level:       zapcore.InfoLevel,
+	}
+	fakeLogger := ctrlrtzap.New(ctrlrtzap.UseFlagOptions(&zapOptions))
+	return &resourceManager{
+		rr:           nil,
+		awsAccountID: "",
+		awsRegion:    "",
+		sess:         nil,
+		sdkapi:       mockSageMakerAPI,
+		log:          fakeLogger,
+		metrics:      ackmetrics.NewMetrics("sagemaker"),
+	}
 }
 
-// TestFeatureGroupTestSuite runs the test suite for feature group
-func TestFeatureGroupTestSuite(t *testing.T) {
+// TestEndpointTestSuite runs the test suite for endpoint
+func TestEndpointTestSuite(t *testing.T) {
      	defer func() {
      	   if r := recover(); r != nil {
      	      fmt.Println(testutil.RecoverPanicString, r)
@@ -89,14 +89,17 @@ func (d *testRunnerDelegate) EmptyServiceAPIOutput(apiName string) (interface{},
 	}
 	//TODO: use reflection, template to auto generate this block/method.
 	switch apiName {
-	case "CreateFeatureGroupWithContext":
-		var output svcsdk.CreateFeatureGroupOutput
+	case "CreateEndpointWithContext":
+		var output svcsdk.CreateEndpointOutput
+	    	return &output, nil
+	case "DeleteEndpointWithContext":
+		var output svcsdk.DeleteEndpointOutput
 		return &output, nil
-	case "DeleteFeatureGroupWithContext":
-		var output svcsdk.DeleteFeatureGroupOutput
+	case "DescribeEndpointWithContext":
+		var output svcsdk.DescribeEndpointOutput
 		return &output, nil
-	case "DescribeFeatureGroupWithContext":
-		var output svcsdk.DescribeFeatureGroupOutput
+	case "UpdateEndpointWithContext":
+		var output svcsdk.UpdateEndpointOutput
 		return &output, nil
 	}
 	return nil, errors.New(fmt.Sprintf("no matching API name found for: %s", apiName))
