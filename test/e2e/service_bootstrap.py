@@ -123,8 +123,7 @@ def service_bootstrap() -> dict:
     logging.getLogger().setLevel(logging.INFO)
 
     return TestBootstrapResources(
-        create_data_bucket(),
-        create_execution_role(),
+        create_data_bucket(), create_execution_role(),
     ).__dict__
 
 

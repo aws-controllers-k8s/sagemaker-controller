@@ -53,11 +53,11 @@ def xgboost_churn_model_bias_job_definition(xgboost_churn_endpoint):
     yield (reference, resource)
 
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(job_definition_reference, 3, 10)
+        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted
 
 
-def describe_sagemaker_model_bias_job_definition(sagemaker_client, job_definition_name):
+def get_sagemaker_model_bias_job_definition(sagemaker_client, job_definition_name):
     try:
         return sagemaker_client.describe_model_bias_job_definition(
             JobDefinitionName=job_definition_name
@@ -79,7 +79,7 @@ class TestModelBiasJobDefinition:
         job_definition_name = resource["spec"].get("jobDefinitionName")
         assert (
             k8s.get_resource_arn(resource)
-            == describe_sagemaker_model_bias_job_definition(
+            == get_sagemaker_model_bias_job_definition(
                 sagemaker_client, job_definition_name
             )["JobDefinitionArn"]
         )
@@ -88,7 +88,7 @@ class TestModelBiasJobDefinition:
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted
         assert (
-            describe_sagemaker_model_bias_job_definition(
+            get_sagemaker_model_bias_job_definition(
                 sagemaker_client, job_definition_name
             )
             is None
