@@ -485,38 +485,75 @@ resources:
         from:
           operation: DescribeMonitoringSchedule
           path: LastMonitoringExecutionSummary
-  ModelPackageGroup:
+  FeatureGroup:
     exceptions:
       errors:
           404:
-            code: ValidationException
-            message_suffix: does not exist.
+            code: ResourceNotFound
       terminal_codes:
+        - ResourceInUse
         - ResourceLimitExceeded
         - ResourceNotFound
-        - ResourceInUse
-        - OptInRequired
+        - InvalidAction
+        - InvalidClientTokenId
         - InvalidParameterCombination
         - InvalidParameterValue
-        - MissingParameter
-        - MissingAction
         - InvalidQueryParameter
         - MalformedQueryString
-        - InvalidAction
-        - UnrecognizedClientException
+        - MissingAction
+        - MissingParameter
+        - OptInRequired
+    hooks:
+      delta_pre_compare:
+        code: customSetDefaults(a, b)
     fields:
-      ModelPackageGroupStatus:
+      FailureReason:
+        is_read_only: true
+        print:
+          name: FAILURE-REASON
+          priority: 1
+        from:
+          operation: DescribeFeatureGroup
+          path: FailureReason
+      FeatureGroupStatus:
         is_read_only: true
         print:
           name: STATUS
         from:
-          operation: DescribeModelPackageGroup
-          path: ModelPackageGroupStatus      
-    hooks:
-      sdk_read_one_post_set_output:
-        template_path: model_package_group/sdk_read_one_post_set_output.go.tpl 
-      sdk_delete_pre_build_request:
-        template_path: model_package_group/sdk_delete_pre_build_request.go.tpl 
+          operation: DescribeFeatureGroup
+          path: FeatureGroupStatus
+  ModelPackageGroup:
+      exceptions:
+        errors:
+            404:
+              code: ValidationException
+              message_suffix: does not exist.
+        terminal_codes:
+          - ResourceLimitExceeded
+          - ResourceNotFound
+          - ResourceInUse
+          - OptInRequired
+          - InvalidParameterCombination
+          - InvalidParameterValue
+          - MissingParameter
+          - MissingAction
+          - InvalidQueryParameter
+          - MalformedQueryString
+          - InvalidAction
+          - UnrecognizedClientException
+      fields:
+        ModelPackageGroupStatus:
+          is_read_only: true
+          print:
+            name: STATUS
+          from:
+            operation: DescribeModelPackageGroup
+            path: ModelPackageGroupStatus      
+      hooks:
+        sdk_read_one_post_set_output:
+          template_path: model_package_group/sdk_read_one_post_set_output.go.tpl 
+        sdk_delete_pre_build_request:
+          template_path: model_package_group/sdk_delete_pre_build_request.go.tpl 
 ignore:
     resource_names:
       - Algorithm
@@ -535,7 +572,7 @@ ignore:
       # - EndpointConfig
       # - Endpoint
       - Experiment
-      - FeatureGroup
+      # - FeatureGroup
       - FlowDefinition
       - HumanTaskUi
       # - HyperParameterTuningJob
