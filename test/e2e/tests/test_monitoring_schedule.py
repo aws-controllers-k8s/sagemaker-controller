@@ -63,7 +63,7 @@ def xgboost_churn_data_quality_monitoring_schedule(
         assert deleted
 
 
-def describe_sagemaker_monitoring_schedule(sagemaker_client, monitoring_schedule_name):
+def get_sagemaker_monitoring_schedule(sagemaker_client, monitoring_schedule_name):
     try:
         response = sagemaker_client.describe_monitoring_schedule(
             MonitoringScheduleName=monitoring_schedule_name
@@ -155,7 +155,7 @@ class TestMonitoringSchedule:
 
         assert (
             k8s.get_resource_arn(resource)
-            == describe_sagemaker_monitoring_schedule(
+            == get_sagemaker_monitoring_schedule(
                 sagemaker_client, monitoring_schedule_name
             )["MonitoringScheduleArn"]
         )
@@ -193,7 +193,7 @@ class TestMonitoringSchedule:
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
-        latest_schedule = describe_sagemaker_monitoring_schedule(
+        latest_schedule = get_sagemaker_monitoring_schedule(
             sagemaker_client, monitoring_schedule_name
         )
         assert (
@@ -212,7 +212,7 @@ class TestMonitoringSchedule:
         for _ in range(3):
             time.sleep(10)
             if (
-                describe_sagemaker_monitoring_schedule(
+                get_sagemaker_monitoring_schedule(
                     sagemaker_client, monitoring_schedule_name
                 )
                 is None

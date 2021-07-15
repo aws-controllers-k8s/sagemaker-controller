@@ -29,7 +29,6 @@ from e2e import (
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.bootstrap_resources import get_bootstrap_resources
 from e2e.common import config as cfg
-from time import sleep
 
 RESOURCE_PLURAL = "trainingjobs"
 
@@ -47,6 +46,10 @@ def xgboost_training_job():
     )
 
     assert resource is not None
+    if k8s.get_resource_arn(resource) is None:
+        logging.debug(
+            f"ARN for this resource is None, resource status is: {resource['status']}"
+        )
     assert k8s.get_resource_arn(resource) is not None
 
     yield (reference, resource)

@@ -13,7 +13,6 @@
 """Integration tests for the SageMaker EndpointConfig API.
 """
 
-from _pytest import config
 import botocore
 import pytest
 import logging
@@ -43,6 +42,10 @@ def single_variant_config():
         replacements=replacements,
     )
     assert model_resource is not None
+    if k8s.get_resource_arn(model_resource) is None:
+        logging.debug(
+            f"ARN for this resource is None, resource status is: {model_resource['status']}"
+        )
     assert k8s.get_resource_arn(model_resource) is not None
 
     config_reference, config_spec, config_resource = create_sagemaker_resource(

@@ -52,6 +52,10 @@ def single_container_model(name_suffix):
         replacements=replacements,
     )
     assert model_resource is not None
+    if k8s.get_resource_arn(model_resource) is None:
+        logging.debug(
+            f"ARN for this resource is None, resource status is: {model_resource['status']}"
+        )
     assert k8s.get_resource_arn(model_resource) is not None
 
     yield (model_reference, model_resource)
@@ -77,6 +81,10 @@ def multi_variant_config(name_suffix, single_container_model):
         replacements=replacements,
     )
     assert config_resource is not None
+    if k8s.get_resource_arn(config_resource) is None:
+        logging.debug(
+            f"ARN for this resource is None, resource status is: {config_resource['status']}"
+        )
     assert k8s.get_resource_arn(config_resource) is not None
 
     yield (config_reference, config_resource)
@@ -102,6 +110,10 @@ def single_variant_config(name_suffix, single_container_model):
         replacements=replacements,
     )
     assert config_resource is not None
+    if k8s.get_resource_arn(config_resource) is None:
+        logging.debug(
+            f"ARN for this resource is None, resource status is: {config_resource['status']}"
+        )
     assert k8s.get_resource_arn(config_resource) is not None
 
     yield (config_reference, config_resource)
@@ -160,7 +172,10 @@ def faulty_config(name_suffix, single_container_model):
         replacements=replacements,
     )
     assert model_resource is not None
-    model_resource = k8s.get_resource(model_reference)
+    if k8s.get_resource_arn(model_resource) is None:
+        logging.debug(
+            f"ARN for this resource is None, resource status is: {model_resource['status']}"
+        )
     assert k8s.get_resource_arn(model_resource) is not None
     s3.delete_object(model_bucket, model_destination_key)
 
@@ -177,6 +192,10 @@ def faulty_config(name_suffix, single_container_model):
         replacements=replacements,
     )
     assert config_resource is not None
+    if k8s.get_resource_arn(config_resource) is None:
+        logging.debug(
+            f"ARN for this resource is None, resource status is: {config_resource['status']}"
+        )
     assert k8s.get_resource_arn(config_resource) is not None
 
     yield (config_reference, config_resource)
@@ -246,9 +265,7 @@ class TestEndpoint:
 
         # endpoint transitions Updating -> InService state
         assert_endpoint_status_in_sync(
-            endpoint_reference.name,
-            endpoint_reference,
-            cfg.ENDPOINT_STATUS_UPDATING,
+            endpoint_reference.name, endpoint_reference, cfg.ENDPOINT_STATUS_UPDATING,
         )
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "False")
         endpoint_resource = k8s.get_resource(endpoint_reference)
@@ -258,17 +275,12 @@ class TestEndpoint:
         )
 
         assert_endpoint_status_in_sync(
-            endpoint_reference.name,
-            endpoint_reference,
-            cfg.ENDPOINT_STATUS_INSERVICE,
+            endpoint_reference.name, endpoint_reference, cfg.ENDPOINT_STATUS_INSERVICE,
         )
 
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "True")
         assert k8s.assert_condition_state_message(
-            endpoint_reference,
-            "ACK.Terminal",
-            "True",
-            FAIL_UPDATE_ERROR_MESSAGE,
+            endpoint_reference, "ACK.Terminal", "True", FAIL_UPDATE_ERROR_MESSAGE,
         )
 
         endpoint_resource = k8s.get_resource(endpoint_reference)
@@ -279,10 +291,10 @@ class TestEndpoint:
         current_config_name = endpoint_resource["status"].get(
             "latestEndpointConfigName"
         )
-        assert (
-            current_config_name is not None
-            and current_config_name
-            == old_config_resource["spec"].get("endpointConfigName", None)
+        assert current_config_name is not None and current_config_name == old_config_resource[
+            "spec"
+        ].get(
+            "endpointConfigName", None
         )
 
     def update_endpoint_successful_test(
@@ -306,9 +318,7 @@ class TestEndpoint:
 
         # endpoint transitions Updating -> InService state
         assert_endpoint_status_in_sync(
-            endpoint_reference.name,
-            endpoint_reference,
-            cfg.ENDPOINT_STATUS_UPDATING,
+            endpoint_reference.name, endpoint_reference, cfg.ENDPOINT_STATUS_UPDATING,
         )
 
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "False")
@@ -322,9 +332,7 @@ class TestEndpoint:
         )
 
         assert_endpoint_status_in_sync(
-            endpoint_reference.name,
-            endpoint_reference,
-            cfg.ENDPOINT_STATUS_INSERVICE,
+            endpoint_reference.name, endpoint_reference, cfg.ENDPOINT_STATUS_INSERVICE,
         )
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "True")
         assert k8s.assert_condition_state_message(

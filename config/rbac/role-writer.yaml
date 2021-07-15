@@ -12,6 +12,7 @@ rules:
   - dataqualityjobdefinitions
   - endpoints
   - endpointconfigs
+  - featuregroups
   - hyperparametertuningjobs
   - models
   - modelbiasjobdefinitions
@@ -35,6 +36,7 @@ rules:
   - dataqualityjobdefinitions
   - endpoints
   - endpointconfigs
+  - featuregroups
   - hyperparametertuningjobs
   - models
   - modelbiasjobdefinitions

@@ -61,10 +61,20 @@ type AlgorithmStatusItem struct {
 	FailureReason *string `json:"failureReason,omitempty"`
 }
 
+// Provides summary information about an algorithm.
+type AlgorithmSummary struct {
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+}
+
 // Specifies configurations for one or more training jobs that Amazon SageMaker
 // runs to test the algorithm.
 type AlgorithmValidationSpecification struct {
 	ValidationRole *string `json:"validationRole,omitempty"`
+}
+
+// Details about an Amazon SageMaker app.
+type AppDetails struct {
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 }
 
 // The configuration for running a SageMaker image as a KernelGateway app.
@@ -247,6 +257,11 @@ type CheckpointConfig struct {
 	S3URI     *string `json:"s3URI,omitempty"`
 }
 
+// Specifies summary information about a Git repository.
+type CodeRepositorySummary struct {
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+}
+
 // Configuration information for the Debugger output tensor collections.
 type CollectionConfiguration struct {
 	CollectionName       *string            `json:"collectionName,omitempty"`
@@ -257,6 +272,7 @@ type CollectionConfiguration struct {
 type CompilationJobSummary struct {
 	CompilationEndTime   *metav1.Time `json:"compilationEndTime,omitempty"`
 	CompilationStartTime *metav1.Time `json:"compilationStartTime,omitempty"`
+	CreationTime         *metav1.Time `json:"creationTime,omitempty"`
 }
 
 // Describes the container, as part of model definition.
@@ -311,6 +327,13 @@ type DataCaptureConfigSummary struct {
 	DestinationS3URI          *string `json:"destinationS3URI,omitempty"`
 	EnableCapture             *bool   `json:"enableCapture,omitempty"`
 	KMSKeyID                  *string `json:"kmsKeyID,omitempty"`
+}
+
+// The meta data of the Glue table which serves as data catalog for the OfflineStore.
+type DataCatalogConfig struct {
+	Catalog   *string `json:"catalog,omitempty"`
+	Database  *string `json:"database,omitempty"`
+	TableName *string `json:"tableName,omitempty"`
 }
 
 // The data structure used to specify the data to be used for inference in a
@@ -451,6 +474,11 @@ type DeviceSummary struct {
 	RegistrationTime *metav1.Time `json:"registrationTime,omitempty"`
 }
 
+// The domain's details.
+type DomainDetails struct {
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+}
+
 // The model on the edge device.
 type EdgeModel struct {
 	LatestInference  *metav1.Time `json:"latestInference,omitempty"`
@@ -543,21 +571,53 @@ type ExperimentSummary struct {
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
-// Amazon SageMaker Feature Store stores features in a collection called Feature
-// Group. A Feature Group can be visualized as a table which has rows, with
-// a unique identifier for each row where each column in the table is a feature.
-// In principle, a Feature Group is composed of features and values per features.
-type FeatureGroup struct {
-	FailureReason    *string `json:"failureReason,omitempty"`
-	FeatureGroupName *string `json:"featureGroupName,omitempty"`
-	RoleARN          *string `json:"roleARN,omitempty"`
+// A list of features. You must include FeatureName and FeatureType. Valid feature
+// FeatureTypes are Integral, Fractional and String.
+type FeatureDefinition struct {
+	FeatureName *string `json:"featureName,omitempty"`
+	FeatureType *string `json:"featureType,omitempty"`
 }
 
 // The name, Arn, CreationTime, FeatureGroup values, LastUpdatedTime and EnableOnlineStorage
 // status of a FeatureGroup.
 type FeatureGroupSummary struct {
-	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
-	FeatureGroupName *string      `json:"featureGroupName,omitempty"`
+	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
+	FeatureGroupARN    *string      `json:"featureGroupARN,omitempty"`
+	FeatureGroupName   *string      `json:"featureGroupName,omitempty"`
+	FeatureGroupStatus *string      `json:"featureGroupStatus,omitempty"`
+	// The status of OfflineStore.
+	OfflineStoreStatus *OfflineStoreStatus `json:"offlineStoreStatus,omitempty"`
+}
+
+// Amazon SageMaker Feature Store stores features in a collection called Feature
+// Group. A Feature Group can be visualized as a table which has rows, with
+// a unique identifier for each row where each column in the table is a feature.
+// In principle, a Feature Group is composed of features and values per features.
+type FeatureGroup_SDK struct {
+	CreationTime         *metav1.Time         `json:"creationTime,omitempty"`
+	Description          *string              `json:"description,omitempty"`
+	EventTimeFeatureName *string              `json:"eventTimeFeatureName,omitempty"`
+	FailureReason        *string              `json:"failureReason,omitempty"`
+	FeatureDefinitions   []*FeatureDefinition `json:"featureDefinitions,omitempty"`
+	FeatureGroupARN      *string              `json:"featureGroupARN,omitempty"`
+	FeatureGroupName     *string              `json:"featureGroupName,omitempty"`
+	FeatureGroupStatus   *string              `json:"featureGroupStatus,omitempty"`
+	// The configuration of an OfflineStore.
+	//
+	// Provide an OfflineStoreConfig in a request to CreateFeatureGroup to create
+	// an OfflineStore.
+	//
+	// To encrypt an OfflineStore using at rest data encryption, specify AWS Key
+	// Management Service (KMS) key ID, or KMSKeyId, in S3StorageConfig.
+	OfflineStoreConfig *OfflineStoreConfig `json:"offlineStoreConfig,omitempty"`
+	// The status of OfflineStore.
+	OfflineStoreStatus *OfflineStoreStatus `json:"offlineStoreStatus,omitempty"`
+	// Use this to specify the AWS Key Management Service (KMS) Key ID, or KMSKeyId,
+	// for at rest data encryption. You can turn OnlineStore on or off by specifying
+	// the EnableOnlineStore flag at General Assembly; the default value is False.
+	OnlineStoreConfig           *OnlineStoreConfig `json:"onlineStoreConfig,omitempty"`
+	RecordIdentifierFeatureName *string            `json:"recordIdentifierFeatureName,omitempty"`
+	RoleARN                     *string            `json:"roleARN,omitempty"`
 }
 
 // Specifies a file system data source for a channel.
@@ -963,6 +1023,7 @@ type ModelExplainabilityJobInput struct {
 
 // A versioned model that can be deployed for SageMaker inference.
 type ModelPackage struct {
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
@@ -973,9 +1034,24 @@ type ModelPackageContainerDefinition struct {
 	ModelDataURL      *string `json:"modelDataURL,omitempty"`
 }
 
+// A group of versioned models in the model registry.
+type ModelPackageGroup struct {
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+}
+
+// Summary information about a model group.
+type ModelPackageGroupSummary struct {
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+}
+
 // Represents the overall status of a model package.
 type ModelPackageStatusItem struct {
 	FailureReason *string `json:"failureReason,omitempty"`
+}
+
+// Provides summary information about a model package.
+type ModelPackageSummary struct {
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 }
 
 // Specifies batch transform jobs that Amazon SageMaker runs to validate your
@@ -1218,6 +1294,16 @@ type NetworkConfig struct {
 	VPCConfig *VPCConfig `json:"vpcConfig,omitempty"`
 }
 
+// Provides a summary of a notebook instance lifecycle configuration.
+type NotebookInstanceLifecycleConfigSummary struct {
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+}
+
+// Provides summary information for an Amazon SageMaker notebook instance.
+type NotebookInstanceSummary struct {
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+}
+
 // Specifies the number of training jobs that this hyperparameter tuning job
 // launched, categorized by the status of their objective metric. The objective
 // metric status shows whether the final objective metric for the training job
@@ -1237,7 +1323,18 @@ type ObjectiveStatusCounters struct {
 // To encrypt an OfflineStore using at rest data encryption, specify AWS Key
 // Management Service (KMS) key ID, or KMSKeyId, in S3StorageConfig.
 type OfflineStoreConfig struct {
-	DisableGlueTableCreation *bool `json:"disableGlueTableCreation,omitempty"`
+	// The meta data of the Glue table which serves as data catalog for the OfflineStore.
+	DataCatalogConfig        *DataCatalogConfig `json:"dataCatalogConfig,omitempty"`
+	DisableGlueTableCreation *bool              `json:"disableGlueTableCreation,omitempty"`
+	// The Amazon Simple Storage (Amazon S3) location and and security configuration
+	// for OfflineStore.
+	S3StorageConfig *S3StorageConfig `json:"s3StorageConfig,omitempty"`
+}
+
+// The status of OfflineStore.
+type OfflineStoreStatus struct {
+	BlockedReason *string `json:"blockedReason,omitempty"`
+	Status        *string `json:"status,omitempty"`
 }
 
 // Use this to specify the AWS Key Management Service (KMS) Key ID, or KMSKeyId,
@@ -1245,6 +1342,8 @@ type OfflineStoreConfig struct {
 // the EnableOnlineStore flag at General Assembly; the default value is False.
 type OnlineStoreConfig struct {
 	EnableOnlineStore *bool `json:"enableOnlineStore,omitempty"`
+	// The security configuration for OnlineStore.
+	SecurityConfig *OnlineStoreSecurityConfig `json:"securityConfig,omitempty"`
 }
 
 // The security configuration for OnlineStore.
@@ -2059,6 +2158,11 @@ type UserContext struct {
 	DomainID        *string `json:"domainID,omitempty"`
 	UserProfileARN  *string `json:"userProfileARN,omitempty"`
 	UserProfileName *string `json:"userProfileName,omitempty"`
+}
+
+// The user profile details.
+type UserProfileDetails struct {
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 }
 
 // A collection of settings that apply to users of Amazon SageMaker Studio.

@@ -489,6 +489,43 @@ resources:
         from:
           operation: DescribeMonitoringSchedule
           path: LastMonitoringExecutionSummary
+  FeatureGroup:
+    exceptions:
+      errors:
+          404:
+            code: ResourceNotFound
+      terminal_codes:
+        - ResourceInUse
+        - ResourceLimitExceeded
+        - ResourceNotFound
+        - InvalidAction
+        - InvalidClientTokenId
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - InvalidQueryParameter
+        - MalformedQueryString
+        - MissingAction
+        - MissingParameter
+        - OptInRequired
+    hooks:
+      delta_pre_compare:
+        code: customSetDefaults(a, b)
+    fields:
+      FailureReason:
+        is_read_only: true
+        print:
+          name: FAILURE-REASON
+          priority: 1
+        from:
+          operation: DescribeFeatureGroup
+          path: FailureReason
+      FeatureGroupStatus:
+        is_read_only: true
+        print:
+          name: STATUS
+        from:
+          operation: DescribeFeatureGroup
+          path: FeatureGroupStatus
 ignore:
     resource_names:
       - Algorithm
@@ -507,7 +544,7 @@ ignore:
       # - EndpointConfig
       # - Endpoint
       - Experiment
-      - FeatureGroup
+      # - FeatureGroup
       - FlowDefinition
       - HumanTaskUi
       # - HyperParameterTuningJob

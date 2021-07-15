@@ -43,6 +43,7 @@ function cleanup {
   kubectl delete modelqualityjobdefinitions --all
   kubectl delete monitoringschedules --all
   kubectl delete adoptedresources --all
+  kubectl delete featuregroups --all
 
   print_controller_logs
 
