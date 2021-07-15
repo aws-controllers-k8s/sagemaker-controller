@@ -14,54 +14,61 @@
 package model_package_group
 
 import (
+	"context"
 	"errors"
 
-	condition "github.com/aws-controllers-k8s/runtime/pkg/condition"
+	ackcondition "github.com/aws-controllers-k8s/runtime/pkg/condition"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 	corev1 "k8s.io/api/core/v1"
 )
 
 var (
-	ErrModelPackageGroupDeleting   = errors.New("ModelPackageGroup in 'DELETING' state, cannot be modified or deleted")
-	ErrModelPackageGroupInProgress = errors.New("ModelPackageGroup in 'INPROGRESS' state, cannot be modified or deleted")
-	ErrModelPackageGroupPending    = errors.New("ModelPackageGroup in 'PENDING' state, cannot be modified or deleted")
-)
-
-var (
 	requeueWaitWhileDeleting = ackrequeue.NeededAfter(
-		ErrModelPackageGroupDeleting,
-		ackrequeue.DefaultRequeueAfterDuration,
-	)
-	requeueWaitWhileInProgress = ackrequeue.NeededAfter(
-		ErrModelPackageGroupInProgress,
-		ackrequeue.DefaultRequeueAfterDuration,
-	)
-	requeueWaitWhilePending = ackrequeue.NeededAfter(
-		ErrModelPackageGroupPending,
+		errors.New("ModelPackageGroup is deleting"),
 		ackrequeue.DefaultRequeueAfterDuration,
 	)
 )
 
-func CustomSetOutput(r *resource) (err error) {
+func (rm *resourceManager) customSetOutput(r *resource) {
 	if r.ko.Status.ModelPackageGroupStatus == nil {
-		return nil
+		return
 	}
 	ModelPackageGroupStatus := *r.ko.Status.ModelPackageGroupStatus
 	msg := "ModelPackageGroup is in" + ModelPackageGroupStatus + "status"
-	if ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusCompleted) || ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusFailed) {
-		condition.SetSynced(r, corev1.ConditionTrue, &msg, nil)
+	if ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusCompleted) || ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusFailed) || ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusDeleteFailed) {
+		ackcondition.SetSynced(r, corev1.ConditionTrue, &msg, nil)
+	} else {
+		ackcondition.SetSynced(r, corev1.ConditionFalse, &msg, nil)
+	}
+}
+
+func (rm *resourceManager) customDeleteModelPackageGroup(ctx context.Context,
+	latest *resource,
+) error {
+	if latest.ko.Status.ModelPackageGroupStatus == nil {
 		return nil
 	}
-	requeue := &ackrequeue.RequeueNeededAfter{}
-	switch ModelPackageGroupStatus {
-	case string(svcsdk.ModelPackageGroupStatusInProgress):
-		requeue = requeueWaitWhileInProgress
-	case string(svcsdk.ModelPackageGroupStatusDeleting):
-		requeue = requeueWaitWhileDeleting
-	case string(svcsdk.ModelPackageGroupStatusPending):
-		requeue = requeueWaitWhilePending
+	ModelPackageGroupStatus := *latest.ko.Status.ModelPackageGroupStatus
+	if ModelPackageGroupStatus != string(svcsdk.ModelPackageGroupStatusCompleted) || ModelPackageGroupStatus != string(svcsdk.ModelPackageGroupStatusFailed) || ModelPackageGroupStatus != string(svcsdk.ModelPackageGroupStatusDeleteFailed) {
+		errMsg := "ModelPackageGroup in" + ModelPackageGroupStatus + "state cannot be modified or deleted"
+		requeueWaitWhileModifying := ackrequeue.NeededAfter(
+			errors.New(errMsg),
+			ackrequeue.DefaultRequeueAfterDuration,
+		)
+		return requeueWaitWhileModifying
 	}
-	condition.SetSynced(r, corev1.ConditionFalse, &msg, nil)
-	return requeue
+	return nil
+}
+
+// isDeleting returns true if supplied ModelPackageGroup resource state is in 'Deleting' or 'DeleteFailed'
+func isDeleting(r *resource) bool {
+	if r == nil || r.ko.Status.ModelPackageGroupStatus == nil {
+		return false
+	}
+	ModelPackageGroupStatus := *r.ko.Status.ModelPackageGroupStatus
+	if ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusDeleting) || ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusDeleteFailed) {
+		return true
+	}
+	return false
 }

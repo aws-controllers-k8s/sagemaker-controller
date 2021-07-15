@@ -100,10 +100,7 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
-	err = CustomSetOutput(&resource{ko})
-	if err != nil {
-		return &resource{ko}, err
-	}
+	rm.customSetOutput(&resource{ko})
 	return &resource{ko}, nil
 }
 
@@ -166,6 +163,7 @@ func (rm *resourceManager) sdkCreate(
 	}
 
 	rm.setStatusDefaults(ko)
+	rm.customSetOutput(&resource{ko})
 	return &resource{ko}, nil
 }
 
@@ -207,13 +205,20 @@ func (rm *resourceManager) sdkDelete(
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
-	err = CustomSetOutput(r)
-	if err != nil {
+	if err = rm.customDeleteModelPackageGroup(ctx, r); err != nil {
 		return err
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
 		return err
+	}
+	if err == nil {
+		if foundResource, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
+			if isDeleting(foundResource) {
+				return requeueWaitWhileDeleting
+			}
+			return err
+		}
 	}
 	_, err = rm.sdkapi.DeleteModelPackageGroupWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteModelPackageGroup", err)
