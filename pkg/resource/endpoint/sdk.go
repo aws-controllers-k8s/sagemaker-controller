@@ -29,7 +29,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
-	svcsdkapi "github.com/aws/aws-sdk-go/service/sagemaker"
 )
 
 // Hack to avoid import errors during build...
@@ -41,7 +40,6 @@ var (
 	_ = &svcapitypes.Endpoint{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
-	_ = svcsdkapi.New
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -64,7 +62,7 @@ func (rm *resourceManager) sdkFind(
 		return nil, err
 	}
 
-	var resp *svcsdkapi.DescribeEndpointOutput
+	var resp *svcsdk.DescribeEndpointOutput
 	resp, err = rm.sdkapi.DescribeEndpointWithContext(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeEndpoint", err)
 	if err != nil {
@@ -206,7 +204,8 @@ func (rm *resourceManager) sdkCreate(
 		return nil, err
 	}
 
-	var resp *svcsdkapi.CreateEndpointOutput
+	var resp *svcsdk.CreateEndpointOutput
+	_ = resp
 	resp, err = rm.sdkapi.CreateEndpointWithContext(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateEndpoint", err)
 	if err != nil {
@@ -267,7 +266,8 @@ func (rm *resourceManager) sdkUpdate(
 		return nil, err
 	}
 
-	var resp *svcsdkapi.UpdateEndpointOutput
+	var resp *svcsdk.UpdateEndpointOutput
+	_ = resp
 	resp, err = rm.sdkapi.UpdateEndpointWithContext(ctx, input)
 	rm.metrics.RecordAPICall("UPDATE", "UpdateEndpoint", err)
 	if err != nil {
@@ -366,6 +366,7 @@ func (rm *resourceManager) setStatusDefaults(
 // else it returns nil, false
 func (rm *resourceManager) updateConditions(
 	r *resource,
+	onSuccess bool,
 	err error,
 ) (*resource, bool) {
 	ko := r.ko.DeepCopy()
@@ -374,12 +375,16 @@ func (rm *resourceManager) updateConditions(
 	// Terminal condition
 	var terminalCondition *ackv1alpha1.Condition = nil
 	var recoverableCondition *ackv1alpha1.Condition = nil
+	var syncCondition *ackv1alpha1.Condition = nil
 	for _, condition := range ko.Status.Conditions {
 		if condition.Type == ackv1alpha1.ConditionTypeTerminal {
 			terminalCondition = condition
 		}
 		if condition.Type == ackv1alpha1.ConditionTypeRecoverable {
 			recoverableCondition = condition
+		}
+		if condition.Type == ackv1alpha1.ConditionTypeResourceSynced {
+			syncCondition = condition
 		}
 	}
 
@@ -421,9 +426,16 @@ func (rm *resourceManager) updateConditions(
 			recoverableCondition.Message = nil
 		}
 	}
+	if syncCondition == nil && onSuccess {
+		syncCondition = &ackv1alpha1.Condition{
+			Type:   ackv1alpha1.ConditionTypeResourceSynced,
+			Status: corev1.ConditionTrue,
+		}
+		ko.Status.Conditions = append(ko.Status.Conditions, syncCondition)
+	}
 	// custom update conditions
 	customUpdate := rm.customUpdateConditions(ko, r, err)
-	if terminalCondition != nil || recoverableCondition != nil || customUpdate {
+	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil || customUpdate {
 		return &resource{ko}, true // updated
 	}
 	return nil, false // not updated
