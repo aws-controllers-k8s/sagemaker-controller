@@ -23,10 +23,9 @@ import (
 )
 
 var (
-	ErrModelPackageGroupDeleting     = errors.New("ModelPackageGroup in 'DELETING' state, cannot be modified or deleted")
-	ErrModelPackageGroupInProgress   = errors.New("ModelPackageGroup in 'INPROGRESS' state, cannot be modified or deleted")
-	ErrModelPackageGroupPending      = errors.New("ModelPackageGroup in 'PENDING' state, cannot be modified or deleted")
-	ErrModelPackageGroupDeleteFailed = errors.New("ModelPackageGroup in 'DELETEFAILED' state")
+	ErrModelPackageGroupDeleting   = errors.New("ModelPackageGroup in 'DELETING' state, cannot be modified or deleted")
+	ErrModelPackageGroupInProgress = errors.New("ModelPackageGroup in 'INPROGRESS' state, cannot be modified or deleted")
+	ErrModelPackageGroupPending    = errors.New("ModelPackageGroup in 'PENDING' state, cannot be modified or deleted")
 )
 
 var (
@@ -40,10 +39,6 @@ var (
 	)
 	requeueWaitWhilePending = ackrequeue.NeededAfter(
 		ErrModelPackageGroupPending,
-		ackrequeue.DefaultRequeueAfterDuration,
-	)
-	requeueWaitWhileDeleteFailed = ackrequeue.NeededAfter(
-		ErrModelPackageGroupDeleteFailed,
 		ackrequeue.DefaultRequeueAfterDuration,
 	)
 )
@@ -64,8 +59,6 @@ func CustomSetOutput(r *resource) (err error) {
 		requeue = requeueWaitWhileInProgress
 	case string(svcsdk.ModelPackageGroupStatusDeleting):
 		requeue = requeueWaitWhileDeleting
-	case string(svcsdk.ModelPackageGroupStatusDeleteFailed):
-		requeue = requeueWaitWhileDeleteFailed
 	case string(svcsdk.ModelPackageGroupStatusPending):
 		requeue = requeueWaitWhilePending
 	}
