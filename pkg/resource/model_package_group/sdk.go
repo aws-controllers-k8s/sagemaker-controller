@@ -100,17 +100,10 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
-	if isModelPackageGroupPending(&resource{ko}) {
-		msg := "ModelPackageGroup is currently pending"
-		setSyncedCondition(&resource{ko}, corev1.ConditionFalse, &msg, nil)
-		return &resource{ko}, requeueWaitWhilePending
+	err = CustomSetOutput(&resource{ko})
+	if err != nil {
+		return &resource{ko}, err
 	}
-	if isModelPackageGroupInProgress(&resource{ko}) {
-		msg := "ModelPackageGroup is currently in progress"
-		setSyncedCondition(&resource{ko}, corev1.ConditionFalse, &msg, nil)
-		return &resource{ko}, requeueWaitWhileInProgress
-	}
-	ModelPackageGroupCustomSetOutput(&resource{ko})
 	return &resource{ko}, nil
 }
 
@@ -214,26 +207,9 @@ func (rm *resourceManager) sdkDelete(
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
-	if isModelPackageGroupDeleting(r) {
-		msg := "ModelPackageGroup is currently being deleted"
-		setSyncedCondition(r, corev1.ConditionFalse, &msg, nil)
-		return requeueWaitWhileDeleting
-	}
-	if isModelPackageGroupInProgress(r) {
-		msg := "ModelPackageGroup is currently in progress"
-		setSyncedCondition(r, corev1.ConditionFalse, &msg, nil)
-		return requeueWaitWhileInProgress
-	}
-	if isModelPackageGroupPending(r) {
-		msg := "ModelPackageGroup is currently pending"
-		setSyncedCondition(r, corev1.ConditionFalse, &msg, nil)
-		return requeueWaitWhilePending
-	}
-	if isModelPackageGroupDeleteFailed(r) {
-		// TODO Implement exponential backoff for DeleteFailed
-		msg := "ModelPackageGroup delete failed"
-		setSyncedCondition(r, corev1.ConditionFalse, &msg, nil)
-		return requeueWaitWhileDeleteFailed
+	err = CustomSetOutput(r)
+	if err != nil {
+		return err
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {

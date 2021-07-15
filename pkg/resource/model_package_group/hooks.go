@@ -15,10 +15,10 @@ package model_package_group
 
 import (
 	"errors"
-	"time"
 
+	condition "github.com/aws-controllers-k8s/runtime/pkg/condition"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
-	"github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
+	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 	corev1 "k8s.io/api/core/v1"
 )
 
@@ -30,93 +30,45 @@ var (
 )
 
 var (
-	// TerminalStatuses are the status strings that are terminal states for a
-	// ModelPackageGroup
-	TerminalStatuses = []v1alpha1.ModelPackageGroupStatus_SDK{
-		v1alpha1.ModelPackageGroupStatus_SDK_Deleting,
-	}
-)
-
-var (
 	requeueWaitWhileDeleting = ackrequeue.NeededAfter(
 		ErrModelPackageGroupDeleting,
-		5*time.Second,
+		ackrequeue.DefaultRequeueAfterDuration,
 	)
 	requeueWaitWhileInProgress = ackrequeue.NeededAfter(
 		ErrModelPackageGroupInProgress,
-		5*time.Second,
+		ackrequeue.DefaultRequeueAfterDuration,
 	)
 	requeueWaitWhilePending = ackrequeue.NeededAfter(
 		ErrModelPackageGroupPending,
-		5*time.Second,
+		ackrequeue.DefaultRequeueAfterDuration,
 	)
 	requeueWaitWhileDeleteFailed = ackrequeue.NeededAfter(
 		ErrModelPackageGroupDeleteFailed,
-		5*time.Second,
+		ackrequeue.DefaultRequeueAfterDuration,
 	)
 )
 
-// modelPackageGroupHasTerminalStatus returns whether the supplied SageMaker ModelPackageGroup is in a
-// terminal state
-func modelPackageGroupHasTerminalStatus(r *resource) bool {
+func CustomSetOutput(r *resource) (err error) {
 	if r.ko.Status.ModelPackageGroupStatus == nil {
-		return false
+		return nil
 	}
-	ts := *r.ko.Status.ModelPackageGroupStatus
-	for _, s := range TerminalStatuses {
-		if ts == string(s) {
-			return true
-		}
+	ModelPackageGroupStatus := *r.ko.Status.ModelPackageGroupStatus
+	msg := "ModelPackageGroup is in" + ModelPackageGroupStatus + "status"
+	if ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusCompleted) || ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusFailed) {
+		condition.SetSynced(r, corev1.ConditionTrue, &msg, nil)
+		return nil
 	}
-	return false
-}
-
-// isModelPackageGroupPending returns true if the supplied SageMaker ModelPackageGroup is in the process
-// of pending
-func isModelPackageGroupPending(r *resource) bool {
-	if r.ko.Status.ModelPackageGroupStatus == nil {
-		return false
+	requeue := &ackrequeue.RequeueNeededAfter{}
+	switch ModelPackageGroupStatus {
+	case string(svcsdk.ModelPackageGroupStatusInProgress):
+		requeue = requeueWaitWhileInProgress
+	case string(svcsdk.ModelPackageGroupStatusDeleting):
+		requeue = requeueWaitWhileDeleting
+	case string(svcsdk.ModelPackageGroupStatusDeleteFailed):
+		requeue = requeueWaitWhileDeleteFailed
+	case string(svcsdk.ModelPackageGroupStatusPending):
+		requeue = requeueWaitWhilePending
 	}
-	sagemaker_status := *r.ko.Status.ModelPackageGroupStatus
-	return sagemaker_status == string(v1alpha1.ModelPackageGroupStatus_SDK_Pending)
-}
-
-// isModelPackageGroupProgressreturns true if the supplied SageMaker ModelPackageGroup is in progress
-func isModelPackageGroupInProgress(r *resource) bool {
-	if r.ko.Status.ModelPackageGroupStatus == nil {
-		return false
-	}
-	sagemaker_status := *r.ko.Status.ModelPackageGroupStatus
-	return sagemaker_status == string(v1alpha1.ModelPackageGroupStatus_SDK_InProgress)
-}
-
-// isModelPackageGroupDeleting returns true if the supplied SageMaker ModelPackageGroup is in the process
-// of being deleted
-func isModelPackageGroupDeleting(r *resource) bool {
-	if r.ko.Status.ModelPackageGroupStatus == nil {
-		return false
-	}
-	sagemaker_status := *r.ko.Status.ModelPackageGroupStatus
-	return sagemaker_status == string(v1alpha1.ModelPackageGroupStatus_SDK_Deleting)
-}
-
-// isModelPackageGroupDeleting returns true if the supplied SageMaker ModelPackageGroup delete failed
-func isModelPackageGroupDeleteFailed(r *resource) bool {
-	if r.ko.Status.ModelPackageGroupStatus == nil {
-		return false
-	}
-	sagemaker_status := *r.ko.Status.ModelPackageGroupStatus
-	return sagemaker_status == string(v1alpha1.ModelPackageGroupStatus_SDK_DeleteFailed)
-}
-
-func ModelPackageGroupCustomSetOutput(r *resource) {
-	if r.ko.Status.ModelPackageGroupStatus == nil {
-		return
-	}
-	sagemaker_status := *r.ko.Status.ModelPackageGroupStatus
-	if sagemaker_status == string(v1alpha1.ModelPackageGroupStatus_SDK_Completed) || sagemaker_status == string(v1alpha1.ModelPackageGroupStatus_SDK_Failed) {
-		setSyncedCondition(r, corev1.ConditionTrue, nil, nil)
-	} else {
-		setSyncedCondition(r, corev1.ConditionFalse, nil, nil)
-	}
+	condition.SetSynced(r, corev1.ConditionFalse, &msg, nil)
+	return requeue
 }
