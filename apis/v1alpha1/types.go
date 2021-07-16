@@ -259,7 +259,8 @@ type CheckpointConfig struct {
 
 // Specifies summary information about a Git repository.
 type CodeRepositorySummary struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
 // Configuration information for the Debugger output tensor collections.
@@ -273,6 +274,7 @@ type CompilationJobSummary struct {
 	CompilationEndTime   *metav1.Time `json:"compilationEndTime,omitempty"`
 	CompilationStartTime *metav1.Time `json:"compilationStartTime,omitempty"`
 	CreationTime         *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime     *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
 // Describes the container, as part of model definition.
@@ -476,7 +478,8 @@ type DeviceSummary struct {
 
 // The domain's details.
 type DomainDetails struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
 // The model on the edge device.
@@ -1296,12 +1299,37 @@ type NetworkConfig struct {
 
 // Provides a summary of a notebook instance lifecycle configuration.
 type NotebookInstanceLifecycleConfigSummary struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	CreationTime                        *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime                    *metav1.Time `json:"lastModifiedTime,omitempty"`
+	NotebookInstanceLifecycleConfigARN  *string      `json:"notebookInstanceLifecycleConfigARN,omitempty"`
+	NotebookInstanceLifecycleConfigName *string      `json:"notebookInstanceLifecycleConfigName,omitempty"`
+}
+
+// Contains the notebook instance lifecycle configuration script.
+//
+// Each lifecycle configuration script has a limit of 16384 characters.
+//
+// The value of the $PATH environment variable that is available to both scripts
+// is /sbin:bin:/usr/sbin:/usr/bin.
+//
+// View CloudWatch Logs for notebook instance lifecycle configurations in log
+// group /aws/sagemaker/NotebookInstances in log stream [notebook-instance-name]/[LifecycleConfigHook].
+//
+// Lifecycle configuration scripts cannot run for longer than 5 minutes. If
+// a script runs for longer than 5 minutes, it fails and the notebook instance
+// is not created or started.
+//
+// For information about notebook instance lifestyle configurations, see Step
+// 2.1: (Optional) Customize a Notebook Instance (https://docs.aws.amazon.com/sagemaker/latest/dg/notebook-lifecycle-config.html).
+type NotebookInstanceLifecycleHook struct {
+	Content *string `json:"content,omitempty"`
 }
 
 // Provides summary information for an Amazon SageMaker notebook instance.
 type NotebookInstanceSummary struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	CreationTime                        *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime                    *metav1.Time `json:"lastModifiedTime,omitempty"`
+	NotebookInstanceLifecycleConfigName *string      `json:"notebookInstanceLifecycleConfigName,omitempty"`
 }
 
 // Specifies the number of training jobs that this hyperparameter tuning job
@@ -2162,7 +2190,8 @@ type UserContext struct {
 
 // The user profile details.
 type UserProfileDetails struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
 // A collection of settings that apply to users of Amazon SageMaker Studio.

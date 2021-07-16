@@ -1,0 +1,30 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: NotebookInstanceLifecycleConfig
+metadata:
+  name: test11
+spec:
+  notebookInstanceLifecycleConfigName: test11
+  # role: arn:aws:iam::475866477710:role/service-role/AmazonSageMakerServiceCatalogProductsUseRole
+  # onCreate:
+  #   - content: "pip install"
+  onStart:
+    - content: "pip me"
+  onCreate:
+           - content: | 
+              wget http://mirrors.ctan.org/macros/latex/contrib/upquote.zip
+              EOF
+  # onStart:
+  #         - content: |
+  #                     set -e
+
+  #                     sudo -u ec2-user -i <<'EOF'
+  #                     PACKAGE=scipy
+  #                     for env in base /home/ec2-user/anaconda3/envs/*; do
+  #                         source /home/ec2-user/anaconda3/bin/activate $(basename "$env")
+  #                         if [ $env = 'JupyterSystemEnv' ]; then
+  #                             continue
+  #                         fi
+  #                         pip install --upgrade "$PACKAGE"
+  #                         source /home/ec2-user/anaconda3/bin/deactivate
+  #                     done
+  #                     EOF
