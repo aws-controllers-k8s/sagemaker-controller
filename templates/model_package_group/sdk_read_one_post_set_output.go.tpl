@@ -1,1 +1,0 @@
-    rm.customSetOutput(&resource{ko}) 

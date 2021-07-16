@@ -17,6 +17,7 @@ package model_package_group
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
@@ -163,7 +164,6 @@ func (rm *resourceManager) sdkCreate(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutput(&resource{ko})
 	return &resource{ko}, nil
 }
 
@@ -212,6 +212,8 @@ func (rm *resourceManager) sdkDelete(
 	if err != nil {
 		return err
 	}
+	_, err = rm.sdkapi.DeleteModelPackageGroupWithContext(ctx, input)
+	rm.metrics.RecordAPICall("DELETE", "DeleteModelPackageGroup", err)
 	if err == nil {
 		if foundResource, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
 			if isDeleting(foundResource) {
@@ -220,8 +222,6 @@ func (rm *resourceManager) sdkDelete(
 			return err
 		}
 	}
-	_, err = rm.sdkapi.DeleteModelPackageGroupWithContext(ctx, input)
-	rm.metrics.RecordAPICall("DELETE", "DeleteModelPackageGroup", err)
 	return err
 }
 

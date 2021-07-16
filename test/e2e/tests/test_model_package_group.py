@@ -23,6 +23,7 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
+    wait_for_status,
     sagemaker_client,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
@@ -66,9 +67,65 @@ def get_sagemaker_model_package_group(model_package_group_name: str):
         return None
 
 
+def get_model_package_group_sagemaker_status(model_package_group_name: str):
+    model_package_group_sm_desc = get_sagemaker_model_package_group(
+        model_package_group_name
+    )
+    return model_package_group_sm_desc["ModelPackageGroupStatus"]
+
+
+def get_model_package_group_resource_status(reference: k8s.CustomResourceReference):
+    resource = k8s.get_resource(reference)
+    assert "modelPackageGroupStatus" in resource["status"]
+    return resource["status"]["modelPackageGroupStatus"]
+
+
 @service_marker
 @pytest.mark.canary
 class TestModelPackageGroup:
+    def _wait_resource_model_package_group_status(
+        self,
+        reference: k8s.CustomResourceReference,
+        expected_status: str,
+        wait_periods: int = 30,
+        period_length: int = 30,
+    ):
+        return wait_for_status(
+            expected_status,
+            wait_periods,
+            period_length,
+            get_model_package_group_resource_status,
+            reference,
+        )
+
+    def _wait_sagemaker_model_package_group_status(
+        self,
+        model_package_group_name,
+        expected_status: str,
+        wait_periods: int = 30,
+        period_length: int = 30,
+    ):
+        return wait_for_status(
+            expected_status,
+            wait_periods,
+            period_length,
+            get_model_package_group_sagemaker_status,
+            model_package_group_name,
+        )
+
+    def _assert_model_package_group_status_in_sync(
+        self, model_package_group_name, reference, expected_status
+    ):
+        assert (
+            self._wait_sagemaker_model_package_group_status(
+                model_package_group_name, expected_status
+            )
+            == self._wait_resource_model_package_group_status(
+                reference, expected_status
+            )
+            == expected_status
+        )
+
     def test_create_model_package_group(self, xgboost_model_package_group):
         (reference, resource) = xgboost_model_package_group
         assert k8s.get_resource_exists(reference)
@@ -89,6 +146,12 @@ class TestModelPackageGroup:
             model_package_group_sm_desc["ModelPackageGroupStatus"]
             == cfg.JOB_STATUS_COMPLETED
         )
+
+        self._assert_model_package_group_status_in_sync(
+            model_package_group_name, reference, cfg.JOB_STATUS_COMPLETED
+        )
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+
         # Check that you can delete a completed resource from k8s
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted is True

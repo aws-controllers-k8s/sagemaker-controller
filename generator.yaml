@@ -19,8 +19,6 @@ operations:
       RetainAllVariantProperties: true
   DeleteEndpoint:
     custom_implementation: customDeleteEndpoint
-  DeleteModelPackageGroup:
-    custom_implementation: customDeleteModelPackageGroup
   StopHyperParameterTuningJob:
     operation_type: Delete
     resource_name: HyperParameterTuningJob
@@ -556,12 +554,12 @@ resources:
             operation: DescribeModelPackageGroup
             path: ModelPackageGroupStatus      
       hooks:
-        sdk_create_post_set_output:
-          code: rm.customSetOutput(&resource{ko})
         sdk_read_one_post_set_output:
-          template_path: model_package_group/sdk_read_one_post_set_output.go.tpl 
-        sdk_delete_post_build_request:
-          template_path: model_package_group/sdk_delete_post_build_request.go.tpl
+          code: rm.customSetOutput(&resource{ko})  
+        sdk_delete_pre_build_request:
+          template_path: model_package_group/sdk_delete_pre_build_request.go.tpl
+        sdk_delete_post_request:
+          template_path: model_package_group/sdk_delete_post_request.go.tpl
 ignore:
     resource_names:
       - Algorithm

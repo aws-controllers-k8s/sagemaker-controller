@@ -50,7 +50,7 @@ func (rm *resourceManager) customDeleteModelPackageGroup(ctx context.Context,
 		return nil
 	}
 	ModelPackageGroupStatus := *latest.ko.Status.ModelPackageGroupStatus
-	if ModelPackageGroupStatus != string(svcsdk.ModelPackageGroupStatusCompleted) || ModelPackageGroupStatus != string(svcsdk.ModelPackageGroupStatusFailed) || ModelPackageGroupStatus != string(svcsdk.ModelPackageGroupStatusDeleteFailed) {
+	if ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusInProgress) || ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusPending) {
 		errMsg := "ModelPackageGroup in" + ModelPackageGroupStatus + "state cannot be modified or deleted"
 		requeueWaitWhileModifying := ackrequeue.NeededAfter(
 			errors.New(errMsg),
