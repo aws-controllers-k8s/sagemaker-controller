@@ -50,7 +50,7 @@ func (rm *resourceManager) customDeleteModelPackageGroup(ctx context.Context,
 		return nil
 	}
 	ModelPackageGroupStatus := *latest.ko.Status.ModelPackageGroupStatus
-	if ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusInProgress) || ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusPending) {
+	if isModifiying(latest) {
 		errMsg := "ModelPackageGroup in" + ModelPackageGroupStatus + "state cannot be modified or deleted"
 		requeueWaitWhileModifying := ackrequeue.NeededAfter(
 			errors.New(errMsg),
@@ -59,6 +59,18 @@ func (rm *resourceManager) customDeleteModelPackageGroup(ctx context.Context,
 		return requeueWaitWhileModifying
 	}
 	return nil
+}
+
+func isModifiying(r *resource) bool {
+	if r == nil || r.ko.Status.ModelPackageGroupStatus == nil {
+		return false
+	}
+	ModelPackageGroupStatus := *r.ko.Status.ModelPackageGroupStatus
+
+	if ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusInProgress) || ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusPending) || isDeleting(r) {
+		return true
+	}
+	return false
 }
 
 // isDeleting returns true if supplied ModelPackageGroup resource state is in 'Deleting' or 'DeleteFailed'
