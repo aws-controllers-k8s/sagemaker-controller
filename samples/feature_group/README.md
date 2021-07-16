@@ -2,6 +2,8 @@
 
 This sample demonstrates how to create a feature group using the Amazon AWS Controllers for Kubernetes (ACK) service controller for Amazon SageMaker.
 
+Inspiration for this sample was taken from the notebook on [Fraud Detection with Amazon SageMaker FeatureStore](https://sagemaker-examples.readthedocs.io/en/latest/sagemaker-featurestore/sagemaker_featurestore_fraud_detection_python_sdk.html).
+
 ## Prerequisites
 
 This sample assumes that you have completed the [common prerequisites](https://github.com/aws-controllers-k8s/sagemaker-controller/blob/main/samples/README.md).
