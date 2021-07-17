@@ -142,11 +142,6 @@ class TestModelPackageGroup:
             == model_package_group_sm_desc["ModelPackageGroupArn"]
         )
 
-        assert (
-            model_package_group_sm_desc["ModelPackageGroupStatus"]
-            == cfg.JOB_STATUS_COMPLETED
-        )
-
         self._assert_model_package_group_status_in_sync(
             model_package_group_name, reference, cfg.JOB_STATUS_COMPLETED
         )

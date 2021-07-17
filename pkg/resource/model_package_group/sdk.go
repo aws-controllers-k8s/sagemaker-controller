@@ -214,11 +214,8 @@ func (rm *resourceManager) sdkDelete(
 	_, err = rm.sdkapi.DeleteModelPackageGroupWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteModelPackageGroup", err)
 	if err == nil {
-		if foundResource, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
-			if isDeleting(foundResource) {
-				return requeueWaitWhileDeleting
-			}
-			return err
+		if _, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
+			return requeueWaitWhileDeleting
 		}
 	}
 	return err

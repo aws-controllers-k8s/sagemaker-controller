@@ -36,7 +36,7 @@ func (rm *resourceManager) customSetOutput(r *resource) {
 	}
 	ModelPackageGroupStatus := *r.ko.Status.ModelPackageGroupStatus
 	msg := "ModelPackageGroup is in" + ModelPackageGroupStatus + "status"
-	if ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusCompleted) || ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusFailed) || ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusDeleteFailed) {
+	if !isModifiying(r) {
 		ackcondition.SetSynced(r, corev1.ConditionTrue, &msg, nil)
 	} else {
 		ackcondition.SetSynced(r, corev1.ConditionFalse, &msg, nil)
@@ -67,19 +67,7 @@ func isModifiying(r *resource) bool {
 	}
 	ModelPackageGroupStatus := *r.ko.Status.ModelPackageGroupStatus
 
-	if ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusInProgress) || ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusPending) || isDeleting(r) {
-		return true
-	}
-	return false
-}
-
-// isDeleting returns true if supplied ModelPackageGroup resource state is in 'Deleting' or 'DeleteFailed'
-func isDeleting(r *resource) bool {
-	if r == nil || r.ko.Status.ModelPackageGroupStatus == nil {
-		return false
-	}
-	ModelPackageGroupStatus := *r.ko.Status.ModelPackageGroupStatus
-	if ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusDeleting) || ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusDeleteFailed) {
+	if ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusInProgress) || ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusPending) || ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusDeleting) {
 		return true
 	}
 	return false
