@@ -225,7 +225,7 @@ func (rm *resourceManager) sdkCreate(
 	exit := rlog.Trace("rm.sdkCreate")
 	defer exit(err)
 
-	// If creating, requeue with wait untill status becomes created.
+	// If creating, requeue with wait until status becomes created.
 	if isCreating(desired) {
 		return nil, requeueWaitWhileCreating
 	}
@@ -239,7 +239,7 @@ func (rm *resourceManager) sdkCreate(
 	_ = resp
 	resp, err = rm.sdkapi.CreateFeatureGroupWithContext(ctx, input)
 
-	// If creating, requeue with wait untill status becomes created.
+	// If creating, requeue with wait until status becomes created.
 	if err == nil {
 		if foundResource, err := rm.sdkFind(ctx, desired); err != ackerr.NotFound {
 			if isCreating(foundResource) {
