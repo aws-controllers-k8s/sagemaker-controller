@@ -59,11 +59,23 @@ type AlgorithmSpecification struct {
 // Represents the overall status of an algorithm.
 type AlgorithmStatusItem struct {
 	FailureReason *string `json:"failureReason,omitempty"`
+	Name          *string `json:"name,omitempty"`
 }
 
 // Provides summary information about an algorithm.
 type AlgorithmSummary struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	AlgorithmDescription *string      `json:"algorithmDescription,omitempty"`
+	AlgorithmName        *string      `json:"algorithmName,omitempty"`
+	CreationTime         *metav1.Time `json:"creationTime,omitempty"`
+}
+
+// Defines a training job and a batch transform job that Amazon SageMaker runs
+// to validate your algorithm.
+//
+// The data provided in the validation profile is made available to your buyers
+// on AWS Marketplace.
+type AlgorithmValidationProfile struct {
+	ProfileName *string `json:"profileName,omitempty"`
 }
 
 // Specifies configurations for one or more training jobs that Amazon SageMaker
@@ -102,6 +114,9 @@ type ArtifactSummary struct {
 // entity that links other lineage or experiment entities. An example would
 // be an association between a training job and a model.
 type AssociationSummary struct {
+	// Information about the user who created or modified an experiment, trial,
+	// or trial component.
+	CreatedBy       *UserContext `json:"createdBy,omitempty"`
 	CreationTime    *metav1.Time `json:"creationTime,omitempty"`
 	DestinationName *string      `json:"destinationName,omitempty"`
 	SourceName      *string      `json:"sourceName,omitempty"`
@@ -246,8 +261,9 @@ type Channel struct {
 
 // Defines a named input source, called a channel, to be used by an algorithm.
 type ChannelSpecification struct {
-	IsRequired *bool   `json:"isRequired,omitempty"`
-	Name       *string `json:"name,omitempty"`
+	Description *string `json:"description,omitempty"`
+	IsRequired  *bool   `json:"isRequired,omitempty"`
+	Name        *string `json:"name,omitempty"`
 }
 
 // Contains information about the output location for managed spot training
@@ -259,7 +275,8 @@ type CheckpointConfig struct {
 
 // Specifies summary information about a Git repository.
 type CodeRepositorySummary struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	CodeRepositoryName *string      `json:"codeRepositoryName,omitempty"`
+	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
 }
 
 // Configuration information for the Debugger output tensor collections.
@@ -271,6 +288,7 @@ type CollectionConfiguration struct {
 // A summary of a model compilation job.
 type CompilationJobSummary struct {
 	CompilationEndTime   *metav1.Time `json:"compilationEndTime,omitempty"`
+	CompilationJobName   *string      `json:"compilationJobName,omitempty"`
 	CompilationStartTime *metav1.Time `json:"compilationStartTime,omitempty"`
 	CreationTime         *metav1.Time `json:"creationTime,omitempty"`
 }
@@ -465,11 +483,14 @@ type DesiredWeightAndCapacity struct {
 // Summary of the device fleet.
 type DeviceFleetSummary struct {
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	DeviceFleetName  *string      `json:"deviceFleetName,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
 // Summary of the device.
 type DeviceSummary struct {
+	DeviceFleetName  *string      `json:"deviceFleetName,omitempty"`
+	DeviceName       *string      `json:"deviceName,omitempty"`
 	LatestHeartbeat  *metav1.Time `json:"latestHeartbeat,omitempty"`
 	RegistrationTime *metav1.Time `json:"registrationTime,omitempty"`
 }
@@ -483,6 +504,17 @@ type DomainDetails struct {
 type EdgeModel struct {
 	LatestInference  *metav1.Time `json:"latestInference,omitempty"`
 	LatestSampleTime *metav1.Time `json:"latestSampleTime,omitempty"`
+	ModelName        *string      `json:"modelName,omitempty"`
+}
+
+// Status of edge devices with this model.
+type EdgeModelStat struct {
+	ModelName *string `json:"modelName,omitempty"`
+}
+
+// Summary of model on edge device.
+type EdgeModelSummary struct {
+	ModelName *string `json:"modelName,omitempty"`
 }
 
 // The output configuration.
@@ -493,8 +525,11 @@ type EdgeOutputConfig struct {
 
 // Summary of edge packaging job.
 type EdgePackagingJobSummary struct {
-	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
-	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	CompilationJobName   *string      `json:"compilationJobName,omitempty"`
+	CreationTime         *metav1.Time `json:"creationTime,omitempty"`
+	EdgePackagingJobName *string      `json:"edgePackagingJobName,omitempty"`
+	LastModifiedTime     *metav1.Time `json:"lastModifiedTime,omitempty"`
+	ModelName            *string      `json:"modelName,omitempty"`
 }
 
 // Provides summary information for an endpoint configuration.
@@ -542,9 +577,15 @@ type Endpoint_SDK struct {
 
 // The properties of an experiment as returned by the Search API.
 type Experiment struct {
-	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
-	DisplayName      *string      `json:"displayName,omitempty"`
-	ExperimentName   *string      `json:"experimentName,omitempty"`
+	// Information about the user who created or modified an experiment, trial,
+	// or trial component.
+	CreatedBy      *UserContext `json:"createdBy,omitempty"`
+	CreationTime   *metav1.Time `json:"creationTime,omitempty"`
+	DisplayName    *string      `json:"displayName,omitempty"`
+	ExperimentName *string      `json:"experimentName,omitempty"`
+	// Information about the user who created or modified an experiment, trial,
+	// or trial component.
+	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
@@ -671,6 +712,7 @@ type HyperParameterAlgorithmSpecification struct {
 // Defines a hyperparameter to be used by an algorithm.
 type HyperParameterSpecification struct {
 	DefaultValue *string `json:"defaultValue,omitempty"`
+	Description  *string `json:"description,omitempty"`
 	IsRequired   *bool   `json:"isRequired,omitempty"`
 	IsTunable    *bool   `json:"isTunable,omitempty"`
 }
@@ -1023,8 +1065,17 @@ type ModelExplainabilityJobInput struct {
 
 // A versioned model that can be deployed for SageMaker inference.
 type ModelPackage struct {
-	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
-	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	// Information about the user who created or modified an experiment, trial,
+	// or trial component.
+	CreatedBy    *UserContext `json:"createdBy,omitempty"`
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	// Information about the user who created or modified an experiment, trial,
+	// or trial component.
+	LastModifiedBy          *UserContext `json:"lastModifiedBy,omitempty"`
+	LastModifiedTime        *metav1.Time `json:"lastModifiedTime,omitempty"`
+	ModelPackageDescription *string      `json:"modelPackageDescription,omitempty"`
+	ModelPackageGroupName   *string      `json:"modelPackageGroupName,omitempty"`
+	ModelPackageName        *string      `json:"modelPackageName,omitempty"`
 }
 
 // Describes the Docker container for the model package.
@@ -1034,24 +1085,48 @@ type ModelPackageContainerDefinition struct {
 	ModelDataURL      *string `json:"modelDataURL,omitempty"`
 }
 
-// A group of versioned models in the model registry.
-type ModelPackageGroup struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
-}
-
 // Summary information about a model group.
 type ModelPackageGroupSummary struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	CreationTime                 *metav1.Time `json:"creationTime,omitempty"`
+	ModelPackageGroupARN         *string      `json:"modelPackageGroupARN,omitempty"`
+	ModelPackageGroupDescription *string      `json:"modelPackageGroupDescription,omitempty"`
+	ModelPackageGroupName        *string      `json:"modelPackageGroupName,omitempty"`
+	ModelPackageGroupStatus      *string      `json:"modelPackageGroupStatus,omitempty"`
+}
+
+// A group of versioned models in the model registry.
+type ModelPackageGroup_SDK struct {
+	// Information about the user who created or modified an experiment, trial,
+	// or trial component.
+	CreatedBy                    *UserContext `json:"createdBy,omitempty"`
+	CreationTime                 *metav1.Time `json:"creationTime,omitempty"`
+	ModelPackageGroupARN         *string      `json:"modelPackageGroupARN,omitempty"`
+	ModelPackageGroupDescription *string      `json:"modelPackageGroupDescription,omitempty"`
+	ModelPackageGroupName        *string      `json:"modelPackageGroupName,omitempty"`
+	ModelPackageGroupStatus      *string      `json:"modelPackageGroupStatus,omitempty"`
 }
 
 // Represents the overall status of a model package.
 type ModelPackageStatusItem struct {
 	FailureReason *string `json:"failureReason,omitempty"`
+	Name          *string `json:"name,omitempty"`
 }
 
 // Provides summary information about a model package.
 type ModelPackageSummary struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	CreationTime            *metav1.Time `json:"creationTime,omitempty"`
+	ModelPackageDescription *string      `json:"modelPackageDescription,omitempty"`
+	ModelPackageGroupName   *string      `json:"modelPackageGroupName,omitempty"`
+	ModelPackageName        *string      `json:"modelPackageName,omitempty"`
+}
+
+// Contains data, such as the inputs and targeted instance types that are used
+// in the process of validating the model package.
+//
+// The data provided in the validation profile is made available to your buyers
+// on AWS Marketplace.
+type ModelPackageValidationProfile struct {
+	ProfileName *string `json:"profileName,omitempty"`
 }
 
 // Specifies batch transform jobs that Amazon SageMaker runs to validate your
@@ -1401,7 +1476,13 @@ type ParentHyperParameterTuningJob struct {
 
 // A SageMaker Model Building Pipeline instance.
 type Pipeline struct {
-	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	// Information about the user who created or modified an experiment, trial,
+	// or trial component.
+	CreatedBy    *UserContext `json:"createdBy,omitempty"`
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	// Information about the user who created or modified an experiment, trial,
+	// or trial component.
+	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	LastRunTime      *metav1.Time `json:"lastRunTime,omitempty"`
 	RoleARN          *string      `json:"roleARN,omitempty"`
@@ -1409,7 +1490,13 @@ type Pipeline struct {
 
 // An execution of a pipeline.
 type PipelineExecution struct {
-	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	// Information about the user who created or modified an experiment, trial,
+	// or trial component.
+	CreatedBy    *UserContext `json:"createdBy,omitempty"`
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	// Information about the user who created or modified an experiment, trial,
+	// or trial component.
+	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
@@ -1648,7 +1735,8 @@ type ProfilerRuleEvaluationStatus struct {
 
 // Information about a project.
 type ProjectSummary struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
+	ProjectDescription *string      `json:"projectDescription,omitempty"`
 }
 
 // Configuration for Redshift Dataset Definition input.
@@ -2093,18 +2181,30 @@ type TransformS3DataSource struct {
 
 // The properties of a trial as returned by the Search API.
 type Trial struct {
-	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
-	DisplayName      *string      `json:"displayName,omitempty"`
-	ExperimentName   *string      `json:"experimentName,omitempty"`
+	// Information about the user who created or modified an experiment, trial,
+	// or trial component.
+	CreatedBy      *UserContext `json:"createdBy,omitempty"`
+	CreationTime   *metav1.Time `json:"creationTime,omitempty"`
+	DisplayName    *string      `json:"displayName,omitempty"`
+	ExperimentName *string      `json:"experimentName,omitempty"`
+	// Information about the user who created or modified an experiment, trial,
+	// or trial component.
+	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	TrialName        *string      `json:"trialName,omitempty"`
 }
 
 // The properties of a trial component as returned by the Search API.
 type TrialComponent struct {
-	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
-	DisplayName        *string      `json:"displayName,omitempty"`
-	EndTime            *metav1.Time `json:"endTime,omitempty"`
+	// Information about the user who created or modified an experiment, trial,
+	// or trial component.
+	CreatedBy    *UserContext `json:"createdBy,omitempty"`
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	DisplayName  *string      `json:"displayName,omitempty"`
+	EndTime      *metav1.Time `json:"endTime,omitempty"`
+	// Information about the user who created or modified an experiment, trial,
+	// or trial component.
+	LastModifiedBy     *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime   *metav1.Time `json:"lastModifiedTime,omitempty"`
 	StartTime          *metav1.Time `json:"startTime,omitempty"`
 	TrialComponentName *string      `json:"trialComponentName,omitempty"`
@@ -2118,6 +2218,9 @@ type TrialComponentMetricSummary struct {
 
 // A short summary of a trial component.
 type TrialComponentSimpleSummary struct {
+	// Information about the user who created or modified an experiment, trial,
+	// or trial component.
+	CreatedBy          *UserContext `json:"createdBy,omitempty"`
 	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
 	TrialComponentName *string      `json:"trialComponentName,omitempty"`
 }
@@ -2125,9 +2228,15 @@ type TrialComponentSimpleSummary struct {
 // A summary of the properties of a trial component. To get all the properties,
 // call the DescribeTrialComponent API and provide the TrialComponentName.
 type TrialComponentSummary struct {
-	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
-	DisplayName        *string      `json:"displayName,omitempty"`
-	EndTime            *metav1.Time `json:"endTime,omitempty"`
+	// Information about the user who created or modified an experiment, trial,
+	// or trial component.
+	CreatedBy    *UserContext `json:"createdBy,omitempty"`
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	DisplayName  *string      `json:"displayName,omitempty"`
+	EndTime      *metav1.Time `json:"endTime,omitempty"`
+	// Information about the user who created or modified an experiment, trial,
+	// or trial component.
+	LastModifiedBy     *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime   *metav1.Time `json:"lastModifiedTime,omitempty"`
 	StartTime          *metav1.Time `json:"startTime,omitempty"`
 	TrialComponentName *string      `json:"trialComponentName,omitempty"`

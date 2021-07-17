@@ -17,6 +17,7 @@ rules:
   - models
   - modelbiasjobdefinitions
   - modelexplainabilityjobdefinitions
+  - modelpackagegroups
   - modelqualityjobdefinitions
   - monitoringschedules
   - processingjobs
@@ -41,6 +42,7 @@ rules:
   - models
   - modelbiasjobdefinitions
   - modelexplainabilityjobdefinitions
+  - modelpackagegroups
   - modelqualityjobdefinitions
   - monitoringschedules
   - processingjobs
