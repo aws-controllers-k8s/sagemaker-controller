@@ -259,7 +259,8 @@ type CheckpointConfig struct {
 
 // Specifies summary information about a Git repository.
 type CodeRepositorySummary struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
 // Configuration information for the Debugger output tensor collections.
@@ -273,6 +274,7 @@ type CompilationJobSummary struct {
 	CompilationEndTime   *metav1.Time `json:"compilationEndTime,omitempty"`
 	CompilationStartTime *metav1.Time `json:"compilationStartTime,omitempty"`
 	CreationTime         *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime     *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
 // Describes the container, as part of model definition.
@@ -476,7 +478,8 @@ type DeviceSummary struct {
 
 // The domain's details.
 type DomainDetails struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
 // The model on the edge device.
@@ -1296,12 +1299,23 @@ type NetworkConfig struct {
 
 // Provides a summary of a notebook instance lifecycle configuration.
 type NotebookInstanceLifecycleConfigSummary struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	CreationTime                        *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime                    *metav1.Time `json:"lastModifiedTime,omitempty"`
+	NotebookInstanceLifecycleConfigName *string      `json:"notebookInstanceLifecycleConfigName,omitempty"`
 }
 
 // Provides summary information for an Amazon SageMaker notebook instance.
 type NotebookInstanceSummary struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	AdditionalCodeRepositories          []*string    `json:"additionalCodeRepositories,omitempty"`
+	CreationTime                        *metav1.Time `json:"creationTime,omitempty"`
+	DefaultCodeRepository               *string      `json:"defaultCodeRepository,omitempty"`
+	InstanceType                        *string      `json:"instanceType,omitempty"`
+	LastModifiedTime                    *metav1.Time `json:"lastModifiedTime,omitempty"`
+	NotebookInstanceARN                 *string      `json:"notebookInstanceARN,omitempty"`
+	NotebookInstanceLifecycleConfigName *string      `json:"notebookInstanceLifecycleConfigName,omitempty"`
+	NotebookInstanceName                *string      `json:"notebookInstanceName,omitempty"`
+	NotebookInstanceStatus              *string      `json:"notebookInstanceStatus,omitempty"`
+	URL                                 *string      `json:"url,omitempty"`
 }
 
 // Specifies the number of training jobs that this hyperparameter tuning job
@@ -2162,7 +2176,8 @@ type UserContext struct {
 
 // The user profile details.
 type UserProfileDetails struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
 // A collection of settings that apply to users of Amazon SageMaker Studio.
@@ -2173,7 +2188,8 @@ type UserProfileDetails struct {
 // settings in UserSettings, the values specified in CreateUserProfile take
 // precedence over those specified in CreateDomain.
 type UserSettings struct {
-	ExecutionRole *string `json:"executionRole,omitempty"`
+	ExecutionRole  *string   `json:"executionRole,omitempty"`
+	SecurityGroups []*string `json:"securityGroups,omitempty"`
 }
 
 // Specifies a VPC that your training jobs and hosted models have access to.
