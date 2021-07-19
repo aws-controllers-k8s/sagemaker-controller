@@ -1,3 +1,3 @@
-    if err = rm.customDeleteModelPackageGroup(ctx, r); err != nil {
+    if err = rm.requeueUntilCanModify(ctx, r); err != nil {
             return err
         }

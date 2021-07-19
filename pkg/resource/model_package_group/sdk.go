@@ -204,7 +204,7 @@ func (rm *resourceManager) sdkDelete(
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
-	if err = rm.customDeleteModelPackageGroup(ctx, r); err != nil {
+	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
 		return err
 	}
 	input, err := rm.newDeleteRequestPayload(r)

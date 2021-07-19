@@ -43,7 +43,7 @@ func (rm *resourceManager) customSetOutput(r *resource) {
 	}
 }
 
-func (rm *resourceManager) customDeleteModelPackageGroup(ctx context.Context,
+func (rm *resourceManager) requeueUntilCanModify(ctx context.Context,
 	latest *resource,
 ) error {
 	if latest.ko.Status.ModelPackageGroupStatus == nil {
