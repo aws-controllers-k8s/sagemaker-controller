@@ -75,8 +75,6 @@ resources:
         - InvalidAction
         - UnrecognizedClientException
   Endpoint:
-    reconcile: 
-      requeue_on_success_seconds: 30
     update_conditions_custom_method_name: customUpdateConditions
     exceptions:
       errors:
@@ -435,8 +433,6 @@ resources:
       JobDefinitionName:
         is_name: true
   MonitoringSchedule:
-    reconcile: 
-      requeue_on_success_seconds: 30
     update_conditions_custom_method_name: customUpdateConditions
     exceptions:
       errors:

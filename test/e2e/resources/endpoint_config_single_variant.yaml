@@ -13,5 +13,9 @@ spec:
       instanceType: ml.c5.large
       initialVariantWeight: 1
   tags:
-    - key: var
-      value: val
+    - key: confidentiality
+      value: public
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

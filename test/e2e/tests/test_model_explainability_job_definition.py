@@ -17,10 +17,7 @@ import botocore
 import pytest
 import logging
 
-from e2e import (
-    service_marker,
-    create_sagemaker_resource,
-)
+from e2e import service_marker, create_sagemaker_resource, assert_tags_in_sync
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common.fixtures import xgboost_churn_endpoint
 from acktest.resources import random_suffix_name
@@ -30,6 +27,7 @@ RESOURCE_PLURAL = "modelexplainabilityjobdefinitions"
 
 # Access variable so it is loaded as a fixture
 _accessed = xgboost_churn_endpoint
+
 
 @pytest.fixture(scope="module")
 def xgboost_churn_model_explainability_job_definition(xgboost_churn_endpoint):
@@ -80,13 +78,14 @@ class TestModelExplainabilityJobDefinition:
         assert k8s.get_resource_exists(reference)
 
         job_definition_name = resource["spec"].get("jobDefinitionName")
-        assert (
-            k8s.get_resource_arn(resource)
-            == get_sagemaker_model_explainability_job_definition(
-                sagemaker_client, job_definition_name
-            )["JobDefinitionArn"]
+        job_definition_desc = get_sagemaker_model_explainability_job_definition(
+            sagemaker_client, job_definition_name
         )
+        job_definition_arn = job_definition_desc["JobDefinitionArn"]
+        assert k8s.get_resource_arn(resource) == job_definition_arn
 
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(job_definition_arn, resource_tags)
         # Delete the k8s resource.
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted

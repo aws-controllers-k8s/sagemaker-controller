@@ -14,3 +14,10 @@ spec:
         my_var: my_value
         my_var2: my_value2
   executionRoleARN: $SAGEMAKER_EXECUTION_ROLE_ARN
+  tags:
+    - key: algorithm
+      value: xgboost
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

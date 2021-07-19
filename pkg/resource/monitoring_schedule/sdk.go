@@ -1065,6 +1065,13 @@ func (rm *resourceManager) updateConditions(
 	}
 	// Required to avoid the "declared but not used" error in the default case
 	_ = syncCondition
+	if syncCondition == nil && onSuccess {
+		syncCondition = &ackv1alpha1.Condition{
+			Type:   ackv1alpha1.ConditionTypeResourceSynced,
+			Status: corev1.ConditionTrue,
+		}
+		ko.Status.Conditions = append(ko.Status.Conditions, syncCondition)
+	}
 	// custom update conditions
 	customUpdate := rm.customUpdateConditions(ko, r, err)
 	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil || customUpdate {
