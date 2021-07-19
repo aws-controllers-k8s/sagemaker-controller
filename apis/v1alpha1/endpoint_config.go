@@ -64,6 +64,10 @@ type EndpointConfigSpec struct {
 	// host at this endpoint.
 	// +kubebuilder:validation:Required
 	ProductionVariants []*ProductionVariant `json:"productionVariants"`
+	// An array of key-value pairs. You can use tags to categorize your AWS resources
+	// in different ways, for example, by purpose, owner, or environment. For more
+	// information, see Tagging AWS Resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+	Tags []*Tag `json:"tags,omitempty"`
 }
 
 // EndpointConfigStatus defines the observed state of EndpointConfig

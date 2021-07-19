@@ -29,7 +29,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
-	svcsdkapi "github.com/aws/aws-sdk-go/service/sagemaker"
 )
 
 // Hack to avoid import errors during build...
@@ -41,7 +40,6 @@ var (
 	_ = &svcapitypes.TrainingJob{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
-	_ = svcsdkapi.New
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -64,7 +62,7 @@ func (rm *resourceManager) sdkFind(
 		return nil, err
 	}
 
-	var resp *svcsdkapi.DescribeTrainingJobOutput
+	var resp *svcsdk.DescribeTrainingJobOutput
 	resp, err = rm.sdkapi.DescribeTrainingJobWithContext(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeTrainingJob", err)
 	if err != nil {
@@ -568,7 +566,8 @@ func (rm *resourceManager) sdkCreate(
 		return nil, err
 	}
 
-	var resp *svcsdkapi.CreateTrainingJobOutput
+	var resp *svcsdk.CreateTrainingJobOutput
+	_ = resp
 	resp, err = rm.sdkapi.CreateTrainingJobWithContext(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateTrainingJob", err)
 	if err != nil {
@@ -918,40 +917,54 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.SetStoppingCondition(f16)
 	}
+	if r.ko.Spec.Tags != nil {
+		f17 := []*svcsdk.Tag{}
+		for _, f17iter := range r.ko.Spec.Tags {
+			f17elem := &svcsdk.Tag{}
+			if f17iter.Key != nil {
+				f17elem.SetKey(*f17iter.Key)
+			}
+			if f17iter.Value != nil {
+				f17elem.SetValue(*f17iter.Value)
+			}
+			f17 = append(f17, f17elem)
+		}
+		res.SetTags(f17)
+	}
 	if r.ko.Spec.TensorBoardOutputConfig != nil {
-		f17 := &svcsdk.TensorBoardOutputConfig{}
+		f18 := &svcsdk.TensorBoardOutputConfig{}
 		if r.ko.Spec.TensorBoardOutputConfig.LocalPath != nil {
-			f17.SetLocalPath(*r.ko.Spec.TensorBoardOutputConfig.LocalPath)
+			f18.SetLocalPath(*r.ko.Spec.TensorBoardOutputConfig.LocalPath)
 		}
 		if r.ko.Spec.TensorBoardOutputConfig.S3OutputPath != nil {
-			f17.SetS3OutputPath(*r.ko.Spec.TensorBoardOutputConfig.S3OutputPath)
+			f18.SetS3OutputPath(*r.ko.Spec.TensorBoardOutputConfig.S3OutputPath)
 		}
-		res.SetTensorBoardOutputConfig(f17)
+		res.SetTensorBoardOutputConfig(f18)
 	}
 	if r.ko.Spec.TrainingJobName != nil {
 		res.SetTrainingJobName(*r.ko.Spec.TrainingJobName)
 	}
 	if r.ko.Spec.VPCConfig != nil {
-		f19 := &svcsdk.VpcConfig{}
+		f20 := &svcsdk.VpcConfig{}
 		if r.ko.Spec.VPCConfig.SecurityGroupIDs != nil {
-			f19f0 := []*string{}
-			for _, f19f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
-				var f19f0elem string
-				f19f0elem = *f19f0iter
-				f19f0 = append(f19f0, &f19f0elem)
+			f20f0 := []*string{}
+			for _, f20f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
+				var f20f0elem string
+				f20f0elem = *f20f0iter
+				f20f0 = append(f20f0, &f20f0elem)
 			}
-			f19.SetSecurityGroupIds(f19f0)
+			f20.SetSecurityGroupIds(f20f0)
 		}
 		if r.ko.Spec.VPCConfig.Subnets != nil {
-			f19f1 := []*string{}
-			for _, f19f1iter := range r.ko.Spec.VPCConfig.Subnets {
-				var f19f1elem string
-				f19f1elem = *f19f1iter
-				f19f1 = append(f19f1, &f19f1elem)
+			f20f1 := []*string{}
+			for _, f20f1iter := range r.ko.Spec.VPCConfig.Subnets {
+				var f20f1elem string
+				f20f1elem = *f20f1iter
+				f20f1 = append(f20f1, &f20f1elem)
 			}
-			f19.SetSubnets(f19f1)
+			f20.SetSubnets(f20f1)
 		}
-		res.SetVpcConfig(f19)
+		res.SetVpcConfig(f20)
 	}
 
 	return res, nil
@@ -973,7 +986,7 @@ func (rm *resourceManager) sdkUpdate(
 func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
-) (err error) {
+) (latest *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
@@ -981,15 +994,17 @@ func (rm *resourceManager) sdkDelete(
 	// resource Unmanaged
 	latestStatus := r.ko.Status.TrainingJobStatus
 	if latestStatus != nil && *latestStatus != svcsdk.TrainingJobStatusInProgress {
-		return nil
+		return nil, err
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = rm.sdkapi.StopTrainingJobWithContext(ctx, input)
+	var resp *svcsdk.StopTrainingJobOutput
+	_ = resp
+	resp, err = rm.sdkapi.StopTrainingJobWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "StopTrainingJob", err)
-	return err
+	return nil, err
 }
 
 // newDeleteRequestPayload returns an SDK-specific struct for the HTTP request
@@ -1025,6 +1040,7 @@ func (rm *resourceManager) setStatusDefaults(
 // else it returns nil, false
 func (rm *resourceManager) updateConditions(
 	r *resource,
+	onSuccess bool,
 	err error,
 ) (*resource, bool) {
 	ko := r.ko.DeepCopy()
@@ -1033,12 +1049,16 @@ func (rm *resourceManager) updateConditions(
 	// Terminal condition
 	var terminalCondition *ackv1alpha1.Condition = nil
 	var recoverableCondition *ackv1alpha1.Condition = nil
+	var syncCondition *ackv1alpha1.Condition = nil
 	for _, condition := range ko.Status.Conditions {
 		if condition.Type == ackv1alpha1.ConditionTypeTerminal {
 			terminalCondition = condition
 		}
 		if condition.Type == ackv1alpha1.ConditionTypeRecoverable {
 			recoverableCondition = condition
+		}
+		if condition.Type == ackv1alpha1.ConditionTypeResourceSynced {
+			syncCondition = condition
 		}
 	}
 
@@ -1080,7 +1100,9 @@ func (rm *resourceManager) updateConditions(
 			recoverableCondition.Message = nil
 		}
 	}
-	if terminalCondition != nil || recoverableCondition != nil {
+	// Required to avoid the "declared but not used" error in the default case
+	_ = syncCondition
+	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil {
 		return &resource{ko}, true // updated
 	}
 	return nil, false // not updated

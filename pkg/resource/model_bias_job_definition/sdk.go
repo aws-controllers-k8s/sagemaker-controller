@@ -29,7 +29,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
-	svcsdkapi "github.com/aws/aws-sdk-go/service/sagemaker"
 )
 
 // Hack to avoid import errors during build...
@@ -41,7 +40,6 @@ var (
 	_ = &svcapitypes.ModelBiasJobDefinition{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
-	_ = svcsdkapi.New
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -64,7 +62,7 @@ func (rm *resourceManager) sdkFind(
 		return nil, err
 	}
 
-	var resp *svcsdkapi.DescribeModelBiasJobDefinitionOutput
+	var resp *svcsdk.DescribeModelBiasJobDefinitionOutput
 	resp, err = rm.sdkapi.DescribeModelBiasJobDefinitionWithContext(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeModelBiasJobDefinition", err)
 	if err != nil {
@@ -318,7 +316,8 @@ func (rm *resourceManager) sdkCreate(
 		return nil, err
 	}
 
-	var resp *svcsdkapi.CreateModelBiasJobDefinitionOutput
+	var resp *svcsdk.CreateModelBiasJobDefinitionOutput
+	_ = resp
 	resp, err = rm.sdkapi.CreateModelBiasJobDefinitionWithContext(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateModelBiasJobDefinition", err)
 	if err != nil {
@@ -519,6 +518,20 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.SetStoppingCondition(f8)
 	}
+	if r.ko.Spec.Tags != nil {
+		f9 := []*svcsdk.Tag{}
+		for _, f9iter := range r.ko.Spec.Tags {
+			f9elem := &svcsdk.Tag{}
+			if f9iter.Key != nil {
+				f9elem.SetKey(*f9iter.Key)
+			}
+			if f9iter.Value != nil {
+				f9elem.SetValue(*f9iter.Value)
+			}
+			f9 = append(f9, f9elem)
+		}
+		res.SetTags(f9)
+	}
 
 	return res, nil
 }
@@ -539,17 +552,19 @@ func (rm *resourceManager) sdkUpdate(
 func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
-) (err error) {
+) (latest *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = rm.sdkapi.DeleteModelBiasJobDefinitionWithContext(ctx, input)
+	var resp *svcsdk.DeleteModelBiasJobDefinitionOutput
+	_ = resp
+	resp, err = rm.sdkapi.DeleteModelBiasJobDefinitionWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteModelBiasJobDefinition", err)
-	return err
+	return nil, err
 }
 
 // newDeleteRequestPayload returns an SDK-specific struct for the HTTP request
@@ -585,6 +600,7 @@ func (rm *resourceManager) setStatusDefaults(
 // else it returns nil, false
 func (rm *resourceManager) updateConditions(
 	r *resource,
+	onSuccess bool,
 	err error,
 ) (*resource, bool) {
 	ko := r.ko.DeepCopy()
@@ -593,12 +609,16 @@ func (rm *resourceManager) updateConditions(
 	// Terminal condition
 	var terminalCondition *ackv1alpha1.Condition = nil
 	var recoverableCondition *ackv1alpha1.Condition = nil
+	var syncCondition *ackv1alpha1.Condition = nil
 	for _, condition := range ko.Status.Conditions {
 		if condition.Type == ackv1alpha1.ConditionTypeTerminal {
 			terminalCondition = condition
 		}
 		if condition.Type == ackv1alpha1.ConditionTypeRecoverable {
 			recoverableCondition = condition
+		}
+		if condition.Type == ackv1alpha1.ConditionTypeResourceSynced {
+			syncCondition = condition
 		}
 	}
 
@@ -640,7 +660,9 @@ func (rm *resourceManager) updateConditions(
 			recoverableCondition.Message = nil
 		}
 	}
-	if terminalCondition != nil || recoverableCondition != nil {
+	// Required to avoid the "declared but not used" error in the default case
+	_ = syncCondition
+	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil {
 		return &resource{ko}, true // updated
 	}
 	return nil, false // not updated

@@ -29,7 +29,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
-	svcsdkapi "github.com/aws/aws-sdk-go/service/sagemaker"
 )
 
 // Hack to avoid import errors during build...
@@ -41,7 +40,6 @@ var (
 	_ = &svcapitypes.TransformJob{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
-	_ = svcsdkapi.New
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -64,7 +62,7 @@ func (rm *resourceManager) sdkFind(
 		return nil, err
 	}
 
-	var resp *svcsdkapi.DescribeTransformJobOutput
+	var resp *svcsdk.DescribeTransformJobOutput
 	resp, err = rm.sdkapi.DescribeTransformJobWithContext(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeTransformJob", err)
 	if err != nil {
@@ -280,7 +278,8 @@ func (rm *resourceManager) sdkCreate(
 		return nil, err
 	}
 
-	var resp *svcsdkapi.CreateTransformJobOutput
+	var resp *svcsdk.CreateTransformJobOutput
+	_ = resp
 	resp, err = rm.sdkapi.CreateTransformJobWithContext(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateTransformJob", err)
 	if err != nil {
@@ -368,64 +367,78 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.ModelName != nil {
 		res.SetModelName(*r.ko.Spec.ModelName)
 	}
+	if r.ko.Spec.Tags != nil {
+		f8 := []*svcsdk.Tag{}
+		for _, f8iter := range r.ko.Spec.Tags {
+			f8elem := &svcsdk.Tag{}
+			if f8iter.Key != nil {
+				f8elem.SetKey(*f8iter.Key)
+			}
+			if f8iter.Value != nil {
+				f8elem.SetValue(*f8iter.Value)
+			}
+			f8 = append(f8, f8elem)
+		}
+		res.SetTags(f8)
+	}
 	if r.ko.Spec.TransformInput != nil {
-		f8 := &svcsdk.TransformInput{}
+		f9 := &svcsdk.TransformInput{}
 		if r.ko.Spec.TransformInput.CompressionType != nil {
-			f8.SetCompressionType(*r.ko.Spec.TransformInput.CompressionType)
+			f9.SetCompressionType(*r.ko.Spec.TransformInput.CompressionType)
 		}
 		if r.ko.Spec.TransformInput.ContentType != nil {
-			f8.SetContentType(*r.ko.Spec.TransformInput.ContentType)
+			f9.SetContentType(*r.ko.Spec.TransformInput.ContentType)
 		}
 		if r.ko.Spec.TransformInput.DataSource != nil {
-			f8f2 := &svcsdk.TransformDataSource{}
+			f9f2 := &svcsdk.TransformDataSource{}
 			if r.ko.Spec.TransformInput.DataSource.S3DataSource != nil {
-				f8f2f0 := &svcsdk.TransformS3DataSource{}
+				f9f2f0 := &svcsdk.TransformS3DataSource{}
 				if r.ko.Spec.TransformInput.DataSource.S3DataSource.S3DataType != nil {
-					f8f2f0.SetS3DataType(*r.ko.Spec.TransformInput.DataSource.S3DataSource.S3DataType)
+					f9f2f0.SetS3DataType(*r.ko.Spec.TransformInput.DataSource.S3DataSource.S3DataType)
 				}
 				if r.ko.Spec.TransformInput.DataSource.S3DataSource.S3URI != nil {
-					f8f2f0.SetS3Uri(*r.ko.Spec.TransformInput.DataSource.S3DataSource.S3URI)
+					f9f2f0.SetS3Uri(*r.ko.Spec.TransformInput.DataSource.S3DataSource.S3URI)
 				}
-				f8f2.SetS3DataSource(f8f2f0)
+				f9f2.SetS3DataSource(f9f2f0)
 			}
-			f8.SetDataSource(f8f2)
+			f9.SetDataSource(f9f2)
 		}
 		if r.ko.Spec.TransformInput.SplitType != nil {
-			f8.SetSplitType(*r.ko.Spec.TransformInput.SplitType)
+			f9.SetSplitType(*r.ko.Spec.TransformInput.SplitType)
 		}
-		res.SetTransformInput(f8)
+		res.SetTransformInput(f9)
 	}
 	if r.ko.Spec.TransformJobName != nil {
 		res.SetTransformJobName(*r.ko.Spec.TransformJobName)
 	}
 	if r.ko.Spec.TransformOutput != nil {
-		f10 := &svcsdk.TransformOutput{}
+		f11 := &svcsdk.TransformOutput{}
 		if r.ko.Spec.TransformOutput.Accept != nil {
-			f10.SetAccept(*r.ko.Spec.TransformOutput.Accept)
+			f11.SetAccept(*r.ko.Spec.TransformOutput.Accept)
 		}
 		if r.ko.Spec.TransformOutput.AssembleWith != nil {
-			f10.SetAssembleWith(*r.ko.Spec.TransformOutput.AssembleWith)
+			f11.SetAssembleWith(*r.ko.Spec.TransformOutput.AssembleWith)
 		}
 		if r.ko.Spec.TransformOutput.KMSKeyID != nil {
-			f10.SetKmsKeyId(*r.ko.Spec.TransformOutput.KMSKeyID)
+			f11.SetKmsKeyId(*r.ko.Spec.TransformOutput.KMSKeyID)
 		}
 		if r.ko.Spec.TransformOutput.S3OutputPath != nil {
-			f10.SetS3OutputPath(*r.ko.Spec.TransformOutput.S3OutputPath)
+			f11.SetS3OutputPath(*r.ko.Spec.TransformOutput.S3OutputPath)
 		}
-		res.SetTransformOutput(f10)
+		res.SetTransformOutput(f11)
 	}
 	if r.ko.Spec.TransformResources != nil {
-		f11 := &svcsdk.TransformResources{}
+		f12 := &svcsdk.TransformResources{}
 		if r.ko.Spec.TransformResources.InstanceCount != nil {
-			f11.SetInstanceCount(*r.ko.Spec.TransformResources.InstanceCount)
+			f12.SetInstanceCount(*r.ko.Spec.TransformResources.InstanceCount)
 		}
 		if r.ko.Spec.TransformResources.InstanceType != nil {
-			f11.SetInstanceType(*r.ko.Spec.TransformResources.InstanceType)
+			f12.SetInstanceType(*r.ko.Spec.TransformResources.InstanceType)
 		}
 		if r.ko.Spec.TransformResources.VolumeKMSKeyID != nil {
-			f11.SetVolumeKmsKeyId(*r.ko.Spec.TransformResources.VolumeKMSKeyID)
+			f12.SetVolumeKmsKeyId(*r.ko.Spec.TransformResources.VolumeKMSKeyID)
 		}
-		res.SetTransformResources(f11)
+		res.SetTransformResources(f12)
 	}
 
 	return res, nil
@@ -447,7 +460,7 @@ func (rm *resourceManager) sdkUpdate(
 func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
-) (err error) {
+) (latest *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
@@ -455,15 +468,17 @@ func (rm *resourceManager) sdkDelete(
 	// resource Unmanaged
 	latestStatus := r.ko.Status.TransformJobStatus
 	if latestStatus != nil && *latestStatus != svcsdk.TransformJobStatusInProgress {
-		return nil
+		return nil, err
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = rm.sdkapi.StopTransformJobWithContext(ctx, input)
+	var resp *svcsdk.StopTransformJobOutput
+	_ = resp
+	resp, err = rm.sdkapi.StopTransformJobWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "StopTransformJob", err)
-	return err
+	return nil, err
 }
 
 // newDeleteRequestPayload returns an SDK-specific struct for the HTTP request
@@ -499,6 +514,7 @@ func (rm *resourceManager) setStatusDefaults(
 // else it returns nil, false
 func (rm *resourceManager) updateConditions(
 	r *resource,
+	onSuccess bool,
 	err error,
 ) (*resource, bool) {
 	ko := r.ko.DeepCopy()
@@ -507,12 +523,16 @@ func (rm *resourceManager) updateConditions(
 	// Terminal condition
 	var terminalCondition *ackv1alpha1.Condition = nil
 	var recoverableCondition *ackv1alpha1.Condition = nil
+	var syncCondition *ackv1alpha1.Condition = nil
 	for _, condition := range ko.Status.Conditions {
 		if condition.Type == ackv1alpha1.ConditionTypeTerminal {
 			terminalCondition = condition
 		}
 		if condition.Type == ackv1alpha1.ConditionTypeRecoverable {
 			recoverableCondition = condition
+		}
+		if condition.Type == ackv1alpha1.ConditionTypeResourceSynced {
+			syncCondition = condition
 		}
 	}
 
@@ -554,7 +574,9 @@ func (rm *resourceManager) updateConditions(
 			recoverableCondition.Message = nil
 		}
 	}
-	if terminalCondition != nil || recoverableCondition != nil {
+	// Required to avoid the "declared but not used" error in the default case
+	_ = syncCondition
+	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil {
 		return &resource{ko}, true // updated
 	}
 	return nil, false // not updated

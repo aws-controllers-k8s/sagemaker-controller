@@ -35,6 +35,13 @@ type HyperParameterTuningJobSpec struct {
 	// is not case sensitive.
 	// +kubebuilder:validation:Required
 	HyperParameterTuningJobName *string `json:"hyperParameterTuningJobName"`
+	// An array of key-value pairs. You can use tags to categorize your AWS resources
+	// in different ways, for example, by purpose, owner, or environment. For more
+	// information, see Tagging AWS Resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+	//
+	// Tags that you specify for the tuning job are also added to all training jobs
+	// that the tuning job launches.
+	Tags []*Tag `json:"tags,omitempty"`
 	// The HyperParameterTrainingJobDefinition object that describes the training
 	// jobs that this tuning job launches, including static hyperparameters, input
 	// data configuration, output data configuration, resource configuration, and

@@ -156,3 +156,11 @@ def assert_endpoint_status_in_sync(endpoint_name, reference, expected_status):
         == wait_resource_endpoint_status(reference, expected_status, 2)
         == expected_status
     )
+
+def assert_tags_in_sync(resource_arn,resource_tags):
+    response = sagemaker_client().list_tags(ResourceArn=resource_arn)
+    response_tags = response["Tags"]
+    while "NextToken" in response:
+        response = sagemaker_client().list_tags(ResourceArn=resource_arn)
+        response_tags.extend(response["Tags"])
+    assert response_tags == resource_tags

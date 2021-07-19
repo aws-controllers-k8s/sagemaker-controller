@@ -29,7 +29,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
-	svcsdkapi "github.com/aws/aws-sdk-go/service/sagemaker"
 )
 
 // Hack to avoid import errors during build...
@@ -41,7 +40,6 @@ var (
 	_ = &svcapitypes.Model{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
-	_ = svcsdkapi.New
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -64,7 +62,7 @@ func (rm *resourceManager) sdkFind(
 		return nil, err
 	}
 
-	var resp *svcsdkapi.DescribeModelOutput
+	var resp *svcsdk.DescribeModelOutput
 	resp, err = rm.sdkapi.DescribeModelWithContext(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeModel", err)
 	if err != nil {
@@ -283,7 +281,8 @@ func (rm *resourceManager) sdkCreate(
 		return nil, err
 	}
 
-	var resp *svcsdkapi.CreateModelOutput
+	var resp *svcsdk.CreateModelOutput
+	_ = resp
 	resp, err = rm.sdkapi.CreateModelWithContext(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateModel", err)
 	if err != nil {
@@ -431,27 +430,41 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.SetPrimaryContainer(f5)
 	}
-	if r.ko.Spec.VPCConfig != nil {
-		f6 := &svcsdk.VpcConfig{}
-		if r.ko.Spec.VPCConfig.SecurityGroupIDs != nil {
-			f6f0 := []*string{}
-			for _, f6f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
-				var f6f0elem string
-				f6f0elem = *f6f0iter
-				f6f0 = append(f6f0, &f6f0elem)
+	if r.ko.Spec.Tags != nil {
+		f6 := []*svcsdk.Tag{}
+		for _, f6iter := range r.ko.Spec.Tags {
+			f6elem := &svcsdk.Tag{}
+			if f6iter.Key != nil {
+				f6elem.SetKey(*f6iter.Key)
 			}
-			f6.SetSecurityGroupIds(f6f0)
+			if f6iter.Value != nil {
+				f6elem.SetValue(*f6iter.Value)
+			}
+			f6 = append(f6, f6elem)
+		}
+		res.SetTags(f6)
+	}
+	if r.ko.Spec.VPCConfig != nil {
+		f7 := &svcsdk.VpcConfig{}
+		if r.ko.Spec.VPCConfig.SecurityGroupIDs != nil {
+			f7f0 := []*string{}
+			for _, f7f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
+				var f7f0elem string
+				f7f0elem = *f7f0iter
+				f7f0 = append(f7f0, &f7f0elem)
+			}
+			f7.SetSecurityGroupIds(f7f0)
 		}
 		if r.ko.Spec.VPCConfig.Subnets != nil {
-			f6f1 := []*string{}
-			for _, f6f1iter := range r.ko.Spec.VPCConfig.Subnets {
-				var f6f1elem string
-				f6f1elem = *f6f1iter
-				f6f1 = append(f6f1, &f6f1elem)
+			f7f1 := []*string{}
+			for _, f7f1iter := range r.ko.Spec.VPCConfig.Subnets {
+				var f7f1elem string
+				f7f1elem = *f7f1iter
+				f7f1 = append(f7f1, &f7f1elem)
 			}
-			f6.SetSubnets(f6f1)
+			f7.SetSubnets(f7f1)
 		}
-		res.SetVpcConfig(f6)
+		res.SetVpcConfig(f7)
 	}
 
 	return res, nil
@@ -473,17 +486,19 @@ func (rm *resourceManager) sdkUpdate(
 func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
-) (err error) {
+) (latest *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = rm.sdkapi.DeleteModelWithContext(ctx, input)
+	var resp *svcsdk.DeleteModelOutput
+	_ = resp
+	resp, err = rm.sdkapi.DeleteModelWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteModel", err)
-	return err
+	return nil, err
 }
 
 // newDeleteRequestPayload returns an SDK-specific struct for the HTTP request
@@ -519,6 +534,7 @@ func (rm *resourceManager) setStatusDefaults(
 // else it returns nil, false
 func (rm *resourceManager) updateConditions(
 	r *resource,
+	onSuccess bool,
 	err error,
 ) (*resource, bool) {
 	ko := r.ko.DeepCopy()
@@ -527,12 +543,16 @@ func (rm *resourceManager) updateConditions(
 	// Terminal condition
 	var terminalCondition *ackv1alpha1.Condition = nil
 	var recoverableCondition *ackv1alpha1.Condition = nil
+	var syncCondition *ackv1alpha1.Condition = nil
 	for _, condition := range ko.Status.Conditions {
 		if condition.Type == ackv1alpha1.ConditionTypeTerminal {
 			terminalCondition = condition
 		}
 		if condition.Type == ackv1alpha1.ConditionTypeRecoverable {
 			recoverableCondition = condition
+		}
+		if condition.Type == ackv1alpha1.ConditionTypeResourceSynced {
+			syncCondition = condition
 		}
 	}
 
@@ -574,7 +594,9 @@ func (rm *resourceManager) updateConditions(
 			recoverableCondition.Message = nil
 		}
 	}
-	if terminalCondition != nil || recoverableCondition != nil {
+	// Required to avoid the "declared but not used" error in the default case
+	_ = syncCondition
+	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil {
 		return &resource{ko}, true // updated
 	}
 	return nil, false // not updated

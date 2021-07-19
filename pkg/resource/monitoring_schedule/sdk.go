@@ -29,7 +29,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
-	svcsdkapi "github.com/aws/aws-sdk-go/service/sagemaker"
 )
 
 // Hack to avoid import errors during build...
@@ -41,7 +40,6 @@ var (
 	_ = &svcapitypes.MonitoringSchedule{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
-	_ = svcsdkapi.New
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -64,7 +62,7 @@ func (rm *resourceManager) sdkFind(
 		return nil, err
 	}
 
-	var resp *svcsdkapi.DescribeMonitoringScheduleOutput
+	var resp *svcsdk.DescribeMonitoringScheduleOutput
 	resp, err = rm.sdkapi.DescribeMonitoringScheduleWithContext(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeMonitoringSchedule", err)
 	if err != nil {
@@ -407,7 +405,8 @@ func (rm *resourceManager) sdkCreate(
 		return nil, err
 	}
 
-	var resp *svcsdkapi.CreateMonitoringScheduleOutput
+	var resp *svcsdk.CreateMonitoringScheduleOutput
+	_ = resp
 	resp, err = rm.sdkapi.CreateMonitoringScheduleWithContext(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateMonitoringSchedule", err)
 	if err != nil {
@@ -655,6 +654,20 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.MonitoringScheduleName != nil {
 		res.SetMonitoringScheduleName(*r.ko.Spec.MonitoringScheduleName)
 	}
+	if r.ko.Spec.Tags != nil {
+		f2 := []*svcsdk.Tag{}
+		for _, f2iter := range r.ko.Spec.Tags {
+			f2elem := &svcsdk.Tag{}
+			if f2iter.Key != nil {
+				f2elem.SetKey(*f2iter.Key)
+			}
+			if f2iter.Value != nil {
+				f2elem.SetValue(*f2iter.Value)
+			}
+			f2 = append(f2, f2elem)
+		}
+		res.SetTags(f2)
+	}
 
 	return res, nil
 }
@@ -680,7 +693,8 @@ func (rm *resourceManager) sdkUpdate(
 		return nil, err
 	}
 
-	var resp *svcsdkapi.UpdateMonitoringScheduleOutput
+	var resp *svcsdk.UpdateMonitoringScheduleOutput
+	_ = resp
 	resp, err = rm.sdkapi.UpdateMonitoringScheduleWithContext(ctx, input)
 	rm.metrics.RecordAPICall("UPDATE", "UpdateMonitoringSchedule", err)
 	if err != nil {
@@ -936,22 +950,24 @@ func (rm *resourceManager) newUpdateRequestPayload(
 func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
-) (err error) {
+) (latest *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
 	// specialized logic to check if modification is allowed
 	err = rm.statusAllowUpdates(ctx, r)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = rm.sdkapi.DeleteMonitoringScheduleWithContext(ctx, input)
+	var resp *svcsdk.DeleteMonitoringScheduleOutput
+	_ = resp
+	resp, err = rm.sdkapi.DeleteMonitoringScheduleWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteMonitoringSchedule", err)
-	return err
+	return nil, err
 }
 
 // newDeleteRequestPayload returns an SDK-specific struct for the HTTP request
@@ -987,6 +1003,7 @@ func (rm *resourceManager) setStatusDefaults(
 // else it returns nil, false
 func (rm *resourceManager) updateConditions(
 	r *resource,
+	onSuccess bool,
 	err error,
 ) (*resource, bool) {
 	ko := r.ko.DeepCopy()
@@ -995,12 +1012,16 @@ func (rm *resourceManager) updateConditions(
 	// Terminal condition
 	var terminalCondition *ackv1alpha1.Condition = nil
 	var recoverableCondition *ackv1alpha1.Condition = nil
+	var syncCondition *ackv1alpha1.Condition = nil
 	for _, condition := range ko.Status.Conditions {
 		if condition.Type == ackv1alpha1.ConditionTypeTerminal {
 			terminalCondition = condition
 		}
 		if condition.Type == ackv1alpha1.ConditionTypeRecoverable {
 			recoverableCondition = condition
+		}
+		if condition.Type == ackv1alpha1.ConditionTypeResourceSynced {
+			syncCondition = condition
 		}
 	}
 
@@ -1042,9 +1063,11 @@ func (rm *resourceManager) updateConditions(
 			recoverableCondition.Message = nil
 		}
 	}
+	// Required to avoid the "declared but not used" error in the default case
+	_ = syncCondition
 	// custom update conditions
 	customUpdate := rm.customUpdateConditions(ko, r, err)
-	if terminalCondition != nil || recoverableCondition != nil || customUpdate {
+	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil || customUpdate {
 		return &resource{ko}, true // updated
 	}
 	return nil, false // not updated

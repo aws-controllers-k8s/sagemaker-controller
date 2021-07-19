@@ -31,7 +31,6 @@ RESOURCE_PLURAL = "modelexplainabilityjobdefinitions"
 # Access variable so it is loaded as a fixture
 _accessed = xgboost_churn_endpoint
 
-
 @pytest.fixture(scope="module")
 def xgboost_churn_model_explainability_job_definition(xgboost_churn_endpoint):
     endpoint_spec = xgboost_churn_endpoint
