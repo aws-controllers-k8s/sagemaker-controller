@@ -557,9 +557,9 @@ resources:
         sdk_read_one_post_set_output:
           code: rm.customSetOutput(&resource{ko})  
         sdk_delete_pre_build_request:
-          template_path: model_package_group/sdk_delete_pre_build_request.go.tpl
+          template_path: common/sdk_delete_pre_build_request.go.tpl
         sdk_delete_post_request:
-          template_path: model_package_group/sdk_delete_post_request.go.tpl
+          template_path: common/sdk_delete_post_request.go.tpl
 ignore:
     resource_names:
       - Algorithm
