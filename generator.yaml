@@ -546,14 +546,18 @@ resources:
         - InvalidAction
         - UnrecognizedClientException
     hooks:
-      sdk_create_post_build_request:
-        code: input = rm.fixNotebookLFinput(input)
       delta_post_compare:
         template_path: notebook_instance_lifecycle_config/delta_post_compare.go.tpl
       sdk_read_one_post_request:
-         template_path: notebook_instance_lifecycle_config/sdk_readOne_post_build_request.go.tpl
-      sdk_update_post_build_request:
-        code: input = rm.fixNotebookLFinput_update(input)
+        template_path: notebook_instance_lifecycle_config/sdk_readOne_post_build_request.go.tpl
+    fields:
+      LastModifiedTime:
+        is_read_only: true
+        print:
+          name: STATUS
+        from:
+          operation: DescribeNotebookInstanceLifecycleConfig
+          path: LastModifiedTime
 ignore:
     resource_names:
       - Algorithm

@@ -16,7 +16,11 @@ spec:
     singular: notebookinstancelifecycleconfig
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .status.lastModifiedTime
+      name: STATUS
+      type: date
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: NotebookInstanceLifecycleConfig is the Schema for the NotebookInstanceLifecycleConfigs
@@ -145,6 +149,11 @@ spec:
                   - type
                   type: object
                 type: array
+              lastModifiedTime:
+                description: A timestamp that tells when the lifecycle configuration
+                  was last modified.
+                format: date-time
+                type: string
             required:
             - ackResourceMetadata
             - conditions

@@ -1,9 +1,6 @@
 package notebook_instance_lifecycle_config
 
 import (
-	"encoding/base64"
-	"fmt"
-
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 )
 
@@ -31,14 +28,7 @@ func modifyDeltaCreate(
 		for i := 0; i < onCreateLen; i++ {
 			abb := *a.ko.Spec.OnCreate[i].Content
 			bbb := *b.ko.Spec.OnCreate[i].Content
-			if err, re := IsBase64(*a.ko.Spec.OnCreate[i].Content); err == false {
-				abb = re
-			}
-			if err, re := IsBase64(*b.ko.Spec.OnCreate[i].Content); err == false {
-				bbb = re
-			}
 			if abb != bbb {
-				fmt.Println(abb, bbb)
 				delta.Add("Spec.OnCreate", a.ko.Spec.OnCreate, b.ko.Spec.OnCreate)
 				return delta
 			}
@@ -71,14 +61,7 @@ func modifyDeltaStart(
 		for i := 0; i < onStartLen; i++ {
 			abb := *a.ko.Spec.OnStart[i].Content
 			bbb := *b.ko.Spec.OnStart[i].Content
-			if err, re := IsBase64(*a.ko.Spec.OnStart[i].Content); err == false {
-				abb = re
-			}
-			if err, re := IsBase64(*b.ko.Spec.OnStart[i].Content); err == false {
-				bbb = re
-			}
 			if abb != bbb {
-				fmt.Println(abb, bbb)
 				delta.Add("Spec.OnStart", a.ko.Spec.OnStart, b.ko.Spec.OnStart)
 				return delta
 			}
@@ -86,9 +69,4 @@ func modifyDeltaStart(
 
 	}
 	return delta
-}
-
-func IsBase64(s string) (bool, string) {
-	res, err := base64.StdEncoding.DecodeString(s)
-	return err != nil, string(res)
 }

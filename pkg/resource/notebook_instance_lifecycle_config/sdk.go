@@ -85,6 +85,11 @@ func (rm *resourceManager) sdkFind(
 	// the original Kubernetes object we passed to the function
 	ko := r.ko.DeepCopy()
 
+	if resp.LastModifiedTime != nil {
+		ko.Status.LastModifiedTime = &metav1.Time{*resp.LastModifiedTime}
+	} else {
+		ko.Status.LastModifiedTime = nil
+	}
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
 	}
@@ -166,7 +171,6 @@ func (rm *resourceManager) sdkCreate(
 	if err != nil {
 		return nil, err
 	}
-	input = rm.fixNotebookLFinput(input)
 
 	var resp *svcsdk.CreateNotebookInstanceLifecycleConfigOutput
 	_ = resp
@@ -243,7 +247,6 @@ func (rm *resourceManager) sdkUpdate(
 	if err != nil {
 		return nil, err
 	}
-	input = rm.fixNotebookLFinput_update(input)
 
 	var resp *svcsdk.UpdateNotebookInstanceLifecycleConfigOutput
 	_ = resp
