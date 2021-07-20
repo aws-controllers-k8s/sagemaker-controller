@@ -170,8 +170,5 @@ def assert_tags_in_sync(resource_arn, resource_tags):
         response_tags.extend(response["Tags"])
 
     # SageMaker returns tags with Key,Value while ACK returns key,value
-    for i in range(len(response_tags)):
-        response_tags[i] = {
-            key.lower(): value for key, value in response_tags[i].items()
-        }
+    response_tags = [{"key": d["Key"], "value": d["Value"]} for d in response_tags]
     TestCase().assertCountEqual(response_tags, resource_tags)
