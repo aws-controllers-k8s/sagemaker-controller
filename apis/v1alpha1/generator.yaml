@@ -78,6 +78,8 @@ resources:
         - InvalidAction
         - UnrecognizedClientException
   Endpoint:
+    reconcile: 
+      requeue_on_success_seconds: 30
     update_conditions_custom_method_name: customUpdateConditions
     exceptions:
       errors:
@@ -436,6 +438,8 @@ resources:
       JobDefinitionName:
         is_name: true
   MonitoringSchedule:
+    reconcile: 
+      requeue_on_success_seconds: 30
     update_conditions_custom_method_name: customUpdateConditions
     exceptions:
       errors:
@@ -558,6 +562,43 @@ resources:
         from:
           operation: UpdateModelPackage
           path: ApprovalDescription
+  FeatureGroup:
+    exceptions:
+      errors:
+          404:
+            code: ResourceNotFound
+      terminal_codes:
+        - ResourceInUse
+        - ResourceLimitExceeded
+        - ResourceNotFound
+        - InvalidAction
+        - InvalidClientTokenId
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - InvalidQueryParameter
+        - MalformedQueryString
+        - MissingAction
+        - MissingParameter
+        - OptInRequired
+    hooks:
+      delta_pre_compare:
+        code: customSetDefaults(a, b)
+    fields:
+      FailureReason:
+        is_read_only: true
+        print:
+          name: FAILURE-REASON
+          priority: 1
+        from:
+          operation: DescribeFeatureGroup
+          path: FailureReason
+      FeatureGroupStatus:
+        is_read_only: true
+        print:
+          name: STATUS
+        from:
+          operation: DescribeFeatureGroup
+          path: FeatureGroupStatus
   ModelPackageGroup:
       exceptions:
         errors:
@@ -578,6 +619,22 @@ resources:
           - InvalidAction
           - UnrecognizedClientException    
           - ConflictException   
+          - UnrecognizedClientException
+      fields:
+        ModelPackageGroupStatus:
+          is_read_only: true
+          print:
+            name: STATUS
+          from:
+            operation: DescribeModelPackageGroup
+            path: ModelPackageGroupStatus      
+      hooks:
+        sdk_read_one_post_set_output:
+          code: rm.customSetOutput(&resource{ko})  
+        sdk_delete_pre_build_request:
+          template_path: common/sdk_delete_pre_build_request.go.tpl
+        sdk_delete_post_request:
+          template_path: common/sdk_delete_post_request.go.tpl
 ignore:
     resource_names:
       - Algorithm
@@ -596,7 +653,7 @@ ignore:
       # - EndpointConfig
       # - Endpoint
       - Experiment
-      - FeatureGroup
+      # - FeatureGroup
       - FlowDefinition
       - HumanTaskUi
       # - HyperParameterTuningJob

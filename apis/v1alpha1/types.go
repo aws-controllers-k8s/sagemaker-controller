@@ -269,9 +269,10 @@ type Channel struct {
 
 // Defines a named input source, called a channel, to be used by an algorithm.
 type ChannelSpecification struct {
-	Description *string `json:"description,omitempty"`
-	IsRequired  *bool   `json:"isRequired,omitempty"`
-	Name        *string `json:"name,omitempty"`
+	Description           *string   `json:"description,omitempty"`
+	IsRequired            *bool     `json:"isRequired,omitempty"`
+	Name                  *string   `json:"name,omitempty"`
+	SupportedContentTypes []*string `json:"supportedContentTypes,omitempty"`
 }
 
 // Contains information about the output location for managed spot training
@@ -625,15 +626,11 @@ type Explainability struct {
 	Report *MetricsSource `json:"report,omitempty"`
 }
 
-// Amazon SageMaker Feature Store stores features in a collection called Feature
-// Group. A Feature Group can be visualized as a table which has rows, with
-// a unique identifier for each row where each column in the table is a feature.
-// In principle, a Feature Group is composed of features and values per features.
-type FeatureGroup struct {
-	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
-	FailureReason    *string      `json:"failureReason,omitempty"`
-	FeatureGroupName *string      `json:"featureGroupName,omitempty"`
-	RoleARN          *string      `json:"roleARN,omitempty"`
+// A list of features. You must include FeatureName and FeatureType. Valid feature
+// FeatureTypes are Integral, Fractional and String.
+type FeatureDefinition struct {
+	FeatureName *string `json:"featureName,omitempty"`
+	FeatureType *string `json:"featureType,omitempty"`
 }
 
 // The name, Arn, CreationTime, FeatureGroup values, LastUpdatedTime and EnableOnlineStorage
@@ -1150,27 +1147,6 @@ type ModelPackageGroup_SDK struct {
 type ModelPackageStatusDetails struct {
 	ImageScanStatuses  []*ModelPackageStatusItem `json:"imageScanStatuses,omitempty"`
 	ValidationStatuses []*ModelPackageStatusItem `json:"validationStatuses,omitempty"`
-}
-
-// Summary information about a model group.
-type ModelPackageGroupSummary struct {
-	CreationTime                 *metav1.Time `json:"creationTime,omitempty"`
-	ModelPackageGroupARN         *string      `json:"modelPackageGroupARN,omitempty"`
-	ModelPackageGroupDescription *string      `json:"modelPackageGroupDescription,omitempty"`
-	ModelPackageGroupName        *string      `json:"modelPackageGroupName,omitempty"`
-	ModelPackageGroupStatus      *string      `json:"modelPackageGroupStatus,omitempty"`
-}
-
-// A group of versioned models in the model registry.
-type ModelPackageGroup_SDK struct {
-	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
-	CreatedBy                    *UserContext `json:"createdBy,omitempty"`
-	CreationTime                 *metav1.Time `json:"creationTime,omitempty"`
-	ModelPackageGroupARN         *string      `json:"modelPackageGroupARN,omitempty"`
-	ModelPackageGroupDescription *string      `json:"modelPackageGroupDescription,omitempty"`
-	ModelPackageGroupName        *string      `json:"modelPackageGroupName,omitempty"`
-	ModelPackageGroupStatus      *string      `json:"modelPackageGroupStatus,omitempty"`
 }
 
 // Represents the overall status of a model package.

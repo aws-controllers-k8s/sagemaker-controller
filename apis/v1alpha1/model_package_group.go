@@ -42,11 +42,14 @@ type ModelPackageGroupStatus struct {
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	// The status of the model group.
+	ModelPackageGroupStatus *string `json:"modelPackageGroupStatus,omitempty"`
 }
 
 // ModelPackageGroup is the Schema for the ModelPackageGroups API
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="STATUS",type=string,priority=0,JSONPath=`.status.modelPackageGroupStatus`
 type ModelPackageGroup struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

@@ -200,7 +200,7 @@ func (rm *resourceManager) sdkUpdate(
 func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
-) (err error) {
+) (latest *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
@@ -209,9 +209,11 @@ func (rm *resourceManager) sdkDelete(
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = rm.sdkapi.DeleteModelPackageGroupWithContext(ctx, input)
+	var resp *svcsdk.DeleteModelPackageGroupOutput
+	_ = resp
+	resp, err = rm.sdkapi.DeleteModelPackageGroupWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteModelPackageGroup", err)
 	if err == nil {
 		if _, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
@@ -221,7 +223,7 @@ func (rm *resourceManager) sdkDelete(
 			return requeueWaitWhileDeleting
 		}
 	}
-	return err
+	return nil, err
 }
 
 // newDeleteRequestPayload returns an SDK-specific struct for the HTTP request
@@ -349,7 +351,8 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 		"MalformedQueryString",
 		"InvalidAction",
 		"UnrecognizedClientException",
-		"ConflictException":
+		"ConflictException",
+		"UnrecognizedClientException":
 		return true
 	default:
 		return false

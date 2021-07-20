@@ -961,7 +961,7 @@ func (rm *resourceManager) newUpdateRequestPayload(
 func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
-) (err error) {
+) (latest *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
@@ -977,7 +977,7 @@ func (rm *resourceManager) sdkDelete(
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if input.ModelPackageName == nil {
 		if r.ko.Status.ACKResourceMetadata != nil && r.ko.Status.ACKResourceMetadata.ARN != nil {
@@ -986,9 +986,11 @@ func (rm *resourceManager) sdkDelete(
 			return ackerr.NotFound
 		}
 	}
-	_, err = rm.sdkapi.DeleteModelPackageWithContext(ctx, input)
+	var resp *svcsdk.DeleteModelPackageOutput
+	_ = resp
+	resp, err = rm.sdkapi.DeleteModelPackageWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteModelPackage", err)
-	return err
+	return nil, err
 }
 
 // newDeleteRequestPayload returns an SDK-specific struct for the HTTP request
