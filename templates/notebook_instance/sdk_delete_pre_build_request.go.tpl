@@ -6,5 +6,8 @@ if isNotebookStopping(r){
 if isNotebookPending(r){
     return requeueWaitWhilePending
 }
+if isNotebookDeleting(r){
+    return requeueWaitWhilePending
+}
 
-rm.customDelete(r)
+rm.customPreDelete(r)

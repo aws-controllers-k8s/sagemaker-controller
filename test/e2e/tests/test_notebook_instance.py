@@ -105,7 +105,7 @@ class TestNotebookInstance:
         == self._wait_resource_notebook_status(reference,expected_status,wait_periods=60,period_length=15)
         == expected_status
         )
-    def testCreateUpdateAndDelete(self,notebook_instance):
+    def testCreateAndDelete(self,notebook_instance):
         (reference, resource, spec) = notebook_instance
         assert k8s.get_resource_exists(reference)
 

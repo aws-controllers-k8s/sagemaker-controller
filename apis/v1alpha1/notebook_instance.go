@@ -112,6 +112,9 @@ type NotebookInstanceStatus struct {
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
 	// The status of the notebook instance.
 	NotebookInstanceStatus *string `json:"notebookInstanceStatus,omitempty"`
+	// The URL that you use to connect to the Jupyter notebook that is running in
+	// your notebook instance.
+	NotebookInstanceURL *string `json:"notebookInstanceURL,omitempty"`
 }
 
 // NotebookInstance is the Schema for the NotebookInstances API

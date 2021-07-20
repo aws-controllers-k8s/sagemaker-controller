@@ -9,13 +9,13 @@ import (
 
 func (rm *resourceManager) customSetOutput(
 	notebookInstanceStatus *string, ko *svcapitypes.NotebookInstance) {
+
 	if notebookInstanceStatus == nil {
 		return
 	}
-
 	pendingReason := "Notebook is currenty starting"
-
-	if *notebookInstanceStatus == svcsdk.NotebookInstanceStatusDeleting || *notebookInstanceStatus == svcsdk.NotebookInstanceStatusFailed || *notebookInstanceStatus == svcsdk.NotebookInstanceStatusInService || *notebookInstanceStatus == svcsdk.NotebookInstanceStatusStopped {
+	if *notebookInstanceStatus == svcsdk.NotebookInstanceStatusDeleting || *notebookInstanceStatus == svcsdk.NotebookInstanceStatusFailed ||
+		*notebookInstanceStatus == svcsdk.NotebookInstanceStatusInService || *notebookInstanceStatus == svcsdk.NotebookInstanceStatusStopped {
 		ackcond.SetSynced(&resource{ko}, corev1.ConditionTrue, nil, nil)
 
 	} else if *notebookInstanceStatus == svcsdk.NotebookInstanceStatusPending {
@@ -23,7 +23,6 @@ func (rm *resourceManager) customSetOutput(
 	} else {
 		ackcond.SetSynced(&resource{ko}, corev1.ConditionFalse, nil, nil)
 	}
-
 }
 
 func (rm *resourceManager) customSetOutputDescribe(r *resource,

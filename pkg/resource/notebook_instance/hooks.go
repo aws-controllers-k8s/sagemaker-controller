@@ -17,6 +17,10 @@ var (
 		errors.New("NotebookInstance in 'Pending' state, cannot be modified or deleted"),
 		10*time.Second,
 	)
+	requeueWaitWhileDeleting = ackrequeue.NeededAfter(
+		errors.New("NotebookInstance in 'Deleting' state, cannot be modified or deleted"),
+		10*time.Second,
+	)
 )
 
 func isNotebookStopping(r *resource) bool {
@@ -35,4 +39,13 @@ func isNotebookPending(r *resource) bool {
 	notebookInstanceStatus := r.ko.Status.NotebookInstanceStatus
 
 	return *notebookInstanceStatus == svcsdk.NotebookInstanceStatusPending
+}
+
+func isNotebookDeleting(r *resource) bool {
+	if r.ko.Status.NotebookInstanceStatus == nil {
+		return false
+	}
+	notebookInstanceStatus := r.ko.Status.NotebookInstanceStatus
+
+	return *notebookInstanceStatus == svcsdk.NotebookInstanceStatusDeleting
 }

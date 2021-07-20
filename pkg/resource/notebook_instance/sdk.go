@@ -392,7 +392,7 @@ func (rm *resourceManager) sdkDelete(
 		return requeueWaitWhilePending
 	}
 
-	rm.customDelete(r)
+	rm.customPreDelete(r)
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
 		return err
@@ -527,8 +527,7 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 		"InvalidQueryParameter",
 		"MalformedQueryString",
 		"InvalidAction",
-		"UnrecognizedClientException",
-		"VolumeModificationRateExceeded":
+		"UnrecognizedClientException":
 		return true
 	default:
 		return false
