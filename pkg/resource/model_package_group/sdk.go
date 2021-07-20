@@ -93,8 +93,14 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.ModelPackageGroupName = nil
 	}
+	if resp.ModelPackageGroupStatus != nil {
+		ko.Status.ModelPackageGroupStatus = resp.ModelPackageGroupStatus
+	} else {
+		ko.Status.ModelPackageGroupStatus = nil
+	}
 
 	rm.setStatusDefaults(ko)
+	rm.customSetOutput(&resource{ko})
 	return &resource{ko}, nil
 }
 
@@ -198,12 +204,23 @@ func (rm *resourceManager) sdkDelete(
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
+	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
+		return err
+	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
 		return err
 	}
 	_, err = rm.sdkapi.DeleteModelPackageGroupWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteModelPackageGroup", err)
+	if err == nil {
+		if _, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
+			if err != nil {
+				return err
+			}
+			return requeueWaitWhileDeleting
+		}
+	}
 	return err
 }
 

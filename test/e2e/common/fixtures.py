@@ -14,7 +14,7 @@
 """
 
 import pytest
-
+import logging
 from e2e import (
     create_sagemaker_resource,
     wait_sagemaker_endpoint_status,
@@ -51,6 +51,10 @@ def xgboost_churn_endpoint(sagemaker_client):
         replacements=replacements,
     )
     assert model_resource is not None
+    if k8s.get_resource_arn(model_resource) is None:
+        logging.debug(
+            f"ARN for this resource is None, resource status is: {model_resource['status']}"
+        )
     assert k8s.get_resource_arn(model_resource) is not None
 
     (
@@ -64,6 +68,10 @@ def xgboost_churn_endpoint(sagemaker_client):
         replacements=replacements,
     )
     assert endpoint_config_resource is not None
+    if k8s.get_resource_arn(endpoint_config_resource) is None:
+        logging.debug(
+            f"ARN for this resource is None, resource status is: {endpoint_config_resource['status']}"
+        )
     assert k8s.get_resource_arn(endpoint_config_resource) is not None
 
     endpoint_reference, endpoint_spec, endpoint_resource = create_sagemaker_resource(
@@ -73,6 +81,10 @@ def xgboost_churn_endpoint(sagemaker_client):
         replacements=replacements,
     )
     assert endpoint_resource is not None
+    if k8s.get_resource_arn(endpoint_resource) is None:
+        logging.debug(
+            f"ARN for this resource is None, resource status is: {endpoint_resource['status']}"
+        )
     assert k8s.get_resource_arn(endpoint_resource) is not None
     wait_sagemaker_endpoint_status(replacements["ENDPOINT_NAME"], "InService")
 

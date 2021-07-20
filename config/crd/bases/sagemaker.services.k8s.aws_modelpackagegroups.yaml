@@ -16,7 +16,11 @@ spec:
     singular: modelpackagegroup
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .status.modelPackageGroupStatus
+      name: STATUS
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: ModelPackageGroup is the Schema for the ModelPackageGroups API
@@ -105,6 +109,9 @@ spec:
                   - type
                   type: object
                 type: array
+              modelPackageGroupStatus:
+                description: The status of the model group.
+                type: string
             required:
             - ackResourceMetadata
             - conditions

@@ -269,10 +269,9 @@ type Channel struct {
 
 // Defines a named input source, called a channel, to be used by an algorithm.
 type ChannelSpecification struct {
-	Description           *string   `json:"description,omitempty"`
-	IsRequired            *bool     `json:"isRequired,omitempty"`
-	Name                  *string   `json:"name,omitempty"`
-	SupportedContentTypes []*string `json:"supportedContentTypes,omitempty"`
+	Description *string `json:"description,omitempty"`
+	IsRequired  *bool   `json:"isRequired,omitempty"`
+	Name        *string `json:"name,omitempty"`
 }
 
 // Contains information about the output location for managed spot training
@@ -354,6 +353,13 @@ type DataCaptureConfigSummary struct {
 	DestinationS3URI          *string `json:"destinationS3URI,omitempty"`
 	EnableCapture             *bool   `json:"enableCapture,omitempty"`
 	KMSKeyID                  *string `json:"kmsKeyID,omitempty"`
+}
+
+// The meta data of the Glue table which serves as data catalog for the OfflineStore.
+type DataCatalogConfig struct {
+	Catalog   *string `json:"catalog,omitempty"`
+	Database  *string `json:"database,omitempty"`
+	TableName *string `json:"tableName,omitempty"`
 }
 
 // The data structure used to specify the data to be used for inference in a
@@ -633,8 +639,43 @@ type FeatureGroup struct {
 // The name, Arn, CreationTime, FeatureGroup values, LastUpdatedTime and EnableOnlineStorage
 // status of a FeatureGroup.
 type FeatureGroupSummary struct {
-	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
-	FeatureGroupName *string      `json:"featureGroupName,omitempty"`
+	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
+	FeatureGroupARN    *string      `json:"featureGroupARN,omitempty"`
+	FeatureGroupName   *string      `json:"featureGroupName,omitempty"`
+	FeatureGroupStatus *string      `json:"featureGroupStatus,omitempty"`
+	// The status of OfflineStore.
+	OfflineStoreStatus *OfflineStoreStatus `json:"offlineStoreStatus,omitempty"`
+}
+
+// Amazon SageMaker Feature Store stores features in a collection called Feature
+// Group. A Feature Group can be visualized as a table which has rows, with
+// a unique identifier for each row where each column in the table is a feature.
+// In principle, a Feature Group is composed of features and values per features.
+type FeatureGroup_SDK struct {
+	CreationTime         *metav1.Time         `json:"creationTime,omitempty"`
+	Description          *string              `json:"description,omitempty"`
+	EventTimeFeatureName *string              `json:"eventTimeFeatureName,omitempty"`
+	FailureReason        *string              `json:"failureReason,omitempty"`
+	FeatureDefinitions   []*FeatureDefinition `json:"featureDefinitions,omitempty"`
+	FeatureGroupARN      *string              `json:"featureGroupARN,omitempty"`
+	FeatureGroupName     *string              `json:"featureGroupName,omitempty"`
+	FeatureGroupStatus   *string              `json:"featureGroupStatus,omitempty"`
+	// The configuration of an OfflineStore.
+	//
+	// Provide an OfflineStoreConfig in a request to CreateFeatureGroup to create
+	// an OfflineStore.
+	//
+	// To encrypt an OfflineStore using at rest data encryption, specify AWS Key
+	// Management Service (KMS) key ID, or KMSKeyId, in S3StorageConfig.
+	OfflineStoreConfig *OfflineStoreConfig `json:"offlineStoreConfig,omitempty"`
+	// The status of OfflineStore.
+	OfflineStoreStatus *OfflineStoreStatus `json:"offlineStoreStatus,omitempty"`
+	// Use this to specify the AWS Key Management Service (KMS) Key ID, or KMSKeyId,
+	// for at rest data encryption. You can turn OnlineStore on or off by specifying
+	// the EnableOnlineStore flag at General Assembly; the default value is False.
+	OnlineStoreConfig           *OnlineStoreConfig `json:"onlineStoreConfig,omitempty"`
+	RecordIdentifierFeatureName *string            `json:"recordIdentifierFeatureName,omitempty"`
+	RoleARN                     *string            `json:"roleARN,omitempty"`
 }
 
 // Specifies a file system data source for a channel.
@@ -1111,6 +1152,27 @@ type ModelPackageStatusDetails struct {
 	ValidationStatuses []*ModelPackageStatusItem `json:"validationStatuses,omitempty"`
 }
 
+// Summary information about a model group.
+type ModelPackageGroupSummary struct {
+	CreationTime                 *metav1.Time `json:"creationTime,omitempty"`
+	ModelPackageGroupARN         *string      `json:"modelPackageGroupARN,omitempty"`
+	ModelPackageGroupDescription *string      `json:"modelPackageGroupDescription,omitempty"`
+	ModelPackageGroupName        *string      `json:"modelPackageGroupName,omitempty"`
+	ModelPackageGroupStatus      *string      `json:"modelPackageGroupStatus,omitempty"`
+}
+
+// A group of versioned models in the model registry.
+type ModelPackageGroup_SDK struct {
+	// Information about the user who created or modified an experiment, trial,
+	// or trial component.
+	CreatedBy                    *UserContext `json:"createdBy,omitempty"`
+	CreationTime                 *metav1.Time `json:"creationTime,omitempty"`
+	ModelPackageGroupARN         *string      `json:"modelPackageGroupARN,omitempty"`
+	ModelPackageGroupDescription *string      `json:"modelPackageGroupDescription,omitempty"`
+	ModelPackageGroupName        *string      `json:"modelPackageGroupName,omitempty"`
+	ModelPackageGroupStatus      *string      `json:"modelPackageGroupStatus,omitempty"`
+}
+
 // Represents the overall status of a model package.
 type ModelPackageStatusItem struct {
 	FailureReason *string `json:"failureReason,omitempty"`
@@ -1452,7 +1514,18 @@ type ObjectiveStatusCounters struct {
 // To encrypt an OfflineStore using at rest data encryption, specify AWS Key
 // Management Service (KMS) key ID, or KMSKeyId, in S3StorageConfig.
 type OfflineStoreConfig struct {
-	DisableGlueTableCreation *bool `json:"disableGlueTableCreation,omitempty"`
+	// The meta data of the Glue table which serves as data catalog for the OfflineStore.
+	DataCatalogConfig        *DataCatalogConfig `json:"dataCatalogConfig,omitempty"`
+	DisableGlueTableCreation *bool              `json:"disableGlueTableCreation,omitempty"`
+	// The Amazon Simple Storage (Amazon S3) location and and security configuration
+	// for OfflineStore.
+	S3StorageConfig *S3StorageConfig `json:"s3StorageConfig,omitempty"`
+}
+
+// The status of OfflineStore.
+type OfflineStoreStatus struct {
+	BlockedReason *string `json:"blockedReason,omitempty"`
+	Status        *string `json:"status,omitempty"`
 }
 
 // Use this to specify the AWS Key Management Service (KMS) Key ID, or KMSKeyId,
@@ -1460,6 +1533,8 @@ type OfflineStoreConfig struct {
 // the EnableOnlineStore flag at General Assembly; the default value is False.
 type OnlineStoreConfig struct {
 	EnableOnlineStore *bool `json:"enableOnlineStore,omitempty"`
+	// The security configuration for OnlineStore.
+	SecurityConfig *OnlineStoreSecurityConfig `json:"securityConfig,omitempty"`
 }
 
 // The security configuration for OnlineStore.

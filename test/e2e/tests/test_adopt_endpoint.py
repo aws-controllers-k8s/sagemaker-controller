@@ -123,7 +123,6 @@ def adopted_endpoint(sdk_endpoint):
     (model_input, _, endpoint_config_input, _, endpoint_input, _) = sdk_endpoint
 
     replacements = REPLACEMENT_VALUES.copy()
-
     # adopt model
     replacements["ADOPTED_RESOURCE_NAME"] = "adopt-" + model_input["ModelName"]
     replacements["TARGET_RESOURCE_AWS"] = replacements[
@@ -260,8 +259,6 @@ class TestAdoptedEndpoint:
         )
 
         assert_endpoint_status_in_sync(
-            endpoint_name,
-            endpoint_reference,
-            cfg.ENDPOINT_STATUS_INSERVICE,
+            endpoint_name, endpoint_reference, cfg.ENDPOINT_STATUS_INSERVICE,
         )
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "True")
