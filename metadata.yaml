@@ -1,0 +1,8 @@
+service:
+  full_name: "Amazon SageMaker"
+  short_name: "SageMaker"
+  link: "https://aws.amazon.com/sagemaker/"
+  documentation: "https://docs.aws.amazon.com/sagemaker/latest/dg/what-is.html"
+api_versions:
+  - api_version: v1alpha1
+    status: available
