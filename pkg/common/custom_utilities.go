@@ -13,27 +13,17 @@
 
 package common
 
-import (
-	"errors"
-	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
-)
-
-// ACKRequeueIfModifying creates and returns an
-// ackrequeue if a resource's latest status matches
-// one of the provided modifying statuses.
-func ACKRequeueIfModifying(
+// IsModifyingStatus returns true if a
+// resource's latest status matches one
+// of the provided modifying statuses.
+func IsModifyingStatus(
 	latestStatus *string,
-	resourceName *string,
 	modifyingStatuses *[]string,
-) error {
-	if !IsModifyingStatus(latestStatus, modifyingStatuses) {
-		return nil
+) bool {
+	for _, status := range *modifyingStatuses {
+		if *latestStatus == status {
+			return true
+		}
 	}
-
-	errMsg := *resourceName + " in " + *latestStatus + " state cannot be modified or deleted."
-	requeueWaitWhileModifying := ackrequeue.NeededAfter(
-		errors.New(errMsg),
-		ackrequeue.DefaultRequeueAfterDuration,
-	)
-	return requeueWaitWhileModifying
+	return false
 }

@@ -30,6 +30,7 @@ var (
 		ackrequeue.DefaultRequeueAfterDuration,
 	)
 )
+var resourceName = "Model package group"
 
 var modifyingStatuses = []string{svcsdk.ModelPackageGroupStatusInProgress,
 	svcsdk.ModelPackageGroupStatusPending,
@@ -56,6 +57,5 @@ func (rm *resourceManager) requeueUntilCanModify(
 	r *resource,
 ) error {
 	latestStatus := r.ko.Status.ModelPackageGroupStatus
-	resourceName := "Model package group"
 	return customShared.ACKRequeueIfModifying(latestStatus, &resourceName, &modifyingStatuses)
 }
