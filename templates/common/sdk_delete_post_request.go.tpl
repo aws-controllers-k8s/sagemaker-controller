@@ -3,6 +3,6 @@
                 if err != nil {
                     return nil, err
                 }
-                return nil, requeueWaitWhileDeleting
+                return r, requeueWaitWhileDeleting
             }
     }

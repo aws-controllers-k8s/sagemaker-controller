@@ -1666,7 +1666,7 @@ func (rm *resourceManager) sdkDelete(
 	// resource Unmanaged
 	latestStatus := r.ko.Status.HyperParameterTuningJobStatus
 	if latestStatus != nil && *latestStatus != svcsdk.HyperParameterTuningJobStatusInProgress {
-		return nil, err
+		return r, err
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {

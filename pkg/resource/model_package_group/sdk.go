@@ -219,7 +219,7 @@ func (rm *resourceManager) sdkDelete(
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
 	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
-		return nil, err
+		return r, err
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
@@ -234,7 +234,7 @@ func (rm *resourceManager) sdkDelete(
 			if err != nil {
 				return nil, err
 			}
-			return nil, requeueWaitWhileDeleting
+			return r, requeueWaitWhileDeleting
 		}
 	}
 	return nil, err
