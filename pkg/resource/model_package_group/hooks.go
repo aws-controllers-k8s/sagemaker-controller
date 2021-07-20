@@ -19,6 +19,7 @@ import (
 
 	ackcondition "github.com/aws-controllers-k8s/runtime/pkg/condition"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
+	customShared "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 	corev1 "k8s.io/api/core/v1"
 )
@@ -30,45 +31,31 @@ var (
 	)
 )
 
+var modifyingStatuses = []string{svcsdk.ModelPackageGroupStatusInProgress,
+	svcsdk.ModelPackageGroupStatusPending,
+	svcsdk.ModelPackageGroupStatusDeleting}
+
 func (rm *resourceManager) customSetOutput(r *resource) {
 	if r.ko.Status.ModelPackageGroupStatus == nil {
 		return
 	}
 	ModelPackageGroupStatus := *r.ko.Status.ModelPackageGroupStatus
 	msg := "ModelPackageGroup is in" + ModelPackageGroupStatus + "status"
-	if !isModifiying(r) {
+	if !customShared.IsModifyingStatus(&ModelPackageGroupStatus, &modifyingStatuses) {
 		ackcondition.SetSynced(r, corev1.ConditionTrue, &msg, nil)
 	} else {
 		ackcondition.SetSynced(r, corev1.ConditionFalse, &msg, nil)
 	}
 }
 
-func (rm *resourceManager) requeueUntilCanModify(ctx context.Context,
-	latest *resource,
+// requeueUntilCanModify creates and returns an
+// ackrequeue error if a resource's latest status matches
+// any of the defined modifying statuses below.
+func (rm *resourceManager) requeueUntilCanModify(
+	ctx context.Context,
+	r *resource,
 ) error {
-	if latest.ko.Status.ModelPackageGroupStatus == nil {
-		return nil
-	}
-	ModelPackageGroupStatus := *latest.ko.Status.ModelPackageGroupStatus
-	if isModifiying(latest) {
-		errMsg := "ModelPackageGroup in" + ModelPackageGroupStatus + "state cannot be modified or deleted"
-		requeueWaitWhileModifying := ackrequeue.NeededAfter(
-			errors.New(errMsg),
-			ackrequeue.DefaultRequeueAfterDuration,
-		)
-		return requeueWaitWhileModifying
-	}
-	return nil
-}
-
-func isModifiying(r *resource) bool {
-	if r == nil || r.ko.Status.ModelPackageGroupStatus == nil {
-		return false
-	}
-	ModelPackageGroupStatus := *r.ko.Status.ModelPackageGroupStatus
-
-	if ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusInProgress) || ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusPending) || ModelPackageGroupStatus == string(svcsdk.ModelPackageGroupStatusDeleting) {
-		return true
-	}
-	return false
+	latestStatus := r.ko.Status.ModelPackageGroupStatus
+	resourceName := "Model package group"
+	return customShared.ACKRequeueIfModifying(latestStatus, &resourceName, &modifyingStatuses)
 }

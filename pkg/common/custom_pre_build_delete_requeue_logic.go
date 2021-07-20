@@ -26,7 +26,7 @@ func ACKRequeueIfModifying(
 	resourceName *string,
 	modifyingStatuses *[]string,
 ) error {
-	if !isModifyingStatus(latestStatus, modifyingStatuses) {
+	if !IsModifyingStatus(latestStatus, modifyingStatuses) {
 		return nil
 	}
 
@@ -38,10 +38,10 @@ func ACKRequeueIfModifying(
 	return requeueWaitWhileModifying
 }
 
-// isModifyingStatus returns true if a
+// IsModifyingStatus returns true if a
 // resource's latest status matches one
 // of the provided modifying statuses.
-func isModifyingStatus(
+func IsModifyingStatus(
 	latestStatus *string,
 	modifyingStatuses *[]string,
 ) bool {

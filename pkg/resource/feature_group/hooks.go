@@ -37,6 +37,7 @@ func (rm *resourceManager) requeueUntilCanModify(
 ) error {
 	latestStatus := r.ko.Status.FeatureGroupStatus
 	resourceName := "Feature group"
-	modifyingStatuses := []string{svcsdk.FeatureGroupStatusCreating, svcsdk.FeatureGroupStatusDeleting}
+	modifyingStatuses := []string{svcsdk.FeatureGroupStatusCreating,
+		svcsdk.FeatureGroupStatusDeleting}
 	return customShared.ACKRequeueIfModifying(latestStatus, &resourceName, &modifyingStatuses)
 }
