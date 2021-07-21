@@ -32,7 +32,64 @@ from e2e.common import config as cfg
 
 RESOURCE_PLURAL = "modelpackages"
 
+@pytest.fixture(scope="function")
+def xgboost_model_package_group():
+    resource_name = random_suffix_name("xgboost-model-package-group", 32)
 
+    replacements = REPLACEMENT_VALUES.copy()
+    replacements["MODEL_PACKAGE_GROUP_NAME"] = resource_name
+
+    (
+        model_package_group_reference,
+        model_package_group_spec,
+        model_package_group_resource,
+    ) = create_sagemaker_resource(
+        resource_plural=cfg.MODEL_PACKAGE_GROUP_RESOURCE_PLURAL,
+        resource_name=resource_name,
+        spec_file="xgboost_model_package_group",
+        replacements=replacements,
+    )
+    assert model_package_group_resource is not None
+
+    yield (model_package_group_reference, model_package_group_resource)
+
+    # Delete the k8s resource if not already deleted by tests
+    if k8s.get_resource_exists(model_package_group_reference):
+        _, deleted = k8s.delete_custom_resource(model_package_group_reference, 3, 10)
+        assert deleted
+
+
+@pytest.fixture(scope="function")
+def xgboost_versioned_model_package(xgboost_model_package_group):
+    resource_name = random_suffix_name("xgboost-versioned-model-package", 38)
+    (_, model_package_group_resource) = xgboost_model_package_group
+    print(model_package_group_resource)
+    model_package_group_resource_name = model_package_group_resource["spec"].get(
+        "modelPackageGroupName", None
+    )
+
+    replacements = REPLACEMENT_VALUES.copy()
+    replacements["MODEL_PACKAGE_GROUP_NAME"] = model_package_group_resource_name
+    replacements["MODEL_PACKAGE_RESOURCE_NAME"] = resource_name
+    reference, spec, resource = create_sagemaker_resource(
+        resource_plural=RESOURCE_PLURAL,
+        resource_name=resource_name,
+        spec_file="xgboost_versioned_model_package",
+        replacements=replacements,
+    )
+    assert resource is not None
+    if k8s.get_resource_arn(resource) is None:
+        logging.debug(
+            f"ARN for this resource is None, resource status is: {resource['status']}"
+        )
+    assert k8s.get_resource_arn(resource) is not None
+    
+    yield (reference, spec, resource)
+    # Delete the k8s resource if not already deleted by tests
+    if k8s.get_resource_exists(reference):
+        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        assert deleted
+        
 @pytest.fixture(scope="function")
 def xgboost_unversioned_model_package():
     resource_name = random_suffix_name("xgboost-unversioned-model-package", 38)
@@ -46,6 +103,10 @@ def xgboost_unversioned_model_package():
     )
 
     assert resource is not None
+    if k8s.get_resource_arn(resource) is None:
+        logging.debug(
+            f"ARN for this resource is None, resource status is: {resource['status']}"
+        )
     assert k8s.get_resource_arn(resource) is not None
 
     yield (reference, resource)
@@ -142,6 +203,51 @@ class TestmodelPackage:
             model_package_name, reference, cfg.JOB_STATUS_COMPLETED
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+
+        # Check that you can delete a completed resource from k8s
+        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        assert deleted is True
+
+    def test_versioned_model_package_completed(self, xgboost_versioned_model_package):
+        (reference, spec, resource) = xgboost_versioned_model_package
+        assert k8s.get_resource_exists(reference)
+
+        if resource["spec"].get("modelPackageGroupName") is not None:
+            model_package_name = (
+                resource["status"].get("ackResourceMetadata", {}).get("arn", None)
+            )
+
+        model_package_desc = get_sagemaker_model_package(model_package_name)
+
+        assert k8s.get_resource_arn(resource) == model_package_desc["ModelPackageArn"]
+        assert model_package_desc["ModelPackageStatus"] == cfg.JOB_STATUS_INPROGRESS
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
+
+        self._assert_model_package_status_in_sync(
+            model_package_name, reference, cfg.JOB_STATUS_COMPLETED
+        )
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+
+        # Update the resource
+        new_model_approval_status = "Approved"
+        approval_description = "Approved modelpackage"
+        spec["spec"]["modelApprovalStatus"] = new_model_approval_status
+        spec["spec"]["approvalDescription"] = approval_description
+        resource = k8s.patch_custom_resource(reference, spec)
+        resource = k8s.wait_resource_consumed_by_controller(reference)
+        assert resource is not None
+
+        self._assert_model_package_status_in_sync(
+            model_package_name, reference, cfg.JOB_STATUS_COMPLETED
+        )
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+
+        latest_model_package_desc = get_sagemaker_model_package(model_package_name)
+        assert (
+            latest_model_package_desc["ModelApprovalStatus"]
+            == new_model_approval_status
+        )
+        assert latest_model_package_desc["ApprovalDescription"] == approval_description
 
         # Check that you can delete a completed resource from k8s
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)

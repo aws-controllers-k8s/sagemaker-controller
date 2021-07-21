@@ -740,7 +740,7 @@ func (rm *resourceManager) sdkDelete(
 	// resource Unmanaged
 	latestStatus := r.ko.Status.ProcessingJobStatus
 	if latestStatus != nil && *latestStatus != svcsdk.ProcessingJobStatusInProgress {
-		return nil
+		return nil, nil
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {

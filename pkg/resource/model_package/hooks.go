@@ -14,96 +14,61 @@
 package model_package
 
 import (
+	"context"
 	"errors"
-	"time"
 
+	ackcondition "github.com/aws-controllers-k8s/runtime/pkg/condition"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
-	"github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
+	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 	corev1 "k8s.io/api/core/v1"
 )
 
 var (
-	ErrModelPackageDeleting   = errors.New("ModelPackage in 'DELETING' state, cannot be modified or deleted")
-	ErrModelPackagePending    = errors.New("ModelPackage in 'PENDING' state, cannot be modified or deleted")
-	ErrModelPackageInProgress = errors.New("ModelPackage in 'INPROGRESS' state, cannot be modified or deleted")
-)
-
-var (
-	// TerminalStatuses are the status strings that are terminal states for a
-	// SageMaker ModelPackage
-	TerminalStatuses = []v1alpha1.ModelPackageStatus_SDK{
-		v1alpha1.ModelPackageStatus_SDK_Deleting,
-	}
-)
-
-var (
 	requeueWaitWhileDeleting = ackrequeue.NeededAfter(
-		ErrModelPackageDeleting,
-		5*time.Second,
-	)
-	requeueWaitWhilePending = ackrequeue.NeededAfter(
-		ErrModelPackagePending,
-		5*time.Second,
-	)
-	requeueWaitWhileInProgress = ackrequeue.NeededAfter(
-		ErrModelPackageInProgress,
-		5*time.Second,
+		errors.New("ModelPackage is deleting"),
+		ackrequeue.DefaultRequeueAfterDuration,
 	)
 )
 
-// ModelPackageHasTerminalStatus returns whether the supplied SageMaker ModelPackage is in a
-// terminal state
-func ModelPackageHasTerminalStatus(r *resource) bool {
-	if r.ko.Status.ModelPackageStatus == nil {
-		return false
-	}
-	ts := *r.ko.Status.ModelPackageStatus
-	for _, s := range TerminalStatuses {
-		if ts == string(s) {
-			return true
-		}
-	}
-	return false
-}
-
-// isModelPackagePending returns true if the supplied SageMaker ModelPackage is in the process
-// of pending
-func isModelPackagePending(r *resource) bool {
-	if r.ko.Status.ModelPackageStatus == nil {
-		return false
-	}
-	dbis := *r.ko.Status.ModelPackageStatus
-	return dbis == string(v1alpha1.ModelPackageStatus_SDK_Pending)
-}
-
-// isModelPackageDeleting returns true if the supplied SageMaker ModelPackage is in the process
-// of being deleted
-func isModelPackageDeleting(r *resource) bool {
-	if r.ko.Status.ModelPackageStatus == nil {
-		return false
-	}
-	dbis := *r.ko.Status.ModelPackageStatus
-	return dbis == string(v1alpha1.ModelPackageStatus_SDK_Deleting)
-}
-
-// isModelPackageInProgress returns true if the supplied SageMaker ModelPackage is in the process
-// of being in progress
-func isModelPackageInProgress(r *resource) bool {
-	if r.ko.Status.ModelPackageStatus == nil {
-		return false
-	}
-	dbis := *r.ko.Status.ModelPackageStatus
-	return dbis == string(v1alpha1.ModelPackageStatus_SDK_InProgress)
-}
-
-func ModelPackageCustomSetOutput(r *resource) {
+func (rm *resourceManager) customSetOutput(r *resource) {
 	if r.ko.Status.ModelPackageStatus == nil {
 		return
 	}
-	sagemaker_status := *r.ko.Status.ModelPackageStatus
-	if sagemaker_status == string(v1alpha1.ModelPackageStatus_SDK_Completed) || sagemaker_status == string(v1alpha1.ModelPackageStatus_SDK_Failed) {
-		setSyncedCondition(r, corev1.ConditionTrue, nil, nil)
+	ModelPackageStatus := *r.ko.Status.ModelPackageStatus
+	msg := "ModelPackage is in" + ModelPackageStatus + "status"
+	if !isModifiying(r) {
+		ackcondition.SetSynced(r, corev1.ConditionTrue, &msg, nil)
 	} else {
-		setSyncedCondition(r, corev1.ConditionFalse, nil, nil)
+		ackcondition.SetSynced(r, corev1.ConditionFalse, &msg, nil)
 	}
+}
+
+func (rm *resourceManager) requeueUntilCanModify(ctx context.Context,
+	latest *resource,
+) error {
+	if latest.ko.Status.ModelPackageStatus == nil {
+		return nil
+	}
+	ModelPackageStatus := *latest.ko.Status.ModelPackageStatus
+	if isModifiying(latest) {
+		errMsg := "ModelPackage in" + ModelPackageStatus + "state cannot be modified or deleted"
+		requeueWaitWhileModifying := ackrequeue.NeededAfter(
+			errors.New(errMsg),
+			ackrequeue.DefaultRequeueAfterDuration,
+		)
+		return requeueWaitWhileModifying
+	}
+	return nil
+}
+
+func isModifiying(r *resource) bool {
+	if r == nil || r.ko.Status.ModelPackageStatus == nil {
+		return false
+	}
+	ModelPackageStatus := *r.ko.Status.ModelPackageStatus
+
+	if ModelPackageStatus == string(svcsdk.ModelPackageStatusInProgress) || ModelPackageStatus == string(svcsdk.ModelPackageStatusPending) || ModelPackageStatus == string(svcsdk.ModelPackageStatusDeleting) {
+		return true
+	}
+	return false
 }

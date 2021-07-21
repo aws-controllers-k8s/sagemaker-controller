@@ -478,17 +478,7 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
-	if isModelPackagePending(&resource{ko}) {
-		msg := "ModelPackage is currently pending"
-		setSyncedCondition(&resource{ko}, corev1.ConditionFalse, &msg, nil)
-		return &resource{ko}, requeueWaitWhilePending
-	}
-	if isModelPackageInProgress(&resource{ko}) {
-		msg := "ModelPackage is currently in progress"
-		setSyncedCondition(&resource{ko}, corev1.ConditionFalse, &msg, nil)
-		return &resource{ko}, requeueWaitWhileInProgress
-	}
-	ModelPackageCustomSetOutput(&resource{ko})
+	rm.customSetOutput(&resource{ko})
 	return &resource{ko}, nil
 }
 
@@ -885,26 +875,8 @@ func (rm *resourceManager) sdkUpdate(
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkUpdate")
 	defer exit(err)
-	if isModelPackageDeleting(latest) {
-		msg := "ModelPackage is currently being deleted"
-		setSyncedCondition(desired, corev1.ConditionFalse, &msg, nil)
-		return desired, requeueWaitWhileDeleting
-	}
-	if isModelPackagePending(latest) {
-		msg := "ModelPackage is currently pending"
-		setSyncedCondition(desired, corev1.ConditionFalse, &msg, nil)
-		return desired, requeueWaitWhilePending
-	}
-	if isModelPackageInProgress(latest) {
-		msg := "ModelPackage is currently in progress"
-		setSyncedCondition(desired, corev1.ConditionFalse, &msg, nil)
-		return desired, requeueWaitWhileInProgress
-	}
-	if ModelPackageHasTerminalStatus(latest) {
-		msg := "ModelPackage is in '" + *latest.ko.Status.ModelPackageStatus + "' status"
-		setTerminalCondition(desired, corev1.ConditionTrue, &msg, nil)
-		setSyncedCondition(desired, corev1.ConditionTrue, nil, nil)
-		return desired, nil
+	if err = rm.requeueUntilCanModify(ctx, latest); err != nil {
+		return nil, err
 	}
 	input, err := rm.newUpdateRequestPayload(ctx, desired)
 	if err != nil {
@@ -965,15 +937,8 @@ func (rm *resourceManager) sdkDelete(
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
-	if isModelPackageDeleting(r) {
-		msg := "ModelPackage is currently being deleted"
-		setSyncedCondition(r, corev1.ConditionFalse, &msg, nil)
-		return requeueWaitWhileDeleting
-	}
-	if isModelPackageInProgress(r) {
-		msg := "ModelPackage is currently in progress"
-		setSyncedCondition(r, corev1.ConditionFalse, &msg, nil)
-		return requeueWaitWhileInProgress
+	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
+		return nil, err
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
@@ -983,13 +948,21 @@ func (rm *resourceManager) sdkDelete(
 		if r.ko.Status.ACKResourceMetadata != nil && r.ko.Status.ACKResourceMetadata.ARN != nil {
 			input.SetModelPackageName(string(*r.ko.Status.ACKResourceMetadata.ARN))
 		} else {
-			return ackerr.NotFound
+			return nil, ackerr.NotFound
 		}
 	}
 	var resp *svcsdk.DeleteModelPackageOutput
 	_ = resp
 	resp, err = rm.sdkapi.DeleteModelPackageWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteModelPackage", err)
+	if err == nil {
+		if _, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
+			if err != nil {
+				return nil, err
+			}
+			return nil, requeueWaitWhileDeleting
+		}
+	}
 	return nil, err
 }
 

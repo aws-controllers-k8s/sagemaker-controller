@@ -205,7 +205,7 @@ func (rm *resourceManager) sdkDelete(
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
 	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
-		return err
+		return nil, err
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
@@ -218,9 +218,9 @@ func (rm *resourceManager) sdkDelete(
 	if err == nil {
 		if _, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
 			if err != nil {
-				return err
+				return nil, err
 			}
-			return requeueWaitWhileDeleting
+			return nil, requeueWaitWhileDeleting
 		}
 	}
 	return nil, err
@@ -351,8 +351,7 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 		"MalformedQueryString",
 		"InvalidAction",
 		"UnrecognizedClientException",
-		"ConflictException",
-		"UnrecognizedClientException":
+		"ConflictException":
 		return true
 	default:
 		return false
