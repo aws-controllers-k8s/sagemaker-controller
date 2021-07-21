@@ -61,6 +61,8 @@ func (rm *resourceManager) sdkFind(
 	if err != nil {
 		return nil, err
 	}
+	// If ModelPackageName not set after newCreateRequestPayload attempt to use ARN
+	// This is because versioned modelpackage uses ARN not name
 	if input.ModelPackageName == nil {
 		if r.ko.Status.ACKResourceMetadata != nil && r.ko.Status.ACKResourceMetadata.ARN != nil {
 			input.SetModelPackageName(string(*r.ko.Status.ACKResourceMetadata.ARN))
@@ -938,12 +940,14 @@ func (rm *resourceManager) sdkDelete(
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
 	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
-		return nil, err
+		return r, err
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
 		return nil, err
 	}
+	// If ModelPackageName not set after newDeleteRequestPayload attempt to use ARN
+	// This is because versioned modelpackage uses ARN not name
 	if input.ModelPackageName == nil {
 		if r.ko.Status.ACKResourceMetadata != nil && r.ko.Status.ACKResourceMetadata.ARN != nil {
 			input.SetModelPackageName(string(*r.ko.Status.ACKResourceMetadata.ARN))
@@ -956,11 +960,11 @@ func (rm *resourceManager) sdkDelete(
 	resp, err = rm.sdkapi.DeleteModelPackageWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteModelPackage", err)
 	if err == nil {
-		if _, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
+		if foundResource, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
 			if err != nil {
-				return nil, err
+				return foundResource, err
 			}
-			return nil, requeueWaitWhileDeleting
+			return foundResource, requeueWaitWhileDeleting
 		}
 	}
 	return nil, err

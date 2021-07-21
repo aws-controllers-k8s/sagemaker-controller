@@ -524,17 +524,19 @@ resources:
       delta_pre_compare:
         code: customSetDefaults(a, b)
       sdk_delete_pre_build_request:
-        template_path: model_package/sdk_delete_pre_build_request.go.tpl
+        template_path: common/sdk_delete_pre_build_request.go.tpl
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
+      sdk_delete_post_build_request:
+        template_path: model_package/sdk_delete_post_build_request.go.tpl
       sdk_read_one_post_set_output:
-        template_path: model_package/sdk_read_one_post_set_output.go.tpl
+        code: rm.customSetOutput(&resource{ko})
+      sdk_read_one_post_build_request:
+        template_path: model_package/sdk_read_one_post_build_request.go.tpl
       sdk_update_pre_build_request:
         template_path: model_package/sdk_update_pre_build_request.go.tpl
       sdk_custom_required_fields_missing:
         template_path: model_package/sdk_custom_required_fields_missing.go.tpl
-      sdk_read_one_post_build_request:
-        template_path: model_package/sdk_read_one_post_build_request.go.tpl
-      sdk_delete_post_build_request:
-        template_path: model_package/sdk_delete_post_build_request.go.tpl
     fields:
       ModelPackageStatus:
         is_read_only: true
@@ -619,7 +621,6 @@ resources:
           - InvalidAction
           - UnrecognizedClientException    
           - ConflictException   
-          - UnrecognizedClientException
       fields:
         ModelPackageGroupStatus:
           is_read_only: true
