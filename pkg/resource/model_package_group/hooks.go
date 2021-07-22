@@ -25,16 +25,17 @@ import (
 )
 
 var (
+	modifyingStatuses = []string{svcsdk.ModelPackageGroupStatusInProgress,
+		svcsdk.ModelPackageGroupStatusPending,
+		svcsdk.ModelPackageGroupStatusDeleting}
+
+	resourceName = "ModelPackageGroup"
+
 	requeueWaitWhileDeleting = ackrequeue.NeededAfter(
-		errors.New("ModelPackageGroup is deleting."),
+		errors.New(resourceName+" is deleting."),
 		ackrequeue.DefaultRequeueAfterDuration,
 	)
 )
-var resourceName = "ModelPackageGroup"
-
-var modifyingStatuses = []string{svcsdk.ModelPackageGroupStatusInProgress,
-	svcsdk.ModelPackageGroupStatusPending,
-	svcsdk.ModelPackageGroupStatusDeleting}
 
 func (rm *resourceManager) customSetOutput(r *resource) {
 	if r.ko.Status.ModelPackageGroupStatus == nil {
@@ -57,5 +58,5 @@ func (rm *resourceManager) requeueUntilCanModify(
 	r *resource,
 ) error {
 	latestStatus := r.ko.Status.ModelPackageGroupStatus
-	return svccommon.ACKRequeueIfModifying(latestStatus, &resourceName, &modifyingStatuses)
+	return svccommon.RequeueIfModifying(latestStatus, &resourceName, &modifyingStatuses)
 }

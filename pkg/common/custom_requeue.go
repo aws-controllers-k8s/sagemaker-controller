@@ -18,10 +18,10 @@ import (
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 )
 
-// ACKRequeueIfModifying creates and returns an
+// RequeueIfModifying creates and returns an
 // ackrequeue if a resource's latest status matches
 // one of the provided modifying statuses.
-func ACKRequeueIfModifying(
+func RequeueIfModifying(
 	latestStatus *string,
 	resourceName *string,
 	modifyingStatuses *[]string,

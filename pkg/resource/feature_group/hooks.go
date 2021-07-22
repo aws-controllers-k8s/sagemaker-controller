@@ -22,16 +22,16 @@ import (
 )
 
 var (
+	modifyingStatuses = []string{svcsdk.FeatureGroupStatusCreating,
+		svcsdk.FeatureGroupStatusDeleting}
+
+	resourceName = "FeatureGroup"
+
 	requeueWaitWhileDeleting = ackrequeue.NeededAfter(
-		errors.New("FeatureGroup is deleting."),
+		errors.New(resourceName+" is deleting."),
 		ackrequeue.DefaultRequeueAfterDuration,
 	)
 )
-
-var resourceName = "FeatureGroup"
-
-var modifyingStatuses = []string{svcsdk.FeatureGroupStatusCreating,
-	svcsdk.FeatureGroupStatusDeleting}
 
 // requeueUntilCanModify creates and returns an
 // ackrequeue error if a resource's latest status matches
@@ -41,5 +41,5 @@ func (rm *resourceManager) requeueUntilCanModify(
 	r *resource,
 ) error {
 	latestStatus := r.ko.Status.FeatureGroupStatus
-	return svccommon.ACKRequeueIfModifying(latestStatus, &resourceName, &modifyingStatuses)
+	return svccommon.RequeueIfModifying(latestStatus, &resourceName, &modifyingStatuses)
 }
