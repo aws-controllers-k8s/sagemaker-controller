@@ -19,18 +19,18 @@ import (
 
 	ackcondition "github.com/aws-controllers-k8s/runtime/pkg/condition"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
-	customShared "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
+	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 	corev1 "k8s.io/api/core/v1"
 )
 
 var (
 	requeueWaitWhileDeleting = ackrequeue.NeededAfter(
-		errors.New("ModelPackageGroup is deleting"),
+		errors.New("ModelPackageGroup is deleting."),
 		ackrequeue.DefaultRequeueAfterDuration,
 	)
 )
-var resourceName = "Model package group"
+var resourceName = "ModelPackageGroup"
 
 var modifyingStatuses = []string{svcsdk.ModelPackageGroupStatusInProgress,
 	svcsdk.ModelPackageGroupStatusPending,
@@ -42,7 +42,7 @@ func (rm *resourceManager) customSetOutput(r *resource) {
 	}
 	ModelPackageGroupStatus := *r.ko.Status.ModelPackageGroupStatus
 	msg := "ModelPackageGroup is in" + ModelPackageGroupStatus + "status"
-	if !customShared.IsModifyingStatus(&ModelPackageGroupStatus, &modifyingStatuses) {
+	if !svccommon.IsModifyingStatus(&ModelPackageGroupStatus, &modifyingStatuses) {
 		ackcondition.SetSynced(r, corev1.ConditionTrue, &msg, nil)
 	} else {
 		ackcondition.SetSynced(r, corev1.ConditionFalse, &msg, nil)
@@ -57,5 +57,5 @@ func (rm *resourceManager) requeueUntilCanModify(
 	r *resource,
 ) error {
 	latestStatus := r.ko.Status.ModelPackageGroupStatus
-	return customShared.ACKRequeueIfModifying(latestStatus, &resourceName, &modifyingStatuses)
+	return svccommon.ACKRequeueIfModifying(latestStatus, &resourceName, &modifyingStatuses)
 }
