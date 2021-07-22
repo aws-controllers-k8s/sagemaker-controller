@@ -616,5 +616,3 @@ ignore:
       - Workteam
     operations:
       - UpdateTrainingJob
-    shape_names:
-      # TagList

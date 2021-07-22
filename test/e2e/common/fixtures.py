@@ -55,7 +55,6 @@ def xgboost_churn_endpoint(sagemaker_client):
         logging.debug(
             f"ARN for this resource is None, resource status is: {model_resource['status']}"
         )
-
     assert k8s.get_resource_arn(model_resource) is not None
 
     (
