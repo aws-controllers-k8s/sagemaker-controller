@@ -16,6 +16,7 @@ import logging
 import time
 import boto3
 from pathlib import Path
+import random
 
 from acktest.k8s import resource as k8s
 
@@ -41,7 +42,11 @@ def create_sagemaker_resource(
     """
     Wrapper around k8s.load_and_create_resource to create a SageMaker resource
     """
-
+    # Add a random sleep to prevent throttling exception before the call to load and create
+    # This is because there may be many of the same resource ex: Multiple Models being created at the same time
+    # If this occurs then a throttling exception may occur and cause the tests to fail, this sleep prevents this from occurring.
+    rand = random.randrange(1, 4)
+    time.sleep(rand)
     reference, spec, resource = k8s.load_and_create_resource(
         resource_directory,
         CRD_GROUP,
