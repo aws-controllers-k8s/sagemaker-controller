@@ -17,16 +17,21 @@ import (
 	"context"
 	"errors"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
-	customShared "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
+	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 )
 
 var (
 	requeueWaitWhileDeleting = ackrequeue.NeededAfter(
-		errors.New("Still in the process of deleting."),
+		errors.New("FeatureGroup is deleting."),
 		ackrequeue.DefaultRequeueAfterDuration,
 	)
 )
+
+var resourceName = "FeatureGroup"
+
+var modifyingStatuses = []string{svcsdk.FeatureGroupStatusCreating,
+	svcsdk.FeatureGroupStatusDeleting}
 
 // requeueUntilCanModify creates and returns an
 // ackrequeue error if a resource's latest status matches
@@ -36,8 +41,5 @@ func (rm *resourceManager) requeueUntilCanModify(
 	r *resource,
 ) error {
 	latestStatus := r.ko.Status.FeatureGroupStatus
-	resourceName := "Feature group"
-	modifyingStatuses := []string{svcsdk.FeatureGroupStatusCreating,
-		svcsdk.FeatureGroupStatusDeleting}
-	return customShared.ACKRequeueIfModifying(latestStatus, &resourceName, &modifyingStatuses)
+	return svccommon.ACKRequeueIfModifying(latestStatus, &resourceName, &modifyingStatuses)
 }
