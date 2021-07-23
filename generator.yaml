@@ -80,7 +80,7 @@ resources:
   Endpoint:
     reconcile: 
       requeue_on_success_seconds: 30
-    update_conditions_custom_method_name: customUpdateConditions
+    update_conditions_custom_method_name: CustomUpdateConditions
     exceptions:
       errors:
         404:
@@ -440,7 +440,7 @@ resources:
   MonitoringSchedule:
     reconcile: 
       requeue_on_success_seconds: 30
-    update_conditions_custom_method_name: customUpdateConditions
+    update_conditions_custom_method_name: CustomUpdateConditions
     exceptions:
       errors:
           404:
@@ -565,6 +565,7 @@ resources:
           operation: UpdateModelPackage
           path: ApprovalDescription
   FeatureGroup:
+    update_conditions_custom_method_name: CustomUpdateConditions
     exceptions:
       errors:
           404:
@@ -589,6 +590,8 @@ resources:
         template_path: common/sdk_delete_pre_build_request.go.tpl
       sdk_delete_post_request:
         template_path: common/sdk_delete_post_request.go.tpl
+      sdk_read_one_post_set_output:
+        code: rm.customSetOutput(&resource{ko})
     fields:
       FailureReason:
         is_read_only: true
