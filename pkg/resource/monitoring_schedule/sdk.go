@@ -1071,7 +1071,7 @@ func (rm *resourceManager) updateConditions(
 		ko.Status.Conditions = append(ko.Status.Conditions, syncCondition)
 	}
 	// custom update conditions
-	customUpdate := rm.customUpdateConditions(ko, r, err)
+	customUpdate := rm.CustomUpdateConditions(ko, r, err)
 	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil || customUpdate {
 		return &resource{ko}, true // updated
 	}
