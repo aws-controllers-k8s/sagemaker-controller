@@ -360,12 +360,27 @@ func (rm *resourceManager) sdkDelete(
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
+
+	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
+		return err
+	}
+
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
 		return err
 	}
 	_, err = rm.sdkapi.DeleteFeatureGroupWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteFeatureGroup", err)
+
+	if err == nil {
+		if _, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
+			if err != nil {
+				return err
+			}
+			return requeueWaitWhileDeleting
+		}
+	}
+
 	return err
 }
 
