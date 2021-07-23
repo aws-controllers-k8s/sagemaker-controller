@@ -1,10 +1,10 @@
 apiVersion: sagemaker.services.k8s.aws/v1alpha1
 kind: NotebookInstanceLifecycleConfig
 metadata:
-  name: test47
+  name: test48
 spec:
-  notebookInstanceLifecycleConfigName: test47
+  notebookInstanceLifecycleConfigName: test48
   onStart:
     - content: cGlwIGluc3RhbGwgUElM
-  # onCreate:
-  #          - content: d2dldCBodHRwOi8vbWlycm9ycy5jdGFuLm9yZy9tYWNyb3MvbGF0ZXgvY29udHJpYi91cHF1b3RlLnppcA0KRU9G
+  onCreate:
+           - content: d2dldCBodHRwOi8vbWlycm9ycy5jdGFuLm9yZy9tYWNyb3MvbGF0ZXgvY29udHJpYi91cHF1b3RlLnppcA0KRU9G
