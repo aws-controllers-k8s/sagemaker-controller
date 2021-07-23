@@ -64,11 +64,11 @@ func (rm *resourceManager) sdkFind(
 	// If ModelPackageName not set after newCreateRequestPayload attempt to use ARN
 	// This is because versioned modelpackage uses ARN not name
 	if input.ModelPackageName == nil {
-		if r.ko.Status.ACKResourceMetadata != nil && r.ko.Status.ACKResourceMetadata.ARN != nil {
-			input.SetModelPackageName(string(*r.ko.Status.ACKResourceMetadata.ARN))
-		} else {
+		arn := r.Identifiers().ARN()
+		if arn == nil {
 			return nil, ackerr.NotFound
 		}
+		input.SetModelPackageName(string(*arn))
 	}
 
 	var resp *svcsdk.DescribeModelPackageOutput
@@ -942,6 +942,7 @@ func (rm *resourceManager) sdkDelete(
 	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
 		return r, err
 	}
+
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
 		return nil, err
@@ -949,11 +950,11 @@ func (rm *resourceManager) sdkDelete(
 	// If ModelPackageName not set after newDeleteRequestPayload attempt to use ARN
 	// This is because versioned modelpackage uses ARN not name
 	if input.ModelPackageName == nil {
-		if r.ko.Status.ACKResourceMetadata != nil && r.ko.Status.ACKResourceMetadata.ARN != nil {
-			input.SetModelPackageName(string(*r.ko.Status.ACKResourceMetadata.ARN))
-		} else {
+		arn := r.Identifiers().ARN()
+		if arn == nil {
 			return nil, ackerr.NotFound
 		}
+		input.SetModelPackageName(string(*arn))
 	}
 	var resp *svcsdk.DeleteModelPackageOutput
 	_ = resp
@@ -967,6 +968,7 @@ func (rm *resourceManager) sdkDelete(
 			return foundResource, requeueWaitWhileDeleting
 		}
 	}
+
 	return nil, err
 }
 

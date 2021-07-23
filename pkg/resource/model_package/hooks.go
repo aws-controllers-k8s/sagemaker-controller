@@ -19,13 +19,20 @@ import (
 
 	ackcondition "github.com/aws-controllers-k8s/runtime/pkg/condition"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
+	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 	corev1 "k8s.io/api/core/v1"
 )
 
 var (
+	modifyingStatuses = []string{svcsdk.ModelPackageStatusInProgress,
+		svcsdk.ModelPackageStatusPending,
+		svcsdk.ModelPackageStatusDeleting}
+
+	resourceName = resourceGK.Kind
+
 	requeueWaitWhileDeleting = ackrequeue.NeededAfter(
-		errors.New("ModelPackage is deleting"),
+		errors.New(resourceName+" is deleting."),
 		ackrequeue.DefaultRequeueAfterDuration,
 	)
 )
@@ -35,40 +42,21 @@ func (rm *resourceManager) customSetOutput(r *resource) {
 		return
 	}
 	ModelPackageStatus := *r.ko.Status.ModelPackageStatus
-	msg := "ModelPackage is in" + ModelPackageStatus + "status"
-	if !isModifiying(r) {
+	msg := "ModelPackageGroup is in" + ModelPackageStatus + "status"
+	if !svccommon.IsModifyingStatus(&ModelPackageStatus, &modifyingStatuses) {
 		ackcondition.SetSynced(r, corev1.ConditionTrue, &msg, nil)
 	} else {
 		ackcondition.SetSynced(r, corev1.ConditionFalse, &msg, nil)
 	}
 }
 
-func (rm *resourceManager) requeueUntilCanModify(ctx context.Context,
-	latest *resource,
+// requeueUntilCanModify creates and returns an
+// ackrequeue error if a resource's latest status matches
+// any of the defined modifying statuses below.
+func (rm *resourceManager) requeueUntilCanModify(
+	ctx context.Context,
+	r *resource,
 ) error {
-	if latest.ko.Status.ModelPackageStatus == nil {
-		return nil
-	}
-	ModelPackageStatus := *latest.ko.Status.ModelPackageStatus
-	if isModifiying(latest) {
-		errMsg := "ModelPackage in" + ModelPackageStatus + "state cannot be modified or deleted"
-		requeueWaitWhileModifying := ackrequeue.NeededAfter(
-			errors.New(errMsg),
-			ackrequeue.DefaultRequeueAfterDuration,
-		)
-		return requeueWaitWhileModifying
-	}
-	return nil
-}
-
-func isModifiying(r *resource) bool {
-	if r == nil || r.ko.Status.ModelPackageStatus == nil {
-		return false
-	}
-	ModelPackageStatus := *r.ko.Status.ModelPackageStatus
-
-	if ModelPackageStatus == string(svcsdk.ModelPackageStatusInProgress) || ModelPackageStatus == string(svcsdk.ModelPackageStatusPending) || ModelPackageStatus == string(svcsdk.ModelPackageStatusDeleting) {
-		return true
-	}
-	return false
+	latestStatus := r.ko.Status.ModelPackageStatus
+	return svccommon.RequeueIfModifying(latestStatus, &resourceName, &modifyingStatuses)
 }
