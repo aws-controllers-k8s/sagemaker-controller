@@ -2,5 +2,5 @@
 	// resource Unmanaged
 	latestStatus := r.ko.Status.TrainingJobStatus
 	if latestStatus != nil && *latestStatus != svcsdk.TrainingJobStatusInProgress {
-		return nil
+		return r,nil
 	}

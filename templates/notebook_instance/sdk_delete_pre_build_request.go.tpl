@@ -1,13 +1,13 @@
 //This will avoid exponential backoff
 if isNotebookStopping(r){
-    return requeueWaitWhileStopping
+    return r,requeueWaitWhileStopping
 }
 //This will avoid exponential backoff
 if isNotebookPending(r){
-    return requeueWaitWhilePending
+    return r,requeueWaitWhilePending
 }
 if isNotebookDeleting(r){
-    return requeueWaitWhilePending
+    return nil,requeueWaitWhileDeleting
 }
 
 rm.customPreDelete(r)

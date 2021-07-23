@@ -6186,6 +6186,11 @@ func (in *NotebookInstanceStatus) DeepCopyInto(out *NotebookInstanceStatus) {
 			}
 		}
 	}
+	if in.FailureReason != nil {
+		in, out := &in.FailureReason, &out.FailureReason
+		*out = new(string)
+		**out = **in
+	}
 	if in.NotebookInstanceStatus != nil {
 		in, out := &in.NotebookInstanceStatus, &out.NotebookInstanceStatus
 		*out = new(string)
@@ -6193,6 +6198,11 @@ func (in *NotebookInstanceStatus) DeepCopyInto(out *NotebookInstanceStatus) {
 	}
 	if in.NotebookInstanceURL != nil {
 		in, out := &in.NotebookInstanceURL, &out.NotebookInstanceURL
+		*out = new(string)
+		**out = **in
+	}
+	if in.StoppedByAck != nil {
+		in, out := &in.StoppedByAck, &out.StoppedByAck
 		*out = new(string)
 		**out = **in
 	}

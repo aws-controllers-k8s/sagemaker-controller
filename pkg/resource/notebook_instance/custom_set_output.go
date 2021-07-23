@@ -29,6 +29,19 @@ func (rm *resourceManager) customSetOutputDescribe(r *resource,
 	ko *svcapitypes.NotebookInstance) {
 
 	notebook_state := *ko.Status.NotebookInstanceStatus // Get the Notebook State
-	rm.customSetOutput(&notebook_state, ko)             // We set the sync status here
-
+	if ko.Annotations != nil && ko.Annotations["done_updating"] == "true" {
+		if notebook_state != svcsdk.NotebookInstanceStatusStopped {
+			return //we want to keep requeing until update finishes
+		}
+		if ko.Status.StoppedByAck != nil && *ko.Status.StoppedByAck == "true" {
+			nb_input := svcsdk.StartNotebookInstanceInput{}
+			nb_input.NotebookInstanceName = &r.ko.Name
+			rm.sdkapi.StartNotebookInstance(&nb_input)
+			ko.Annotations["done_updating"] = "false"
+			resetStoppedbyAck := "false"
+			ko.Status.StoppedByAck = &resetStoppedbyAck
+			return //dont want to set resource synced to true pre maturely.
+		}
+	}
+	rm.customSetOutput(&notebook_state, ko) // We set the sync status here
 }

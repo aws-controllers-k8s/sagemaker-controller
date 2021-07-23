@@ -368,17 +368,19 @@ func (rm *resourceManager) sdkUpdate(
 func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
-) (err error) {
+) (latest *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = rm.sdkapi.DeleteEndpointConfigWithContext(ctx, input)
+	var resp *svcsdk.DeleteEndpointConfigOutput
+	_ = resp
+	resp, err = rm.sdkapi.DeleteEndpointConfigWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteEndpointConfig", err)
-	return err
+	return nil, err
 }
 
 // newDeleteRequestPayload returns an SDK-specific struct for the HTTP request

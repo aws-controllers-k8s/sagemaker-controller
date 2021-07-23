@@ -1644,7 +1644,7 @@ func (rm *resourceManager) sdkUpdate(
 func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
-) (err error) {
+) (latest *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
@@ -1652,15 +1652,17 @@ func (rm *resourceManager) sdkDelete(
 	// resource Unmanaged
 	latestStatus := r.ko.Status.HyperParameterTuningJobStatus
 	if latestStatus != nil && *latestStatus != svcsdk.HyperParameterTuningJobStatusInProgress {
-		return nil
+		return r, nil
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = rm.sdkapi.StopHyperParameterTuningJobWithContext(ctx, input)
+	var resp *svcsdk.StopHyperParameterTuningJobOutput
+	_ = resp
+	resp, err = rm.sdkapi.StopHyperParameterTuningJobWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "StopHyperParameterTuningJob", err)
-	return err
+	return nil, err
 }
 
 // newDeleteRequestPayload returns an SDK-specific struct for the HTTP request

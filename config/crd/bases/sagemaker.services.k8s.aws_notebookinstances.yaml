@@ -17,8 +17,15 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
+    - jsonPath: .status.failureReason
+      name: FAILURE-REASON
+      priority: 1
+      type: string
     - jsonPath: .status.notebookInstanceStatus
       name: STATUS
+      type: string
+    - jsonPath: .status.notebookInstanceURL
+      name: URL
       type: string
     name: v1alpha1
     schema:
@@ -200,10 +207,17 @@ spec:
                   - type
                   type: object
                 type: array
+              failureReason:
+                description: If status is Failed, the reason it failed.
+                type: string
               notebookInstanceStatus:
                 description: The status of the notebook instance.
                 type: string
               notebookInstanceURL:
+                description: The URL that you use to connect to the Jupyter notebook
+                  that is running in your notebook instance.
+                type: string
+              stoppedByAck:
                 description: The URL that you use to connect to the Jupyter notebook
                   that is running in your notebook instance.
                 type: string

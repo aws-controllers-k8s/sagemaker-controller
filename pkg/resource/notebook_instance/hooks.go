@@ -21,6 +21,10 @@ var (
 		errors.New("NotebookInstance in 'Deleting' state, cannot be modified or deleted"),
 		10*time.Second,
 	)
+	requeueWaitWhileUpdating = ackrequeue.NeededAfter(
+		errors.New("NotebookInstance in 'Updating' state, cannot be modified or deleted"),
+		20*time.Second,
+	)
 )
 
 func isNotebookStopping(r *resource) bool {
@@ -48,4 +52,12 @@ func isNotebookDeleting(r *resource) bool {
 	notebookInstanceStatus := r.ko.Status.NotebookInstanceStatus
 
 	return *notebookInstanceStatus == svcsdk.NotebookInstanceStatusDeleting
+}
+func isNotebookUpdating(r *resource) bool {
+	if r.ko.Status.NotebookInstanceStatus == nil {
+		return false
+	}
+	notebookInstanceStatus := r.ko.Status.NotebookInstanceStatus
+
+	return *notebookInstanceStatus == svcsdk.NotebookInstanceStatusUpdating
 }
