@@ -117,8 +117,5 @@ class TestFeatureGroup:
         # Delete the k8s resource.
         _, deleted = k8s.delete_custom_resource(reference, WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH)
         assert deleted
-        # TODO: Implement logic to requeueOnDelete.
-        # TODO: Once the delete requeue PR is merged,
-        # verify that it works for DeleteFailed state.
         
         assert get_sagemaker_feature_group(feature_group_name) is None
