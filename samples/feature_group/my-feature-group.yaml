@@ -1,0 +1,19 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: FeatureGroup
+metadata:
+  name: <YOUR FEATURE GROUP NAME>
+  spec:
+    eventTimeFeatureName: EventTime
+    featureDefinitions:
+      - featureName: TransactionID
+        featureType: Integral
+      - featureName: EventTime
+        featureType: Fractional
+    featureGroupName: <YOUR FEATURE GROUP NAME>
+    recordIdentifierFeatureName: TransactionID
+    offlineStoreConfig:
+      s3StorageConfig:
+        s3URI: s3://<YOUR BUCKET>/feature-group-data
+    onlineStoreConfig:
+enableOnlineStore: True
+    roleARN: <YOUR SAGEMAKER ROLE ARN>
