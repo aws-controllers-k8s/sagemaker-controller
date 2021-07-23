@@ -180,6 +180,20 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.ModelPackageGroupName != nil {
 		res.SetModelPackageGroupName(*r.ko.Spec.ModelPackageGroupName)
 	}
+	if r.ko.Spec.Tags != nil {
+		f2 := []*svcsdk.Tag{}
+		for _, f2iter := range r.ko.Spec.Tags {
+			f2elem := &svcsdk.Tag{}
+			if f2iter.Key != nil {
+				f2elem.SetKey(*f2iter.Key)
+			}
+			if f2iter.Value != nil {
+				f2elem.SetValue(*f2iter.Value)
+			}
+			f2 = append(f2, f2elem)
+		}
+		res.SetTags(f2)
+	}
 
 	return res, nil
 }
@@ -200,32 +214,33 @@ func (rm *resourceManager) sdkUpdate(
 func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
-) (err error) {
+) (latest *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
-
 	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
-		return err
+		return r, err
 	}
 
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = rm.sdkapi.DeleteModelPackageGroupWithContext(ctx, input)
+	var resp *svcsdk.DeleteModelPackageGroupOutput
+	_ = resp
+	resp, err = rm.sdkapi.DeleteModelPackageGroupWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteModelPackageGroup", err)
 
 	if err == nil {
 		if _, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
 			if err != nil {
-				return err
+				return nil, err
 			}
-			return requeueWaitWhileDeleting
+			return r, requeueWaitWhileDeleting
 		}
 	}
 
-	return err
+	return nil, err
 }
 
 // newDeleteRequestPayload returns an SDK-specific struct for the HTTP request

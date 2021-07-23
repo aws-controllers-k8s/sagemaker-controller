@@ -573,6 +573,7 @@ type Endpoint_SDK struct {
 	FailureReason      *string                     `json:"failureReason,omitempty"`
 	LastModifiedTime   *metav1.Time                `json:"lastModifiedTime,omitempty"`
 	ProductionVariants []*ProductionVariantSummary `json:"productionVariants,omitempty"`
+	Tags               []*Tag                      `json:"tags,omitempty"`
 }
 
 // The properties of an experiment as returned by the Search API.
@@ -587,6 +588,7 @@ type Experiment struct {
 	// or trial component.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	Tags             []*Tag       `json:"tags,omitempty"`
 }
 
 // Associates a SageMaker job as a trial component with an experiment and trial.
@@ -659,6 +661,7 @@ type FeatureGroup_SDK struct {
 	OnlineStoreConfig           *OnlineStoreConfig `json:"onlineStoreConfig,omitempty"`
 	RecordIdentifierFeatureName *string            `json:"recordIdentifierFeatureName,omitempty"`
 	RoleARN                     *string            `json:"roleARN,omitempty"`
+	Tags                        []*Tag             `json:"tags,omitempty"`
 }
 
 // Specifies a file system data source for a channel.
@@ -1076,6 +1079,7 @@ type ModelPackage struct {
 	ModelPackageDescription *string      `json:"modelPackageDescription,omitempty"`
 	ModelPackageGroupName   *string      `json:"modelPackageGroupName,omitempty"`
 	ModelPackageName        *string      `json:"modelPackageName,omitempty"`
+	Tags                    []*Tag       `json:"tags,omitempty"`
 }
 
 // Describes the Docker container for the model package.
@@ -1104,6 +1108,7 @@ type ModelPackageGroup_SDK struct {
 	ModelPackageGroupDescription *string      `json:"modelPackageGroupDescription,omitempty"`
 	ModelPackageGroupName        *string      `json:"modelPackageGroupName,omitempty"`
 	ModelPackageGroupStatus      *string      `json:"modelPackageGroupStatus,omitempty"`
+	Tags                         []*Tag       `json:"tags,omitempty"`
 }
 
 // Represents the overall status of a model package.
@@ -1337,6 +1342,7 @@ type MonitoringSchedule_SDK struct {
 	MonitoringScheduleName   *string                   `json:"monitoringScheduleName,omitempty"`
 	MonitoringScheduleStatus *string                   `json:"monitoringScheduleStatus,omitempty"`
 	MonitoringType           *string                   `json:"monitoringType,omitempty"`
+	Tags                     []*Tag                    `json:"tags,omitempty"`
 }
 
 // The statistics resource for a monitoring job.
@@ -1486,6 +1492,7 @@ type Pipeline struct {
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	LastRunTime      *metav1.Time `json:"lastRunTime,omitempty"`
 	RoleARN          *string      `json:"roleARN,omitempty"`
+	Tags             []*Tag       `json:"tags,omitempty"`
 }
 
 // An execution of a pipeline.
@@ -1607,6 +1614,7 @@ type ProcessingJob_SDK struct {
 	// as how long the processing job has been running. After the condition is met,
 	// the processing job is stopped.
 	StoppingCondition *ProcessingStoppingCondition `json:"stoppingCondition,omitempty"`
+	Tags              []*Tag                       `json:"tags,omitempty"`
 	TrainingJobARN    *string                      `json:"trainingJobARN,omitempty"`
 }
 
@@ -1889,6 +1897,12 @@ type SubscribedWorkteam struct {
 	SellerName *string `json:"sellerName,omitempty"`
 }
 
+// Describes a tag.
+type Tag struct {
+	Key   *string `json:"key,omitempty"`
+	Value *string `json:"value,omitempty"`
+}
+
 // Configuration of storage locations for the Debugger TensorBoard output data.
 type TensorBoardOutputConfig struct {
 	LocalPath    *string `json:"localPath,omitempty"`
@@ -2036,6 +2050,7 @@ type TrainingJob_SDK struct {
 	// model artifacts. When training NTMs, make sure that the maximum runtime is
 	// sufficient for the training job to complete.
 	StoppingCondition *StoppingCondition `json:"stoppingCondition,omitempty"`
+	Tags              []*Tag             `json:"tags,omitempty"`
 	// Configuration of storage locations for the Debugger TensorBoard output data.
 	TensorBoardOutputConfig *TensorBoardOutputConfig `json:"tensorBoardOutputConfig,omitempty"`
 	TrainingEndTime         *metav1.Time             `json:"trainingEndTime,omitempty"`
@@ -2142,6 +2157,7 @@ type TransformJob_SDK struct {
 	// job invocation.
 	ModelClientConfig *ModelClientConfig `json:"modelClientConfig,omitempty"`
 	ModelName         *string            `json:"modelName,omitempty"`
+	Tags              []*Tag             `json:"tags,omitempty"`
 	TransformEndTime  *metav1.Time       `json:"transformEndTime,omitempty"`
 	// Describes the input source of a transform job and the way the transform job
 	// consumes it.
@@ -2191,6 +2207,7 @@ type Trial struct {
 	// or trial component.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	Tags             []*Tag       `json:"tags,omitempty"`
 	TrialName        *string      `json:"trialName,omitempty"`
 }
 
@@ -2207,6 +2224,7 @@ type TrialComponent struct {
 	LastModifiedBy     *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime   *metav1.Time `json:"lastModifiedTime,omitempty"`
 	StartTime          *metav1.Time `json:"startTime,omitempty"`
+	Tags               []*Tag       `json:"tags,omitempty"`
 	TrialComponentName *string      `json:"trialComponentName,omitempty"`
 }
 

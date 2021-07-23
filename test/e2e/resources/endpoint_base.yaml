@@ -5,3 +5,10 @@ metadata:
 spec:
   endpointName: $ENDPOINT_NAME
   endpointConfigName: $ENDPOINT_CONFIG_NAME
+  tags:
+    - key: confidentiality
+      value: public
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

@@ -136,6 +136,7 @@ func newResourceDelta(
 			delta.Add("Spec.ModelName", a.ko.Spec.ModelName, b.ko.Spec.ModelName)
 		}
 	}
+
 	if ackcompare.HasNilDifference(a.ko.Spec.TransformInput, b.ko.Spec.TransformInput) {
 		delta.Add("Spec.TransformInput", a.ko.Spec.TransformInput, b.ko.Spec.TransformInput)
 	} else if a.ko.Spec.TransformInput != nil && b.ko.Spec.TransformInput != nil {

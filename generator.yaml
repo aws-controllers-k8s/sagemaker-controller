@@ -22,6 +22,14 @@ operations:
   StopHyperParameterTuningJob:
     operation_type: Delete
     resource_name: HyperParameterTuningJob
+  DescribeModelQualityJobDefinition:
+    primary_identifier_field_name: JobDefinitionName
+  DescribeModelBiasJobDefinition:
+    primary_identifier_field_name: JobDefinitionName
+  DescribeDataQualityJobDefinition:
+    primary_identifier_field_name: JobDefinitionName
+  DescribeModelExplainabilityJobDefinition:
+    primary_identifier_field_name: JobDefinitionName
 resources:
   Model:
     hooks:
@@ -615,5 +623,3 @@ ignore:
       - Workteam
     operations:
       - UpdateTrainingJob
-    shape_names:
-      - TagList

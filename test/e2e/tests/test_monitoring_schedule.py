@@ -18,7 +18,12 @@ import time
 import pytest
 import logging
 
-from e2e import service_marker, create_sagemaker_resource, wait_for_status
+from e2e import (
+    service_marker,
+    create_sagemaker_resource,
+    wait_for_status,
+    assert_tags_in_sync,
+)
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common.fixtures import (
     xgboost_churn_data_quality_job_definition,
@@ -152,13 +157,14 @@ class TestMonitoringSchedule:
         assert k8s.get_resource_exists(reference)
 
         monitoring_schedule_name = resource["spec"].get("monitoringScheduleName")
-
-        assert (
-            k8s.get_resource_arn(resource)
-            == get_sagemaker_monitoring_schedule(
-                sagemaker_client, monitoring_schedule_name
-            )["MonitoringScheduleArn"]
+        monitoring_schedule_desc = get_sagemaker_monitoring_schedule(
+            sagemaker_client, monitoring_schedule_name
         )
+        monitoring_schedule_arn = monitoring_schedule_desc["MonitoringScheduleArn"]
+        assert k8s.get_resource_arn(resource) == monitoring_schedule_arn
+
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(monitoring_schedule_arn, resource_tags)
 
         # scheule transitions Pending -> Scheduled state
         # Pending status is shortlived only for 30 seconds because baselining job has already been run

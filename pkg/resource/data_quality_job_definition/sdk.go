@@ -560,6 +560,20 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.SetStoppingCondition(f8)
 	}
+	if r.ko.Spec.Tags != nil {
+		f9 := []*svcsdk.Tag{}
+		for _, f9iter := range r.ko.Spec.Tags {
+			f9elem := &svcsdk.Tag{}
+			if f9iter.Key != nil {
+				f9elem.SetKey(*f9iter.Key)
+			}
+			if f9iter.Value != nil {
+				f9elem.SetValue(*f9iter.Value)
+			}
+			f9 = append(f9, f9elem)
+		}
+		res.SetTags(f9)
+	}
 
 	return res, nil
 }
@@ -580,17 +594,19 @@ func (rm *resourceManager) sdkUpdate(
 func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
-) (err error) {
+) (latest *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = rm.sdkapi.DeleteDataQualityJobDefinitionWithContext(ctx, input)
+	var resp *svcsdk.DeleteDataQualityJobDefinitionOutput
+	_ = resp
+	resp, err = rm.sdkapi.DeleteDataQualityJobDefinitionWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteDataQualityJobDefinition", err)
-	return err
+	return nil, err
 }
 
 // newDeleteRequestPayload returns an SDK-specific struct for the HTTP request

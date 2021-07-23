@@ -25,6 +25,7 @@ from e2e import (
     wait_for_status,
     create_sagemaker_resource,
     sagemaker_client,
+    assert_tags_in_sync,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.bootstrap_resources import get_bootstrap_resources
@@ -157,8 +158,12 @@ class TestTrainingJob:
         assert training_job_name is not None
 
         training_job_desc = get_sagemaker_training_job(training_job_name)
+        training_job_arn = training_job_desc["TrainingJobArn"]
+        assert k8s.get_resource_arn(resource) == training_job_arn
 
-        assert k8s.get_resource_arn(resource) == training_job_desc["TrainingJobArn"]
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(training_job_arn, resource_tags)
+
         assert training_job_desc["TrainingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 

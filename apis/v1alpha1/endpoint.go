@@ -32,6 +32,10 @@ type EndpointSpec struct {
 	// case is preserved and must be matched in .
 	// +kubebuilder:validation:Required
 	EndpointName *string `json:"endpointName"`
+	// An array of key-value pairs. You can use tags to categorize your AWS resources
+	// in different ways, for example, by purpose, owner, or environment. For more
+	// information, see Tagging AWS Resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+	Tags []*Tag `json:"tags,omitempty"`
 }
 
 // EndpointStatus defines the observed state of Endpoint

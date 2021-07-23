@@ -9,3 +9,10 @@ spec:
     monitoringJobDefinitionName: $JOB_DEFINITION_NAME
     scheduleConfig:
       scheduleExpression: "cron(0 * ? * * *)"
+  tags:
+    - key: confidentiality
+      value: public
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

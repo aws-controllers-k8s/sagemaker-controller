@@ -22,3 +22,10 @@ spec:
       - "text/csv"
       jsonContentTypes:
       - "application/json"
+  tags:
+    - key: confidentiality
+      value: public
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user
