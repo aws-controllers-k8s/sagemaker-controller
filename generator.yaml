@@ -22,6 +22,14 @@ operations:
   StopHyperParameterTuningJob:
     operation_type: Delete
     resource_name: HyperParameterTuningJob
+  DescribeModelQualityJobDefinition:
+    primary_identifier_field_name: JobDefinitionName
+  DescribeModelBiasJobDefinition:
+    primary_identifier_field_name: JobDefinitionName
+  DescribeDataQualityJobDefinition:
+    primary_identifier_field_name: JobDefinitionName
+  DescribeModelExplainabilityJobDefinition:
+    primary_identifier_field_name: JobDefinitionName
 resources:
   Model:
     hooks:
@@ -531,7 +539,7 @@ resources:
       errors:
           404:
             code: ValidationException
-            message_prefix: Notebook Instance Lifecycle Config does not exist
+            message_prefix: Unable to describe Notebook Instance Lifecycle Config
       terminal_codes:
         - ResourceLimitExceeded
         - ResourceNotFound
@@ -548,13 +556,11 @@ resources:
     hooks:
       delta_post_compare:
         template_path: notebook_instance_lifecycle_config/delta_post_compare.go.tpl
-      sdk_read_one_post_request:
-        template_path: notebook_instance_lifecycle_config/sdk_readOne_post_build_request.go.tpl
     fields:
       LastModifiedTime:
         is_read_only: true
         print:
-          name: STATUS
+          name: Last Modified Time
         from:
           operation: DescribeNotebookInstanceLifecycleConfig
           path: LastModifiedTime

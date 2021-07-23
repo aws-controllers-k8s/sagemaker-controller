@@ -52,7 +52,7 @@ type NotebookInstanceLifecycleConfigStatus struct {
 // NotebookInstanceLifecycleConfig is the Schema for the NotebookInstanceLifecycleConfigs API
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:printcolumn:name="STATUS",type=date,priority=0,JSONPath=`.status.lastModifiedTime`
+// +kubebuilder:printcolumn:name="Last Modified Time",type=date,priority=0,JSONPath=`.status.lastModifiedTime`
 type NotebookInstanceLifecycleConfig struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

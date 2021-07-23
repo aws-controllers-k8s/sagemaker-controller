@@ -64,18 +64,9 @@ func (rm *resourceManager) sdkFind(
 
 	var resp *svcsdk.DescribeNotebookInstanceLifecycleConfigOutput
 	resp, err = rm.sdkapi.DescribeNotebookInstanceLifecycleConfigWithContext(ctx, input)
-	awErr, ok := ackerr.AWSError(err)
-
-	if ok {
-		errMsg := awErr.Message()
-		if strings.Contains(errMsg, "Notebook Instance Lifecycle Config does not exist") {
-			return nil, ackerr.NotFound
-		}
-
-	}
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeNotebookInstanceLifecycleConfig", err)
 	if err != nil {
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ValidationException" && strings.HasPrefix(awsErr.Message(), "Notebook Instance Lifecycle Config does not exist") {
+		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ValidationException" && strings.HasPrefix(awsErr.Message(), "Unable to describe Notebook Instance Lifecycle Config") {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
