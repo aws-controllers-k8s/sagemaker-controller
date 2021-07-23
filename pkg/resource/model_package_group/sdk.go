@@ -218,7 +218,6 @@ func (rm *resourceManager) sdkDelete(
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
-
 	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
 		return r, err
 	}
@@ -240,6 +239,7 @@ func (rm *resourceManager) sdkDelete(
 			return r, requeueWaitWhileDeleting
 		}
 	}
+
 	return nil, err
 }
 
