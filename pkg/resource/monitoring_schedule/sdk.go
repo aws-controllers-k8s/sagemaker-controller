@@ -654,6 +654,20 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.MonitoringScheduleName != nil {
 		res.SetMonitoringScheduleName(*r.ko.Spec.MonitoringScheduleName)
 	}
+	if r.ko.Spec.Tags != nil {
+		f2 := []*svcsdk.Tag{}
+		for _, f2iter := range r.ko.Spec.Tags {
+			f2elem := &svcsdk.Tag{}
+			if f2iter.Key != nil {
+				f2elem.SetKey(*f2iter.Key)
+			}
+			if f2iter.Value != nil {
+				f2elem.SetValue(*f2iter.Value)
+			}
+			f2 = append(f2, f2elem)
+		}
+		res.SetTags(f2)
+	}
 
 	return res, nil
 }

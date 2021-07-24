@@ -504,6 +504,20 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.SetStoppingCondition(f8)
 	}
+	if r.ko.Spec.Tags != nil {
+		f9 := []*svcsdk.Tag{}
+		for _, f9iter := range r.ko.Spec.Tags {
+			f9elem := &svcsdk.Tag{}
+			if f9iter.Key != nil {
+				f9elem.SetKey(*f9iter.Key)
+			}
+			if f9iter.Value != nil {
+				f9elem.SetValue(*f9iter.Value)
+			}
+			f9 = append(f9, f9elem)
+		}
+		res.SetTags(f9)
+	}
 
 	return res, nil
 }

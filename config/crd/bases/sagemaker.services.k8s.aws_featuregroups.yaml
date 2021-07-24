@@ -152,6 +152,17 @@ spec:
                   used to persist data into the OfflineStore if an OfflineStoreConfig
                   is provided.
                 type: string
+              tags:
+                description: Tags used to identify Features in each FeatureGroup.
+                items:
+                  description: Describes a tag.
+                  properties:
+                    key:
+                      type: string
+                    value:
+                      type: string
+                  type: object
+                type: array
             required:
             - eventTimeFeatureName
             - featureDefinitions

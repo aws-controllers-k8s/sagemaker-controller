@@ -2,5 +2,5 @@
 	// resource Unmanaged
 	latestStatus := r.ko.Status.HyperParameterTuningJobStatus
 	if latestStatus != nil && *latestStatus != svcsdk.HyperParameterTuningJobStatusInProgress {
-		return r, nil
+		return r, err
 	}

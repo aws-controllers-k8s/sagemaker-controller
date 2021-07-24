@@ -34,3 +34,10 @@ spec:
   stoppingCondition:
     maxRuntimeInSeconds: 1800
   roleARN: "$SAGEMAKER_EXECUTION_ROLE_ARN"
+  tags:
+    - key: confidentiality
+      value: public
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

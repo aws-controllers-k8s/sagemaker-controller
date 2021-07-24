@@ -24,6 +24,7 @@ from e2e import (
     service_marker,
     create_sagemaker_resource,
     sagemaker_client,
+    assert_tags_in_sync,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
@@ -70,11 +71,12 @@ class TestModel:
         assert k8s.get_resource_exists(reference)
 
         model_name = resource["spec"].get("modelName", None)
+        model_desc = get_sagemaker_model(model_name)
+        model_arn = model_desc["ModelArn"]
+        assert k8s.get_resource_arn(resource) == model_arn
 
-        assert (
-            k8s.get_resource_arn(resource)
-            == get_sagemaker_model(model_name)["ModelArn"]
-        )
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(model_arn, resource_tags)
 
         # Delete the k8s resource.
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)

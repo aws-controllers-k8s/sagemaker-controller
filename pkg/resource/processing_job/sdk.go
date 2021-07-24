@@ -712,6 +712,20 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.SetStoppingCondition(f9)
 	}
+	if r.ko.Spec.Tags != nil {
+		f10 := []*svcsdk.Tag{}
+		for _, f10iter := range r.ko.Spec.Tags {
+			f10elem := &svcsdk.Tag{}
+			if f10iter.Key != nil {
+				f10elem.SetKey(*f10iter.Key)
+			}
+			if f10iter.Value != nil {
+				f10elem.SetValue(*f10iter.Value)
+			}
+			f10 = append(f10, f10elem)
+		}
+		res.SetTags(f10)
+	}
 
 	return res, nil
 }
@@ -740,7 +754,7 @@ func (rm *resourceManager) sdkDelete(
 	// resource Unmanaged
 	latestStatus := r.ko.Status.ProcessingJobStatus
 	if latestStatus != nil && *latestStatus != svcsdk.ProcessingJobStatusInProgress {
-		return r, nil
+		return r, err
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {

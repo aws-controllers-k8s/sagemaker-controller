@@ -180,6 +180,20 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.ModelPackageGroupName != nil {
 		res.SetModelPackageGroupName(*r.ko.Spec.ModelPackageGroupName)
 	}
+	if r.ko.Spec.Tags != nil {
+		f2 := []*svcsdk.Tag{}
+		for _, f2iter := range r.ko.Spec.Tags {
+			f2elem := &svcsdk.Tag{}
+			if f2iter.Key != nil {
+				f2elem.SetKey(*f2iter.Key)
+			}
+			if f2iter.Value != nil {
+				f2elem.SetValue(*f2iter.Value)
+			}
+			f2 = append(f2, f2elem)
+		}
+		res.SetTags(f2)
+	}
 
 	return res, nil
 }
@@ -204,7 +218,6 @@ func (rm *resourceManager) sdkDelete(
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
-
 	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
 		return r, err
 	}
@@ -221,9 +234,9 @@ func (rm *resourceManager) sdkDelete(
 	if err == nil {
 		if foundResource, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
 			if err != nil {
-				return foundResource, err
+				return nil, err
 			}
-			return foundResource, requeueWaitWhileDeleting
+			return r, requeueWaitWhileDeleting
 		}
 	}
 

@@ -430,27 +430,41 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.SetPrimaryContainer(f5)
 	}
-	if r.ko.Spec.VPCConfig != nil {
-		f6 := &svcsdk.VpcConfig{}
-		if r.ko.Spec.VPCConfig.SecurityGroupIDs != nil {
-			f6f0 := []*string{}
-			for _, f6f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
-				var f6f0elem string
-				f6f0elem = *f6f0iter
-				f6f0 = append(f6f0, &f6f0elem)
+	if r.ko.Spec.Tags != nil {
+		f6 := []*svcsdk.Tag{}
+		for _, f6iter := range r.ko.Spec.Tags {
+			f6elem := &svcsdk.Tag{}
+			if f6iter.Key != nil {
+				f6elem.SetKey(*f6iter.Key)
 			}
-			f6.SetSecurityGroupIds(f6f0)
+			if f6iter.Value != nil {
+				f6elem.SetValue(*f6iter.Value)
+			}
+			f6 = append(f6, f6elem)
+		}
+		res.SetTags(f6)
+	}
+	if r.ko.Spec.VPCConfig != nil {
+		f7 := &svcsdk.VpcConfig{}
+		if r.ko.Spec.VPCConfig.SecurityGroupIDs != nil {
+			f7f0 := []*string{}
+			for _, f7f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
+				var f7f0elem string
+				f7f0elem = *f7f0iter
+				f7f0 = append(f7f0, &f7f0elem)
+			}
+			f7.SetSecurityGroupIds(f7f0)
 		}
 		if r.ko.Spec.VPCConfig.Subnets != nil {
-			f6f1 := []*string{}
-			for _, f6f1iter := range r.ko.Spec.VPCConfig.Subnets {
-				var f6f1elem string
-				f6f1elem = *f6f1iter
-				f6f1 = append(f6f1, &f6f1elem)
+			f7f1 := []*string{}
+			for _, f7f1iter := range r.ko.Spec.VPCConfig.Subnets {
+				var f7f1elem string
+				f7f1elem = *f7f1iter
+				f7f1 = append(f7f1, &f7f1elem)
 			}
-			f6.SetSubnets(f6f1)
+			f7.SetSubnets(f7f1)
 		}
-		res.SetVpcConfig(f6)
+		res.SetVpcConfig(f7)
 	}
 
 	return res, nil

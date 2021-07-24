@@ -25,6 +25,7 @@ from e2e import (
     create_sagemaker_resource,
     wait_for_status,
     sagemaker_client,
+    assert_tags_in_sync,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.bootstrap_resources import get_bootstrap_resources
@@ -158,9 +159,12 @@ class TestHPO:
         assert hpo_job_name is not None
 
         hpo_sm_desc = get_sagemaker_hpo_job(hpo_job_name)
-        assert (
-            k8s.get_resource_arn(resource) == hpo_sm_desc["HyperParameterTuningJobArn"]
-        )
+        hpo_arn = hpo_sm_desc["HyperParameterTuningJobArn"]
+        assert k8s.get_resource_arn(resource) == hpo_arn
+
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(hpo_arn, resource_tags)
+
         assert hpo_sm_desc["HyperParameterTuningJobStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 

@@ -32,7 +32,6 @@ operations:
     primary_identifier_field_name: JobDefinitionName
   DescribeModelExplainabilityJobDefinition:
     primary_identifier_field_name: JobDefinitionName
-
 resources:
   Model:
     hooks:
@@ -691,5 +690,3 @@ ignore:
       - Workteam
     operations:
       - UpdateTrainingJob
-    shape_names:
-      - TagList

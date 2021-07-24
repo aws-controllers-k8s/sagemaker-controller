@@ -337,6 +337,20 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.RoleARN != nil {
 		res.SetRoleArn(*r.ko.Spec.RoleARN)
 	}
+	if r.ko.Spec.Tags != nil {
+		f8 := []*svcsdk.Tag{}
+		for _, f8iter := range r.ko.Spec.Tags {
+			f8elem := &svcsdk.Tag{}
+			if f8iter.Key != nil {
+				f8elem.SetKey(*f8iter.Key)
+			}
+			if f8iter.Value != nil {
+				f8elem.SetValue(*f8iter.Value)
+			}
+			f8 = append(f8, f8elem)
+		}
+		res.SetTags(f8)
+	}
 
 	return res, nil
 }
@@ -376,9 +390,9 @@ func (rm *resourceManager) sdkDelete(
 	if err == nil {
 		if foundResource, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
 			if err != nil {
-				return foundResource, err
+				return nil, err
 			}
-			return foundResource, requeueWaitWhileDeleting
+			return r, requeueWaitWhileDeleting
 		}
 	}
 
