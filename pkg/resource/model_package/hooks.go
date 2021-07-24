@@ -17,11 +17,9 @@ import (
 	"context"
 	"errors"
 
-	ackcondition "github.com/aws-controllers-k8s/runtime/pkg/condition"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
-	corev1 "k8s.io/api/core/v1"
 )
 
 var (
@@ -38,16 +36,8 @@ var (
 )
 
 func (rm *resourceManager) customSetOutput(r *resource) {
-	if r.ko.Status.ModelPackageStatus == nil {
-		return
-	}
-	ModelPackageStatus := *r.ko.Status.ModelPackageStatus
-	msg := "ModelPackageGroup is in" + ModelPackageStatus + "status"
-	if !svccommon.IsModifyingStatus(&ModelPackageStatus, &modifyingStatuses) {
-		ackcondition.SetSynced(r, corev1.ConditionTrue, &msg, nil)
-	} else {
-		ackcondition.SetSynced(r, corev1.ConditionFalse, &msg, nil)
-	}
+	latestStatus := r.ko.Status.ModelPackageStatus
+	svccommon.SetSyncedCondition(r, latestStatus, &resourceName, &modifyingStatuses)
 }
 
 // requeueUntilCanModify creates and returns an

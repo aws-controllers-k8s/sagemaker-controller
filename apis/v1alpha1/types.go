@@ -1116,22 +1116,6 @@ type ModelMetrics struct {
 	ModelQuality *ModelQuality `json:"modelQuality,omitempty"`
 }
 
-// A versioned model that can be deployed for SageMaker inference.
-type ModelPackage struct {
-	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
-	CreatedBy    *UserContext `json:"createdBy,omitempty"`
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
-	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
-	LastModifiedBy          *UserContext `json:"lastModifiedBy,omitempty"`
-	LastModifiedTime        *metav1.Time `json:"lastModifiedTime,omitempty"`
-	ModelPackageDescription *string      `json:"modelPackageDescription,omitempty"`
-	ModelPackageGroupName   *string      `json:"modelPackageGroupName,omitempty"`
-	ModelPackageName        *string      `json:"modelPackageName,omitempty"`
-	Tags                    []*Tag       `json:"tags,omitempty"`
-}
-
 // Describes the Docker container for the model package.
 type ModelPackageContainerDefinition struct {
 	ContainerHostname *string `json:"containerHostname,omitempty"`
@@ -1236,6 +1220,7 @@ type ModelPackage_SDK struct {
 	ModelPackageVersion       *int64                     `json:"modelPackageVersion,omitempty"`
 	// A list of algorithms that were used to create a model package.
 	SourceAlgorithmSpecification *SourceAlgorithmSpecification `json:"sourceAlgorithmSpecification,omitempty"`
+	Tags                         []*Tag                        `json:"tags,omitempty"`
 	// Specifies batch transform jobs that Amazon SageMaker runs to validate your
 	// model package.
 	ValidationSpecification *ModelPackageValidationSpecification `json:"validationSpecification,omitempty"`
@@ -2320,8 +2305,10 @@ type Trial struct {
 	// or trial component.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
-	Tags             []*Tag       `json:"tags,omitempty"`
-	TrialName        *string      `json:"trialName,omitempty"`
+	// Metadata properties of the tracking entity, trial, or trial component.
+	MetadataProperties *MetadataProperties `json:"metadataProperties,omitempty"`
+	Tags               []*Tag              `json:"tags,omitempty"`
+	TrialName          *string             `json:"trialName,omitempty"`
 }
 
 // The properties of a trial component as returned by the Search API.
@@ -2334,11 +2321,13 @@ type TrialComponent struct {
 	EndTime      *metav1.Time `json:"endTime,omitempty"`
 	// Information about the user who created or modified an experiment, trial,
 	// or trial component.
-	LastModifiedBy     *UserContext `json:"lastModifiedBy,omitempty"`
-	LastModifiedTime   *metav1.Time `json:"lastModifiedTime,omitempty"`
-	StartTime          *metav1.Time `json:"startTime,omitempty"`
-	Tags               []*Tag       `json:"tags,omitempty"`
-	TrialComponentName *string      `json:"trialComponentName,omitempty"`
+	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	// Metadata properties of the tracking entity, trial, or trial component.
+	MetadataProperties *MetadataProperties `json:"metadataProperties,omitempty"`
+	StartTime          *metav1.Time        `json:"startTime,omitempty"`
+	Tags               []*Tag              `json:"tags,omitempty"`
+	TrialComponentName *string             `json:"trialComponentName,omitempty"`
 }
 
 // A summary of the metrics of a trial component.

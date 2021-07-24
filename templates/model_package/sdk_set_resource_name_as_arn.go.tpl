@@ -1,4 +1,4 @@
-    // If ModelPackageName not set after newDeleteRequestPayload attempt to use ARN
+    // If ModelPackageName not set after newRequestPayload attempt to use ARN
     // This is because versioned modelpackage uses ARN not name
 	if input.ModelPackageName == nil {
 		arn := r.Identifiers().ARN()

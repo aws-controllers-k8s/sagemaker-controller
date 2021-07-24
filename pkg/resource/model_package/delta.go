@@ -309,6 +309,7 @@ func newResourceDelta(
 	} else if a.ko.Spec.SourceAlgorithmSpecification != nil && b.ko.Spec.SourceAlgorithmSpecification != nil {
 
 	}
+
 	if ackcompare.HasNilDifference(a.ko.Spec.ValidationSpecification, b.ko.Spec.ValidationSpecification) {
 		delta.Add("Spec.ValidationSpecification", a.ko.Spec.ValidationSpecification, b.ko.Spec.ValidationSpecification)
 	} else if a.ko.Spec.ValidationSpecification != nil && b.ko.Spec.ValidationSpecification != nil {

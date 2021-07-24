@@ -527,11 +527,11 @@ resources:
       sdk_delete_post_request:
         template_path: common/sdk_delete_post_request.go.tpl
       sdk_delete_post_build_request:
-        template_path: model_package/sdk_delete_post_build_request.go.tpl
+        template_path: model_package/sdk_set_resource_name_as_arn.go.tpl
       sdk_read_one_post_set_output:
         code: rm.customSetOutput(&resource{ko})
       sdk_read_one_post_build_request:
-        template_path: model_package/sdk_read_one_post_build_request.go.tpl
+        template_path: model_package/sdk_set_resource_name_as_arn.go.tpl
       sdk_update_pre_build_request:
         template_path: model_package/sdk_update_pre_build_request.go.tpl
       sdk_custom_required_fields_missing:

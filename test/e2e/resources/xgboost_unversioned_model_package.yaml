@@ -33,4 +33,10 @@ spec:
           transformResources:
             instanceCount: 1
             instanceType: ml.m5.large
-  #modelApprovalStatus: "Approved"
+  tags:
+    - key: algorithm
+      value: xgboost
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

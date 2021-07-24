@@ -61,7 +61,7 @@ func (rm *resourceManager) sdkFind(
 	if err != nil {
 		return nil, err
 	}
-	// If ModelPackageName not set after newCreateRequestPayload attempt to use ARN
+	// If ModelPackageName not set after newRequestPayload attempt to use ARN
 	// This is because versioned modelpackage uses ARN not name
 	if input.ModelPackageName == nil {
 		arn := r.Identifiers().ARN()
@@ -766,101 +766,115 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.SetSourceAlgorithmSpecification(f9)
 	}
-	if r.ko.Spec.ValidationSpecification != nil {
-		f10 := &svcsdk.ModelPackageValidationSpecification{}
-		if r.ko.Spec.ValidationSpecification.ValidationProfiles != nil {
-			f10f0 := []*svcsdk.ModelPackageValidationProfile{}
-			for _, f10f0iter := range r.ko.Spec.ValidationSpecification.ValidationProfiles {
-				f10f0elem := &svcsdk.ModelPackageValidationProfile{}
-				if f10f0iter.ProfileName != nil {
-					f10f0elem.SetProfileName(*f10f0iter.ProfileName)
-				}
-				if f10f0iter.TransformJobDefinition != nil {
-					f10f0elemf1 := &svcsdk.TransformJobDefinition{}
-					if f10f0iter.TransformJobDefinition.BatchStrategy != nil {
-						f10f0elemf1.SetBatchStrategy(*f10f0iter.TransformJobDefinition.BatchStrategy)
-					}
-					if f10f0iter.TransformJobDefinition.Environment != nil {
-						f10f0elemf1f1 := map[string]*string{}
-						for f10f0elemf1f1key, f10f0elemf1f1valiter := range f10f0iter.TransformJobDefinition.Environment {
-							var f10f0elemf1f1val string
-							f10f0elemf1f1val = *f10f0elemf1f1valiter
-							f10f0elemf1f1[f10f0elemf1f1key] = &f10f0elemf1f1val
-						}
-						f10f0elemf1.SetEnvironment(f10f0elemf1f1)
-					}
-					if f10f0iter.TransformJobDefinition.MaxConcurrentTransforms != nil {
-						f10f0elemf1.SetMaxConcurrentTransforms(*f10f0iter.TransformJobDefinition.MaxConcurrentTransforms)
-					}
-					if f10f0iter.TransformJobDefinition.MaxPayloadInMB != nil {
-						f10f0elemf1.SetMaxPayloadInMB(*f10f0iter.TransformJobDefinition.MaxPayloadInMB)
-					}
-					if f10f0iter.TransformJobDefinition.TransformInput != nil {
-						f10f0elemf1f4 := &svcsdk.TransformInput{}
-						if f10f0iter.TransformJobDefinition.TransformInput.CompressionType != nil {
-							f10f0elemf1f4.SetCompressionType(*f10f0iter.TransformJobDefinition.TransformInput.CompressionType)
-						}
-						if f10f0iter.TransformJobDefinition.TransformInput.ContentType != nil {
-							f10f0elemf1f4.SetContentType(*f10f0iter.TransformJobDefinition.TransformInput.ContentType)
-						}
-						if f10f0iter.TransformJobDefinition.TransformInput.DataSource != nil {
-							f10f0elemf1f4f2 := &svcsdk.TransformDataSource{}
-							if f10f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource != nil {
-								f10f0elemf1f4f2f0 := &svcsdk.TransformS3DataSource{}
-								if f10f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3DataType != nil {
-									f10f0elemf1f4f2f0.SetS3DataType(*f10f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3DataType)
-								}
-								if f10f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3URI != nil {
-									f10f0elemf1f4f2f0.SetS3Uri(*f10f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3URI)
-								}
-								f10f0elemf1f4f2.SetS3DataSource(f10f0elemf1f4f2f0)
-							}
-							f10f0elemf1f4.SetDataSource(f10f0elemf1f4f2)
-						}
-						if f10f0iter.TransformJobDefinition.TransformInput.SplitType != nil {
-							f10f0elemf1f4.SetSplitType(*f10f0iter.TransformJobDefinition.TransformInput.SplitType)
-						}
-						f10f0elemf1.SetTransformInput(f10f0elemf1f4)
-					}
-					if f10f0iter.TransformJobDefinition.TransformOutput != nil {
-						f10f0elemf1f5 := &svcsdk.TransformOutput{}
-						if f10f0iter.TransformJobDefinition.TransformOutput.Accept != nil {
-							f10f0elemf1f5.SetAccept(*f10f0iter.TransformJobDefinition.TransformOutput.Accept)
-						}
-						if f10f0iter.TransformJobDefinition.TransformOutput.AssembleWith != nil {
-							f10f0elemf1f5.SetAssembleWith(*f10f0iter.TransformJobDefinition.TransformOutput.AssembleWith)
-						}
-						if f10f0iter.TransformJobDefinition.TransformOutput.KMSKeyID != nil {
-							f10f0elemf1f5.SetKmsKeyId(*f10f0iter.TransformJobDefinition.TransformOutput.KMSKeyID)
-						}
-						if f10f0iter.TransformJobDefinition.TransformOutput.S3OutputPath != nil {
-							f10f0elemf1f5.SetS3OutputPath(*f10f0iter.TransformJobDefinition.TransformOutput.S3OutputPath)
-						}
-						f10f0elemf1.SetTransformOutput(f10f0elemf1f5)
-					}
-					if f10f0iter.TransformJobDefinition.TransformResources != nil {
-						f10f0elemf1f6 := &svcsdk.TransformResources{}
-						if f10f0iter.TransformJobDefinition.TransformResources.InstanceCount != nil {
-							f10f0elemf1f6.SetInstanceCount(*f10f0iter.TransformJobDefinition.TransformResources.InstanceCount)
-						}
-						if f10f0iter.TransformJobDefinition.TransformResources.InstanceType != nil {
-							f10f0elemf1f6.SetInstanceType(*f10f0iter.TransformJobDefinition.TransformResources.InstanceType)
-						}
-						if f10f0iter.TransformJobDefinition.TransformResources.VolumeKMSKeyID != nil {
-							f10f0elemf1f6.SetVolumeKmsKeyId(*f10f0iter.TransformJobDefinition.TransformResources.VolumeKMSKeyID)
-						}
-						f10f0elemf1.SetTransformResources(f10f0elemf1f6)
-					}
-					f10f0elem.SetTransformJobDefinition(f10f0elemf1)
-				}
-				f10f0 = append(f10f0, f10f0elem)
+	if r.ko.Spec.Tags != nil {
+		f10 := []*svcsdk.Tag{}
+		for _, f10iter := range r.ko.Spec.Tags {
+			f10elem := &svcsdk.Tag{}
+			if f10iter.Key != nil {
+				f10elem.SetKey(*f10iter.Key)
 			}
-			f10.SetValidationProfiles(f10f0)
+			if f10iter.Value != nil {
+				f10elem.SetValue(*f10iter.Value)
+			}
+			f10 = append(f10, f10elem)
+		}
+		res.SetTags(f10)
+	}
+	if r.ko.Spec.ValidationSpecification != nil {
+		f11 := &svcsdk.ModelPackageValidationSpecification{}
+		if r.ko.Spec.ValidationSpecification.ValidationProfiles != nil {
+			f11f0 := []*svcsdk.ModelPackageValidationProfile{}
+			for _, f11f0iter := range r.ko.Spec.ValidationSpecification.ValidationProfiles {
+				f11f0elem := &svcsdk.ModelPackageValidationProfile{}
+				if f11f0iter.ProfileName != nil {
+					f11f0elem.SetProfileName(*f11f0iter.ProfileName)
+				}
+				if f11f0iter.TransformJobDefinition != nil {
+					f11f0elemf1 := &svcsdk.TransformJobDefinition{}
+					if f11f0iter.TransformJobDefinition.BatchStrategy != nil {
+						f11f0elemf1.SetBatchStrategy(*f11f0iter.TransformJobDefinition.BatchStrategy)
+					}
+					if f11f0iter.TransformJobDefinition.Environment != nil {
+						f11f0elemf1f1 := map[string]*string{}
+						for f11f0elemf1f1key, f11f0elemf1f1valiter := range f11f0iter.TransformJobDefinition.Environment {
+							var f11f0elemf1f1val string
+							f11f0elemf1f1val = *f11f0elemf1f1valiter
+							f11f0elemf1f1[f11f0elemf1f1key] = &f11f0elemf1f1val
+						}
+						f11f0elemf1.SetEnvironment(f11f0elemf1f1)
+					}
+					if f11f0iter.TransformJobDefinition.MaxConcurrentTransforms != nil {
+						f11f0elemf1.SetMaxConcurrentTransforms(*f11f0iter.TransformJobDefinition.MaxConcurrentTransforms)
+					}
+					if f11f0iter.TransformJobDefinition.MaxPayloadInMB != nil {
+						f11f0elemf1.SetMaxPayloadInMB(*f11f0iter.TransformJobDefinition.MaxPayloadInMB)
+					}
+					if f11f0iter.TransformJobDefinition.TransformInput != nil {
+						f11f0elemf1f4 := &svcsdk.TransformInput{}
+						if f11f0iter.TransformJobDefinition.TransformInput.CompressionType != nil {
+							f11f0elemf1f4.SetCompressionType(*f11f0iter.TransformJobDefinition.TransformInput.CompressionType)
+						}
+						if f11f0iter.TransformJobDefinition.TransformInput.ContentType != nil {
+							f11f0elemf1f4.SetContentType(*f11f0iter.TransformJobDefinition.TransformInput.ContentType)
+						}
+						if f11f0iter.TransformJobDefinition.TransformInput.DataSource != nil {
+							f11f0elemf1f4f2 := &svcsdk.TransformDataSource{}
+							if f11f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource != nil {
+								f11f0elemf1f4f2f0 := &svcsdk.TransformS3DataSource{}
+								if f11f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3DataType != nil {
+									f11f0elemf1f4f2f0.SetS3DataType(*f11f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3DataType)
+								}
+								if f11f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3URI != nil {
+									f11f0elemf1f4f2f0.SetS3Uri(*f11f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3URI)
+								}
+								f11f0elemf1f4f2.SetS3DataSource(f11f0elemf1f4f2f0)
+							}
+							f11f0elemf1f4.SetDataSource(f11f0elemf1f4f2)
+						}
+						if f11f0iter.TransformJobDefinition.TransformInput.SplitType != nil {
+							f11f0elemf1f4.SetSplitType(*f11f0iter.TransformJobDefinition.TransformInput.SplitType)
+						}
+						f11f0elemf1.SetTransformInput(f11f0elemf1f4)
+					}
+					if f11f0iter.TransformJobDefinition.TransformOutput != nil {
+						f11f0elemf1f5 := &svcsdk.TransformOutput{}
+						if f11f0iter.TransformJobDefinition.TransformOutput.Accept != nil {
+							f11f0elemf1f5.SetAccept(*f11f0iter.TransformJobDefinition.TransformOutput.Accept)
+						}
+						if f11f0iter.TransformJobDefinition.TransformOutput.AssembleWith != nil {
+							f11f0elemf1f5.SetAssembleWith(*f11f0iter.TransformJobDefinition.TransformOutput.AssembleWith)
+						}
+						if f11f0iter.TransformJobDefinition.TransformOutput.KMSKeyID != nil {
+							f11f0elemf1f5.SetKmsKeyId(*f11f0iter.TransformJobDefinition.TransformOutput.KMSKeyID)
+						}
+						if f11f0iter.TransformJobDefinition.TransformOutput.S3OutputPath != nil {
+							f11f0elemf1f5.SetS3OutputPath(*f11f0iter.TransformJobDefinition.TransformOutput.S3OutputPath)
+						}
+						f11f0elemf1.SetTransformOutput(f11f0elemf1f5)
+					}
+					if f11f0iter.TransformJobDefinition.TransformResources != nil {
+						f11f0elemf1f6 := &svcsdk.TransformResources{}
+						if f11f0iter.TransformJobDefinition.TransformResources.InstanceCount != nil {
+							f11f0elemf1f6.SetInstanceCount(*f11f0iter.TransformJobDefinition.TransformResources.InstanceCount)
+						}
+						if f11f0iter.TransformJobDefinition.TransformResources.InstanceType != nil {
+							f11f0elemf1f6.SetInstanceType(*f11f0iter.TransformJobDefinition.TransformResources.InstanceType)
+						}
+						if f11f0iter.TransformJobDefinition.TransformResources.VolumeKMSKeyID != nil {
+							f11f0elemf1f6.SetVolumeKmsKeyId(*f11f0iter.TransformJobDefinition.TransformResources.VolumeKMSKeyID)
+						}
+						f11f0elemf1.SetTransformResources(f11f0elemf1f6)
+					}
+					f11f0elem.SetTransformJobDefinition(f11f0elemf1)
+				}
+				f11f0 = append(f11f0, f11f0elem)
+			}
+			f11.SetValidationProfiles(f11f0)
 		}
 		if r.ko.Spec.ValidationSpecification.ValidationRole != nil {
-			f10.SetValidationRole(*r.ko.Spec.ValidationSpecification.ValidationRole)
+			f11.SetValidationRole(*r.ko.Spec.ValidationSpecification.ValidationRole)
 		}
-		res.SetValidationSpecification(f10)
+		res.SetValidationSpecification(f11)
 	}
 
 	return res, nil
@@ -947,7 +961,7 @@ func (rm *resourceManager) sdkDelete(
 	if err != nil {
 		return nil, err
 	}
-	// If ModelPackageName not set after newDeleteRequestPayload attempt to use ARN
+	// If ModelPackageName not set after newRequestPayload attempt to use ARN
 	// This is because versioned modelpackage uses ARN not name
 	if input.ModelPackageName == nil {
 		arn := r.Identifiers().ARN()
@@ -960,12 +974,13 @@ func (rm *resourceManager) sdkDelete(
 	_ = resp
 	resp, err = rm.sdkapi.DeleteModelPackageWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteModelPackage", err)
+
 	if err == nil {
-		if foundResource, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
+		if _, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
 			if err != nil {
-				return foundResource, err
+				return nil, err
 			}
-			return foundResource, requeueWaitWhileDeleting
+			return r, requeueWaitWhileDeleting
 		}
 	}
 

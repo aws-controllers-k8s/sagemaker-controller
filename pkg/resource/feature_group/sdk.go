@@ -387,8 +387,9 @@ func (rm *resourceManager) sdkDelete(
 	_ = resp
 	resp, err = rm.sdkapi.DeleteFeatureGroupWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteFeatureGroup", err)
+
 	if err == nil {
-		if foundResource, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
+		if _, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
 			if err != nil {
 				return nil, err
 			}

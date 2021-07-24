@@ -25,12 +25,14 @@ from e2e import (
     wait_for_status,
     create_sagemaker_resource,
     sagemaker_client,
+    assert_tags_in_sync,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.bootstrap_resources import get_bootstrap_resources
 from e2e.common import config as cfg
 
 RESOURCE_PLURAL = "modelpackages"
+
 
 @pytest.fixture(scope="function")
 def xgboost_model_package_group():
@@ -83,13 +85,14 @@ def xgboost_versioned_model_package(xgboost_model_package_group):
             f"ARN for this resource is None, resource status is: {resource['status']}"
         )
     assert k8s.get_resource_arn(resource) is not None
-    
+
     yield (reference, spec, resource)
     # Delete the k8s resource if not already deleted by tests
     if k8s.get_resource_exists(reference):
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted
-        
+
+
 @pytest.fixture(scope="function")
 def xgboost_unversioned_model_package():
     resource_name = random_suffix_name("xgboost-unversioned-model-package", 38)
@@ -194,8 +197,13 @@ class TestmodelPackage:
         assert model_package_name is not None
 
         model_package_desc = get_sagemaker_model_package(model_package_name)
+        model_package_arn = model_package_desc["ModelPackageArn"]
 
-        assert k8s.get_resource_arn(resource) == model_package_desc["ModelPackageArn"]
+        assert k8s.get_resource_arn(resource) == model_package_arn
+
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(model_package_arn, resource_tags)
+
         assert model_package_desc["ModelPackageStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
@@ -218,8 +226,9 @@ class TestmodelPackage:
             )
 
         model_package_desc = get_sagemaker_model_package(model_package_name)
+        model_package_arn = model_package_desc["ModelPackageArn"]
 
-        assert k8s.get_resource_arn(resource) == model_package_desc["ModelPackageArn"]
+        assert k8s.get_resource_arn(resource) == model_package_arn
         assert model_package_desc["ModelPackageStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 

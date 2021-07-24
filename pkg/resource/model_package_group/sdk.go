@@ -232,7 +232,7 @@ func (rm *resourceManager) sdkDelete(
 	rm.metrics.RecordAPICall("DELETE", "DeleteModelPackageGroup", err)
 
 	if err == nil {
-		if foundResource, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
+		if _, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
 			if err != nil {
 				return nil, err
 			}

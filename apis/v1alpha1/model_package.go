@@ -72,6 +72,10 @@ type ModelPackageSpec struct {
 	ModelPackageName *string `json:"modelPackageName,omitempty"`
 	// Details about the algorithm that was used to create the model package.
 	SourceAlgorithmSpecification *SourceAlgorithmSpecification `json:"sourceAlgorithmSpecification,omitempty"`
+	// A list of key value pairs associated with the model. For more information,
+	// see Tagging AWS resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html)
+	// in the AWS General Reference Guide.
+	Tags []*Tag `json:"tags,omitempty"`
 	// Specifies configurations for one or more transform jobs that Amazon SageMaker
 	// runs to test the model package.
 	ValidationSpecification *ModelPackageValidationSpecification `json:"validationSpecification,omitempty"`
