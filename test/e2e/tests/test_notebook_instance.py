@@ -118,6 +118,18 @@ class TestNotebookInstance:
         #wait for the resource to go to the InService state and make sure the operator is synced with sagemaker.
         self._assert_notebook_status_in_sync(notebook_instance_name,reference,"InService")
 
+        spec["spec"]["volumeSizeInGB"] = 7
+        k8s.patch_custom_resource(reference,spec)
+
+        self._assert_notebook_status_in_sync(notebook_instance_name,reference,"InService")
+
+        resource = k8s.wait_resource_consumed_by_controller(reference)
+        assert resource is not None
+
+        latest_notebook = get_notebook_instance(notebook_instance_name)
+        assert(latest_notebook["VolumeSizeInGB"] == 7)
+
+
         # Delete the k8s resource.
         _, deleted = k8s.delete_custom_resource(reference, 11, 30)
         assert deleted is True

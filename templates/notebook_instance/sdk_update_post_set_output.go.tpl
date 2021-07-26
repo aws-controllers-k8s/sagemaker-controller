@@ -4,4 +4,4 @@
 	}
 	curr["done_updating"] = "true"
 	ko.SetAnnotations(curr)
-	rm.customSetOutput(aws.String(svcsdk.NotebookInstanceStatusUpdating), ko)
+	rm.customSetOutputCreateUpdate(ko)

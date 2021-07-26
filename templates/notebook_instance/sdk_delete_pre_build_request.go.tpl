@@ -1,13 +1,6 @@
 //This will avoid exponential backoff
-if isNotebookStopping(r){
-    return r,requeueWaitWhileStopping
-}
-//This will avoid exponential backoff
-if isNotebookPending(r){
-    return r,requeueWaitWhilePending
-}
-if isNotebookDeleting(r){
-    return nil,requeueWaitWhileDeleting
+if err = rm.requeueUntilCanModify(ctx, r); err != nil {
+	return r, err
 }
 
 rm.customPreDelete(r)

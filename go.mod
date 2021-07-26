@@ -13,3 +13,4 @@ require (
 	sigs.k8s.io/controller-runtime v0.6.0
 )
 
+replace github.com/aws-controllers-k8s/runtime => /home/ubuntu/go/src/github.com/aws-controllers-k8s/runtime

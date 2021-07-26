@@ -571,7 +571,7 @@ resources:
       sdk_read_one_pre_set_output:
         template_path: notebook_instance/sdk_read_one_pre_set_output.go.tpl
       sdk_create_post_set_output:
-        code: rm.customSetOutput(aws.String(svcsdk.NotebookInstanceStatusPending),ko)
+        code: rm.customSetOutputCreateUpdate(ko)
       sdk_update_pre_build_request:
         template_path: notebook_instance/sdk_update_pre_build_request.go.tpl
       sdk_update_post_set_output:

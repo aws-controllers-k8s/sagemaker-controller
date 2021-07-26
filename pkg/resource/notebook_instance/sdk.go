@@ -17,6 +17,7 @@ package notebook_instance
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
@@ -71,13 +72,18 @@ func (rm *resourceManager) sdkFind(
 		}
 		return nil, err
 	}
+	if r.ko.Status.StoppedByAck != nil {
+		fmt.Println("\n \n \n stopped by ack pre", *r.ko.Status.StoppedByAck, "\n \n \n")
+	} else {
+		fmt.Println("\n \n \n nillll reeeee  \n \n \n")
+	}
 
 	// Merge in the information we read from the API call above to the copy of
 	// the original Kubernetes object we passed to the function
 	ko := r.ko.DeepCopy()
-	tmp := ""
+	tmp := "woof"
 	if r != nil && r.ko != nil && r.ko.Status.StoppedByAck != nil {
-		tmp = *r.ko.Status.StoppedByAck
+		// tmp = *r.ko.Status.StoppedByAck
 	}
 
 	if resp.AcceleratorTypes != nil {
@@ -165,9 +171,12 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.VolumeSizeInGB = nil
 	}
 
+	ko.Status.StoppedByAck = &tmp //covers a scenario where the code generator sets r.ko.Status.StoppedByAck
+
 	rm.setStatusDefaults(ko)
 	rm.customSetOutputDescribe(r, ko)
-	r.ko.Status.StoppedByAck = &tmp //covers a scenario where the code generator sets r.ko.Status.StoppedByAck
+
+	fmt.Println("\n \n \n stopped by ack", *ko.Status.StoppedByAck, "\n \n \n")
 	return &resource{ko}, nil
 }
 
@@ -230,7 +239,7 @@ func (rm *resourceManager) sdkCreate(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutput(aws.String(svcsdk.NotebookInstanceStatusPending), ko)
+	rm.customSetOutputCreateUpdate(ko)
 	return &resource{ko}, nil
 }
 
@@ -328,17 +337,13 @@ func (rm *resourceManager) sdkUpdate(
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkUpdate")
 	defer exit(err)
-	if isNotebookStopping(latest) {
-		return latest, requeueWaitWhileStopping
+	if err = rm.requeueUntilCanModify(ctx, latest); err != nil {
+		return latest, err
 	}
-	if isNotebookPending(latest) {
-		return latest, requeueWaitWhilePending
-	}
-	if isNotebookUpdating(latest) && latest.ko.Status.FailureReason == nil {
-		return latest, requeueWaitWhileUpdating
-	}
+
 	stopped_by_ack := rm.customPreUpdate(ctx, desired, latest)
 	if stopped_by_ack {
+		fmt.Println("\n \n \n stopped by ack \n \n \n")
 		stopped_by_ack_str := "true"
 		latest.ko.Status.StoppedByAck = &stopped_by_ack_str
 		return latest, requeueWaitWhileStopping
@@ -366,7 +371,7 @@ func (rm *resourceManager) sdkUpdate(
 	}
 	curr["done_updating"] = "true"
 	ko.SetAnnotations(curr)
-	rm.customSetOutput(aws.String(svcsdk.NotebookInstanceStatusUpdating), ko)
+	rm.customSetOutputCreateUpdate(ko)
 	return &resource{ko}, nil
 }
 
@@ -430,15 +435,8 @@ func (rm *resourceManager) sdkDelete(
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
 	//This will avoid exponential backoff
-	if isNotebookStopping(r) {
-		return r, requeueWaitWhileStopping
-	}
-	//This will avoid exponential backoff
-	if isNotebookPending(r) {
-		return r, requeueWaitWhilePending
-	}
-	if isNotebookDeleting(r) {
-		return nil, requeueWaitWhileDeleting
+	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
+		return r, err
 	}
 
 	rm.customPreDelete(r)
