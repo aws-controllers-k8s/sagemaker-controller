@@ -6712,6 +6712,17 @@ func (in *NotebookInstanceSpec) DeepCopyInto(out *NotebookInstanceSpec) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.Tags != nil {
+		in, out := &in.Tags, &out.Tags
+		*out = make([]*Tag, len(*in))
+		for i := range *in {
+			if (*in)[i] != nil {
+				in, out := &(*in)[i], &(*out)[i]
+				*out = new(Tag)
+				(*in).DeepCopyInto(*out)
+			}
+		}
+	}
 	if in.VolumeSizeInGB != nil {
 		in, out := &in.VolumeSizeInGB, &out.VolumeSizeInGB
 		*out = new(int64)

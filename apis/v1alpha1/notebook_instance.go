@@ -94,6 +94,10 @@ type NotebookInstanceSpec struct {
 	// The ID of the subnet in a VPC to which you would like to have a connectivity
 	// from your ML compute instance.
 	SubnetID *string `json:"subnetID,omitempty"`
+	// An array of key-value pairs. You can use tags to categorize your AWS resources
+	// in different ways, for example, by purpose, owner, or environment. For more
+	// information, see Tagging AWS Resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+	Tags []*Tag `json:"tags,omitempty"`
 	// The size, in GB, of the ML storage volume to attach to the notebook instance.
 	// The default value is 5 GB.
 	VolumeSizeInGB *int64 `json:"volumeSizeInGB,omitempty"`

@@ -107,6 +107,7 @@ func newResourceDelta(
 			delta.Add("Spec.SubnetID", a.ko.Spec.SubnetID, b.ko.Spec.SubnetID)
 		}
 	}
+
 	if ackcompare.HasNilDifference(a.ko.Spec.VolumeSizeInGB, b.ko.Spec.VolumeSizeInGB) {
 		delta.Add("Spec.VolumeSizeInGB", a.ko.Spec.VolumeSizeInGB, b.ko.Spec.VolumeSizeInGB)
 	} else if a.ko.Spec.VolumeSizeInGB != nil && b.ko.Spec.VolumeSizeInGB != nil {

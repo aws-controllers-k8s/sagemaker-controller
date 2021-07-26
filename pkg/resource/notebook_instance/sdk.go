@@ -296,6 +296,20 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.SubnetID != nil {
 		res.SetSubnetId(*r.ko.Spec.SubnetID)
 	}
+	if r.ko.Spec.Tags != nil {
+		f12 := []*svcsdk.Tag{}
+		for _, f12iter := range r.ko.Spec.Tags {
+			f12elem := &svcsdk.Tag{}
+			if f12iter.Key != nil {
+				f12elem.SetKey(*f12iter.Key)
+			}
+			if f12iter.Value != nil {
+				f12elem.SetValue(*f12iter.Value)
+			}
+			f12 = append(f12, f12elem)
+		}
+		res.SetTags(f12)
+	}
 	if r.ko.Spec.VolumeSizeInGB != nil {
 		res.SetVolumeSizeInGB(*r.ko.Spec.VolumeSizeInGB)
 	}

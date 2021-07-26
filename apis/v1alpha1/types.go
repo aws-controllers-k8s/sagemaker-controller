@@ -275,8 +275,9 @@ type CheckpointConfig struct {
 
 // Specifies summary information about a Git repository.
 type CodeRepositorySummary struct {
-	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
-	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	CodeRepositoryName *string      `json:"codeRepositoryName,omitempty"`
+	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime   *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
 // Configuration information for the Debugger output tensor collections.
