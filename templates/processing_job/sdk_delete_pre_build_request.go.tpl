@@ -2,5 +2,5 @@
 	// resource Unmanaged
 	latestStatus := r.ko.Status.ProcessingJobStatus
 	if latestStatus != nil && *latestStatus != svcsdk.ProcessingJobStatusInProgress {
-		return r,nil
+		return r, err
 	}

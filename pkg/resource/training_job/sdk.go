@@ -917,40 +917,54 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.SetStoppingCondition(f16)
 	}
+	if r.ko.Spec.Tags != nil {
+		f17 := []*svcsdk.Tag{}
+		for _, f17iter := range r.ko.Spec.Tags {
+			f17elem := &svcsdk.Tag{}
+			if f17iter.Key != nil {
+				f17elem.SetKey(*f17iter.Key)
+			}
+			if f17iter.Value != nil {
+				f17elem.SetValue(*f17iter.Value)
+			}
+			f17 = append(f17, f17elem)
+		}
+		res.SetTags(f17)
+	}
 	if r.ko.Spec.TensorBoardOutputConfig != nil {
-		f17 := &svcsdk.TensorBoardOutputConfig{}
+		f18 := &svcsdk.TensorBoardOutputConfig{}
 		if r.ko.Spec.TensorBoardOutputConfig.LocalPath != nil {
-			f17.SetLocalPath(*r.ko.Spec.TensorBoardOutputConfig.LocalPath)
+			f18.SetLocalPath(*r.ko.Spec.TensorBoardOutputConfig.LocalPath)
 		}
 		if r.ko.Spec.TensorBoardOutputConfig.S3OutputPath != nil {
-			f17.SetS3OutputPath(*r.ko.Spec.TensorBoardOutputConfig.S3OutputPath)
+			f18.SetS3OutputPath(*r.ko.Spec.TensorBoardOutputConfig.S3OutputPath)
 		}
-		res.SetTensorBoardOutputConfig(f17)
+		res.SetTensorBoardOutputConfig(f18)
 	}
 	if r.ko.Spec.TrainingJobName != nil {
 		res.SetTrainingJobName(*r.ko.Spec.TrainingJobName)
 	}
 	if r.ko.Spec.VPCConfig != nil {
-		f19 := &svcsdk.VpcConfig{}
+		f20 := &svcsdk.VpcConfig{}
 		if r.ko.Spec.VPCConfig.SecurityGroupIDs != nil {
-			f19f0 := []*string{}
-			for _, f19f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
-				var f19f0elem string
-				f19f0elem = *f19f0iter
-				f19f0 = append(f19f0, &f19f0elem)
+			f20f0 := []*string{}
+			for _, f20f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
+				var f20f0elem string
+				f20f0elem = *f20f0iter
+				f20f0 = append(f20f0, &f20f0elem)
 			}
-			f19.SetSecurityGroupIds(f19f0)
+			f20.SetSecurityGroupIds(f20f0)
 		}
 		if r.ko.Spec.VPCConfig.Subnets != nil {
-			f19f1 := []*string{}
-			for _, f19f1iter := range r.ko.Spec.VPCConfig.Subnets {
-				var f19f1elem string
-				f19f1elem = *f19f1iter
-				f19f1 = append(f19f1, &f19f1elem)
+			f20f1 := []*string{}
+			for _, f20f1iter := range r.ko.Spec.VPCConfig.Subnets {
+				var f20f1elem string
+				f20f1elem = *f20f1iter
+				f20f1 = append(f20f1, &f20f1elem)
 			}
-			f19.SetSubnets(f19f1)
+			f20.SetSubnets(f20f1)
 		}
-		res.SetVpcConfig(f19)
+		res.SetVpcConfig(f20)
 	}
 
 	return res, nil
@@ -980,7 +994,7 @@ func (rm *resourceManager) sdkDelete(
 	// resource Unmanaged
 	latestStatus := r.ko.Status.TrainingJobStatus
 	if latestStatus != nil && *latestStatus != svcsdk.TrainingJobStatusInProgress {
-		return r, nil
+		return r, err
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
