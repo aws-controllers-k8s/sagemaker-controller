@@ -220,7 +220,7 @@ func (rm *resourceManager) sdkCreate(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutputCreate(aws.String("Pending"), ko)
+	rm.customSetOutputCreate(ko)
 	return &resource{ko}, nil
 }
 

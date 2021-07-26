@@ -569,7 +569,7 @@ resources:
       sdk_read_one_post_set_output: 
         code: rm.customSetOutputDescribe(r,ko)
       sdk_create_post_set_output:
-        code: rm.customSetOutputCreate(aws.String("Pending"),ko)
+        code: rm.customSetOutputCreate(ko)
     fields:
       NotebookInstanceStatus:
         is_read_only: true

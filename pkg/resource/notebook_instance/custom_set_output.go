@@ -4,6 +4,7 @@ import (
 	ackcond "github.com/aws-controllers-k8s/runtime/pkg/condition"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
+	"github.com/aws/aws-sdk-go/aws"
 	corev1 "k8s.io/api/core/v1"
 )
 
@@ -15,14 +16,12 @@ func (rm *resourceManager) customSetOutput(r *resource) {
 	svccommon.SetSyncedCondition(r, latestStatus, &resourceName, &modifyingStatuses)
 }
 
-//Create does
-func (rm *resourceManager) customSetOutputCreate(
-	notebookInstanceStatus *string, ko *svcapitypes.NotebookInstance) {
-	if notebookInstanceStatus == nil {
+//The resource from create does not have a state in the status field
+func (rm *resourceManager) customSetOutputCreate(ko *svcapitypes.NotebookInstance) {
+	if ko == nil {
 		return
 	}
-	pendingReason := "Notebook is currenty starting"
-	ackcond.SetSynced(&resource{ko}, corev1.ConditionFalse, nil, &pendingReason)
+	ackcond.SetSynced(&resource{ko}, corev1.ConditionFalse, nil, aws.String("Notebook is currenty starting"))
 
 }
 
