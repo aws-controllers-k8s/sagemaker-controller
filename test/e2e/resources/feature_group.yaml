@@ -15,3 +15,10 @@ spec:
     s3StorageConfig:
       s3URI: s3://$SAGEMAKER_DATA_BUCKET/sagemaker/feature-group-data
   roleARN: $SAGEMAKER_EXECUTION_ROLE_ARN
+  tags:
+    - key: confidentiality
+      value: public
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

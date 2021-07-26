@@ -176,6 +176,19 @@ spec:
                     format: int64
                     type: integer
                 type: object
+              tags:
+                description: (Optional) An array of key-value pairs. For more information,
+                  see Using Cost Allocation Tags (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html#allocation-whatURL)
+                  in the AWS Billing and Cost Management User Guide.
+                items:
+                  description: Describes a tag.
+                  properties:
+                    key:
+                      type: string
+                    value:
+                      type: string
+                  type: object
+                type: array
             required:
             - jobDefinitionName
             - jobResources
