@@ -277,6 +277,7 @@ type CheckpointConfig struct {
 type CodeRepositorySummary struct {
 	CodeRepositoryName *string      `json:"codeRepositoryName,omitempty"`
 	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime   *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
 // Configuration information for the Debugger output tensor collections.

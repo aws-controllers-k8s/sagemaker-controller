@@ -131,6 +131,20 @@ spec:
                 description: The ID of the subnet in a VPC to which you would like
                   to have a connectivity from your ML compute instance.
                 type: string
+              tags:
+                description: An array of key-value pairs. You can use tags to categorize
+                  your AWS resources in different ways, for example, by purpose, owner,
+                  or environment. For more information, see Tagging AWS Resources
+                  (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+                items:
+                  description: Describes a tag.
+                  properties:
+                    key:
+                      type: string
+                    value:
+                      type: string
+                  type: object
+                type: array
               volumeSizeInGB:
                 description: The size, in GB, of the ML storage volume to attach to
                   the notebook instance. The default value is 5 GB.

@@ -220,7 +220,7 @@ func (rm *resourceManager) sdkCreate(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutput(aws.String(svcsdk.NotebookInstanceStatusPending), ko)
+	rm.customSetOutputCreate(aws.String("Pending"), ko)
 	return &resource{ko}, nil
 }
 
@@ -285,6 +285,20 @@ func (rm *resourceManager) newCreateRequestPayload(
 	}
 	if r.ko.Spec.SubnetID != nil {
 		res.SetSubnetId(*r.ko.Spec.SubnetID)
+	}
+	if r.ko.Spec.Tags != nil {
+		f12 := []*svcsdk.Tag{}
+		for _, f12iter := range r.ko.Spec.Tags {
+			f12elem := &svcsdk.Tag{}
+			if f12iter.Key != nil {
+				f12elem.SetKey(*f12iter.Key)
+			}
+			if f12iter.Value != nil {
+				f12elem.SetValue(*f12iter.Value)
+			}
+			f12 = append(f12, f12elem)
+		}
+		res.SetTags(f12)
 	}
 	if r.ko.Spec.VolumeSizeInGB != nil {
 		res.SetVolumeSizeInGB(*r.ko.Spec.VolumeSizeInGB)
@@ -379,27 +393,24 @@ func (rm *resourceManager) newUpdateRequestPayload(
 func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
-) (err error) {
+) (latest *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
-	//This will avoid exponential backoff
-	if isNotebookStopping(r) {
-		return requeueWaitWhileStopping
-	}
-	//This will avoid exponential backoff
-	if isNotebookPending(r) {
-		return requeueWaitWhilePending
+	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
+		return r, err
 	}
 
 	rm.customPreDelete(r)
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = rm.sdkapi.DeleteNotebookInstanceWithContext(ctx, input)
+	var resp *svcsdk.DeleteNotebookInstanceOutput
+	_ = resp
+	resp, err = rm.sdkapi.DeleteNotebookInstanceWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteNotebookInstance", err)
-	return err
+	return nil, err
 }
 
 // newDeleteRequestPayload returns an SDK-specific struct for the HTTP request

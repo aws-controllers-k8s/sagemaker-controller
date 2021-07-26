@@ -567,9 +567,9 @@ resources:
       delta_pre_compare:
         code: customSetDefaults(a, b)
       sdk_read_one_post_set_output: 
-        code: rm.customSetOutputDescribe(r, ko)
+        code: rm.customSetOutputDescribe(r,ko)
       sdk_create_post_set_output:
-        code: rm.customSetOutput(aws.String(svcsdk.NotebookInstanceStatusPending),ko)
+        code: rm.customSetOutputCreate(aws.String("Pending"),ko)
     fields:
       NotebookInstanceStatus:
         is_read_only: true

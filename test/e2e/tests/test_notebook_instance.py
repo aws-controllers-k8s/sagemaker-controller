@@ -115,8 +115,11 @@ class TestNotebookInstance:
         notebook_description = get_notebook_instance(notebook_instance_name)
         assert notebook_description["NotebookInstanceStatus"] == "Pending"
 
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
+
         #wait for the resource to go to the InService state and make sure the operator is synced with sagemaker.
         self._assert_notebook_status_in_sync(notebook_instance_name,reference,"InService")
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
         # Delete the k8s resource.
         _, deleted = k8s.delete_custom_resource(reference, 11, 30)
