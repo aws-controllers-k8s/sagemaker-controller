@@ -7,8 +7,8 @@ spec:
   modelPackageDescription: "Description for model package"
   inferenceSpecification:
     containers:
-      - image: 433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:latest
-        modelDataURL: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model/xgboost-mnist-model.tar.gz
+      - image: $XGBOOST_V1_IMAGE_URI
+        modelDataURL: s3://$SAGEMAKER_DATA_BUCKET/sagemaker/model/xgboost-mnist-model.tar.gz
     supportedContentTypes:
       - "text/csv"
     supportedResponseMIMETypes:

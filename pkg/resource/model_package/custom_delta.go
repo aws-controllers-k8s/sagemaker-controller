@@ -21,9 +21,11 @@ func customSetDefaults(
 	a *resource,
 	b *resource,
 ) {
+	// Default is for CertifyForMarketplace to be set to false
 	if ackcompare.IsNil(a.ko.Spec.CertifyForMarketplace) && ackcompare.IsNotNil(b.ko.Spec.CertifyForMarketplace) {
 		a.ko.Spec.CertifyForMarketplace = b.ko.Spec.CertifyForMarketplace
 	}
+	// Default is for ModelApprovalStatus to be set to pending manual approval
 	if ackcompare.IsNil(a.ko.Spec.ModelApprovalStatus) && ackcompare.IsNotNil(b.ko.Spec.ModelApprovalStatus) {
 		a.ko.Spec.ModelApprovalStatus = b.ko.Spec.ModelApprovalStatus
 	}

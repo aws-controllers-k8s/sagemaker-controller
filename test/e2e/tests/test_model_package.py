@@ -52,7 +52,12 @@ def xgboost_model_package_group():
         replacements=replacements,
     )
     assert model_package_group_resource is not None
-
+    if k8s.get_resource_arn(model_package_group_resource) is None:
+        logging.debug(
+            f"ARN for this resource is None, resource status is: {model_package_group_resource['status']}"
+        )
+    assert k8s.get_resource_arn(model_package_group_resource) is not None
+    
     yield (model_package_group_reference, model_package_group_resource)
 
     # Delete the k8s resource if not already deleted by tests
@@ -65,7 +70,6 @@ def xgboost_model_package_group():
 def xgboost_versioned_model_package(xgboost_model_package_group):
     resource_name = random_suffix_name("xgboost-versioned-model-package", 38)
     (_, model_package_group_resource) = xgboost_model_package_group
-    print(model_package_group_resource)
     model_package_group_resource_name = model_package_group_resource["spec"].get(
         "modelPackageGroupName", None
     )
@@ -80,11 +84,6 @@ def xgboost_versioned_model_package(xgboost_model_package_group):
         replacements=replacements,
     )
     assert resource is not None
-    if k8s.get_resource_arn(resource) is None:
-        logging.debug(
-            f"ARN for this resource is None, resource status is: {resource['status']}"
-        )
-    assert k8s.get_resource_arn(resource) is not None
 
     yield (reference, spec, resource)
     # Delete the k8s resource if not already deleted by tests
@@ -106,11 +105,6 @@ def xgboost_unversioned_model_package():
     )
 
     assert resource is not None
-    if k8s.get_resource_arn(resource) is None:
-        logging.debug(
-            f"ARN for this resource is None, resource status is: {resource['status']}"
-        )
-    assert k8s.get_resource_arn(resource) is not None
 
     yield (reference, resource)
 
@@ -199,6 +193,11 @@ class TestmodelPackage:
         model_package_desc = get_sagemaker_model_package(model_package_name)
         model_package_arn = model_package_desc["ModelPackageArn"]
 
+        if k8s.get_resource_arn(resource) is None:
+            logging.debug(
+                f"ARN for this resource is None, resource status is: {resource['status']}"
+            )
+        
         assert k8s.get_resource_arn(resource) == model_package_arn
 
         resource_tags = resource["spec"].get("tags", None)
@@ -227,6 +226,10 @@ class TestmodelPackage:
 
         model_package_desc = get_sagemaker_model_package(model_package_name)
         model_package_arn = model_package_desc["ModelPackageArn"]
+        if k8s.get_resource_arn(resource) is None:
+            logging.debug(
+                f"ARN for this resource is None, resource status is: {resource['status']}"
+            )
 
         assert k8s.get_resource_arn(resource) == model_package_arn
         assert model_package_desc["ModelPackageStatus"] == cfg.JOB_STATUS_INPROGRESS

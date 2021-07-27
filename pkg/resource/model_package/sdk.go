@@ -61,7 +61,7 @@ func (rm *resourceManager) sdkFind(
 	if err != nil {
 		return nil, err
 	}
-	// If ModelPackageName not set after newRequestPayload attempt to use ARN
+	// If ModelPackageName not set after newRequestPayload, attempt to use ARN
 	// This is because versioned modelpackage uses ARN not name
 	if input.ModelPackageName == nil {
 		arn := r.Identifiers().ARN()
@@ -961,7 +961,7 @@ func (rm *resourceManager) sdkDelete(
 	if err != nil {
 		return nil, err
 	}
-	// If ModelPackageName not set after newRequestPayload attempt to use ARN
+	// If ModelPackageName not set after newRequestPayload, attempt to use ARN
 	// This is because versioned modelpackage uses ARN not name
 	if input.ModelPackageName == nil {
 		arn := r.Identifiers().ARN()

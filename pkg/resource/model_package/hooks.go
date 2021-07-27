@@ -50,3 +50,15 @@ func (rm *resourceManager) requeueUntilCanModify(
 	latestStatus := r.ko.Status.ModelPackageStatus
 	return svccommon.RequeueIfModifying(latestStatus, &resourceName, &modifyingStatuses)
 }
+
+// requiredFieldsMissingFromReadOneInput returns true if there are any fields
+// for the ReadOne Input shape that are required but not present in the
+// resource's Spec or Status
+// ModelPackage can be Unversioned or Versioned both cannot be nil since ModelPackageName
+// is required for Unversioned and  ModelPackageGroupName is required for Versioned
+func (rm *resourceManager) customCheckRequiredFieldsMissingMethod(
+	r *resource,
+) bool {
+	return r.ko.Spec.ModelPackageName == nil && r.ko.Spec.ModelPackageGroupName == nil
+
+}
