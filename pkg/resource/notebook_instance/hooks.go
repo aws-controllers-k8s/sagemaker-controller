@@ -36,6 +36,5 @@ func isNotebookUpdating(r *resource) bool {
 		return false
 	}
 	notebookInstanceStatus := r.ko.Status.NotebookInstanceStatus
-
 	return *notebookInstanceStatus == svcsdk.NotebookInstanceStatusUpdating
 }

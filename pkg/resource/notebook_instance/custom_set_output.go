@@ -27,7 +27,6 @@ func (rm *resourceManager) customSetOutputCreateUpdate(ko *svcapitypes.NotebookI
 
 func (rm *resourceManager) customSetOutputDescribe(r *resource,
 	ko *svcapitypes.NotebookInstance) bool {
-
 	notebook_state := *ko.Status.NotebookInstanceStatus // Get the Notebook State
 	if ko.Annotations != nil && ko.Annotations["done_updating"] == "true" {
 		if notebook_state != svcsdk.NotebookInstanceStatusStopped {

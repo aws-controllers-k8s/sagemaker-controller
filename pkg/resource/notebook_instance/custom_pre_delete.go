@@ -11,7 +11,6 @@ func (rm *resourceManager) customPreDelete(
 	r *resource) {
 
 	latestStatus := *r.ko.Status.NotebookInstanceStatus
-
 	if &latestStatus == nil {
 		return
 	}
