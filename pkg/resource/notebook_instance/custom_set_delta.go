@@ -12,7 +12,6 @@ func customSetDefaults(
 	a *resource,
 	b *resource,
 ) {
-
 	if ackcompare.IsNil(a.ko.Spec.DirectInternetAccess) && ackcompare.IsNotNil(b.ko.Spec.DirectInternetAccess) {
 		a.ko.Spec.DirectInternetAccess = b.ko.Spec.DirectInternetAccess
 	}

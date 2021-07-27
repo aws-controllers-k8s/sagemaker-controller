@@ -4,7 +4,6 @@ import (
 	"context"
 
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
-
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 )
 

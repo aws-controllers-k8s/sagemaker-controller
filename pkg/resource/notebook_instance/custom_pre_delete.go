@@ -9,9 +9,7 @@ This code stops the NotebookInstance right before its about to be deleted.
 */
 func (rm *resourceManager) customPreDelete(
 	r *resource) {
-
 	latestStatus := *r.ko.Status.NotebookInstanceStatus
-
 	if &latestStatus == nil {
 		return
 	}

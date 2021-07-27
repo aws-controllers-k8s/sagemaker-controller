@@ -22,11 +22,9 @@ func (rm *resourceManager) customSetOutputCreate(ko *svcapitypes.NotebookInstanc
 		return
 	}
 	ackcond.SetSynced(&resource{ko}, corev1.ConditionFalse, nil, aws.String("Notebook is currenty starting"))
-
 }
 
 //Update uses this function
 func (rm *resourceManager) customSetOutputDescribe(r *resource, ko *svcapitypes.NotebookInstance) {
 	rm.customSetOutput(&resource{ko}) // We set the sync status here
-
 }
