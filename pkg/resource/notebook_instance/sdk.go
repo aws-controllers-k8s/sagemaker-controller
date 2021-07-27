@@ -17,7 +17,6 @@ package notebook_instance
 
 import (
 	"context"
-	"fmt"
 	"strings"
 
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
@@ -72,18 +71,13 @@ func (rm *resourceManager) sdkFind(
 		}
 		return nil, err
 	}
-	if r.ko.Status.StoppedByAck != nil {
-		fmt.Println("\n \n \n stopped by ack pre", *r.ko.Status.StoppedByAck, "\n \n \n")
-	} else {
-		fmt.Println("\n \n \n nillll reeeee  \n \n \n")
-	}
 
 	// Merge in the information we read from the API call above to the copy of
 	// the original Kubernetes object we passed to the function
 	ko := r.ko.DeepCopy()
-	tmp := "woof"
+	tmp := ""
 	if r != nil && r.ko != nil && r.ko.Status.StoppedByAck != nil {
-		// tmp = *r.ko.Status.StoppedByAck
+		tmp = *r.ko.Status.StoppedByAck
 	}
 
 	if resp.AcceleratorTypes != nil {
@@ -171,12 +165,12 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.VolumeSizeInGB = nil
 	}
 
-	ko.Status.StoppedByAck = &tmp //covers a scenario where the code generator sets r.ko.Status.StoppedByAck
-
 	rm.setStatusDefaults(ko)
-	rm.customSetOutputDescribe(r, ko)
+	started_notebook := rm.customSetOutputDescribe(r, ko)
+	if !started_notebook {
+		ko.Status.StoppedByAck = &tmp //covers a scenario where the code generator sets r.ko.Status.StoppedByAck
+	}
 
-	fmt.Println("\n \n \n stopped by ack", *ko.Status.StoppedByAck, "\n \n \n")
 	return &resource{ko}, nil
 }
 
@@ -343,9 +337,7 @@ func (rm *resourceManager) sdkUpdate(
 
 	stopped_by_ack := rm.customPreUpdate(ctx, desired, latest)
 	if stopped_by_ack {
-		fmt.Println("\n \n \n stopped by ack \n \n \n")
-		stopped_by_ack_str := "true"
-		latest.ko.Status.StoppedByAck = &stopped_by_ack_str
+		latest.ko.Status.StoppedByAck = aws.String("true")
 		return latest, requeueWaitWhileStopping
 	}
 	input, err := rm.newUpdateRequestPayload(ctx, desired)
