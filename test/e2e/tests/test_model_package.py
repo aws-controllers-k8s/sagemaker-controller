@@ -57,7 +57,7 @@ def xgboost_model_package_group():
             f"ARN for this resource is None, resource status is: {model_package_group_resource['status']}"
         )
     assert k8s.get_resource_arn(model_package_group_resource) is not None
-    
+
     yield (model_package_group_reference, model_package_group_resource)
 
     # Delete the k8s resource if not already deleted by tests
@@ -197,7 +197,7 @@ class TestmodelPackage:
             logging.error(
                 f"ARN for this resource is None, resource status is: {resource['status']}"
             )
-        
+
         assert k8s.get_resource_arn(resource) == model_package_arn
 
         resource_tags = resource["spec"].get("tags", None)
@@ -214,29 +214,25 @@ class TestmodelPackage:
         # Check that you can delete a completed resource from k8s
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted is True
-        assert (
-            get_sagemaker_model_package(model_package_name)
-            is None
-        )
-
+        assert get_sagemaker_model_package(model_package_name) is None
 
     def test_versioned_model_package_completed(self, xgboost_versioned_model_package):
         (reference, spec, resource) = xgboost_versioned_model_package
         assert k8s.get_resource_exists(reference)
 
-        if resource["spec"].get("modelPackageGroupName") is not None:
-            model_package_name = (
-                resource["status"].get("ackResourceMetadata", {}).get("arn", None)
-            )
+        model_package_group_name = resource["spec"].get("modelPackageGroupName")
+        # Model package name for Versioned Model packages is the ARN of the resource
+        model_package_name = sagemaker_client().list_model_packages(
+            ModelPackageGroupName=model_package_group_name
+        )["ModelPackageSummaryList"]["ModelPackageArn"]
 
         model_package_desc = get_sagemaker_model_package(model_package_name)
-        model_package_arn = model_package_desc["ModelPackageArn"]
         if k8s.get_resource_arn(resource) is None:
-            logging.debug(
+            logging.error(
                 f"ARN for this resource is None, resource status is: {resource['status']}"
             )
 
-        assert k8s.get_resource_arn(resource) == model_package_arn
+        assert k8s.get_resource_arn(resource) == model_package_name
         assert model_package_desc["ModelPackageStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
@@ -269,8 +265,4 @@ class TestmodelPackage:
         # Check that you can delete a completed resource from k8s
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted is True
-        assert (
-            get_sagemaker_model_package(model_package_name)
-            is None
-        )
-
+        assert get_sagemaker_model_package(model_package_name) is None

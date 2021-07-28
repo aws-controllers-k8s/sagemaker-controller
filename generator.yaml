@@ -566,6 +566,10 @@ resources:
         from:
           operation: UpdateModelPackage
           path: ApprovalDescription
+    # Can adopt unversioned Model Packages however versioned ModelPackages 
+    # cannot be adopted properly. Their spec will show in describe 
+    # kubecetl describe modelpackages however it cannot be deleted or updated
+    # Since this is not expected behavior adoption is disabled
     is_adoptable: false
   FeatureGroup:
     update_conditions_custom_method_name: CustomUpdateConditions
