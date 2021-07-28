@@ -53,7 +53,7 @@ def xgboost_model_package_group():
     )
     assert model_package_group_resource is not None
     if k8s.get_resource_arn(model_package_group_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {model_package_group_resource['status']}"
         )
     assert k8s.get_resource_arn(model_package_group_resource) is not None
@@ -194,7 +194,7 @@ class TestmodelPackage:
         model_package_arn = model_package_desc["ModelPackageArn"]
 
         if k8s.get_resource_arn(resource) is None:
-            logging.debug(
+            logging.error(
                 f"ARN for this resource is None, resource status is: {resource['status']}"
             )
         
@@ -214,6 +214,11 @@ class TestmodelPackage:
         # Check that you can delete a completed resource from k8s
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted is True
+        assert (
+            get_sagemaker_model_package(model_package_name)
+            is None
+        )
+
 
     def test_versioned_model_package_completed(self, xgboost_versioned_model_package):
         (reference, spec, resource) = xgboost_versioned_model_package
@@ -264,3 +269,8 @@ class TestmodelPackage:
         # Check that you can delete a completed resource from k8s
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted is True
+        assert (
+            get_sagemaker_model_package(model_package_name)
+            is None
+        )
+
