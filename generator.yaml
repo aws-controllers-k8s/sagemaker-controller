@@ -566,6 +566,7 @@ resources:
         from:
           operation: UpdateModelPackage
           path: ApprovalDescription
+    is_adoptable: false
   FeatureGroup:
     update_conditions_custom_method_name: CustomUpdateConditions
     exceptions:
