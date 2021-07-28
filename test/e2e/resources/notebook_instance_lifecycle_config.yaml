@@ -1,0 +1,10 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: NotebookInstanceLifecycleConfig
+metadata:
+  name: $NOTEBOOK_INSTANCE_LFC_NAME
+spec:
+  notebookInstanceLifecycleConfigName: $NOTEBOOK_INSTANCE_LFC_NAME
+  onStart:
+    - content: cGlwIGluc3RhbGwgUElM
+  onCreate:
+    - content: d2dldCBodHRwOi8vbWlycm9ycy5jdGFuLm9yZy9tYWNyb3MvbGF0ZXgvY29udHJpYi91cHF1b3RlLnppcA0KRU9G 
