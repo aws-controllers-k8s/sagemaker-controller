@@ -18,7 +18,6 @@ import pytest
 import logging
 from typing import Dict
 
-from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
@@ -27,9 +26,6 @@ from e2e import (
     sagemaker_client,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
-from e2e.bootstrap_resources import get_bootstrap_resources
-from e2e.common import config as cfg
-from time import sleep
 import random
 
 RESOURCE_PLURAL = "notebookinstances"
@@ -53,6 +49,11 @@ def notebook_instance():
     assert k8s.get_resource_arn(resource) is not None
 
     yield (reference, resource, spec)
+
+    # Delete the k8s resource if not already deleted by tests
+    if k8s.get_resource_exists(reference):
+        _, deleted = k8s.delete_custom_resource(reference, 11, 30)
+        assert deleted
 
 
 def get_notebook_instance(notebook_instance_name: str):
