@@ -35,6 +35,9 @@ var (
 	)
 )
 
+// customSetOutput sets ConditionTypeResourceSynced condition to True or False
+// based on the modelPackageStatus on AWS so the reconciler can determine if a
+// requeue is needed
 func (rm *resourceManager) customSetOutput(r *resource) {
 	latestStatus := r.ko.Status.ModelPackageStatus
 	svccommon.SetSyncedCondition(r, latestStatus, &resourceName, &modifyingStatuses)
@@ -51,7 +54,7 @@ func (rm *resourceManager) requeueUntilCanModify(
 	return svccommon.RequeueIfModifying(latestStatus, &resourceName, &modifyingStatuses)
 }
 
-// requiredFieldsMissingFromReadOneInput returns true if there are any fields
+// customCheckRequiredFieldsMissingMethod returns true if there are any fields
 // for the ReadOne Input shape that are required but not present in the
 // resource's Spec or Status
 // ModelPackage can be Unversioned or Versioned both cannot be nil since ModelPackageName

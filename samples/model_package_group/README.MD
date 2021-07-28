@@ -22,17 +22,17 @@ modelpackagegroups.sagemaker.services.k8s.aws.amazon.com/my-model-package-group 
 ### List Model Package Groups
 To list all Model Package Groups created using the ACK controller use the following command:
 ```
-$ kubectl get modelpackagegroups.sagemaker.services.k8s.aws
+$ kubectl get modelpackagegroups
 ```
 
 ### Describe a Model Package Group
 To get more details about the Model Package Group once it's submitted, like checking the status, errors or parameters of the Model Package Group use the following command:
 ```
-$ kubectl describe modelpackagegroups.sagemaker.services.k8s.aws my-model-package-group
+$ kubectl describe modelpackagegroups my-model-package-group
 ```
 
 ### Delete a Model Package Group
 To delete the Model Package Group, use the following command:
 ```
-$ kubectl delete modelpackagegroups.sagemaker.services.k8s.aws my-model-package-group
+$ kubectl delete modelpackagegroups my-model-package-group
 ```

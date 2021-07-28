@@ -269,7 +269,7 @@ class TestmodelPackage:
             resource["spec"].get("modelApprovalStatus", None)
             == new_model_approval_status
         )
-        assert resource["spec"].get("ApprovalDescription", None) == approval_description
+        assert resource["spec"].get("approvalDescription", None) == approval_description
         # Check that you can delete a completed resource from k8s
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted is True
