@@ -204,6 +204,9 @@ class TestmodelPackage:
         assert_tags_in_sync(model_package_arn, resource_tags)
 
         assert model_package_desc["ModelPackageStatus"] == cfg.JOB_STATUS_INPROGRESS
+        self._assert_model_package_status_in_sync(
+            model_package_name, reference, cfg.JOB_STATUS_INPROGRESS
+        )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
         self._assert_model_package_status_in_sync(
@@ -224,7 +227,7 @@ class TestmodelPackage:
         # Model package name for Versioned Model packages is the ARN of the resource
         model_package_name = sagemaker_client().list_model_packages(
             ModelPackageGroupName=model_package_group_name
-        )["ModelPackageSummaryList"]["ModelPackageArn"]
+        )["ModelPackageSummaryList"][0]["ModelPackageArn"]
 
         model_package_desc = get_sagemaker_model_package(model_package_name)
         if k8s.get_resource_arn(resource) is None:
@@ -234,6 +237,9 @@ class TestmodelPackage:
 
         assert k8s.get_resource_arn(resource) == model_package_name
         assert model_package_desc["ModelPackageStatus"] == cfg.JOB_STATUS_INPROGRESS
+        self._assert_model_package_status_in_sync(
+            model_package_name, reference, cfg.JOB_STATUS_INPROGRESS
+        )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
         self._assert_model_package_status_in_sync(
@@ -255,13 +261,15 @@ class TestmodelPackage:
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
-        latest_model_package_desc = get_sagemaker_model_package(model_package_name)
+        model_package_desc = get_sagemaker_model_package(model_package_name)
+        assert model_package_desc["ModelApprovalStatus"] == new_model_approval_status
+        assert model_package_desc["ApprovalDescription"] == approval_description
+
         assert (
-            latest_model_package_desc["ModelApprovalStatus"]
+            resource["spec"].get("modelApprovalStatus", None)
             == new_model_approval_status
         )
-        assert latest_model_package_desc["ApprovalDescription"] == approval_description
-
+        assert resource["spec"].get("ApprovalDescription", None) == approval_description
         # Check that you can delete a completed resource from k8s
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted is True
