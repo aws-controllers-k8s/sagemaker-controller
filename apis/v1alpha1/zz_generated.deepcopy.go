@@ -5491,6 +5491,11 @@ func (in *ModelPackageStatus) DeepCopyInto(out *ModelPackageStatus) {
 		in, out := &in.LastModifiedTime, &out.LastModifiedTime
 		*out = (*in).DeepCopy()
 	}
+	if in.ModelApprovalStatus != nil {
+		in, out := &in.ModelApprovalStatus, &out.ModelApprovalStatus
+		*out = new(string)
+		**out = **in
+	}
 	if in.ModelPackageStatus != nil {
 		in, out := &in.ModelPackageStatus, &out.ModelPackageStatus
 		*out = new(string)

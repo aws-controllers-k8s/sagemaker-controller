@@ -96,6 +96,8 @@ type ModelPackageStatus struct {
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	// The last time the model package was modified.
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	// The approval status of the model package.
+	ModelApprovalStatus *string `json:"modelApprovalStatus,omitempty"`
 	// The current status of the model package.
 	ModelPackageStatus *string `json:"modelPackageStatus,omitempty"`
 	// Details about the current status of the model package.
