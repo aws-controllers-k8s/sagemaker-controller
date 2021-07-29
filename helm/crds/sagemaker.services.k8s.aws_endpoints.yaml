@@ -4,7 +4,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.4.0
+    controller-gen.kubebuilder.io/version: v0.6.1
   creationTimestamp: null
   name: endpoints.sagemaker.services.k8s.aws
 spec:
@@ -17,11 +17,12 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
-    - jsonPath: .status.endpointStatus
-      name: EndpointStatus
-      type: string
     - jsonPath: .status.failureReason
-      name: FailureReason
+      name: FAILURE-REASON
+      priority: 1
+      type: string
+    - jsonPath: .status.endpointStatus
+      name: STATUS
       type: string
     name: v1alpha1
     schema:
@@ -41,7 +42,8 @@ spec:
           metadata:
             type: object
           spec:
-            description: EndpointSpec defines the desired state of Endpoint
+            description: "EndpointSpec defines the desired state of Endpoint. \n A
+              hosted endpoint for real-time inference."
             properties:
               endpointConfigName:
                 description: The name of an endpoint configuration. For more information,
@@ -53,6 +55,20 @@ spec:
                   in CreateEndpoint, but the case is preserved and must be matched
                   in .
                 type: string
+              tags:
+                description: An array of key-value pairs. You can use tags to categorize
+                  your AWS resources in different ways, for example, by purpose, owner,
+                  or environment. For more information, see Tagging AWS Resources
+                  (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+                items:
+                  description: Describes a tag.
+                  properties:
+                    key:
+                      type: string
+                    value:
+                      type: string
+                  type: object
+                type: array
             required:
             - endpointConfigName
             - endpointName

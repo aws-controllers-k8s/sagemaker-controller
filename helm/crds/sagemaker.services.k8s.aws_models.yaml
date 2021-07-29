@@ -4,7 +4,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.4.0
+    controller-gen.kubebuilder.io/version: v0.6.1
   creationTimestamp: null
   name: models.sagemaker.services.k8s.aws
 spec:
@@ -34,7 +34,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: ModelSpec defines the desired state of Model
+            description: ModelSpec defines the desired state of Model.
             properties:
               containers:
                 description: Specifies the containers in the inference pipeline.
@@ -154,6 +154,20 @@ spec:
                         type: string
                     type: object
                 type: object
+              tags:
+                description: An array of key-value pairs. You can use tags to categorize
+                  your AWS resources in different ways, for example, by purpose, owner,
+                  or environment. For more information, see Tagging AWS Resources
+                  (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+                items:
+                  description: Describes a tag.
+                  properties:
+                    key:
+                      type: string
+                    value:
+                      type: string
+                  type: object
+                type: array
               vpcConfig:
                 description: A VpcConfig object that specifies the VPC that you want
                   your model to connect to. Control access to and from your model
