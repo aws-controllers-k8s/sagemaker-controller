@@ -712,6 +712,20 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.SetStoppingCondition(f9)
 	}
+	if r.ko.Spec.Tags != nil {
+		f10 := []*svcsdk.Tag{}
+		for _, f10iter := range r.ko.Spec.Tags {
+			f10elem := &svcsdk.Tag{}
+			if f10iter.Key != nil {
+				f10elem.SetKey(*f10iter.Key)
+			}
+			if f10iter.Value != nil {
+				f10elem.SetValue(*f10iter.Value)
+			}
+			f10 = append(f10, f10elem)
+		}
+		res.SetTags(f10)
+	}
 
 	return res, nil
 }
@@ -732,7 +746,7 @@ func (rm *resourceManager) sdkUpdate(
 func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
-) (err error) {
+) (latest *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
@@ -740,15 +754,17 @@ func (rm *resourceManager) sdkDelete(
 	// resource Unmanaged
 	latestStatus := r.ko.Status.ProcessingJobStatus
 	if latestStatus != nil && *latestStatus != svcsdk.ProcessingJobStatusInProgress {
-		return nil
+		return r, err
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = rm.sdkapi.StopProcessingJobWithContext(ctx, input)
+	var resp *svcsdk.StopProcessingJobOutput
+	_ = resp
+	resp, err = rm.sdkapi.StopProcessingJobWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "StopProcessingJob", err)
-	return err
+	return nil, err
 }
 
 // newDeleteRequestPayload returns an SDK-specific struct for the HTTP request

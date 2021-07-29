@@ -229,6 +229,19 @@ spec:
                 description: The name of the monitoring schedule. The name must be
                   unique within an AWS Region within an AWS account.
                 type: string
+              tags:
+                description: (Optional) An array of key-value pairs. For more information,
+                  see Using Cost Allocation Tags (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html#allocation-whatURL)
+                  in the AWS Billing and Cost Management User Guide.
+                items:
+                  description: Describes a tag.
+                  properties:
+                    key:
+                      type: string
+                    value:
+                      type: string
+                  type: object
+                type: array
             required:
             - monitoringScheduleConfig
             - monitoringScheduleName

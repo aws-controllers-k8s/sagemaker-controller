@@ -25,6 +25,7 @@ from e2e import (
     create_sagemaker_resource,
     wait_for_status,
     sagemaker_client,
+    assert_tags_in_sync,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.bootstrap_resources import get_bootstrap_resources
@@ -55,7 +56,7 @@ def xgboost_model_for_transform(generate_job_names):
     )
     assert resource is not None
     if k8s.get_resource_arn(resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {resource['status']}"
         )
     assert k8s.get_resource_arn(resource) is not None
@@ -84,7 +85,7 @@ def xgboost_transformjob(xgboost_model_for_transform):
 
     assert resource is not None
     if k8s.get_resource_arn(resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {resource['status']}"
         )
     assert k8s.get_resource_arn(resource) is not None
@@ -193,7 +194,9 @@ class TestTransformJob:
         assert transform_job_name is not None
 
         transform_sm_desc = get_sagemaker_transform_job(transform_job_name)
-        assert k8s.get_resource_arn(resource) == transform_sm_desc["TransformJobArn"]
+        transform_arn = transform_sm_desc["TransformJobArn"]
+        assert k8s.get_resource_arn(resource) == transform_arn
+
         assert transform_sm_desc["TransformJobStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
@@ -201,6 +204,9 @@ class TestTransformJob:
             transform_job_name, reference, cfg.JOB_STATUS_COMPLETED
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(transform_arn, resource_tags)
 
         # Check that you can delete a completed resource from k8s
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)

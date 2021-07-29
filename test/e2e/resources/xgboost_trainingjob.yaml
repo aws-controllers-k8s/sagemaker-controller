@@ -42,3 +42,10 @@ spec:
           s3DataDistributionType: FullyReplicated
       contentType: text/csv
       compressionType: None
+  tags:
+    - key: algorithm
+      value: xgboost
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

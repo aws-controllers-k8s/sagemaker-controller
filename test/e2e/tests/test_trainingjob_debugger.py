@@ -25,6 +25,7 @@ from e2e import (
     create_sagemaker_resource,
     wait_for_status,
     sagemaker_client,
+    assert_tags_in_sync,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.bootstrap_resources import get_bootstrap_resources
@@ -45,7 +46,7 @@ def xgboost_training_job_debugger():
         replacements=replacements,
     )
     if k8s.get_resource_arn(resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {resource['status']}"
         )
     assert resource is not None
@@ -187,8 +188,12 @@ class TestTrainingDebuggerJob:
         assert training_job_name is not None
 
         training_job_desc = get_sagemaker_training_job(training_job_name)
+        training_job_arn = training_job_desc["TrainingJobArn"]
+        assert k8s.get_resource_arn(resource) == training_job_arn
 
-        assert k8s.get_resource_arn(resource) == training_job_desc["TrainingJobArn"]
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(training_job_arn, resource_tags)
+
         assert training_job_desc["TrainingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 

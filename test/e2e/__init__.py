@@ -16,6 +16,7 @@ import logging
 import time
 import boto3
 from pathlib import Path
+from unittest import TestCase
 import random
 
 from acktest.k8s import resource as k8s
@@ -156,3 +157,18 @@ def assert_endpoint_status_in_sync(endpoint_name, reference, expected_status):
         == wait_resource_endpoint_status(reference, expected_status, 2)
         == expected_status
     )
+
+
+def assert_tags_in_sync(resource_arn, resource_tags):
+    response = sagemaker_client().list_tags(ResourceArn=resource_arn)
+    response_tags = response["Tags"]
+
+    while "NextToken" in response:
+        response = sagemaker_client().list_tags(
+            ResourceArn=resource_arn, NextToken=response["NextToken"]
+        )
+        response_tags.extend(response["Tags"])
+
+    # SageMaker returns tags with Key,Value while ACK returns key,value
+    response_tags = [{"key": d["Key"], "value": d["Value"]} for d in response_tags]
+    TestCase().assertCountEqual(response_tags, resource_tags)

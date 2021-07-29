@@ -135,6 +135,10 @@ type TrainingJobSpec struct {
 	// window to save the model artifacts, so the results of training are not lost.
 	// +kubebuilder:validation:Required
 	StoppingCondition *StoppingCondition `json:"stoppingCondition"`
+	// An array of key-value pairs. You can use tags to categorize your AWS resources
+	// in different ways, for example, by purpose, owner, or environment. For more
+	// information, see Tagging AWS Resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+	Tags []*Tag `json:"tags,omitempty"`
 
 	TensorBoardOutputConfig *TensorBoardOutputConfig `json:"tensorBoardOutputConfig,omitempty"`
 	// The name of the training job. The name must be unique within an AWS Region

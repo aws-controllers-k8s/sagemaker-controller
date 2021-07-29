@@ -242,6 +242,20 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.EndpointName != nil {
 		res.SetEndpointName(*r.ko.Spec.EndpointName)
 	}
+	if r.ko.Spec.Tags != nil {
+		f2 := []*svcsdk.Tag{}
+		for _, f2iter := range r.ko.Spec.Tags {
+			f2elem := &svcsdk.Tag{}
+			if f2iter.Key != nil {
+				f2elem.SetKey(*f2iter.Key)
+			}
+			if f2iter.Value != nil {
+				f2elem.SetValue(*f2iter.Value)
+			}
+			f2 = append(f2, f2elem)
+		}
+		res.SetTags(f2)
+	}
 
 	return res, nil
 }
@@ -317,20 +331,22 @@ func (rm *resourceManager) newUpdateRequestPayload(
 func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
-) (err error) {
+) (latest *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
 	if err = rm.customDeleteEndpoint(ctx, r); err != nil {
-		return err
+		return nil, err
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = rm.sdkapi.DeleteEndpointWithContext(ctx, input)
+	var resp *svcsdk.DeleteEndpointOutput
+	_ = resp
+	resp, err = rm.sdkapi.DeleteEndpointWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteEndpoint", err)
-	return err
+	return nil, err
 }
 
 // newDeleteRequestPayload returns an SDK-specific struct for the HTTP request
@@ -434,7 +450,7 @@ func (rm *resourceManager) updateConditions(
 		ko.Status.Conditions = append(ko.Status.Conditions, syncCondition)
 	}
 	// custom update conditions
-	customUpdate := rm.customUpdateConditions(ko, r, err)
+	customUpdate := rm.CustomUpdateConditions(ko, r, err)
 	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil || customUpdate {
 		return &resource{ko}, true // updated
 	}

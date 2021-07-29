@@ -21,7 +21,12 @@ from typing import Dict
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
 
-from e2e import service_marker, create_sagemaker_resource, sagemaker_client
+from e2e import (
+    service_marker,
+    create_sagemaker_resource,
+    sagemaker_client,
+    assert_tags_in_sync,
+)
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
 
@@ -43,7 +48,7 @@ def single_variant_config():
     )
     assert model_resource is not None
     if k8s.get_resource_arn(model_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {model_resource['status']}"
         )
     assert k8s.get_resource_arn(model_resource) is not None
@@ -85,12 +90,12 @@ class TestEndpointConfig:
         assert k8s.get_resource_exists(reference)
 
         config_name = resource["spec"].get("endpointConfigName", None)
+        endpoint_config_desc = get_sagemaker_endpoint_config(config_name)
+        endpoint_arn = endpoint_config_desc["EndpointConfigArn"]
+        assert k8s.get_resource_arn(resource) == endpoint_arn
 
-        assert (
-            k8s.get_resource_arn(resource)
-            == get_sagemaker_endpoint_config(config_name)["EndpointConfigArn"]
-        )
-
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(endpoint_arn, resource_tags)
         # Delete the k8s resource.
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted

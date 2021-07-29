@@ -43,3 +43,11 @@ func (rm *resourceManager) requeueUntilCanModify(
 	latestStatus := r.ko.Status.FeatureGroupStatus
 	return svccommon.RequeueIfModifying(latestStatus, &resourceName, &modifyingStatuses)
 }
+
+// customSetOutput sets the ack syncedCondition depending on
+// whether the latest status of the resource is one of the
+// defined modifyingStatuses.
+func (rm *resourceManager) customSetOutput(r *resource) {
+	latestStatus := r.ko.Status.FeatureGroupStatus
+	svccommon.SetSyncedCondition(r, latestStatus, &resourceName, &modifyingStatuses)
+}

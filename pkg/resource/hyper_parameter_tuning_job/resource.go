@@ -87,9 +87,10 @@ func (r *resource) SetObjectMeta(meta metav1.ObjectMeta) {
 // SetIdentifiers sets the Spec or Status field that is referenced as the unique
 // resource identifier
 func (r *resource) SetIdentifiers(identifier *ackv1alpha1.AWSIdentifiers) error {
-	if identifier.NameOrID == nil {
+	if identifier.NameOrID == "" {
 		return ackerrors.MissingNameIdentifier
 	}
-	r.ko.Spec.HyperParameterTuningJobName = identifier.NameOrID
+	r.ko.Spec.HyperParameterTuningJobName = &identifier.NameOrID
+
 	return nil
 }
