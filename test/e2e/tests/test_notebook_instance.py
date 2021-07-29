@@ -18,7 +18,6 @@ import pytest
 import logging
 from typing import Dict
 
-from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
@@ -27,9 +26,6 @@ from e2e import (
     sagemaker_client,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
-from e2e.bootstrap_resources import get_bootstrap_resources
-from e2e.common import config as cfg
-from time import sleep
 import random
 
 RESOURCE_PLURAL = "notebookinstances"
@@ -39,7 +35,7 @@ RESOURCE_SPEC_FILE = "notebook_instance"
 
 @pytest.fixture(scope="function")
 def notebook_instance():
-    resource_name = RESOURCE_PREFIX + str(random.randint(0, 10000))
+    resource_name = RESOURCE_PREFIX + str(random.randint(0, 10000)) #Random strings dont work so we have to use random number names
     replacements = REPLACEMENT_VALUES.copy()
     replacements["NOTEBOOK_INSTANCE_NAME"] = resource_name
     reference, spec, resource = create_sagemaker_resource(
@@ -53,6 +49,11 @@ def notebook_instance():
     assert k8s.get_resource_arn(resource) is not None
 
     yield (reference, resource, spec)
+
+    # Delete the k8s resource if not already deleted by tests
+    if k8s.get_resource_exists(reference):
+        _, deleted = k8s.delete_custom_resource(reference, 11, 30)
+        assert deleted
 
 
 def get_notebook_instance(notebook_instance_name: str):
@@ -105,22 +106,27 @@ class TestNotebookInstance:
         == self._wait_resource_notebook_status(reference,expected_status,wait_periods=60,period_length=15)
         == expected_status
         )
-    def testCreateAndDelete(self,notebook_instance):
+    def testCreateUpdateDelete(self,notebook_instance):
         (reference, resource, spec) = notebook_instance
         assert k8s.get_resource_exists(reference)
-
+        
+        #Create the resource and verify that its Pending
         notebook_instance_name = resource["spec"].get("notebookInstanceName",None)
         assert notebook_instance_name is not None
 
         notebook_description = get_notebook_instance(notebook_instance_name)
         assert notebook_description["NotebookInstanceStatus"] == "Pending"
 
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
+        self._assert_notebook_status_in_sync(notebook_instance_name,reference,"Pending")
+
         #wait for the resource to go to the InService state and make sure the operator is synced with sagemaker.
         self._assert_notebook_status_in_sync(notebook_instance_name,reference,"InService")
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
+        #Update test
         spec["spec"]["volumeSizeInGB"] = 7
         k8s.patch_custom_resource(reference,spec)
-
         self._assert_notebook_status_in_sync(notebook_instance_name,reference,"InService")
 
         resource = k8s.wait_resource_consumed_by_controller(reference)
@@ -129,7 +135,7 @@ class TestNotebookInstance:
         latest_notebook = get_notebook_instance(notebook_instance_name)
         assert(latest_notebook["VolumeSizeInGB"] == 7)
 
-
         # Delete the k8s resource.
         _, deleted = k8s.delete_custom_resource(reference, 11, 30)
         assert deleted is True
+        assert get_notebook_instance(notebook_instance_name) == None

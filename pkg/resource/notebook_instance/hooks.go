@@ -17,7 +17,11 @@ var (
 	)
 	modifyingStatuses = []string{svcsdk.NotebookInstanceStatusPending, svcsdk.NotebookInstanceStatusUpdating,
 		svcsdk.NotebookInstanceStatusDeleting, svcsdk.NotebookInstanceStatusStopping}
-	resourceName = resourceGK.Kind
+	resourceName             = resourceGK.Kind
+	requeueWaitWhileDeleting = ackrequeue.NeededAfter(
+		errors.New(resourceName+" is deleting."),
+		ackrequeue.DefaultRequeueAfterDuration,
+	)
 )
 
 // requeueUntilCanModify creates and returns an
