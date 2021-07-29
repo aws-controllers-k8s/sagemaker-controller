@@ -52,7 +52,7 @@ def xgboost_churn_endpoint(sagemaker_client):
     )
     assert model_resource is not None
     if k8s.get_resource_arn(model_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {model_resource['status']}"
         )
     assert k8s.get_resource_arn(model_resource) is not None
@@ -69,7 +69,7 @@ def xgboost_churn_endpoint(sagemaker_client):
     )
     assert endpoint_config_resource is not None
     if k8s.get_resource_arn(endpoint_config_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {endpoint_config_resource['status']}"
         )
     assert k8s.get_resource_arn(endpoint_config_resource) is not None
@@ -82,7 +82,7 @@ def xgboost_churn_endpoint(sagemaker_client):
     )
     assert endpoint_resource is not None
     if k8s.get_resource_arn(endpoint_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {endpoint_resource['status']}"
         )
     assert k8s.get_resource_arn(endpoint_resource) is not None

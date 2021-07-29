@@ -48,7 +48,7 @@ def xgboost_hpojob():
     )
     assert resource is not None
     if k8s.get_resource_arn(resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {resource['status']}"
         )
     assert k8s.get_resource_arn(resource) is not None

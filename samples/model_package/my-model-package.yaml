@@ -1,0 +1,22 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: ModelPackage
+metadata:
+  name: <YOUR MODEL PACKAGE NAME>
+spec:
+  modelPackageName: <YOUR MODEL PACKAGE NAME>
+  modelPackageDescription: "Description for model package"
+  inferenceSpecification:
+    containers:
+      # The URL and tag of your ECR container  
+      # If you are not on us-west-2 you can find an imageURI here https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-algo-docker-registry-paths.html
+      - image: 433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:latest
+        # The source of the model data
+        modelDataURL: s3://<YOUR BUCKET/PATH>
+    supportedContentTypes:
+      - "text/csv"
+    supportedResponseMIMETypes:
+      - "text/csv"
+    supportedTransformInstanceTypes:
+      - "ml.m5.large"
+    supportedRealtimeInferenceInstanceTypes:
+      - "ml.m5.large"
