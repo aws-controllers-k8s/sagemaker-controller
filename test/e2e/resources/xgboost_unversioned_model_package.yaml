@@ -1,0 +1,42 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: ModelPackage
+metadata:
+  name: $MODEL_PACKAGE_NAME
+spec:
+  modelPackageName: $MODEL_PACKAGE_NAME
+  modelPackageDescription: "Description for model package"
+  inferenceSpecification:
+    containers:
+      - image: $XGBOOST_V1_IMAGE_URI
+        modelDataURL: s3://$SAGEMAKER_DATA_BUCKET/sagemaker/model/xgboost-mnist-model.tar.gz
+    supportedContentTypes:
+      - "text/csv"
+    supportedResponseMIMETypes:
+      - "text/csv"
+    supportedTransformInstanceTypes:
+      - "ml.m5.large"
+    supportedRealtimeInferenceInstanceTypes:
+      - "ml.m5.large"
+  validationSpecification:
+    validationRole: $SAGEMAKER_EXECUTION_ROLE_ARN
+    validationProfiles:
+      - profileName: "Test-Model-Package"
+        transformJobDefinition:
+          transformInput:
+            dataSource:
+              s3DataSource:
+                s3DataType: S3Prefix
+                s3URI: s3://$SAGEMAKER_DATA_BUCKET/sagemaker/batch/input-data
+            contentType: text/csv
+          transformOutput:
+            s3OutputPath: s3://$SAGEMAKER_DATA_BUCKET/sagemaker/batch/output
+          transformResources:
+            instanceCount: 1
+            instanceType: ml.m5.large
+  tags:
+    - key: algorithm
+      value: xgboost
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

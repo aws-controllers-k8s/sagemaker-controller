@@ -17,6 +17,8 @@ operations:
     set_output_custom_method_name: customUpdateEndpointSetOutput
     override_values:
       RetainAllVariantProperties: true
+  DescribeModelPackage:
+    custom_check_required_fields_missing_method: customCheckRequiredFieldsMissingMethod
   DeleteEndpoint:
     custom_implementation: customDeleteEndpoint
   StopHyperParameterTuningJob:
@@ -497,6 +499,78 @@ resources:
         from:
           operation: DescribeMonitoringSchedule
           path: LastMonitoringExecutionSummary
+  ModelPackage:
+    exceptions:
+      errors:
+          404:
+            code: ValidationException
+            message_suffix: does not exist.
+      terminal_codes:
+        - ResourceLimitExceeded
+        - ResourceNotFound
+        - ResourceInUse
+        - OptInRequired
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+        - MissingAction
+        - InvalidQueryParameter
+        - MalformedQueryString
+        - InvalidAction
+        - UnrecognizedClientException    
+        - ConflictException   
+    hooks:
+      delta_pre_compare:
+        code: customSetDefaults(a, b)
+      sdk_delete_pre_build_request:
+        template_path: common/sdk_delete_pre_build_request.go.tpl
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
+      sdk_delete_post_build_request:
+        template_path: model_package/set_resource_name_as_arn.go.tpl
+      sdk_read_one_post_set_output:
+        code: rm.customSetOutput(&resource{ko})
+      sdk_read_one_post_build_request:
+        template_path: model_package/set_resource_name_as_arn.go.tpl
+      sdk_update_pre_build_request:
+        template_path: model_package/sdk_update_pre_build_request.go.tpl
+    fields:
+      ModelPackageStatus:
+        is_read_only: true
+        print:
+          name: STATUS
+        from:
+          operation: DescribeModelPackage
+          path: ModelPackageStatus 
+      CreationTime:
+        is_read_only: true
+        from:
+          operation: DescribeModelPackage
+          path: CreationTime
+      ModelPackageStatusDetails:
+        is_read_only: true
+        from:
+          operation: DescribeModelPackage
+          path: ModelPackageStatusDetails
+      ModelApprovalStatus:
+        is_read_only: true
+        from:
+          operation: DescribeModelPackage
+          path: ModelApprovalStatus
+      LastModifiedTime:
+        is_read_only: true
+        from:
+          operation: DescribeModelPackage
+          path: LastModifiedTime
+      ApprovalDescription:
+        from:
+          operation: UpdateModelPackage
+          path: ApprovalDescription
+    # TODO: Can adopt unversioned Model Packages however versioned ModelPackages 
+    # cannot be adopted properly. Their spec will show in describe 
+    # kubecetl describe modelpackages however it cannot be deleted or updated
+    # Since this is not expected behavior adoption is disabled
+    is_adoptable: false
   FeatureGroup:
     update_conditions_custom_method_name: CustomUpdateConditions
     exceptions:
@@ -559,7 +633,8 @@ resources:
           - InvalidQueryParameter
           - MalformedQueryString
           - InvalidAction
-          - UnrecognizedClientException
+          - UnrecognizedClientException    
+          - ConflictException   
       fields:
         ModelPackageGroupStatus:
           is_read_only: true
@@ -603,7 +678,7 @@ ignore:
       # - Model
       # - ModelBiasJobDefinition
       # - ModelExplainabilityJobDefinition
-      - ModelPackage
+      # ModelPackage
       # ModelPackageGroup
       # - ModelQualityJobDefinition
       # - MonitoringSchedule
