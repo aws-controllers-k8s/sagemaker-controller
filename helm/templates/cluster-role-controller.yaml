@@ -85,6 +85,26 @@ rules:
 - apiGroups:
   - sagemaker.services.k8s.aws
   resources:
+  - featuregroups
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
+  - featuregroups/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
   - hyperparametertuningjobs
   verbs:
   - create
@@ -138,6 +158,46 @@ rules:
   - sagemaker.services.k8s.aws
   resources:
   - modelexplainabilityjobdefinitions/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
+  - modelpackagegroups
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
+  - modelpackagegroups/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
+  - modelpackages
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
+  - modelpackages/status
   verbs:
   - get
   - patch
