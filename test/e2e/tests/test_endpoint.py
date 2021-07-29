@@ -55,7 +55,7 @@ def single_container_model(name_suffix):
     )
     assert model_resource is not None
     if k8s.get_resource_arn(model_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {model_resource['status']}"
         )
     assert k8s.get_resource_arn(model_resource) is not None
@@ -84,7 +84,7 @@ def multi_variant_config(name_suffix, single_container_model):
     )
     assert config_resource is not None
     if k8s.get_resource_arn(config_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {config_resource['status']}"
         )
     assert k8s.get_resource_arn(config_resource) is not None
@@ -113,7 +113,7 @@ def single_variant_config(name_suffix, single_container_model):
     )
     assert config_resource is not None
     if k8s.get_resource_arn(config_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {config_resource['status']}"
         )
     assert k8s.get_resource_arn(config_resource) is not None
@@ -175,7 +175,7 @@ def faulty_config(name_suffix, single_container_model):
     )
     assert model_resource is not None
     if k8s.get_resource_arn(model_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {model_resource['status']}"
         )
     assert k8s.get_resource_arn(model_resource) is not None
@@ -195,7 +195,7 @@ def faulty_config(name_suffix, single_container_model):
     )
     assert config_resource is not None
     if k8s.get_resource_arn(config_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {config_resource['status']}"
         )
     assert k8s.get_resource_arn(config_resource) is not None

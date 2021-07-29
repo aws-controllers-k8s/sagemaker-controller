@@ -36,10 +36,9 @@ RESOURCE_PLURAL = "featuregroups"
 SPEC_FILE = "feature_group"
 FEATURE_GROUP_STATUS_CREATING = "Creating"
 FEATURE_GROUP_STATUS_CREATED = "Created"
-WAIT_PERIOD_COUNT = 3
-# A 15 second wait period is used because we sometimes see
-# time out errors at a 10 second wait period.
-WAIT_PERIOD_LENGTH = 15
+# longer wait is used because we sometimes see server taking time to create/delete
+WAIT_PERIOD_COUNT = 4
+WAIT_PERIOD_LENGTH = 30
 STATUS = "status"
 RESOURCE_STATUS = "featureGroupStatus"
 
@@ -140,15 +139,13 @@ class TestFeatureGroup:
 
         feature_group_name = resource["spec"].get("featureGroupName", None)
         assert feature_group_name is not None
-        
-        feature_group_describe_response = get_sagemaker_feature_group(feature_group_name)
-        
-        assert (
-            k8s.get_resource_arn(resource)
-            == feature_group_describe_response["FeatureGroupArn"]
-        )
 
-        assert feature_group_describe_response["FeatureGroupStatus"] == FEATURE_GROUP_STATUS_CREATING
+        feature_group_sm_desc = get_sagemaker_feature_group(feature_group_name)
+        feature_group_arn = feature_group_sm_desc["FeatureGroupArn"]
+
+        assert k8s.get_resource_arn(resource) == feature_group_arn
+
+        assert feature_group_sm_desc["FeatureGroupStatus"] == FEATURE_GROUP_STATUS_CREATING
 
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
@@ -157,6 +154,9 @@ class TestFeatureGroup:
         )
 
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(feature_group_arn, resource_tags)
 
         # Delete the k8s resource.
         _, deleted = k8s.delete_custom_resource(
