@@ -48,7 +48,7 @@ def single_variant_config():
     )
     assert model_resource is not None
     if k8s.get_resource_arn(model_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {model_resource['status']}"
         )
     assert k8s.get_resource_arn(model_resource) is not None

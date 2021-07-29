@@ -46,7 +46,7 @@ def xgboost_training_job_debugger():
         replacements=replacements,
     )
     if k8s.get_resource_arn(resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {resource['status']}"
         )
     assert resource is not None
