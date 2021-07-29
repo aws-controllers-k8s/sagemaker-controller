@@ -35,7 +35,7 @@ RESOURCE_SPEC_FILE = "notebook_instance"
 
 @pytest.fixture(scope="function")
 def notebook_instance():
-    resource_name = RESOURCE_PREFIX + str(random.randint(0, 10000))
+    resource_name = RESOURCE_PREFIX + str(random.randint(0, 10000)) #Random strings dont work so we have to use random number names
     replacements = REPLACEMENT_VALUES.copy()
     replacements["NOTEBOOK_INSTANCE_NAME"] = resource_name
     reference, spec, resource = create_sagemaker_resource(
@@ -109,7 +109,8 @@ class TestNotebookInstance:
     def testCreateAndDelete(self,notebook_instance):
         (reference, resource, spec) = notebook_instance
         assert k8s.get_resource_exists(reference)
-
+        
+        #Create the resource and verify that its Pending
         notebook_instance_name = resource["spec"].get("notebookInstanceName",None)
         assert notebook_instance_name is not None
 
@@ -117,6 +118,7 @@ class TestNotebookInstance:
         assert notebook_description["NotebookInstanceStatus"] == "Pending"
 
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
+        self._assert_notebook_status_in_sync(notebook_instance_name,reference,"Pending")
 
         #wait for the resource to go to the InService state and make sure the operator is synced with sagemaker.
         self._assert_notebook_status_in_sync(notebook_instance_name,reference,"InService")
@@ -125,3 +127,4 @@ class TestNotebookInstance:
         # Delete the k8s resource.
         _, deleted = k8s.delete_custom_resource(reference, 11, 30)
         assert deleted is True
+        assert get_notebook_instance(notebook_instance_name) == None

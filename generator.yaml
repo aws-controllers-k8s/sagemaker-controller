@@ -564,6 +564,8 @@ resources:
     hooks:
       sdk_delete_pre_build_request:
         template_path: notebook_instance/sdk_delete_pre_build_request.go.tpl
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
       delta_pre_compare:
         code: customSetDefaults(a, b)
       sdk_read_one_post_set_output: 
