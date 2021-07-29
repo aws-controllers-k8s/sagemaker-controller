@@ -500,6 +500,7 @@ resources:
           operation: DescribeMonitoringSchedule
           path: LastMonitoringExecutionSummary
   ModelPackage:
+    update_conditions_custom_method_name: CustomUpdateConditions
     exceptions:
       errors:
           404:
