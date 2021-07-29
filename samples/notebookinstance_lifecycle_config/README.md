@@ -31,7 +31,3 @@ This command deletes a Notebook Instance Lifecycle Configuration.
 ```
 $ kubectl delete NotebookInstanceLifecycleConfig my-notebook_lifecycle_config
 ```
-
-
-
-

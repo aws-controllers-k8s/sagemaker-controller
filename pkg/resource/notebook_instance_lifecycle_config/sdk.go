@@ -295,17 +295,19 @@ func (rm *resourceManager) newUpdateRequestPayload(
 func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
-) (err error) {
+) (latest *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = rm.sdkapi.DeleteNotebookInstanceLifecycleConfigWithContext(ctx, input)
+	var resp *svcsdk.DeleteNotebookInstanceLifecycleConfigOutput
+	_ = resp
+	resp, err = rm.sdkapi.DeleteNotebookInstanceLifecycleConfigWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteNotebookInstanceLifecycleConfig", err)
-	return err
+	return nil, err
 }
 
 // newDeleteRequestPayload returns an SDK-specific struct for the HTTP request
