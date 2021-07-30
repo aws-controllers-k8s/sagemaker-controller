@@ -135,7 +135,7 @@ Take note of IAM_ROLE_ARN_FOR_IRSA printed in the previous step; you will pass t
 ```sh
 export HELM_EXPERIMENTAL_OCI=1
 export SERVICE=sagemaker
-export RELEASE_VERSION=v0.0.2
+export RELEASE_VERSION=v0.0.3
 export CHART_EXPORT_PATH=/tmp/chart
 export CHART_REPO=public.ecr.aws/aws-controllers-k8s/$SERVICE-chart
 export CHART_REF=$CHART_REPO:$RELEASE_VERSION
