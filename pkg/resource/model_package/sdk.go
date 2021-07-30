@@ -521,6 +521,11 @@ func (rm *resourceManager) sdkCreate(
 	if err != nil {
 		return nil, err
 	}
+	// If ModelPackageGroupName set after newRequestPayload, return error
+	// This is because versioned modelpackage is not supported.
+	if input.ModelPackageGroupName != nil {
+		return nil, VersionedModelPackageNotSupported
+	}
 
 	var resp *svcsdk.CreateModelPackageOutput
 	_ = resp
@@ -1114,7 +1119,8 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 		"MalformedQueryString",
 		"InvalidAction",
 		"UnrecognizedClientException",
-		"ConflictException":
+		"ConflictException",
+		"VersionedModelPackageNotSupported":
 		return true
 	default:
 		return false
