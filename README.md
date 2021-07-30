@@ -152,7 +152,7 @@ helm chart export $CHART_REF --destination $CHART_EXPORT_PATH
     - ```sh
       # Update values in helm chart
       cd $CHART_EXPORT_PATH/$SERVICE-chart
-      yq e '.aws.region = env(SERVICE_REGION)' -i values.yaml
+      yq e '.aws.region = env(AWS_DEFAULT_REGION)' -i values.yaml
       yq e '.aws.account_id = env(AWS_ACCOUNT_ID)' -i values.yaml
       yq e '.serviceAccount.annotations."eks.amazonaws.com/role-arn" = env(IAM_ROLE_ARN_FOR_IRSA)' -i values.yaml
       cd -
@@ -165,7 +165,7 @@ helm chart export $CHART_REF --destination $CHART_EXPORT_PATH
     - ```sh
       # Update values in helm chart
       cd $CHART_EXPORT_PATH/$SERVICE-chart
-      yq e '.aws.region = env(SERVICE_REGION)' -i values.yaml
+      yq e '.aws.region = env(AWS_DEFAULT_REGION)' -i values.yaml
       yq e '.aws.account_id = env(AWS_ACCOUNT_ID)' -i values.yaml
       yq e '.serviceAccount.annotations."eks.amazonaws.com/role-arn" = env(IAM_ROLE_ARN_FOR_IRSA)' -i values.yaml
       yq e '.watchNamespace" = env(WATCH_NAMESPACE)' -i values.yaml
