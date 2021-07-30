@@ -202,9 +202,6 @@ class TestmodelPackage:
 
         assert k8s.get_resource_arn(resource) == model_package_arn
 
-        resource_tags = resource["spec"].get("tags", None)
-        assert_tags_in_sync(model_package_arn, resource_tags)
-
         assert model_package_desc["ModelPackageStatus"] == cfg.JOB_STATUS_INPROGRESS
         self._assert_model_package_status_in_sync(
             model_package_name, reference, cfg.JOB_STATUS_INPROGRESS
@@ -215,6 +212,9 @@ class TestmodelPackage:
             model_package_name, reference, cfg.JOB_STATUS_COMPLETED
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(model_package_arn, resource_tags)
 
         # Check that you can delete a completed resource from k8s
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)

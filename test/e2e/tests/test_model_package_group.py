@@ -139,14 +139,15 @@ class TestModelPackageGroup:
         )
         model_package_group_arn = model_package_group_sm_desc["ModelPackageGroupArn"]
         assert k8s.get_resource_arn(resource) == model_package_group_arn
-        resource_tags = resource["spec"].get("tags", None)
-        assert_tags_in_sync(model_package_group_arn, resource_tags)
 
         self._assert_model_package_group_status_in_sync(
             model_package_group_name, reference, cfg.JOB_STATUS_COMPLETED
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(model_package_group_arn, resource_tags)
+        
         # Check that you can delete a completed resource from k8s
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted is True
