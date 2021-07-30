@@ -240,9 +240,6 @@ class TestEndpoint:
         endpoint_arn = endpoint_desc["EndpointArn"]
         assert self._get_resource_endpoint_arn(resource) == endpoint_arn
 
-        resource_tags = resource["spec"].get("tags", None)
-        assert_tags_in_sync(endpoint_arn, resource_tags)
-
         # endpoint transitions Creating -> InService state
         assert_endpoint_status_in_sync(
             endpoint_name, reference, cfg.ENDPOINT_STATUS_CREATING
@@ -253,6 +250,9 @@ class TestEndpoint:
             endpoint_name, reference, cfg.ENDPOINT_STATUS_INSERVICE
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(endpoint_arn, resource_tags)
 
     def update_endpoint_failed_test(
         self, sagemaker_client, single_variant_config, faulty_config, xgboost_endpoint

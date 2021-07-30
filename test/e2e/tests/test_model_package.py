@@ -33,6 +33,9 @@ from e2e.common import config as cfg
 
 RESOURCE_PLURAL = "modelpackages"
 
+DELETE_WAIT_PERIOD = 20
+DELETE_WAIT_LENGTH = 30
+
 # Disabled since versioned model package is not supported
 # Issue with multiple creates.
 
@@ -111,7 +114,9 @@ def xgboost_unversioned_model_package():
     yield (reference, resource)
 
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        _, deleted = k8s.delete_custom_resource(
+            reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
+        )
         assert deleted
 
 
@@ -202,10 +207,6 @@ class TestmodelPackage:
 
         assert k8s.get_resource_arn(resource) == model_package_arn
 
-        resource_tags = resource["spec"].get("tags", None)
-        assert_tags_in_sync(model_package_arn, resource_tags)
-
-        assert model_package_desc["ModelPackageStatus"] == cfg.JOB_STATUS_INPROGRESS
         self._assert_model_package_status_in_sync(
             model_package_name, reference, cfg.JOB_STATUS_INPROGRESS
         )
@@ -216,8 +217,13 @@ class TestmodelPackage:
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(model_package_arn, resource_tags)
+
         # Check that you can delete a completed resource from k8s
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        _, deleted = k8s.delete_custom_resource(
+            reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
+        )
         assert deleted is True
         assert get_sagemaker_model_package(model_package_name) is None
 
