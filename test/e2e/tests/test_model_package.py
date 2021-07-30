@@ -207,7 +207,6 @@ class TestmodelPackage:
 
         assert k8s.get_resource_arn(resource) == model_package_arn
 
-        assert model_package_desc["ModelPackageStatus"] == cfg.JOB_STATUS_INPROGRESS
         self._assert_model_package_status_in_sync(
             model_package_name, reference, cfg.JOB_STATUS_INPROGRESS
         )
