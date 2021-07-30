@@ -17,7 +17,6 @@ ENDPOINT_CONFIG_RESOURCE_PLURAL = "endpointconfigs"
 MODEL_RESOURCE_PLURAL = "models"
 ENDPOINT_RESOURCE_PLURAL = "endpoints"
 DATA_QUALITY_JOB_DEFINITION_RESOURCE_PLURAL = "dataqualityjobdefinitions"
-MODEL_PACKAGE_GROUP_RESOURCE_PLURAL = "modelpackagegroups"
 
 # Job Type Resource Statuses
 LIST_JOB_STATUS_STOPPED = ("Stopped", "Stopping", "Completed")

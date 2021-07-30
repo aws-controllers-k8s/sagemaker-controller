@@ -792,14 +792,14 @@ const (
 	ModelPackageSortBy_CreationTime ModelPackageSortBy = "CreationTime"
 )
 
-type ModelPackageStatus_SDK string
+type ModelPackageStatus string
 
 const (
-	ModelPackageStatus_SDK_Pending    ModelPackageStatus_SDK = "Pending"
-	ModelPackageStatus_SDK_InProgress ModelPackageStatus_SDK = "InProgress"
-	ModelPackageStatus_SDK_Completed  ModelPackageStatus_SDK = "Completed"
-	ModelPackageStatus_SDK_Failed     ModelPackageStatus_SDK = "Failed"
-	ModelPackageStatus_SDK_Deleting   ModelPackageStatus_SDK = "Deleting"
+	ModelPackageStatus_Pending    ModelPackageStatus = "Pending"
+	ModelPackageStatus_InProgress ModelPackageStatus = "InProgress"
+	ModelPackageStatus_Completed  ModelPackageStatus = "Completed"
+	ModelPackageStatus_Failed     ModelPackageStatus = "Failed"
+	ModelPackageStatus_Deleting   ModelPackageStatus = "Deleting"
 )
 
 type ModelPackageType string

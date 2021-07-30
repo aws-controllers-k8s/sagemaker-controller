@@ -76,9 +76,6 @@ type AlgorithmSummary struct {
 // on AWS Marketplace.
 type AlgorithmValidationProfile struct {
 	ProfileName *string `json:"profileName,omitempty"`
-	// Defines the input needed to run a transform job using the inference specification
-	// specified in the algorithm.
-	TransformJobDefinition *TransformJobDefinition `json:"transformJobDefinition,omitempty"`
 }
 
 // Specifies configurations for one or more training jobs that Amazon SageMaker
@@ -202,11 +199,6 @@ type AutoRollbackConfig struct {
 	Alarms []*Alarm `json:"alarms,omitempty"`
 }
 
-// Contains bias metrics for a model.
-type Bias struct {
-	Report *MetricsSource `json:"report,omitempty"`
-}
-
 // Currently, the BlueGreenUpdatePolicy API is not supported.
 type BlueGreenUpdatePolicy struct {
 	MaximumExecutionTimeoutInSeconds *int64 `json:"maximumExecutionTimeoutInSeconds,omitempty"`
@@ -269,10 +261,9 @@ type Channel struct {
 
 // Defines a named input source, called a channel, to be used by an algorithm.
 type ChannelSpecification struct {
-	Description           *string   `json:"description,omitempty"`
-	IsRequired            *bool     `json:"isRequired,omitempty"`
-	Name                  *string   `json:"name,omitempty"`
-	SupportedContentTypes []*string `json:"supportedContentTypes,omitempty"`
+	Description *string `json:"description,omitempty"`
+	IsRequired  *bool   `json:"isRequired,omitempty"`
+	Name        *string `json:"name,omitempty"`
 }
 
 // Contains information about the output location for managed spot training
@@ -623,11 +614,6 @@ type ExperimentSummary struct {
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
-// Contains explainability metrics for a model.
-type Explainability struct {
-	Report *MetricsSource `json:"report,omitempty"`
-}
-
 // A list of features. You must include FeatureName and FeatureType. Valid feature
 // FeatureTypes are Integral, Fractional and String.
 type FeatureDefinition struct {
@@ -934,15 +920,6 @@ type InferenceExecutionConfig struct {
 	Mode *string `json:"mode,omitempty"`
 }
 
-// Defines how to perform inference generation after a training job is run.
-type InferenceSpecification struct {
-	Containers                              []*ModelPackageContainerDefinition `json:"containers,omitempty"`
-	SupportedContentTypes                   []*string                          `json:"supportedContentTypes,omitempty"`
-	SupportedRealtimeInferenceInstanceTypes []*string                          `json:"supportedRealtimeInferenceInstanceTypes,omitempty"`
-	SupportedResponseMIMETypes              []*string                          `json:"supportedResponseMIMETypes,omitempty"`
-	SupportedTransformInstanceTypes         []*string                          `json:"supportedTransformInstanceTypes,omitempty"`
-}
-
 // Contains information about the location of input model artifacts, the name
 // and shape of the expected data inputs, and the framework in which the model
 // was trained.
@@ -1007,14 +984,6 @@ type LabelingJobSummary struct {
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
-// Metadata properties of the tracking entity, trial, or trial component.
-type MetadataProperties struct {
-	CommitID    *string `json:"commitID,omitempty"`
-	GeneratedBy *string `json:"generatedBy,omitempty"`
-	ProjectID   *string `json:"projectID,omitempty"`
-	Repository  *string `json:"repository,omitempty"`
-}
-
 // The name, value, and date and time of a metric that was emitted to Amazon
 // CloudWatch.
 type MetricData struct {
@@ -1033,9 +1002,8 @@ type MetricDefinition struct {
 }
 
 type MetricsSource struct {
-	ContentDigest *string `json:"contentDigest,omitempty"`
-	ContentType   *string `json:"contentType,omitempty"`
-	S3URI         *string `json:"s3URI,omitempty"`
+	ContentType *string `json:"contentType,omitempty"`
+	S3URI       *string `json:"s3URI,omitempty"`
 }
 
 // Provides information about the location that is configured for storing model
@@ -1077,12 +1045,6 @@ type ModelClientConfig struct {
 	InvocationsTimeoutInSeconds *int64 `json:"invocationsTimeoutInSeconds,omitempty"`
 }
 
-// Data quality constraints and statistics for a model.
-type ModelDataQuality struct {
-	Constraints *MetricsSource `json:"constraints,omitempty"`
-	Statistics  *MetricsSource `json:"statistics,omitempty"`
-}
-
 // Docker container image configuration object for the model explainability
 // job.
 type ModelExplainabilityAppSpecification struct {
@@ -1104,25 +1066,27 @@ type ModelExplainabilityJobInput struct {
 	EndpointInput *EndpointInput `json:"endpointInput,omitempty"`
 }
 
-// Contains metrics captured from a model.
-type ModelMetrics struct {
-	// Contains bias metrics for a model.
-	Bias *Bias `json:"bias,omitempty"`
-	// Contains explainability metrics for a model.
-	Explainability *Explainability `json:"explainability,omitempty"`
-	// Data quality constraints and statistics for a model.
-	ModelDataQuality *ModelDataQuality `json:"modelDataQuality,omitempty"`
-	// Model quality statistics and constraints.
-	ModelQuality *ModelQuality `json:"modelQuality,omitempty"`
+// A versioned model that can be deployed for SageMaker inference.
+type ModelPackage struct {
+	// Information about the user who created or modified an experiment, trial,
+	// or trial component.
+	CreatedBy    *UserContext `json:"createdBy,omitempty"`
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	// Information about the user who created or modified an experiment, trial,
+	// or trial component.
+	LastModifiedBy          *UserContext `json:"lastModifiedBy,omitempty"`
+	LastModifiedTime        *metav1.Time `json:"lastModifiedTime,omitempty"`
+	ModelPackageDescription *string      `json:"modelPackageDescription,omitempty"`
+	ModelPackageGroupName   *string      `json:"modelPackageGroupName,omitempty"`
+	ModelPackageName        *string      `json:"modelPackageName,omitempty"`
+	Tags                    []*Tag       `json:"tags,omitempty"`
 }
 
 // Describes the Docker container for the model package.
 type ModelPackageContainerDefinition struct {
 	ContainerHostname *string `json:"containerHostname,omitempty"`
 	Image             *string `json:"image,omitempty"`
-	ImageDigest       *string `json:"imageDigest,omitempty"`
 	ModelDataURL      *string `json:"modelDataURL,omitempty"`
-	ProductID         *string `json:"productID,omitempty"`
 }
 
 // Summary information about a model group.
@@ -1147,29 +1111,18 @@ type ModelPackageGroup_SDK struct {
 	Tags                         []*Tag       `json:"tags,omitempty"`
 }
 
-// Specifies the validation and image scan statuses of the model package.
-type ModelPackageStatusDetails struct {
-	ImageScanStatuses  []*ModelPackageStatusItem `json:"imageScanStatuses,omitempty"`
-	ValidationStatuses []*ModelPackageStatusItem `json:"validationStatuses,omitempty"`
-}
-
 // Represents the overall status of a model package.
 type ModelPackageStatusItem struct {
 	FailureReason *string `json:"failureReason,omitempty"`
 	Name          *string `json:"name,omitempty"`
-	Status        *string `json:"status,omitempty"`
 }
 
 // Provides summary information about a model package.
 type ModelPackageSummary struct {
 	CreationTime            *metav1.Time `json:"creationTime,omitempty"`
-	ModelApprovalStatus     *string      `json:"modelApprovalStatus,omitempty"`
-	ModelPackageARN         *string      `json:"modelPackageARN,omitempty"`
 	ModelPackageDescription *string      `json:"modelPackageDescription,omitempty"`
 	ModelPackageGroupName   *string      `json:"modelPackageGroupName,omitempty"`
 	ModelPackageName        *string      `json:"modelPackageName,omitempty"`
-	ModelPackageStatus      *string      `json:"modelPackageStatus,omitempty"`
-	ModelPackageVersion     *int64       `json:"modelPackageVersion,omitempty"`
 }
 
 // Contains data, such as the inputs and targeted instance types that are used
@@ -1179,57 +1132,12 @@ type ModelPackageSummary struct {
 // on AWS Marketplace.
 type ModelPackageValidationProfile struct {
 	ProfileName *string `json:"profileName,omitempty"`
-	// Defines the input needed to run a transform job using the inference specification
-	// specified in the algorithm.
-	TransformJobDefinition *TransformJobDefinition `json:"transformJobDefinition,omitempty"`
 }
 
 // Specifies batch transform jobs that Amazon SageMaker runs to validate your
 // model package.
 type ModelPackageValidationSpecification struct {
-	ValidationProfiles []*ModelPackageValidationProfile `json:"validationProfiles,omitempty"`
-	ValidationRole     *string                          `json:"validationRole,omitempty"`
-}
-
-// A versioned model that can be deployed for SageMaker inference.
-type ModelPackage_SDK struct {
-	ApprovalDescription   *string `json:"approvalDescription,omitempty"`
-	CertifyForMarketplace *bool   `json:"certifyForMarketplace,omitempty"`
-	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
-	CreatedBy    *UserContext `json:"createdBy,omitempty"`
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
-	// Defines how to perform inference generation after a training job is run.
-	InferenceSpecification *InferenceSpecification `json:"inferenceSpecification,omitempty"`
-	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
-	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
-	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
-	// Metadata properties of the tracking entity, trial, or trial component.
-	MetadataProperties  *MetadataProperties `json:"metadataProperties,omitempty"`
-	ModelApprovalStatus *string             `json:"modelApprovalStatus,omitempty"`
-	// Contains metrics captured from a model.
-	ModelMetrics            *ModelMetrics `json:"modelMetrics,omitempty"`
-	ModelPackageARN         *string       `json:"modelPackageARN,omitempty"`
-	ModelPackageDescription *string       `json:"modelPackageDescription,omitempty"`
-	ModelPackageGroupName   *string       `json:"modelPackageGroupName,omitempty"`
-	ModelPackageName        *string       `json:"modelPackageName,omitempty"`
-	ModelPackageStatus      *string       `json:"modelPackageStatus,omitempty"`
-	// Specifies the validation and image scan statuses of the model package.
-	ModelPackageStatusDetails *ModelPackageStatusDetails `json:"modelPackageStatusDetails,omitempty"`
-	ModelPackageVersion       *int64                     `json:"modelPackageVersion,omitempty"`
-	// A list of algorithms that were used to create a model package.
-	SourceAlgorithmSpecification *SourceAlgorithmSpecification `json:"sourceAlgorithmSpecification,omitempty"`
-	Tags                         []*Tag                        `json:"tags,omitempty"`
-	// Specifies batch transform jobs that Amazon SageMaker runs to validate your
-	// model package.
-	ValidationSpecification *ModelPackageValidationSpecification `json:"validationSpecification,omitempty"`
-}
-
-// Model quality statistics and constraints.
-type ModelQuality struct {
-	Constraints *MetricsSource `json:"constraints,omitempty"`
-	Statistics  *MetricsSource `json:"statistics,omitempty"`
+	ValidationRole *string `json:"validationRole,omitempty"`
 }
 
 // Container image configuration object for the monitoring job.
@@ -1959,11 +1867,6 @@ type SourceAlgorithm struct {
 	ModelDataURL  *string `json:"modelDataURL,omitempty"`
 }
 
-// A list of algorithms that were used to create a model package.
-type SourceAlgorithmSpecification struct {
-	SourceAlgorithms []*SourceAlgorithm `json:"sourceAlgorithms,omitempty"`
-}
-
 // Specifies a limit to how long a model training or compilation job can run.
 // It also specifies how long you are willing to wait for a managed spot training
 // job to complete. When the job reaches the time limit, Amazon SageMaker ends
@@ -2170,7 +2073,6 @@ type TrainingSpecification struct {
 	MetricDefinitions           []*MetricDefinition `json:"metricDefinitions,omitempty"`
 	SupportsDistributedTraining *bool               `json:"supportsDistributedTraining,omitempty"`
 	TrainingImage               *string             `json:"trainingImage,omitempty"`
-	TrainingImageDigest         *string             `json:"trainingImageDigest,omitempty"`
 }
 
 // Describes the location of the channel data.
@@ -2305,10 +2207,8 @@ type Trial struct {
 	// or trial component.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
-	// Metadata properties of the tracking entity, trial, or trial component.
-	MetadataProperties *MetadataProperties `json:"metadataProperties,omitempty"`
-	Tags               []*Tag              `json:"tags,omitempty"`
-	TrialName          *string             `json:"trialName,omitempty"`
+	Tags             []*Tag       `json:"tags,omitempty"`
+	TrialName        *string      `json:"trialName,omitempty"`
 }
 
 // The properties of a trial component as returned by the Search API.
@@ -2321,13 +2221,11 @@ type TrialComponent struct {
 	EndTime      *metav1.Time `json:"endTime,omitempty"`
 	// Information about the user who created or modified an experiment, trial,
 	// or trial component.
-	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
-	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
-	// Metadata properties of the tracking entity, trial, or trial component.
-	MetadataProperties *MetadataProperties `json:"metadataProperties,omitempty"`
-	StartTime          *metav1.Time        `json:"startTime,omitempty"`
-	Tags               []*Tag              `json:"tags,omitempty"`
-	TrialComponentName *string             `json:"trialComponentName,omitempty"`
+	LastModifiedBy     *UserContext `json:"lastModifiedBy,omitempty"`
+	LastModifiedTime   *metav1.Time `json:"lastModifiedTime,omitempty"`
+	StartTime          *metav1.Time `json:"startTime,omitempty"`
+	Tags               []*Tag       `json:"tags,omitempty"`
+	TrialComponentName *string      `json:"trialComponentName,omitempty"`
 }
 
 // A summary of the metrics of a trial component.

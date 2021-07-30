@@ -5,10 +5,3 @@ metadata:
 spec:
   modelPackageGroupName: $MODEL_PACKAGE_GROUP_NAME
   modelPackageGroupDescription: "Description for model package group"
-  tags:
-    - key: algorithm
-      value: xgboost
-    - key: environment
-      value: testing
-    - key: customer
-      value: test-user

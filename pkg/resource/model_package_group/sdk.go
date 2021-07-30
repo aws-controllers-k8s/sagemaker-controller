@@ -367,8 +367,7 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 		"InvalidQueryParameter",
 		"MalformedQueryString",
 		"InvalidAction",
-		"UnrecognizedClientException",
-		"ConflictException":
+		"UnrecognizedClientException":
 		return true
 	default:
 		return false

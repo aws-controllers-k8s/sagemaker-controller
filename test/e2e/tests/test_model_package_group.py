@@ -25,7 +25,6 @@ from e2e import (
     create_sagemaker_resource,
     wait_for_status,
     sagemaker_client,
-    assert_tags_in_sync,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
@@ -137,10 +136,11 @@ class TestModelPackageGroup:
         model_package_group_sm_desc = get_sagemaker_model_package_group(
             model_package_group_name
         )
-        model_package_group_arn = model_package_group_sm_desc["ModelPackageGroupArn"]
-        assert k8s.get_resource_arn(resource) == model_package_group_arn
-        resource_tags = resource["spec"].get("tags", None)
-        assert_tags_in_sync(model_package_group_arn, resource_tags)
+
+        assert (
+            k8s.get_resource_arn(resource)
+            == model_package_group_sm_desc["ModelPackageGroupArn"]
+        )
 
         self._assert_model_package_group_status_in_sync(
             model_package_group_name, reference, cfg.JOB_STATUS_COMPLETED
