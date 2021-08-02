@@ -621,6 +621,72 @@ resources:
         from:
           operation: DescribeFeatureGroup
           path: FeatureGroupStatus
+  NotebookInstance:
+    exceptions:
+      errors:
+          404:
+            code: ValidationException
+            message_prefix: RecordNotFound
+      terminal_codes:
+        - ResourceLimitExceeded
+        - ResourceNotFound
+        - ResourceInUse
+        - OptInRequired
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+        - MissingAction
+        - InvalidClientTokenId
+        - InvalidQueryParameter
+        - MalformedQueryString
+        - InvalidAction
+        - UnrecognizedClientException
+    hooks:
+      sdk_delete_pre_build_request:
+        template_path: notebook_instance/sdk_delete_pre_build_request.go.tpl
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
+      delta_pre_compare:
+        code: customSetDefaults(a, b)
+      sdk_read_one_post_set_output: 
+        template_path: notebook_instance/sdk_read_one_post_set_output.go.tpl
+      sdk_read_one_pre_set_output:
+        template_path: notebook_instance/sdk_read_one_pre_set_output.go.tpl
+      sdk_create_post_set_output:
+        code: rm.customSetOutputCreateUpdate(ko)
+      sdk_update_pre_build_request:
+        template_path: notebook_instance/sdk_update_pre_build_request.go.tpl
+      sdk_update_post_set_output:
+        template_path: notebook_instance/sdk_update_post_set_output.go.tpl
+    fields:
+      NotebookInstanceStatus:
+        is_read_only: true
+        print:
+          name: STATUS
+        from:
+          operation: DescribeNotebookInstance
+          path: NotebookInstanceStatus
+      NotebookInstanceURL:
+        is_read_only: true
+        from:
+          operation: DescribeNotebookInstance
+          path: Url
+        print:
+          name: URL
+      stopped_by_ack:
+        is_read_only: true
+        from:
+          path: Url
+          operation: DescribeNotebookInstance
+      FailureReason:
+        is_read_only: true
+        print:
+          name: FAILURE-REASON
+          priority: 1
+        from:
+          operation: DescribeNotebookInstance
+          path: FailureReason
+
   ModelPackageGroup:
       exceptions:
         errors:
@@ -689,7 +755,7 @@ ignore:
       # - ModelQualityJobDefinition
       # - MonitoringSchedule
       - NotebookInstanceLifecycleConfig
-      - NotebookInstance
+      # - NotebookInstance
       - Pipeline
       - PresignedDomainUrl
       - PresignedNotebookInstanceUrl
