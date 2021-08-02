@@ -161,9 +161,6 @@ class TestTrainingJob:
         training_job_arn = training_job_desc["TrainingJobArn"]
         assert k8s.get_resource_arn(resource) == training_job_arn
 
-        resource_tags = resource["spec"].get("tags", None)
-        assert_tags_in_sync(training_job_arn, resource_tags)
-
         assert training_job_desc["TrainingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
@@ -171,6 +168,9 @@ class TestTrainingJob:
             training_job_name, reference, cfg.JOB_STATUS_COMPLETED
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(training_job_arn, resource_tags)
 
         # Check that you can delete a completed resource from k8s
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)

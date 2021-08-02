@@ -621,36 +621,6 @@ resources:
         from:
           operation: DescribeFeatureGroup
           path: FeatureGroupStatus
-  NotebookInstanceLifecycleConfig:
-    exceptions:
-      errors:
-          404:
-            code: ValidationException
-            message_prefix: Unable to describe Notebook Instance Lifecycle Config
-      terminal_codes:
-        - ResourceLimitExceeded
-        - ResourceNotFound
-        - ResourceInUse
-        - OptInRequired
-        - InvalidParameterCombination
-        - InvalidParameterValue
-        - MissingParameter
-        - MissingAction
-        - InvalidQueryParameter
-        - MalformedQueryString
-        - InvalidAction
-        - UnrecognizedClientException
-    hooks:
-      delta_post_compare:
-        template_path: notebook_instance_lifecycle_config/delta_post_compare.go.tpl
-    fields:
-      LastModifiedTime:
-        is_read_only: true
-        print:
-          name: Last Modified Time
-        from:
-          operation: DescribeNotebookInstanceLifecycleConfig
-          path: LastModifiedTime
   ModelPackageGroup:
       exceptions:
         errors:
@@ -718,7 +688,7 @@ ignore:
       # ModelPackageGroup
       # - ModelQualityJobDefinition
       # - MonitoringSchedule
-      # - NotebookInstanceLifecycleConfig
+      - NotebookInstanceLifecycleConfig
       - NotebookInstance
       - Pipeline
       - PresignedDomainUrl

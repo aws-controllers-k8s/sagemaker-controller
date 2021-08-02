@@ -4,7 +4,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.4.0
+    controller-gen.kubebuilder.io/version: v0.6.1
   creationTimestamp: null
   name: trainingjobs.sagemaker.services.k8s.aws
 spec:
@@ -18,13 +18,14 @@ spec:
   versions:
   - additionalPrinterColumns:
     - jsonPath: .status.failureReason
-      name: FailureReason
+      name: FAILURE-REASON
+      priority: 1
       type: string
     - jsonPath: .status.secondaryStatus
-      name: SecondaryStatus
+      name: SECONDARY-STATUS
       type: string
     - jsonPath: .status.trainingJobStatus
-      name: TrainingJobStatus
+      name: STATUS
       type: string
     name: v1alpha1
     schema:
@@ -44,7 +45,8 @@ spec:
           metadata:
             type: object
           spec:
-            description: TrainingJobSpec defines the desired state of TrainingJob
+            description: "TrainingJobSpec defines the desired state of TrainingJob.
+              \n Contains information about a training job."
             properties:
               algorithmSpecification:
                 description: The registry path of the Docker image that contains the
@@ -382,6 +384,20 @@ spec:
                     format: int64
                     type: integer
                 type: object
+              tags:
+                description: An array of key-value pairs. You can use tags to categorize
+                  your AWS resources in different ways, for example, by purpose, owner,
+                  or environment. For more information, see Tagging AWS Resources
+                  (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+                items:
+                  description: Describes a tag.
+                  properties:
+                    key:
+                      type: string
+                    value:
+                      type: string
+                  type: object
+                type: array
               tensorBoardOutputConfig:
                 description: Configuration of storage locations for the Debugger TensorBoard
                   output data.
