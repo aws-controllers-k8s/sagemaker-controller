@@ -12,10 +12,13 @@ rules:
   - dataqualityjobdefinitions
   - endpoints
   - endpointconfigs
+  - featuregroups
   - hyperparametertuningjobs
   - models
   - modelbiasjobdefinitions
   - modelexplainabilityjobdefinitions
+  - modelpackages
+  - modelpackagegroups
   - modelqualityjobdefinitions
   - monitoringschedules
   - processingjobs

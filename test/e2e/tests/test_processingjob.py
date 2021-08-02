@@ -48,7 +48,7 @@ def kmeans_processing_job():
 
     assert resource is not None
     if k8s.get_resource_arn(resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {resource['status']}"
         )
     assert k8s.get_resource_arn(resource) is not None
@@ -161,9 +161,6 @@ class TestProcessingJob:
         processing_job_arn = processing_job_desc["ProcessingJobArn"]
         assert k8s.get_resource_arn(resource) == processing_job_arn
 
-        resource_tags = resource["spec"].get("tags", None)
-        assert_tags_in_sync(processing_job_arn, resource_tags)
-
         assert processing_job_desc["ProcessingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
@@ -171,6 +168,9 @@ class TestProcessingJob:
             processing_job_name, reference, cfg.JOB_STATUS_COMPLETED
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(processing_job_arn, resource_tags)
 
         # Check that you can delete a completed resource from k8s
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)

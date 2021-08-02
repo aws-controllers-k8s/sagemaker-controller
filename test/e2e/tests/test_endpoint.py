@@ -55,7 +55,7 @@ def single_container_model(name_suffix):
     )
     assert model_resource is not None
     if k8s.get_resource_arn(model_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {model_resource['status']}"
         )
     assert k8s.get_resource_arn(model_resource) is not None
@@ -84,7 +84,7 @@ def multi_variant_config(name_suffix, single_container_model):
     )
     assert config_resource is not None
     if k8s.get_resource_arn(config_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {config_resource['status']}"
         )
     assert k8s.get_resource_arn(config_resource) is not None
@@ -113,7 +113,7 @@ def single_variant_config(name_suffix, single_container_model):
     )
     assert config_resource is not None
     if k8s.get_resource_arn(config_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {config_resource['status']}"
         )
     assert k8s.get_resource_arn(config_resource) is not None
@@ -175,7 +175,7 @@ def faulty_config(name_suffix, single_container_model):
     )
     assert model_resource is not None
     if k8s.get_resource_arn(model_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {model_resource['status']}"
         )
     assert k8s.get_resource_arn(model_resource) is not None
@@ -195,7 +195,7 @@ def faulty_config(name_suffix, single_container_model):
     )
     assert config_resource is not None
     if k8s.get_resource_arn(config_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {config_resource['status']}"
         )
     assert k8s.get_resource_arn(config_resource) is not None
@@ -240,9 +240,6 @@ class TestEndpoint:
         endpoint_arn = endpoint_desc["EndpointArn"]
         assert self._get_resource_endpoint_arn(resource) == endpoint_arn
 
-        resource_tags = resource["spec"].get("tags", None)
-        assert_tags_in_sync(endpoint_arn, resource_tags)
-
         # endpoint transitions Creating -> InService state
         assert_endpoint_status_in_sync(
             endpoint_name, reference, cfg.ENDPOINT_STATUS_CREATING
@@ -253,6 +250,9 @@ class TestEndpoint:
             endpoint_name, reference, cfg.ENDPOINT_STATUS_INSERVICE
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(endpoint_arn, resource_tags)
 
     def update_endpoint_failed_test(
         self, sagemaker_client, single_variant_config, faulty_config, xgboost_endpoint

@@ -4,7 +4,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.4.0
+    controller-gen.kubebuilder.io/version: v0.6.1
   creationTimestamp: null
   name: monitoringschedules.sagemaker.services.k8s.aws
 spec:
@@ -18,10 +18,11 @@ spec:
   versions:
   - additionalPrinterColumns:
     - jsonPath: .status.failureReason
-      name: FailureReason
+      name: FAILURE-REASON
+      priority: 1
       type: string
     - jsonPath: .status.monitoringScheduleStatus
-      name: MonitoringScheduleStatus
+      name: STATUS
       type: string
     name: v1alpha1
     schema:
@@ -42,7 +43,9 @@ spec:
           metadata:
             type: object
           spec:
-            description: MonitoringScheduleSpec defines the desired state of MonitoringSchedule
+            description: "MonitoringScheduleSpec defines the desired state of MonitoringSchedule.
+              \n A schedule for a model monitoring job. For information about model
+              monitor, see Amazon SageMaker Model Monitor (https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor.html)."
             properties:
               monitoringScheduleConfig:
                 description: The configuration object that specifies the monitoring
@@ -226,6 +229,19 @@ spec:
                 description: The name of the monitoring schedule. The name must be
                   unique within an AWS Region within an AWS account.
                 type: string
+              tags:
+                description: (Optional) An array of key-value pairs. For more information,
+                  see Using Cost Allocation Tags (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html#allocation-whatURL)
+                  in the AWS Billing and Cost Management User Guide.
+                items:
+                  description: Describes a tag.
+                  properties:
+                    key:
+                      type: string
+                    value:
+                      type: string
+                  type: object
+                type: array
             required:
             - monitoringScheduleConfig
             - monitoringScheduleName

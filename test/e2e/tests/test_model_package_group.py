@@ -25,6 +25,7 @@ from e2e import (
     create_sagemaker_resource,
     wait_for_status,
     sagemaker_client,
+    assert_tags_in_sync,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
@@ -34,7 +35,7 @@ RESOURCE_PLURAL = "modelpackagegroups"
 
 @pytest.fixture(scope="module")
 def xgboost_model_package_group():
-    resource_name = random_suffix_name("xgboost-model-package-group", 32)
+    resource_name = random_suffix_name("xgboost-model-package-group", 50)
 
     replacements = REPLACEMENT_VALUES.copy()
     replacements["MODEL_PACKAGE_GROUP_NAME"] = resource_name
@@ -51,7 +52,9 @@ def xgboost_model_package_group():
 
     # Delete the k8s resource if not already deleted by tests
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        _, deleted = k8s.delete_custom_resource(
+            reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+        )
         assert deleted
 
 
@@ -136,19 +139,21 @@ class TestModelPackageGroup:
         model_package_group_sm_desc = get_sagemaker_model_package_group(
             model_package_group_name
         )
-
-        assert (
-            k8s.get_resource_arn(resource)
-            == model_package_group_sm_desc["ModelPackageGroupArn"]
-        )
+        model_package_group_arn = model_package_group_sm_desc["ModelPackageGroupArn"]
+        assert k8s.get_resource_arn(resource) == model_package_group_arn
 
         self._assert_model_package_group_status_in_sync(
             model_package_group_name, reference, cfg.JOB_STATUS_COMPLETED
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(model_package_group_arn, resource_tags)
+
         # Check that you can delete a completed resource from k8s
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        _, deleted = k8s.delete_custom_resource(
+            reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+        )
         assert deleted is True
 
         assert get_sagemaker_model_package_group(model_package_group_name) is None

@@ -48,7 +48,7 @@ def xgboost_hpojob():
     )
     assert resource is not None
     if k8s.get_resource_arn(resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {resource['status']}"
         )
     assert k8s.get_resource_arn(resource) is not None
@@ -162,9 +162,6 @@ class TestHPO:
         hpo_arn = hpo_sm_desc["HyperParameterTuningJobArn"]
         assert k8s.get_resource_arn(resource) == hpo_arn
 
-        resource_tags = resource["spec"].get("tags", None)
-        assert_tags_in_sync(hpo_arn, resource_tags)
-
         assert hpo_sm_desc["HyperParameterTuningJobStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
@@ -172,6 +169,9 @@ class TestHPO:
             hpo_job_name, reference, cfg.JOB_STATUS_COMPLETED
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(hpo_arn, resource_tags)
 
         # Check that you can delete a completed resource from k8s
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)
