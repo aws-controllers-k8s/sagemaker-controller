@@ -33,14 +33,19 @@ The following sections will guide you to install SageMaker and Application Autos
 This guide assumes that you’ve the following prerequisites:
   - Installed the following tools on the client machine used to access your Kubernetes cluster:
     - [kubectl](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html) - A command line tool for working with Kubernetes clusters. 
-    - helm v3.2.4 - A tool for installing and managing Kubernetes applications
-      - ```
-        git clone https://github.com/aws-controllers-k8s/community.git community
-
-        ./community/scripts/install-helm.sh
-        ```
+    - [helm](https://helm.sh/docs/intro/install/) - A tool for installing and managing Kubernetes applications
     - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv1.html) - A command line tool for interacting with AWS services. 
     - [eksctl](https://docs.aws.amazon.com/eks/latest/userguide/eksctl.html) - A command line tool for working with EKS clusters that automates many individual tasks.
+    - [yq](https://mikefarah.gitbook.io/yq) - command-line YAML processor.
+      - Linux
+        ```
+        sudo wget https://github.com/mikefarah/yq/releases/download/v4.9.8/yq_linux_amd64 -O /usr/bin/yq
+        sudo chmod +x /usr/bin/yq
+        ```
+      - Mac
+        ```
+        brew install yq
+        ```
   - Have IAM permissions to create roles and attach policies to roles.
   - Created an EKS cluster on which to run the controllers. It should be Kubernetes version 1.16+. For automated cluster creation using eksctl, see [Create an Amazon EKS Cluster](https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html) and select eksctl option.
 
@@ -55,8 +60,8 @@ export AWS_DEFAULT_REGION=<CLUSTER_REGION>
 aws eks update-kubeconfig --name $CLUSTER_NAME --region $AWS_DEFAULT_REGION
 
 kubectl config get-contexts
-
-kubectl get namespaces
+# Ensure cluster has compute
+kubectl get nodes
 ```
 
 #### 2.1 Setup IRSA for controller pod
@@ -73,7 +78,7 @@ eksctl utils associate-iam-oidc-provider --cluster ${CLUSTER_NAME} \
 Get the OIDC ID
 ```sh
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
-OIDC_PROVIDER=$(aws eks describe-cluster --name $CLUSTER_NAME --region $AWS_DEFAULT_REGION \
+OIDC_PROVIDER_URL=$(aws eks describe-cluster --name $CLUSTER_NAME --region $AWS_DEFAULT_REGION \
 --query "cluster.identity.oidc.issuer" --output text | cut -c9-)
 ```
 
@@ -87,13 +92,13 @@ printf '{
     {
       "Effect": "Allow",
       "Principal": {
-        "Federated": "arn:aws:iam::'$AWS_ACCOUNT_ID':oidc-provider/'$OIDC_PROVIDER'"
+        "Federated": "arn:aws:iam::'$AWS_ACCOUNT_ID':oidc-provider/'$OIDC_PROVIDER_URL'"
       },
       "Action": "sts:AssumeRoleWithWebIdentity",
       "Condition": {
         "StringEquals": {
-          "'$OIDC_PROVIDER':aud": "sts.amazonaws.com",
-          "'$OIDC_PROVIDER':sub": [
+          "'$OIDC_PROVIDER_URL':aud": "sts.amazonaws.com",
+          "'$OIDC_PROVIDER_URL':sub": [
             "system:serviceaccount:ack-system:ack-sagemaker-controller",
             "system:serviceaccount:ack-system:ack-applicationautoscaling-controller"
           ]
@@ -107,18 +112,19 @@ printf '{
 
 
 Run the following command to create a role with the trust relationship defined in `trust.json`. This role enables the Amazon EKS cluster to get and refresh credentials from IAM.
+
 ```sh
-OIDC_ROLE_NAME=ack-sage-role-$CLUSTER_NAME
+OIDC_ROLE_NAME=ack-controller-role-$CLUSTER_NAME
 
 aws --region $AWS_DEFAULT_REGION iam create-role --role-name $OIDC_ROLE_NAME --assume-role-policy-document file://trust.json
 
 # Attach the AmazonSageMakerFullAccess Policy to the Role
 aws --region $AWS_DEFAULT_REGION iam attach-role-policy --role-name $OIDC_ROLE_NAME --policy-arn arn:aws:iam::aws:policy/AmazonSageMakerFullAccess
-export OIDC_ROLE_ARN=$(aws --region $AWS_DEFAULT_REGION iam get-role --role-name $OIDC_ROLE_NAME --output text --query 'Role.Arn')
-echo $OIDC_ROLE_ARN
+export IAM_ROLE_ARN_FOR_IRSA=$(aws --region $AWS_DEFAULT_REGION iam get-role --role-name $OIDC_ROLE_NAME --output text --query 'Role.Arn')
+echo $IAM_ROLE_ARN_FOR_IRSA
 ```
 
-Take note of OIDC_ROLE_ARN printed in the previous step; you will pass this value to the service account used by the controller.
+Take note of IAM_ROLE_ARN_FOR_IRSA printed in the previous step; you will pass this value to the service account used by the controller.
 
 ### 3.0 Install Controllers
 
@@ -129,10 +135,10 @@ Take note of OIDC_ROLE_ARN printed in the previous step; you will pass this valu
 ```sh
 export HELM_EXPERIMENTAL_OCI=1
 export SERVICE=sagemaker
-export RELEASE_VERSION=v0.0.1
+export RELEASE_VERSION=v0.0.3
 export CHART_EXPORT_PATH=/tmp/chart
-export CHART_REPO=public.ecr.aws/aws-controllers-k8s/chart
-export CHART_REF=$CHART_REPO:$SERVICE-$RELEASE_VERSION
+export CHART_REPO=public.ecr.aws/aws-controllers-k8s/$SERVICE-chart
+export CHART_REF=$CHART_REPO:$RELEASE_VERSION
 
 mkdir -p $CHART_EXPORT_PATH
 helm chart pull $CHART_REF
@@ -144,50 +150,39 @@ helm chart export $CHART_REF --destination $CHART_EXPORT_PATH
 
   - [Option 1] Cluster scoped deployment
     - ```sh
-      # Change values in helm chart
-      vim $CHART_EXPORT_PATH/ack-$SERVICE-controller/values.yaml
-
-      # line #29, #30, change the aws.region, aws.account_id
-      aws:
-        region: "<REGION_HERE>"
-        account_id: "<ACCOUNT_ID_HERE>"
-
-      # line #46, remove {} in serviceAccount.annotations
-      # line #47, uncomment eks.amazonaws.com/role-arn and add the OIDC_ROLE_ARN
-      annotations: <REMOVE {}>
-      eks.amazonaws.com/role-arn: <OIDC_ROLE_ARN_HERE>
+      # Update values in helm chart
+      cd $CHART_EXPORT_PATH/$SERVICE-chart
+      yq e '.aws.region = env(AWS_DEFAULT_REGION)' -i values.yaml
+      yq e '.aws.account_id = env(AWS_ACCOUNT_ID)' -i values.yaml
+      yq e '.serviceAccount.annotations."eks.amazonaws.com/role-arn" = env(IAM_ROLE_ARN_FOR_IRSA)' -i values.yaml
+      cd -
       ```
   - [Option 2] Namespace scoped deployment
+    - Specify the namespace to listen to
+      ```sh
+      export WATCH_NAMESPACE=<NAMESPACE_TO_LISTEN_TO>
+      ```
     - ```sh
-      # Change values in helm chart
-      vim $CHART_EXPORT_PATH/ack-$SERVICE-controller/values.yaml
-
-      # line #29, #30, change the aws.region, aws.account_id to default account and region where controller should create the resources
-      aws:
-        region: "<REGION_HERE>"
-        account_id: "<ACCOUNT_ID_HERE>"
-
-      # Change the watchNamespace parameter
-      # line #33
-      watchNamespace: <Namespace_To_Listen_To>
-
-      # line #46, remove {} in serviceAccount.annotations
-      # line #47, uncomment eks.amazonaws.com/role-arn and add the OIDC_ROLE_ARN
-      annotations: <REMOVE {}>
-          eks.amazonaws.com/role-arn: <OIDC_ROLE_ARN_HERE>
+      # Update values in helm chart
+      cd $CHART_EXPORT_PATH/$SERVICE-chart
+      yq e '.aws.region = env(AWS_DEFAULT_REGION)' -i values.yaml
+      yq e '.aws.account_id = env(AWS_ACCOUNT_ID)' -i values.yaml
+      yq e '.serviceAccount.annotations."eks.amazonaws.com/role-arn" = env(IAM_ROLE_ARN_FOR_IRSA)' -i values.yaml
+      yq e '.watchNamespace" = env(WATCH_NAMESPACE)' -i values.yaml
+      cd -
       ```
 ##### 3.1.3 Install Controller
 
 Install CRDs
 ```sh
-kubectl apply -f $CHART_EXPORT_PATH/ack-$SERVICE-controller/crds
+kubectl apply -f $CHART_EXPORT_PATH/$SERVICE-chart/crds
 ```
 
 Create a namespace and install the helm chart
 ```sh
 export ACK_K8S_NAMESPACE=ack-system
 helm install -n $ACK_K8S_NAMESPACE --create-namespace --skip-crds ack-$SERVICE-controller \
- $CHART_EXPORT_PATH/ack-$SERVICE-controller 
+ $CHART_EXPORT_PATH/$SERVICE-chart
 ```
 
 Verify CRDs and helm charts were deployed
@@ -207,8 +202,8 @@ export HELM_EXPERIMENTAL_OCI=1
 export SERVICE=applicationautoscaling
 export RELEASE_VERSION=v0.0.1
 export CHART_EXPORT_PATH=/tmp/chart
-export CHART_REPO=public.ecr.aws/aws-controllers-k8s/chart
-export CHART_REF=$CHART_REPO:$SERVICE-$RELEASE_VERSION
+export CHART_REPO=public.ecr.aws/aws-controllers-k8s/$SERVICE-chart
+export CHART_REF=$CHART_REPO:$RELEASE_VERSION
 
 mkdir -p $CHART_EXPORT_PATH
 helm chart pull $CHART_REF
@@ -451,7 +446,7 @@ export SERVICE=sagemaker
 helm uninstall -n $ACK_K8S_NAMESPACE ack-$SERVICE-controller
 
 # Delete the CRDs
-cd $CHART_EXPORT_PATH/ack-$SERVICE-controller/crds
+cd $CHART_EXPORT_PATH/$SERVICE-chart/crds
 
 $ ls
 sagemaker.services.k8s.aws_dataqualityjobdefinitions.yaml
@@ -476,7 +471,7 @@ Choose either of the options below to delete CRDs
       ```
   - [Option 2] If you want to delete all CRDs
     - ```
-      kubectl delete -f $CHART_EXPORT_PATH/ack-$SERVICE-controller/crds
+      kubectl delete -f $CHART_EXPORT_PATH/$SERVICE-chart/crds
       ```
 
 #### 9.2 Uninstall applicationautoscaling controller and CRDs
@@ -489,7 +484,7 @@ export SERVICE=applicationautoscaling
 helm uninstall -n $ACK_K8S_NAMESPACE ack-$SERVICE-controller
 
 # Delete the CRDs
-cd $CHART_EXPORT_PATH/ack-$SERVICE-controller/crds
+cd $CHART_EXPORT_PATH/$SERVICE-chart/crds
 $ ls
 applicationautoscaling.services.k8s.aws_scalabletargets.yaml
 applicationautoscaling.services.k8s.aws_scalingpolicies.yaml
@@ -503,7 +498,7 @@ Choose either of the options below to delete CRDs
       ```
   - [Option 2] If you want to delete all CRDs
     - ```
-      kubectl delete -f $CHART_EXPORT_PATH/ack-$SERVICE-controller/crds
+      kubectl delete -f $CHART_EXPORT_PATH/$SERVICE-chart/crds
       ```
 
 #### 9.3 Verify charts were deleted
