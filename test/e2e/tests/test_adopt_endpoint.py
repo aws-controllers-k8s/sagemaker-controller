@@ -170,7 +170,6 @@ def adopted_endpoint(sdk_endpoint):
 
 
 @service_marker
-@pytest.mark.canary
 class TestAdoptedEndpoint:
     def test_smoke(self, sdk_endpoint, adopted_endpoint):
         (

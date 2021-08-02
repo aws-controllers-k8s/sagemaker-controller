@@ -187,6 +187,7 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
+	rm.customSetOutput(&resource{ko})
 	return &resource{ko}, nil
 }
 
@@ -336,6 +337,20 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.RoleARN != nil {
 		res.SetRoleArn(*r.ko.Spec.RoleARN)
 	}
+	if r.ko.Spec.Tags != nil {
+		f8 := []*svcsdk.Tag{}
+		for _, f8iter := range r.ko.Spec.Tags {
+			f8elem := &svcsdk.Tag{}
+			if f8iter.Key != nil {
+				f8elem.SetKey(*f8iter.Key)
+			}
+			if f8iter.Value != nil {
+				f8elem.SetValue(*f8iter.Value)
+			}
+			f8 = append(f8, f8elem)
+		}
+		res.SetTags(f8)
+	}
 
 	return res, nil
 }
@@ -356,32 +371,33 @@ func (rm *resourceManager) sdkUpdate(
 func (rm *resourceManager) sdkDelete(
 	ctx context.Context,
 	r *resource,
-) (err error) {
+) (latest *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
-
 	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
-		return err
+		return r, err
 	}
 
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_, err = rm.sdkapi.DeleteFeatureGroupWithContext(ctx, input)
+	var resp *svcsdk.DeleteFeatureGroupOutput
+	_ = resp
+	resp, err = rm.sdkapi.DeleteFeatureGroupWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteFeatureGroup", err)
 
 	if err == nil {
 		if _, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
 			if err != nil {
-				return err
+				return nil, err
 			}
-			return requeueWaitWhileDeleting
+			return r, requeueWaitWhileDeleting
 		}
 	}
 
-	return err
+	return nil, err
 }
 
 // newDeleteRequestPayload returns an SDK-specific struct for the HTTP request
@@ -479,7 +495,9 @@ func (rm *resourceManager) updateConditions(
 	}
 	// Required to avoid the "declared but not used" error in the default case
 	_ = syncCondition
-	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil {
+	// custom update conditions
+	customUpdate := rm.CustomUpdateConditions(ko, r, err)
+	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil || customUpdate {
 		return &resource{ko}, true // updated
 	}
 	return nil, false // not updated

@@ -45,6 +45,7 @@ function cleanup {
   kubectl delete adoptedresources --all
   kubectl delete featuregroups --all
   kubectl delete modelpackagegroups --all
+  kubectl delete modelpackages --all
 
   print_controller_logs
 

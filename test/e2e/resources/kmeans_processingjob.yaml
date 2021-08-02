@@ -50,3 +50,10 @@ spec:
           s3URI: s3://$SAGEMAKER_DATA_BUCKET/sagemaker/processing/output/
           localPath: /opt/ml/processing/output_valid/
           s3UploadMode: EndOfJob
+  tags:
+    - key: confidentiality
+      value: public
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

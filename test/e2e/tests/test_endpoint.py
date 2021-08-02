@@ -14,6 +14,7 @@
 """
 
 import botocore
+from botocore import endpoint
 import pytest
 import logging
 import time
@@ -27,6 +28,7 @@ from e2e import (
     service_marker,
     create_sagemaker_resource,
     assert_endpoint_status_in_sync,
+    assert_tags_in_sync,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
@@ -53,7 +55,7 @@ def single_container_model(name_suffix):
     )
     assert model_resource is not None
     if k8s.get_resource_arn(model_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {model_resource['status']}"
         )
     assert k8s.get_resource_arn(model_resource) is not None
@@ -82,7 +84,7 @@ def multi_variant_config(name_suffix, single_container_model):
     )
     assert config_resource is not None
     if k8s.get_resource_arn(config_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {config_resource['status']}"
         )
     assert k8s.get_resource_arn(config_resource) is not None
@@ -111,7 +113,7 @@ def single_variant_config(name_suffix, single_container_model):
     )
     assert config_resource is not None
     if k8s.get_resource_arn(config_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {config_resource['status']}"
         )
     assert k8s.get_resource_arn(config_resource) is not None
@@ -173,7 +175,7 @@ def faulty_config(name_suffix, single_container_model):
     )
     assert model_resource is not None
     if k8s.get_resource_arn(model_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {model_resource['status']}"
         )
     assert k8s.get_resource_arn(model_resource) is not None
@@ -193,7 +195,7 @@ def faulty_config(name_suffix, single_container_model):
     )
     assert config_resource is not None
     if k8s.get_resource_arn(config_resource) is None:
-        logging.debug(
+        logging.error(
             f"ARN for this resource is None, resource status is: {config_resource['status']}"
         )
     assert k8s.get_resource_arn(config_resource) is not None
@@ -232,12 +234,14 @@ class TestEndpoint:
         endpoint_name = resource["spec"].get("endpointName", None)
         assert endpoint_name is not None
 
-        assert (
-            self._get_resource_endpoint_arn(resource)
-            == self._describe_sagemaker_endpoint(sagemaker_client, endpoint_name)[
-                "EndpointArn"
-            ]
+        endpoint_desc = self._describe_sagemaker_endpoint(
+            sagemaker_client, endpoint_name
         )
+        endpoint_arn = endpoint_desc["EndpointArn"]
+        assert self._get_resource_endpoint_arn(resource) == endpoint_arn
+
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(endpoint_arn, resource_tags)
 
         # endpoint transitions Creating -> InService state
         assert_endpoint_status_in_sync(

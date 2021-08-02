@@ -68,3 +68,10 @@ spec:
         collection_names: metrics
         num_steps: "10"
         rule_to_invoke: LossNotDecreasing
+  tags:
+    - key: algorithm
+      value: xgboost
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

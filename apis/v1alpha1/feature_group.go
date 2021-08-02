@@ -99,6 +99,8 @@ type FeatureGroupSpec struct {
 	// The Amazon Resource Name (ARN) of the IAM execution role used to persist
 	// data into the OfflineStore if an OfflineStoreConfig is provided.
 	RoleARN *string `json:"roleARN,omitempty"`
+	// Tags used to identify Features in each FeatureGroup.
+	Tags []*Tag `json:"tags,omitempty"`
 }
 
 // FeatureGroupStatus defines the observed state of FeatureGroup

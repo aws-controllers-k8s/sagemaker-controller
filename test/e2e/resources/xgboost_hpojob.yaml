@@ -59,3 +59,10 @@ spec:
       maxRuntimeInSeconds: 3600
     enableNetworkIsolation: true
     enableInterContainerTrafficEncryption: false
+  tags:
+    - key: algorithm
+      value: xgboost
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

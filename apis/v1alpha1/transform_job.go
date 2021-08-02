@@ -79,6 +79,10 @@ type TransformJobSpec struct {
 	// in an AWS account.
 	// +kubebuilder:validation:Required
 	ModelName *string `json:"modelName"`
+	// (Optional) An array of key-value pairs. For more information, see Using Cost
+	// Allocation Tags (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html#allocation-what)
+	// in the AWS Billing and Cost Management User Guide.
+	Tags []*Tag `json:"tags,omitempty"`
 	// Describes the input source and the way the transform job consumes it.
 	// +kubebuilder:validation:Required
 	TransformInput *TransformInput `json:"transformInput"`

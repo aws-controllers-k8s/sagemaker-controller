@@ -273,6 +273,7 @@ func newResourceDelta(
 			}
 		}
 	}
+
 	if ackcompare.HasNilDifference(a.ko.Spec.TensorBoardOutputConfig, b.ko.Spec.TensorBoardOutputConfig) {
 		delta.Add("Spec.TensorBoardOutputConfig", a.ko.Spec.TensorBoardOutputConfig, b.ko.Spec.TensorBoardOutputConfig)
 	} else if a.ko.Spec.TensorBoardOutputConfig != nil && b.ko.Spec.TensorBoardOutputConfig != nil {
