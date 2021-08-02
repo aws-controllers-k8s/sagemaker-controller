@@ -30,6 +30,7 @@ from e2e.bootstrap_resources import get_bootstrap_resources
 import random
 
 from e2e.replacement_values import REPLACEMENT_VALUES
+from time import sleep
 
 RESOURCE_PLURAL = "notebookinstancelifecycleconfigs"
 RESOURCE_NAME_PREFIX = "nblf"
@@ -70,20 +71,26 @@ class TestNotebookInstanceLifecycleConfig:
         (reference, resource,spec) = notebook_instance_lifecycleConfig
         assert k8s.get_resource_exists(reference)
 
+        #Getting the resource name
         notebook_instance_lfc_name = resource["spec"].get("notebookInstanceLifecycleConfigName",None)
         assert notebook_instance_lfc_name is not None
 
+        #Verifying that its set correctly
         spec["spec"]["onStart"] = [{"content":"cGlwIGluc3RhbGwgc2l4"}]
         k8s.patch_custom_resource(reference,spec)
 
         resource = k8s.wait_resource_consumed_by_controller(reference)
         assert resource is not None
+        sleep(3) #Done to avoid flakiness
 
+        #Verifying that an update was successful
         latest_notebook_lf = get_notebook_instance_lifecycle_config(notebook_instance_lfc_name)
         assert(latest_notebook_lf["OnStart"][0]["Content"] == "cGlwIGluc3RhbGwgc2l4")
 
+        #Deleting the resource
         _, deleted = k8s.delete_custom_resource(reference, 10, 5)
-        assert deleted is True 
+        assert deleted is True
+        assert get_notebook_instance_lifecycle_config(notebook_instance_lfc_name) is None
 
 
 
