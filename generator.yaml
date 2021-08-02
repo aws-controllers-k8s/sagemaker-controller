@@ -519,7 +519,10 @@ resources:
         - MalformedQueryString
         - InvalidAction
         - UnrecognizedClientException    
-        - ConflictException   
+        - ConflictException
+        # Custom error to disable support for Versioned
+        # Model Package
+        - VersionedModelPackageNotSupported
     hooks:
       delta_pre_compare:
         code: customSetDefaults(a, b)
@@ -535,6 +538,8 @@ resources:
         template_path: model_package/set_resource_name_as_arn.go.tpl
       sdk_update_pre_build_request:
         template_path: model_package/sdk_update_pre_build_request.go.tpl
+      sdk_create_post_build_request:
+        template_path: model_package/sdk_create_post_build_request.go.tpl
     fields:
       ModelPackageStatus:
         is_read_only: true

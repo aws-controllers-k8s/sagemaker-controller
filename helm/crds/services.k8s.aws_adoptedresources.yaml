@@ -4,7 +4,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.4.0
+    controller-gen.kubebuilder.io/version: v0.6.1
   creationTimestamp: null
   name: adoptedresources.services.k8s.aws
 spec:
@@ -40,6 +40,12 @@ spec:
                 description: AWSIdentifiers provide all unique ways to reference an
                   AWS resource.
                 properties:
+                  additionalKeys:
+                    additionalProperties:
+                      type: string
+                    description: AdditionalKeys represents any additional arbitrary
+                      identifiers used when describing the target resource.
+                    type: object
                   arn:
                     description: ARN is the AWS Resource Name for the resource. It
                       is a globally unique identifier.

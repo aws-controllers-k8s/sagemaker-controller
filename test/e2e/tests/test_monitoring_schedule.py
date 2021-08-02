@@ -163,9 +163,6 @@ class TestMonitoringSchedule:
         monitoring_schedule_arn = monitoring_schedule_desc["MonitoringScheduleArn"]
         assert k8s.get_resource_arn(resource) == monitoring_schedule_arn
 
-        resource_tags = resource["spec"].get("tags", None)
-        assert_tags_in_sync(monitoring_schedule_arn, resource_tags)
-
         # scheule transitions Pending -> Scheduled state
         # Pending status is shortlived only for 30 seconds because baselining job has already been run
         # remove the checks for Pending status if the test is flaky because of this
@@ -185,6 +182,9 @@ class TestMonitoringSchedule:
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(monitoring_schedule_arn, resource_tags)
+        
         # Update the resource
         new_cron_expression = "cron(0 * * * ? *)"
         spec["spec"]["monitoringScheduleConfig"]["scheduleConfig"][
