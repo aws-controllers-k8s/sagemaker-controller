@@ -10,9 +10,8 @@ spec:
   volumeSizeInGB: 6  
   directInternetAccess: Enabled
   rootAccess: Enabled
-  tags: [
-    {
-      "Key": "Development"
-      "Value": "Kubernetes"
-    }
-  ]
+  acceleratorTypes:
+    - ml.eia1.medium
+  lifecycleConfigName: sample-lifecycle
+  defaultCodeRepository: <Your git code repository>
+    
