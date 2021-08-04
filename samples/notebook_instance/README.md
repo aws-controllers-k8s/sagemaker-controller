@@ -27,6 +27,9 @@ $ kubectl get NotebookInstance
 
 ### Describe a Notebook Instance
 This command desribes a specific Notebook Instance, it is useful for checking items like the status, errors or parameters of the Notebook Instance.
+
+Note: The status field NotebookInstanceURL returns a url in the form <name>.notebook.<region>.sagemaker.aws. To view the NotebookInstance in the browser, use https://<url>
+
 ```
 $ kubectl describe NotebookInstance my-notebook
 ```
