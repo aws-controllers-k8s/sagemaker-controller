@@ -114,16 +114,19 @@ type NotebookInstanceStatus struct {
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	// If status is Failed, the reason it failed.
+	FailureReason *string `json:"failureReason,omitempty"`
 	// The status of the notebook instance.
 	NotebookInstanceStatus *string `json:"notebookInstanceStatus,omitempty"`
 	// The URL that you use to connect to the Jupyter notebook that is running in
 	// your notebook instance.
-	NotebookInstanceURL *string `json:"notebookInstanceURL,omitempty"`
+	URL *string `json:"url,omitempty"`
 }
 
 // NotebookInstance is the Schema for the NotebookInstances API
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="FAILURE-REASON",type=string,priority=1,JSONPath=`.status.failureReason`
 // +kubebuilder:printcolumn:name="STATUS",type=string,priority=0,JSONPath=`.status.notebookInstanceStatus`
 type NotebookInstance struct {
 	metav1.TypeMeta   `json:",inline"`

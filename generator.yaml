@@ -649,9 +649,7 @@ resources:
       delta_pre_compare:
         code: customSetDefaults(a, b)
       sdk_read_one_post_set_output: 
-        code: rm.customSetOutputDescribe(r,ko)
-      sdk_create_post_set_output:
-        code: rm.customSetOutputCreate(ko)
+        code: rm.customSetOutput(&resource{ko})
     fields:
       NotebookInstanceStatus:
         is_read_only: true
@@ -660,11 +658,19 @@ resources:
         from:
           operation: DescribeNotebookInstance
           path: NotebookInstanceStatus
-      NotebookInstanceURL:
+      Url:
         is_read_only: true
         from:
           operation: DescribeNotebookInstance
           path: Url
+      FailureReason:
+        is_read_only: true
+        print:
+          name: FAILURE-REASON
+          priority: 1
+        from:
+          operation: DescribeNotebookInstance
+          path: FailureReason
   ModelPackageGroup:
       exceptions:
         errors:

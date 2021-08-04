@@ -108,6 +108,11 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.DirectInternetAccess = nil
 	}
+	if resp.FailureReason != nil {
+		ko.Status.FailureReason = resp.FailureReason
+	} else {
+		ko.Status.FailureReason = nil
+	}
 	if resp.InstanceType != nil {
 		ko.Spec.InstanceType = resp.InstanceType
 	} else {
@@ -150,6 +155,11 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.SubnetID = nil
 	}
+	if resp.Url != nil {
+		ko.Status.URL = resp.Url
+	} else {
+		ko.Status.URL = nil
+	}
 	if resp.VolumeSizeInGB != nil {
 		ko.Spec.VolumeSizeInGB = resp.VolumeSizeInGB
 	} else {
@@ -157,7 +167,7 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutputDescribe(r, ko)
+	rm.customSetOutput(&resource{ko})
 	return &resource{ko}, nil
 }
 
@@ -220,7 +230,6 @@ func (rm *resourceManager) sdkCreate(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutputCreate(ko)
 	return &resource{ko}, nil
 }
 
@@ -401,7 +410,15 @@ func (rm *resourceManager) sdkDelete(
 		return r, err
 	}
 
-	rm.customPreDelete(r)
+	if latestStatus := r.ko.Status.NotebookInstanceStatus; latestStatus != nil &&
+		*latestStatus == svcsdk.NotebookInstanceStatusInService {
+		if err := rm.stopNotebookInstance(r); err == nil {
+			return r, requeueWaitWhileStopping
+		} else {
+			return r, err
+		}
+	}
+
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
 		return nil, err
