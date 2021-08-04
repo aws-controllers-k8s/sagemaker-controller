@@ -17,7 +17,6 @@ package notebook_instance
 
 import (
 	"context"
-	"fmt"
 	"strings"
 
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
@@ -77,7 +76,6 @@ func (rm *resourceManager) sdkFind(
 	// the original Kubernetes object we passed to the function
 	ko := r.ko.DeepCopy()
 	//Todo Take this if statement out if code generator can generate this field.
-	fmt.Println("\n \n ", resp, "\n")
 	if resp.Url != nil {
 		ko.Status.NotebookInstanceURL = resp.Url
 	}
@@ -175,9 +173,6 @@ func (rm *resourceManager) sdkFind(
 	started_notebook := rm.customSetOutputDescribe(r, ko)
 	if !started_notebook {
 		ko.Status.StoppedByAck = &tmp //covers a scenario where the code generator sets r.ko.Status.StoppedByAck
-	}
-	if ko.Status.NotebookInstanceURL != nil {
-		fmt.Println(*ko.Status.NotebookInstanceURL)
 	}
 
 	return &resource{ko}, nil
