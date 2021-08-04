@@ -7357,6 +7357,11 @@ func (in *NotebookInstanceStatus) DeepCopyInto(out *NotebookInstanceStatus) {
 			}
 		}
 	}
+	if in.FailureReason != nil {
+		in, out := &in.FailureReason, &out.FailureReason
+		*out = new(string)
+		**out = **in
+	}
 	if in.NotebookInstanceStatus != nil {
 		in, out := &in.NotebookInstanceStatus, &out.NotebookInstanceStatus
 		*out = new(string)

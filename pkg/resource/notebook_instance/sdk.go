@@ -75,6 +75,10 @@ func (rm *resourceManager) sdkFind(
 	// Merge in the information we read from the API call above to the copy of
 	// the original Kubernetes object we passed to the function
 	ko := r.ko.DeepCopy()
+	//Todo Take this if statement out if code generator can generate this field.
+	if resp.Url != nil {
+		ko.Status.NotebookInstanceURL = resp.Url
+	}
 
 	if resp.AcceleratorTypes != nil {
 		f0 := []*string{}
@@ -107,6 +111,11 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.DirectInternetAccess = resp.DirectInternetAccess
 	} else {
 		ko.Spec.DirectInternetAccess = nil
+	}
+	if resp.FailureReason != nil {
+		ko.Status.FailureReason = resp.FailureReason
+	} else {
+		ko.Status.FailureReason = nil
 	}
 	if resp.InstanceType != nil {
 		ko.Spec.InstanceType = resp.InstanceType

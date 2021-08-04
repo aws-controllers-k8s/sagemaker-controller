@@ -652,6 +652,8 @@ resources:
         code: rm.customSetOutputDescribe(r,ko)
       sdk_create_post_set_output:
         code: rm.customSetOutputCreate(ko)
+      sdk_read_one_pre_set_output:
+        template_path: notebook_instance/sdk_read_one_pre_set_output.go.tpl
     fields:
       NotebookInstanceStatus:
         is_read_only: true
@@ -665,6 +667,14 @@ resources:
         from:
           operation: DescribeNotebookInstance
           path: Url
+      FailureReason:
+        is_read_only: true
+        print:
+          name: FAILURE-REASON
+          priority: 1
+        from:
+          operation: DescribeNotebookInstance
+          path: FailureReason
   ModelPackageGroup:
       exceptions:
         errors:
