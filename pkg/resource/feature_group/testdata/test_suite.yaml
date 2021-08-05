@@ -5,7 +5,7 @@ tests:
      - name: "Create=InvalidInput"
        description: "Given one of the parameters is invalid, ko.Status shows a terminal condition"
        given:
-         desired_state: "feature_group/cr/fg_cmd_invalid_before_create.yaml"
+         desired_state: "feature_group/cr/fg_invalid_before_create.yaml"
          svc_api:
            - operation: CreateFeatureGroupWithContext
              error:
@@ -13,5 +13,5 @@ tests:
                message: "The feature group name must start with an alphanumeric character."
        invoke: Create
        expect:
-         latest_state: "feature_group/cr/fg_cmd_invalid_create_attempted.yaml"
+         latest_state: "feature_group/cr/fg_invalid_create_attempted.yaml"
          error: resource is in terminal condition
