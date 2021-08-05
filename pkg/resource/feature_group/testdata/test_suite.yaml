@@ -1,5 +1,5 @@
 tests:
-  - name: "Feature group demo test"
+  - name: "Feature group create test."
     description: "Feature group CRD tests"
     scenarios:
      - name: "Create=InvalidInput"

@@ -86,44 +86,14 @@ func (d *testRunnerDelegate) EmptyServiceAPIOutput(apiName string) (interface{},
 	}
 	//TODO: use reflection, template to auto generate this block/method.
 	switch apiName {
-	case "CreateFeatureGroup":
-		var output svcsdk.CreateFeatureGroupOutput
-		return &output, nil
-	case "CreateFeatureGroupRequest":
-		var output svcsdk.CreateFeatureGroupOutput
-	    	return &output, nil
 	case "CreateFeatureGroupWithContext":
 		var output svcsdk.CreateFeatureGroupOutput
 	    	return &output, nil
-	case "DeleteFeatureGroup":
-		var output svcsdk.DeleteFeatureGroupOutput
-		return &output, nil
-	case "DeleteFeatureGroupRequest":
-		var output svcsdk.DeleteFeatureGroupOutput
-		return &output, nil
 	case "DeleteFeatureGroupWithContext":
 		var output svcsdk.DeleteFeatureGroupOutput
 		return &output, nil
-	case "DescribeFeatureGroup":
-		var output svcsdk.DescribeFeatureGroupOutput
-		return &output, nil
-	case "DescribeFeatureGroupRequest":
-		var output svcsdk.DescribeFeatureGroupOutput
-		return &output, nil
 	case "DescribeFeatureGroupWithContext":
 		var output svcsdk.DescribeFeatureGroupOutput
-		return &output, nil
-	case "ListFeatureGroups":
-		var output svcsdk.ListFeatureGroupsOutput
-		return &output, nil
-	case "ListFeatureGroupsPages":
-		var output svcsdk.ListFeatureGroupsOutput
-		return &output, nil
-	case "ListFeatureGroupsRequest":
-		var output svcsdk.ListFeatureGroupsOutput
-		return &output, nil
-	case "ListFeatureGroupsWithContext":
-		var output svcsdk.ListFeatureGroupsOutput
 		return &output, nil
 	}
 	return nil, errors.New(fmt.Sprintf("no matching API name found for: %s", apiName))
