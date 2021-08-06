@@ -1,0 +1,49 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: ModelBiasJobDefinition
+metadata:
+  creationTimestamp: null
+  name: unit-testing-model-bias-job-definition
+spec:
+  jobDefinitionName: ""
+  jobResources:
+    clusterConfig:
+      instanceCount: 1
+      instanceType: ml.m5.large
+      volumeSizeInGB: 30
+  modelBiasAppSpecification:
+    configURI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model_bias_job_definition/baselining/analysis_config.json
+    imageURI: 306415355426.dkr.ecr.us-west-2.amazonaws.com
+  modelBiasBaselineConfig:
+    constraintsResource:
+      s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model_bias_job_definition/baselining/analysis.json
+  modelBiasJobInput:
+    endpointInput:
+      endTimeOffset: -PT0H
+      endpointName: unit-testing-endpoint
+      localPath: /opt/ml/processing/input/endpoint
+      probabilityThresholdAttribute: 0.8
+      s3DataDistributionType: FullyReplicated
+      s3InputMode: File
+      startTimeOffset: -PT1H
+    groundTruthS3Input:
+      s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model_bias_job_definition/ground_truth_data
+  modelBiasJobOutputConfig:
+    monitoringOutputs:
+    - {}
+  roleARN: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
+  stoppingCondition:
+    maxRuntimeInSeconds: 1800
+  tags:
+  - key: confidentiality
+    value: public
+  - key: environment
+    value: testing
+  - key: customer
+    value: test-user
+status:
+  ackResourceMetadata:
+    ownerAccountID: ""
+  conditions:
+  - message: The job definition name must start with an alphanumeric character.
+    status: "True"
+    type: ACK.Terminal

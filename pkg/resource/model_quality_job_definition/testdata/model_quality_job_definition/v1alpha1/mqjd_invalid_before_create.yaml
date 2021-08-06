@@ -1,0 +1,43 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: ModelQualityJobDefinition
+metadata:
+  name: unit-testing-model-quality-job-definition
+spec:
+  jobDefinitionName: !-intentionally-invalid-name
+  jobResources:
+    clusterConfig:
+      instanceCount: 1
+      instanceType: ml.m5.large
+      volumeSizeInGB: 20
+  modelQualityAppSpecification:
+    imageURI: 159807026194.dkr.ecr.us-west-2.amazonaws.com
+    problemType: BinaryClassification
+  modelQualityBaselineConfig:
+    constraintsResource:
+      s3URI: "s3://source-data-bucket-592697580195-us-west-2/sagemaker/model_quality_job_definition/baselining/constraints.json"
+  modelQualityJobInput:
+    endpointInput:
+      endpointName: unit-testing-endpoint
+      localPath: "/opt/ml/processing/input_data"
+      s3InputMode: File
+      s3DataDistributionType: FullyReplicated
+      probabilityThresholdAttribute: 0.5
+      probabilityAttribute: "0"
+    groundTruthS3Input:
+      s3URI: "s3://source-data-bucket-592697580195-us-west-2/sagemaker/model_quality_job_definition/ground_truth_data"
+  modelQualityJobOutputConfig:
+    monitoringOutputs:
+    - s3Output:
+        localPath: "/opt/ml/processing/output"
+        s3URI: "s3://source-data-bucket-592697580195-us-west-2/sagemaker/model_quality_job_definition/results"
+        s3UploadMode: Continuous
+  stoppingCondition:
+    maxRuntimeInSeconds: 1800
+  roleARN: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
+  tags:
+    - key: confidentiality
+      value: public
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

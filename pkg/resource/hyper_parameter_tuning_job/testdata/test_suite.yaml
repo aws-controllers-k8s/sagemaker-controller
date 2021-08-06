@@ -1,0 +1,17 @@
+tests:
+  - name: "Hyper parameter tuning job create tests"
+    description: "Part of hyper parameter tuning job CRD tests."
+    scenarios:
+     - name: "Create=InvalidInput"
+       description: "Given one of the parameters is invalid, ko.Status shows a terminal condition"
+       given:
+         desired_state: "hyper_parameter_tuning_job/v1alpha1/hptj_invalid_before_create.yaml"
+         svc_api:
+           - operation: CreateHyperParameterTuningJobWithContext
+             error:
+               code: InvalidParameterValue
+               message: "The hyper parameter tuning job name must start with an alphanumeric character."
+       invoke: Create
+       expect:
+         latest_state: "hyper_parameter_tuning_job/v1alpha1/hptj_invalid_create_attempted.yaml"
+         error: resource is in terminal condition

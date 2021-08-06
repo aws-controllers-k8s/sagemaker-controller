@@ -11,15 +11,15 @@
 // express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-package feature_group
+package transform_job
 
 import (
 	"errors"
 	"fmt"
 
+	mocksvcsdkapi "github.com/aws-controllers-k8s/sagemaker-controller/test/mocks/aws-sdk-go/sagemaker"
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
 	"github.com/ghodss/yaml"
-	mocksvcsdkapi "github.com/aws-controllers-k8s/sagemaker-controller/test/mocks/aws-sdk-go/sagemaker"
 	"github.com/aws-controllers-k8s/sagemaker-controller/pkg/testutil"
 	acktypes "github.com/aws-controllers-k8s/runtime/pkg/types"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
@@ -51,14 +51,8 @@ func provideResourceManagerWithMockSDKAPI(mockSageMakerAPI *mocksvcsdkapi.SageMa
      }
 }
 
-// TestFeatureGroupTestSuite runs the test suite for feature group
-func TestFeatureGroupTestSuite(t *testing.T) {
-     	defer func() {
-     	   if r := recover(); r != nil {
-     	      fmt.Println(testutil.RecoverPanicString, r)
-	      t.Fail()
-     	   }
-        }()
+// TestTransformJobTestSuite runs the test suite for transform job
+func TestTransformJobTestSuite(t *testing.T) {
 	var ts = testutil.TestSuite{}
 	testutil.LoadFromFixture(filepath.Join("testdata", "test_suite.yaml"), &ts)
 	var delegate = testRunnerDelegate{t: t}
@@ -89,14 +83,14 @@ func (d *testRunnerDelegate) EmptyServiceAPIOutput(apiName string) (interface{},
 	}
 	//TODO: use reflection, template to auto generate this block/method.
 	switch apiName {
-	case "CreateFeatureGroupWithContext":
-		var output svcsdk.CreateFeatureGroupOutput
+	case "CreateTransformJobWithContext":
+		var output svcsdk.CreateTransformJobOutput
 		return &output, nil
-	case "DeleteFeatureGroupWithContext":
-		var output svcsdk.DeleteFeatureGroupOutput
+	case "DescribeTransformJobWithContext":
+		var output svcsdk.DescribeTransformJobOutput
 		return &output, nil
-	case "DescribeFeatureGroupWithContext":
-		var output svcsdk.DescribeFeatureGroupOutput
+	case "StopTransformJobWithContext":
+		var output svcsdk.StopTransformJobOutput
 		return &output, nil
 	}
 	return nil, errors.New(fmt.Sprintf("no matching API name found for: %s", apiName))
