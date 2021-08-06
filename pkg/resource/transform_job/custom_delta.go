@@ -22,11 +22,9 @@ func customSetDefaults(
 	a *resource,
 	b *resource,
 ) {
-	// TransformInput is a required field.
-	if ackcompare.IsNotNil(a.ko.Spec.TransformInput) && ackcompare.IsNotNil(b.ko.Spec.TransformInput) {
-	   	if ackcompare.IsNil(a.ko.Spec.TransformInput.CompressionType) && ackcompare.IsNotNil(b.ko.Spec.TransformInput.CompressionType) {
-		   a.ko.Spec.TransformInput.CompressionType = b.ko.Spec.TransformInput.CompressionType
-		}
+
+	if ackcompare.IsNil(a.ko.Spec.TransformInput.CompressionType) && ackcompare.IsNotNil(b.ko.Spec.TransformInput.CompressionType) {
+		a.ko.Spec.TransformInput.CompressionType = b.ko.Spec.TransformInput.CompressionType
 	}
 
 	if ackcompare.IsNotNil(a.ko.Spec.TransformInput) && ackcompare.IsNotNil(b.ko.Spec.TransformInput) {
