@@ -31,7 +31,7 @@ clean-mocks:	## Remove mocks directory
 	rm -r mocks
 
 install-mockery:
-	@scripts/install-mockery.sh
+	@test/scripts/install-mockery.sh
 
 mocks: install-mockery ## Build mocks
 	go get -d $(AWS_SDK_GO_VERSIONED_PATH)
