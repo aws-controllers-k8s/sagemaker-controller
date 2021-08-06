@@ -16,7 +16,7 @@ package feature_group
 import (
 	"errors"
 	"fmt"
-	mocksvcsdkapi "github.com/aws-controllers-k8s/sagemaker-controller/mocks/aws-sdk-go/sagemaker"
+	mocksvcsdkapi "github.com/aws-controllers-k8s/sagemaker-controller/test/mocks/aws-sdk-go/sagemaker"
 	"github.com/aws-controllers-k8s/sagemaker-controller/pkg/testutil"
 	acktypes "github.com/aws-controllers-k8s/runtime/pkg/types"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"

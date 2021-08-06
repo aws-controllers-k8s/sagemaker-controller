@@ -17,7 +17,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	mocksvcsdkapi "github.com/aws-controllers-k8s/sagemaker-controller/mocks/aws-sdk-go/sagemaker"
+	mocksvcsdkapi "github.com/aws-controllers-k8s/sagemaker-controller/test/mocks/aws-sdk-go/sagemaker"
 	acktypes "github.com/aws-controllers-k8s/runtime/pkg/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
