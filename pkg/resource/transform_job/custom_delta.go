@@ -16,13 +16,14 @@ package transform_job
 import (
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
+	"fmt"
 )
 
 func customSetDefaults(
 	a *resource,
 	b *resource,
 ) {
-
+	// TransformInput is a required field.
 	if ackcompare.IsNil(a.ko.Spec.TransformInput.CompressionType) && ackcompare.IsNotNil(b.ko.Spec.TransformInput.CompressionType) {
 		a.ko.Spec.TransformInput.CompressionType = b.ko.Spec.TransformInput.CompressionType
 	}
