@@ -1,0 +1,3 @@
+{
+    "FeatureGroupArn": "arn:aws:sagemaker:us-west-2:123456789012:feature-group/unit-testing-feature-group"
+}
