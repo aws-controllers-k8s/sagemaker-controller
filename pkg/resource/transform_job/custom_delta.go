@@ -16,7 +16,6 @@ package transform_job
 import (
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
-	"fmt"
 )
 
 func customSetDefaults(
@@ -28,10 +27,8 @@ func customSetDefaults(
 		a.ko.Spec.TransformInput.CompressionType = b.ko.Spec.TransformInput.CompressionType
 	}
 
-	if ackcompare.IsNotNil(a.ko.Spec.TransformInput) && ackcompare.IsNotNil(b.ko.Spec.TransformInput) {
-	   	if ackcompare.IsNil(a.ko.Spec.TransformInput.SplitType) && ackcompare.IsNotNil(b.ko.Spec.TransformInput.SplitType) {
-		   a.ko.Spec.TransformInput.SplitType = b.ko.Spec.TransformInput.SplitType
-		}
+	if ackcompare.IsNil(a.ko.Spec.TransformInput.SplitType) && ackcompare.IsNotNil(b.ko.Spec.TransformInput.SplitType) {
+		a.ko.Spec.TransformInput.SplitType = b.ko.Spec.TransformInput.SplitType
 	}
 
 	// DataProcessing is not a required field, so first create it.
