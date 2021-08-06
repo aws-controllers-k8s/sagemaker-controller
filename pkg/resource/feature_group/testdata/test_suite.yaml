@@ -1,6 +1,6 @@
 tests:
-  - name: "Feature group create test."
-    description: "Feature group CRD tests"
+  - name: "Feature group create tests"
+    description: "Part of feature group CRD tests."
     scenarios:
       - name: "Create=InvalidInput"
         description: "Given one of the parameters is invalid, ko.Status shows a terminal condition"
@@ -26,6 +26,9 @@ tests:
         expect:
           latest_state: "feature_group/v1alpha1/fg_create_initiated.yaml"
           error: nil
+  - name: "Feature group read one tests"
+    description: "Part of feature group CRD tests."
+    scenarios:
       - name: "ReadOne=NewlyCreated"
         description: "A create initialized feature group enters the creating state with the ACK.ResourceSynced set to false, and the offlineStorageConfig disableGlueTableCreation, s3StorageConfig.resolvedOutputS3URI should be updated."
         given:
@@ -62,6 +65,9 @@ tests:
         expect:
           latest_state: "feature_group/v1alpha1/fg_created_state.yaml"
           error: nil
+  - name: "Feature group delete tests"
+    description: "Part of feature group CRD tests."
+    scenarios:
       - name: "Delete=RequiresRequeueWhileCreating"
         description: "Deleting a feature group in a modifying condition (creating) should result in a requeue on delete."
         given:
