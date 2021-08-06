@@ -1,0 +1,17 @@
+tests:
+  - name: "Feature group create test."
+    description: "Feature group CRD tests"
+    scenarios:
+     - name: "Create=InvalidInput"
+       description: "Given one of the parameters is invalid, ko.Status shows a terminal condition"
+       given:
+         desired_state: "feature_group/v1alpha1/fg_invalid_before_create.yaml"
+         svc_api:
+           - operation: CreateFeatureGroupWithContext
+             error:
+               code: InvalidParameterValue
+               message: "The feature group name must start with an alphanumeric character."
+       invoke: Create
+       expect:
+         latest_state: "feature_group/v1alpha1/fg_invalid_create_attempted.yaml"
+         error: resource is in terminal condition

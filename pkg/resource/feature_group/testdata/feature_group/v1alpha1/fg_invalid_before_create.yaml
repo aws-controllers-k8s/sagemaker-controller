@@ -1,0 +1,17 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: FeatureGroup
+metadata:
+  name: unit-testing-feature-group
+spec:
+  eventTimeFeatureName: EventTime
+  featureDefinitions:
+  - featureName: TransactionID
+    featureType: Integral
+  - featureName: EventTime
+    featureType: Fractional
+  featureGroupName: !-intentionally-invalid-name
+  offlineStoreConfig:
+    s3StorageConfig:
+      s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/feature-group-data
+  recordIdentifierFeatureName: TransactionID
+  roleARN: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
