@@ -1,0 +1,49 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: DataQualityJobDefinition
+metadata:
+  creationTimestamp: null
+  name: unit_testing_job_definition
+spec:
+  dataQualityAppSpecification:
+    imageURI: 159807026194.dkr.ecr.us-west-2.amazonaws.com
+    postAnalyticsProcessorSourceURI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/data_quality_job_definition/code/postprocessor.py
+  dataQualityBaselineConfig:
+    constraintsResource:
+      s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/data_quality_job_definition/baselining/constraints.json
+    statisticsResource:
+      s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/data_quality_job_definition/baselining/statistics.json
+  dataQualityJobInput:
+    endpointInput:
+      endpointName: unit_testing_endpoint
+      localPath: /opt/ml/processing/input/endpoint
+      s3DataDistributionType: FullyReplicated
+      s3InputMode: File
+  dataQualityJobOutputConfig:
+    monitoringOutputs:
+    - s3Output:
+        localPath: /opt/ml/processing/output
+        s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/data_quality_job_definition/reports
+        s3UploadMode: Continuous
+  jobDefinitionName: ""
+  jobResources:
+    clusterConfig:
+      instanceCount: 1
+      instanceType: ml.m5.large
+      volumeSizeInGB: 20
+  roleARN: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
+  stoppingCondition:
+    maxRuntimeInSeconds: 1800
+  tags:
+  - key: confidentiality
+    value: public
+  - key: environment
+    value: testing
+  - key: customer
+    value: test-user
+status:
+  ackResourceMetadata:
+    ownerAccountID: ""
+  conditions:
+  - message: The job definition name must start with an alphanumeric character.
+    status: "True"
+    type: ACK.Terminal

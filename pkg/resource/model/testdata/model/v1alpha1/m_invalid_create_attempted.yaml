@@ -1,0 +1,29 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: Model
+metadata:
+  creationTimestamp: null
+  name: unit-testing-model
+spec:
+  executionRoleARN: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
+  modelName: ""
+  primaryContainer:
+    containerHostname: xgboost
+    environment:
+      my_var: my_value
+      my_var2: my_value2
+    image: 433757028032.dkr.ecr.us-west-2.amazonaws.com
+    modelDataURL: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model/xgboost-mnist-model.tar.gz
+  tags:
+  - key: algorithm
+    value: xgboost
+  - key: environment
+    value: testing
+  - key: customer
+    value: test-user
+status:
+  ackResourceMetadata:
+    ownerAccountID: ""
+  conditions:
+  - message: The model name must start with an alphanumeric character.
+    status: "True"
+    type: ACK.Terminal

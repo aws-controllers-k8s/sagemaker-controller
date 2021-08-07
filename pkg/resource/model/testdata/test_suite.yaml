@@ -1,0 +1,17 @@
+tests:
+  - name: "Model create tests"
+    description: "Part of model CRD tests."
+    scenarios:
+     - name: "Create=InvalidInput"
+       description: "Given one of the parameters is invalid, ko.Status shows a terminal condition"
+       given:
+         desired_state: "model/v1alpha1/m_invalid_before_create.yaml"
+         svc_api:
+           - operation: CreateModelWithContext
+             error:
+               code: InvalidParameterValue
+               message: "The model name must start with an alphanumeric character."
+       invoke: Create
+       expect:
+         latest_state: "model/v1alpha1/m_invalid_create_attempted.yaml"
+         error: resource is in terminal condition

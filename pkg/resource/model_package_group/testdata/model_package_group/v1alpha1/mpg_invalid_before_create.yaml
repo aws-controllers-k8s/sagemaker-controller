@@ -1,0 +1,7 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: ModelPackageGroup
+metadata:
+  name: unit-testing-model-package-group
+  spec:
+    modelPackageGroupName: !-intentionally-invalid-name
+      modelPackageGroupDescription: "Description for model package group"
