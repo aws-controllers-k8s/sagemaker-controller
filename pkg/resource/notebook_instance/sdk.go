@@ -75,10 +75,11 @@ func (rm *resourceManager) sdkFind(
 	// Merge in the information we read from the API call above to the copy of
 	// the original Kubernetes object we passed to the function
 	ko := r.ko.DeepCopy()
-	//Todo Take this if statement out if code generator can generate this field.
+	//TODO: Take this if statement out if code generator can generate this field.
 	if resp.Url != nil {
 		ko.Status.NotebookInstanceURL = resp.Url
 	}
+	//TODO: take this out if the runtime supports updating annotations if an error is returned.
 	tmp := ""
 	if r != nil && r.ko != nil && r.ko.Status.StoppedByAck != nil {
 		tmp = *r.ko.Status.StoppedByAck
@@ -171,8 +172,10 @@ func (rm *resourceManager) sdkFind(
 
 	rm.setStatusDefaults(ko)
 	started_notebook := rm.customSetOutputDescribe(r, ko)
+	//TODO: Take this out if runtime supports updating annotations when an error is returned.
 	if !started_notebook {
-		ko.Status.StoppedByAck = &tmp //covers a scenario where the code generator sets r.ko.Status.StoppedByAck
+		//covers a scenario where the code generator generates code to set StoppedByAck
+		ko.Status.StoppedByAck = &tmp
 	}
 
 	return &resource{ko}, nil
@@ -338,8 +341,8 @@ func (rm *resourceManager) sdkUpdate(
 	if err = rm.requeueUntilCanModify(ctx, latest); err != nil {
 		return latest, err
 	}
-
 	stopped_by_ack := rm.customPreUpdate(ctx, desired, latest)
+	//TODO: Take this out if the runtime supports updating annotations if an error is returned and use annotations for this.
 	if stopped_by_ack {
 		latest.ko.Status.StoppedByAck = aws.String("true")
 		return latest, requeueWaitWhileStopping
@@ -367,6 +370,7 @@ func (rm *resourceManager) sdkUpdate(
 	}
 	curr["done_updating"] = "true"
 	ko.SetAnnotations(curr)
+	//Making the controller requeue after calling update.
 	rm.customSetOutputCreateUpdate(ko)
 	return &resource{ko}, nil
 }
@@ -435,6 +439,7 @@ func (rm *resourceManager) sdkDelete(
 		return r, err
 	}
 
+	//Stops the Notebook Instance
 	rm.customPreDelete(r)
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {

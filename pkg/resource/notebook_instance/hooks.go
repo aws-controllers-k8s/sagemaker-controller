@@ -24,9 +24,12 @@ var (
 	)
 )
 
-// requeueUntilCanModify creates and returns an
-// ackrequeue error if a resource's latest status matches
-// any of the defined modifying statuses below.
+/*
+  requeueUntilCanModify creates and returns an
+  ackrequeue error if a resource's latest status matches
+  any of the defined modifying statuses below.
+*/
+
 func (rm *resourceManager) requeueUntilCanModify(
 	ctx context.Context,
 	r *resource,

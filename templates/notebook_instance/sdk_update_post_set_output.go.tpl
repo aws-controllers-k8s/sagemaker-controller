@@ -4,4 +4,5 @@
 	}
 	curr["done_updating"] = "true"
 	ko.SetAnnotations(curr)
+	//Making the controller requeue after calling update.
 	rm.customSetOutputCreateUpdate(ko)

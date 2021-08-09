@@ -8,6 +8,7 @@ import (
 
 /*
 This function stops the notebook instance(if its running) before the update build request.
+TODO: Set an annotation here or in sdk.go once runtime can update annotations while returning an error.
 */
 func (rm *resourceManager) customPreUpdate(
 	ctx context.Context,

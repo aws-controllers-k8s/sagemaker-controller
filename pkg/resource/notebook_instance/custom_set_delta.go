@@ -5,8 +5,8 @@ import (
 )
 
 /* We just set the defualts here in case the user does not specify them. This avoids the controller trying to update itself right after creation.
-Direct Internet Access does ...
-Root Acess does .....
+Direct Internet Access describes whether Amazon SageMaker provides internet access to the notebook instance.
+Root Acess describes whether root access is enabled or disabled for users of the notebook instance.
 */
 func customSetDefaults(
 	a *resource,

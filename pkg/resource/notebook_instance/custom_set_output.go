@@ -25,6 +25,13 @@ func (rm *resourceManager) customSetOutputCreateUpdate(ko *svcapitypes.NotebookI
 	ackcond.SetSynced(&resource{ko}, corev1.ConditionFalse, nil, aws.String("Notebook is currenty starting or updating"))
 }
 
+/*
+	Sets the sync condition and starts the notebook if the StoppedByAck
+	status is set to true. Also resets annotations and statuses.
+
+	TODO: Use an annotation instead of a status(for stopped_by_ack) once the ack runtime supports
+	updating annoations when an error is returned.
+*/
 func (rm *resourceManager) customSetOutputDescribe(r *resource,
 	ko *svcapitypes.NotebookInstance) bool {
 	notebook_state := *ko.Status.NotebookInstanceStatus // Get the Notebook State
