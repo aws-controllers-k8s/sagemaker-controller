@@ -76,6 +76,8 @@ class TestNotebookInstanceLifecycleConfig:
         assert notebook_instance_lfc_name is not None
 
         #Verifying that its set correctly
+        lfc_before_update = get_notebook_instance_lifecycle_config(notebook_instance_lfc_name)
+        assert(lfc_before_update["OnStart"][0]["Content"] == "cGlwIGluc3RhbGwgUElM")
         spec["spec"]["onStart"] = [{"content":"cGlwIGluc3RhbGwgc2l4"}]
         k8s.patch_custom_resource(reference,spec)
 
