@@ -1,0 +1,17 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: NotebookInstance
+metadata:
+  creationTimestamp: null
+  name: test
+spec:
+  instanceType: ml.t2.medium
+  notebookInstanceName: '!-test'
+  roleARN: arn:aws:iam::1234:role/service-role/AmazonSageMakerServiceCatalogProductsUseRole
+  volumeSizeInGB: 8
+status:
+  ackResourceMetadata:
+    ownerAccountID: ""
+  conditions:
+  - message: The notebook instance name must start with an alphanumeric character.
+    status: "True"
+    type: ACK.Terminal
