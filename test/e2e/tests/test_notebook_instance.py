@@ -135,6 +135,9 @@ class TestNotebookInstance:
         latest_notebook = get_notebook_instance(notebook_instance_name)
         assert(latest_notebook["VolumeSizeInGB"] == 7)
 
+        latest_notebook_resource =  k8s.get_resource(reference)
+        assert(latest_notebook_resource["spec"]["volumeSizeInGB"] == 7)
+
         # Delete the k8s resource.
         _, deleted = k8s.delete_custom_resource(reference, 11, 30)
         assert deleted is True
