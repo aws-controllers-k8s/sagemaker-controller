@@ -5,9 +5,11 @@ import (
 )
 
 func (rm *resourceManager) stopNotebookInstance(r *resource) error {
-	nb_input := svcsdk.StopNotebookInstanceInput{}
-	nb_input.NotebookInstanceName = &r.ko.Name
-	_, err := rm.sdkapi.StopNotebookInstance(&nb_input) //Stop Notebook Instance does not return a response
+	input := &svcsdk.StopNotebookInstanceInput{}
+	input.SetNotebookInstanceName(*r.ko.Spec.NotebookInstanceName)
+
+	// Stop Notebook Instance does not return a response
+	_, err := rm.sdkapi.StopNotebookInstance(input)
 	rm.metrics.RecordAPICall("STOP", "StopNotebookInstance", err)
 	return err
 }

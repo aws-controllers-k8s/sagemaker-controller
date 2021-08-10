@@ -650,8 +650,6 @@ resources:
         code: customSetDefaults(a, b)
       sdk_read_one_post_set_output: 
         code: rm.customSetOutput(&resource{ko})
-      sdk_read_one_pre_set_output:
-        template_path: notebook_instance/sdk_read_one_pre_set_output.go.tpl
     fields:
       NotebookInstanceStatus:
         is_read_only: true

@@ -9,22 +9,20 @@ This code stops the NotebookInstance right before its about to be deleted.
 Returns True if the Notebook was stopped
 */
 func (rm *resourceManager) customPreDelete(
-	r *resource) bool {
+	r *resource) (bool, error) {
 	latestStatus := *r.ko.Status.NotebookInstanceStatus
 	if &latestStatus == nil {
-		return false
+		return false, nil
 	}
 
 	//We only want to stop the Notebook if its not already stopped/stopping or not in a failed state.
-	if rm.isInServiceStatus(latestStatus) {
+	if latestStatus == svcsdk.NotebookInstanceStatusInService {
 		err := rm.stopNotebookInstance(r)
 		if err == nil {
-			return true
+			return true, nil
+		} else {
+			return false, err
 		}
 	}
-	return false
-}
-
-func (rm *resourceManager) isInServiceStatus(latestStatus string) bool {
-	return latestStatus == svcsdk.NotebookInstanceStatusInService
+	return false, nil
 }

@@ -75,7 +75,6 @@ func (rm *resourceManager) sdkFind(
 	// Merge in the information we read from the API call above to the copy of
 	// the original Kubernetes object we passed to the function
 	ko := r.ko.DeepCopy()
-	//Todo Take this if statement out if code generator can generate this field.
 
 	if resp.AcceleratorTypes != nil {
 		f0 := []*string{}
@@ -411,7 +410,10 @@ func (rm *resourceManager) sdkDelete(
 		return r, err
 	}
 
-	stopped_by_controller := rm.customPreDelete(r)
+	stopped_by_controller, err := rm.customPreDelete(r)
+	if err != nil {
+		return latest, err
+	}
 	if stopped_by_controller {
 		return r, requeueWaitWhileStopping
 	}

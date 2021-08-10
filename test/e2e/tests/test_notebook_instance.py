@@ -145,6 +145,6 @@ class TestNotebookInstance:
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(reference, 11, 30)
+        _, deleted = k8s.delete_custom_resource(reference, 16, 30)
         assert deleted is True
         assert get_notebook_instance(notebook_instance_name) is None
