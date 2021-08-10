@@ -32,34 +32,34 @@ import random
 from e2e.replacement_values import REPLACEMENT_VALUES
 from time import sleep
 
-RESOURCE_PLURAL = "notebookinstancelifecycleconfigs"
-RESOURCE_NAME_PREFIX = "nblf"
-RESOURCE_SPEC_FILE = "notebook_instance_lifecycle_config"
 
 @pytest.fixture(scope="function")
 def notebook_instance_lifecycleConfig():
-    notebook_instance_lfc_name = random_suffix_name(RESOURCE_NAME_PREFIX, 32)
+    notebook_instance_lfc_name = random_suffix_name("nblf", 32)
     replacements = REPLACEMENT_VALUES.copy()
     replacements["NOTEBOOK_INSTANCE_LFC_NAME"] = notebook_instance_lfc_name
     reference, spec, resource = create_sagemaker_resource(
-        resource_plural=RESOURCE_PLURAL,
+        resource_plural="notebookinstancelifecycleconfigs",
         resource_name=notebook_instance_lfc_name,
-        spec_file=RESOURCE_SPEC_FILE,
+        spec_file="notebook_instance_lifecycle_config",
         replacements=replacements,
     )
-    yield (reference, resource,spec)
+    assert resource is not None
+    yield (reference, resource, spec)
     if k8s.get_resource_exists(reference):
         _, deleted = k8s.delete_custom_resource(reference, 10, 5)
         assert deleted
 
+
 def get_notebook_instance_lifecycle_config(notebook_instance_lfc_name: str):
     try:
-        desired_notebook_instance_lfc = sagemaker_client().describe_notebook_instance_lifecycle_config(
-            NotebookInstanceLifecycleConfigName=notebook_instance_lfc_name)
-        return desired_notebook_instance_lfc
+        resp = sagemaker_client().describe_notebook_instance_lifecycle_config(
+            NotebookInstanceLifecycleConfigName=notebook_instance_lfc_name
+        )
+        return resp
     except botocore.exceptions.ClientError as error:
         logging.error(
-            f"SageMaker could not find a Notebook Instance with the name {notebook_instance_lfc_name}. Error {error}"
+            f"SageMaker could not find a Notebook Instance Lifecycle Configuration with the name {notebook_instance_lfc_name}. Error {error}"
         )
         return None
 
@@ -67,32 +67,39 @@ def get_notebook_instance_lifecycle_config(notebook_instance_lfc_name: str):
 @service_marker
 @pytest.mark.canary
 class TestNotebookInstanceLifecycleConfig:
-    def test_CreateUpdateDeleteNotebookLifecycleConfig(self,notebook_instance_lifecycleConfig):
-        (reference, resource,spec) = notebook_instance_lifecycleConfig
+    def test_CreateUpdateDeleteNotebookLifecycleConfig(
+        self, notebook_instance_lifecycleConfig
+    ):
+        (reference, resource, spec) = notebook_instance_lifecycleConfig
         assert k8s.get_resource_exists(reference)
 
-        #Getting the resource name
-        notebook_instance_lfc_name = resource["spec"].get("notebookInstanceLifecycleConfigName",None)
+        # Getting the resource name
+        notebook_instance_lfc_name = resource["spec"].get(
+            "notebookInstanceLifecycleConfigName", None
+        )
         assert notebook_instance_lfc_name is not None
 
-        #Verifying that its set correctly
-        lfc_before_update = get_notebook_instance_lifecycle_config(notebook_instance_lfc_name)
-        assert(lfc_before_update["OnStart"][0]["Content"] == "cGlwIGluc3RhbGwgUElM")
-        spec["spec"]["onStart"] = [{"content":"cGlwIGluc3RhbGwgc2l4"}]
-        k8s.patch_custom_resource(reference,spec)
+        # Verifying that its set correctly
+        lfc_before_update = get_notebook_instance_lifecycle_config(
+            notebook_instance_lfc_name
+        )
+        assert lfc_before_update["OnStart"][0]["Content"] == "cGlwIGluc3RhbGwgUElM"
+        spec["spec"]["onStart"] = [{"content": "cGlwIGluc3RhbGwgc2l4"}]
+        k8s.patch_custom_resource(reference, spec)
 
         resource = k8s.wait_resource_consumed_by_controller(reference)
         assert resource is not None
-        sleep(3) #Done to avoid flakiness
+        sleep(3)  # Done to avoid flakiness
 
-        #Verifying that an update was successful
-        latest_notebook_lf = get_notebook_instance_lifecycle_config(notebook_instance_lfc_name)
-        assert(latest_notebook_lf["OnStart"][0]["Content"] == "cGlwIGluc3RhbGwgc2l4")
+        # Verifying that an update was successful
+        latest_notebook_lf = get_notebook_instance_lifecycle_config(
+            notebook_instance_lfc_name
+        )
+        assert latest_notebook_lf["OnStart"][0]["Content"] == "cGlwIGluc3RhbGwgc2l4"
 
-        #Deleting the resource
+        # Deleting the resource
         _, deleted = k8s.delete_custom_resource(reference, 10, 5)
         assert deleted is True
-        assert get_notebook_instance_lifecycle_config(notebook_instance_lfc_name) is None
-
-
-
+        assert (
+            get_notebook_instance_lifecycle_config(notebook_instance_lfc_name) is None
+        )
