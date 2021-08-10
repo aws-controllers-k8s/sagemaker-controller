@@ -63,17 +63,20 @@ func (rm *resourceManager) customSetOutput(r *resource) {
 func (rm *resourceManager) customSetOutputDescribe(r *resource,
 	ko *svcapitypes.NotebookInstance) bool {
 	notebook_state := *ko.Status.NotebookInstanceStatus // Get the Notebook State
-	if ko.Annotations != nil && ko.Annotations["done_updating"] == "true" {
+	if ko.Status.IsUpdating != nil && *ko.Status.IsUpdating == "true" {
 		if notebook_state != svcsdk.NotebookInstanceStatusStopped {
 			return false //we want to keep requeing until update finishes
 		}
+		//TODO: Use annotations instead of status once the runtime supports updating metadata
 		if ko.Status.StoppedByAck != nil && *ko.Status.StoppedByAck == "true" {
 			rm.startNotebookInstance(r)
-			ko.Annotations["done_updating"] = "false"
-			resetStoppedbyAck := "false"
-			ko.Status.StoppedByAck = &resetStoppedbyAck
+			ko.Status.IsUpdating = aws.String("false")
+			ko.Status.StoppedByAck = aws.String("false")
 			return true //dont want to set resource synced to true pre maturely.
 		}
+		ko.Status.IsUpdating = aws.String("false")
+		return true
+
 	}
 	rm.customSetOutput(&resource{ko}) // We set the sync status here
 	return false

@@ -75,10 +75,14 @@ func (rm *resourceManager) sdkFind(
 	// Merge in the information we read from the API call above to the copy of
 	// the original Kubernetes object we passed to the function
 	ko := r.ko.DeepCopy()
-	//TODO: Take this out if the runtime supports updating annotations if an error is returned.
+	//TODO: Take this out if runtime supports updating annotations during ReadOne
 	tmp := ""
+	is_updating_tmp := ""
 	if r != nil && r.ko != nil && r.ko.Status.StoppedByAck != nil {
 		tmp = *r.ko.Status.StoppedByAck
+	}
+	if r != nil && r.ko != nil && r.ko.Status.IsUpdating != nil {
+		is_updating_tmp = *r.ko.Status.IsUpdating
 	}
 
 	if resp.AcceleratorTypes != nil {
@@ -172,11 +176,12 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
-	started_notebook := rm.customSetOutputDescribe(r, ko)
+	modified_status := rm.customSetOutputDescribe(r, ko)
 	//TODO: Take this out if runtime supports updating annotations when an error is returned.
-	if !started_notebook {
+	if !modified_status {
 		//covers a scenario where the code generator generates code to set StoppedByAck
 		ko.Status.StoppedByAck = &tmp
+		ko.Status.IsUpdating = &is_updating_tmp
 	}
 
 	return &resource{ko}, nil
@@ -364,12 +369,8 @@ func (rm *resourceManager) sdkUpdate(
 	ko := desired.ko.DeepCopy()
 
 	rm.setStatusDefaults(ko)
-	curr := ko.GetAnnotations()
-	if curr == nil {
-		curr = make(map[string]string)
-	}
-	curr["done_updating"] = "true"
-	ko.SetAnnotations(curr)
+	//TODO: Replace the is_updating status with an annotation if the runtime can update annotations after a readOne call.
+	ko.Status.IsUpdating = aws.String("true")
 	//Making the controller requeue after calling update.
 	rm.customSetOutputUpdate(ko)
 	return &resource{ko}, nil

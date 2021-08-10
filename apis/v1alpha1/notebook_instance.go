@@ -123,6 +123,9 @@ type NotebookInstanceStatus struct {
 	URL *string `json:"url,omitempty"`
 	// The URL that you use to connect to the Jupyter notebook that is running in
 	// your notebook instance.
+	IsUpdating *string `json:"isUpdating,omitempty"`
+	// The URL that you use to connect to the Jupyter notebook that is running in
+	// your notebook instance.
 	StoppedByAck *string `json:"stoppedByAck,omitempty"`
 }
 

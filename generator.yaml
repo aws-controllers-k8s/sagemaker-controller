@@ -676,6 +676,11 @@ resources:
         from:
           path: Url
           operation: DescribeNotebookInstance
+      is_updating:
+        is_read_only: true
+        from:
+          path: Url
+          operation: DescribeNotebookInstance
       FailureReason:
         is_read_only: true
         print:

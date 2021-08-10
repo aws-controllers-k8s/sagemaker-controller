@@ -7372,6 +7372,11 @@ func (in *NotebookInstanceStatus) DeepCopyInto(out *NotebookInstanceStatus) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.IsUpdating != nil {
+		in, out := &in.IsUpdating, &out.IsUpdating
+		*out = new(string)
+		**out = **in
+	}
 	if in.StoppedByAck != nil {
 		in, out := &in.StoppedByAck, &out.StoppedByAck
 		*out = new(string)
