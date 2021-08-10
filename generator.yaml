@@ -649,9 +649,7 @@ resources:
       delta_pre_compare:
         code: customSetDefaults(a, b)
       sdk_read_one_post_set_output: 
-        code: rm.customSetOutputDescribe(r,ko)
-      sdk_create_post_set_output:
-        code: rm.customSetOutputCreate(ko)
+        code: rm.customSetOutput(&resource{ko})
       sdk_read_one_pre_set_output:
         template_path: notebook_instance/sdk_read_one_pre_set_output.go.tpl
     fields:
@@ -662,7 +660,7 @@ resources:
         from:
           operation: DescribeNotebookInstance
           path: NotebookInstanceStatus
-      NotebookInstanceURL:
+      Url:
         is_read_only: true
         from:
           operation: DescribeNotebookInstance

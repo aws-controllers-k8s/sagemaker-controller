@@ -10,12 +10,21 @@ import (
 )
 
 var (
-	modifyingStatuses = []string{svcsdk.NotebookInstanceStatusPending, svcsdk.NotebookInstanceStatusUpdating,
-		svcsdk.NotebookInstanceStatusDeleting, svcsdk.NotebookInstanceStatusStopping}
+	modifyingStatuses = []string{
+		svcsdk.NotebookInstanceStatusPending,
+		svcsdk.NotebookInstanceStatusUpdating,
+		svcsdk.NotebookInstanceStatusDeleting,
+		svcsdk.NotebookInstanceStatusStopping,
+	}
+
 	resourceName = resourceGK.Kind
 
 	requeueWaitWhileDeleting = ackrequeue.NeededAfter(
 		errors.New(resourceName+" is deleting."),
+		ackrequeue.DefaultRequeueAfterDuration,
+	)
+	requeueWaitWhileStopping = ackrequeue.NeededAfter(
+		errors.New(resourceName+" is stopping."),
 		ackrequeue.DefaultRequeueAfterDuration,
 	)
 )
@@ -29,4 +38,12 @@ func (rm *resourceManager) requeueUntilCanModify(
 ) error {
 	latestStatus := r.ko.Status.NotebookInstanceStatus
 	return svccommon.RequeueIfModifying(latestStatus, &resourceName, &modifyingStatuses)
+}
+
+// customSetOutput sets the ack syncedCondition depending on
+// whether the latest status of the resource is one of the
+// defined modifyingStatuses.
+func (rm *resourceManager) customSetOutput(r *resource) {
+	latestStatus := r.ko.Status.NotebookInstanceStatus
+	svccommon.SetSyncedCondition(r, latestStatus, &resourceName, &modifyingStatuses)
 }

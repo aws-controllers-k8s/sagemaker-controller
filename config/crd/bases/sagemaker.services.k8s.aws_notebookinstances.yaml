@@ -224,7 +224,7 @@ spec:
               notebookInstanceStatus:
                 description: The status of the notebook instance.
                 type: string
-              notebookInstanceURL:
+              url:
                 description: The URL that you use to connect to the Jupyter notebook
                   that is running in your notebook instance.
                 type: string

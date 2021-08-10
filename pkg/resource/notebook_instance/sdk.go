@@ -76,9 +76,6 @@ func (rm *resourceManager) sdkFind(
 	// the original Kubernetes object we passed to the function
 	ko := r.ko.DeepCopy()
 	//Todo Take this if statement out if code generator can generate this field.
-	if resp.Url != nil {
-		ko.Status.NotebookInstanceURL = resp.Url
-	}
 
 	if resp.AcceleratorTypes != nil {
 		f0 := []*string{}
@@ -159,6 +156,11 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.SubnetID = nil
 	}
+	if resp.Url != nil {
+		ko.Status.URL = resp.Url
+	} else {
+		ko.Status.URL = nil
+	}
 	if resp.VolumeSizeInGB != nil {
 		ko.Spec.VolumeSizeInGB = resp.VolumeSizeInGB
 	} else {
@@ -166,7 +168,7 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutputDescribe(r, ko)
+	rm.customSetOutput(&resource{ko})
 	return &resource{ko}, nil
 }
 
@@ -229,7 +231,6 @@ func (rm *resourceManager) sdkCreate(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutputCreate(ko)
 	return &resource{ko}, nil
 }
 
@@ -410,7 +411,10 @@ func (rm *resourceManager) sdkDelete(
 		return r, err
 	}
 
-	rm.customPreDelete(r)
+	stopped_by_controller := rm.customPreDelete(r)
+	if stopped_by_controller {
+		return r, requeueWaitWhileStopping
+	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
 		return nil, err

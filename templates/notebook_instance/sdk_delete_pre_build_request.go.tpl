@@ -2,4 +2,7 @@ if err = rm.requeueUntilCanModify(ctx, r); err != nil {
 	return r, err
 }
 
-rm.customPreDelete(r)
+stopped_by_controller := rm.customPreDelete(r)
+if stopped_by_controller{
+	return r,requeueWaitWhileStopping
+}

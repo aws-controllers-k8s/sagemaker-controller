@@ -6,19 +6,25 @@ import (
 
 /*
 This code stops the NotebookInstance right before its about to be deleted.
+Returns True if the Notebook was stopped
 */
 func (rm *resourceManager) customPreDelete(
-	r *resource) {
+	r *resource) bool {
 	latestStatus := *r.ko.Status.NotebookInstanceStatus
 	if &latestStatus == nil {
-		return
+		return false
 	}
 
 	//We only want to stop the Notebook if its not already stopped/stopping or not in a failed state.
-	if latestStatus != svcsdk.NotebookInstanceStatusStopped && latestStatus != svcsdk.NotebookInstanceStatusFailed &&
-		latestStatus != svcsdk.NotebookInstanceStatusStopping {
-		nb_input := svcsdk.StopNotebookInstanceInput{}
-		nb_input.NotebookInstanceName = &r.ko.Name
-		rm.sdkapi.StopNotebookInstance(&nb_input)
+	if rm.isInServiceStatus(latestStatus) {
+		err := rm.stopNotebookInstance(r)
+		if err == nil {
+			return true
+		}
 	}
+	return false
+}
+
+func (rm *resourceManager) isInServiceStatus(latestStatus string) bool {
+	return latestStatus == svcsdk.NotebookInstanceStatusInService
 }
