@@ -75,11 +75,7 @@ func (rm *resourceManager) sdkFind(
 	// Merge in the information we read from the API call above to the copy of
 	// the original Kubernetes object we passed to the function
 	ko := r.ko.DeepCopy()
-	//TODO: Take this if statement out if code generator can generate this field.
-	if resp.Url != nil {
-		ko.Status.NotebookInstanceURL = resp.Url
-	}
-	//TODO: take this out if the runtime supports updating annotations if an error is returned.
+	//TODO: Take this out if the runtime supports updating annotations if an error is returned.
 	tmp := ""
 	if r != nil && r.ko != nil && r.ko.Status.StoppedByAck != nil {
 		tmp = *r.ko.Status.StoppedByAck
@@ -164,6 +160,11 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.SubnetID = nil
 	}
+	if resp.Url != nil {
+		ko.Status.URL = resp.Url
+	} else {
+		ko.Status.URL = nil
+	}
 	if resp.VolumeSizeInGB != nil {
 		ko.Spec.VolumeSizeInGB = resp.VolumeSizeInGB
 	} else {
@@ -240,7 +241,6 @@ func (rm *resourceManager) sdkCreate(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutputCreateUpdate(ko)
 	return &resource{ko}, nil
 }
 
@@ -341,7 +341,7 @@ func (rm *resourceManager) sdkUpdate(
 	if err = rm.requeueUntilCanModify(ctx, latest); err != nil {
 		return latest, err
 	}
-	stopped_by_ack := rm.customPreUpdate(ctx, desired, latest)
+	stopped_by_ack := rm.customStopNotebook(latest)
 	//TODO: Take this out if the runtime supports updating annotations if an error is returned and use annotations for this.
 	if stopped_by_ack {
 		latest.ko.Status.StoppedByAck = aws.String("true")
@@ -371,7 +371,7 @@ func (rm *resourceManager) sdkUpdate(
 	curr["done_updating"] = "true"
 	ko.SetAnnotations(curr)
 	//Making the controller requeue after calling update.
-	rm.customSetOutputCreateUpdate(ko)
+	rm.customSetOutputUpdate(ko)
 	return &resource{ko}, nil
 }
 
@@ -439,8 +439,11 @@ func (rm *resourceManager) sdkDelete(
 		return r, err
 	}
 
-	//Stops the Notebook Instance
-	rm.customPreDelete(r)
+	stopped_by_controller := rm.customStopNotebook(r)
+	if stopped_by_controller {
+		return r, requeueWaitWhileStopping
+	}
+
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
 		return nil, err

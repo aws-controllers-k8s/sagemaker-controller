@@ -24,7 +24,7 @@ spec:
     - jsonPath: .status.notebookInstanceStatus
       name: STATUS
       type: string
-    - jsonPath: .status.notebookInstanceURL
+    - jsonPath: .status.url
       name: URL
       type: string
     name: v1alpha1
@@ -227,11 +227,11 @@ spec:
               notebookInstanceStatus:
                 description: The status of the notebook instance.
                 type: string
-              notebookInstanceURL:
+              stoppedByAck:
                 description: The URL that you use to connect to the Jupyter notebook
                   that is running in your notebook instance.
                 type: string
-              stoppedByAck:
+              url:
                 description: The URL that you use to connect to the Jupyter notebook
                   that is running in your notebook instance.
                 type: string

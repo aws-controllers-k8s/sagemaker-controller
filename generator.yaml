@@ -652,8 +652,6 @@ resources:
         template_path: notebook_instance/sdk_read_one_post_set_output.go.tpl
       sdk_read_one_pre_set_output:
         template_path: notebook_instance/sdk_read_one_pre_set_output.go.tpl
-      sdk_create_post_set_output:
-        code: rm.customSetOutputCreateUpdate(ko)
       sdk_update_pre_build_request:
         template_path: notebook_instance/sdk_update_pre_build_request.go.tpl
       sdk_update_post_set_output:
@@ -666,7 +664,7 @@ resources:
         from:
           operation: DescribeNotebookInstance
           path: NotebookInstanceStatus
-      NotebookInstanceURL:
+      Url:
         is_read_only: true
         from:
           operation: DescribeNotebookInstance
@@ -686,7 +684,6 @@ resources:
         from:
           operation: DescribeNotebookInstance
           path: FailureReason
-
   ModelPackageGroup:
       exceptions:
         errors:

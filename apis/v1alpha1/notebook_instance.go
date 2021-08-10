@@ -120,7 +120,7 @@ type NotebookInstanceStatus struct {
 	NotebookInstanceStatus *string `json:"notebookInstanceStatus,omitempty"`
 	// The URL that you use to connect to the Jupyter notebook that is running in
 	// your notebook instance.
-	NotebookInstanceURL *string `json:"notebookInstanceURL,omitempty"`
+	URL *string `json:"url,omitempty"`
 	// The URL that you use to connect to the Jupyter notebook that is running in
 	// your notebook instance.
 	StoppedByAck *string `json:"stoppedByAck,omitempty"`
@@ -131,7 +131,7 @@ type NotebookInstanceStatus struct {
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="FAILURE-REASON",type=string,priority=1,JSONPath=`.status.failureReason`
 // +kubebuilder:printcolumn:name="STATUS",type=string,priority=0,JSONPath=`.status.notebookInstanceStatus`
-// +kubebuilder:printcolumn:name="URL",type=string,priority=0,JSONPath=`.status.notebookInstanceURL`
+// +kubebuilder:printcolumn:name="URL",type=string,priority=0,JSONPath=`.status.url`
 type NotebookInstance struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
