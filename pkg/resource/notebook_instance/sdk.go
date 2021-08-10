@@ -346,7 +346,10 @@ func (rm *resourceManager) sdkUpdate(
 	if err = rm.requeueUntilCanModify(ctx, latest); err != nil {
 		return latest, err
 	}
-	stopped_by_ack := rm.customStopNotebook(latest)
+	stopped_by_ack, err := rm.customStopNotebook(latest)
+	if err != nil {
+		return latest, err
+	}
 	//TODO: Take this out if the runtime supports updating annotations if an error is returned and use annotations for this.
 	if stopped_by_ack {
 		latest.ko.Status.StoppedByAck = aws.String("true")
@@ -440,7 +443,10 @@ func (rm *resourceManager) sdkDelete(
 		return r, err
 	}
 
-	stopped_by_controller := rm.customStopNotebook(r)
+	stopped_by_controller, err := rm.customStopNotebook(r)
+	if err != nil {
+		return latest, err
+	}
 	if stopped_by_controller {
 		return r, requeueWaitWhileStopping
 	}
