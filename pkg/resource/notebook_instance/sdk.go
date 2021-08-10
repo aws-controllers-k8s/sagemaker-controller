@@ -409,13 +409,18 @@ func (rm *resourceManager) sdkDelete(
 	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
 		return r, err
 	}
+	latestStatus := r.ko.Status.NotebookInstanceStatus
 
-	stopped_by_controller, err := rm.customPreDelete(r)
-	if err != nil {
-		return latest, err
+	if latestStatus != nil && *latestStatus == svcsdk.NotebookInstanceStatusInService {
+		err := rm.stopNotebookInstance(r)
+		if err == nil {
+			return r, requeueWaitWhileStopping
+		} else {
+			return r, err
+		}
 	}
-	if stopped_by_controller {
-		return r, requeueWaitWhileStopping
+	if err != nil {
+		return r, err
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
