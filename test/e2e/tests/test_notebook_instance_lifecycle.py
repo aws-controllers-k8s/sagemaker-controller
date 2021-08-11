@@ -92,7 +92,7 @@ class TestNotebookInstanceLifecycleConfig:
         )
         assert notebook_instance_lfc_name is not None
         current_time = datetime.datetime.today()
-        sleep(5)  # Done to avoid flakiness
+        sleep(5)  # Done to avoid flakiness since update happens instantaneously.
         # Verifying that its set correctly
         notebook_instance_lfc_desc = get_notebook_instance_lifecycle_config(
             notebook_instance_lfc_name
@@ -105,6 +105,8 @@ class TestNotebookInstanceLifecycleConfig:
             k8s.get_resource_arn(resource)
             == notebook_instance_lfc_desc["NotebookInstanceLifecycleConfigArn"]
         )
+        # We need to keep track of the current time so its best to just do
+        # the update test with the create test. 
         spec["spec"]["onStart"] = [
             {"content": "cGlwIGluc3RhbGwgc2l4"}
         ]  # cGlwIGluc3RhbGwgc2l4 = pip install six
