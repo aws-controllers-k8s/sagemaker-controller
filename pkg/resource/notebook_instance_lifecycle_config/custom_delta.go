@@ -13,27 +13,23 @@ func modifyDeltaCreate(
 		delta.Add("Spec.OnCreate", a.ko.Spec.OnCreate, b.ko.Spec.OnCreate)
 		return delta
 	}
-	//check length
-	if a.ko.Spec.OnCreate != nil && b.ko.Spec.OnCreate != nil {
-		if len(a.ko.Spec.OnCreate) != len(b.ko.Spec.OnCreate) {
-			delta.Add("Spec.OnCreate", a.ko.Spec.OnCreate, b.ko.Spec.OnCreate)
-			return delta
-		}
-	} else {
-		return delta
+	var lista []*string
+	var listb []*string
+
+	onCreateLenA := len(a.ko.Spec.OnCreate)
+	onCreateLenB := len(b.ko.Spec.OnCreate)
+	for i := 0; i < onCreateLenA; i++ {
+		val := *a.ko.Spec.OnCreate[i].Content
+		lista = append(lista, &val)
 	}
-	//Check variables, a and b have to be of equal length
-	onCreateLen := len(a.ko.Spec.OnCreate)
-	if a.ko.Spec.OnCreate != nil && b.ko.Spec.OnCreate != nil {
-		for i := 0; i < onCreateLen; i++ {
-			abb := *a.ko.Spec.OnCreate[i].Content
-			bbb := *b.ko.Spec.OnCreate[i].Content
-			if abb != bbb {
-				delta.Add("Spec.OnCreate", a.ko.Spec.OnCreate, b.ko.Spec.OnCreate)
-				return delta
-			}
-		}
+	for i := 0; i < onCreateLenB; i++ {
+		val := *b.ko.Spec.OnCreate[i].Content
+		listb = append(listb, &val)
 	}
+	if !ackcompare.SliceStringPEqual(lista, listb) {
+		delta.Add("Spec.OnCreate", a.ko.Spec.OnCreate, b.ko.Spec.OnCreate)
+	}
+
 	return delta
 }
 
@@ -46,27 +42,24 @@ func modifyDeltaStart(
 		delta.Add("Spec.OnStart", a.ko.Spec.OnStart, b.ko.Spec.OnStart)
 		return delta
 	}
-	//check length
-	if a.ko.Spec.OnStart != nil && b.ko.Spec.OnStart != nil {
-		if len(a.ko.Spec.OnStart) != len(b.ko.Spec.OnStart) {
-			delta.Add("Spec.OnStart", a.ko.Spec.OnStart, b.ko.Spec.OnStart)
-			return delta
-		}
-	} else {
-		return delta
-	}
-	//Check variables, a and b have to be of equal length
-	onStartLen := len(a.ko.Spec.OnStart)
-	if a.ko.Spec.OnStart != nil && b.ko.Spec.OnStart != nil {
-		for i := 0; i < onStartLen; i++ {
-			abb := *a.ko.Spec.OnStart[i].Content
-			bbb := *b.ko.Spec.OnStart[i].Content
-			if abb != bbb {
-				delta.Add("Spec.OnStart", a.ko.Spec.OnStart, b.ko.Spec.OnStart)
-				return delta
-			}
-		}
 
+	var lista []*string
+	var listb []*string
+
+	onStartLenA := len(a.ko.Spec.OnStart)
+	onStartLenB := len(b.ko.Spec.OnStart)
+
+	for i := 0; i < onStartLenA; i++ {
+		val := *a.ko.Spec.OnStart[i].Content
+		lista = append(lista, &val)
 	}
+	for i := 0; i < onStartLenB; i++ {
+		val := *b.ko.Spec.OnStart[i].Content
+		listb = append(listb, &val)
+	}
+	if !ackcompare.SliceStringPEqual(lista, listb) {
+		delta.Add("Spec.OnStart", a.ko.Spec.OnStart, b.ko.Spec.OnStart)
+	}
+
 	return delta
 }

@@ -17,8 +17,11 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
+    - jsonPath: .status.creationTime
+      name: CREATION-TIME
+      type: date
     - jsonPath: .status.lastModifiedTime
-      name: Last Modified Time
+      name: LAST-MODIFIED-TIME
       type: date
     name: v1alpha1
     schema:
@@ -149,6 +152,11 @@ spec:
                   - type
                   type: object
                 type: array
+              creationTime:
+                description: A timestamp that tells when the lifecycle configuration
+                  was created.
+                format: date-time
+                type: string
               lastModifiedTime:
                 description: A timestamp that tells when the lifecycle configuration
                   was last modified.

@@ -16,6 +16,7 @@
 import pytest
 import logging
 import botocore
+import datetime
 
 from acktest.k8s import resource as k8s
 from acktest.resources import random_suffix_name
@@ -35,7 +36,7 @@ from time import sleep
 
 @pytest.fixture(scope="function")
 def notebook_instance_lifecycleConfig():
-    notebook_instance_lfc_name = random_suffix_name("nblf", 32)
+    notebook_instance_lfc_name = random_suffix_name("notebookinstancelfc", 32)
     replacements = REPLACEMENT_VALUES.copy()
     replacements["NOTEBOOK_INSTANCE_LFC_NAME"] = notebook_instance_lfc_name
     reference, spec, resource = create_sagemaker_resource(
@@ -67,6 +68,18 @@ def get_notebook_instance_lifecycle_config(notebook_instance_lfc_name: str):
 @service_marker
 @pytest.mark.canary
 class TestNotebookInstanceLifecycleConfig:
+    def wait_until_update(self, reference, current_time):
+        for i in range(10):
+            resource = k8s.get_resource(reference)
+            assert resource is not None
+            assert "lastModifiedTime" in resource["status"]
+            lastModifiedTime = resource["status"]["lastModifiedTime"]
+            d = datetime.datetime.strptime(lastModifiedTime, "%Y-%m-%dT%H:%M:%SZ")
+            if d > current_time:
+                return
+            sleep(1)
+        return
+
     def test_CreateUpdateDeleteNotebookLifecycleConfig(
         self, notebook_instance_lifecycleConfig
     ):
@@ -78,27 +91,40 @@ class TestNotebookInstanceLifecycleConfig:
             "notebookInstanceLifecycleConfigName", None
         )
         assert notebook_instance_lfc_name is not None
-
+        current_time = datetime.datetime.today()
+        sleep(5)  # Done to avoid flakiness
         # Verifying that its set correctly
-        lfc_before_update = get_notebook_instance_lifecycle_config(
+        notebook_instance_lfc_desc = get_notebook_instance_lifecycle_config(
             notebook_instance_lfc_name
         )
-        assert lfc_before_update["OnStart"][0]["Content"] == "cGlwIGluc3RhbGwgUElM"
-        spec["spec"]["onStart"] = [{"content": "cGlwIGluc3RhbGwgc2l4"}]
+        assert (
+            notebook_instance_lfc_desc["OnStart"][0]["Content"]
+            == spec["spec"]["onStart"][0]["content"]
+        )
+        assert (
+            k8s.get_resource_arn(resource)
+            == notebook_instance_lfc_desc["NotebookInstanceLifecycleConfigArn"]
+        )
+        spec["spec"]["onStart"] = [
+            {"content": "cGlwIGluc3RhbGwgc2l4"}
+        ]  # cGlwIGluc3RhbGwgc2l4 = pip install six
         k8s.patch_custom_resource(reference, spec)
 
         resource = k8s.wait_resource_consumed_by_controller(reference)
         assert resource is not None
-        sleep(3)  # Done to avoid flakiness
+        self.wait_until_update(reference, current_time)
 
         # Verifying that an update was successful
-        latest_notebook_lf = get_notebook_instance_lifecycle_config(
+        notebook_instance_lfc_desc = get_notebook_instance_lifecycle_config(
             notebook_instance_lfc_name
         )
-        assert latest_notebook_lf["OnStart"][0]["Content"] == "cGlwIGluc3RhbGwgc2l4"
+        assert (
+            notebook_instance_lfc_desc["OnStart"][0]["Content"]
+            == "cGlwIGluc3RhbGwgc2l4"
+        )
 
         # Deleting the resource
-        _, deleted = k8s.delete_custom_resource(reference, 10, 5)
+        _, deleted = k8s.delete_custom_resource(reference, 10, 30)
         assert deleted is True
         assert (
             get_notebook_instance_lifecycle_config(notebook_instance_lfc_name) is None

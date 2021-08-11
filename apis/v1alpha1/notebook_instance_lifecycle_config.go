@@ -45,6 +45,8 @@ type NotebookInstanceLifecycleConfigStatus struct {
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	// A timestamp that tells when the lifecycle configuration was created.
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	// A timestamp that tells when the lifecycle configuration was last modified.
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
@@ -52,7 +54,8 @@ type NotebookInstanceLifecycleConfigStatus struct {
 // NotebookInstanceLifecycleConfig is the Schema for the NotebookInstanceLifecycleConfigs API
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:printcolumn:name="Last Modified Time",type=date,priority=0,JSONPath=`.status.lastModifiedTime`
+// +kubebuilder:printcolumn:name="CREATION-TIME",type=date,priority=0,JSONPath=`.status.creationTime`
+// +kubebuilder:printcolumn:name="LAST-MODIFIED-TIME",type=date,priority=0,JSONPath=`.status.lastModifiedTime`
 type NotebookInstanceLifecycleConfig struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
