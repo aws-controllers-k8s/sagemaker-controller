@@ -2,12 +2,13 @@ if err = rm.requeueUntilCanModify(ctx, latest); err != nil {
 	return latest, err
 }
 stopped_by_ack := false
-if latestStatus := latest.ko.Status.NotebookInstanceStatus; latestStatus != nil &&
+latestStatus := latest.ko.Status.NotebookInstanceStatus
+if latestStatus != nil &&
  *latestStatus == svcsdk.NotebookInstanceStatusInService {
-	if err := rm.stopNotebookInstance(latest); err == nil {
-		stopped_by_ack = true
-	} else {
+	if err := rm.stopNotebookInstance(latest); err != nil {
 		return latest, err
+	} else {
+		stopped_by_ack = true
 	}
 }
 
