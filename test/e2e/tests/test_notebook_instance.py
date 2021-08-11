@@ -32,6 +32,7 @@ import random
 DELETE_WAIT_PERIOD = 16
 DELETE_WAIT_LENGTH = 30
 
+
 @pytest.fixture(scope="function")
 def notebook_instance():
     resource_name = random_suffix_name("nb", 32)
@@ -45,7 +46,7 @@ def notebook_instance():
     )
 
     assert resource is not None
-    yield (reference, resource,spec)
+    yield (reference, resource, spec)
 
     # Delete the k8s resource if not already deleted by tests
     if k8s.get_resource_exists(reference):
@@ -54,7 +55,9 @@ def notebook_instance():
 
     # Delete the k8s resource if not already deleted by tests
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH )
+        _, deleted = k8s.delete_custom_resource(
+            reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
+        )
         assert deleted
 
 
@@ -127,43 +130,64 @@ class TestNotebookInstance:
             == self._wait_resource_notebook_status(reference, expected_status)
             == expected_status
         )
-    def testCreateUpdateDelete(self,notebook_instance):
+
+    def createTest(self, notebook_instance):
         (reference, resource, spec) = notebook_instance
         assert k8s.get_resource_exists(reference)
-        
-        #Create the resource and verify that its Pending
-        notebook_instance_name = resource["spec"].get("notebookInstanceName",None)
+
+        # Create the resource and verify that its Pending
+        notebook_instance_name = resource["spec"].get("notebookInstanceName", None)
         assert notebook_instance_name is not None
 
         notebook_description = get_notebook_instance(notebook_instance_name)
         assert notebook_description["NotebookInstanceStatus"] == "Pending"
 
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
-        self._assert_notebook_status_in_sync(notebook_instance_name,reference,"Pending")
+        self._assert_notebook_status_in_sync(
+            notebook_instance_name, reference, "Pending"
+        )
 
-        #wait for the resource to go to the InService state and make sure the operator is synced with sagemaker.
-        self._assert_notebook_status_in_sync(notebook_instance_name,reference,"InService")
+        # wait for the resource to go to the InService state and make sure the operator is synced with sagemaker.
+        self._assert_notebook_status_in_sync(
+            notebook_instance_name, reference, "InService"
+        )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
-        #Update test
+    def updateTest(self, notebook_instance):
+        (reference, resource, spec) = notebook_instance
+        notebook_instance_name = resource["spec"].get("notebookInstanceName", None)
+
+        # Update test
         spec["spec"]["volumeSizeInGB"] = 7
-        k8s.patch_custom_resource(reference,spec)
-        self._assert_notebook_status_in_sync(notebook_instance_name,reference,"InService")
+        k8s.patch_custom_resource(reference, spec)
+        self._assert_notebook_status_in_sync(
+            notebook_instance_name, reference, "InService"
+        )
 
         resource = k8s.wait_resource_consumed_by_controller(reference)
         assert resource is not None
 
         latest_notebook = get_notebook_instance(notebook_instance_name)
-        assert(latest_notebook["VolumeSizeInGB"] == 7)
+        assert latest_notebook["VolumeSizeInGB"] == 7
 
-        latest_notebook_resource =  k8s.get_resource(reference)
-        assert(latest_notebook_resource["spec"]["volumeSizeInGB"] == 7)
+        latest_notebook_resource = k8s.get_resource(reference)
+        assert latest_notebook_resource["spec"]["volumeSizeInGB"] == 7
 
-        #TODO: Replace with annotations once runtime can update annotations in readOne.
-        assert(latest_notebook_resource["status"]["isUpdating"] == "false")
-        assert(latest_notebook_resource["status"]["stoppedByAck"] == "false")
-        
+        # TODO: Replace with annotations once runtime can update annotations in readOne.
+        assert latest_notebook_resource["status"]["isUpdating"] == "false"
+        assert latest_notebook_resource["status"]["stoppedByAck"] == "false"
+
+    def deleteTest(self, notebook_instance):
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH )
+        (reference, resource, spec) = notebook_instance
+        notebook_instance_name = resource["spec"].get("notebookInstanceName", None)
+        _, deleted = k8s.delete_custom_resource(
+            reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
+        )
         assert deleted is True
         assert get_notebook_instance(notebook_instance_name) is None
+
+    def test_driver(self, notebook_instance):
+        self.createTest(notebook_instance)
+        self.updateTest(notebook_instance)
+        self.deleteTest(notebook_instance)

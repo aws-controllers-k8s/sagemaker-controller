@@ -41,8 +41,8 @@ func (rm *resourceManager) requeueUntilCanModify(
 	ctx context.Context,
 	r *resource,
 ) error {
-	latestStatus := r.ko.Status.NotebookInstanceStatus
-	return svccommon.RequeueIfModifying(latestStatus, &resourceName, &modifyingStatuses)
+	notebookStatus := r.ko.Status.NotebookInstanceStatus
+	return svccommon.RequeueIfModifying(notebookStatus, &resourceName, &modifyingStatuses)
 }
 
 func isNotebookUpdating(r *resource) bool {

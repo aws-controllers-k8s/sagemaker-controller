@@ -14,4 +14,3 @@ spec:
     - ml.eia1.medium
   lifecycleConfigName: sample-lifecycle
   defaultCodeRepository: <Your git code repository>
-    

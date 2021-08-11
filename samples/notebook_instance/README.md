@@ -15,6 +15,8 @@ Edit the roleARN value in my-notebook-instance.yaml to include the Sagemaker Exe
 This command creates a Sagemaker notebook instance based on the specification provided in my-notebook-instance.yaml.
 The Notebook Instance will start at the Pending state and will transition into InService once ready.
 
+Note: The lifecycleConfigName is the name of the NotebookInstance Lifecycle configuration, it is created beforehand.
+
 ```
 $ kubectl apply -f my-notebook-instance.yaml
 ```
