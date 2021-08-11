@@ -9,6 +9,7 @@ import (
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 )
 
+// Note: modifyingStatuses are all the statuses where the NotebookInstance requeues.
 var (
 	modifyingStatuses = []string{
 		svcsdk.NotebookInstanceStatusPending,
