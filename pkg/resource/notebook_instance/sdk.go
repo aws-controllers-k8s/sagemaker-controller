@@ -410,15 +410,16 @@ func (rm *resourceManager) sdkDelete(
 		return r, err
 	}
 
-	if latestStatus := r.ko.Status.NotebookInstanceStatus; latestStatus != nil &&
+	latestStatus := r.ko.Status.NotebookInstanceStatus
+
+	if latestStatus != nil &&
 		*latestStatus == svcsdk.NotebookInstanceStatusInService {
-		if err := rm.stopNotebookInstance(r); err == nil {
-			return r, requeueWaitWhileStopping
-		} else {
+		if err := rm.stopNotebookInstance(r); err != nil {
 			return r, err
+		} else {
+			return r, requeueWaitWhileStopping
 		}
 	}
-
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
 		return nil, err

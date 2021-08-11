@@ -49,7 +49,7 @@ def notebook_instance():
 
     # Delete the k8s resource if not already deleted by tests
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH )
+        _, deleted = k8s.delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
         assert deleted
 
 
@@ -147,6 +147,6 @@ class TestNotebookInstance:
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH )
+        _, deleted = k8s.delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
         assert deleted is True
         assert get_notebook_instance(notebook_instance_name) is None
