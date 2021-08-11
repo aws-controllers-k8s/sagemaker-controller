@@ -13,6 +13,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 )
 
+// Note: modifyingStatuses are all the statuses where the NotebookInstance requeues.
 var (
 	modifyingStatuses = []string{
 		svcsdk.NotebookInstanceStatusPending,

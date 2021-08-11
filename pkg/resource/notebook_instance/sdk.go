@@ -347,10 +347,9 @@ func (rm *resourceManager) sdkUpdate(
 		return latest, err
 	}
 	stopped_by_ack := false
-	latestStatus := latest.ko.Status.NotebookInstanceStatus
-	if latestStatus != nil && *latestStatus == svcsdk.NotebookInstanceStatusInService {
-		err := rm.stopNotebookInstance(latest)
-		if err == nil {
+	if latestStatus := latest.ko.Status.NotebookInstanceStatus; latestStatus != nil &&
+		*latestStatus == svcsdk.NotebookInstanceStatusInService {
+		if err := rm.stopNotebookInstance(latest); err == nil {
 			stopped_by_ack = true
 		} else {
 			return latest, err
@@ -450,18 +449,13 @@ func (rm *resourceManager) sdkDelete(
 		return r, err
 	}
 
-	latestStatus := r.ko.Status.NotebookInstanceStatus
-
-	if latestStatus != nil && *latestStatus == svcsdk.NotebookInstanceStatusInService {
-		err := rm.stopNotebookInstance(r)
-		if err == nil {
+	if latestStatus := r.ko.Status.NotebookInstanceStatus; latestStatus != nil &&
+		*latestStatus == svcsdk.NotebookInstanceStatusInService {
+		if err := rm.stopNotebookInstance(r); err == nil {
 			return r, requeueWaitWhileStopping
 		} else {
 			return r, err
 		}
-	}
-	if err != nil {
-		return r, err
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {

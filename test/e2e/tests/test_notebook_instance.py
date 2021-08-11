@@ -29,6 +29,8 @@ from e2e import (
 from e2e.replacement_values import REPLACEMENT_VALUES
 import random
 
+DELETE_WAIT_PERIOD = 16
+DELETE_WAIT_LENGTH = 30
 
 @pytest.fixture(scope="function")
 def notebook_instance():
@@ -52,7 +54,7 @@ def notebook_instance():
 
     # Delete the k8s resource if not already deleted by tests
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference, 11, 30)
+        _, deleted = k8s.delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH )
         assert deleted
 
 
@@ -162,6 +164,6 @@ class TestNotebookInstance:
         assert(latest_notebook_resource["status"]["stoppedByAck"] == "false")
         
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(reference, 16, 30)
+        _, deleted = k8s.delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH )
         assert deleted is True
         assert get_notebook_instance(notebook_instance_name) is None
