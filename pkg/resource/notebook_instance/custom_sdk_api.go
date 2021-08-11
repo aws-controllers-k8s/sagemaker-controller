@@ -15,8 +15,10 @@ func (rm *resourceManager) stopNotebookInstance(r *resource) error {
 }
 
 func (rm *resourceManager) startNotebookInstance(r *resource) {
-	nb_input := svcsdk.StartNotebookInstanceInput{}
-	nb_input.NotebookInstanceName = &r.ko.Name
-	_, err := rm.sdkapi.StartNotebookInstance(&nb_input) //Start Notebook Instance does not return a response
+	input := &svcsdk.StartNotebookInstanceInput{}
+	input.NotebookInstanceName = r.ko.Spec.NotebookInstanceName
+
+	//Start Notebook Instance does not return a response
+	_, err := rm.sdkapi.StartNotebookInstance(input)
 	rm.metrics.RecordAPICall("START", "StartNotebookInstance", err)
 }
