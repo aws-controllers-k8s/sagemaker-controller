@@ -10,9 +10,6 @@ phases:
       - aws ecr get-login-password --region $CLUSTER_REGION | docker login --username AWS --password-stdin $ECR_CACHE_URI || true
       - docker pull ${ECR_CACHE_URI}:latest --quiet || true
 
-      # Login to dockerhub to avoid hitting throttle limit
-      - docker login -u $DOCKER_CONFIG_USERNAME -p $DOCKER_CONFIG_PASSWORD
-
       # Build test image
       - >
         docker build -f ./test/canary/Dockerfile.canary . -t ${ECR_CACHE_URI}:latest
