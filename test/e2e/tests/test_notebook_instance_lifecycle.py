@@ -106,7 +106,7 @@ class TestNotebookInstanceLifecycleConfig:
             == notebook_instance_lfc_desc["NotebookInstanceLifecycleConfigArn"]
         )
         # We need to keep track of the current time so its best to just do
-        # the update test with the create test. 
+        # the update test with the create test. update content is pip install six
         update_content = "cGlwIGluc3RhbGwgc2l4"
         spec["spec"]["onStart"] = [
             {"content": update_content}
