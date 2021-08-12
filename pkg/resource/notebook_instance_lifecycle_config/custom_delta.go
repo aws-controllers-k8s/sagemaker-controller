@@ -4,6 +4,8 @@ import (
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 )
 
+// customDeltaOnCreate compares the difference between
+// two onCreate fields. It makes use of the ackcompare.Splice.
 func customDeltaOnCreate(
 	delta *ackcompare.Delta,
 	a *resource,
@@ -29,6 +31,8 @@ func customDeltaOnCreate(
 	return delta
 }
 
+// customDeltaOnStart compares the difference between
+// two onStart fields. It makes use of the ackcompare.Splice.
 func customDeltaOnStart(
 	delta *ackcompare.Delta,
 	a *resource,

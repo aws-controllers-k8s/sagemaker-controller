@@ -5,11 +5,11 @@ metadata:
 spec:
   notebookInstanceLifecycleConfigName: $NOTEBOOK_INSTANCE_LFC_NAME
   onStart:
-    # base64 decoded string: A="5"
-    - content: QT0iNSI=
+    # base64 decoded string: 
+    # echo "Entering onStart"
+    - content: ZWNobyAiRW50ZXJpbmcgb25TdGFydCI=
   onCreate:
     # base 64 decoded string:
-    # O="1"
-    # EOF
-    - content: Tz0iMSIKRU9G
+    # echo "Entering onCreate"
+    - content: ZWNobyAiRW50ZXJpbmcgb25DcmVhdGUi
     
