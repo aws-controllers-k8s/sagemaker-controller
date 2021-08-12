@@ -1,0 +1,10 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: NotebookInstanceLifecycleConfig
+metadata:
+  name: my-notebook_lifecycle_config
+spec:
+  notebookInstanceLifecycleConfigName: my-notebook_lifecycle_config
+  onStart:
+    - content: QT0iNSI=
+  onCreate:
+    - content: Tz0iMSIKRU9G
