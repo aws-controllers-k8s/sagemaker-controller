@@ -21,6 +21,7 @@ rules:
   - modelpackagegroups
   - modelqualityjobdefinitions
   - monitoringschedules
+  - notebookinstances
   - notebookinstancelifecycleconfigs
   - processingjobs
   - trainingjobs

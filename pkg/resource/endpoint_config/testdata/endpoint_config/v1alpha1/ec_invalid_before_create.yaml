@@ -1,0 +1,21 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: EndpointConfig
+metadata:
+  name: unit-testing-endpoint-config
+  spec:
+    endpointConfigName: !-intentionally-invalid-name
+    productionVariants:
+      - variantName: variant-1
+        modelName: unit-testing-model
+        # instanceCount is 2 to test retainAllVariantProperties
+        initialInstanceCount: 2
+        # This is the smallest instance type which will support scaling
+        instanceType: ml.c5.large
+        initialVariantWeight: 1
+  tags:
+    - key: confidentiality
+      value: public
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

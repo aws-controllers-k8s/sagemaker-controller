@@ -1,0 +1,18 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: MonitoringSchedule
+metadata:
+  name: unit-testing-monitoring-schedule
+spec:
+  monitoringScheduleName: !-intentionally-invalid-name
+  monitoringScheduleConfig:
+    monitoringType: DataQuality
+    monitoringJobDefinitionName: unit-testing-monitoring-job-definition
+    scheduleConfig:
+      scheduleExpression: "cron(0 * ? * * *)"
+  tags:
+    - key: confidentiality
+      value: public
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

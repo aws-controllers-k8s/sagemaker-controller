@@ -1,0 +1,47 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: ModelExplainabilityJobDefinition
+metadata:
+  creationTimestamp: null
+  name: unit-testing-model-explainability-job-definition
+spec:
+  jobDefinitionName: ""
+  jobResources:
+    clusterConfig:
+      instanceCount: 1
+      instanceType: ml.m5.large
+      volumeSizeInGB: 30
+  modelExplainabilityAppSpecification:
+    configURI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model_explainability_job_definition/baselining/analysis_config.json
+    imageURI: 306415355426.dkr.ecr.us-west-2.amazonaws.com
+  modelExplainabilityBaselineConfig:
+    constraintsResource:
+      s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model_explainability_job_definition/baselining/analysis.json
+  modelExplainabilityJobInput:
+    endpointInput:
+      endpointName: unit-testing-endpoint
+      localPath: /opt/ml/processing/input/endpoint
+      s3DataDistributionType: FullyReplicated
+      s3InputMode: File
+  modelExplainabilityJobOutputConfig:
+    monitoringOutputs:
+    - s3Output:
+        localPath: /opt/ml/processing/output
+        s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model_explainability_job_definition/reports
+        s3UploadMode: Continuous
+  roleARN: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
+  stoppingCondition:
+    maxRuntimeInSeconds: 1800
+  tags:
+  - key: confidentiality
+    value: public
+  - key: environment
+    value: testing
+  - key: customer
+    value: test-user
+status:
+  ackResourceMetadata:
+    ownerAccountID: ""
+  conditions:
+  - message: The job definition name must start with an alphanumeric character.
+    status: "True"
+    type: ACK.Terminal

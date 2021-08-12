@@ -1,0 +1,59 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: TrainingJob
+metadata:
+  creationTimestamp: null
+  name: unit-testing-training-job
+spec:
+  algorithmSpecification:
+    trainingImage: 246618743249.dkr.ecr.us-west-2.amazonaws.com
+    trainingInputMode: File
+  hyperParameters:
+    eta: "0.2"
+    gamma: "4"
+    max_depth: "5"
+    min_child_weight: "6"
+    num_class: "10"
+    num_round: "10"
+    objective: multi:softmax
+    silent: "0"
+  inputDataConfig:
+  - channelName: train
+    compressionType: None
+    contentType: text/csv
+    dataSource:
+      s3DataSource:
+        s3DataDistributionType: FullyReplicated
+        s3DataType: S3Prefix
+        s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/train
+  - channelName: validation
+    compressionType: None
+    contentType: text/csv
+    dataSource:
+      s3DataSource:
+        s3DataDistributionType: FullyReplicated
+        s3DataType: S3Prefix
+        s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/validation
+  outputDataConfig:
+    s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/output
+  resourceConfig:
+    instanceCount: 1
+    instanceType: ml.m4.xlarge
+    volumeSizeInGB: 5
+  roleARN: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
+  stoppingCondition:
+    maxRuntimeInSeconds: 86400
+  tags:
+  - key: algorithm
+    value: xgboost
+  - key: environment
+    value: testing
+  - key: customer
+    value: test-user
+  trainingJobName: ""
+status:
+  ackResourceMetadata:
+    ownerAccountID: ""
+  conditions:
+  - message: The training job name must start with an alphanumeric character.
+    status: "True"
+    type: ACK.Terminal

@@ -1,0 +1,33 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: TransformJob
+metadata:
+  creationTimestamp: null
+  name: unit-testing-transform-job
+spec:
+  modelName: xgboost-churn-config-model
+  tags:
+  - key: algorithm
+    value: xgboost
+  - key: environment
+    value: testing
+  - key: customer
+    value: test-user
+  transformInput:
+    contentType: text/csv
+    dataSource:
+      s3DataSource:
+        s3DataType: S3Prefix
+        s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/batch/input-data
+  transformJobName: ""
+  transformOutput:
+    s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/batch/output
+  transformResources:
+    instanceCount: 1
+    instanceType: ml.m5.large
+status:
+  ackResourceMetadata:
+    ownerAccountID: ""
+  conditions:
+  - message: The transform job name must start with an alphanumeric character.
+    status: "True"
+    type: ACK.Terminal

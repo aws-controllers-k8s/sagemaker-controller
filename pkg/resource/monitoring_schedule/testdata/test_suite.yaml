@@ -1,0 +1,17 @@
+tests:
+  - name: "Monitoring schedule create tests"
+    description: "Part of monitoring schedule CRUD tests."
+    scenarios:
+     - name: "Create=InvalidInput"
+       description: "Given one of the parameters is invalid, ko.Status shows a terminal condition"
+       given:
+         desired_state: "monitoring_schedule/v1alpha1/ms_invalid_before_create.yaml"
+         svc_api:
+           - operation: CreateMonitoringScheduleWithContext
+             error:
+               code: InvalidParameterValue
+               message: "The monitoring schedule name must start with an alphanumeric character."
+       invoke: Create
+       expect:
+         latest_state: "monitoring_schedule/v1alpha1/ms_invalid_create_attempted.yaml"
+         error: resource is in terminal condition

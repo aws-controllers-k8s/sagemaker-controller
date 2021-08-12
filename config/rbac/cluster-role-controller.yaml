@@ -285,6 +285,26 @@ rules:
 - apiGroups:
   - sagemaker.services.k8s.aws
   resources:
+  - notebookinstances
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
+  - notebookinstances/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
   - processingjobs
   verbs:
   - create
