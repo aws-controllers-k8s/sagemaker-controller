@@ -1,3 +1,9 @@
+//TODO: Code generator wont autogenerate the line below, take this if statement out when it does.
+if resp.NotebookInstanceLifecycleConfigName != nil {
+	ko.Spec.LifecycleConfigName = resp.NotebookInstanceLifecycleConfigName
+} else {
+	ko.Spec.LifecycleConfigName = nil
+}
 //TODO: Take this out if runtime supports updating annotations during ReadOne
 tmp := ""
 is_updating_tmp := ""
