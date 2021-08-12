@@ -4,7 +4,7 @@ import (
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 )
 
-func modifyDeltaCreate(
+func customDeltaOnCreate(
 	delta *ackcompare.Delta,
 	a *resource,
 	b *resource,
@@ -13,31 +13,23 @@ func modifyDeltaCreate(
 		delta.Add("Spec.OnCreate", a.ko.Spec.OnCreate, b.ko.Spec.OnCreate)
 		return delta
 	}
-	//check length
-	if a.ko.Spec.OnCreate != nil && b.ko.Spec.OnCreate != nil {
-		if len(a.ko.Spec.OnCreate) != len(b.ko.Spec.OnCreate) {
-			delta.Add("Spec.OnCreate", a.ko.Spec.OnCreate, b.ko.Spec.OnCreate)
-			return delta
-		}
-	} else {
-		return delta
+	var lista []*string
+	var listb []*string
+
+	for _, s := range a.ko.Spec.OnCreate {
+		lista = append(lista, s.Content)
 	}
-	//Check variables, a and b have to be of equal length
-	onCreateLen := len(a.ko.Spec.OnCreate)
-	if a.ko.Spec.OnCreate != nil && b.ko.Spec.OnCreate != nil {
-		for i := 0; i < onCreateLen; i++ {
-			abb := *a.ko.Spec.OnCreate[i].Content
-			bbb := *b.ko.Spec.OnCreate[i].Content
-			if abb != bbb {
-				delta.Add("Spec.OnCreate", a.ko.Spec.OnCreate, b.ko.Spec.OnCreate)
-				return delta
-			}
-		}
+	for _, s := range b.ko.Spec.OnCreate {
+		listb = append(listb, s.Content)
 	}
+	if !ackcompare.SliceStringPEqual(lista, listb) {
+		delta.Add("Spec.OnCreate", a.ko.Spec.OnCreate, b.ko.Spec.OnCreate)
+	}
+
 	return delta
 }
 
-func modifyDeltaStart(
+func customDeltaOnStart(
 	delta *ackcompare.Delta,
 	a *resource,
 	b *resource,
@@ -46,27 +38,19 @@ func modifyDeltaStart(
 		delta.Add("Spec.OnStart", a.ko.Spec.OnStart, b.ko.Spec.OnStart)
 		return delta
 	}
-	//check length
-	if a.ko.Spec.OnStart != nil && b.ko.Spec.OnStart != nil {
-		if len(a.ko.Spec.OnStart) != len(b.ko.Spec.OnStart) {
-			delta.Add("Spec.OnStart", a.ko.Spec.OnStart, b.ko.Spec.OnStart)
-			return delta
-		}
-	} else {
-		return delta
-	}
-	//Check variables, a and b have to be of equal length
-	onStartLen := len(a.ko.Spec.OnStart)
-	if a.ko.Spec.OnStart != nil && b.ko.Spec.OnStart != nil {
-		for i := 0; i < onStartLen; i++ {
-			abb := *a.ko.Spec.OnStart[i].Content
-			bbb := *b.ko.Spec.OnStart[i].Content
-			if abb != bbb {
-				delta.Add("Spec.OnStart", a.ko.Spec.OnStart, b.ko.Spec.OnStart)
-				return delta
-			}
-		}
 
+	var lista []*string
+	var listb []*string
+
+	for _, s := range a.ko.Spec.OnStart {
+		lista = append(lista, s.Content)
 	}
+	for _, s := range b.ko.Spec.OnStart {
+		listb = append(listb, s.Content)
+	}
+	if !ackcompare.SliceStringPEqual(lista, listb) {
+		delta.Add("Spec.OnStart", a.ko.Spec.OnStart, b.ko.Spec.OnStart)
+	}
+
 	return delta
 }

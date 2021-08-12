@@ -643,14 +643,23 @@ resources:
     hooks:
       delta_post_compare:
         template_path: notebook_instance_lifecycle_config/delta_post_compare.go.tpl
+      sdk_update_post_set_output:
+        template_path: notebook_instance_lifecycle_config/sdk_update_post_set_output.go.tpl
     fields:
       LastModifiedTime:
         is_read_only: true
         print:
-          name: Last Modified Time
+          name: LAST-MODIFIED-TIME
         from:
           operation: DescribeNotebookInstanceLifecycleConfig
           path: LastModifiedTime
+      CreationTime:
+        is_read_only: true
+        print:
+          name: CREATION-TIME
+        from:
+          operation: DescribeNotebookInstanceLifecycleConfig
+          path: CreationTime
   ModelPackageGroup:
       exceptions:
         errors:

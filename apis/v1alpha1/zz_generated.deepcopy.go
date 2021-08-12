@@ -7262,6 +7262,10 @@ func (in *NotebookInstanceLifecycleConfigStatus) DeepCopyInto(out *NotebookInsta
 			}
 		}
 	}
+	if in.CreationTime != nil {
+		in, out := &in.CreationTime, &out.CreationTime
+		*out = (*in).DeepCopy()
+	}
 	if in.LastModifiedTime != nil {
 		in, out := &in.LastModifiedTime, &out.LastModifiedTime
 		*out = (*in).DeepCopy()
