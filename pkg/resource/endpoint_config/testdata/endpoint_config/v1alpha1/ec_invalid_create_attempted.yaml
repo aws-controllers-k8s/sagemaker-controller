@@ -1,0 +1,15 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: EndpointConfig
+metadata:
+  creationTimestamp: null
+  name: unit-testing-endpoint-config
+spec:
+  endpointConfigName: null
+  productionVariants: null
+status:
+  ackResourceMetadata:
+    ownerAccountID: ""
+  conditions:
+  - message: The endpoint config name must start with an alphanumeric character.
+    status: "True"
+    type: ACK.Terminal

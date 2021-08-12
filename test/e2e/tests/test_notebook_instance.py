@@ -32,7 +32,6 @@ import random
 DELETE_WAIT_PERIOD = 16
 DELETE_WAIT_LENGTH = 30
 
-
 @pytest.fixture(scope="function")
 def notebook_instance():
     resource_name = random_suffix_name("nb", 32)
@@ -47,11 +46,6 @@ def notebook_instance():
 
     assert resource is not None
     yield (reference, resource, spec)
-
-    # Delete the k8s resource if not already deleted by tests
-    if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference, 11, 30)
-        assert deleted
 
     # Delete the k8s resource if not already deleted by tests
     if k8s.get_resource_exists(reference):

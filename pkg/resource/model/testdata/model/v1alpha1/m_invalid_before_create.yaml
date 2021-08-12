@@ -1,0 +1,21 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: Model
+metadata:
+  name: unit-testing-model
+spec:
+  modelName: !-intentionally-invalid-name
+  primaryContainer:
+    containerHostname: xgboost
+    modelDataURL: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model/xgboost-mnist-model.tar.gz
+    image: 433757028032.dkr.ecr.us-west-2.amazonaws.com
+    environment:
+      my_var: my_value
+      my_var2: my_value2
+  executionRoleARN: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
+  tags:
+    - key: algorithm
+      value: xgboost
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

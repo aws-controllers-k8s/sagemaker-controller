@@ -1,0 +1,67 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: ProcessingJob
+metadata:
+  creationTimestamp: null
+  name: unit-testing-processing-job
+spec:
+  appSpecification:
+    containerEntrypoint:
+    - python
+    - /opt/ml/processing/code/kmeans_preprocessing.py
+    imageURI: 763104351884.dkr.ecr.us-west-2.amazonaws.com
+  environment:
+    my_var: my_value
+    my_var2: my_value2
+  processingInputs:
+  - inputName: mnist_tar
+    s3Input:
+      localPath: /opt/ml/processing/input
+      s3CompressionType: None
+      s3DataType: S3Prefix
+      s3InputMode: File
+      s3URI: s3://sagemaker-sample-data-us-west-2/algorithms/kmeans/mnist/mnist.pkl.gz
+  - inputName: source_code
+    s3Input:
+      localPath: /opt/ml/processing/code
+      s3CompressionType: None
+      s3DataType: S3Prefix
+      s3InputMode: File
+      s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/processing/kmeans_preprocessing.py
+  processingJobName: ""
+  processingOutputConfig:
+    outputs:
+    - outputName: train_data
+      s3Output:
+        localPath: /opt/ml/processing/output_train/
+        s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/processing/output/
+        s3UploadMode: EndOfJob
+    - outputName: test_data
+      s3Output:
+        localPath: /opt/ml/processing/output_test/
+        s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/processing/output/
+        s3UploadMode: EndOfJob
+    - outputName: valid_data
+      s3Output:
+        localPath: /opt/ml/processing/output_valid/
+        s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/processing/output/
+        s3UploadMode: EndOfJob
+  processingResources:
+    clusterConfig:
+      instanceCount: 1
+      instanceType: ml.m5.large
+      volumeSizeInGB: 20
+  roleARN: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
+  tags:
+  - key: confidentiality
+    value: public
+  - key: environment
+    value: testing
+  - key: customer
+    value: test-user
+status:
+  ackResourceMetadata:
+    ownerAccountID: ""
+  conditions:
+  - message: The processing job name must start with an alphanumeric character.
+    status: "True"
+    type: ACK.Terminal

@@ -32,6 +32,7 @@ License version 2.0, we include the full text of the package's License below.
 * `github.com/spf13/pflag`
 * `github.com/stretchr/testify`
 * `golang.org/x/mod`
+* `go.uber.org/zap`
 * `k8s.io/api`
 * `k8s.io/apimachinery`
 * `k8s.io/client-go`

@@ -1,0 +1,26 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: MonitoringSchedule
+metadata:
+  creationTimestamp: null
+  name: unit-testing-monitoring-schedule
+spec:
+  monitoringScheduleConfig:
+    monitoringJobDefinitionName: unit-testing-monitoring-job-definition
+    monitoringType: DataQuality
+    scheduleConfig:
+      scheduleExpression: cron(0 * ? * * *)
+  monitoringScheduleName: ""
+  tags:
+  - key: confidentiality
+    value: public
+  - key: environment
+    value: testing
+  - key: customer
+    value: test-user
+status:
+  ackResourceMetadata:
+    ownerAccountID: ""
+  conditions:
+  - message: The monitoring schedule name must start with an alphanumeric character.
+    status: "True"
+    type: ACK.Terminal

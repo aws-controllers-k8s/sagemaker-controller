@@ -1,0 +1,17 @@
+tests:
+  - name: "Endpoint config create tests"
+    description: "Part of endpoint config CRD tests."
+    scenarios:
+     - name: "Create=InvalidInput"
+       description: "Given one of the parameters is invalid, ko.Status shows a terminal condition"
+       given:
+         desired_state: "endpoint_config/v1alpha1/ec_invalid_before_create.yaml"
+         svc_api:
+           - operation: CreateEndpointConfigWithContext
+             error:
+               code: InvalidParameterValue
+               message: "The endpoint config name must start with an alphanumeric character."
+       invoke: Create
+       expect:
+         latest_state: "endpoint_config/v1alpha1/ec_invalid_create_attempted.yaml"
+         error: resource is in terminal condition

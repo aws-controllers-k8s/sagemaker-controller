@@ -1,0 +1,25 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: TransformJob
+metadata:
+  name: unit-testing-transform-job
+spec:
+  transformJobName: !-intentionally-invalid-name
+  modelName: xgboost-churn-config-model
+  transformInput:
+    contentType: text/csv
+    dataSource:
+      s3DataSource:
+        s3DataType: S3Prefix
+        s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/batch/input-data
+  transformOutput:
+    s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/batch/output
+  transformResources:
+    instanceCount: 1
+    instanceType: ml.m5.large
+  tags:
+    - key: algorithm
+      value: xgboost
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user
