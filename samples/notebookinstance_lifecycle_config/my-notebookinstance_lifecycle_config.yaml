@@ -5,6 +5,6 @@ metadata:
 spec:
   notebookInstanceLifecycleConfigName: my-notebook_lifecycle_config
   onStart:
-    - content: cGlwIGluc3RhbGwgUElM
+    - content: QT0iNSI=
   onCreate:
-           - content: d2dldCBodHRwOi8vbWlycm9ycy5jdGFuLm9yZy9tYWNyb3MvbGF0ZXgvY29udHJpYi91cHF1b3RlLnppcA0KRU9G
+    - content: Tz0iMSIKRU9G

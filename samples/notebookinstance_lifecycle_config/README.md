@@ -7,6 +7,10 @@ This sample assumes that you have completed the [common prerequisites](/samples/
 ### Create a Notebook Instance Lifecycle Configuration
 This command creates a Notebook Instance Lifecycle configuration.
 Note: The onCreate and onStart fields must be in base64.
+
+In the example crd the value of the onCreate field decodes to A="5" and the value of the onStart field decodes to:<br />
+O="1"<br />
+EOF<br />
 ```
 $ kubectl apply -f my-notebookinstance_lifecycle_config.yaml
 ```
