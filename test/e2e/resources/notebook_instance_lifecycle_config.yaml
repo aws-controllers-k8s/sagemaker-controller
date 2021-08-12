@@ -5,9 +5,11 @@ metadata:
 spec:
   notebookInstanceLifecycleConfigName: $NOTEBOOK_INSTANCE_LFC_NAME
   onStart:
-    - content: cGlwIGluc3RhbGwgUElM # base64 decoded string: pip install PIL
+    # base64 decoded string: pip install PIL
+    - content: cGlwIGluc3RhbGwgUElM 
   onCreate:
-    - content: d2dldCBodHRwOi8vbWlycm9ycy5jdGFuLm9yZy9tYWNyb3MvbGF0ZXgvY29udHJpYi91cHF1b3RlLnppcA0KRU9G
     # base 64 decoded string:
     # wget http://mirrors.ctan.org/macros/latex/contrib/upquote.zip
     # EOF
+    - content: d2dldCBodHRwOi8vbWlycm9ycy5jdGFuLm9yZy9tYWNyb3MvbGF0ZXgvY29udHJpYi91cHF1b3RlLnppcA0KRU9G
+    

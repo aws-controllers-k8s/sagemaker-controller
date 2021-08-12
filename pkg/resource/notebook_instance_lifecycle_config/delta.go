@@ -40,7 +40,7 @@ func newResourceDelta(
 		}
 	}
 
-	delta = modifyDeltaCreate(delta, a, b)
-	delta = modifyDeltaStart(delta, a, b)
+	delta = customDeltaOnCreate(delta, a, b)
+	delta = customDeltaOnStart(delta, a, b)
 	return delta
 }

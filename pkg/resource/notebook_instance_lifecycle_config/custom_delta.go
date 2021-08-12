@@ -4,7 +4,7 @@ import (
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 )
 
-func modifyDeltaCreate(
+func customDeltaOnCreate(
 	delta *ackcompare.Delta,
 	a *resource,
 	b *resource,
@@ -16,15 +16,11 @@ func modifyDeltaCreate(
 	var lista []*string
 	var listb []*string
 
-	onCreateLenA := len(a.ko.Spec.OnCreate)
-	onCreateLenB := len(b.ko.Spec.OnCreate)
-	for i := 0; i < onCreateLenA; i++ {
-		val := *a.ko.Spec.OnCreate[i].Content
-		lista = append(lista, &val)
+	for _, s := range a.ko.Spec.OnCreate {
+		lista = append(lista, s.Content)
 	}
-	for i := 0; i < onCreateLenB; i++ {
-		val := *b.ko.Spec.OnCreate[i].Content
-		listb = append(listb, &val)
+	for _, s := range b.ko.Spec.OnCreate {
+		listb = append(listb, s.Content)
 	}
 	if !ackcompare.SliceStringPEqual(lista, listb) {
 		delta.Add("Spec.OnCreate", a.ko.Spec.OnCreate, b.ko.Spec.OnCreate)
@@ -33,7 +29,7 @@ func modifyDeltaCreate(
 	return delta
 }
 
-func modifyDeltaStart(
+func customDeltaOnStart(
 	delta *ackcompare.Delta,
 	a *resource,
 	b *resource,
@@ -46,16 +42,11 @@ func modifyDeltaStart(
 	var lista []*string
 	var listb []*string
 
-	onStartLenA := len(a.ko.Spec.OnStart)
-	onStartLenB := len(b.ko.Spec.OnStart)
-
-	for i := 0; i < onStartLenA; i++ {
-		val := *a.ko.Spec.OnStart[i].Content
-		lista = append(lista, &val)
+	for _, s := range a.ko.Spec.OnStart {
+		lista = append(lista, s.Content)
 	}
-	for i := 0; i < onStartLenB; i++ {
-		val := *b.ko.Spec.OnStart[i].Content
-		listb = append(listb, &val)
+	for _, s := range b.ko.Spec.OnStart {
+		listb = append(listb, s.Content)
 	}
 	if !ackcompare.SliceStringPEqual(lista, listb) {
 		delta.Add("Spec.OnStart", a.ko.Spec.OnStart, b.ko.Spec.OnStart)

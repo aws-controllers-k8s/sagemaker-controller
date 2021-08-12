@@ -68,17 +68,17 @@ def get_notebook_instance_lifecycle_config(notebook_instance_lfc_name: str):
 @service_marker
 @pytest.mark.canary
 class TestNotebookInstanceLifecycleConfig:
-    def wait_until_update(self, reference, current_time):
-        for i in range(10):
+    def wait_until_update(self, reference, current_time,wait_period=10,wait_time=5):
+        for i in range(wait_period):
             resource = k8s.get_resource(reference)
             assert resource is not None
             assert "lastModifiedTime" in resource["status"]
             lastModifiedTime = resource["status"]["lastModifiedTime"]
             d = datetime.datetime.strptime(lastModifiedTime, "%Y-%m-%dT%H:%M:%SZ")
             if d > current_time:
-                return
-            sleep(1)
-        return
+                return True
+            sleep(wait_time)
+        return False
 
     def test_CreateUpdateDeleteNotebookLifecycleConfig(
         self, notebook_instance_lifecycleConfig
@@ -107,14 +107,15 @@ class TestNotebookInstanceLifecycleConfig:
         )
         # We need to keep track of the current time so its best to just do
         # the update test with the create test. 
+        update_content = "cGlwIGluc3RhbGwgc2l4"
         spec["spec"]["onStart"] = [
-            {"content": "cGlwIGluc3RhbGwgc2l4"}
+            {"content": update_content}
         ]  # cGlwIGluc3RhbGwgc2l4 = pip install six
         k8s.patch_custom_resource(reference, spec)
 
         resource = k8s.wait_resource_consumed_by_controller(reference)
         assert resource is not None
-        self.wait_until_update(reference, current_time)
+        assert (self.wait_until_update(reference, current_time) == True)
 
         # Verifying that an update was successful
         notebook_instance_lfc_desc = get_notebook_instance_lifecycle_config(
@@ -122,7 +123,7 @@ class TestNotebookInstanceLifecycleConfig:
         )
         assert (
             notebook_instance_lfc_desc["OnStart"][0]["Content"]
-            == "cGlwIGluc3RhbGwgc2l4"
+            == update_content
         )
 
         # Deleting the resource
