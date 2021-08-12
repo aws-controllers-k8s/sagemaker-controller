@@ -898,16 +898,16 @@ const (
 	NotebookInstanceSortOrder_Descending NotebookInstanceSortOrder = "Descending"
 )
 
-type NotebookInstanceStatus string
+type NotebookInstanceStatus_SDK string
 
 const (
-	NotebookInstanceStatus_Pending   NotebookInstanceStatus = "Pending"
-	NotebookInstanceStatus_InService NotebookInstanceStatus = "InService"
-	NotebookInstanceStatus_Stopping  NotebookInstanceStatus = "Stopping"
-	NotebookInstanceStatus_Stopped   NotebookInstanceStatus = "Stopped"
-	NotebookInstanceStatus_Failed    NotebookInstanceStatus = "Failed"
-	NotebookInstanceStatus_Deleting  NotebookInstanceStatus = "Deleting"
-	NotebookInstanceStatus_Updating  NotebookInstanceStatus = "Updating"
+	NotebookInstanceStatus_SDK_Pending   NotebookInstanceStatus_SDK = "Pending"
+	NotebookInstanceStatus_SDK_InService NotebookInstanceStatus_SDK = "InService"
+	NotebookInstanceStatus_SDK_Stopping  NotebookInstanceStatus_SDK = "Stopping"
+	NotebookInstanceStatus_SDK_Stopped   NotebookInstanceStatus_SDK = "Stopped"
+	NotebookInstanceStatus_SDK_Failed    NotebookInstanceStatus_SDK = "Failed"
+	NotebookInstanceStatus_SDK_Deleting  NotebookInstanceStatus_SDK = "Deleting"
+	NotebookInstanceStatus_SDK_Updating  NotebookInstanceStatus_SDK = "Updating"
 )
 
 type NotebookOutputOption string
