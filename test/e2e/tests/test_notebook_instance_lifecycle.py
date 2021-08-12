@@ -47,6 +47,7 @@ def notebook_instance_lifecycleConfig():
     )
     assert resource is not None
     yield (reference, resource, spec)
+
     if k8s.get_resource_exists(reference):
         _, deleted = k8s.delete_custom_resource(reference, 10, 5)
         assert deleted
@@ -106,7 +107,8 @@ class TestNotebookInstanceLifecycleConfig:
             == notebook_instance_lfc_desc["NotebookInstanceLifecycleConfigArn"]
         )
         # We need to keep track of the current time so its best to just do
-        # the update test with the create test. update content is pip install six
+        # the update test with the create test. 
+        # update content is pip install six
         update_content = "cGlwIGluc3RhbGwgc2l4"
         spec["spec"]["onStart"] = [
             {"content": update_content}
