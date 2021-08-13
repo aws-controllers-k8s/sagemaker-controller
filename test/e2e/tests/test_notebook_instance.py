@@ -35,9 +35,11 @@ DELETE_WAIT_LENGTH = 30
 
 @pytest.fixture(scope="function")
 def notebook_instance():
+    default_code_repository = "https://github.com/aws-controllers-k8s/community"
     resource_name = random_suffix_name("nb", 32)
     replacements = REPLACEMENT_VALUES.copy()
     replacements["NOTEBOOK_INSTANCE_NAME"] = resource_name
+    replacements["DEFAULT_CODE_REPOSITORY"] = default_code_repository
     reference, spec, resource = create_sagemaker_resource(
         resource_plural="notebookinstances",
         resource_name=resource_name,
@@ -155,6 +157,7 @@ class TestNotebookInstance:
 
         # Update test
         spec["spec"]["volumeSizeInGB"] = volumeSizeInGB
+        spec["spec"]["defaultCodeRepository"] = None
         k8s.patch_custom_resource(reference, spec)
 
         self._assert_notebook_status_in_sync(
@@ -163,7 +166,8 @@ class TestNotebookInstance:
         # TODO: Replace with annotations once runtime can update annotations in readOne.
         latest_notebook_resource = k8s.get_resource(reference)
         assert (
-            latest_notebook_resource["status"]["stoppedByControllerMETA"] == "UpdatePending"
+            latest_notebook_resource["status"]["stoppedByControllerMETA"]
+            == "UpdatePending"
         )
 
         # wait for the resource to go to the InService state and make sure the operator is synced with sagemaker.
@@ -177,6 +181,9 @@ class TestNotebookInstance:
 
         latest_notebook_resource = k8s.get_resource(reference)
         assert latest_notebook_resource["spec"]["volumeSizeInGB"] == volumeSizeInGB
+
+        assert "DefaultCodeRepository" not in notebook_instance_desc
+        assert "defaultCodeRepository" not in latest_notebook_resource["spec"]
 
         # TODO: Replace with annotations once runtime can update annotations in readOne.
         assert "stoppedByControllerMETA" not in latest_notebook_resource["status"]

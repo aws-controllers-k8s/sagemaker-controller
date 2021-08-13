@@ -356,6 +356,7 @@ func (rm *resourceManager) sdkUpdate(
 	if err != nil {
 		return nil, err
 	}
+	handleUpdateOnlyParameters(desired, latest, input)
 
 	var resp *svcsdk.UpdateNotebookInstanceOutput
 	_ = resp
