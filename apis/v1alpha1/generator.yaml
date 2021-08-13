@@ -642,20 +642,20 @@ resources:
         - InvalidAction
         - UnrecognizedClientException
     hooks:
-      sdk_delete_pre_build_request:
-        template_path: notebook_instance/sdk_delete_pre_build_request.go.tpl
-      sdk_delete_post_request:
-        template_path: common/sdk_delete_post_request.go.tpl
-      delta_pre_compare:
-        code: customSetDefaults(a, b)
-      sdk_read_one_post_set_output: 
-        template_path: notebook_instance/sdk_read_one_post_set_output.go.tpl
       sdk_read_one_pre_set_output:
         template_path: notebook_instance/sdk_read_one_pre_set_output.go.tpl
+      sdk_read_one_post_set_output: 
+        template_path: notebook_instance/sdk_read_one_post_set_output.go.tpl
+      delta_pre_compare:
+        code: customSetDefaults(a, b)
       sdk_update_pre_build_request:
         template_path: notebook_instance/sdk_update_pre_build_request.go.tpl
       sdk_update_post_set_output:
         code: rm.customSetOutputUpdate(ko)
+      sdk_delete_pre_build_request:
+        template_path: notebook_instance/sdk_delete_pre_build_request.go.tpl
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
     fields:
       NotebookInstanceStatus:
         is_read_only: true
@@ -669,18 +669,11 @@ resources:
         from:
           operation: DescribeNotebookInstance
           path: Url
-        print:
-          name: URL
-      stoppedByController:
+      stoppedByControllerMETA:
         is_read_only: true
         from:
-          path: Url
           operation: DescribeNotebookInstance
-      IsUpdating:
-        is_read_only: true
-        from:
           path: Url
-          operation: DescribeNotebookInstance
       FailureReason:
         is_read_only: true
         print:

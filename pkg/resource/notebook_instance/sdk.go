@@ -339,21 +339,18 @@ func (rm *resourceManager) sdkUpdate(
 	if err = rm.requeueUntilCanModify(ctx, latest); err != nil {
 		return latest, err
 	}
-	stopped_by_ack := false
 	latestStatus := latest.ko.Status.NotebookInstanceStatus
+	// The Notebook Instance is stopped and the StoppedByController status is
+	// set to UpdatePending.
 	if latestStatus != nil &&
 		*latestStatus == svcsdk.NotebookInstanceStatusInService {
 		if err := rm.stopNotebookInstance(latest); err != nil {
 			return latest, err
 		} else {
-			stopped_by_ack = true
+			//TODO: Take this out if the runtime supports updating annotations if an error is returned and use annotations for this.
+			latest.ko.Status.StoppedByControllerMETA = aws.String("UpdatePending")
+			return latest, requeueWaitWhileStopping
 		}
-	}
-
-	//TODO: Take this out if the runtime supports updating annotations if an error is returned and use annotations for this.
-	if stopped_by_ack {
-		latest.ko.Status.StoppedByController = aws.String("true")
-		return latest, requeueWaitWhileStopping
 	}
 	input, err := rm.newUpdateRequestPayload(ctx, desired)
 	if err != nil {

@@ -32,6 +32,7 @@ import random
 DELETE_WAIT_PERIOD = 16
 DELETE_WAIT_LENGTH = 30
 
+
 @pytest.fixture(scope="function")
 def notebook_instance():
     resource_name = random_suffix_name("nb", 32)
@@ -49,7 +50,9 @@ def notebook_instance():
 
     # Delete the k8s resource if not already deleted by tests
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
+        _, deleted = k8s.delete_custom_resource(
+            reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
+        )
         assert deleted
 
 
@@ -148,30 +151,39 @@ class TestNotebookInstance:
     def update_notebook_test(self, notebook_instance):
         (reference, resource, spec) = notebook_instance
         notebook_instance_name = resource["spec"].get("notebookInstanceName", None)
+        volumeSizeInGB = 7
 
         # Update test
-        spec["spec"]["volumeSizeInGB"] = 7
+        spec["spec"]["volumeSizeInGB"] = volumeSizeInGB
         k8s.patch_custom_resource(reference, spec)
+
+        self._assert_notebook_status_in_sync(
+            notebook_instance_name, reference, "Stopping"
+        )
+        # TODO: Replace with annotations once runtime can update annotations in readOne.
+        latest_notebook_resource = k8s.get_resource(reference)
+        assert (
+            latest_notebook_resource["status"]["stoppedByControllerMETA"] == "UpdatePending"
+        )
+
+        # wait for the resource to go to the InService state and make sure the operator is synced with sagemaker.
         self._assert_notebook_status_in_sync(
             notebook_instance_name, reference, "InService"
         )
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
-        resource = k8s.wait_resource_consumed_by_controller(reference)
-        assert resource is not None
-
-        latest_notebook = get_notebook_instance(notebook_instance_name)
-        assert latest_notebook["VolumeSizeInGB"] == 7
+        notebook_instance_desc = get_notebook_instance(notebook_instance_name)
+        assert notebook_instance_desc["VolumeSizeInGB"] == volumeSizeInGB
 
         latest_notebook_resource = k8s.get_resource(reference)
-        assert latest_notebook_resource["spec"]["volumeSizeInGB"] == 7
+        assert latest_notebook_resource["spec"]["volumeSizeInGB"] == volumeSizeInGB
 
         # TODO: Replace with annotations once runtime can update annotations in readOne.
-        assert latest_notebook_resource["status"]["isUpdating"] == "false"
-        assert latest_notebook_resource["status"]["stoppedByAck"] == "false"
+        assert "stoppedByControllerMETA" not in latest_notebook_resource["status"]
 
     def delete_notebook_test(self, notebook_instance):
         # Delete the k8s resource.
-        (reference, resource, spec) = notebook_instance
+        (reference, resource, _) = notebook_instance
         notebook_instance_name = resource["spec"].get("notebookInstanceName", None)
         _, deleted = k8s.delete_custom_resource(
             reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH

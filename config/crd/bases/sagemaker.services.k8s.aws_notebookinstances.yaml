@@ -24,9 +24,6 @@ spec:
     - jsonPath: .status.notebookInstanceStatus
       name: STATUS
       type: string
-    - jsonPath: .status.url
-      name: URL
-      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -224,14 +221,10 @@ spec:
               failureReason:
                 description: If status is Failed, the reason it failed.
                 type: string
-              isUpdating:
-                description: The URL that you use to connect to the Jupyter notebook
-                  that is running in your notebook instance.
-                type: string
               notebookInstanceStatus:
                 description: The status of the notebook instance.
                 type: string
-              stoppedByController:
+              stoppedByControllerMETA:
                 description: The URL that you use to connect to the Jupyter notebook
                   that is running in your notebook instance.
                 type: string
