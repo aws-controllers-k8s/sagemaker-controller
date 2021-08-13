@@ -157,6 +157,8 @@ class TestNotebookInstance:
 
         # Update test
         spec["spec"]["volumeSizeInGB"] = volumeSizeInGB
+        # TODO: Use del spec["spec"]["defaultCodeRepository"] instead once ack.testinfra supports replacement.
+        # Patch only supports updating spec fields instead of fully getting rid of them.
         spec["spec"]["defaultCodeRepository"] = None
         k8s.patch_custom_resource(reference, spec)
 
