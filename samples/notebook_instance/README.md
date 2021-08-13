@@ -17,14 +17,14 @@ The Notebook Instance will start at the Pending state and will transition into I
 
 ```
 $ kubectl apply -f my-notebook-instance.yaml
+notebookinstance.sagemaker.services.k8s.aws/my-notebook-instance created
 ```
-
-### Lists Notebook Instances
-This command lists all the notebook instances created using the ACK controller.
+### Update a Notebook Instance
+This commands updates the Notebook Instance with the updated spec provided in my-notebook-instance.yaml. The update command retains the state the controller was previously in. If the update command was called while the controller was in the InService state, it will end up in the InService state after the update. If the update command was called while the controller was in the Stopped/Stopping state, it will end up in the Stopped state after the update.
 ```
-$ kubectl get NotebookInstance
+$ kubectl apply -f my-notebook-instance.yaml
+notebookinstance.sagemaker.services.k8s.aws/my-notebook-instance configured
 ```
-
 ### Describe a Notebook Instance
 This command desribes a specific Notebook Instance, it is useful for checking items like the status, errors or parameters of the Notebook Instance.
 
@@ -33,13 +33,11 @@ Note: The status field Url returns a url in the form <name>.notebook.<region>.sa
 ```
 $ kubectl describe NotebookInstance <YOUR NOTEBOOK INSTANCE NAME>
 ```
-
-### Update a Notebook Instance
-This commands updates the Notebook Instance with the updated spec provided in my-notebook-instance.yaml. The update command retains the state the controller was previously in. If the update command was called while the controller was in the InService state, it will end up in the InService state after the update. If the update command was called while the controller was in the Stopped/Stopping state, it will end up in the Stopped state after the update.
+### List Notebook Instances
+This command lists all the notebook instances created using the ACK controller.
 ```
-$ kubectl apply -f my-notebook-instance.yaml
+$ kubectl get NotebookInstance
 ```
-
 ### Delete a Notebook Instance
 This command deletes the Notebook Instance.
 ```
