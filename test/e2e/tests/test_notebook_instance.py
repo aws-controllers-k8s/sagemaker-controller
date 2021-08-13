@@ -123,7 +123,7 @@ class TestNotebookInstance:
             == expected_status
         )
 
-    def createTest(self, notebook_instance):
+    def create_notebook_test(self, notebook_instance):
         (reference, resource, spec) = notebook_instance
         assert k8s.get_resource_exists(reference)
 
@@ -145,7 +145,7 @@ class TestNotebookInstance:
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
-    def updateTest(self, notebook_instance):
+    def update_notebook_test(self, notebook_instance):
         (reference, resource, spec) = notebook_instance
         notebook_instance_name = resource["spec"].get("notebookInstanceName", None)
 
@@ -169,7 +169,7 @@ class TestNotebookInstance:
         assert latest_notebook_resource["status"]["isUpdating"] == "false"
         assert latest_notebook_resource["status"]["stoppedByAck"] == "false"
 
-    def deleteTest(self, notebook_instance):
+    def delete_notebook_test(self, notebook_instance):
         # Delete the k8s resource.
         (reference, resource, spec) = notebook_instance
         notebook_instance_name = resource["spec"].get("notebookInstanceName", None)
@@ -180,6 +180,6 @@ class TestNotebookInstance:
         assert get_notebook_instance(notebook_instance_name) is None
 
     def test_driver(self, notebook_instance):
-        self.createTest(notebook_instance)
-        self.updateTest(notebook_instance)
-        self.deleteTest(notebook_instance)
+        self.create_notebook_test(notebook_instance)
+        self.update_notebook_test(notebook_instance)
+        self.delete_notebook_test(notebook_instance)

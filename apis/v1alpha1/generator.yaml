@@ -655,7 +655,7 @@ resources:
       sdk_update_pre_build_request:
         template_path: notebook_instance/sdk_update_pre_build_request.go.tpl
       sdk_update_post_set_output:
-        template_path: notebook_instance/sdk_update_post_set_output.go.tpl
+        code: rm.customSetOutputUpdate(ko)
     fields:
       NotebookInstanceStatus:
         is_read_only: true
@@ -671,12 +671,12 @@ resources:
           path: Url
         print:
           name: URL
-      stopped_by_ack:
+      stoppedByController:
         is_read_only: true
         from:
           path: Url
           operation: DescribeNotebookInstance
-      is_updating:
+      IsUpdating:
         is_read_only: true
         from:
           path: Url

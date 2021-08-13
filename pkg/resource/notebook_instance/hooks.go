@@ -45,14 +45,6 @@ func (rm *resourceManager) requeueUntilCanModify(
 	return svccommon.RequeueIfModifying(notebookStatus, &resourceName, &modifyingStatuses)
 }
 
-func isNotebookUpdating(r *resource) bool {
-	if r.ko.Status.NotebookInstanceStatus == nil {
-		return false
-	}
-	notebookInstanceStatus := r.ko.Status.NotebookInstanceStatus
-	return *notebookInstanceStatus == svcsdk.NotebookInstanceStatusUpdating
-}
-
 // customSetOutput sets the ack syncedCondition depending on
 // whether the latest status of the resource is one of the
 // defined modifyingStatuses.
@@ -61,32 +53,36 @@ func (rm *resourceManager) customSetOutput(r *resource) {
 	svccommon.SetSyncedCondition(r, latestStatus, &resourceName, &modifyingStatuses)
 }
 
+//CustomSetOutputDescribe
 func (rm *resourceManager) customSetOutputDescribe(r *resource,
-	ko *svcapitypes.NotebookInstance) bool {
+	ko *svcapitypes.NotebookInstance) error {
 	notebook_state := *ko.Status.NotebookInstanceStatus // Get the Notebook State
 	if ko.Status.IsUpdating != nil && *ko.Status.IsUpdating == "true" {
 		if notebook_state != svcsdk.NotebookInstanceStatusStopped {
-			return false //we want to keep requeing until update finishes
+			return nil //we want to keep requeing until update finishes
 		}
 		//TODO: Use annotations instead of status once the runtime supports updating metadata
-		if ko.Status.StoppedByAck != nil && *ko.Status.StoppedByAck == "true" {
-			rm.startNotebookInstance(r)
+		if ko.Status.StoppedByController != nil && *ko.Status.StoppedByController == "true" {
+			err := rm.startNotebookInstance(r)
+			if err != nil {
+				return err
+			}
 			ko.Status.IsUpdating = aws.String("false")
-			ko.Status.StoppedByAck = aws.String("false")
-			return true //dont want to set resource synced to true pre maturely.
+			ko.Status.StoppedByController = aws.String("false")
+			return nil //Indicating that StoppedByAck and IsUpdating got updated
 		}
 		ko.Status.IsUpdating = aws.String("false")
-		return true
+		return nil
 
 	}
 	rm.customSetOutput(&resource{ko}) // We set the sync status here
-	return false
+	return nil
 }
 
-//The resource from create does not have a state in the status field
+// customSetOutputUpdate sets the isUpdating field and also sets the resource condition to false
+// so that the controller requeues.
 func (rm *resourceManager) customSetOutputUpdate(ko *svcapitypes.NotebookInstance) {
-	if ko == nil {
-		return
-	}
+	//TODO: Replace the IsUpdating status with an annotation if the runtime can update annotations after a readOne call.
+	ko.Status.IsUpdating = aws.String("true")
 	ackcond.SetSynced(&resource{ko}, corev1.ConditionFalse, nil, aws.String("Notebook is currenty updating"))
 }

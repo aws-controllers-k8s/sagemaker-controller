@@ -116,6 +116,9 @@ type NotebookInstanceStatus struct {
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
 	// If status is Failed, the reason it failed.
 	FailureReason *string `json:"failureReason,omitempty"`
+	// The URL that you use to connect to the Jupyter notebook that is running in
+	// your notebook instance.
+	IsUpdating *string `json:"isUpdating,omitempty"`
 	// The status of the notebook instance.
 	NotebookInstanceStatus *string `json:"notebookInstanceStatus,omitempty"`
 	// The URL that you use to connect to the Jupyter notebook that is running in
@@ -123,10 +126,7 @@ type NotebookInstanceStatus struct {
 	URL *string `json:"url,omitempty"`
 	// The URL that you use to connect to the Jupyter notebook that is running in
 	// your notebook instance.
-	IsUpdating *string `json:"isUpdating,omitempty"`
-	// The URL that you use to connect to the Jupyter notebook that is running in
-	// your notebook instance.
-	StoppedByAck *string `json:"stoppedByAck,omitempty"`
+	StoppedByController *string `json:"stoppedByController,omitempty"`
 }
 
 // NotebookInstance is the Schema for the NotebookInstances API
