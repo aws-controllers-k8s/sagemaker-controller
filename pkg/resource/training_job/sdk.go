@@ -354,6 +354,15 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.InputDataConfig = nil
 	}
+	if resp.ModelArtifacts != nil {
+		f19 := &svcapitypes.ModelArtifacts{}
+		if resp.ModelArtifacts.S3ModelArtifacts != nil {
+			f19.S3ModelArtifacts = resp.ModelArtifacts.S3ModelArtifacts
+		}
+		ko.Status.ModelArtifacts = f19
+	} else {
+		ko.Status.ModelArtifacts = nil
+	}
 	if resp.OutputDataConfig != nil {
 		f20 := &svcapitypes.OutputDataConfig{}
 		if resp.OutputDataConfig.KmsKeyId != nil {
@@ -423,6 +432,31 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.ProfilerRuleConfigurations = f22
 	} else {
 		ko.Spec.ProfilerRuleConfigurations = nil
+	}
+	if resp.ProfilerRuleEvaluationStatuses != nil {
+		f23 := []*svcapitypes.ProfilerRuleEvaluationStatus{}
+		for _, f23iter := range resp.ProfilerRuleEvaluationStatuses {
+			f23elem := &svcapitypes.ProfilerRuleEvaluationStatus{}
+			if f23iter.LastModifiedTime != nil {
+				f23elem.LastModifiedTime = &metav1.Time{*f23iter.LastModifiedTime}
+			}
+			if f23iter.RuleConfigurationName != nil {
+				f23elem.RuleConfigurationName = f23iter.RuleConfigurationName
+			}
+			if f23iter.RuleEvaluationJobArn != nil {
+				f23elem.RuleEvaluationJobARN = f23iter.RuleEvaluationJobArn
+			}
+			if f23iter.RuleEvaluationStatus != nil {
+				f23elem.RuleEvaluationStatus = f23iter.RuleEvaluationStatus
+			}
+			if f23iter.StatusDetails != nil {
+				f23elem.StatusDetails = f23iter.StatusDetails
+			}
+			f23 = append(f23, f23elem)
+		}
+		ko.Status.ProfilerRuleEvaluationStatuses = f23
+	} else {
+		ko.Status.ProfilerRuleEvaluationStatuses = nil
 	}
 	if resp.ResourceConfig != nil {
 		f25 := &svcapitypes.ResourceConfig{}
@@ -519,11 +553,7 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
-	// custom set output from response
-	ko, err = rm.customDescribeTrainingJobSetOutput(ctx, r, resp, ko)
-	if err != nil {
-		return nil, err
-	}
+	rm.customDescribeTrainingJobSetOutput(&resource{ko})
 	return &resource{ko}, nil
 }
 
@@ -586,7 +616,7 @@ func (rm *resourceManager) sdkCreate(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutput(desired, aws.String(svcsdk.TrainingJobStatusInProgress), ko)
+	rm.customCreateTrainingJobSetOutput(&resource{ko})
 	return &resource{ko}, nil
 }
 

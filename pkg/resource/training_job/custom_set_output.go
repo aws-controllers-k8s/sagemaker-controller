@@ -17,75 +17,50 @@
 package training_job
 
 import (
-	"context"
-
-	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
-	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
+	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
 	"github.com/aws/aws-sdk-go/aws"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
-	corev1 "k8s.io/api/core/v1"
+)
+
+var (
+	trainingJobModifyingStatuses = []string{
+		svcsdk.TrainingJobStatusInProgress,
+		svcsdk.TrainingJobStatusStopping,
+	}
+	ruleModifyingStatuses = []string{
+		svcsdk.RuleEvaluationStatusInProgress,
+		svcsdk.RuleEvaluationStatusStopping,
+	}
+	resourceName = resourceGK.Kind
 )
 
 // customDescribeTrainingJobSetOutput sets the resource ResourceSynced condition to False if
-// TrainingJob is being modified by AWS. It has an additional check on the debugger status.
-func (rm *resourceManager) customDescribeTrainingJobSetOutput(
-	ctx context.Context,
-	r *resource,
-	resp *svcsdk.DescribeTrainingJobOutput,
-	ko *svcapitypes.TrainingJob,
-) (*svcapitypes.TrainingJob, error) {
-	trainingJobStatus := resp.TrainingJobStatus
-	debuggerRuleInProgress := false
-	if resp.DebugRuleEvaluationStatuses != nil {
-		for _, rule := range resp.DebugRuleEvaluationStatuses {
-			if rule.RuleEvaluationStatus != nil && *rule.RuleEvaluationStatus == svcsdk.RuleEvaluationStatusInProgress {
-				debuggerRuleInProgress = true
-				rm.customSetOutput(r, aws.String(svcsdk.TrainingJobStatusInProgress), ko)
-				break
-			}
-		}
-	}
-
-	if !debuggerRuleInProgress {
-		rm.customSetOutput(r, trainingJobStatus, ko)
-	}
-
-	return ko, nil
-}
-
-// customSetOutput sets ConditionTypeResourceSynced condition to True or False
-// based on the trainingJobStatus on AWS so the reconciler can determine if a
-// requeue is needed
-func (rm *resourceManager) customSetOutput(
-	r *resource,
-	trainingJobStatus *string,
-	ko *svcapitypes.TrainingJob,
-) {
-	if trainingJobStatus == nil {
+// TrainingJob is being modified by AWS. It checks for debug and profiler rule status in addition to TrainingJobStatus
+func (rm *resourceManager) customDescribeTrainingJobSetOutput(r *resource) {
+	trainingJobStatus := r.ko.Status.TrainingJobStatus
+	// early exit if training job is InProgress
+	if trainingJobStatus != nil && *trainingJobStatus == svcsdk.TrainingJobStatusInProgress {
+		svccommon.SetSyncedCondition(r, trainingJobStatus, &resourceName, &trainingJobModifyingStatuses)
 		return
 	}
 
-	syncConditionStatus := corev1.ConditionUnknown
-	if *trainingJobStatus == svcsdk.TrainingJobStatusCompleted || *trainingJobStatus == svcsdk.TrainingJobStatusStopped || *trainingJobStatus == svcsdk.TrainingJobStatusFailed {
-		syncConditionStatus = corev1.ConditionTrue
-	} else {
-		syncConditionStatus = corev1.ConditionFalse
-	}
-
-	var resourceSyncedCondition *ackv1alpha1.Condition = nil
-	for _, condition := range ko.Status.Conditions {
-		if condition.Type == ackv1alpha1.ConditionTypeResourceSynced {
-			resourceSyncedCondition = condition
-			break
+	for _, rule := range r.ko.Status.DebugRuleEvaluationStatuses {
+		if rule.RuleEvaluationStatus != nil && svccommon.IsModifyingStatus(rule.RuleEvaluationStatus, &ruleModifyingStatuses) {
+			svccommon.SetSyncedCondition(r, rule.RuleEvaluationStatus, aws.String("DebugRule"), &ruleModifyingStatuses)
+			return
 		}
 	}
 
-	if resourceSyncedCondition == nil {
-		resourceSyncedCondition = &ackv1alpha1.Condition{
-			Type: ackv1alpha1.ConditionTypeResourceSynced,
+	for _, rule := range r.ko.Status.ProfilerRuleEvaluationStatuses {
+		if rule.RuleEvaluationStatus != nil && svccommon.IsModifyingStatus(rule.RuleEvaluationStatus, &ruleModifyingStatuses) {
+			svccommon.SetSyncedCondition(r, rule.RuleEvaluationStatus, aws.String("ProfilerRule"), &ruleModifyingStatuses)
+			return
 		}
-		ko.Status.Conditions = append(ko.Status.Conditions, resourceSyncedCondition)
 	}
-	resourceSyncedCondition.Status = syncConditionStatus
 
+	svccommon.SetSyncedCondition(r, trainingJobStatus, &resourceName, &trainingJobModifyingStatuses)
+}
+
+func (rm *resourceManager) customCreateTrainingJobSetOutput(r *resource) {
+	svccommon.SetSyncedCondition(r, aws.String(svcsdk.TrainingJobStatusInProgress), &resourceName, &trainingJobModifyingStatuses)
 }

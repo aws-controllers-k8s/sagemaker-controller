@@ -1,6 +1,4 @@
 operations:
-  DescribeTrainingJob:
-    set_output_custom_method_name: customDescribeTrainingJobSetOutput
   StopTrainingJob:
     operation_type: Delete
     resource_name: TrainingJob
@@ -169,7 +167,9 @@ resources:
       delta_pre_compare:
         code: customSetDefaults(a, b)
       sdk_create_post_set_output:
-        code: rm.customSetOutput(desired, aws.String(svcsdk.TrainingJobStatusInProgress), ko)
+        code: rm.customCreateTrainingJobSetOutput(&resource{ko})
+      sdk_read_one_post_set_output:
+        code: rm.customDescribeTrainingJobSetOutput(&resource{ko})
       sdk_delete_pre_build_request:
         template_path: training_job/sdk_delete_pre_build_request.go.tpl
     fields:
@@ -191,7 +191,17 @@ resources:
         is_read_only: true
         from:
           operation: DescribeTrainingJob
-          path: DebugRuleEvaluationStatuses 
+          path: DebugRuleEvaluationStatuses
+      ProfilerRuleEvaluationStatuses:
+        is_read_only: true
+        from:
+          operation: DescribeTrainingJob
+          path: ProfilerRuleEvaluationStatuses
+      ModelArtifacts:
+        is_read_only: true
+        from:
+          operation: DescribeTrainingJob
+          path: ModelArtifacts
       FailureReason:
         is_read_only: true
         print:

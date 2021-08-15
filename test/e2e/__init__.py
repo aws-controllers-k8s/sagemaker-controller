@@ -172,3 +172,65 @@ def assert_tags_in_sync(resource_arn, resource_tags):
     # SageMaker returns tags with Key,Value while ACK returns key,value
     response_tags = [{"key": d["Key"], "value": d["Value"]} for d in response_tags]
     TestCase().assertCountEqual(response_tags, resource_tags)
+
+
+def get_sagemaker_training_job(training_job_name: str):
+    try:
+        training_job = sagemaker_client().describe_training_job(
+            TrainingJobName=training_job_name
+        )
+        return training_job
+    except botocore.exceptions.ClientError as error:
+        logging.error(
+            f"SageMaker could not find a training job with the name {training_job_name}. Error {error}"
+        )
+        return None
+
+
+def get_training_sagemaker_status(training_job_name: str):
+    training_sm_desc = get_sagemaker_training_job(training_job_name)
+    return training_sm_desc["TrainingJobStatus"]
+
+
+def get_training_resource_status(reference: k8s.CustomResourceReference):
+    resource = k8s.get_resource(reference)
+    assert "trainingJobStatus" in resource["status"]
+    return resource["status"]["trainingJobStatus"]
+
+
+def wait_resource_training_status(
+        reference: k8s.CustomResourceReference,
+        expected_status: str,
+        wait_periods: int = 30,
+        period_length: int = 30,
+    ):
+        return wait_for_status(
+            expected_status,
+            wait_periods,
+            period_length,
+            get_training_resource_status,
+            reference,
+        )
+
+def wait_sagemaker_training_status(
+    training_job_name,
+    expected_status: str,
+    wait_periods: int = 30,
+    period_length: int = 30,
+):
+    return wait_for_status(
+        expected_status,
+        wait_periods,
+        period_length,
+        get_training_sagemaker_status,
+        training_job_name,
+    )
+
+def assert_training_status_in_sync(
+    training_job_name, reference, expected_status
+):
+    assert (
+        wait_sagemaker_training_status(training_job_name, expected_status)
+        == wait_resource_training_status(reference, expected_status)
+        == expected_status
+    )
