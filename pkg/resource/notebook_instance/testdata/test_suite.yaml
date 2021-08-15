@@ -95,9 +95,52 @@ tests:
         invoke: Delete
         expect:
           error: "NotebookInstance in Deleting state cannot be modified or deleted."
-      # - name: "Delete=Pending"
+      - name: "Delete=Pending"
+        description: "This test checks if the Notebook requeues while in pending state"
+        given:
+          desired_state: "notebook_instance/v1alpha1/input/nb_delete_pending_input.yaml"
+        invoke: Delete
+        expect:
+          error: "NotebookInstance in Pending state cannot be modified or deleted."
+      - name: "Delete=Stopping"
+        description: "This test checks if the Notebook requeues while stopping"
+        given:
+          desired_state: "notebook_instance/v1alpha1/input/nb_delete_stopping_input.yaml"
+        invoke: Delete
+        expect:
+          error: "NotebookInstance in Stopping state cannot be modified or deleted."
+      - name: "Delete=Updating"
+        description: "This test checks if the Notebook requeues while updating"
+        given:
+          desired_state: "notebook_instance/v1alpha1/input/nb_delete_updating_input.yaml"
+        invoke: Delete
+        expect:
+          error: "NotebookInstance in Updating state cannot be modified or deleted."
       # - name: "Delete=Stopped"
-      # - name: "Delete=Updating"
+      #   description: "This test checks if the Notebook reques right after making the delete call."
+      #   given:
+      #     desired_state: "notebook_instance/v1alpha1/input/nb_delete_stopped_input.yaml"
+      #     svc_api:
+      #       - operation: DeleteNotebookInstanceWithContext
+      #       - operation: DescribeNotebookInstanceWithContext
+      #   invoke: Delete
+      #   expect:
+      #     error: "NotebookInstance is deleting."
+      #     output_fixture: "notebook_instance/create/nb_create_resp.json"
+      
+      # - name: "Delete=Completely Deleted"
+      #   description: "This test checks if the Notebook completely deletes"
+      #   given:
+      #     desired_state: "notebook_instance/v1alpha1/input/nb_delete_stopped_input.yaml"
+      #     svc_api:
+      #       - operation: DeleteNotebookInstanceWithContext
+      #       - operation: DescribeNotebookInstanceWithContext
+      #   invoke: Delete
+      #   expect:
+      #     error: "NotebookInstance is deleting."
+      #     output_fixture: "notebook_instance/create/nb_create_resp.json"
+      
+      #TODO: Add tests for failed delete and failed stop
 
       
 

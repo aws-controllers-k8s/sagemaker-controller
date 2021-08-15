@@ -13,7 +13,7 @@ status:
     ownerAccountID: ""
   conditions:
   - lastTransitionTime: "0001-01-01T00:00:00Z"
-    message: NotebookInstance is in Stopped status.
-    status: "True"
+    message: NotebookInstance is in Stopping status.
+    status: "False"
     type: ACK.ResourceSynced
-  notebookInstanceStatus: Stopped
+  notebookInstanceStatus: Stopping

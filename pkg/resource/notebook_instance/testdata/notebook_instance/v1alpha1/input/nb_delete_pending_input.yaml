@@ -5,5 +5,15 @@ metadata:
 spec:
   instanceType: ml.t2.medium
   notebookInstanceName: test
-  roleARN: arn:aws:iam::475866477710:role/service-role/AmazonSageMakerServiceCatalogProductsUseRole
+  roleARN: arn:aws:iam::1234:role/service-role/AmazonSageMakerServiceCatalogProductsUseRole
   volumeSizeInGB: 8
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-east-2:1234:notebook-instance/test
+    ownerAccountID: ""
+  conditions:
+  - lastTransitionTime: "0001-01-01T00:00:00Z"
+    message: NotebookInstance is in Pending status.
+    status: "False"
+    type: ACK.ResourceSynced
+  notebookInstanceStatus: Pending

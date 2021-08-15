@@ -5,7 +5,7 @@ metadata:
 spec:
   instanceType: ml.t2.medium
   notebookInstanceName: test
-  roleARN: arn:aws:iam::475866477710:role/service-role/AmazonSageMakerServiceCatalogProductsUseRole
+  roleARN: arn:aws:iam::1234:role/service-role/AmazonSageMakerServiceCatalogProductsUseRole
   volumeSizeInGB: 8
 status:
   ackResourceMetadata:
