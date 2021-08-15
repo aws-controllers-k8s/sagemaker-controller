@@ -21,6 +21,7 @@ notebookinstance.sagemaker.services.k8s.aws/my-notebook-instance created
 ```
 ### Update a Notebook Instance
 This commands updates the Notebook Instance with the updated spec provided in my-notebook-instance.yaml. The update command retains the state the controller was previously in. If the update command was called while the controller was in the InService state, it will end up in the InService state after the update. If the update command was called while the controller was in the Stopped/Stopping state, it will end up in the Stopped state after the update.
+Additionally this operator automatically sets the `Disassociate<item>` parameters if the corresponding `<item>` field is empty in the new spec but not empty in the previously applied spec. `<item>` in this case means the following fields: LifecycleConfigName, DefaultCodeRepository, AdditionalCodeRepositories, AcceleratorTypes.
 ```
 $ kubectl apply -f my-notebook-instance.yaml
 notebookinstance.sagemaker.services.k8s.aws/my-notebook-instance configured
