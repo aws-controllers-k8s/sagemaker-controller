@@ -369,7 +369,7 @@ func (rm *resourceManager) sdkUpdate(
 	ko := desired.ko.DeepCopy()
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutputUpdate(ko)
+	rm.customSetOutputUpdate(ko, latest)
 	return &resource{ko}, nil
 }
 
