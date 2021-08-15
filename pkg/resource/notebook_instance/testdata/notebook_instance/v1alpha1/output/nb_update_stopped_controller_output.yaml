@@ -1,16 +1,20 @@
 apiVersion: sagemaker.services.k8s.aws/v1alpha1
 kind: NotebookInstance
 metadata:
+  creationTimestamp: null
   name: test
 spec:
   instanceType: ml.t2.medium
   notebookInstanceName: test
   roleARN: arn:aws:iam::1234:role/service-role/AmazonSageMakerServiceCatalogProductsUseRole
-  volumeSizeInGB: 8
+  volumeSizeInGB: 9
 status:
   ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-east-2:1234:notebook-instance/test
     ownerAccountID: ""
   conditions:
-  - message: The notebook instance name must start with an alphanumeric character.
-    status: "True"
-    type: ACK.Terminal
+  - lastTransitionTime: "0001-01-01T00:00:00Z"
+    reason: Notebook is currenty updating
+    status: "False"
+    type: ACK.ResourceSynced
+  stoppedByControllerMETA: UpdateTriggered
