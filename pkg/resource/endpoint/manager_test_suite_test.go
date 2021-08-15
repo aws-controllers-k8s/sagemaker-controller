@@ -16,20 +16,20 @@ package endpoint
 import (
 	"errors"
 	"fmt"
-	
-	mocksvcsdkapi "github.com/aws-controllers-k8s/sagemaker-controller/test/mocks/aws-sdk-go/sagemaker"
+
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
-	"github.com/ghodss/yaml"
-	"github.com/aws-controllers-k8s/sagemaker-controller/pkg/testutil"
+	ackmetrics "github.com/aws-controllers-k8s/runtime/pkg/metrics"
 	acktypes "github.com/aws-controllers-k8s/runtime/pkg/types"
+	"github.com/aws-controllers-k8s/sagemaker-controller/pkg/testutil"
+	mocksvcsdkapi "github.com/aws-controllers-k8s/sagemaker-controller/test/mocks/aws-sdk-go/sagemaker"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	"github.com/ghodss/yaml"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
-	"path/filepath"
-	"testing"
-	ctrlrtzap "sigs.k8s.io/controller-runtime/pkg/log/zap"
-	ackmetrics "github.com/aws-controllers-k8s/runtime/pkg/metrics"
 	"go.uber.org/zap/zapcore"
+	"path/filepath"
+	ctrlrtzap "sigs.k8s.io/controller-runtime/pkg/log/zap"
+	"testing"
 )
 
 // provideResourceManagerWithMockSDKAPI accepts MockSageMakerAPI and returns pointer to resourceManager
@@ -53,12 +53,12 @@ func provideResourceManagerWithMockSDKAPI(mockSageMakerAPI *mocksvcsdkapi.SageMa
 
 // TestEndpointTestSuite runs the test suite for endpoint
 func TestEndpointTestSuite(t *testing.T) {
-     	defer func() {
-     	   if r := recover(); r != nil {
-     	      fmt.Println(testutil.RecoverPanicString, r)
-	      t.Fail()
-     	   }
-        }()
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println(testutil.RecoverPanicString, r)
+			t.Fail()
+		}
+	}()
 	var ts = testutil.TestSuite{}
 	testutil.LoadFromFixture(filepath.Join("testdata", "test_suite.yaml"), &ts)
 	var delegate = testRunnerDelegate{t: t}
@@ -91,7 +91,7 @@ func (d *testRunnerDelegate) EmptyServiceAPIOutput(apiName string) (interface{},
 	switch apiName {
 	case "CreateEndpointWithContext":
 		var output svcsdk.CreateEndpointOutput
-	    	return &output, nil
+		return &output, nil
 	case "DeleteEndpointWithContext":
 		var output svcsdk.DeleteEndpointOutput
 		return &output, nil

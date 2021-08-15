@@ -7367,13 +7367,13 @@ func (in *NotebookInstanceStatus) DeepCopyInto(out *NotebookInstanceStatus) {
 		*out = new(string)
 		**out = **in
 	}
-	if in.NotebookInstanceURL != nil {
-		in, out := &in.NotebookInstanceURL, &out.NotebookInstanceURL
+	if in.URL != nil {
+		in, out := &in.URL, &out.URL
 		*out = new(string)
 		**out = **in
 	}
-	if in.StoppedByAck != nil {
-		in, out := &in.StoppedByAck, &out.StoppedByAck
+	if in.StoppedByControllerMETA != nil {
+		in, out := &in.StoppedByControllerMETA, &out.StoppedByControllerMETA
 		*out = new(string)
 		**out = **in
 	}

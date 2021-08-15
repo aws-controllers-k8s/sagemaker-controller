@@ -20,15 +20,15 @@ import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/ghodss/yaml"
 	"io/ioutil"
-	"path"
-	"strings"
 	"os"
 	"os/exec"
+	"path"
+	"strings"
 )
 
 var (
-	TestDataDirectory = "testdata"
-	DefaultTimestamp = "0001-01-01T00:00:00Z"
+	TestDataDirectory      = "testdata"
+	DefaultTimestamp       = "0001-01-01T00:00:00Z"
 	ReplaceTimestampRegExp = "s/\"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z\"/\"" + DefaultTimestamp + "\"/"
 )
 
@@ -67,72 +67,72 @@ func CreateAWSError(awsError ServiceAPIError) awserr.RequestFailure {
 // Checks to see if the contents of a given yaml file, with name stored
 // in expectation, matches the given actualYamlByteArray.
 func IsYamlEqual(expectation *string, actualYamlByteArray *[]byte) bool {
-     	// Get the file name of the expected yaml.
+	// Get the file name of the expected yaml.
 	expectedYamlFileName := TestDataDirectory + "/" + *expectation
 
 	// Build a tmp file for the actual yaml.
 	actualYamlFileName := buildTmpFile("actualYaml", *actualYamlByteArray)
 	defer os.Remove(actualYamlFileName)
 	if "" == actualYamlFileName {
-	  fmt.Printf("Could not create temporary actual file.\n")
-	  return false
+		fmt.Printf("Could not create temporary actual file.\n")
+		return false
 	}
 
 	// Replace Timestamps that would show up as different.
 	_, err := exec.Command("sed", "-r", "-i", ReplaceTimestampRegExp, actualYamlFileName).Output()
 	if isExecCommandError(err) {
-	    return false
+		return false
 	}
-	
-	output,err := exec.Command("diff", "-c", expectedYamlFileName, actualYamlFileName).Output()
+
+	output, err := exec.Command("diff", "-c", expectedYamlFileName, actualYamlFileName).Output()
 	if isExecCommandError(err) {
-	   return false
+		return false
 	}
 
 	if len(output) > 0 {
-	   actualOutput,err := exec.Command("cat", actualYamlFileName).Output()
-	   if isExecCommandError(err) {
-	      return false
-	   }
-	   fmt.Printf("\nExpected Yaml File Name: " + expectedYamlFileName + "\n")
-	   fmt.Printf("\nActual Output Yaml:\n" + string(actualOutput) + "\n")
-	   fmt.Printf("Diff From Expected:\n" + string(output) + "\n")
-	   return false
+		actualOutput, err := exec.Command("cat", actualYamlFileName).Output()
+		if isExecCommandError(err) {
+			return false
+		}
+		fmt.Printf("\nExpected Yaml File Name: " + expectedYamlFileName + "\n")
+		fmt.Printf("\nActual Output Yaml:\n" + string(actualOutput) + "\n")
+		fmt.Printf("Diff From Expected:\n" + string(output) + "\n")
+		return false
 	}
 	return true
 }
 
 func buildTmpFile(fileNameBase string, contents []byte) string {
-     newTmpFile, err := ioutil.TempFile(TestDataDirectory, fileNameBase)
-     if err != nil {
-        fmt.Println(err)
-	return ""
-     }
-     if _, err := newTmpFile.Write(contents); err != nil {
-        fmt.Println(err)
-	return ""
-     }
-     if err := newTmpFile.Close(); err != nil {
-        fmt.Println(err)
-	return ""
-     }		
-     return newTmpFile.Name()
+	newTmpFile, err := ioutil.TempFile(TestDataDirectory, fileNameBase)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	if _, err := newTmpFile.Write(contents); err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	if err := newTmpFile.Close(); err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	return newTmpFile.Name()
 }
 
 // isExecCommandError returns true if an error
 // that is not an ExitError is found.
 func isExecCommandError(err error) bool {
-     if err == nil {
-     	return false
-     }
-     switch err.(type) {
+	if err == nil {
+		return false
+	}
+	switch err.(type) {
 	case *exec.ExitError:
-	       // ExitError is expected.
-	       return false
+		// ExitError is expected.
+		return false
 	default:
-	       // Couldn't run diff.
-	       fmt.Printf("Exec Command Error: ")
-	       fmt.Println(err)
-	       return true
-     }
+		// Couldn't run diff.
+		fmt.Printf("Exec Command Error: ")
+		fmt.Println(err)
+		return true
+	}
 }

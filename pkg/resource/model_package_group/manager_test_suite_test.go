@@ -17,38 +17,38 @@ import (
 	"errors"
 	"fmt"
 
-	mocksvcsdkapi "github.com/aws-controllers-k8s/sagemaker-controller/test/mocks/aws-sdk-go/sagemaker"
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
-	"github.com/ghodss/yaml"
-	"github.com/aws-controllers-k8s/sagemaker-controller/pkg/testutil"
+	ackmetrics "github.com/aws-controllers-k8s/runtime/pkg/metrics"
 	acktypes "github.com/aws-controllers-k8s/runtime/pkg/types"
+	"github.com/aws-controllers-k8s/sagemaker-controller/pkg/testutil"
+	mocksvcsdkapi "github.com/aws-controllers-k8s/sagemaker-controller/test/mocks/aws-sdk-go/sagemaker"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	"github.com/ghodss/yaml"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
-	"path/filepath"
-	"testing"
-	ctrlrtzap "sigs.k8s.io/controller-runtime/pkg/log/zap"
-	ackmetrics "github.com/aws-controllers-k8s/runtime/pkg/metrics"
 	"go.uber.org/zap/zapcore"
+	"path/filepath"
+	ctrlrtzap "sigs.k8s.io/controller-runtime/pkg/log/zap"
+	"testing"
 )
 
 // provideResourceManagerWithMockSDKAPI accepts MockSageMakerAPI and returns pointer to resourceManager
 // the returned resourceManager is configured to use mockapi api.
 func provideResourceManagerWithMockSDKAPI(mockSageMakerAPI *mocksvcsdkapi.SageMakerAPI) *resourceManager {
-     zapOptions := ctrlrtzap.Options{
-     	    Development: true,
-	    Level:       zapcore.InfoLevel,
-     }
-     fakeLogger := ctrlrtzap.New(ctrlrtzap.UseFlagOptions(&zapOptions))
-     return &resourceManager{
-     	    rr:           nil,
-	    awsAccountID: "",
-	    awsRegion:    "",
-	    sess:         nil,
-	    sdkapi:       mockSageMakerAPI,
-	    log:          fakeLogger,
-	    metrics:      ackmetrics.NewMetrics("sagemaker"),
-     }
+	zapOptions := ctrlrtzap.Options{
+		Development: true,
+		Level:       zapcore.InfoLevel,
+	}
+	fakeLogger := ctrlrtzap.New(ctrlrtzap.UseFlagOptions(&zapOptions))
+	return &resourceManager{
+		rr:           nil,
+		awsAccountID: "",
+		awsRegion:    "",
+		sess:         nil,
+		sdkapi:       mockSageMakerAPI,
+		log:          fakeLogger,
+		metrics:      ackmetrics.NewMetrics("sagemaker"),
+	}
 }
 
 // TestModelPackageGroupTestSuite runs the test suite for model package group
