@@ -102,6 +102,12 @@ func (d *testRunnerDelegate) EmptyServiceAPIOutput(apiName string) (interface{},
 	case "UpdateNotebookInstanceWithContext":
 		var output svcsdk.UpdateNotebookInstanceOutput
 		return &output, nil
+	case "StartNotebookInstance":
+		var output svcsdk.StartNotebookInstanceOutput
+		return &output, nil
+	case "StopNotebookInstance":
+		var output svcsdk.StopNotebookInstanceOutput
+		return &output, nil
 	}
 	return nil, errors.New(fmt.Sprintf("no matching API name found for: %s", apiName))
 }
