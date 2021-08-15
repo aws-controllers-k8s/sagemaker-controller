@@ -172,6 +172,14 @@ class TestNotebookInstance:
             == "UpdatePending"
         )
 
+        self._assert_notebook_status_in_sync(
+            notebook_instance_name, reference, "Updating"
+        )
+        latest_notebook_resource = k8s.get_resource(reference)
+        assert (
+            latest_notebook_resource["status"]["stoppedByControllerMETA"] == "UpdateTriggered"
+        )
+
         # wait for the resource to go to the InService state and make sure the operator is synced with sagemaker.
         self._assert_notebook_status_in_sync(
             notebook_instance_name, reference, "InService"
