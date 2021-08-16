@@ -642,8 +642,6 @@ resources:
         - InvalidAction
         - UnrecognizedClientException
     hooks:
-      sdk_read_one_pre_set_output:
-        template_path: notebook_instance/sdk_read_one_pre_set_output.go.tpl
       sdk_read_one_post_set_output: 
         template_path: notebook_instance/sdk_read_one_post_set_output.go.tpl
       delta_pre_compare:
@@ -671,7 +669,7 @@ resources:
         from:
           operation: DescribeNotebookInstance
           path: Url
-      stoppedByControllerMETA:
+      stoppedByControllerMetadata:
         is_read_only: true
         from:
           operation: DescribeNotebookInstance
