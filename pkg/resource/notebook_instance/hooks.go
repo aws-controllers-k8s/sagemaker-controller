@@ -4,13 +4,11 @@ import (
 	"context"
 	"errors"
 
-	ackcond "github.com/aws-controllers-k8s/runtime/pkg/condition"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
 	"github.com/aws/aws-sdk-go/aws"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
-	corev1 "k8s.io/api/core/v1"
 )
 
 // Note: modifyingStatuses are all the statuses where the NotebookInstance requeues.
@@ -56,21 +54,20 @@ func (rm *resourceManager) customSetOutput(r *resource) {
 // CustomSetOutputDescribe has three functions
 // 1. Setting the resource synced condition during sdk.Find
 // 2. Starting the Notebook if the StoppedByController field is set to UpdateTriggerd
-// 3. Reseting the StoppedByControllerMetadata field.
-func (rm *resourceManager) customSetOutputDescribe(r *resource,
-	ko *svcapitypes.NotebookInstance) error {
-	notebookStatus := *ko.Status.NotebookInstanceStatus // Get the Notebook State
+// 3. Reseting the StoppedByControllerMetadata field if the Notebook starts.
+func (rm *resourceManager) customSetOutputDescribe(r *resource) error {
+	notebookStatus := *r.ko.Status.NotebookInstanceStatus // Get the Notebook State
 	if notebookStatus == svcsdk.NotebookInstanceStatusStopped {
-		if ko.Status.StoppedByControllerMetadata != nil && *ko.Status.StoppedByControllerMetadata == "UpdateTriggered" {
+		if r.ko.Status.StoppedByControllerMetadata != nil && *r.ko.Status.StoppedByControllerMetadata == "UpdateTriggered" {
 			err := rm.startNotebookInstance(r)
 			if err != nil {
 				// It's best to not update StoppedByControllerMetadata here because the controller can always try again.
 				return err
 			}
-			ko.Status.StoppedByControllerMetadata = nil
+			r.ko.Status.StoppedByControllerMetadata = nil
 		}
 	}
-	rm.customSetOutput(&resource{ko}) // The resource synced status is set here.
+	rm.customSetOutput(r) // The resource synced status is set here.
 	return nil
 }
 
@@ -80,5 +77,5 @@ func (rm *resourceManager) customSetOutputUpdate(ko *svcapitypes.NotebookInstanc
 	if latest.ko.Status.StoppedByControllerMetadata != nil && *latest.ko.Status.StoppedByControllerMetadata == "UpdatePending" {
 		ko.Status.StoppedByControllerMetadata = aws.String("UpdateTriggered")
 	}
-	ackcond.SetSynced(&resource{ko}, corev1.ConditionFalse, nil, aws.String("Notebook is currenty updating"))
+	svccommon.SetSyncedCondition(&resource{ko}, aws.String(svcsdk.NotebookInstanceStatusUpdating), &resourceName, &modifyingStatuses)
 }

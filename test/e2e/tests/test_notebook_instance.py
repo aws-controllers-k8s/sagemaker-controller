@@ -116,19 +116,27 @@ class TestNotebookInstance:
         )
 
     def _assert_notebook_status_in_sync(
-        self, notebook_instance_name, reference, expected_status
+        self,
+        notebook_instance_name,
+        reference,
+        expected_status,
+        wait_periods=30,
+        period_length=30,
     ):
         assert (
             self._wait_sagemaker_notebook_status(
-                notebook_instance_name, expected_status
+                notebook_instance_name, expected_status, wait_periods, period_length
             )
-            == self._wait_resource_notebook_status(reference, expected_status)
+            == self._wait_resource_notebook_status(
+                reference, expected_status, wait_periods, period_length
+            )
             == expected_status
         )
 
     def create_notebook_test(self, notebook_instance):
-        (reference, resource, spec) = notebook_instance
+        (reference, resource, _) = notebook_instance
         assert k8s.get_resource_exists(reference)
+        assert k8s.get_resource_arn(resource) is not None
 
         # Create the resource and verify that its Pending
         notebook_instance_name = resource["spec"].get("notebookInstanceName", None)
@@ -153,7 +161,6 @@ class TestNotebookInstance:
         notebook_instance_name = resource["spec"].get("notebookInstanceName", None)
         volumeSizeInGB = 7
 
-        # Update test
         spec["spec"]["volumeSizeInGB"] = volumeSizeInGB
         k8s.patch_custom_resource(reference, spec)
 
@@ -161,18 +168,19 @@ class TestNotebookInstance:
             notebook_instance_name, reference, "Stopping"
         )
         # TODO: Replace with annotations once runtime can update annotations in readOne.
-        latest_notebook_resource = k8s.get_resource(reference)
-        assert (
-            latest_notebook_resource["status"]["stoppedByControllerMetadata"] == "UpdatePending"
-        )
+        resource = k8s.get_resource(reference)
+        assert resource["status"]["stoppedByControllerMetadata"] == "UpdatePending"
 
         self._assert_notebook_status_in_sync(
-            notebook_instance_name, reference, "Updating"
+            notebook_instance_name,
+            reference,
+            "Updating",
+            wait_periods=40,
+            period_length=15,
         )
-        latest_notebook_resource = k8s.get_resource(reference)
-        assert (
-            latest_notebook_resource["status"]["stoppedByControllerMetadata"] == "UpdateTriggered"
-        )
+        resource = k8s.get_resource(reference)
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
+        assert resource["status"]["stoppedByControllerMetadata"] == "UpdateTriggered"
 
         # wait for the resource to go to the InService state and make sure the operator is synced with sagemaker.
         self._assert_notebook_status_in_sync(
@@ -183,11 +191,10 @@ class TestNotebookInstance:
         notebook_instance_desc = get_notebook_instance(notebook_instance_name)
         assert notebook_instance_desc["VolumeSizeInGB"] == volumeSizeInGB
 
-        latest_notebook_resource = k8s.get_resource(reference)
-        assert latest_notebook_resource["spec"]["volumeSizeInGB"] == volumeSizeInGB
+        resource = k8s.get_resource(reference)
+        assert resource["spec"]["volumeSizeInGB"] == volumeSizeInGB
 
-        # TODO: Replace with annotations once runtime can update annotations in readOne.
-        assert "stoppedByControllerMetadata" not in latest_notebook_resource["status"]
+        assert "stoppedByControllerMetadata" not in resource["status"]
 
     def delete_notebook_test(self, notebook_instance):
         # Delete the k8s resource.
