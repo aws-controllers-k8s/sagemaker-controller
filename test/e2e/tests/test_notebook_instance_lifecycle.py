@@ -100,7 +100,6 @@ class TestNotebookInstanceLifecycleConfig:
             "notebookInstanceLifecycleConfigName", None
         )
         assert notebook_instance_lfc_name is not None
-        # Verifying that its set correctly
         notebook_instance_lfc_desc = get_notebook_instance_lifecycle_config(
             notebook_instance_lfc_name
         )
