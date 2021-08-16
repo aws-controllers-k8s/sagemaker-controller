@@ -33,7 +33,7 @@ DELETE_WAIT_PERIOD = 16
 DELETE_WAIT_LENGTH = 30
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="module")
 def notebook_instance():
     resource_name = random_suffix_name("nb", 32)
     replacements = REPLACEMENT_VALUES.copy()
@@ -163,7 +163,7 @@ class TestNotebookInstance:
         # TODO: Replace with annotations once runtime can update annotations in readOne.
         latest_notebook_resource = k8s.get_resource(reference)
         assert (
-            latest_notebook_resource["status"]["stoppedByControllerMETA"] == "UpdatePending"
+            latest_notebook_resource["status"]["stoppedByControllerMetadata"] == "UpdatePending"
         )
 
         self._assert_notebook_status_in_sync(
@@ -171,7 +171,7 @@ class TestNotebookInstance:
         )
         latest_notebook_resource = k8s.get_resource(reference)
         assert (
-            latest_notebook_resource["status"]["stoppedByControllerMETA"] == "UpdateTriggered"
+            latest_notebook_resource["status"]["stoppedByControllerMetadata"] == "UpdateTriggered"
         )
 
         # wait for the resource to go to the InService state and make sure the operator is synced with sagemaker.
@@ -187,7 +187,7 @@ class TestNotebookInstance:
         assert latest_notebook_resource["spec"]["volumeSizeInGB"] == volumeSizeInGB
 
         # TODO: Replace with annotations once runtime can update annotations in readOne.
-        assert "stoppedByControllerMETA" not in latest_notebook_resource["status"]
+        assert "stoppedByControllerMetadata" not in latest_notebook_resource["status"]
 
     def delete_notebook_test(self, notebook_instance):
         # Delete the k8s resource.

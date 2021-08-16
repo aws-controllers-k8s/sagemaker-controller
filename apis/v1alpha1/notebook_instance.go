@@ -123,7 +123,7 @@ type NotebookInstanceStatus struct {
 	URL *string `json:"url,omitempty"`
 	// The URL that you use to connect to the Jupyter notebook that is running in
 	// your notebook instance.
-	StoppedByControllerMETA *string `json:"stoppedByControllerMETA,omitempty"`
+	StoppedByControllerMetadata *string `json:"stoppedByControllerMetadata,omitempty"`
 }
 
 // NotebookInstance is the Schema for the NotebookInstances API

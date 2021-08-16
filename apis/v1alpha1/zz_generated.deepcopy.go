@@ -7372,8 +7372,8 @@ func (in *NotebookInstanceStatus) DeepCopyInto(out *NotebookInstanceStatus) {
 		*out = new(string)
 		**out = **in
 	}
-	if in.StoppedByControllerMETA != nil {
-		in, out := &in.StoppedByControllerMETA, &out.StoppedByControllerMETA
+	if in.StoppedByControllerMetadata != nil {
+		in, out := &in.StoppedByControllerMetadata, &out.StoppedByControllerMetadata
 		*out = new(string)
 		**out = **in
 	}
