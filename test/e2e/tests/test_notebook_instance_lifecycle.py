@@ -34,7 +34,7 @@ from e2e.replacement_values import REPLACEMENT_VALUES
 from time import sleep
 
 DELETE_WAIT_PERIOD = 16
-DELETE_WAIT_LENGTH = 30
+DELETE_PERIOD_LENGTH = 30
 
 
 @pytest.fixture(scope="module")
@@ -53,7 +53,7 @@ def notebook_instance_lifecycleConfig():
 
     if k8s.get_resource_exists(reference):
         _, deleted = k8s.delete_custom_resource(
-            reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
+            reference, DELETE_WAIT_PERIOD, DELETE_PERIOD_LENGTH
         )
         assert deleted
 
@@ -129,7 +129,7 @@ class TestNotebookInstanceLifecycleConfig:
 
         # Deleting the resource
         _, deleted = k8s.delete_custom_resource(
-            reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
+            reference, DELETE_WAIT_PERIOD, DELETE_PERIOD_LENGTH
         )
         assert deleted is True
         assert (
