@@ -33,6 +33,9 @@ import random
 from e2e.replacement_values import REPLACEMENT_VALUES
 from time import sleep
 
+DELETE_WAIT_PERIOD = 16
+DELETE_WAIT_LENGTH = 30
+
 
 @pytest.fixture(scope="function")
 def notebook_instance_lifecycleConfig():
@@ -49,7 +52,9 @@ def notebook_instance_lifecycleConfig():
     yield (reference, resource, spec)
 
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference, 10, 5)
+        _, deleted = k8s.delete_custom_resource(
+            reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
+        )
         assert deleted
 
 
@@ -69,14 +74,18 @@ def get_notebook_instance_lifecycle_config(notebook_instance_lfc_name: str):
 @service_marker
 @pytest.mark.canary
 class TestNotebookInstanceLifecycleConfig:
-    def wait_until_update(self, reference, previous_modified_time,wait_period=10,wait_time=5):
+    def wait_until_update(
+        self, reference, previous_modified_time, wait_period=10, wait_time=5
+    ):
         for i in range(wait_period):
             resource = k8s.get_resource(reference)
             assert resource is not None
             assert "lastModifiedTime" in resource["status"]
             lastModifiedTime = resource["status"]["lastModifiedTime"]
             d1 = datetime.datetime.strptime(lastModifiedTime, "%Y-%m-%dT%H:%M:%SZ")
-            d2 = datetime.datetime.strptime(previous_modified_time, "%Y-%m-%dT%H:%M:%SZ")
+            d2 = datetime.datetime.strptime(
+                previous_modified_time, "%Y-%m-%dT%H:%M:%SZ"
+            )
             if d1 > d2:
                 return True
             sleep(wait_time)
@@ -107,7 +116,7 @@ class TestNotebookInstanceLifecycleConfig:
             == notebook_instance_lfc_desc["NotebookInstanceLifecycleConfigArn"]
         )
         # We need to keep track of the current time so its best to just do
-        # the update test with the create test. 
+        # the update test with the create test.
         # update content is pip install six
         assert "lastModifiedTime" in resource["status"]
         lastModifiedTime = resource["status"]["lastModifiedTime"]
@@ -119,19 +128,18 @@ class TestNotebookInstanceLifecycleConfig:
 
         resource = k8s.wait_resource_consumed_by_controller(reference)
         assert resource is not None
-        assert (self.wait_until_update(reference, lastModifiedTime) == True)
+        assert self.wait_until_update(reference, lastModifiedTime) == True
 
         # Verifying that an update was successful
         notebook_instance_lfc_desc = get_notebook_instance_lifecycle_config(
             notebook_instance_lfc_name
         )
-        assert (
-            notebook_instance_lfc_desc["OnStart"][0]["Content"]
-            == update_content
-        )
+        assert notebook_instance_lfc_desc["OnStart"][0]["Content"] == update_content
 
         # Deleting the resource
-        _, deleted = k8s.delete_custom_resource(reference, 10, 30)
+        _, deleted = k8s.delete_custom_resource(
+            reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
+        )
         assert deleted is True
         assert (
             get_notebook_instance_lifecycle_config(notebook_instance_lfc_name) is None
