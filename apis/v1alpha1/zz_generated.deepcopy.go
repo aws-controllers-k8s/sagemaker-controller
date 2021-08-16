@@ -9897,6 +9897,22 @@ func (in *TrainingJobStatus) DeepCopyInto(out *TrainingJobStatus) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.ModelArtifacts != nil {
+		in, out := &in.ModelArtifacts, &out.ModelArtifacts
+		*out = new(ModelArtifacts)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.ProfilerRuleEvaluationStatuses != nil {
+		in, out := &in.ProfilerRuleEvaluationStatuses, &out.ProfilerRuleEvaluationStatuses
+		*out = make([]*ProfilerRuleEvaluationStatus, len(*in))
+		for i := range *in {
+			if (*in)[i] != nil {
+				in, out := &(*in)[i], &(*out)[i]
+				*out = new(ProfilerRuleEvaluationStatus)
+				(*in).DeepCopyInto(*out)
+			}
+		}
+	}
 	if in.SecondaryStatus != nil {
 		in, out := &in.SecondaryStatus, &out.SecondaryStatus
 		*out = new(string)
