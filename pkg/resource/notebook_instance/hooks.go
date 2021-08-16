@@ -53,32 +53,32 @@ func (rm *resourceManager) customSetOutput(r *resource) {
 	svccommon.SetSyncedCondition(r, latestStatus, &resourceName, &modifyingStatuses)
 }
 
-// CustomSetOutputDescribe has two functions
+// CustomSetOutputDescribe has three functions
 // 1. Setting the resource synced condition during sdk.Find
 // 2. Starting the Notebook if the StoppedByController field is set to UpdateTriggerd
-// 3. Reseting the StoppedByController field.
+// 3. Reseting the StoppedByControllerMetadata field.
 func (rm *resourceManager) customSetOutputDescribe(r *resource,
 	ko *svcapitypes.NotebookInstance) error {
 	notebookStatus := *ko.Status.NotebookInstanceStatus // Get the Notebook State
 	if notebookStatus == svcsdk.NotebookInstanceStatusStopped {
-		if ko.Status.StoppedByControllerMETA != nil && *ko.Status.StoppedByControllerMETA == "UpdateTriggered" {
+		if ko.Status.StoppedByControllerMetadata != nil && *ko.Status.StoppedByControllerMetadata == "UpdateTriggered" {
 			err := rm.startNotebookInstance(r)
 			if err != nil {
-				//We dont update StoppedByController here because we want it to try to start it again on the next reqeue.
+				// It's best to not update StoppedByControllerMetadata here because the controller can always try again.
 				return err
 			}
-			ko.Status.StoppedByControllerMETA = nil
+			ko.Status.StoppedByControllerMetadata = nil
 		}
 	}
-	rm.customSetOutput(&resource{ko}) // We set the sync status here
+	rm.customSetOutput(&resource{ko}) // The resource synced status is set here.
 	return nil
 }
 
-// customSetOutputUpdate sets the StoppedByController field to UpdateTriggered if it was in UpdatePending before.
+// customSetOutputUpdate sets the StoppedByControllerMeta field to UpdateTriggered if it was in UpdatePending before.
 func (rm *resourceManager) customSetOutputUpdate(ko *svcapitypes.NotebookInstance, latest *resource) {
-	//TODO: Replace the IsUpdating status with an annotation if the runtime can update annotations after a readOne call.
-	if latest.ko.Status.StoppedByControllerMETA != nil && *latest.ko.Status.StoppedByControllerMETA == "UpdatePending" {
-		ko.Status.StoppedByControllerMETA = aws.String("UpdateTriggered")
+	//TODO: Replace the StoppedByControllerMeta status with an annotation if the runtime can update annotations after a readOne call.
+	if latest.ko.Status.StoppedByControllerMetadata != nil && *latest.ko.Status.StoppedByControllerMetadata == "UpdatePending" {
+		ko.Status.StoppedByControllerMetadata = aws.String("UpdateTriggered")
 	}
 	ackcond.SetSynced(&resource{ko}, corev1.ConditionFalse, nil, aws.String("Notebook is currenty updating"))
 }
