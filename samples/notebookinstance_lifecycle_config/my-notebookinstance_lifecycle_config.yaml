@@ -5,6 +5,6 @@ metadata:
 spec:
   notebookInstanceLifecycleConfigName: <YOUR LIFECYCLE CONFIG NAME>
   onStart:
-    - content: ZWNobyAiRW50ZXJpbmcgb25TdGFydCI=
+    - content: ZWNobyAiRW50ZXJpbmcgb25TdGFydCI= #Decodes to echo "Entering onStart"
   onCreate:
-    - content: ZWNobyAiRW50ZXJpbmcgb25DcmVhdGUi
+    - content: ZWNobyAiRW50ZXJpbmcgb25DcmVhdGUi #Decodes to echo "Entering onCreate"
