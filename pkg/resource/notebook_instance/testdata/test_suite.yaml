@@ -25,9 +25,21 @@ tests:
        invoke: Create
        expect:
          latest_state: "notebook_instance/v1alpha1/output/nb_success_after_create.yaml"
-  # - name: "Notebook Instance readOne tests"
-  #   description: "Testing the readOne operation"
-  #   scenarios:
+  - name: "Notebook Instance readOne tests"
+    description: "Testing the readOne operation"
+    scenarios:
+       - name: "ReadOne=AfterCreate"
+         description: "Testing readOne right after create"
+         given: 
+           desired_state: "notebook_instance/v1alpha1/input/nb_readone_after_create_input.yaml"
+           svc_api:
+             - operation: DescribeNotebookInstanceWithContext
+               output_fixture: "notebook_instance/readOne/after_create_resp.json"
+         invoke: ReadOne
+         expect:
+           latest_state: "notebook_instance/v1alpha1/output/nb_readone_after_create_output.yaml"
+         
+
   #     - name: "ReadOne=InServiceNoUpdate"
   #       description: "Testing readOne to see if it will retain the conditions"
   #       given:

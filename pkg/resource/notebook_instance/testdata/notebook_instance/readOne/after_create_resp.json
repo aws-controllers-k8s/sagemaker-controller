@@ -12,7 +12,7 @@
   "NotebookInstanceArn": "arn:aws:sagemaker:us-east-2:1234:notebook-instance/test",
   "NotebookInstanceLifecycleConfigName": null,
   "NotebookInstanceName": "test",
-  "NotebookInstanceStatus": "Deleting",
+  "NotebookInstanceStatus": "Pending",
   "RoleArn": "arn:aws:iam::1234:role/service-role/AmazonSageMakerServiceCatalogProductsUseRole",
   "RootAccess": "Enabled",
   "SecurityGroups": null,
