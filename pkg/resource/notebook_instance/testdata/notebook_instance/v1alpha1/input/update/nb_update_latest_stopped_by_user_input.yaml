@@ -1,6 +1,7 @@
 apiVersion: sagemaker.services.k8s.aws/v1alpha1
 kind: NotebookInstance
 metadata:
+  creationTimestamp: null
   name: test
 spec:
   instanceType: ml.t2.medium
@@ -12,9 +13,8 @@ status:
     arn: arn:aws:sagemaker:us-east-2:1234:notebook-instance/test
     ownerAccountID: ""
   conditions:
-  - lastTransitionTime: "0001-01-01T00:00:00Z"
-    message: NotebookInstance is in Stopping status.
-    status: "False"
+  - lastTransitionTime: null
+    message: NotebookInstance is in Stopped status.
+    status: "True"
     type: ACK.ResourceSynced
-  notebookInstanceStatus: Stopping
-  stoppedByControllerMetadata: UpdatePending
+  notebookInstanceStatus: Stopped

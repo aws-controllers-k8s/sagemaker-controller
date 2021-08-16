@@ -21,4 +21,4 @@ status:
     status: "True"
     type: ACK.Recoverable
   notebookInstanceStatus: InService
-  stoppedByControllerMETA: UpdatePending
+  stoppedByControllerMetadata: UpdatePending

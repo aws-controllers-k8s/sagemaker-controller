@@ -108,7 +108,7 @@ tests:
           latest_state: "notebook_instance/v1alpha1/output/nb_update_InService_output.yaml"
           error: "NotebookInstance is stopping."
       - name: "Update=Stopped--ByController"
-        description: "This test checks if the controller updates"
+        description: "This test checks if the controller updates and sets the StoppedByControllerMetadata status"
         given:
           desired_state: "notebook_instance/v1alpha1/input/update/nb_update_desired_common.yaml"
           latest_state: "notebook_instance/v1alpha1/input/update/nb_update_latest_stopped_controller_input.yaml"
@@ -117,9 +117,18 @@ tests:
         invoke: Update
         expect:
           latest_state: "notebook_instance/v1alpha1/output/nb_update_stopped_controller_output.yaml"
+      - name: "Update=Stopped--ByController"
+        description: "This test checks if the controller updates and does not set the StoppedByControllerMetadata status"
+        given:
+          desired_state: "notebook_instance/v1alpha1/input/update/nb_update_desired_common.yaml"
+          latest_state: "notebook_instance/v1alpha1/input/update/nb_update_latest_stopped_by_user_input.yaml"
+          svc_api:
+            - operation: UpdateNotebookInstanceWithContext 
+        invoke: Update
+        expect:
+          latest_state: "notebook_instance/v1alpha1/output/nb_update_stopped_by_user.yaml"
       
   #     - name: "Update=InvalidInput"
-  #     - name: "Update=InService"
 
   - name: "Notebook Instance delete tests"
     description: "Tests that test the delete operation"
@@ -161,17 +170,18 @@ tests:
         invoke: Delete
         expect:
           error: "NotebookInstance in Updating state cannot be modified or deleted."
-      # - name: "Delete=Stopped"
-      #   description: "This test checks if the Notebook reques right after making the delete call."
-      #   given:
-      #     desired_state: "notebook_instance/v1alpha1/input/nb_delete_stopped_input.yaml"
-      #     svc_api:
-      #       - operation: DeleteNotebookInstanceWithContext
-      #       - operation: DescribeNotebookInstanceWithContext
-      #   invoke: Delete
-      #   expect:
-      #     error: "NotebookInstance is deleting."
-      #     output_fixture: "notebook_instance/create/nb_create_resp.json"
+      - name: "Delete=Stopped"
+        description: "This test checks if the Notebook requeues right after making the delete call."
+        given:
+          desired_state: "notebook_instance/v1alpha1/input/nb_delete_stopped_input.yaml"
+          svc_api:
+            - operation: DeleteNotebookInstanceWithContext
+            - operation: DescribeNotebookInstanceWithContext
+              output_fixture: "notebook_instance/readOne/delete_resp.json"
+        invoke: Delete
+        expect:
+          error: "NotebookInstance is deleting."
+          
       #TODO: Add tests for failed delete and failed stop and complete deletion(once unit test supports that)
 
       

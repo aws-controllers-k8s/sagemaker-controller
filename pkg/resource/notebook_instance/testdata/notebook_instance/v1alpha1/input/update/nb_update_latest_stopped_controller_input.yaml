@@ -18,4 +18,4 @@ status:
     status: "True"
     type: ACK.ResourceSynced
   notebookInstanceStatus: Stopped
-  stoppedByControllerMETA: UpdatePending
+  stoppedByControllerMetadata: UpdatePending

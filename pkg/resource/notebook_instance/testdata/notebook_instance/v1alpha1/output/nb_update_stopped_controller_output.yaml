@@ -17,4 +17,4 @@ status:
     reason: Notebook is currenty updating
     status: "False"
     type: ACK.ResourceSynced
-  stoppedByControllerMETA: UpdateTriggered
+  stoppedByControllerMetadata: UpdateTriggered
