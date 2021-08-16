@@ -257,7 +257,7 @@ func (rm *resourceManager) sdkUpdate(
 
 	rm.setStatusDefaults(ko)
 	//Done because controller finishes reconciling after update.
-	return &resource{ko}, requeueWaitWhileUpdating
+	return nil, requeueWaitWhileUpdating
 	return &resource{ko}, nil
 }
 
