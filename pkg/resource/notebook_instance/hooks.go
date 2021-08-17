@@ -56,7 +56,8 @@ func (rm *resourceManager) customSetOutput(r *resource) {
 // 2. Starting the Notebook if the StoppedByController field is set to UpdateTriggerd
 // 3. Reseting the StoppedByControllerMetadata field if the Notebook starts.
 func (rm *resourceManager) customSetOutputDescribe(r *resource) error {
-	notebookStatus := *r.ko.Status.NotebookInstanceStatus // Get the Notebook State
+	// Get the Notebook State
+	notebookStatus := *r.ko.Status.NotebookInstanceStatus
 	if notebookStatus == svcsdk.NotebookInstanceStatusStopped {
 		if r.ko.Status.StoppedByControllerMetadata != nil && *r.ko.Status.StoppedByControllerMetadata == "UpdateTriggered" {
 			err := rm.startNotebookInstance(r)
@@ -67,7 +68,8 @@ func (rm *resourceManager) customSetOutputDescribe(r *resource) error {
 			r.ko.Status.StoppedByControllerMetadata = nil
 		}
 	}
-	rm.customSetOutput(r) // The resource synced status is set here.
+	// The resource synced status is set here.
+	rm.customSetOutput(r)
 	return nil
 }
 
