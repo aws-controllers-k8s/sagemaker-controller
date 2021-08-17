@@ -175,8 +175,6 @@ class TestNotebookInstance:
             notebook_instance_name,
             reference,
             "Updating",
-            wait_periods=40,
-            period_length=15,
         )
         resource = k8s.get_resource(reference)
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
