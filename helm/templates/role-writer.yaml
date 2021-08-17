@@ -33,6 +33,8 @@ rules:
 
   - monitoringschedules
 
+  - notebookinstances
+
   - processingjobs
 
   - trainingjobs
@@ -62,6 +64,7 @@ rules:
   - modelpackagegroups
   - modelqualityjobdefinitions
   - monitoringschedules
+  - notebookinstances
   - processingjobs
   - trainingjobs
   - transformjobs
