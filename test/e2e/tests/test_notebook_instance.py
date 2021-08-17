@@ -118,19 +118,27 @@ class TestNotebookInstance:
         )
 
     def _assert_notebook_status_in_sync(
-        self, notebook_instance_name, reference, expected_status
+        self,
+        notebook_instance_name,
+        reference,
+        expected_status,
+        wait_periods=30,
+        period_length=30,
     ):
         assert (
             self._wait_sagemaker_notebook_status(
-                notebook_instance_name, expected_status
+                notebook_instance_name, expected_status, wait_periods, period_length
             )
-            == self._wait_resource_notebook_status(reference, expected_status)
+            == self._wait_resource_notebook_status(
+                reference, expected_status, wait_periods, period_length
+            )
             == expected_status
         )
 
     def create_notebook_test(self, notebook_instance):
-        (reference, resource, spec) = notebook_instance
+        (reference, resource, _) = notebook_instance
         assert k8s.get_resource_exists(reference)
+        assert k8s.get_resource_arn(resource) is not None
 
         # Create the resource and verify that its Pending
         notebook_instance_name = resource["spec"].get("notebookInstanceName", None)
@@ -156,7 +164,6 @@ class TestNotebookInstance:
         volumeSizeInGB = 7
         additionalCodeRepositories = ["https://github.com/aws-controllers-k8s/runtime"]
 
-        # Update test
         spec["spec"]["volumeSizeInGB"] = volumeSizeInGB
         # TODO: Use del spec["spec"]["defaultCodeRepository"] instead once ack.testinfra supports replacement.
         # Patch only supports updating spec fields instead of fully getting rid of them.
@@ -168,18 +175,8 @@ class TestNotebookInstance:
             notebook_instance_name, reference, "Stopping"
         )
         # TODO: Replace with annotations once runtime can update annotations in readOne.
-        latest_notebook_resource = k8s.get_resource(reference)
-        assert (
-            latest_notebook_resource["status"]["stoppedByControllerMetadata"] == "UpdatePending"
-        )
-
-        self._assert_notebook_status_in_sync(
-            notebook_instance_name, reference, "Updating"
-        )
-        latest_notebook_resource = k8s.get_resource(reference)
-        assert (
-            latest_notebook_resource["status"]["stoppedByControllerMetadata"] == "UpdateTriggered"
-        )
+        resource = k8s.get_resource(reference)
+        assert resource["status"]["stoppedByControllerMetadata"] == "UpdatePending"
 
         # wait for the resource to go to the InService state and make sure the operator is synced with sagemaker.
         self._assert_notebook_status_in_sync(
@@ -190,8 +187,8 @@ class TestNotebookInstance:
         notebook_instance_desc = get_notebook_instance(notebook_instance_name)
         assert notebook_instance_desc["VolumeSizeInGB"] == volumeSizeInGB
 
-        latest_notebook_resource = k8s.get_resource(reference)
-        assert latest_notebook_resource["spec"]["volumeSizeInGB"] == volumeSizeInGB
+        resource = k8s.get_resource(reference)
+        assert resource["spec"]["volumeSizeInGB"] == volumeSizeInGB
 
         assert "DefaultCodeRepository" not in notebook_instance_desc
         assert "defaultCodeRepository" not in latest_notebook_resource["spec"]
@@ -199,7 +196,6 @@ class TestNotebookInstance:
         assert latest_notebook_resource["spec"]["additionalCodeRepositories"] == additionalCodeRepositories
         assert notebook_instance_desc["AdditionalCodeRepositories"] == additionalCodeRepositories
 
-        # TODO: Replace with annotations once runtime can update annotations in readOne.
         assert "stoppedByControllerMetadata" not in latest_notebook_resource["status"]
 
     def delete_notebook_test(self, notebook_instance):
