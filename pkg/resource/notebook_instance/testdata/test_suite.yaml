@@ -48,49 +48,85 @@ tests:
          invoke: ReadOne
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_deleting.yaml"
+      #  - name: "ReadOne=Fail"
+      #    description: "Testing readOne when deleting"
+      #    given: 
+      #      desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_deleting.yaml"
+      #      svc_api:
+      #        - operation: DescribeNotebookInstanceWithContext
+      #          output_fixture: "notebook_instance/readOne/readone_deleting.json"
+      #    invoke: ReadOne
+      #    expect:
+      #      latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_deleting.yaml"
+       - name: "ReadOne=FailedState"
+         description: "Testing how readone handles the Failed State, it should have a failure reason."
+         given: 
+           desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_failed_state.yaml"
+           svc_api:
+             - operation: DescribeNotebookInstanceWithContext
+               output_fixture: "notebook_instance/readOne/readone_failed_state.json"
+         invoke: ReadOne
+         expect:
+           latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_failed_state.yaml"
+       - name: "ReadOne=InService"
+         description: "Testing how readone handles the InService state"
+         given: 
+           desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_InService.yaml"
+           svc_api:
+             - operation: DescribeNotebookInstanceWithContext
+               output_fixture: "notebook_instance/readOne/readone_InService.json"
+         invoke: ReadOne
+         expect:
+           latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_InService.yaml"
+       - name: "ReadOne=StoppedAfterUpdateACK"
+         description: "Testing how readone handles the Stopped state when stopped by ack for update"
+         given: 
+           desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopped_after_update_ack.yaml"
+           svc_api:
+             - operation: DescribeNotebookInstanceWithContext
+               output_fixture: "notebook_instance/readOne/readone_stopped_after_update_ack.json"
+             - operation: StartNotebookInstance
+         invoke: ReadOne
+         expect:
+           latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_stopped_after_update.yaml"
+       - name: "ReadOne=StoppedAfterUpdateHuman"
+         description: "Testing how readone handles the Stopped state when stopped by human for update"
+         given: 
+           desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopped_after_update_human.yaml"
+           svc_api:
+             - operation: DescribeNotebookInstanceWithContext
+               output_fixture: "notebook_instance/readOne/readone_stopped_after_update_ack.json"
+         invoke: ReadOne
+         expect:
+           latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_stopped_after_update.yaml"
+       - name: "ReadOne=StoppedBeforeUpdateACK"
+         description: "Testing how readone handles the Stopped state when it's stopped right before an update."
+         given: 
+           desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopped_before_update_ack.yaml"
+           svc_api:
+             - operation: DescribeNotebookInstanceWithContext
+               output_fixture: "notebook_instance/readOne/readone_stopped_before_update_ack.json"
+         invoke: ReadOne
+         expect:
+           latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_stopped_before_update_ack.yaml"
+      #  - name: "ReadOne=StartFail"
+      #    description: "Testing how readone handles the Stopped state when it's stopped right before an update."
+      #    given: 
+      #      desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopped_start_failed.yaml"
+      #      svc_api:
+      #        - operation: DescribeNotebookInstanceWithContext
+      #          output_fixture: "notebook_instance/readOne/readone_stopped_start_failed.json"
+      #        - operation: StartNotebookInstance
+      #          erorr: 
+      #            code: ServiceUnavailable
+      #            message: "Server down"
+      #    invoke: ReadOne
+      #    expect:
+      #      latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_stopped_start_failed.yaml"
+      #      erorr: 
+      #       code: ServiceUnavailable
+      #       message: "Server down"
          
-
-  #     - name: "ReadOne=InServiceNoUpdate"
-  #       description: "Testing readOne to see if it will retain the conditions"
-  #       given:
-  #         desired_state: "notebook_instance/v1alpha1/input/nb_success_before_create.yaml"
-  #         svc_api:
-  #          - operation: CreateNotebookInstanceWithContext
-  #            output_fixture: "notebook_instance/create/nb_create_resp.json"
-  #       invoke: ReadOne
-  #       expect:
-  #         latest_state: "notebook_instance/v1alpha1/output/nb_success_after_create.yaml"
-      
-  #     - name: "ReadOne=AfterUpdateStop"
-  #       description: "Testing to see if the NotebookInstance will keep the Notebook in stopped after updating"
-  #       given:
-  #         desired_state: "notebook_instance/v1alpha1/input/nb_success_before_create.yaml"
-  #         svc_api:
-  #          - operation: CreateNotebookInstanceWithContext
-  #            output_fixture: "notebook_instance/create/nb_create_resp.json"
-  #       invoke: ReadOne
-  #       expect:
-  #         latest_state: "notebook_instance/v1alpha1/output/nb_success_after_create.yaml"
-  #     - name: "ReadOne=AfterUpdateStart"
-  #       description: "Testing to see if the NotebookInstance will start the Notebook after updating"
-  #       given:
-  #         desired_state: "notebook_instance/v1alpha1/input/nb_success_before_create.yaml"
-  #         svc_api:
-  #          - operation: CreateNotebookInstanceWithContext
-  #            output_fixture: "notebook_instance/create/nb_create_resp.json"
-  #       invoke: ReadOne
-  #       expect:
-  #         latest_state: "notebook_instance/v1alpha1/output/nb_success_after_create.yaml"
-  #     - name: "ReadOne=AfterUpdateUpdating"
-  #       description: "Testing to see if the NotebookInstance will retain conditions when updating"
-  #       given:
-  #         desired_state: "notebook_instance/v1alpha1/input/nb_success_before_create.yaml"
-  #         svc_api:
-  #          - operation: CreateNotebookInstanceWithContext
-  #            output_fixture: "notebook_instance/create/nb_create_resp.json"
-  #       invoke: ReadOne
-  #       expect:
-  #         latest_state: "notebook_instance/v1alpha1/output/nb_success_after_create.yaml"
   - name: "Notebook Instance update tests"
     description: "Testing the Update functionality of the Notebook Instance"
     scenarios:
@@ -149,6 +185,19 @@ tests:
         invoke: Update
         expect:
           latest_state: "notebook_instance/v1alpha1/output/nb_update_stopped_by_user.yaml"
+      - name: "Update=InvalidInput"
+        description: "This test checks if invalid input has been entered in the input."
+        given:
+          desired_state: "notebook_instance/v1alpha1/input/update/nb_update_desired_invalid.yaml"
+          latest_state: "notebook_instance/v1alpha1/input/update/nb_update_latest_stopped_by_user_input.yaml"
+          svc_api:
+            - operation: UpdateNotebookInstanceWithContext
+              error:
+                code: ValidationException
+                message: "VolumeInSizeGB cannot be lower than current."
+        invoke: Update
+        expect:
+          latest_state: "notebook_instance/v1alpha1/output/nb_update_invalid.yaml"
       
   #     - name: "Update=InvalidInput"
 

@@ -1,6 +1,7 @@
 apiVersion: sagemaker.services.k8s.aws/v1alpha1
 kind: NotebookInstance
 metadata:
+  creationTimestamp: null
   name: test
 spec:
   instanceType: ml.t2.medium
@@ -11,6 +12,11 @@ status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-east-2:1234:notebook-instance/test
     ownerAccountID: ""
-  conditions: []
+  conditions:
+  - message: NotebookInstance is in Stopped status.
+    status: "True"
+    type: ACK.ResourceSynced
+  - message: VolumeInSizeGB cannot be lower than current.
+    status: "True"
+    type: ACK.Recoverable
   notebookInstanceStatus: Stopped
-  stoppedByControllerMetadata: UpdateTriggered

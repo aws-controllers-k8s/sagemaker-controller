@@ -20,4 +20,5 @@ status:
     status: "True"
     type: ACK.ResourceSynced
   notebookInstanceStatus: Stopped
+  stoppedByControllerMetadata: UpdatePending
   url: test.notebook.us-east-2.sagemaker.aws

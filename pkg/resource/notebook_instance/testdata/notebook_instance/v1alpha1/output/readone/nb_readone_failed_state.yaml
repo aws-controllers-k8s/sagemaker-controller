@@ -19,5 +19,6 @@ status:
     message: NotebookInstance is in Failed status.
     status: "True"
     type: ACK.ResourceSynced
+  failureReason: VolumeError
   notebookInstanceStatus: Failed
   url: test.notebook.us-east-2.sagemaker.aws
