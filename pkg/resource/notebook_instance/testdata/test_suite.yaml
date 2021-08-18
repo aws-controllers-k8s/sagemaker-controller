@@ -148,7 +148,7 @@ tests:
       - name: "Delete=IS"
         description: "This test checks if the Notebook stops before deleting."
         given:
-          desired_state: "notebook_instance/v1alpha1/input/nb_delete_IS_input.yaml"
+          desired_state: "notebook_instance/v1alpha1/input/delete/nb_delete_IS_input.yaml"
           svc_api:
             - operation: StopNotebookInstance
         invoke: Delete
@@ -157,35 +157,35 @@ tests:
       - name: "Delete=Deleting"
         description: "This test checks if the Notebook requeues while deleting"
         given:
-          desired_state: "notebook_instance/v1alpha1/input/nb_delete_deleting_input.yaml"
+          desired_state: "notebook_instance/v1alpha1/input/delete/nb_delete_deleting_input.yaml"
         invoke: Delete
         expect:
           error: "NotebookInstance in Deleting state cannot be modified or deleted."
       - name: "Delete=Pending"
         description: "This test checks if the Notebook requeues while in pending state"
         given:
-          desired_state: "notebook_instance/v1alpha1/input/nb_delete_pending_input.yaml"
+          desired_state: "notebook_instance/v1alpha1/input/delete/nb_delete_pending_input.yaml"
         invoke: Delete
         expect:
           error: "NotebookInstance in Pending state cannot be modified or deleted."
       - name: "Delete=Stopping"
         description: "This test checks if the Notebook requeues while stopping"
         given:
-          desired_state: "notebook_instance/v1alpha1/input/nb_delete_stopping_input.yaml"
+          desired_state: "notebook_instance/v1alpha1/input/delete/nb_delete_stopping_input.yaml"
         invoke: Delete
         expect:
           error: "NotebookInstance in Stopping state cannot be modified or deleted."
       - name: "Delete=Updating"
         description: "This test checks if the Notebook requeues while updating"
         given:
-          desired_state: "notebook_instance/v1alpha1/input/nb_delete_updating_input.yaml"
+          desired_state: "notebook_instance/v1alpha1/input/delete/nb_delete_updating_input.yaml"
         invoke: Delete
         expect:
           error: "NotebookInstance in Updating state cannot be modified or deleted."
       - name: "Delete=Stopped"
         description: "This test checks if the Notebook requeues right after making the delete call."
         given:
-          desired_state: "notebook_instance/v1alpha1/input/nb_delete_stopped_input.yaml"
+          desired_state: "notebook_instance/v1alpha1/input/delete/nb_delete_stopped_input.yaml"
           svc_api:
             - operation: DeleteNotebookInstanceWithContext
             - operation: DescribeNotebookInstanceWithContext

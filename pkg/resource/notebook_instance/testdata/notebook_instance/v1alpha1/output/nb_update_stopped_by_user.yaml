@@ -14,6 +14,6 @@ status:
     ownerAccountID: ""
   conditions:
   - lastTransitionTime: "0001-01-01T00:00:00Z"
-    reason: Notebook is currenty updating
+    message: NotebookInstance is in Updating status.
     status: "False"
     type: ACK.ResourceSynced
