@@ -5,6 +5,11 @@ if resp.NotebookInstanceLifecycleConfigName != nil {
 } else {
 	ko.Spec.LifecycleConfigName = nil
 }
+if resp.SecurityGroups != nil {
+	ko.Spec.SecurityGroupIDs = resp.SecurityGroups
+} else {
+	ko.Spec.SecurityGroupIDs = nil
+}
 err = rm.customSetOutputDescribe(&resource{ko})
 if err != nil{
   return nil, err
