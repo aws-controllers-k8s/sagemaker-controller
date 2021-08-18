@@ -29,7 +29,7 @@ tests:
     description: "Testing the readOne operation"
     scenarios:
        - name: "ReadOne=AfterCreate"
-         description: "Testing readOne right after create"
+         description: "Testing readOne right after create, the status should be in Pending with Resource synced being false"
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_pending_after_create.yaml"
            svc_api:
@@ -39,7 +39,7 @@ tests:
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_pending_after_create.yaml"
        - name: "ReadOne=Deleting"
-         description: "Testing readOne when deleting"
+         description: "Testing readOne when deleting, resource synced should be false."
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_deleting.yaml"
            svc_api:
@@ -49,7 +49,7 @@ tests:
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_deleting.yaml"
        - name: "ReadOne=Fail"
-         description: "Testing readOne when Describe fails"
+         description: "Testing readOne when Describe fails."
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_fail.yaml"
            svc_api:
@@ -71,7 +71,7 @@ tests:
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_failed_state.yaml"
        - name: "ReadOne=InService"
-         description: "Testing how readone handles the InService state"
+         description: "Testing how readone handles the InService state. Resource Synced should be true"
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_inservice.yaml"
            svc_api:
@@ -81,7 +81,7 @@ tests:
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_inservice.yaml"
        - name: "ReadOne=StoppedAfterUpdateACK"
-         description: "Testing how readone handles the Stopped state when stopped by ack for update"
+         description: "Testing how readone handles the Stopped after it's been updated. The Notebook here has been stopped by ack."
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopped_after_update_ack.yaml"
            svc_api:
@@ -92,7 +92,8 @@ tests:
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_stopped_after_update.yaml"
        - name: "ReadOne=StoppedAfterUpdateHuman"
-         description: "Testing how readone handles the Stopped state when stopped by human for update"
+         description: "Testing how readone handles the Stopped state when stopped by human for an update, StoppedByControllerMeta should 
+         not be there."
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopped_after_update_human.yaml"
            svc_api:
@@ -102,7 +103,8 @@ tests:
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_stopped_after_update.yaml"
        - name: "ReadOne=StoppedBeforeUpdateACK"
-         description: "Testing how readone handles the Stopped state when it's stopped right before an update."
+         description: "Testing how readone handles the Stopped state when it's stopped right before an update. StoppedByControllerMeta should be in 
+         UpdatePending."
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopped_before_update_ack.yaml"
            svc_api:
@@ -132,7 +134,8 @@ tests:
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_stopping_update.yaml"
        - name: "ReadOne=UpdatingUser"
-         description: "Testing how readone handles the Updating status when a user stops the Notebook"
+         description: "Testing how readone handles the Updating status when a user stops the Notebook. StoppedByControllerMeta should
+         not be there."
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_updating_by_user.yaml"
            svc_api:
@@ -152,7 +155,13 @@ tests:
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_updating.yaml"
 
-# TODO: Add a test for start failed once unit test supports it.
+  # TODO: Add a test for start failed once unit test supports it. Also replace status with annotation in the following files:
+  # testdata/v1alpha1/input/readone/nb_readone_stopped_after_update_ack.yaml
+  # testdata/v1alpha1/input/readone/nb_readone_stopped_before_update_ack.yaml
+  # testdata/v1alpha1/input/readone/nb_readone_stopping_update.yaml
+  # testdata/v1alpha1/output/readone/nb_readone_stopped_before_update_ack.yaml
+  # testdata/v1alpha1/output/readone/nb_readone_stopped_before_update_ack.yaml
+  # testdata/v1alpha1/output/readone/nb_readone_stopping_update.yaml
            
   - name: "Notebook Instance update tests"
     description: "Testing the Update functionality of the Notebook Instance"
@@ -182,7 +191,8 @@ tests:
         expect:
           error: "NotebookInstance in Updating state cannot be modified or deleted."
       - name: "Update=InService"
-        description: "This test checks if the controller stops the Notebook"
+        description: "This test checks if the controller stops the Notebook. Note: Although a stop controller call has been made
+        runtime has not performed an sdk.Find as a result the NotebookInstanceStatus will be InService."
         given:
           desired_state: "notebook_instance/v1alpha1/input/update/nb_update_desired_common.yaml"
           latest_state: "notebook_instance/v1alpha1/input/update/nb_update_latest_inservice_input.yaml"
@@ -202,7 +212,7 @@ tests:
         invoke: Update
         expect:
           latest_state: "notebook_instance/v1alpha1/output/nb_update_stopped_controller.yaml"
-      - name: "Update=Stopped--ByController"
+      - name: "Update=Stopped--ByControllerUser"
         description: "This test checks if the controller updates and does not set the StoppedByControllerMetadata status"
         given:
           desired_state: "notebook_instance/v1alpha1/input/update/nb_update_desired_common.yaml"
@@ -236,7 +246,12 @@ tests:
         expect:
           latest_state: "notebook_instance/v1alpha1/output/nb_update_stopped_controller.yaml"
 
-#TODO: Add tests for Stop errors once unit test supports that. 
+  #TODO: Add tests for Stop errors once unit test supports that. Also replace status with annotation in the following files:
+  # testdata/v1alpha1/input/update/nb_update_latest_stopped_controller_input.yaml
+  # testdata/v1alpha1/input/update/nb_update_latest_stopped_dissassociated.yaml
+  # testdata/v1alpha1/input/update/nb_update_latest_stopping_input.yaml
+  # testdata/v1alpha1/output/nb_update_inservice.yaml
+  # testdata/notebook_instance/v1alpha1/output/nb_update_stopped_controller.yaml
 
   - name: "Notebook Instance delete tests"
     description: "Tests that test the delete operation"

@@ -16,6 +16,8 @@ spec:
   notebookInstanceName: test
   roleARN: arn:aws:iam::1234:role/service-role/AmazonSageMakerServiceCatalogProductsUseRole
   rootAccess: Enabled
+  securityGroupIDs:
+  - woof
   subnetID: abc
   volumeSizeInGB: 8
 status:
