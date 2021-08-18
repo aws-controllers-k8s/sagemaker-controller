@@ -1,0 +1,22 @@
+{
+  "AcceleratorTypes": null,
+  "AdditionalCodeRepositories": null,
+  "CreationTime": "0001-01-01T00:00:00Z",
+  "DefaultCodeRepository": null,
+  "DirectInternetAccess": "Enabled",
+  "FailureReason": null,
+  "InstanceType": "ml.t2.medium",
+  "KmsKeyId": null,
+  "LastModifiedTime": "2021-08-15T22:06:18.767Z",
+  "NetworkInterfaceId": null,
+  "NotebookInstanceArn": "arn:aws:sagemaker:us-east-2:1234:notebook-instance/test",
+  "NotebookInstanceLifecycleConfigName": null,
+  "NotebookInstanceName": "test",
+  "NotebookInstanceStatus": "Stopping",
+  "RoleArn": "arn:aws:iam::1234:role/service-role/AmazonSageMakerServiceCatalogProductsUseRole",
+  "RootAccess": "Enabled",
+  "SecurityGroups": null,
+  "SubnetId": null,
+  "Url": "test.notebook.us-east-2.sagemaker.aws",
+  "VolumeSizeInGB": 8
+ }

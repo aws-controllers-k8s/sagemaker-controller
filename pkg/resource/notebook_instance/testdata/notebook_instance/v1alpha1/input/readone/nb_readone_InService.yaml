@@ -7,3 +7,9 @@ spec:
   notebookInstanceName: test
   roleARN: arn:aws:iam::1234:role/service-role/AmazonSageMakerServiceCatalogProductsUseRole
   volumeSizeInGB: 8
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-east-2:1234:notebook-instance/test
+    ownerAccountID: ""
+  conditions: []
+  notebookInstanceStatus: Pending
