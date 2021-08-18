@@ -244,7 +244,7 @@ tests:
             - operation: UpdateNotebookInstanceWithContext
         invoke: Update
         expect:
-          latest_state: "notebook_instance/v1alpha1/output/nb_update_stopped_controller.yaml"
+          latest_state: "notebook_instance/v1alpha1/output/nb_update_dissassociated.yaml"
 
   #TODO: Add tests for Stop errors once unit test supports that. Also replace status with annotation in the following files:
   # testdata/v1alpha1/input/update/nb_update_latest_stopped_controller_input.yaml

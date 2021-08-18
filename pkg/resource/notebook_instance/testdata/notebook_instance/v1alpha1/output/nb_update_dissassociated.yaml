@@ -4,30 +4,19 @@ metadata:
   creationTimestamp: null
   name: test
 spec:
+  directInternetAccess: Enabled
   instanceType: ml.t2.medium
   notebookInstanceName: test
   roleARN: arn:aws:iam::1234:role/service-role/AmazonSageMakerServiceCatalogProductsUseRole
-  volumeSizeInGB: 8
-  lifecycleConfigName: my-lfc
-  kmsKeyID: op
-  subnetID: abc
   rootAccess: Enabled
-  securityGroupIDs:
-  - woof
-  directInternetAccess: Enabled
-  acceleratorTypes:
-   - ml.eia1.medium
-  defaultCodeRepository: my-code
-  additionalCodeRepositories:
-   - code-repo
+  volumeSizeInGB: 9
 status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-east-2:1234:notebook-instance/test
     ownerAccountID: ""
   conditions:
-  - lastTransitionTime: null
-    message: NotebookInstance is in Stopped status.
-    status: "True"
+  - lastTransitionTime: "0001-01-01T00:00:00Z"
+    message: NotebookInstance is in Updating status.
+    status: "False"
     type: ACK.ResourceSynced
-  notebookInstanceStatus: Stopped
-  stoppedByControllerMetadata: UpdatePending
+  stoppedByControllerMetadata: UpdateTriggered
