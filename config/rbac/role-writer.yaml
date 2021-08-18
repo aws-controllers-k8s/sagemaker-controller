@@ -21,6 +21,7 @@ rules:
   - modelpackagegroups
   - modelqualityjobdefinitions
   - monitoringschedules
+  - notebookinstances
   - processingjobs
   - trainingjobs
   - transformjobs
@@ -47,6 +48,7 @@ rules:
   - modelpackagegroups
   - modelqualityjobdefinitions
   - monitoringschedules
+  - notebookinstances
   - processingjobs
   - trainingjobs
   - transformjobs
