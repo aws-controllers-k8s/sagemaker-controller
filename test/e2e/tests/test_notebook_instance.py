@@ -191,12 +191,12 @@ class TestNotebookInstance:
         assert resource["spec"]["volumeSizeInGB"] == volumeSizeInGB
 
         assert "DefaultCodeRepository" not in notebook_instance_desc
-        assert "defaultCodeRepository" not in latest_notebook_resource["spec"]
+        assert "defaultCodeRepository" not in resource["spec"]
 
-        assert latest_notebook_resource["spec"]["additionalCodeRepositories"] == additionalCodeRepositories
+        assert resource["spec"]["additionalCodeRepositories"] == additionalCodeRepositories
         assert notebook_instance_desc["AdditionalCodeRepositories"] == additionalCodeRepositories
 
-        assert "stoppedByControllerMetadata" not in latest_notebook_resource["status"]
+        assert "stoppedByControllerMetadata" not in resource["status"]
 
     def delete_notebook_test(self, notebook_instance):
         # Delete the k8s resource.
