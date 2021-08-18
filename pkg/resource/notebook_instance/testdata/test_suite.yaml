@@ -29,7 +29,7 @@ tests:
     description: "Testing the readOne operation"
     scenarios:
        - name: "ReadOne=AfterCreate"
-         description: "Testing readOne right after create, the status should be in Pending with Resource synced being false"
+         description: "Testing readOne right after create, the status should be in Pending with Resource synced being false."
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_pending_after_create.yaml"
            svc_api:
@@ -167,7 +167,7 @@ tests:
     description: "Testing the Update functionality of the Notebook Instance"
     scenarios:
       - name: "Update=Pending"
-        description: "This test checks if the Notebook requeues while in pending state"
+        description: "This test checks if the Notebook requeues while in stopping state."
         given:
           desired_state: "notebook_instance/v1alpha1/input/update/nb_update_desired_common.yaml"
           latest_state: "notebook_instance/v1alpha1/input/update/nb_update_latest_pending_input.yaml"
@@ -175,7 +175,7 @@ tests:
         expect:
           error: "NotebookInstance in Pending state cannot be modified or deleted."
       - name: "Update=Stopping"
-        description: "This test checks if the Notebook requeues while in stopping state"
+        description: "This test checks if the Notebook requeues while in stopping state."
         given:
           desired_state: "notebook_instance/v1alpha1/input/update/nb_update_desired_common.yaml"
           latest_state: "notebook_instance/v1alpha1/input/update/nb_update_latest_stopping_input.yaml"
@@ -183,7 +183,7 @@ tests:
         expect:
           error: "NotebookInstance in Stopping state cannot be modified or deleted."
       - name: "Update=Updating"
-        description: "This test checks if the Notebook requeues while in updating state"
+        description: "This test checks if the Notebook requeues while in updating state."
         given:
           desired_state: "notebook_instance/v1alpha1/input/update/nb_update_desired_common.yaml"
           latest_state: "notebook_instance/v1alpha1/input/update/nb_update_latest_updating_input.yaml"
@@ -203,7 +203,7 @@ tests:
           latest_state: "notebook_instance/v1alpha1/output/nb_update_inservice.yaml"
           error: "NotebookInstance is stopping."
       - name: "Update=Stopped--ByController"
-        description: "This test checks if the controller updates and sets the StoppedByControllerMetadata status"
+        description: "This test checks if the controller updates and sets the StoppedByControllerMetadata status."
         given:
           desired_state: "notebook_instance/v1alpha1/input/update/nb_update_desired_common.yaml"
           latest_state: "notebook_instance/v1alpha1/input/update/nb_update_latest_stopped_controller_input.yaml"
@@ -213,7 +213,7 @@ tests:
         expect:
           latest_state: "notebook_instance/v1alpha1/output/nb_update_stopped_controller.yaml"
       - name: "Update=Stopped--ByControllerUser"
-        description: "This test checks if the controller updates and does not set the StoppedByControllerMetadata status"
+        description: "This test checks if the controller updates and does not set the StoppedByControllerMetadata status."
         given:
           desired_state: "notebook_instance/v1alpha1/input/update/nb_update_desired_common.yaml"
           latest_state: "notebook_instance/v1alpha1/input/update/nb_update_latest_stopped_by_user_input.yaml"
@@ -223,7 +223,7 @@ tests:
         expect:
           latest_state: "notebook_instance/v1alpha1/output/nb_update_stopped_by_user.yaml"
       - name: "Update=InvalidInput"
-        description: "This test checks if invalid input has been entered in the input."
+        description: "This test checks if invalid input has been entered."
         given:
           desired_state: "notebook_instance/v1alpha1/input/update/nb_update_desired_invalid.yaml"
           latest_state: "notebook_instance/v1alpha1/input/update/nb_update_latest_stopped_by_user_input.yaml"
@@ -256,7 +256,7 @@ tests:
   - name: "Notebook Instance delete tests"
     description: "Tests that test the delete operation"
     scenarios:
-      - name: "Delete=IS"
+      - name: "Delete=InService"
         description: "This test checks if the Notebook stops before deleting."
         given:
           desired_state: "notebook_instance/v1alpha1/input/delete/nb_delete_IS.yaml"
