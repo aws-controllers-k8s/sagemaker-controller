@@ -3,7 +3,20 @@ kind: NotebookInstance
 metadata:
   name: test
 spec:
+  notebookInstanceName: 
   instanceType: ml.t2.medium
   notebookInstanceName: '!-test'
   roleARN: arn:aws:iam::1234:role/service-role/AmazonSageMakerServiceCatalogProductsUseRole
   volumeSizeInGB: 8
+  lifecycleConfigName: my-lfc
+  acceleratorTypes:
+   - ml.eia1.medium
+  defaultCodeRepository: my-code
+  kmsKeyID: op
+  subnetID: abc
+  rootAccess: Enabled
+  securityGroupIDs:
+  - woof
+  directInternetAccess: Enabled
+  additionalCodeRepositories:
+   - code-repo

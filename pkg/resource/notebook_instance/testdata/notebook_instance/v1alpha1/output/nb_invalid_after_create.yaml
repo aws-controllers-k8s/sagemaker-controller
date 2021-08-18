@@ -4,9 +4,21 @@ metadata:
   creationTimestamp: null
   name: test
 spec:
+  acceleratorTypes:
+  - ml.eia1.medium
+  additionalCodeRepositories:
+  - code-repo
+  defaultCodeRepository: my-code
+  directInternetAccess: Enabled
   instanceType: ml.t2.medium
+  kmsKeyID: op
+  lifecycleConfigName: my-lfc
   notebookInstanceName: '!-test'
   roleARN: arn:aws:iam::1234:role/service-role/AmazonSageMakerServiceCatalogProductsUseRole
+  rootAccess: Enabled
+  securityGroupIDs:
+  - woof
+  subnetID: abc
   volumeSizeInGB: 8
 status:
   ackResourceMetadata:
