@@ -48,16 +48,18 @@ tests:
          invoke: ReadOne
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_deleting.yaml"
-      #  - name: "ReadOne=Fail"
-      #    description: "Testing readOne when deleting"
-      #    given: 
-      #      desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_deleting.yaml"
-      #      svc_api:
-      #        - operation: DescribeNotebookInstanceWithContext
-      #          output_fixture: "notebook_instance/readOne/readone_deleting.json"
-      #    invoke: ReadOne
-      #    expect:
-      #      latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_deleting.yaml"
+       - name: "ReadOne=Fail"
+         description: "Testing readOne when Describe fails"
+         given: 
+           desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_fail.yaml"
+           svc_api:
+             - operation: DescribeNotebookInstanceWithContext
+               error:
+                code: ServiceUnavailable
+                message: "Server is down"
+         invoke: ReadOne
+         expect:
+           error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
        - name: "ReadOne=FailedState"
          description: "Testing how readone handles the Failed State, it should have a failure reason."
          given: 
@@ -109,24 +111,47 @@ tests:
          invoke: ReadOne
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_stopped_before_update_ack.yaml"
-      #  - name: "ReadOne=StartFail"
-      #    description: "Testing how readone handles the Stopped state when it's stopped right before an update."
-      #    given: 
-      #      desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopped_start_failed.yaml"
-      #      svc_api:
-      #        - operation: DescribeNotebookInstanceWithContext
-      #          output_fixture: "notebook_instance/readOne/readone_stopped_start_failed.json"
-      #        - operation: StartNotebookInstance
-      #          erorr: 
-      #            code: ServiceUnavailable
-      #            message: "Server down"
-      #    invoke: ReadOne
-      #    expect:
-      #      latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_stopped_start_failed.yaml"
-      #      erorr: 
-      #       code: ServiceUnavailable
-      #       message: "Server down"
-         
+       - name: "ReadOne=StoppingDeleting"
+         description: "Testing how readone handles the Stopping stopping state before going into deleting"
+         given: 
+           desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopping_deleting.yaml"
+           svc_api:
+             - operation: DescribeNotebookInstanceWithContext
+               output_fixture: "notebook_instance/readOne/readone_stopping_deleting.json"
+         invoke: ReadOne
+         expect:
+           latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_stopping_deleting.yaml"
+       - name: "ReadOne=StoppedUpdate"
+         description: "Testing how readone handles the Stopping stopping state before going into Update"
+         given: 
+           desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopping_update.yaml"
+           svc_api:
+             - operation: DescribeNotebookInstanceWithContext
+               output_fixture: "notebook_instance/readOne/readone_stopping_update.json"
+         invoke: ReadOne
+         expect:
+           latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_stopping_update.yaml"
+       - name: "ReadOne=UpdatingUser"
+         description: "Testing how readone handles the Updating status when a user stops the Notebook"
+         given: 
+           desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_updating_by_user.yaml"
+           svc_api:
+             - operation: DescribeNotebookInstanceWithContext
+               output_fixture: "notebook_instance/readOne/readone_updating_by_user.json"
+         invoke: ReadOne
+         expect:
+           latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_updating_by_user.yaml"
+       - name: "ReadOne=UpdatingUser"
+         description: "Testing how readone handles the Updating status when ack stops the Notebook"
+         given: 
+           desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_updating.yaml"
+           svc_api:
+             - operation: DescribeNotebookInstanceWithContext
+               output_fixture: "notebook_instance/readOne/readone_updating.json"
+         invoke: ReadOne
+         expect:
+           latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_updating.yaml"
+           
   - name: "Notebook Instance update tests"
     description: "Testing the Update functionality of the Notebook Instance"
     scenarios:
@@ -198,8 +223,7 @@ tests:
         invoke: Update
         expect:
           latest_state: "notebook_instance/v1alpha1/output/nb_update_invalid.yaml"
-      
-  #     - name: "Update=InvalidInput"
+  #TODO: Add tests for Stop errors once unit test supports that.
 
   - name: "Notebook Instance delete tests"
     description: "Tests that test the delete operation"
@@ -252,8 +276,21 @@ tests:
         invoke: Delete
         expect:
           error: "NotebookInstance is deleting."
+      - name: "Delete=Fail"
+        description: "This test checks if the Notebook returns an error if delete fails"
+        given:
+          desired_state: "notebook_instance/v1alpha1/input/delete/nb_delete_stopped_input.yaml"
+          svc_api:
+            - operation: DeleteNotebookInstanceWithContext
+              error:
+                code: ServiceUnavailable
+                message: "Server is down"
+        invoke: Delete
+        expect:
+          error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
+          # latest_state: "notebook_instance/v1alpha1/output/nb_delete_fail.yaml"
           
-      #TODO: Add tests for failed delete and failed stop and complete deletion(once unit test supports that)
+      #TODO: Add tests for failed stop and complete deletion(once unit test supports that)
 
       
 

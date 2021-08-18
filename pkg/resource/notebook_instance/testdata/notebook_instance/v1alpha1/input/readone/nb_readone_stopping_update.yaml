@@ -13,5 +13,5 @@ status:
     ownerAccountID: ""
   conditions: []
   notebookInstanceStatus: Stopping
-  StoppedByControllerMetadata: UpdateTriggered
+  StoppedByControllerMetadata: UpdatePending
   
