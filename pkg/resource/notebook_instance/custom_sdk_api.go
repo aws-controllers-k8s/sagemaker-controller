@@ -6,7 +6,8 @@ import (
 
 // Note: This file is used for functions calling Sagemaker APIs that are non-CRUD.
 
-// This function stops the Notebook Instance.
+// stopNotebookInstance stops the Notebook Instance and returns
+// an error if there was an error with stopping the Notebook Instance.
 func (rm *resourceManager) stopNotebookInstance(r *resource) error {
 	input := &svcsdk.StopNotebookInstanceInput{}
 	input.SetNotebookInstanceName(*r.ko.Spec.NotebookInstanceName)
@@ -14,5 +15,17 @@ func (rm *resourceManager) stopNotebookInstance(r *resource) error {
 	// Stop Notebook Instance does not return a response
 	_, err := rm.sdkapi.StopNotebookInstance(input)
 	rm.metrics.RecordAPICall("STOP", "StopNotebookInstance", err)
+	return err
+}
+
+// startNotebookInstance starts the Notebook Instance and returns an
+// error if there was an error with starting the Notebook Instance.
+func (rm *resourceManager) startNotebookInstance(r *resource) error {
+	input := &svcsdk.StartNotebookInstanceInput{}
+	input.NotebookInstanceName = r.ko.Spec.NotebookInstanceName
+
+	//Start Notebook Instance does not return a response
+	_, err := rm.sdkapi.StartNotebookInstance(input)
+	rm.metrics.RecordAPICall("START", "StartNotebookInstance", err)
 	return err
 }

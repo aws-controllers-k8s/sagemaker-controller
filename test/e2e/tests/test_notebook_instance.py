@@ -32,7 +32,8 @@ import random
 DELETE_WAIT_PERIOD = 16
 DELETE_WAIT_LENGTH = 30
 
-@pytest.fixture(scope="function")
+
+@pytest.fixture(scope="module")
 def notebook_instance():
     resource_name = random_suffix_name("nb", 32)
     replacements = REPLACEMENT_VALUES.copy()
@@ -45,11 +46,13 @@ def notebook_instance():
     )
 
     assert resource is not None
-    yield (reference, resource)
+    yield (reference, resource, spec)
 
     # Delete the k8s resource if not already deleted by tests
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
+        _, deleted = k8s.delete_custom_resource(
+            reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
+        )
         assert deleted
 
 
@@ -113,18 +116,25 @@ class TestNotebookInstance:
         )
 
     def _assert_notebook_status_in_sync(
-        self, notebook_instance_name, reference, expected_status
+        self,
+        notebook_instance_name,
+        reference,
+        expected_status,
+        wait_periods=30,
+        period_length=30,
     ):
         assert (
             self._wait_sagemaker_notebook_status(
-                notebook_instance_name, expected_status
+                notebook_instance_name, expected_status, wait_periods, period_length
             )
-            == self._wait_resource_notebook_status(reference, expected_status)
+            == self._wait_resource_notebook_status(
+                reference, expected_status, wait_periods, period_length
+            )
             == expected_status
         )
 
-    def testCreateAndDelete(self, notebook_instance):
-        (reference, resource) = notebook_instance
+    def create_notebook_test(self, notebook_instance):
+        (reference, resource, _) = notebook_instance
         assert k8s.get_resource_exists(reference)
         assert k8s.get_resource_arn(resource) is not None
 
@@ -146,7 +156,46 @@ class TestNotebookInstance:
         )
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
+    def update_notebook_test(self, notebook_instance):
+        (reference, resource, spec) = notebook_instance
+        notebook_instance_name = resource["spec"].get("notebookInstanceName", None)
+        volumeSizeInGB = 7
+
+        spec["spec"]["volumeSizeInGB"] = volumeSizeInGB
+        k8s.patch_custom_resource(reference, spec)
+
+        self._assert_notebook_status_in_sync(
+            notebook_instance_name, reference, "Stopping"
+        )
+        # TODO: Replace with annotations once runtime can update annotations in readOne.
+        resource = k8s.get_resource(reference)
+        assert resource["status"]["stoppedByControllerMetadata"] == "UpdatePending"
+
+        # wait for the resource to go to the InService state and make sure the operator is synced with sagemaker.
+        self._assert_notebook_status_in_sync(
+            notebook_instance_name, reference, "InService"
+        )
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+
+        notebook_instance_desc = get_notebook_instance(notebook_instance_name)
+        assert notebook_instance_desc["VolumeSizeInGB"] == volumeSizeInGB
+
+        resource = k8s.get_resource(reference)
+        assert resource["spec"]["volumeSizeInGB"] == volumeSizeInGB
+
+        assert "stoppedByControllerMetadata" not in resource["status"]
+
+    def delete_notebook_test(self, notebook_instance):
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
+        (reference, resource, _) = notebook_instance
+        notebook_instance_name = resource["spec"].get("notebookInstanceName", None)
+        _, deleted = k8s.delete_custom_resource(
+            reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
+        )
         assert deleted is True
         assert get_notebook_instance(notebook_instance_name) is None
+
+    def test_driver(self, notebook_instance):
+        self.create_notebook_test(notebook_instance)
+        self.update_notebook_test(notebook_instance)
+        self.delete_notebook_test(notebook_instance)
