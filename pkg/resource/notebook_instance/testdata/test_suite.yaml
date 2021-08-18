@@ -152,7 +152,7 @@ tests:
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_updating.yaml"
 
-  # TODO: Add a test for start failed once unit test supports it.
+# TODO: Add a test for start failed once unit test supports it.
            
   - name: "Notebook Instance update tests"
     description: "Testing the Update functionality of the Notebook Instance"
@@ -190,7 +190,7 @@ tests:
             - operation: StopNotebookInstance
         invoke: Update
         expect:
-          latest_state: "notebook_instance/v1alpha1/output/nb_update_InService_output.yaml"
+          latest_state: "notebook_instance/v1alpha1/output/nb_update_inservice.yaml"
           error: "NotebookInstance is stopping."
       - name: "Update=Stopped--ByController"
         description: "This test checks if the controller updates and sets the StoppedByControllerMetadata status"
@@ -201,7 +201,7 @@ tests:
             - operation: UpdateNotebookInstanceWithContext 
         invoke: Update
         expect:
-          latest_state: "notebook_instance/v1alpha1/output/nb_update_stopped_controller_output.yaml"
+          latest_state: "notebook_instance/v1alpha1/output/nb_update_stopped_controller.yaml"
       - name: "Update=Stopped--ByController"
         description: "This test checks if the controller updates and does not set the StoppedByControllerMetadata status"
         given:
@@ -234,8 +234,9 @@ tests:
             - operation: UpdateNotebookInstanceWithContext
         invoke: Update
         expect:
-          latest_state: "notebook_instance/v1alpha1/output/nb_update_stopped_controller_output.yaml"
-  #TODO: Add tests for Stop errors once unit test supports that. 
+          latest_state: "notebook_instance/v1alpha1/output/nb_update_stopped_controller.yaml"
+
+#TODO: Add tests for Stop errors once unit test supports that. 
 
   - name: "Notebook Instance delete tests"
     description: "Tests that test the delete operation"
@@ -300,8 +301,4 @@ tests:
         invoke: Delete
         expect:
           error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "      
-      #TODO: Add tests for failed stop and complete deletion(once unit test supports that)
-
-      
-
-
+#TODO: Add tests for failed stop and complete deletion(once unit test supports that)
