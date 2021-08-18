@@ -151,6 +151,8 @@ tests:
          invoke: ReadOne
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_updating.yaml"
+
+  # TODO: Add a test for start failed once unit test supports it.
            
   - name: "Notebook Instance update tests"
     description: "Testing the Update functionality of the Notebook Instance"
@@ -223,7 +225,17 @@ tests:
         invoke: Update
         expect:
           latest_state: "notebook_instance/v1alpha1/output/nb_update_invalid.yaml"
-  #TODO: Add tests for Stop errors once unit test supports that.
+      - name: "Update=Dissassociated"
+        description: "This test checks if the dissassociated parameters are being handled right."
+        given:
+          desired_state: "notebook_instance/v1alpha1/input/update/nb_update_desired_common.yaml"
+          latest_state: "notebook_instance/v1alpha1/input/update/nb_update_latest_stopped_dissassociated.yaml"
+          svc_api:
+            - operation: UpdateNotebookInstanceWithContext
+        invoke: Update
+        expect:
+          latest_state: "notebook_instance/v1alpha1/output/nb_update_stopped_controller_output.yaml"
+  #TODO: Add tests for Stop errors once unit test supports that. 
 
   - name: "Notebook Instance delete tests"
     description: "Tests that test the delete operation"
@@ -287,8 +299,7 @@ tests:
                 message: "Server is down"
         invoke: Delete
         expect:
-          error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
-          
+          error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "      
       #TODO: Add tests for failed stop and complete deletion(once unit test supports that)
 
       
