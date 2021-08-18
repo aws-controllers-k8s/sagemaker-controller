@@ -68,6 +68,14 @@ spec:
         collection_names: metrics
         num_steps: "10"
         rule_to_invoke: LossNotDecreasing
+  profilerConfig:
+    s3OutputPath: s3://$SAGEMAKER_DATA_BUCKET/sagemaker/training/profiler/
+    profilingIntervalInMilliseconds: 500
+  profilerRuleConfigurations:
+    - ruleConfigurationName: ProfilerReport
+      ruleEvaluatorImage: $DEBUGGER_IMAGE_URI
+      ruleParameters:
+        rule_to_invoke: ProfilerReport
   tags:
     - key: algorithm
       value: xgboost

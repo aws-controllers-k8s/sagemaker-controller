@@ -167,6 +167,11 @@ type TrainingJobStatus struct {
 	DebugRuleEvaluationStatuses []*DebugRuleEvaluationStatus `json:"debugRuleEvaluationStatuses,omitempty"`
 	// If the training job failed, the reason it failed.
 	FailureReason *string `json:"failureReason,omitempty"`
+	// Information about the Amazon S3 location that is configured for storing model
+	// artifacts.
+	ModelArtifacts *ModelArtifacts `json:"modelArtifacts,omitempty"`
+	// Evaluation status of Debugger rules for profiling on a training job.
+	ProfilerRuleEvaluationStatuses []*ProfilerRuleEvaluationStatus `json:"profilerRuleEvaluationStatuses,omitempty"`
 	// Provides detailed information about the state of the training job. For detailed
 	// information on the secondary status of the training job, see StatusMessage
 	// under SecondaryStatusTransition.

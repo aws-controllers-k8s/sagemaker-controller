@@ -4,8 +4,7 @@ import (
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 )
 
-// We just set the defualts here in case the user does not specify them.
-// This avoids the controller trying to update itself right after creation.
+// customSetDefaults sets the default fields for DirectInternetAccess and RootAccess.
 func customSetDefaults(
 	a *resource,
 	b *resource,
