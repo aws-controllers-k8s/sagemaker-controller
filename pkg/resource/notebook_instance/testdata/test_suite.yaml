@@ -79,7 +79,7 @@ tests:
                output_fixture: "notebook_instance/readOne/readone_inservice.json"
          invoke: ReadOne
          expect:
-           latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_InService.yaml"
+           latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_inservice.yaml"
        - name: "ReadOne=StoppedAfterUpdateACK"
          description: "Testing how readone handles the Stopped state when stopped by ack for update"
          given: 

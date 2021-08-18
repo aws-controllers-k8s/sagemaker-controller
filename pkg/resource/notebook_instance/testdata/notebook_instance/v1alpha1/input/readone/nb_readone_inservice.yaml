@@ -7,6 +7,14 @@ spec:
   notebookInstanceName: test
   roleARN: arn:aws:iam::1234:role/service-role/AmazonSageMakerServiceCatalogProductsUseRole
   volumeSizeInGB: 8
+  lifecycleConfigName: my-lfc
+  acceleratorTypes:
+   - ml.eia1.medium
+  defaultCodeRepository: my-code
+  kmsKeyID: op
+  subnetID: abc
+  additionalCodeRepositories:
+   - code-repo
 status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-east-2:1234:notebook-instance/test
