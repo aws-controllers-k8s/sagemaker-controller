@@ -81,7 +81,7 @@ tests:
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_inservice.yaml"
        - name: "ReadOne=StoppedAfterUpdateACK"
-         description: "Testing how readone handles the Stopped after it's been updated. The Notebook here has been stopped by ack."
+         description: "Testing how readone handles the Stopped after it's been updated. The Notebook here has been stopped by the controller."
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopped_after_update_ack.yaml"
            svc_api:
@@ -145,7 +145,7 @@ tests:
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_updating_by_user.yaml"
        - name: "ReadOne=UpdatingUser"
-         description: "Testing how readone handles the Updating status when ack stops the Notebook"
+         description: "Testing how readone handles the Updating status when the controller stops the Notebook"
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_updating.yaml"
            svc_api:
