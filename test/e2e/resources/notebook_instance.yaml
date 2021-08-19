@@ -9,3 +9,4 @@ spec:
   volumeSizeInGB: 6
   directInternetAccess: Enabled
   rootAccess: Enabled
+  defaultCodeRepository: $DEFAULT_CODE_REPOSITORY

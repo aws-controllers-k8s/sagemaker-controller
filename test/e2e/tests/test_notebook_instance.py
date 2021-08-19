@@ -35,9 +35,11 @@ DELETE_WAIT_LENGTH = 30
 
 @pytest.fixture(scope="module")
 def notebook_instance():
+    default_code_repository = "https://github.com/aws-controllers-k8s/community"
     resource_name = random_suffix_name("nb", 32)
     replacements = REPLACEMENT_VALUES.copy()
     replacements["NOTEBOOK_INSTANCE_NAME"] = resource_name
+    replacements["DEFAULT_CODE_REPOSITORY"] = default_code_repository
     reference, spec, resource = create_sagemaker_resource(
         resource_plural="notebookinstances",
         resource_name=resource_name,
@@ -160,8 +162,13 @@ class TestNotebookInstance:
         (reference, resource, spec) = notebook_instance
         notebook_instance_name = resource["spec"].get("notebookInstanceName", None)
         volumeSizeInGB = 7
+        additionalCodeRepositories = ["https://github.com/aws-controllers-k8s/runtime"]
 
         spec["spec"]["volumeSizeInGB"] = volumeSizeInGB
+        # TODO: Use del spec["spec"]["defaultCodeRepository"] instead once ack.testinfra supports replacement.
+        # Patch only supports updating spec fields instead of fully getting rid of them.
+        spec["spec"]["defaultCodeRepository"] = None
+        spec["spec"]["additionalCodeRepositories"] = additionalCodeRepositories
         k8s.patch_custom_resource(reference, spec)
 
         self._assert_notebook_status_in_sync(
@@ -182,6 +189,12 @@ class TestNotebookInstance:
 
         resource = k8s.get_resource(reference)
         assert resource["spec"]["volumeSizeInGB"] == volumeSizeInGB
+
+        assert "DefaultCodeRepository" not in notebook_instance_desc
+        assert "defaultCodeRepository" not in resource["spec"]
+
+        assert resource["spec"]["additionalCodeRepositories"] == additionalCodeRepositories
+        assert notebook_instance_desc["AdditionalCodeRepositories"] == additionalCodeRepositories
 
         assert "stoppedByControllerMetadata" not in resource["status"]
 

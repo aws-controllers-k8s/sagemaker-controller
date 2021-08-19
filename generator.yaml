@@ -658,6 +658,8 @@ resources:
         code: customSetDefaults(a, b)
       sdk_update_pre_build_request:
         template_path: notebook_instance/sdk_update_pre_build_request.go.tpl
+      sdk_update_post_build_request:
+        code: handleUpdateOnlyParameters(desired, latest, input)
       sdk_update_post_set_output:
         code: rm.customSetOutputUpdate(ko, latest)
       sdk_delete_pre_build_request:
