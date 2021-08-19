@@ -29,22 +29,22 @@ tests:
     description: "Testing the readOne operation"
     scenarios:
        - name: "ReadOne=AfterCreate"
-         description: "Testing readOne right after create, the status should be in Pending with Resource synced being false."
+         description: "Testing readone right after create, the status should be in Pending with Resource synced being false."
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_pending_after_create.yaml"
            svc_api:
              - operation: DescribeNotebookInstanceWithContext
-               output_fixture: "notebook_instance/readOne/readone_pending_after_create.json"
+               output_fixture: "notebook_instance/readone/readone_pending_after_create.json"
          invoke: ReadOne
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_pending_after_create.yaml"
        - name: "ReadOne=Deleting"
-         description: "Testing readOne when deleting, resource synced should be false."
+         description: "Testing readone when deleting, resource synced should be false."
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_deleting.yaml"
            svc_api:
              - operation: DescribeNotebookInstanceWithContext
-               output_fixture: "notebook_instance/readOne/readone_deleting.json"
+               output_fixture: "notebook_instance/readone/readone_deleting.json"
          invoke: ReadOne
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_deleting.yaml"
@@ -66,7 +66,7 @@ tests:
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_failed_state.yaml"
            svc_api:
              - operation: DescribeNotebookInstanceWithContext
-               output_fixture: "notebook_instance/readOne/readone_failed_state.json"
+               output_fixture: "notebook_instance/readone/readone_failed_state.json"
          invoke: ReadOne
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_failed_state.yaml"
@@ -76,7 +76,7 @@ tests:
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_inservice.yaml"
            svc_api:
              - operation: DescribeNotebookInstanceWithContext
-               output_fixture: "notebook_instance/readOne/readone_inservice.json"
+               output_fixture: "notebook_instance/readone/readone_inservice.json"
          invoke: ReadOne
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_inservice.yaml"
@@ -86,7 +86,7 @@ tests:
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopped_after_update_ack.yaml"
            svc_api:
              - operation: DescribeNotebookInstanceWithContext
-               output_fixture: "notebook_instance/readOne/readone_stopped_after_update_ack.json"
+               output_fixture: "notebook_instance/readone/readone_stopped_after_update_ack.json"
              - operation: StartNotebookInstance
          invoke: ReadOne
          expect:
@@ -98,7 +98,7 @@ tests:
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopped_after_update_human.yaml"
            svc_api:
              - operation: DescribeNotebookInstanceWithContext
-               output_fixture: "notebook_instance/readOne/readone_stopped_after_update_ack.json"
+               output_fixture: "notebook_instance/readone/readone_stopped_after_update_ack.json"
          invoke: ReadOne
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_stopped_after_update.yaml"
@@ -109,7 +109,7 @@ tests:
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopped_before_update_ack.yaml"
            svc_api:
              - operation: DescribeNotebookInstanceWithContext
-               output_fixture: "notebook_instance/readOne/readone_stopped_before_update_ack.json"
+               output_fixture: "notebook_instance/readone/readone_stopped_before_update_ack.json"
          invoke: ReadOne
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_stopped_before_update_ack.yaml"
@@ -119,28 +119,28 @@ tests:
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopping_deleting.yaml"
            svc_api:
              - operation: DescribeNotebookInstanceWithContext
-               output_fixture: "notebook_instance/readOne/readone_stopping_deleting.json"
+               output_fixture: "notebook_instance/readone/readone_stopping_deleting.json"
          invoke: ReadOne
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_stopping_deleting.yaml"
-       - name: "ReadOne=StoppedUpdate"
-         description: "Testing how readone handles the Stopping stopping state before going into Update"
+       - name: "ReadOne=StoppingUpdate"
+         description: "Testing how readone handles the Stopping state before going into Update."
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopping_update.yaml"
            svc_api:
              - operation: DescribeNotebookInstanceWithContext
-               output_fixture: "notebook_instance/readOne/readone_stopping_update.json"
+               output_fixture: "notebook_instance/readone/readone_stopping_update.json"
          invoke: ReadOne
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_stopping_update.yaml"
        - name: "ReadOne=UpdatingUser"
          description: "Testing how readone handles the Updating status when a user stops the Notebook. StoppedByControllerMeta should
-         not be there."
+         not be in the status field."
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_updating_by_user.yaml"
            svc_api:
              - operation: DescribeNotebookInstanceWithContext
-               output_fixture: "notebook_instance/readOne/readone_updating_by_user.json"
+               output_fixture: "notebook_instance/readone/readone_updating_by_user.json"
          invoke: ReadOne
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_updating_by_user.yaml"
@@ -150,7 +150,7 @@ tests:
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_updating.yaml"
            svc_api:
              - operation: DescribeNotebookInstanceWithContext
-               output_fixture: "notebook_instance/readOne/readone_updating.json"
+               output_fixture: "notebook_instance/readone/readone_updating.json"
          invoke: ReadOne
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_updating.yaml"
@@ -160,7 +160,7 @@ tests:
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopped_after_update_ack.yaml"
            svc_api:
              - operation: DescribeNotebookInstanceWithContext
-               output_fixture: "notebook_instance/readOne/readone_stopped_after_update_ack.json"
+               output_fixture: "notebook_instance/readone/readone_stopped_after_update_ack.json"
              - operation: StartNotebookInstance
                error:
                  code: ServiceUnavailable
@@ -206,7 +206,7 @@ tests:
           error: "NotebookInstance in Updating state cannot be modified or deleted."
       - name: "Update=InService"
         description: "This test checks if the controller stops the Notebook. Note: Although a stop controller call has been made
-        runtime has not performed an sdk.Find as a result the NotebookInstanceStatus will be InService."
+        runtime has not performed an sdk.Find() as a result the NotebookInstanceStatus will be InService."
         given:
           desired_state: "notebook_instance/v1alpha1/input/update/nb_update_desired_common.yaml"
           latest_state: "notebook_instance/v1alpha1/input/update/nb_update_latest_inservice_input.yaml"
@@ -327,7 +327,7 @@ tests:
           svc_api:
             - operation: DeleteNotebookInstanceWithContext
             - operation: DescribeNotebookInstanceWithContext
-              output_fixture: "notebook_instance/readOne/delete_resp.json"
+              output_fixture: "notebook_instance/readone/delete_resp.json"
         invoke: Delete
         expect:
           error: "NotebookInstance is deleting."
