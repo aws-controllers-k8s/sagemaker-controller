@@ -45,6 +45,7 @@ import (
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/model_quality_job_definition"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/monitoring_schedule"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/notebook_instance"
+	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/notebook_instance_lifecycle_config"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/processing_job"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/training_job"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/transform_job"

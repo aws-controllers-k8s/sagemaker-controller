@@ -22,6 +22,7 @@ rules:
   - modelqualityjobdefinitions
   - monitoringschedules
   - notebookinstances
+  - notebookinstancelifecycleconfigs
   - processingjobs
   - trainingjobs
   - transformjobs
