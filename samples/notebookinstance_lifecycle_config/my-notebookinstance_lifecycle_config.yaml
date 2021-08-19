@@ -1,0 +1,10 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: NotebookInstanceLifecycleConfig
+metadata:
+  name: <YOUR LIFECYCLE CONFIG NAME>
+spec:
+  notebookInstanceLifecycleConfigName: <YOUR LIFECYCLE CONFIG NAME>
+  onStart:
+    - content: ZWNobyAiRW50ZXJpbmcgb25TdGFydCI= #Decodes to echo "Entering onStart"
+  onCreate:
+    - content: ZWNobyAiRW50ZXJpbmcgb25DcmVhdGUi #Decodes to echo "Entering onCreate"
