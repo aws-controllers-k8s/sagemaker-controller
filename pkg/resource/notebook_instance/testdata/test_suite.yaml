@@ -154,8 +154,22 @@ tests:
          invoke: ReadOne
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_updating.yaml"
+       - name: "ReadOne=StartFail"
+         description: "Testing how readone would behave if start failed"
+         given:
+           desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopped_after_update_ack.yaml"
+           svc_api:
+             - operation: DescribeNotebookInstanceWithContext
+               output_fixture: "notebook_instance/readOne/readone_stopped_after_update_ack.json"
+             - operation: StartNotebookInstance
+               error:
+                 code: ServiceUnavailable
+                 message: "Server is down"
+         invoke: ReadOne
+         expect:
+           error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "   
 
-  # TODO: Add a test for start failed once unit test supports it. Also replace status with annotation in the following files:
+  # TODO: Replace status with annotation in the following files:
   # testdata/v1alpha1/input/readone/nb_readone_stopped_after_update_ack.yaml
   # testdata/v1alpha1/input/readone/nb_readone_stopped_before_update_ack.yaml
   # testdata/v1alpha1/input/readone/nb_readone_stopping_update.yaml
@@ -245,8 +259,21 @@ tests:
         invoke: Update
         expect:
           latest_state: "notebook_instance/v1alpha1/output/nb_update_dissassociated.yaml"
+      - name: "Update=StopError"
+        description: "This test checks if the controller returns an error if StopNotebookInstance fails."
+        given:
+          desired_state: "notebook_instance/v1alpha1/input/update/nb_update_desired_common.yaml"
+          latest_state: "notebook_instance/v1alpha1/input/update/nb_update_latest_inservice_input.yaml"
+          svc_api:
+            - operation: StopNotebookInstance
+              error:
+                code: ServiceUnavailable
+                message: "Server is down"
+        invoke: Update
+        expect:
+          error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "  
 
-  #TODO: Add tests for Stop errors once unit test supports that. Also replace status with annotation in the following files:
+  #TODO: Replace status with annotation in the following files:
   # testdata/v1alpha1/input/update/nb_update_latest_stopped_controller_input.yaml
   # testdata/v1alpha1/input/update/nb_update_latest_stopped_dissassociated.yaml
   # testdata/v1alpha1/input/update/nb_update_latest_stopping_input.yaml
@@ -315,5 +342,17 @@ tests:
                 message: "Server is down"
         invoke: Delete
         expect:
-          error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "      
-#TODO: Add tests for failed stop and complete deletion(once unit test supports that)
+          error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
+      - name: "Delete=StopFail"
+        description: "This test checks if the Notebook returns an error if delete fails"
+        given:
+          desired_state: "notebook_instance/v1alpha1/input/delete/nb_delete_IS.yaml"
+          svc_api:
+            - operation: StopNotebookInstance
+              error:
+                code: ServiceUnavailable
+                message: "Server is down"
+        invoke: Delete
+        expect:
+          error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "        
+#TODO: Add tests complete deletion(once unit test supports that)
