@@ -3,7 +3,7 @@ tests:
     description: "Part of Notebook Instance CRUD tests."
     scenarios:
      - name: "Create=InvalidInput"
-       description: "Given one of the parameters is invalid, ko.Status shows a terminal condition"
+       description: "Given one of the parameters is invalid, ko.Status shows a terminal condition."
        given:
          desired_state: "notebook_instance/v1alpha1/input/nb_invalid_before_create.yaml"
          svc_api:
@@ -16,7 +16,7 @@ tests:
          latest_state: "notebook_instance/v1alpha1/output/nb_invalid_after_create.yaml"
          error: resource is in terminal condition
      - name: "Create=Valid"
-       description: "Testing a successful create call"
+       description: "Testing a successful create call."
        given:
          desired_state: "notebook_instance/v1alpha1/input/nb_success_before_create.yaml"
          svc_api:
@@ -49,7 +49,7 @@ tests:
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_deleting.yaml"
        - name: "ReadOne=Fail"
-         description: "Testing readOne when Describe fails."
+         description: "Testing readone when Describe fails, an error should be returned."
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_fail.yaml"
            svc_api:
@@ -71,7 +71,7 @@ tests:
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_failed_state.yaml"
        - name: "ReadOne=InService"
-         description: "Testing how readone handles the InService state. Resource Synced should be true"
+         description: "Testing how readone handles the InService state. Resource Synced should be true."
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_inservice.yaml"
            svc_api:
@@ -81,7 +81,8 @@ tests:
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_inservice.yaml"
        - name: "ReadOne=StoppedAfterUpdateACK"
-         description: "Testing how readone handles the Stopped after it's been updated. The Notebook here has been stopped by the controller."
+         description: "Testing how readone handles the Stopped state after it's been updated. In this test the Notebook Instance has been stopped by
+         the controller."
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopped_after_update_ack.yaml"
            svc_api:
@@ -92,8 +93,8 @@ tests:
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_stopped_after_update.yaml"
        - name: "ReadOne=StoppedAfterUpdateHuman"
-         description: "Testing how readone handles the Stopped state when stopped by human for an update, StoppedByControllerMeta should 
-         not be there."
+         description: "Testing how readone handles the Stopped state when stopped by a human for an update, StoppedByControllerMeta should 
+         not be in the status."
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopped_after_update_human.yaml"
            svc_api:
@@ -103,8 +104,8 @@ tests:
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_stopped_after_update.yaml"
        - name: "ReadOne=StoppedBeforeUpdateACK"
-         description: "Testing how readone handles the Stopped state when it's stopped right before an update. StoppedByControllerMeta should be in 
-         UpdatePending."
+         description: "Testing how readone handles the Stopped state when it's stopped right before an update. The StoppedByControllerMeta status
+         should be in UpdatePending."
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopped_before_update_ack.yaml"
            svc_api:
@@ -114,7 +115,7 @@ tests:
          expect:
            latest_state: "notebook_instance/v1alpha1/output/readone/nb_readone_stopped_before_update_ack.yaml"
        - name: "ReadOne=StoppingDeleting"
-         description: "Testing how readone handles the Stopping stopping state before going into deleting"
+         description: "Testing how readone handles the Stopping state before going into deleting"
          given: 
            desired_state: "notebook_instance/v1alpha1/input/readone/nb_readone_stopping_deleting.yaml"
            svc_api:
