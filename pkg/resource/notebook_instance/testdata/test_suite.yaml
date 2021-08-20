@@ -302,7 +302,7 @@ tests:
           desired_state: "notebook_instance/v1alpha1/input/delete/nb_delete_deleting.yaml"
         invoke: Delete
         expect:
-          error: "NotebookInstance in Deleting state cannot be modified or deleted. The resource synced condition should be False."
+          error: "NotebookInstance in Deleting state cannot be modified or deleted."
       - name: "Delete=Pending"
         description: "This test checks if the Notebook requeues while in pending state."
         given:
@@ -316,7 +316,7 @@ tests:
           desired_state: "notebook_instance/v1alpha1/input/delete/nb_delete_stopping.yaml"
         invoke: Delete
         expect:
-          error: "NotebookInstance in Stopping state cannot be modified or deleted. The resource synced condition should be False."
+          error: "NotebookInstance in Stopping state cannot be modified or deleted."
       - name: "Delete=Updating"
         description: "This test checks if the Notebook requeues while updating"
         given:
