@@ -82,7 +82,7 @@ tests:
            latest_state: "v1alpha1/readone/observed/nb_readone_inservice.yaml"
        - name: "ReadOne=StoppedAfterUpdateACK"
          description: "Testing how readone handles the Stopped state after it's been updated. In this test the Notebook Instance has been stopped by
-         the controller."
+         the controller. It should remove the StoppedByControllerMetadata status field."
          given: 
            desired_state: "v1alpha1/readone/desired/nb_readone_stopped_after_update_ack.yaml"
            svc_api:
@@ -93,7 +93,7 @@ tests:
          expect:
            latest_state: "v1alpha1/readone/observed/nb_readone_stopped_after_update.yaml"
        - name: "ReadOne=StoppedAfterUpdateHuman"
-         description: "Testing how readone handles the Stopped state when stopped by a human for an update, StoppedByControllerMeta should 
+         description: "Testing how readone handles the Stopped state when stopped by a human for an update, StoppedByControllerMetadata should 
          not be in the status."
          given: 
            desired_state: "v1alpha1/readone/desired/nb_readone_stopped_after_update_human.yaml"
@@ -105,7 +105,7 @@ tests:
            latest_state: "v1alpha1/readone/observed/nb_readone_stopped_after_update.yaml"
        - name: "ReadOne=StoppedBeforeUpdateACK"
          description: "Testing how readone handles the Stopped state when it's stopped right before an update. The StoppedByControllerMetadata status
-         should be in UpdatePending."
+         field should be in UpdatePending."
          given: 
            desired_state: "v1alpha1/readone/desired/nb_readone_stopped_before_update_ack.yaml"
            svc_api:
@@ -148,7 +148,7 @@ tests:
          expect:
            latest_state: "v1alpha1/readone/observed/nb_readone_updating_by_user.yaml"
        - name: "ReadOne=UpdatingUserStopping"
-         description: "Testing if the readone call updates the Notebook's status from stopped to updating, when it recieves information
+         description: "Testing if the readone operation updates the Notebook's status from stopped to updating, when it recieves information
          from the server."
          given: 
            desired_state: "v1alpha1/readone/desired/nb_readone_updating.yaml"
@@ -159,7 +159,7 @@ tests:
          expect:
            latest_state: "v1alpha1/readone/observed/nb_readone_updating.yaml"
        - name: "ReadOne=StartFail"
-         description: "Testing how readone would behave if start failed, it should return an error."
+         description: "Testing how readone would behave if startNotebookInstance failed, test should return an error."
          given:
            desired_state: "v1alpha1/readone/desired/nb_readone_stopped_after_update_ack.yaml"
            svc_api:
@@ -288,7 +288,7 @@ tests:
     description: "Tests that test the delete operation"
     scenarios:
       - name: "Delete=InService"
-        description: "This test checks if the Notebook Instance stops before deleting."
+        description: "This test checks if the Notebook Instance stops before deleting. It should return a requeueWaitWhileStopping error."
         given:
           desired_state: "v1alpha1/delete/desired/nb_delete_IS.yaml"
           svc_api:
@@ -297,7 +297,7 @@ tests:
         expect:
           error: "NotebookInstance is stopping."
       - name: "Delete=Deleting"
-        description: "This test checks if the Notebook requeues while deleting. The resource synced condition should be False."
+        description: "This test checks if the Notebook requeues while deleting. It should return a requeueWaitWhileDeleting error."
         given:
           desired_state: "v1alpha1/delete/desired/nb_delete_deleting.yaml"
         invoke: Delete
@@ -311,7 +311,7 @@ tests:
         expect:
           error: "NotebookInstance in Pending state cannot be modified or deleted."
       - name: "Delete=Stopping"
-        description: "This test checks if the Notebook requeues while stopping. The resource synced condition should be False."
+        description: "This test checks if the Notebook requeues while stopping."
         given:
           desired_state: "v1alpha1/delete/desired/nb_delete_stopping.yaml"
         invoke: Delete
@@ -336,7 +336,7 @@ tests:
         expect:
           error: "NotebookInstance is deleting."
       - name: "Delete=Fail"
-        description: "This test checks if the Notebook returns an error if delete fails"
+        description: "This test checks if the Notebook returns an error if delete fails."
         given:
           desired_state: "v1alpha1/delete/desired/nb_delete_stopped.yaml"
           svc_api:
@@ -348,7 +348,7 @@ tests:
         expect:
           error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
       - name: "Delete=StopFail"
-        description: "This test checks if the Notebook returns an error if Stop fails"
+        description: "This test checks if the Notebook returns an error if Stop fails."
         given:
           desired_state: "v1alpha1/delete/desired/nb_delete_IS.yaml"
           svc_api:
