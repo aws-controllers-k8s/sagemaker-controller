@@ -1,0 +1,22 @@
+{
+  "AcceleratorTypes": ["ml.eia1.medium"],
+  "AdditionalCodeRepositories": ["code-repo"],
+  "CreationTime": "0001-01-01T00:00:00Z",
+  "DefaultCodeRepository": "my-code",
+  "DirectInternetAccess": "Enabled",
+  "FailureReason": null,
+  "InstanceType": "ml.t2.medium",
+  "KmsKeyId": "op",
+  "LastModifiedTime": "2021-08-15T22:06:18.767Z",
+  "NetworkInterfaceId": null,
+  "NotebookInstanceArn": "arn:aws:sagemaker:us-east-2:1234:notebook-instance/test",
+  "NotebookInstanceLifecycleConfigName": "my-lfc",
+  "NotebookInstanceName": "test",
+  "NotebookInstanceStatus": "InService",
+  "RoleArn": "arn:aws:iam::1234:role/service-role/AmazonSageMakerServiceCatalogProductsUseRole",
+  "RootAccess": "Enabled",
+  "SecurityGroups": ["woof"],
+  "SubnetId": "abc",
+  "Url": "test.notebook.us-east-2.sagemaker.aws",
+  "VolumeSizeInGB": 8
+ }
