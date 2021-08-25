@@ -1,0 +1,32 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: Endpoint
+metadata:
+  creationTimestamp: null
+  name: xgboost-endpoint
+spec:
+  endpointConfigName: xgboost-endpoint-single-variant-config-updated
+  endpointName: xgboost-endpoint
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:endpoint/xgboost-endpoint
+    ownerAccountID: ""
+  conditions:
+  - lastTransitionTime: "0001-01-01T00:00:00.109Z"
+    message: Endpoint is in InService status.
+    status: "True"
+    type: ACK.ResourceSynced
+  creationTime: "0001-01-01T00:00:00.109Z"
+  endpointStatus: InService
+  lastEndpointConfigNameForUpdate: xgboost-endpoint-single-variant-config-updated
+  lastModifiedTime: "0001-01-01T00:00:00.109Z"
+  latestEndpointConfigName: xgboost-endpoint-single-variant-config
+  productionVariants:
+  - currentInstanceCount: 2
+    currentWeight: 1
+    deployedImages:
+    - resolutionTime: "0001-01-01T00:00:00.109Z"
+      resolvedImage: 433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost@sha256:54004f910467ebf7cfa71b5523b81695d103abf21a37d38dc84d63ab8d510c35
+      specifiedImage: 433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:latest
+    desiredInstanceCount: 2
+    desiredWeight: 1
+    variantName: variant-1

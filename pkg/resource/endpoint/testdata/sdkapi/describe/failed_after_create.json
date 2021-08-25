@@ -1,0 +1,13 @@
+{
+    "CreationTime": "0001-01-01T00:00:00.109Z",
+    "DataCaptureConfig": null,
+    "EndpointArn": "arn:aws:sagemaker:us-west-2:123456789012:endpoint/xgboost-endpoint",
+    "EndpointConfigName": "xgboost-endpoint-faulty-config",
+    "EndpointName": "xgboost-endpoint",
+    "EndpointStatus": "Failed",
+    "FailureReason": " Failed to download model data for container from URL, blah",
+    "LastDeploymentConfig": null,
+    "LastModifiedTime": "0001-01-01T00:00:00.109Z",
+    "ProductionVariants": null
+   }
+   

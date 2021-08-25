@@ -5,3 +5,6 @@
 /docs/site
 bin
 build
+
+*.out
+*.html
