@@ -1,0 +1,33 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: Endpoint
+metadata:
+  creationTimestamp: null
+  name: xgboost-endpoint
+spec:
+  endpointConfigName: xgboost-endpoint-faulty-config
+  endpointName: xgboost-endpoint
+  tags:
+  - key: confidentiality
+    value: public
+  - key: environment
+    value: testing
+  - key: customer
+    value: test-user
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:endpoint/xgboost-endpoint
+    ownerAccountID: ""
+  conditions:
+  - lastTransitionTime: "0001-01-01T00:00:00Z"
+    message: Endpoint is in Failed status.
+    status: "True"
+    type: ACK.ResourceSynced
+  - lastTransitionTime: "0001-01-01T00:00:00Z"
+    message: 'Endpoint status reached terminal state: Failed. Check the FailureReason.'
+    status: "True"
+    type: ACK.Terminal
+  creationTime: "0001-01-01T00:00:00Z"
+  endpointStatus: Failed
+  failureReason: ' Failed to download model data for container from URL, blah'
+  lastModifiedTime: "0001-01-01T00:00:00Z"
+  latestEndpointConfigName: xgboost-endpoint-faulty-config

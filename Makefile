@@ -15,6 +15,7 @@ BUILDDATE=$(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
 GO_LDFLAGS=-ldflags "-X main.version=$(VERSION) \
 			-X main.buildHash=$(GITCOMMIT) \
 			-X main.buildDate=$(BUILDDATE)"
+GOCOVER=go tool cover
 
 .PHONY: all test clean-mocks mocks
 
@@ -24,8 +25,9 @@ test: 				## Run code tests
 	go test -v ./...
 
 test-cover: | mocks				## Run code tests with resources coverage
-	go test -coverpkg=./pkg/resource/... -covermode=count -coverprofile=coverage.out ./...
-	go tool cover -func=coverage.out
+	go test -coverpkg=./pkg/resource/endpoint/... -covermode=count -coverprofile=coverage.out ./...
+	$(GOCOVER) -func=coverage.out
+	$(GOCOVER) -html=coverage.out -o coverage.html
 
 clean-mocks:	## Remove mocks directory
 	rm -r mocks

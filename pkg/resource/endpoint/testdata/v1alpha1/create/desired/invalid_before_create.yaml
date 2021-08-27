@@ -3,7 +3,7 @@ kind: Endpoint
 metadata:
   name: unit_testing_endpoint
 spec:
-  endpointName: !-intentionally-invalid-name
+  endpointName: intentionally@invalid-name
   endpointConfigName: unit_testing_endpoint
   tags:
     - key: confidentiality

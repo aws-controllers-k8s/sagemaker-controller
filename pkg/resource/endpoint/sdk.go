@@ -157,11 +157,7 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
-	// custom set output from response
-	ko, err = rm.customDescribeEndpointSetOutput(ctx, r, resp, ko)
-	if err != nil {
-		return nil, err
-	}
+	rm.customDescribeEndpointSetOutput(resp, ko)
 	return &resource{ko}, nil
 }
 
@@ -224,7 +220,6 @@ func (rm *resourceManager) sdkCreate(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutput(desired, aws.String(svcsdk.EndpointStatusCreating), ko)
 	return &resource{ko}, nil
 }
 
@@ -271,10 +266,14 @@ func (rm *resourceManager) sdkUpdate(
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkUpdate")
 	defer exit(err)
-	updated, err = rm.customUpdateEndpoint(ctx, desired, latest, delta)
-	if updated != nil || err != nil {
-		return updated, err
+	if err = rm.requeueUntilCanModify(ctx, latest); err != nil {
+		return nil, err
 	}
+
+	if err = rm.customUpdateEndpointPreChecks(ctx, desired, latest, delta); err != nil {
+		return nil, err
+	}
+
 	input, err := rm.newUpdateRequestPayload(ctx, desired)
 	if err != nil {
 		return nil, err
@@ -300,11 +299,7 @@ func (rm *resourceManager) sdkUpdate(
 	}
 
 	rm.setStatusDefaults(ko)
-	// custom set output from response
-	ko, err = rm.customUpdateEndpointSetOutput(ctx, desired, resp, ko)
-	if err != nil {
-		return nil, err
-	}
+	rm.customUpdateEndpointSetOutput(ko)
 	return &resource{ko}, nil
 }
 
@@ -335,9 +330,10 @@ func (rm *resourceManager) sdkDelete(
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
-	if err = rm.customDeleteEndpoint(ctx, r); err != nil {
-		return nil, err
+	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
+		return r, err
 	}
+
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
 		return nil, err
