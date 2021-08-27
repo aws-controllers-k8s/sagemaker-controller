@@ -16,7 +16,16 @@
 package notebook_instance
 
 import (
+	"bytes"
+	"reflect"
+
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+)
+
+// Hack to avoid import errors during build...
+var (
+	_ = &bytes.Buffer{}
+	_ = &reflect.Method{}
 )
 
 // newResourceDelta returns a new `ackcompare.Delta` used to compare two
@@ -36,7 +45,6 @@ func newResourceDelta(
 	if !ackcompare.SliceStringPEqual(a.ko.Spec.AcceleratorTypes, b.ko.Spec.AcceleratorTypes) {
 		delta.Add("Spec.AcceleratorTypes", a.ko.Spec.AcceleratorTypes, b.ko.Spec.AcceleratorTypes)
 	}
-
 	if !ackcompare.SliceStringPEqual(a.ko.Spec.AdditionalCodeRepositories, b.ko.Spec.AdditionalCodeRepositories) {
 		delta.Add("Spec.AdditionalCodeRepositories", a.ko.Spec.AdditionalCodeRepositories, b.ko.Spec.AdditionalCodeRepositories)
 	}
@@ -96,7 +104,6 @@ func newResourceDelta(
 			delta.Add("Spec.RootAccess", a.ko.Spec.RootAccess, b.ko.Spec.RootAccess)
 		}
 	}
-
 	if !ackcompare.SliceStringPEqual(a.ko.Spec.SecurityGroupIDs, b.ko.Spec.SecurityGroupIDs) {
 		delta.Add("Spec.SecurityGroupIDs", a.ko.Spec.SecurityGroupIDs, b.ko.Spec.SecurityGroupIDs)
 	}
@@ -107,7 +114,9 @@ func newResourceDelta(
 			delta.Add("Spec.SubnetID", a.ko.Spec.SubnetID, b.ko.Spec.SubnetID)
 		}
 	}
-
+	if !reflect.DeepEqual(a.ko.Spec.Tags, b.ko.Spec.Tags) {
+		delta.Add("Spec.Tags", a.ko.Spec.Tags, b.ko.Spec.Tags)
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.VolumeSizeInGB, b.ko.Spec.VolumeSizeInGB) {
 		delta.Add("Spec.VolumeSizeInGB", a.ko.Spec.VolumeSizeInGB, b.ko.Spec.VolumeSizeInGB)
 	} else if a.ko.Spec.VolumeSizeInGB != nil && b.ko.Spec.VolumeSizeInGB != nil {

@@ -16,7 +16,16 @@
 package data_quality_job_definition
 
 import (
+	"bytes"
+	"reflect"
+
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+)
+
+// Hack to avoid import errors during build...
+var (
+	_ = &bytes.Buffer{}
+	_ = &reflect.Method{}
 )
 
 // newResourceDelta returns a new `ackcompare.Delta` used to compare two
@@ -35,11 +44,9 @@ func newResourceDelta(
 	if ackcompare.HasNilDifference(a.ko.Spec.DataQualityAppSpecification, b.ko.Spec.DataQualityAppSpecification) {
 		delta.Add("Spec.DataQualityAppSpecification", a.ko.Spec.DataQualityAppSpecification, b.ko.Spec.DataQualityAppSpecification)
 	} else if a.ko.Spec.DataQualityAppSpecification != nil && b.ko.Spec.DataQualityAppSpecification != nil {
-
 		if !ackcompare.SliceStringPEqual(a.ko.Spec.DataQualityAppSpecification.ContainerArguments, b.ko.Spec.DataQualityAppSpecification.ContainerArguments) {
 			delta.Add("Spec.DataQualityAppSpecification.ContainerArguments", a.ko.Spec.DataQualityAppSpecification.ContainerArguments, b.ko.Spec.DataQualityAppSpecification.ContainerArguments)
 		}
-
 		if !ackcompare.SliceStringPEqual(a.ko.Spec.DataQualityAppSpecification.ContainerEntrypoint, b.ko.Spec.DataQualityAppSpecification.ContainerEntrypoint) {
 			delta.Add("Spec.DataQualityAppSpecification.ContainerEntrypoint", a.ko.Spec.DataQualityAppSpecification.ContainerEntrypoint, b.ko.Spec.DataQualityAppSpecification.ContainerEntrypoint)
 		}
@@ -193,7 +200,9 @@ func newResourceDelta(
 				delta.Add("Spec.DataQualityJobOutputConfig.KMSKeyID", a.ko.Spec.DataQualityJobOutputConfig.KMSKeyID, b.ko.Spec.DataQualityJobOutputConfig.KMSKeyID)
 			}
 		}
-
+		if !reflect.DeepEqual(a.ko.Spec.DataQualityJobOutputConfig.MonitoringOutputs, b.ko.Spec.DataQualityJobOutputConfig.MonitoringOutputs) {
+			delta.Add("Spec.DataQualityJobOutputConfig.MonitoringOutputs", a.ko.Spec.DataQualityJobOutputConfig.MonitoringOutputs, b.ko.Spec.DataQualityJobOutputConfig.MonitoringOutputs)
+		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.JobDefinitionName, b.ko.Spec.JobDefinitionName) {
 		delta.Add("Spec.JobDefinitionName", a.ko.Spec.JobDefinitionName, b.ko.Spec.JobDefinitionName)
@@ -258,11 +267,9 @@ func newResourceDelta(
 		if ackcompare.HasNilDifference(a.ko.Spec.NetworkConfig.VPCConfig, b.ko.Spec.NetworkConfig.VPCConfig) {
 			delta.Add("Spec.NetworkConfig.VPCConfig", a.ko.Spec.NetworkConfig.VPCConfig, b.ko.Spec.NetworkConfig.VPCConfig)
 		} else if a.ko.Spec.NetworkConfig.VPCConfig != nil && b.ko.Spec.NetworkConfig.VPCConfig != nil {
-
 			if !ackcompare.SliceStringPEqual(a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs) {
 				delta.Add("Spec.NetworkConfig.VPCConfig.SecurityGroupIDs", a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs)
 			}
-
 			if !ackcompare.SliceStringPEqual(a.ko.Spec.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.NetworkConfig.VPCConfig.Subnets) {
 				delta.Add("Spec.NetworkConfig.VPCConfig.Subnets", a.ko.Spec.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.NetworkConfig.VPCConfig.Subnets)
 			}
@@ -285,6 +292,9 @@ func newResourceDelta(
 				delta.Add("Spec.StoppingCondition.MaxRuntimeInSeconds", a.ko.Spec.StoppingCondition.MaxRuntimeInSeconds, b.ko.Spec.StoppingCondition.MaxRuntimeInSeconds)
 			}
 		}
+	}
+	if !reflect.DeepEqual(a.ko.Spec.Tags, b.ko.Spec.Tags) {
+		delta.Add("Spec.Tags", a.ko.Spec.Tags, b.ko.Spec.Tags)
 	}
 
 	return delta

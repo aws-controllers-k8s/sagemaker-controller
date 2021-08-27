@@ -74,24 +74,30 @@ type HyperParameterTuningJobStatus struct {
 	// All CRs managed by ACK have a common `Status.ACKResourceMetadata` member
 	// that is used to contain resource sync state, account ownership,
 	// constructed ARN for the resource
+	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
 	// All CRS managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
+	// +kubebuilder:validation:Optional
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
 	// A TrainingJobSummary object that describes the training job that completed
 	// with the best current HyperParameterTuningJobObjective.
+	// +kubebuilder:validation:Optional
 	BestTrainingJob *HyperParameterTrainingJobSummary `json:"bestTrainingJob,omitempty"`
 	// If the tuning job failed, the reason it failed.
+	// +kubebuilder:validation:Optional
 	FailureReason *string `json:"failureReason,omitempty"`
 	// The status of the tuning job: InProgress, Completed, Failed, Stopping, or
 	// Stopped.
+	// +kubebuilder:validation:Optional
 	HyperParameterTuningJobStatus *string `json:"hyperParameterTuningJobStatus,omitempty"`
 	// If the hyperparameter tuning job is an warm start tuning job with a WarmStartType
 	// of IDENTICAL_DATA_AND_ALGORITHM, this is the TrainingJobSummary for the training
 	// job with the best objective metric value of all training jobs launched by
 	// this tuning job and all parent jobs specified for the warm start tuning job.
+	// +kubebuilder:validation:Optional
 	OverallBestTrainingJob *HyperParameterTrainingJobSummary `json:"overallBestTrainingJob,omitempty"`
 }
 

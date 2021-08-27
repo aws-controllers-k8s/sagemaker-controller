@@ -16,7 +16,16 @@
 package monitoring_schedule
 
 import (
+	"bytes"
+	"reflect"
+
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+)
+
+// Hack to avoid import errors during build...
+var (
+	_ = &bytes.Buffer{}
+	_ = &reflect.Method{}
 )
 
 // newResourceDelta returns a new `ackcompare.Delta` used to compare two
@@ -81,11 +90,9 @@ func newResourceDelta(
 			if ackcompare.HasNilDifference(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification) {
 				delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification)
 			} else if a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification != nil && b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification != nil {
-
 				if !ackcompare.SliceStringPEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments) {
 					delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments)
 				}
-
 				if !ackcompare.SliceStringPEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint) {
 					delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint)
 				}
@@ -111,7 +118,9 @@ func newResourceDelta(
 					}
 				}
 			}
-
+			if !reflect.DeepEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs) {
+				delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs)
+			}
 			if ackcompare.HasNilDifference(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig) {
 				delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig)
 			} else if a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig != nil && b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig != nil {
@@ -122,7 +131,9 @@ func newResourceDelta(
 						delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.KMSKeyID", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.KMSKeyID, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.KMSKeyID)
 					}
 				}
-
+				if !reflect.DeepEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs) {
+					delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs)
+				}
 			}
 			if ackcompare.HasNilDifference(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources) {
 				delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources)
@@ -180,11 +191,9 @@ func newResourceDelta(
 				if ackcompare.HasNilDifference(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig) {
 					delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig)
 				} else if a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig != nil && b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig != nil {
-
 					if !ackcompare.SliceStringPEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs) {
 						delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs)
 					}
-
 					if !ackcompare.SliceStringPEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets) {
 						delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets)
 					}
@@ -241,6 +250,9 @@ func newResourceDelta(
 		if *a.ko.Spec.MonitoringScheduleName != *b.ko.Spec.MonitoringScheduleName {
 			delta.Add("Spec.MonitoringScheduleName", a.ko.Spec.MonitoringScheduleName, b.ko.Spec.MonitoringScheduleName)
 		}
+	}
+	if !reflect.DeepEqual(a.ko.Spec.Tags, b.ko.Spec.Tags) {
+		delta.Add("Spec.Tags", a.ko.Spec.Tags, b.ko.Spec.Tags)
 	}
 
 	return delta

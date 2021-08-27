@@ -17,13 +17,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"path/filepath"
+	"strings"
+	"testing"
+
 	acktypes "github.com/aws-controllers-k8s/runtime/pkg/types"
 	mocksvcsdkapi "github.com/aws-controllers-k8s/sagemaker-controller/test/mocks/aws-sdk-go/sagemaker"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"path/filepath"
-	"strings"
-	"testing"
 )
 
 var RecoverPanicString = "\t--- PANIC ON ERROR:"

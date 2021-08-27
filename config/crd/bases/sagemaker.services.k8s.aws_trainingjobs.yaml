@@ -4,7 +4,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.4.0
+    controller-gen.kubebuilder.io/version: v0.6.1
   creationTimestamp: null
   name: trainingjobs.sagemaker.services.k8s.aws
 spec:
@@ -577,9 +577,6 @@ spec:
                   Stopping - The training job is stopping. \n    * Stopped - The training
                   job has stopped. \n For more detailed information, see SecondaryStatus."
                 type: string
-            required:
-            - ackResourceMetadata
-            - conditions
             type: object
         type: object
     served: true

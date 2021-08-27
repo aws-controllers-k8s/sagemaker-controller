@@ -18,8 +18,6 @@ spec:
         minValue: '10'
         maxValue: '20'
         scalingType: Linear
-      continuousParameterRanges: []
-      categoricalParameterRanges: []
     trainingJobEarlyStoppingType: Auto
   trainingJobDefinition:
     staticHyperParameters:

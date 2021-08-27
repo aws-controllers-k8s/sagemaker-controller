@@ -16,7 +16,16 @@
 package endpoint_config
 
 import (
+	"bytes"
+	"reflect"
+
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+)
+
+// Hack to avoid import errors during build...
+var (
+	_ = &bytes.Buffer{}
+	_ = &reflect.Method{}
 )
 
 // newResourceDelta returns a new `ackcompare.Delta` used to compare two
@@ -38,16 +47,16 @@ func newResourceDelta(
 		if ackcompare.HasNilDifference(a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader, b.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader) {
 			delta.Add("Spec.DataCaptureConfig.CaptureContentTypeHeader", a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader, b.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader)
 		} else if a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader != nil && b.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader != nil {
-
 			if !ackcompare.SliceStringPEqual(a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes, b.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes) {
 				delta.Add("Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes", a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes, b.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes)
 			}
-
 			if !ackcompare.SliceStringPEqual(a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes, b.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes) {
 				delta.Add("Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes", a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes, b.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes)
 			}
 		}
-
+		if !reflect.DeepEqual(a.ko.Spec.DataCaptureConfig.CaptureOptions, b.ko.Spec.DataCaptureConfig.CaptureOptions) {
+			delta.Add("Spec.DataCaptureConfig.CaptureOptions", a.ko.Spec.DataCaptureConfig.CaptureOptions, b.ko.Spec.DataCaptureConfig.CaptureOptions)
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.DataCaptureConfig.DestinationS3URI, b.ko.Spec.DataCaptureConfig.DestinationS3URI) {
 			delta.Add("Spec.DataCaptureConfig.DestinationS3URI", a.ko.Spec.DataCaptureConfig.DestinationS3URI, b.ko.Spec.DataCaptureConfig.DestinationS3URI)
 		} else if a.ko.Spec.DataCaptureConfig.DestinationS3URI != nil && b.ko.Spec.DataCaptureConfig.DestinationS3URI != nil {
@@ -90,6 +99,12 @@ func newResourceDelta(
 		if *a.ko.Spec.KMSKeyID != *b.ko.Spec.KMSKeyID {
 			delta.Add("Spec.KMSKeyID", a.ko.Spec.KMSKeyID, b.ko.Spec.KMSKeyID)
 		}
+	}
+	if !reflect.DeepEqual(a.ko.Spec.ProductionVariants, b.ko.Spec.ProductionVariants) {
+		delta.Add("Spec.ProductionVariants", a.ko.Spec.ProductionVariants, b.ko.Spec.ProductionVariants)
+	}
+	if !reflect.DeepEqual(a.ko.Spec.Tags, b.ko.Spec.Tags) {
+		delta.Add("Spec.Tags", a.ko.Spec.Tags, b.ko.Spec.Tags)
 	}
 
 	return delta

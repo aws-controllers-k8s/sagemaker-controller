@@ -374,9 +374,6 @@ spec:
               processingJobStatus:
                 description: Provides the status of a processing job.
                 type: string
-            required:
-            - ackResourceMetadata
-            - conditions
             type: object
         type: object
     served: true

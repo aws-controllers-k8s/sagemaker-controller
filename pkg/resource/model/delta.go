@@ -16,7 +16,16 @@
 package model
 
 import (
+	"bytes"
+	"reflect"
+
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+)
+
+// Hack to avoid import errors during build...
+var (
+	_ = &bytes.Buffer{}
+	_ = &reflect.Method{}
 )
 
 // newResourceDelta returns a new `ackcompare.Delta` used to compare two
@@ -33,6 +42,9 @@ func newResourceDelta(
 	}
 	customSetDefaults(a, b)
 
+	if !reflect.DeepEqual(a.ko.Spec.Containers, b.ko.Spec.Containers) {
+		delta.Add("Spec.Containers", a.ko.Spec.Containers, b.ko.Spec.Containers)
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.EnableNetworkIsolation, b.ko.Spec.EnableNetworkIsolation) {
 		delta.Add("Spec.EnableNetworkIsolation", a.ko.Spec.EnableNetworkIsolation, b.ko.Spec.EnableNetworkIsolation)
 	} else if a.ko.Spec.EnableNetworkIsolation != nil && b.ko.Spec.EnableNetworkIsolation != nil {
@@ -144,15 +156,15 @@ func newResourceDelta(
 			}
 		}
 	}
-
+	if !reflect.DeepEqual(a.ko.Spec.Tags, b.ko.Spec.Tags) {
+		delta.Add("Spec.Tags", a.ko.Spec.Tags, b.ko.Spec.Tags)
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.VPCConfig, b.ko.Spec.VPCConfig) {
 		delta.Add("Spec.VPCConfig", a.ko.Spec.VPCConfig, b.ko.Spec.VPCConfig)
 	} else if a.ko.Spec.VPCConfig != nil && b.ko.Spec.VPCConfig != nil {
-
 		if !ackcompare.SliceStringPEqual(a.ko.Spec.VPCConfig.SecurityGroupIDs, b.ko.Spec.VPCConfig.SecurityGroupIDs) {
 			delta.Add("Spec.VPCConfig.SecurityGroupIDs", a.ko.Spec.VPCConfig.SecurityGroupIDs, b.ko.Spec.VPCConfig.SecurityGroupIDs)
 		}
-
 		if !ackcompare.SliceStringPEqual(a.ko.Spec.VPCConfig.Subnets, b.ko.Spec.VPCConfig.Subnets) {
 			delta.Add("Spec.VPCConfig.Subnets", a.ko.Spec.VPCConfig.Subnets, b.ko.Spec.VPCConfig.Subnets)
 		}

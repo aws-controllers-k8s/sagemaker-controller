@@ -16,7 +16,16 @@
 package endpoint
 
 import (
+	"bytes"
+	"reflect"
+
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+)
+
+// Hack to avoid import errors during build...
+var (
+	_ = &bytes.Buffer{}
+	_ = &reflect.Method{}
 )
 
 // newResourceDelta returns a new `ackcompare.Delta` used to compare two
@@ -45,6 +54,9 @@ func newResourceDelta(
 		if *a.ko.Spec.EndpointName != *b.ko.Spec.EndpointName {
 			delta.Add("Spec.EndpointName", a.ko.Spec.EndpointName, b.ko.Spec.EndpointName)
 		}
+	}
+	if !reflect.DeepEqual(a.ko.Spec.Tags, b.ko.Spec.Tags) {
+		delta.Add("Spec.Tags", a.ko.Spec.Tags, b.ko.Spec.Tags)
 	}
 
 	return delta

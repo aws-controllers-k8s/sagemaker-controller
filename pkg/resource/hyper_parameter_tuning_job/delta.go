@@ -16,7 +16,16 @@
 package hyper_parameter_tuning_job
 
 import (
+	"bytes"
+	"reflect"
+
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+)
+
+// Hack to avoid import errors during build...
+var (
+	_ = &bytes.Buffer{}
+	_ = &reflect.Method{}
 )
 
 // newResourceDelta returns a new `ackcompare.Delta` used to compare two
@@ -57,7 +66,15 @@ func newResourceDelta(
 		if ackcompare.HasNilDifference(a.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges, b.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges) {
 			delta.Add("Spec.HyperParameterTuningJobConfig.ParameterRanges", a.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges, b.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges)
 		} else if a.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges != nil && b.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges != nil {
-
+			if !reflect.DeepEqual(a.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges.CategoricalParameterRanges, b.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges.CategoricalParameterRanges) {
+				delta.Add("Spec.HyperParameterTuningJobConfig.ParameterRanges.CategoricalParameterRanges", a.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges.CategoricalParameterRanges, b.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges.CategoricalParameterRanges)
+			}
+			if !reflect.DeepEqual(a.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges.ContinuousParameterRanges, b.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges.ContinuousParameterRanges) {
+				delta.Add("Spec.HyperParameterTuningJobConfig.ParameterRanges.ContinuousParameterRanges", a.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges.ContinuousParameterRanges, b.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges.ContinuousParameterRanges)
+			}
+			if !reflect.DeepEqual(a.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges.IntegerParameterRanges, b.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges.IntegerParameterRanges) {
+				delta.Add("Spec.HyperParameterTuningJobConfig.ParameterRanges.IntegerParameterRanges", a.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges.IntegerParameterRanges, b.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges.IntegerParameterRanges)
+			}
 		}
 		if ackcompare.HasNilDifference(a.ko.Spec.HyperParameterTuningJobConfig.ResourceLimits, b.ko.Spec.HyperParameterTuningJobConfig.ResourceLimits) {
 			delta.Add("Spec.HyperParameterTuningJobConfig.ResourceLimits", a.ko.Spec.HyperParameterTuningJobConfig.ResourceLimits, b.ko.Spec.HyperParameterTuningJobConfig.ResourceLimits)
@@ -110,7 +127,9 @@ func newResourceDelta(
 			delta.Add("Spec.HyperParameterTuningJobName", a.ko.Spec.HyperParameterTuningJobName, b.ko.Spec.HyperParameterTuningJobName)
 		}
 	}
-
+	if !reflect.DeepEqual(a.ko.Spec.Tags, b.ko.Spec.Tags) {
+		delta.Add("Spec.Tags", a.ko.Spec.Tags, b.ko.Spec.Tags)
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition, b.ko.Spec.TrainingJobDefinition) {
 		delta.Add("Spec.TrainingJobDefinition", a.ko.Spec.TrainingJobDefinition, b.ko.Spec.TrainingJobDefinition)
 	} else if a.ko.Spec.TrainingJobDefinition != nil && b.ko.Spec.TrainingJobDefinition != nil {
@@ -124,7 +143,9 @@ func newResourceDelta(
 					delta.Add("Spec.TrainingJobDefinition.AlgorithmSpecification.AlgorithmName", a.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.AlgorithmName, b.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.AlgorithmName)
 				}
 			}
-
+			if !reflect.DeepEqual(a.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions, b.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions) {
+				delta.Add("Spec.TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions", a.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions, b.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions)
+			}
 			if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.TrainingImage, b.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.TrainingImage) {
 				delta.Add("Spec.TrainingJobDefinition.AlgorithmSpecification.TrainingImage", a.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.TrainingImage, b.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.TrainingImage)
 			} else if a.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.TrainingImage != nil && b.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.TrainingImage != nil {
@@ -189,9 +210,19 @@ func newResourceDelta(
 		if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.HyperParameterRanges, b.ko.Spec.TrainingJobDefinition.HyperParameterRanges) {
 			delta.Add("Spec.TrainingJobDefinition.HyperParameterRanges", a.ko.Spec.TrainingJobDefinition.HyperParameterRanges, b.ko.Spec.TrainingJobDefinition.HyperParameterRanges)
 		} else if a.ko.Spec.TrainingJobDefinition.HyperParameterRanges != nil && b.ko.Spec.TrainingJobDefinition.HyperParameterRanges != nil {
-
+			if !reflect.DeepEqual(a.ko.Spec.TrainingJobDefinition.HyperParameterRanges.CategoricalParameterRanges, b.ko.Spec.TrainingJobDefinition.HyperParameterRanges.CategoricalParameterRanges) {
+				delta.Add("Spec.TrainingJobDefinition.HyperParameterRanges.CategoricalParameterRanges", a.ko.Spec.TrainingJobDefinition.HyperParameterRanges.CategoricalParameterRanges, b.ko.Spec.TrainingJobDefinition.HyperParameterRanges.CategoricalParameterRanges)
+			}
+			if !reflect.DeepEqual(a.ko.Spec.TrainingJobDefinition.HyperParameterRanges.ContinuousParameterRanges, b.ko.Spec.TrainingJobDefinition.HyperParameterRanges.ContinuousParameterRanges) {
+				delta.Add("Spec.TrainingJobDefinition.HyperParameterRanges.ContinuousParameterRanges", a.ko.Spec.TrainingJobDefinition.HyperParameterRanges.ContinuousParameterRanges, b.ko.Spec.TrainingJobDefinition.HyperParameterRanges.ContinuousParameterRanges)
+			}
+			if !reflect.DeepEqual(a.ko.Spec.TrainingJobDefinition.HyperParameterRanges.IntegerParameterRanges, b.ko.Spec.TrainingJobDefinition.HyperParameterRanges.IntegerParameterRanges) {
+				delta.Add("Spec.TrainingJobDefinition.HyperParameterRanges.IntegerParameterRanges", a.ko.Spec.TrainingJobDefinition.HyperParameterRanges.IntegerParameterRanges, b.ko.Spec.TrainingJobDefinition.HyperParameterRanges.IntegerParameterRanges)
+			}
 		}
-
+		if !reflect.DeepEqual(a.ko.Spec.TrainingJobDefinition.InputDataConfig, b.ko.Spec.TrainingJobDefinition.InputDataConfig) {
+			delta.Add("Spec.TrainingJobDefinition.InputDataConfig", a.ko.Spec.TrainingJobDefinition.InputDataConfig, b.ko.Spec.TrainingJobDefinition.InputDataConfig)
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.OutputDataConfig, b.ko.Spec.TrainingJobDefinition.OutputDataConfig) {
 			delta.Add("Spec.TrainingJobDefinition.OutputDataConfig", a.ko.Spec.TrainingJobDefinition.OutputDataConfig, b.ko.Spec.TrainingJobDefinition.OutputDataConfig)
 		} else if a.ko.Spec.TrainingJobDefinition.OutputDataConfig != nil && b.ko.Spec.TrainingJobDefinition.OutputDataConfig != nil {
@@ -295,21 +326,23 @@ func newResourceDelta(
 		if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.VPCConfig, b.ko.Spec.TrainingJobDefinition.VPCConfig) {
 			delta.Add("Spec.TrainingJobDefinition.VPCConfig", a.ko.Spec.TrainingJobDefinition.VPCConfig, b.ko.Spec.TrainingJobDefinition.VPCConfig)
 		} else if a.ko.Spec.TrainingJobDefinition.VPCConfig != nil && b.ko.Spec.TrainingJobDefinition.VPCConfig != nil {
-
 			if !ackcompare.SliceStringPEqual(a.ko.Spec.TrainingJobDefinition.VPCConfig.SecurityGroupIDs, b.ko.Spec.TrainingJobDefinition.VPCConfig.SecurityGroupIDs) {
 				delta.Add("Spec.TrainingJobDefinition.VPCConfig.SecurityGroupIDs", a.ko.Spec.TrainingJobDefinition.VPCConfig.SecurityGroupIDs, b.ko.Spec.TrainingJobDefinition.VPCConfig.SecurityGroupIDs)
 			}
-
 			if !ackcompare.SliceStringPEqual(a.ko.Spec.TrainingJobDefinition.VPCConfig.Subnets, b.ko.Spec.TrainingJobDefinition.VPCConfig.Subnets) {
 				delta.Add("Spec.TrainingJobDefinition.VPCConfig.Subnets", a.ko.Spec.TrainingJobDefinition.VPCConfig.Subnets, b.ko.Spec.TrainingJobDefinition.VPCConfig.Subnets)
 			}
 		}
 	}
-
+	if !reflect.DeepEqual(a.ko.Spec.TrainingJobDefinitions, b.ko.Spec.TrainingJobDefinitions) {
+		delta.Add("Spec.TrainingJobDefinitions", a.ko.Spec.TrainingJobDefinitions, b.ko.Spec.TrainingJobDefinitions)
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.WarmStartConfig, b.ko.Spec.WarmStartConfig) {
 		delta.Add("Spec.WarmStartConfig", a.ko.Spec.WarmStartConfig, b.ko.Spec.WarmStartConfig)
 	} else if a.ko.Spec.WarmStartConfig != nil && b.ko.Spec.WarmStartConfig != nil {
-
+		if !reflect.DeepEqual(a.ko.Spec.WarmStartConfig.ParentHyperParameterTuningJobs, b.ko.Spec.WarmStartConfig.ParentHyperParameterTuningJobs) {
+			delta.Add("Spec.WarmStartConfig.ParentHyperParameterTuningJobs", a.ko.Spec.WarmStartConfig.ParentHyperParameterTuningJobs, b.ko.Spec.WarmStartConfig.ParentHyperParameterTuningJobs)
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.WarmStartConfig.WarmStartType, b.ko.Spec.WarmStartConfig.WarmStartType) {
 			delta.Add("Spec.WarmStartConfig.WarmStartType", a.ko.Spec.WarmStartConfig.WarmStartType, b.ko.Spec.WarmStartConfig.WarmStartType)
 		} else if a.ko.Spec.WarmStartConfig.WarmStartType != nil && b.ko.Spec.WarmStartConfig.WarmStartType != nil {

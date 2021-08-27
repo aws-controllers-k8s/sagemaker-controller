@@ -86,21 +86,28 @@ type ModelPackageStatus struct {
 	// All CRs managed by ACK have a common `Status.ACKResourceMetadata` member
 	// that is used to contain resource sync state, account ownership,
 	// constructed ARN for the resource
+	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
 	// All CRS managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
+	// +kubebuilder:validation:Optional
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
 	// A timestamp specifying when the model package was created.
+	// +kubebuilder:validation:Optional
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	// The last time the model package was modified.
+	// +kubebuilder:validation:Optional
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	// The approval status of the model package.
+	// +kubebuilder:validation:Optional
 	ModelApprovalStatus *string `json:"modelApprovalStatus,omitempty"`
 	// The current status of the model package.
+	// +kubebuilder:validation:Optional
 	ModelPackageStatus *string `json:"modelPackageStatus,omitempty"`
 	// Details about the current status of the model package.
+	// +kubebuilder:validation:Optional
 	ModelPackageStatusDetails *ModelPackageStatusDetails `json:"modelPackageStatusDetails,omitempty"`
 }
 

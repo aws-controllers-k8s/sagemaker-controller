@@ -632,6 +632,10 @@ resources:
           operation: DescribeFeatureGroup
           path: FeatureGroupStatus
   NotebookInstance:
+    # Resource state/status can be modified in Sagemaker Console
+    # Need to reconcile to catch these state/status changes
+    reconcile: 
+      requeue_on_success_seconds: 60
     exceptions:
       errors:
           404:
@@ -814,3 +818,4 @@ ignore:
       - Workteam
     operations:
       - UpdateTrainingJob
+

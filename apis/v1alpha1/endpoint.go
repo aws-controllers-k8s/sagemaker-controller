@@ -43,13 +43,16 @@ type EndpointStatus struct {
 	// All CRs managed by ACK have a common `Status.ACKResourceMetadata` member
 	// that is used to contain resource sync state, account ownership,
 	// constructed ARN for the resource
+	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
 	// All CRS managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
+	// +kubebuilder:validation:Optional
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
 	// A timestamp that shows when the endpoint was created.
+	// +kubebuilder:validation:Optional
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	// The status of the endpoint.
 	//
@@ -79,17 +82,23 @@ type EndpointStatus struct {
 	//    * Failed: Endpoint could not be created, updated, or re-scaled. Use DescribeEndpointOutput$FailureReason
 	//    for information about the failure. DeleteEndpoint is the only operation
 	//    that can be performed on a failed endpoint.
+	// +kubebuilder:validation:Optional
 	EndpointStatus *string `json:"endpointStatus,omitempty"`
 	// If the status of the endpoint is Failed, the reason why it failed.
+	// +kubebuilder:validation:Optional
 	FailureReason *string `json:"failureReason,omitempty"`
 	// Name of the Amazon SageMaker endpoint configuration.
+	// +kubebuilder:validation:Optional
 	LastEndpointConfigNameForUpdate *string `json:"lastEndpointConfigNameForUpdate,omitempty"`
 	// A timestamp that shows when the endpoint was last modified.
+	// +kubebuilder:validation:Optional
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	// The name of the endpoint configuration associated with this endpoint.
+	// +kubebuilder:validation:Optional
 	LatestEndpointConfigName *string `json:"latestEndpointConfigName,omitempty"`
 	// An array of ProductionVariantSummary objects, one for each model hosted behind
 	// this endpoint.
+	// +kubebuilder:validation:Optional
 	ProductionVariants []*ProductionVariantSummary `json:"productionVariants,omitempty"`
 }
 

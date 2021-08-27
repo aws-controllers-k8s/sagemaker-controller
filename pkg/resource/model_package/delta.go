@@ -16,7 +16,16 @@
 package model_package
 
 import (
+	"bytes"
+	"reflect"
+
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+)
+
+// Hack to avoid import errors during build...
+var (
+	_ = &bytes.Buffer{}
+	_ = &reflect.Method{}
 )
 
 // newResourceDelta returns a new `ackcompare.Delta` used to compare two
@@ -57,19 +66,18 @@ func newResourceDelta(
 	if ackcompare.HasNilDifference(a.ko.Spec.InferenceSpecification, b.ko.Spec.InferenceSpecification) {
 		delta.Add("Spec.InferenceSpecification", a.ko.Spec.InferenceSpecification, b.ko.Spec.InferenceSpecification)
 	} else if a.ko.Spec.InferenceSpecification != nil && b.ko.Spec.InferenceSpecification != nil {
-
+		if !reflect.DeepEqual(a.ko.Spec.InferenceSpecification.Containers, b.ko.Spec.InferenceSpecification.Containers) {
+			delta.Add("Spec.InferenceSpecification.Containers", a.ko.Spec.InferenceSpecification.Containers, b.ko.Spec.InferenceSpecification.Containers)
+		}
 		if !ackcompare.SliceStringPEqual(a.ko.Spec.InferenceSpecification.SupportedContentTypes, b.ko.Spec.InferenceSpecification.SupportedContentTypes) {
 			delta.Add("Spec.InferenceSpecification.SupportedContentTypes", a.ko.Spec.InferenceSpecification.SupportedContentTypes, b.ko.Spec.InferenceSpecification.SupportedContentTypes)
 		}
-
 		if !ackcompare.SliceStringPEqual(a.ko.Spec.InferenceSpecification.SupportedRealtimeInferenceInstanceTypes, b.ko.Spec.InferenceSpecification.SupportedRealtimeInferenceInstanceTypes) {
 			delta.Add("Spec.InferenceSpecification.SupportedRealtimeInferenceInstanceTypes", a.ko.Spec.InferenceSpecification.SupportedRealtimeInferenceInstanceTypes, b.ko.Spec.InferenceSpecification.SupportedRealtimeInferenceInstanceTypes)
 		}
-
 		if !ackcompare.SliceStringPEqual(a.ko.Spec.InferenceSpecification.SupportedResponseMIMETypes, b.ko.Spec.InferenceSpecification.SupportedResponseMIMETypes) {
 			delta.Add("Spec.InferenceSpecification.SupportedResponseMIMETypes", a.ko.Spec.InferenceSpecification.SupportedResponseMIMETypes, b.ko.Spec.InferenceSpecification.SupportedResponseMIMETypes)
 		}
-
 		if !ackcompare.SliceStringPEqual(a.ko.Spec.InferenceSpecification.SupportedTransformInstanceTypes, b.ko.Spec.InferenceSpecification.SupportedTransformInstanceTypes) {
 			delta.Add("Spec.InferenceSpecification.SupportedTransformInstanceTypes", a.ko.Spec.InferenceSpecification.SupportedTransformInstanceTypes, b.ko.Spec.InferenceSpecification.SupportedTransformInstanceTypes)
 		}
@@ -307,13 +315,19 @@ func newResourceDelta(
 	if ackcompare.HasNilDifference(a.ko.Spec.SourceAlgorithmSpecification, b.ko.Spec.SourceAlgorithmSpecification) {
 		delta.Add("Spec.SourceAlgorithmSpecification", a.ko.Spec.SourceAlgorithmSpecification, b.ko.Spec.SourceAlgorithmSpecification)
 	} else if a.ko.Spec.SourceAlgorithmSpecification != nil && b.ko.Spec.SourceAlgorithmSpecification != nil {
-
+		if !reflect.DeepEqual(a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms, b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms) {
+			delta.Add("Spec.SourceAlgorithmSpecification.SourceAlgorithms", a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms, b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms)
+		}
 	}
-
+	if !reflect.DeepEqual(a.ko.Spec.Tags, b.ko.Spec.Tags) {
+		delta.Add("Spec.Tags", a.ko.Spec.Tags, b.ko.Spec.Tags)
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.ValidationSpecification, b.ko.Spec.ValidationSpecification) {
 		delta.Add("Spec.ValidationSpecification", a.ko.Spec.ValidationSpecification, b.ko.Spec.ValidationSpecification)
 	} else if a.ko.Spec.ValidationSpecification != nil && b.ko.Spec.ValidationSpecification != nil {
-
+		if !reflect.DeepEqual(a.ko.Spec.ValidationSpecification.ValidationProfiles, b.ko.Spec.ValidationSpecification.ValidationProfiles) {
+			delta.Add("Spec.ValidationSpecification.ValidationProfiles", a.ko.Spec.ValidationSpecification.ValidationProfiles, b.ko.Spec.ValidationSpecification.ValidationProfiles)
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.ValidationSpecification.ValidationRole, b.ko.Spec.ValidationSpecification.ValidationRole) {
 			delta.Add("Spec.ValidationSpecification.ValidationRole", a.ko.Spec.ValidationSpecification.ValidationRole, b.ko.Spec.ValidationSpecification.ValidationRole)
 		} else if a.ko.Spec.ValidationSpecification.ValidationRole != nil && b.ko.Spec.ValidationSpecification.ValidationRole != nil {

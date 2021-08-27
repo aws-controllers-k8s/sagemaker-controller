@@ -16,7 +16,16 @@
 package model_bias_job_definition
 
 import (
+	"bytes"
+	"reflect"
+
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+)
+
+// Hack to avoid import errors during build...
+var (
+	_ = &bytes.Buffer{}
+	_ = &reflect.Method{}
 )
 
 // newResourceDelta returns a new `ackcompare.Delta` used to compare two
@@ -221,7 +230,9 @@ func newResourceDelta(
 				delta.Add("Spec.ModelBiasJobOutputConfig.KMSKeyID", a.ko.Spec.ModelBiasJobOutputConfig.KMSKeyID, b.ko.Spec.ModelBiasJobOutputConfig.KMSKeyID)
 			}
 		}
-
+		if !reflect.DeepEqual(a.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs, b.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs) {
+			delta.Add("Spec.ModelBiasJobOutputConfig.MonitoringOutputs", a.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs, b.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs)
+		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.NetworkConfig, b.ko.Spec.NetworkConfig) {
 		delta.Add("Spec.NetworkConfig", a.ko.Spec.NetworkConfig, b.ko.Spec.NetworkConfig)
@@ -243,11 +254,9 @@ func newResourceDelta(
 		if ackcompare.HasNilDifference(a.ko.Spec.NetworkConfig.VPCConfig, b.ko.Spec.NetworkConfig.VPCConfig) {
 			delta.Add("Spec.NetworkConfig.VPCConfig", a.ko.Spec.NetworkConfig.VPCConfig, b.ko.Spec.NetworkConfig.VPCConfig)
 		} else if a.ko.Spec.NetworkConfig.VPCConfig != nil && b.ko.Spec.NetworkConfig.VPCConfig != nil {
-
 			if !ackcompare.SliceStringPEqual(a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs) {
 				delta.Add("Spec.NetworkConfig.VPCConfig.SecurityGroupIDs", a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs)
 			}
-
 			if !ackcompare.SliceStringPEqual(a.ko.Spec.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.NetworkConfig.VPCConfig.Subnets) {
 				delta.Add("Spec.NetworkConfig.VPCConfig.Subnets", a.ko.Spec.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.NetworkConfig.VPCConfig.Subnets)
 			}
@@ -270,6 +279,9 @@ func newResourceDelta(
 				delta.Add("Spec.StoppingCondition.MaxRuntimeInSeconds", a.ko.Spec.StoppingCondition.MaxRuntimeInSeconds, b.ko.Spec.StoppingCondition.MaxRuntimeInSeconds)
 			}
 		}
+	}
+	if !reflect.DeepEqual(a.ko.Spec.Tags, b.ko.Spec.Tags) {
+		delta.Add("Spec.Tags", a.ko.Spec.Tags, b.ko.Spec.Tags)
 	}
 
 	return delta

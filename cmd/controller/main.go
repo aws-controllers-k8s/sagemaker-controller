@@ -22,6 +22,7 @@ import (
 	ackrt "github.com/aws-controllers-k8s/runtime/pkg/runtime"
 	ackrtutil "github.com/aws-controllers-k8s/runtime/pkg/util"
 	ackrtwebhook "github.com/aws-controllers-k8s/runtime/pkg/webhook"
+	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 	flag "github.com/spf13/pflag"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
@@ -52,10 +53,11 @@ import (
 )
 
 var (
-	awsServiceAPIGroup = "sagemaker.services.k8s.aws"
-	awsServiceAlias    = "sagemaker"
-	scheme             = runtime.NewScheme()
-	setupLog           = ctrlrt.Log.WithName("setup")
+	awsServiceAPIGroup    = "sagemaker.services.k8s.aws"
+	awsServiceAlias       = "sagemaker"
+	awsServiceEndpointsID = svcsdk.EndpointsID
+	scheme                = runtime.NewScheme()
+	setupLog              = ctrlrt.Log.WithName("setup")
 )
 
 func init() {
@@ -112,7 +114,7 @@ func main() {
 		"aws.service", awsServiceAlias,
 	)
 	sc := ackrt.NewServiceController(
-		awsServiceAlias, awsServiceAPIGroup,
+		awsServiceAlias, awsServiceAPIGroup, awsServiceEndpointsID,
 		ackrt.VersionInfo{}, // TODO: populate version info
 	).WithLogger(
 		ctrlrt.Log,

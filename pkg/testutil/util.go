@@ -17,13 +17,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/aws/aws-sdk-go/aws/awserr"
-	"github.com/ghodss/yaml"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"path"
 	"strings"
+
+	"github.com/aws/aws-sdk-go/aws/awserr"
+	"github.com/ghodss/yaml"
 )
 
 var (
@@ -79,10 +80,15 @@ func IsYamlEqual(expectation *string, actualYamlByteArray *[]byte) bool {
 	}
 
 	// Replace Timestamps that would show up as different.
-	_, err := exec.Command("sed", "-r", "-i", ReplaceTimestampRegExp, actualYamlFileName).Output()
+	_, err := exec.Command("sed", "-r", "-i.tmp", ReplaceTimestampRegExp, actualYamlFileName).Output()
 	if isExecCommandError(err) {
 		return false
 	}
+
+	// Remove tmp files used as backup https://riptutorial.com/sed/topic/9436/bsd-macos-sed-vs--gnu-sed-vs--the-posix-sed-specification
+	// -i inplace-editing is not consistent on both GNU and non-GNU sed when not specifiying a backup file.
+	actualYamlFileNameTmp := actualYamlFileName + ".tmp"
+	_, err = exec.Command("rm", actualYamlFileNameTmp).Output()
 
 	output, err := exec.Command("diff", "-c", expectedYamlFileName, actualYamlFileName).Output()
 	if isExecCommandError(err) {

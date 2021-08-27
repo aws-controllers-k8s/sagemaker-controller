@@ -104,19 +104,23 @@ type TransformJobStatus struct {
 	// All CRs managed by ACK have a common `Status.ACKResourceMetadata` member
 	// that is used to contain resource sync state, account ownership,
 	// constructed ARN for the resource
+	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
 	// All CRS managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
+	// +kubebuilder:validation:Optional
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
 	// If the transform job failed, FailureReason describes why it failed. A transform
 	// job creates a log file, which includes error messages, and stores it as an
 	// Amazon S3 object. For more information, see Log Amazon SageMaker Events with
 	// Amazon CloudWatch (https://docs.aws.amazon.com/sagemaker/latest/dg/logging-cloudwatch.html).
+	// +kubebuilder:validation:Optional
 	FailureReason *string `json:"failureReason,omitempty"`
 	// The status of the transform job. If the transform job failed, the reason
 	// is returned in the FailureReason field.
+	// +kubebuilder:validation:Optional
 	TransformJobStatus *string `json:"transformJobStatus,omitempty"`
 }
 

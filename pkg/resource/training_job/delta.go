@@ -16,7 +16,16 @@
 package training_job
 
 import (
+	"bytes"
+	"reflect"
+
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+)
+
+// Hack to avoid import errors during build...
+var (
+	_ = &bytes.Buffer{}
+	_ = &reflect.Method{}
 )
 
 // newResourceDelta returns a new `ackcompare.Delta` used to compare two
@@ -50,7 +59,9 @@ func newResourceDelta(
 				delta.Add("Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries", a.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries, b.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries)
 			}
 		}
-
+		if !reflect.DeepEqual(a.ko.Spec.AlgorithmSpecification.MetricDefinitions, b.ko.Spec.AlgorithmSpecification.MetricDefinitions) {
+			delta.Add("Spec.AlgorithmSpecification.MetricDefinitions", a.ko.Spec.AlgorithmSpecification.MetricDefinitions, b.ko.Spec.AlgorithmSpecification.MetricDefinitions)
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.AlgorithmSpecification.TrainingImage, b.ko.Spec.AlgorithmSpecification.TrainingImage) {
 			delta.Add("Spec.AlgorithmSpecification.TrainingImage", a.ko.Spec.AlgorithmSpecification.TrainingImage, b.ko.Spec.AlgorithmSpecification.TrainingImage)
 		} else if a.ko.Spec.AlgorithmSpecification.TrainingImage != nil && b.ko.Spec.AlgorithmSpecification.TrainingImage != nil {
@@ -87,7 +98,9 @@ func newResourceDelta(
 	if ackcompare.HasNilDifference(a.ko.Spec.DebugHookConfig, b.ko.Spec.DebugHookConfig) {
 		delta.Add("Spec.DebugHookConfig", a.ko.Spec.DebugHookConfig, b.ko.Spec.DebugHookConfig)
 	} else if a.ko.Spec.DebugHookConfig != nil && b.ko.Spec.DebugHookConfig != nil {
-
+		if !reflect.DeepEqual(a.ko.Spec.DebugHookConfig.CollectionConfigurations, b.ko.Spec.DebugHookConfig.CollectionConfigurations) {
+			delta.Add("Spec.DebugHookConfig.CollectionConfigurations", a.ko.Spec.DebugHookConfig.CollectionConfigurations, b.ko.Spec.DebugHookConfig.CollectionConfigurations)
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.DebugHookConfig.HookParameters, b.ko.Spec.DebugHookConfig.HookParameters) {
 			delta.Add("Spec.DebugHookConfig.HookParameters", a.ko.Spec.DebugHookConfig.HookParameters, b.ko.Spec.DebugHookConfig.HookParameters)
 		} else if a.ko.Spec.DebugHookConfig.HookParameters != nil && b.ko.Spec.DebugHookConfig.HookParameters != nil {
@@ -110,7 +123,9 @@ func newResourceDelta(
 			}
 		}
 	}
-
+	if !reflect.DeepEqual(a.ko.Spec.DebugRuleConfigurations, b.ko.Spec.DebugRuleConfigurations) {
+		delta.Add("Spec.DebugRuleConfigurations", a.ko.Spec.DebugRuleConfigurations, b.ko.Spec.DebugRuleConfigurations)
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.EnableInterContainerTrafficEncryption, b.ko.Spec.EnableInterContainerTrafficEncryption) {
 		delta.Add("Spec.EnableInterContainerTrafficEncryption", a.ko.Spec.EnableInterContainerTrafficEncryption, b.ko.Spec.EnableInterContainerTrafficEncryption)
 	} else if a.ko.Spec.EnableInterContainerTrafficEncryption != nil && b.ko.Spec.EnableInterContainerTrafficEncryption != nil {
@@ -171,7 +186,9 @@ func newResourceDelta(
 			delta.Add("Spec.HyperParameters", a.ko.Spec.HyperParameters, b.ko.Spec.HyperParameters)
 		}
 	}
-
+	if !reflect.DeepEqual(a.ko.Spec.InputDataConfig, b.ko.Spec.InputDataConfig) {
+		delta.Add("Spec.InputDataConfig", a.ko.Spec.InputDataConfig, b.ko.Spec.InputDataConfig)
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.OutputDataConfig, b.ko.Spec.OutputDataConfig) {
 		delta.Add("Spec.OutputDataConfig", a.ko.Spec.OutputDataConfig, b.ko.Spec.OutputDataConfig)
 	} else if a.ko.Spec.OutputDataConfig != nil && b.ko.Spec.OutputDataConfig != nil {
@@ -215,7 +232,9 @@ func newResourceDelta(
 			}
 		}
 	}
-
+	if !reflect.DeepEqual(a.ko.Spec.ProfilerRuleConfigurations, b.ko.Spec.ProfilerRuleConfigurations) {
+		delta.Add("Spec.ProfilerRuleConfigurations", a.ko.Spec.ProfilerRuleConfigurations, b.ko.Spec.ProfilerRuleConfigurations)
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.ResourceConfig, b.ko.Spec.ResourceConfig) {
 		delta.Add("Spec.ResourceConfig", a.ko.Spec.ResourceConfig, b.ko.Spec.ResourceConfig)
 	} else if a.ko.Spec.ResourceConfig != nil && b.ko.Spec.ResourceConfig != nil {
@@ -273,7 +292,9 @@ func newResourceDelta(
 			}
 		}
 	}
-
+	if !reflect.DeepEqual(a.ko.Spec.Tags, b.ko.Spec.Tags) {
+		delta.Add("Spec.Tags", a.ko.Spec.Tags, b.ko.Spec.Tags)
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.TensorBoardOutputConfig, b.ko.Spec.TensorBoardOutputConfig) {
 		delta.Add("Spec.TensorBoardOutputConfig", a.ko.Spec.TensorBoardOutputConfig, b.ko.Spec.TensorBoardOutputConfig)
 	} else if a.ko.Spec.TensorBoardOutputConfig != nil && b.ko.Spec.TensorBoardOutputConfig != nil {
@@ -302,11 +323,9 @@ func newResourceDelta(
 	if ackcompare.HasNilDifference(a.ko.Spec.VPCConfig, b.ko.Spec.VPCConfig) {
 		delta.Add("Spec.VPCConfig", a.ko.Spec.VPCConfig, b.ko.Spec.VPCConfig)
 	} else if a.ko.Spec.VPCConfig != nil && b.ko.Spec.VPCConfig != nil {
-
 		if !ackcompare.SliceStringPEqual(a.ko.Spec.VPCConfig.SecurityGroupIDs, b.ko.Spec.VPCConfig.SecurityGroupIDs) {
 			delta.Add("Spec.VPCConfig.SecurityGroupIDs", a.ko.Spec.VPCConfig.SecurityGroupIDs, b.ko.Spec.VPCConfig.SecurityGroupIDs)
 		}
-
 		if !ackcompare.SliceStringPEqual(a.ko.Spec.VPCConfig.Subnets, b.ko.Spec.VPCConfig.Subnets) {
 			delta.Add("Spec.VPCConfig.Subnets", a.ko.Spec.VPCConfig.Subnets, b.ko.Spec.VPCConfig.Subnets)
 		}

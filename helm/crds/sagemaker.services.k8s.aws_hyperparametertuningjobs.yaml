@@ -893,9 +893,6 @@ spec:
                   tuningJobName:
                     type: string
                 type: object
-            required:
-            - ackResourceMetadata
-            - conditions
             type: object
         type: object
     served: true
