@@ -46,4 +46,34 @@ func customSetDefaults(
 			a.ko.Spec.OutputDataConfig.KMSKeyID = b.ko.Spec.OutputDataConfig.KMSKeyID
 		}
 	}
+
+	// Default value of VolumeSizeInGB is 0
+	if ackcompare.IsNotNil(a.ko.Spec.ProfilerRuleConfigurations) && ackcompare.IsNotNil(b.ko.Spec.ProfilerRuleConfigurations) {
+		for index := range a.ko.Spec.ProfilerRuleConfigurations {
+			if ackcompare.IsNil(a.ko.Spec.ProfilerRuleConfigurations[index].VolumeSizeInGB) && ackcompare.IsNotNil(b.ko.Spec.ProfilerRuleConfigurations[index].VolumeSizeInGB) {
+				a.ko.Spec.ProfilerRuleConfigurations[index].VolumeSizeInGB =
+					b.ko.Spec.ProfilerRuleConfigurations[index].VolumeSizeInGB
+			}
+		}
+	}
+
+	// Default value of VolumeSizeInGB is 0
+	if ackcompare.IsNotNil(a.ko.Spec.DebugRuleConfigurations) && ackcompare.IsNotNil(b.ko.Spec.DebugRuleConfigurations) {
+		for index := range a.ko.Spec.DebugRuleConfigurations {
+			if ackcompare.IsNil(a.ko.Spec.DebugRuleConfigurations[index].VolumeSizeInGB) && ackcompare.IsNotNil(b.ko.Spec.DebugRuleConfigurations[index].VolumeSizeInGB) {
+				a.ko.Spec.DebugRuleConfigurations[index].VolumeSizeInGB =
+					b.ko.Spec.DebugRuleConfigurations[index].VolumeSizeInGB
+			}
+		}
+	}
+
+	// Default value of RecordWrapperType is None
+	if ackcompare.IsNotNil(a.ko.Spec.InputDataConfig) && ackcompare.IsNotNil(b.ko.Spec.InputDataConfig) {
+		for index := range a.ko.Spec.InputDataConfig {
+			if ackcompare.IsNil(a.ko.Spec.InputDataConfig[index].RecordWrapperType) && ackcompare.IsNotNil(b.ko.Spec.InputDataConfig[index].RecordWrapperType) {
+				a.ko.Spec.InputDataConfig[index].RecordWrapperType =
+					b.ko.Spec.InputDataConfig[index].RecordWrapperType
+			}
+		}
+	}
 }

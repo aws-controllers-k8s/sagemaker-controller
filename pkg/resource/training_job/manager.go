@@ -40,7 +40,7 @@ import (
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=trainingjobs,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=trainingjobs/status,verbs=get;update;patch
 
-var lateInitializeFieldNames = []string{}
+var lateInitializeFieldNames = []string{"AlgorithmSpecification.MetricDefinitions"}
 
 // resourceManager is responsible for providing a consistent way to perform
 // CRUD operations in a backend AWS service API for Book custom resources.
@@ -221,6 +221,12 @@ func (rm *resourceManager) LateInitialize(
 func (rm *resourceManager) incompleteLateInitialization(
 	res acktypes.AWSResource,
 ) bool {
+	ko := rm.concreteResource(res).ko.DeepCopy()
+	if ko.Spec.AlgorithmSpecification != nil {
+		if ko.Spec.AlgorithmSpecification.MetricDefinitions == nil {
+			return true
+		}
+	}
 	return false
 }
 
@@ -230,7 +236,14 @@ func (rm *resourceManager) lateInitializeFromReadOneOutput(
 	observed acktypes.AWSResource,
 	latest acktypes.AWSResource,
 ) acktypes.AWSResource {
-	return latest
+	observedKo := rm.concreteResource(observed).ko.DeepCopy()
+	latestKo := rm.concreteResource(latest).ko.DeepCopy()
+	if observedKo.Spec.AlgorithmSpecification != nil && latestKo.Spec.AlgorithmSpecification != nil {
+		if observedKo.Spec.AlgorithmSpecification.MetricDefinitions != nil && latestKo.Spec.AlgorithmSpecification.MetricDefinitions == nil {
+			latestKo.Spec.AlgorithmSpecification.MetricDefinitions = observedKo.Spec.AlgorithmSpecification.MetricDefinitions
+		}
+	}
+	return &resource{latestKo}
 }
 
 // newResourceManager returns a new struct implementing

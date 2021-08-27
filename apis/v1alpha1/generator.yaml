@@ -210,6 +210,9 @@ resources:
         from:
           operation: DescribeTrainingJob
           path: FailureReason 
+      AlgorithmSpecification.MetricDefinitions:
+        late_initialize:
+          min_backoff_seconds: 5
   ProcessingJob:
     exceptions:
       errors:
@@ -354,6 +357,9 @@ resources:
         from:
           operation: DescribeHyperParameterTuningJob
           path: OverallBestTrainingJob
+      TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions:
+        late_initialize:
+          min_backoff_seconds: 5
   DataQualityJobDefinition:
     exceptions:
       errors:
