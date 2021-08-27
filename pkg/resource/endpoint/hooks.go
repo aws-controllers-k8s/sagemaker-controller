@@ -70,7 +70,6 @@ func (rm *resourceManager) customDescribeEndpointSetOutput(
 // customUpdateEndpointSetOutput sets the resource ResourceSynced condition to False if endpoint is
 // being updated. At this stage we know call to updateEndpoint was successful.
 func (rm *resourceManager) customUpdateEndpointSetOutput(ko *svcapitypes.Endpoint) {
-	//rm.customSetOutput(r, aws.String(svcsdk.EndpointStatusUpdating), ko)
 	// no nil check present here since Spec.EndpointConfigName is a required field
 	ko.Status.LastEndpointConfigNameForUpdate = ko.Spec.EndpointConfigName
 	// injecting Updating status to keep the Sync condition message and status.endpointStatus in sync

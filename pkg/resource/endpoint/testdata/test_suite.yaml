@@ -62,7 +62,7 @@ tests:
           latest_state: "v1alpha1/readone/observed/error_on_describe.yaml"
           error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
       - name: "ReadOne=AfterCreate"
-        description: "Testing readone right after create, the status should be in Creating with resource synced being false."
+        description: "Testing readOne right after create, the status should be in Creating with resource synced being false."
         given:
           desired_state: "v1alpha1/readone/desired/right_after_create.yaml"
           svc_api:
@@ -72,7 +72,7 @@ tests:
         expect:
           latest_state: "v1alpha1/readone/observed/creating_after_describe.yaml"
       - name: "ReadOne=InService"
-        description: "Testing readone when InService, resource synced should be true."
+        description: "Testing readOne when InService, resource synced should be true."
         given: 
           desired_state: "v1alpha1/readone/observed/creating_after_describe.yaml"
           svc_api:
@@ -82,7 +82,7 @@ tests:
         expect:
           latest_state: "v1alpha1/readone/observed/inservice_no_failure_after_describe.yaml"
       - name: "ReadOne=AfterUpdate"
-        description: "Testing readone after update, the status should be in Updating with resource synced being false."
+        description: "Testing readOne after update, the status should be in Updating with resource synced being false."
         given:
           desired_state: "v1alpha1/readone/desired/after_update_apicall_success.yaml"
           svc_api:
@@ -92,7 +92,7 @@ tests:
         expect:
           latest_state: "v1alpha1/readone/observed/updating_on_describe.yaml"
       - name: "ReadOne=FailedStatus"
-        description: "Testing how readone handles the Failed Status, it should set a terminal condition."
+        description: "Testing how readOne handles the Failed Status, it should set a terminal condition."
         given: 
           desired_state: "v1alpha1/readone/desired/failed_right_after_create.yaml"
           svc_api:
@@ -131,7 +131,7 @@ tests:
           latest_state: "v1alpha1/update/observed/no_retry_on_failed_update.yaml"
           error: "resource is in terminal condition"
       - name: "Update=Fail"
-        description: "This test checks if the condition is updated if update fails and returns error"
+        description: "This test checks if the recoverable condition is updated if update fails and returns error"
         given:
           desired_state: "v1alpha1/update/desired/update_common.yaml"
           latest_state: "v1alpha1/update/desired/latest_inservice_pre_update.yaml"
