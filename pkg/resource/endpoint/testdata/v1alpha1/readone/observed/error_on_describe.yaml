@@ -1,0 +1,26 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: Endpoint
+metadata:
+  creationTimestamp: null
+  name: xgboost-endpoint
+spec:
+  endpointConfigName: xgboost-endpoint-single-variant-config
+  endpointName: xgboost-endpoint
+  tags:
+  - key: confidentiality
+    value: public
+  - key: environment
+    value: testing
+  - key: customer
+    value: test-user
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:endpoint/xgboost-endpoint
+    ownerAccountID: ""
+  conditions:
+  - status: "True"
+    type: ACK.ResourceSynced
+  - message: Server is down
+    status: "True"
+    type: ACK.Recoverable
+  creationTime: null

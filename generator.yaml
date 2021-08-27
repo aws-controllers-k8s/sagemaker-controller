@@ -8,17 +8,11 @@ operations:
   StopTransformJob:
     operation_type: Delete
     resource_name: TransformJob
-  DescribeEndpoint:
-    set_output_custom_method_name: customDescribeEndpointSetOutput
   UpdateEndpoint:
-    custom_implementation: customUpdateEndpoint
-    set_output_custom_method_name: customUpdateEndpointSetOutput
     override_values:
       RetainAllVariantProperties: true
   DescribeModelPackage:
     custom_check_required_fields_missing_method: customCheckRequiredFieldsMissingMethod
-  DeleteEndpoint:
-    custom_implementation: customDeleteEndpoint
   StopHyperParameterTuningJob:
     operation_type: Delete
     resource_name: HyperParameterTuningJob
@@ -100,8 +94,14 @@ resources:
         # Custom error
         - EndpointUpdateError
     hooks:
-      sdk_create_post_set_output:
-        code: rm.customSetOutput(desired, aws.String(svcsdk.EndpointStatusCreating), ko)
+      sdk_read_one_post_set_output:
+        code: rm.customDescribeEndpointSetOutput(resp, ko)
+      sdk_update_pre_build_request:
+        template_path: endpoint/sdk_update_pre_build_request.go.tpl
+      sdk_update_post_set_output:
+        code: rm.customUpdateEndpointSetOutput(ko)
+      sdk_delete_pre_build_request:
+        template_path: common/sdk_delete_pre_build_request.go.tpl
     fields:
       EndpointStatus:
         is_read_only: true

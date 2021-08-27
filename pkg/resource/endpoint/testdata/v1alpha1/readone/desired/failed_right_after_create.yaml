@@ -2,10 +2,10 @@ apiVersion: sagemaker.services.k8s.aws/v1alpha1
 kind: Endpoint
 metadata:
   creationTimestamp: null
-  name: unit_testing_endpoint
+  name: xgboost-endpoint
 spec:
-  endpointConfigName: unit_testing_endpoint
-  endpointName: ""
+  endpointConfigName: xgboost-endpoint-faulty-config
+  endpointName: xgboost-endpoint
   tags:
   - key: confidentiality
     value: public
@@ -15,8 +15,9 @@ spec:
     value: test-user
 status:
   ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:endpoint/xgboost-endpoint
     ownerAccountID: ""
   conditions:
-  - message: The endpoint name must start with an alphanumeric character.
-    status: "True"
-    type: ACK.Terminal
+  - status: "True"
+    type: ACK.ResourceSynced
+  creationTime: "0001-01-01T00:00:00Z"

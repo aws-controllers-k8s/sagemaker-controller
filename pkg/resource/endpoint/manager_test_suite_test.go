@@ -20,6 +20,7 @@ import (
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
 	ackmetrics "github.com/aws-controllers-k8s/runtime/pkg/metrics"
 	acktypes "github.com/aws-controllers-k8s/runtime/pkg/types"
+	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	"github.com/aws-controllers-k8s/sagemaker-controller/pkg/testutil"
 	mocksvcsdkapi "github.com/aws-controllers-k8s/sagemaker-controller/test/mocks/aws-sdk-go/sagemaker"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
@@ -109,7 +110,12 @@ func (d *testRunnerDelegate) Equal(a acktypes.AWSResource, b acktypes.AWSResourc
 	ac := a.(*resource)
 	bc := b.(*resource)
 	// Ignore LastTransitionTime since it gets updated each run.
-	opts := []cmp.Option{cmpopts.EquateEmpty(), cmpopts.IgnoreFields(ackv1alpha1.Condition{}, "LastTransitionTime")}
+	opts := []cmp.Option{
+		cmpopts.EquateEmpty(),
+		cmpopts.IgnoreFields(ackv1alpha1.Condition{}, "LastTransitionTime"),
+		cmpopts.IgnoreFields(svcapitypes.EndpointStatus{}, "CreationTime", "LastModifiedTime"),
+		cmpopts.IgnoreFields(svcapitypes.DeployedImage{}, "ResolutionTime"),
+	}
 
 	if cmp.Equal(ac.ko.Status, bc.ko.Status, opts...) {
 		return true
