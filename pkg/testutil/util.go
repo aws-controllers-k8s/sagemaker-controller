@@ -88,10 +88,7 @@ func IsYamlEqual(expectation *string, actualYamlByteArray *[]byte) bool {
 	// Remove tmp files used as backup https://riptutorial.com/sed/topic/9436/bsd-macos-sed-vs--gnu-sed-vs--the-posix-sed-specification
 	// -i inplace-editing is not consistent on both GNU and non-GNU sed when not specifiying a backup file.
 	actualYamlFileNameTmp := actualYamlFileName + ".tmp"
-	_, err = exec.Command("rm", actualYamlFileNameTmp).Output()
-	if isExecCommandError(err) {
-		return false
-	}
+	defer os.Remove(actualYamlFileNameTmp)
 
 	output, err := exec.Command("diff", "-c", expectedYamlFileName, actualYamlFileName).Output()
 	if isExecCommandError(err) {
