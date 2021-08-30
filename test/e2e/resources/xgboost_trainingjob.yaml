@@ -21,7 +21,7 @@ spec:
     s3OutputPath: s3://$SAGEMAKER_DATA_BUCKET/sagemaker/training/output
   resourceConfig:
     instanceCount: 1
-    instanceType: ml.m4.xlarge
+    instanceType: $TRAINING_JOB_INSTANCE_TYPE
     volumeSizeInGB: 5
   stoppingCondition:
     maxRuntimeInSeconds: 86400

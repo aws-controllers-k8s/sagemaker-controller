@@ -9,12 +9,12 @@ spec:
       modelName: $MODEL_NAME
       initialInstanceCount: 1
       # This is the smallest instance type which will support scaling
-      instanceType: ml.c5.large
+      instanceType: $ENDPOINT_INSTANCE_TYPE
       initialVariantWeight: 1
     - variantName: variant-2
       modelName: $MODEL_NAME
       initialInstanceCount: 1
-      instanceType: ml.c5.large
+      instanceType: $ENDPOINT_INSTANCE_TYPE
       initialVariantWeight: 1
   tags:
     - key: confidentiality
