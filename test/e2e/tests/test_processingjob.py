@@ -56,7 +56,7 @@ def kmeans_processing_job():
     yield (reference, resource)
 
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
         assert deleted
 
 
@@ -144,7 +144,7 @@ class TestProcessingJob:
         )
 
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
         assert deleted is True
 
         processing_job_desc = get_sagemaker_processing_job(processing_job_name)
@@ -173,5 +173,5 @@ class TestProcessingJob:
         assert_tags_in_sync(processing_job_arn, resource_tags)
 
         # Check that you can delete a completed resource from k8s
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
         assert deleted is True

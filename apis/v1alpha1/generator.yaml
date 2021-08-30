@@ -150,28 +150,20 @@ resources:
             code: ValidationException
             message_prefix: Requested resource not found
       terminal_codes:
-        - ResourceLimitExceeded
         - ResourceNotFound
         - ResourceInUse
-        - OptInRequired
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
-        - MissingAction
-        - InvalidClientTokenId
-        - InvalidQueryParameter
-        - MalformedQueryString
-        - InvalidAction
-        - UnrecognizedClientException
     hooks:
       delta_pre_compare:
         code: customSetDefaults(a, b)
-      sdk_create_post_set_output:
-        code: rm.customCreateTrainingJobSetOutput(&resource{ko})
       sdk_read_one_post_set_output:
-        code: rm.customDescribeTrainingJobSetOutput(&resource{ko})
+        code: rm.customSetOutput(&resource{ko})
       sdk_delete_pre_build_request:
         template_path: training_job/sdk_delete_pre_build_request.go.tpl
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
     fields:
       TrainingJobStatus:
         is_read_only: true
@@ -217,28 +209,20 @@ resources:
             code: ValidationException
             message_prefix: Could not find requested job
       terminal_codes:
-        - ResourceLimitExceeded
         - ResourceNotFound
         - ResourceInUse
-        - OptInRequired
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
-        - MissingAction
-        - InvalidClientTokenId
-        - InvalidQueryParameter
-        - MalformedQueryString
-        - InvalidAction
-        - UnrecognizedClientException
     hooks:
       delta_pre_compare:
         code: customSetDefaults(a, b)
+      sdk_read_one_post_set_output:
+        code: rm.customSetOutput(&resource{ko})
       sdk_delete_pre_build_request:
         template_path: processing_job/sdk_delete_pre_build_request.go.tpl
-      sdk_create_post_set_output:
-        code: rm.customSetOutput(desired, aws.String(svcsdk.ProcessingJobStatusInProgress), ko)
-      sdk_read_one_post_set_output:
-        code: rm.customSetOutput(r, resp.ProcessingJobStatus, ko)
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
     fields:
       ProcessingJobStatus:
         is_read_only: true
@@ -262,28 +246,20 @@ resources:
             code: ValidationException
             message_prefix: Could not find requested job with name
       terminal_codes:
-        - ResourceLimitExceeded
         - ResourceNotFound
         - ResourceInUse
-        - OptInRequired
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
-        - MissingAction
-        - InvalidClientTokenId
-        - InvalidQueryParameter
-        - MalformedQueryString
-        - InvalidAction
-        - UnrecognizedClientException
     hooks:
       delta_pre_compare:
         code: customSetDefaults(a, b)
+      sdk_read_one_post_set_output:
+        code: rm.customSetOutput(&resource{ko})
       sdk_delete_pre_build_request:
         template_path: transform_job/sdk_delete_pre_build_request.go.tpl
-      sdk_create_post_set_output:
-        code: rm.customSetOutput(desired, aws.String(svcsdk.TransformJobStatusInProgress), ko)
-      sdk_read_one_post_set_output:
-        code: rm.customSetOutput(r, resp.TransformJobStatus, ko)
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
     fields:
       TransformJobStatus:
         is_read_only: true
@@ -306,28 +282,20 @@ resources:
           404:
             code: ResourceNotFound
       terminal_codes:
-        - ResourceLimitExceeded
         - ResourceNotFound
         - ResourceInUse
-        - OptInRequired
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
-        - MissingAction
-        - InvalidClientTokenId
-        - InvalidQueryParameter
-        - MalformedQueryString
-        - InvalidAction
-        - UnrecognizedClientException
     hooks:
       delta_pre_compare:
         code: customSetDefaults(a, b)
+      sdk_read_one_post_set_output:
+        code: rm.customSetOutput(&resource{ko})
       sdk_delete_pre_build_request:
         template_path: hyper_parameter_tuning_job/sdk_delete_pre_build_request.go.tpl
-      sdk_create_post_set_output:
-        code: rm.customSetOutput(desired, aws.String(svcsdk.HyperParameterTuningJobStatusInProgress), ko)
-      sdk_read_one_post_set_output:
-        code: rm.customSetOutput(r, resp.HyperParameterTuningJobStatus, ko)
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
     fields:
       HyperParameterTuningJobStatus:
         is_read_only: true

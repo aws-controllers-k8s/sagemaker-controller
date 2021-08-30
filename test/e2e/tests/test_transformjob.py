@@ -64,7 +64,7 @@ def xgboost_model_for_transform(generate_job_names):
     yield (transform_resource_name, model_resource_name)
 
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
         assert deleted
 
 
@@ -93,7 +93,7 @@ def xgboost_transformjob(xgboost_model_for_transform):
     yield (reference, resource)
 
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
         assert deleted
 
 
@@ -180,7 +180,7 @@ class TestTransformJob:
         )
 
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
         assert deleted is True
 
         transform_sm_desc = get_sagemaker_transform_job(transform_job_name)
@@ -209,5 +209,5 @@ class TestTransformJob:
         assert_tags_in_sync(transform_arn, resource_tags)
 
         # Check that you can delete a completed resource from k8s
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
         assert deleted is True

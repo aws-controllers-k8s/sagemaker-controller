@@ -11,12 +11,12 @@
 // express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-// Use this file if the Status/Spec of the CR needs to be modified after
-// create/describe/update operation
-
 package training_job
 
 import (
+	"errors"
+
+	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
 	"github.com/aws/aws-sdk-go/aws"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
@@ -32,11 +32,16 @@ var (
 		svcsdk.RuleEvaluationStatusStopping,
 	}
 	resourceName = resourceGK.Kind
+
+	requeueWaitWhileDeleting = ackrequeue.NeededAfter(
+		errors.New(resourceName+" is Stopping."),
+		ackrequeue.DefaultRequeueAfterDuration,
+	)
 )
 
-// customDescribeTrainingJobSetOutput sets the resource ResourceSynced condition to False if
+// customSetOutput sets the resource ResourceSynced condition to False if
 // TrainingJob is being modified by AWS. It checks for debug and profiler rule status in addition to TrainingJobStatus
-func (rm *resourceManager) customDescribeTrainingJobSetOutput(r *resource) {
+func (rm *resourceManager) customSetOutput(r *resource) {
 	trainingJobStatus := r.ko.Status.TrainingJobStatus
 	// early exit if training job is InProgress
 	if trainingJobStatus != nil && *trainingJobStatus == svcsdk.TrainingJobStatusInProgress {
@@ -59,8 +64,4 @@ func (rm *resourceManager) customDescribeTrainingJobSetOutput(r *resource) {
 	}
 
 	svccommon.SetSyncedCondition(r, trainingJobStatus, &resourceName, &trainingJobModifyingStatuses)
-}
-
-func (rm *resourceManager) customCreateTrainingJobSetOutput(r *resource) {
-	svccommon.SetSyncedCondition(r, aws.String(svcsdk.TrainingJobStatusInProgress), &resourceName, &trainingJobModifyingStatuses)
 }
