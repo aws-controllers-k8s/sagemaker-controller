@@ -26,11 +26,9 @@ from e2e import (
     assert_tags_in_sync,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
-from e2e.bootstrap_resources import get_bootstrap_resources
 from e2e.common import config as cfg
 
 RESOURCE_PLURAL = "trainingjobs"
-
 
 @pytest.fixture(scope="function")
 def xgboost_training_job():
@@ -54,7 +52,7 @@ def xgboost_training_job():
     yield (reference, resource)
 
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
         assert deleted
 
 @pytest.mark.canary
@@ -78,7 +76,7 @@ class TestTrainingJob:
         )
 
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
         assert deleted is True
 
         training_job_desc = get_sagemaker_training_job(training_job_name)
@@ -111,5 +109,5 @@ class TestTrainingJob:
         assert_tags_in_sync(training_job_arn, resource_tags)
 
         # Check that you can delete a completed resource from k8s
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        _, deleted = k8s.delete_custom_resource(reference, cfg. JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
         assert deleted is True
