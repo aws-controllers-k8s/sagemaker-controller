@@ -15,6 +15,7 @@ package model_package
 
 import (
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+	"github.com/aws/aws-sdk-go/aws"
 )
 
 func customSetDefaults(
@@ -31,23 +32,21 @@ func customSetDefaults(
 	}
 	// Default is for ImageDigest to be generated automatically by Sagemaker if not specified
 	if ackcompare.IsNotNil(a.ko.Spec.InferenceSpecification) && ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification) {
-		if ackcompare.IsNotNil(a.ko.Spec.InferenceSpecification.Containers) && ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification.Containers) {
+		if len(a.ko.Spec.InferenceSpecification.Containers) == len(b.ko.Spec.InferenceSpecification.Containers) {
 			for index := range a.ko.Spec.InferenceSpecification.Containers {
-				if ackcompare.IsNil(a.ko.Spec.InferenceSpecification.Containers[index].ImageDigest) &&
-					ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification.Containers[index].ImageDigest) {
-					a.ko.Spec.InferenceSpecification.Containers[index].ImageDigest =
-						b.ko.Spec.InferenceSpecification.Containers[index].ImageDigest
-				}
+				a.ko.Spec.InferenceSpecification.Containers[index].ImageDigest =
+					b.ko.Spec.InferenceSpecification.Containers[index].ImageDigest
 			}
 		}
 	}
+
 	// Default is for KMSKeyID to be ""
-	if ackcompare.IsNotNil(a.ko.Spec.ValidationSpecification) && ackcompare.IsNotNil(b.ko.Spec.ValidationSpecification) {
+	DefaultKMSKeyID := aws.String("")
+
+	if ackcompare.IsNotNil(a.ko.Spec.ValidationSpecification) {
 		for index := range a.ko.Spec.ValidationSpecification.ValidationProfiles {
-			if ackcompare.IsNil(a.ko.Spec.ValidationSpecification.ValidationProfiles[index].TransformJobDefinition.TransformOutput.KMSKeyID) &&
-				ackcompare.IsNotNil(b.ko.Spec.ValidationSpecification.ValidationProfiles[index].TransformJobDefinition.TransformOutput.KMSKeyID) {
-				a.ko.Spec.ValidationSpecification.ValidationProfiles[index].TransformJobDefinition.TransformOutput.KMSKeyID =
-					b.ko.Spec.ValidationSpecification.ValidationProfiles[index].TransformJobDefinition.TransformOutput.KMSKeyID
+			if ackcompare.IsNil(a.ko.Spec.ValidationSpecification.ValidationProfiles[index].TransformJobDefinition.TransformOutput.KMSKeyID) {
+				a.ko.Spec.ValidationSpecification.ValidationProfiles[index].TransformJobDefinition.TransformOutput.KMSKeyID = DefaultKMSKeyID
 			}
 		}
 	}
