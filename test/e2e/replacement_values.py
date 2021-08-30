@@ -167,49 +167,13 @@ CLARIFY_IMAGE_URIS = {
 }
 
 ENDPOINT_INSTANCE_TYPES = {
-    "us-east-1": "ml.c5.large",
-    "us-east-2": "ml.c5.large",
-    "us-west-1": "ml.c5.large",
-    "us-west-2": "ml.c5.large",
-    "ap-east-1": "ml.c5.large",
-    "ap-south-1": "ml.c5.large",
-    "ap-northeast-2": "ml.c5.large",
-    "ap-southeast-1": "ml.c5.large",
-    "ap-southeast-2": "ml.c5.large",
-    "ap-northeast-1": "ml.c5.large",
-    "ca-central-1": "ml.c5.large",
-    "eu-central-1": "ml.c5.large",
-    "eu-west-1": "ml.c5.large",
-    "eu-west-2": "ml.c5.large",
     "eu-west-3": "ml.m5.large",
     "eu-north-1": "ml.m5.large",
-    "me-south-1": "ml.c5.large",
-    "sa-east-1": "ml.c5.large",
-    "af-south-1": "ml.c5.large",
-    "eu-south-1": "ml.c5.large",
 }
 
 TRAINING_JOB_INSTANCE_TYPES = {
-    "us-east-1": "ml.m4.xlarge",
-    "us-east-2": "ml.m4.xlarge",
-    "us-west-1": "ml.m4.xlarge",
-    "us-west-2": "ml.m4.xlarge",
-    "ap-east-1": "ml.m4.xlarge",
-    "ap-south-1": "ml.m4.xlarge",
-    "ap-northeast-2": "ml.m4.xlarge",
-    "ap-southeast-1": "ml.m4.xlarge",
-    "ap-southeast-2": "ml.m4.xlarge",
-    "ap-northeast-1": "ml.m4.xlarge",
-    "ca-central-1": "ml.m4.xlarge",
-    "eu-central-1": "ml.m4.xlarge",
-    "eu-west-1": "ml.m4.xlarge",
-    "eu-west-2": "ml.m4.xlarge",
     "eu-west-3": "ml.m5.xlarge",
     "eu-north-1": "ml.m5.xlarge",
-    "me-south-1": "ml.m4.xlarge",
-    "sa-east-1": "ml.m4.xlarge",
-    "af-south-1": "ml.m4.xlarge",
-    "eu-south-1": "ml.m4.xlarge",
 }
 
 REPLACEMENT_VALUES = {
@@ -221,6 +185,6 @@ REPLACEMENT_VALUES = {
     "SAGEMAKER_EXECUTION_ROLE_ARN": get_bootstrap_resources().ExecutionRoleARN,
     "MODEL_MONITOR_ANALYZER_IMAGE_URI": f"{MODEL_MONITOR_IMAGE_URIS[get_region()]}/sagemaker-model-monitor-analyzer",
     "CLARIFY_IMAGE_URI": f"{CLARIFY_IMAGE_URIS[get_region()]}/sagemaker-clarify-processing:1.0",
-    "ENDPOINT_INSTANCE_TYPE": ENDPOINT_INSTANCE_TYPES[get_region()],
-    "TRAINING_JOB_INSTANCE_TYPE": TRAINING_JOB_INSTANCE_TYPES[get_region()],
+    "ENDPOINT_INSTANCE_TYPE": ENDPOINT_INSTANCE_TYPES.get(get_region(), 'ml.c5.large'),
+    "TRAINING_JOB_INSTANCE_TYPE": TRAINING_JOB_INSTANCE_TYPES.get(get_region(), 'ml.m4.xlarge')
 }
