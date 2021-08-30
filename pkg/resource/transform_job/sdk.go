@@ -235,7 +235,7 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutput(r, resp.TransformJobStatus, ko)
+	rm.customSetOutput(&resource{ko})
 	return &resource{ko}, nil
 }
 
@@ -298,7 +298,6 @@ func (rm *resourceManager) sdkCreate(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutput(desired, aws.String(svcsdk.TransformJobStatusInProgress), ko)
 	return &resource{ko}, nil
 }
 
@@ -464,11 +463,17 @@ func (rm *resourceManager) sdkDelete(
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
-	// Call StopTranformJob only if the job is InProgress, otherwise just return nil to mark the
-	// resource Unmanaged
 	latestStatus := r.ko.Status.TransformJobStatus
-	if latestStatus != nil && *latestStatus != svcsdk.TransformJobStatusInProgress {
-		return r, err
+	if latestStatus != nil {
+		if *latestStatus == svcsdk.TransformJobStatusStopping {
+			return r, requeueWaitWhileDeleting
+		}
+
+		// Call StopTranformJob only if the job is InProgress, otherwise just
+		// return nil to mark the resource Unmanaged
+		if *latestStatus != svcsdk.TransformJobStatusInProgress {
+			return r, err
+		}
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
@@ -478,6 +483,16 @@ func (rm *resourceManager) sdkDelete(
 	_ = resp
 	resp, err = rm.sdkapi.StopTransformJobWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "StopTransformJob", err)
+
+	if err == nil {
+		if _, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
+			if err != nil {
+				return nil, err
+			}
+			return r, requeueWaitWhileDeleting
+		}
+	}
+
 	return nil, err
 }
 
@@ -599,19 +614,11 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 		return false
 	}
 	switch awsErr.Code() {
-	case "ResourceLimitExceeded",
-		"ResourceNotFound",
+	case "ResourceNotFound",
 		"ResourceInUse",
-		"OptInRequired",
 		"InvalidParameterCombination",
 		"InvalidParameterValue",
-		"MissingParameter",
-		"MissingAction",
-		"InvalidClientTokenId",
-		"InvalidQueryParameter",
-		"MalformedQueryString",
-		"InvalidAction",
-		"UnrecognizedClientException":
+		"MissingParameter":
 		return true
 	default:
 		return false

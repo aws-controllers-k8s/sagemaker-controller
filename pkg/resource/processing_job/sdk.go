@@ -376,7 +376,7 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutput(r, resp.ProcessingJobStatus, ko)
+	rm.customSetOutput(&resource{ko})
 	return &resource{ko}, nil
 }
 
@@ -439,7 +439,6 @@ func (rm *resourceManager) sdkCreate(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutput(desired, aws.String(svcsdk.ProcessingJobStatusInProgress), ko)
 	return &resource{ko}, nil
 }
 
@@ -750,11 +749,17 @@ func (rm *resourceManager) sdkDelete(
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
-	// Call StopProcessingJob only if the job is InProgress, otherwise just return nil to mark the
-	// resource Unmanaged
 	latestStatus := r.ko.Status.ProcessingJobStatus
-	if latestStatus != nil && *latestStatus != svcsdk.ProcessingJobStatusInProgress {
-		return r, err
+	if latestStatus != nil {
+		if *latestStatus == svcsdk.ProcessingJobStatusStopping {
+			return r, requeueWaitWhileDeleting
+		}
+
+		// Call StopProcessingJob only if the job is InProgress, otherwise just
+		// return nil to mark the resource Unmanaged
+		if *latestStatus != svcsdk.ProcessingJobStatusInProgress {
+			return r, err
+		}
 	}
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
@@ -764,6 +769,16 @@ func (rm *resourceManager) sdkDelete(
 	_ = resp
 	resp, err = rm.sdkapi.StopProcessingJobWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "StopProcessingJob", err)
+
+	if err == nil {
+		if _, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
+			if err != nil {
+				return nil, err
+			}
+			return r, requeueWaitWhileDeleting
+		}
+	}
+
 	return nil, err
 }
 
@@ -885,19 +900,11 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 		return false
 	}
 	switch awsErr.Code() {
-	case "ResourceLimitExceeded",
-		"ResourceNotFound",
+	case "ResourceNotFound",
 		"ResourceInUse",
-		"OptInRequired",
 		"InvalidParameterCombination",
 		"InvalidParameterValue",
-		"MissingParameter",
-		"MissingAction",
-		"InvalidClientTokenId",
-		"InvalidQueryParameter",
-		"MalformedQueryString",
-		"InvalidAction",
-		"UnrecognizedClientException":
+		"MissingParameter":
 		return true
 	default:
 		return false
