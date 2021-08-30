@@ -56,7 +56,7 @@ def xgboost_hpojob():
     yield (reference, resource)
 
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_PERIODS)
+        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
         assert deleted
 
 
@@ -143,7 +143,7 @@ class TestHPO:
         )
 
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_PERIODS)
+        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
         assert deleted is True
 
         hpo_sm_desc = get_sagemaker_hpo_job(hpo_job_name)
