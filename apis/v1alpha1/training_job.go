@@ -157,20 +157,26 @@ type TrainingJobStatus struct {
 	// All CRs managed by ACK have a common `Status.ACKResourceMetadata` member
 	// that is used to contain resource sync state, account ownership,
 	// constructed ARN for the resource
+	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
 	// All CRS managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
+	// +kubebuilder:validation:Optional
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
 	// Evaluation status of Debugger rules for debugging on a training job.
+	// +kubebuilder:validation:Optional
 	DebugRuleEvaluationStatuses []*DebugRuleEvaluationStatus `json:"debugRuleEvaluationStatuses,omitempty"`
 	// If the training job failed, the reason it failed.
+	// +kubebuilder:validation:Optional
 	FailureReason *string `json:"failureReason,omitempty"`
 	// Information about the Amazon S3 location that is configured for storing model
 	// artifacts.
+	// +kubebuilder:validation:Optional
 	ModelArtifacts *ModelArtifacts `json:"modelArtifacts,omitempty"`
 	// Evaluation status of Debugger rules for profiling on a training job.
+	// +kubebuilder:validation:Optional
 	ProfilerRuleEvaluationStatuses []*ProfilerRuleEvaluationStatus `json:"profilerRuleEvaluationStatuses,omitempty"`
 	// Provides detailed information about the state of the training job. For detailed
 	// information on the secondary status of the training job, see StatusMessage
@@ -227,6 +233,7 @@ type TrainingJobStatus struct {
 	//    * PreparingTrainingStack
 	//
 	//    * DownloadingTrainingImage
+	// +kubebuilder:validation:Optional
 	SecondaryStatus *string `json:"secondaryStatus,omitempty"`
 	// The status of the training job.
 	//
@@ -245,6 +252,7 @@ type TrainingJobStatus struct {
 	//    * Stopped - The training job has stopped.
 	//
 	// For more detailed information, see SecondaryStatus.
+	// +kubebuilder:validation:Optional
 	TrainingJobStatus *string `json:"trainingJobStatus,omitempty"`
 }
 

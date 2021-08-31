@@ -66,6 +66,10 @@ func (rm *resourceManager) customSetOutputDescribe(r *resource) error {
 				return err
 			}
 			r.ko.Status.StoppedByControllerMetadata = nil
+			// Notebook after rm.startNotebookInstance(r) is in pending state
+			// Manually change status since otherwise synced condition will be set to True as
+			// of a result Stopped status.
+			r.ko.Status.NotebookInstanceStatus = aws.String(svcsdk.NotebookInstanceStatusPending)
 		}
 	}
 	// The resource synced status is set here.

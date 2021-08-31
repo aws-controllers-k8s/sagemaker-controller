@@ -16,7 +16,16 @@
 package transform_job
 
 import (
+	"bytes"
+	"reflect"
+
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+)
+
+// Hack to avoid import errors during build...
+var (
+	_ = &bytes.Buffer{}
+	_ = &reflect.Method{}
 )
 
 // newResourceDelta returns a new `ackcompare.Delta` used to compare two
@@ -136,7 +145,6 @@ func newResourceDelta(
 			delta.Add("Spec.ModelName", a.ko.Spec.ModelName, b.ko.Spec.ModelName)
 		}
 	}
-
 	if ackcompare.HasNilDifference(a.ko.Spec.TransformInput, b.ko.Spec.TransformInput) {
 		delta.Add("Spec.TransformInput", a.ko.Spec.TransformInput, b.ko.Spec.TransformInput)
 	} else if a.ko.Spec.TransformInput != nil && b.ko.Spec.TransformInput != nil {

@@ -162,9 +162,6 @@ spec:
                   was last modified.
                 format: date-time
                 type: string
-            required:
-            - ackResourceMetadata
-            - conditions
             type: object
         type: object
     served: true

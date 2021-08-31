@@ -274,9 +274,6 @@ spec:
                 description: The status of the transform job. If the transform job
                   failed, the reason is returned in the FailureReason field.
                 type: string
-            required:
-            - ackResourceMetadata
-            - conditions
             type: object
         type: object
     served: true

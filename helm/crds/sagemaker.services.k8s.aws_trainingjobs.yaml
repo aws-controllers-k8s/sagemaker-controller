@@ -516,6 +516,32 @@ spec:
               failureReason:
                 description: If the training job failed, the reason it failed.
                 type: string
+              modelArtifacts:
+                description: Information about the Amazon S3 location that is configured
+                  for storing model artifacts.
+                properties:
+                  s3ModelArtifacts:
+                    type: string
+                type: object
+              profilerRuleEvaluationStatuses:
+                description: Evaluation status of Debugger rules for profiling on
+                  a training job.
+                items:
+                  description: Information about the status of the rule evaluation.
+                  properties:
+                    lastModifiedTime:
+                      format: date-time
+                      type: string
+                    ruleConfigurationName:
+                      type: string
+                    ruleEvaluationJobARN:
+                      type: string
+                    ruleEvaluationStatus:
+                      type: string
+                    statusDetails:
+                      type: string
+                  type: object
+                type: array
               secondaryStatus:
                 description: "Provides detailed information about the state of the
                   training job. For detailed information on the secondary status of
@@ -551,9 +577,6 @@ spec:
                   Stopping - The training job is stopping. \n    * Stopped - The training
                   job has stopped. \n For more detailed information, see SecondaryStatus."
                 type: string
-            required:
-            - ackResourceMetadata
-            - conditions
             type: object
         type: object
     served: true

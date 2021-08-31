@@ -16,7 +16,16 @@
 package feature_group
 
 import (
+	"bytes"
+	"reflect"
+
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+)
+
+// Hack to avoid import errors during build...
+var (
+	_ = &bytes.Buffer{}
+	_ = &reflect.Method{}
 )
 
 // newResourceDelta returns a new `ackcompare.Delta` used to compare two
@@ -47,7 +56,9 @@ func newResourceDelta(
 			delta.Add("Spec.EventTimeFeatureName", a.ko.Spec.EventTimeFeatureName, b.ko.Spec.EventTimeFeatureName)
 		}
 	}
-
+	if !reflect.DeepEqual(a.ko.Spec.FeatureDefinitions, b.ko.Spec.FeatureDefinitions) {
+		delta.Add("Spec.FeatureDefinitions", a.ko.Spec.FeatureDefinitions, b.ko.Spec.FeatureDefinitions)
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.FeatureGroupName, b.ko.Spec.FeatureGroupName) {
 		delta.Add("Spec.FeatureGroupName", a.ko.Spec.FeatureGroupName, b.ko.Spec.FeatureGroupName)
 	} else if a.ko.Spec.FeatureGroupName != nil && b.ko.Spec.FeatureGroupName != nil {

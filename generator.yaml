@@ -38,6 +38,10 @@ resources:
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
+    fields:
+      Tags:
+        compare:
+          is_ignored: true
   EndpointConfig:
     exceptions:
       errors:
@@ -48,6 +52,10 @@ resources:
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
+    fields:
+      Tags:
+        compare:
+          is_ignored: true
   Endpoint:
     reconcile: 
       requeue_on_success_seconds: 30
@@ -113,6 +121,9 @@ resources:
         from:
           operation: DescribeEndpoint
           path: ProductionVariants
+      Tags:
+        compare:
+          is_ignored: true
   TrainingJob:
     exceptions:
       errors:
@@ -172,6 +183,12 @@ resources:
         from:
           operation: DescribeTrainingJob
           path: FailureReason 
+      AlgorithmSpecification.MetricDefinitions:
+        late_initialize:
+          min_backoff_seconds: 5
+      Tags:
+        compare:
+          is_ignored: true
   ProcessingJob:
     exceptions:
       errors:
@@ -209,6 +226,9 @@ resources:
         from:
           operation: DescribeProcessingJob
           path: FailureReason 
+      Tags:
+        compare:
+          is_ignored: true
   TransformJob:
     exceptions:
       errors:
@@ -246,6 +266,9 @@ resources:
         from:
           operation: DescribeTransformJob
           path: FailureReason
+      Tags:
+        compare:
+          is_ignored: true
   HyperParameterTuningJob:
     exceptions:
       errors:
@@ -292,6 +315,12 @@ resources:
         from:
           operation: DescribeHyperParameterTuningJob
           path: OverallBestTrainingJob
+      TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions:
+        late_initialize:
+          min_backoff_seconds: 5
+      Tags:
+        compare:
+          is_ignored: true
   DataQualityJobDefinition:
     exceptions:
       errors:
@@ -308,6 +337,9 @@ resources:
         is_arn: true
       JobDefinitionName:
         is_name: true
+      Tags:
+        compare:
+          is_ignored: true
   ModelBiasJobDefinition:
     exceptions:
       errors:
@@ -324,6 +356,9 @@ resources:
         is_arn: true
       JobDefinitionName:
         is_name: true
+      Tags:
+        compare:
+          is_ignored: true
   ModelExplainabilityJobDefinition:
     exceptions:
       errors:
@@ -340,6 +375,9 @@ resources:
         is_arn: true
       JobDefinitionName:
         is_name: true
+      Tags:
+        compare:
+          is_ignored: true
   ModelQualityJobDefinition:
     exceptions:
       errors:
@@ -356,6 +394,9 @@ resources:
         is_arn: true
       JobDefinitionName:
         is_name: true
+      Tags:
+        compare:
+          is_ignored: true
   MonitoringSchedule:
     reconcile: 
       requeue_on_success_seconds: 30
@@ -412,6 +453,9 @@ resources:
         from:
           operation: DescribeMonitoringSchedule
           path: LastMonitoringExecutionSummary
+      Tags:
+        compare:
+          is_ignored: true
   ModelPackage:
     update_conditions_custom_method_name: CustomUpdateConditions
     exceptions:
@@ -476,6 +520,9 @@ resources:
         from:
           operation: UpdateModelPackage
           path: ApprovalDescription
+      Tags:
+        compare:
+          is_ignored: true
     # TODO: Can adopt unversioned Model Packages however versioned ModelPackages 
     # cannot be adopted properly. Their spec will show in describe 
     # kubecetl describe modelpackages however it cannot be deleted or updated
@@ -518,7 +565,14 @@ resources:
         from:
           operation: DescribeFeatureGroup
           path: FeatureGroupStatus
+      Tags:
+        compare:
+          is_ignored: true
   NotebookInstance:
+    # Resource state/status can be modified in Sagemaker Console
+    # Need to reconcile to catch these state/status changes
+    reconcile: 
+      requeue_on_success_seconds: 60
     exceptions:
       errors:
           404:
@@ -569,6 +623,9 @@ resources:
         from:
           operation: DescribeNotebookInstance
           path: FailureReason
+      Tags:
+        compare:
+          is_ignored: true        
   ModelPackageGroup:
       exceptions:
         errors:
@@ -587,7 +644,10 @@ resources:
             name: STATUS
           from:
             operation: DescribeModelPackageGroup
-            path: ModelPackageGroupStatus      
+            path: ModelPackageGroupStatus    
+        Tags:
+          compare:
+            is_ignored: true       
       hooks:
         sdk_read_one_post_set_output:
           code: rm.customSetOutput(&resource{ko})  
@@ -625,6 +685,16 @@ resources:
         from:
           operation: DescribeNotebookInstanceLifecycleConfig
           path: CreationTime
+      Tags:
+        compare:
+          is_ignored: true
+      # Custom code is implemented for these fields delta comparison
+      OnCreate:
+        compare:
+          is_ignored: true  
+      OnStart:
+        compare:
+          is_ignored: true  
 ignore:
     resource_names:
       - Algorithm

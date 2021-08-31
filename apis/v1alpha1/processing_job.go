@@ -67,16 +67,20 @@ type ProcessingJobStatus struct {
 	// All CRs managed by ACK have a common `Status.ACKResourceMetadata` member
 	// that is used to contain resource sync state, account ownership,
 	// constructed ARN for the resource
+	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
 	// All CRS managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
+	// +kubebuilder:validation:Optional
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
 	// A string, up to one KB in size, that contains the reason a processing job
 	// failed, if it failed.
+	// +kubebuilder:validation:Optional
 	FailureReason *string `json:"failureReason,omitempty"`
 	// Provides the status of a processing job.
+	// +kubebuilder:validation:Optional
 	ProcessingJobStatus *string `json:"processingJobStatus,omitempty"`
 }
 

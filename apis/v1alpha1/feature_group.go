@@ -108,11 +108,13 @@ type FeatureGroupStatus struct {
 	// All CRs managed by ACK have a common `Status.ACKResourceMetadata` member
 	// that is used to contain resource sync state, account ownership,
 	// constructed ARN for the resource
+	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
 	// All CRS managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
+	// +kubebuilder:validation:Optional
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
 	// The reason that the FeatureGroup failed to be replicated in the OfflineStore.
 	// This is failure can occur because:
@@ -120,8 +122,10 @@ type FeatureGroupStatus struct {
 	//    * The FeatureGroup could not be created in the OfflineStore.
 	//
 	//    * The FeatureGroup could not be deleted from the OfflineStore.
+	// +kubebuilder:validation:Optional
 	FailureReason *string `json:"failureReason,omitempty"`
 	// The status of the feature group.
+	// +kubebuilder:validation:Optional
 	FeatureGroupStatus *string `json:"featureGroupStatus,omitempty"`
 }
 

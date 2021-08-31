@@ -91,7 +91,7 @@ tests:
              - operation: StartNotebookInstance
          invoke: ReadOne
          expect:
-           latest_state: "v1alpha1/readone/observed/nb_readone_stopped_after_update.yaml"
+           latest_state: "v1alpha1/readone/observed/nb_readone_stopped_after_update_ack.yaml"
        - name: "ReadOne=StoppedAfterUpdateHuman"
          description: "Testing how readone handles the Stopped state when stopped by a human for an update, StoppedByControllerMetadata should 
          not be in the status."

@@ -82,7 +82,7 @@ func (f *resourceManagerFactory) IsAdoptable() bool {
 // RequeueOnSuccessSeconds returns true if the resource should be requeued after specified seconds
 // Default is false which means resource will not be requeued after success.
 func (f *resourceManagerFactory) RequeueOnSuccessSeconds() int {
-	return 0
+	return 60
 }
 
 func newResourceManagerFactory() *resourceManagerFactory {

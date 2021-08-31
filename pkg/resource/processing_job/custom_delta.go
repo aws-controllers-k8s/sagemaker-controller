@@ -16,6 +16,7 @@ package processing_job
 import (
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
+	"github.com/aws/aws-sdk-go/aws"
 )
 
 func customSetDefaults(
@@ -30,6 +31,34 @@ func customSetDefaults(
 	if ackcompare.IsNotNil(a.ko.Spec.StoppingCondition) && ackcompare.IsNotNil(b.ko.Spec.StoppingCondition) {
 		if ackcompare.IsNil(a.ko.Spec.StoppingCondition.MaxRuntimeInSeconds) && ackcompare.IsNotNil(b.ko.Spec.StoppingCondition.MaxRuntimeInSeconds) {
 			a.ko.Spec.StoppingCondition.MaxRuntimeInSeconds = b.ko.Spec.StoppingCondition.MaxRuntimeInSeconds
+		}
+	}
+
+	// Default value of AppManaged is false
+	defaultAppManaged := aws.Bool(false)
+
+	// Default value of S3DataDistributionType is FullyReplicated
+	defaultS3DataDistributionType := aws.String("FullyReplicated")
+
+	if ackcompare.IsNotNil(a.ko.Spec.ProcessingInputs) && ackcompare.IsNotNil(b.ko.Spec.ProcessingInputs) {
+		for index := range a.ko.Spec.ProcessingInputs {
+			if ackcompare.IsNil(a.ko.Spec.ProcessingInputs[index].AppManaged) && ackcompare.IsNotNil(b.ko.Spec.ProcessingInputs[index].AppManaged) {
+				a.ko.Spec.ProcessingInputs[index].AppManaged = defaultAppManaged
+			}
+			if ackcompare.IsNil(a.ko.Spec.ProcessingInputs[index].S3Input.S3DataDistributionType) && ackcompare.IsNotNil(b.ko.Spec.ProcessingInputs[index].S3Input.S3DataDistributionType) {
+				a.ko.Spec.ProcessingInputs[index].S3Input.S3DataDistributionType = defaultS3DataDistributionType
+			}
+		}
+	}
+
+	// Default value of AppManaged is false
+	if ackcompare.IsNotNil(a.ko.Spec.ProcessingOutputConfig) && ackcompare.IsNotNil(b.ko.Spec.ProcessingOutputConfig) {
+		if ackcompare.IsNotNil(a.ko.Spec.ProcessingOutputConfig.Outputs) && ackcompare.IsNotNil(b.ko.Spec.ProcessingOutputConfig.Outputs) {
+			for index := range a.ko.Spec.ProcessingOutputConfig.Outputs {
+				if ackcompare.IsNil(a.ko.Spec.ProcessingOutputConfig.Outputs[index].AppManaged) && ackcompare.IsNotNil(b.ko.Spec.ProcessingOutputConfig.Outputs[index].AppManaged) {
+					a.ko.Spec.ProcessingOutputConfig.Outputs[index].AppManaged = defaultAppManaged
+				}
+			}
 		}
 	}
 }

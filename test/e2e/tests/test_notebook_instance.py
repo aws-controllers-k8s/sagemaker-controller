@@ -176,7 +176,10 @@ class TestNotebookInstance:
         )
         # TODO: Replace with annotations once runtime can update annotations in readOne.
         resource = k8s.get_resource(reference)
-        assert resource["status"]["stoppedByControllerMetadata"] == "UpdatePending"
+        # Test is flakey as this field can get changed before we get resource
+        # UpdateTriggered can only be in the status if beforehand it was UpdatePending
+        # TODO: See if update code can be restructured to avoid this
+        assert resource["status"]["stoppedByControllerMetadata"] == ( "UpdatePending" or "UpdateTriggered")
 
         # wait for the resource to go to the InService state and make sure the operator is synced with sagemaker.
         self._assert_notebook_status_in_sync(

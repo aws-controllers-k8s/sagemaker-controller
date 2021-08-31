@@ -348,9 +348,6 @@ spec:
               monitoringScheduleStatus:
                 description: The status of an monitoring job.
                 type: string
-            required:
-            - ackResourceMetadata
-            - conditions
             type: object
         type: object
     served: true

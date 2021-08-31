@@ -16,7 +16,16 @@
 package endpoint
 
 import (
+	"bytes"
+	"reflect"
+
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+)
+
+// Hack to avoid import errors during build...
+var (
+	_ = &bytes.Buffer{}
+	_ = &reflect.Method{}
 )
 
 // newResourceDelta returns a new `ackcompare.Delta` used to compare two
