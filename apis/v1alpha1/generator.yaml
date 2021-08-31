@@ -35,19 +35,9 @@ resources:
           code: ValidationException
           message_prefix: Could not find model
       terminal_codes:
-        - ResourceLimitExceeded
-        - ResourceNotFound
-        - ResourceInUse
-        - OptInRequired
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
-        - MissingAction
-        - InvalidClientTokenId
-        - InvalidQueryParameter
-        - MalformedQueryString
-        - InvalidAction
-        - UnrecognizedClientException
     fields:
       Tags:
         compare:
@@ -59,19 +49,9 @@ resources:
           code: ValidationException
           message_prefix: Could not find endpoint configuration
       terminal_codes:
-        - ResourceLimitExceeded
-        - ResourceNotFound
-        - ResourceInUse
-        - OptInRequired
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
-        - MissingAction
-        - InvalidClientTokenId
-        - InvalidQueryParameter
-        - MalformedQueryString
-        - InvalidAction
-        - UnrecognizedClientException
     fields:
       Tags:
         compare:
@@ -86,19 +66,9 @@ resources:
           code: ValidationException
           message_prefix: Could not find endpoint
       terminal_codes:
-        - ResourceLimitExceeded
-        - ResourceNotFound
-        - ResourceInUse
-        - OptInRequired
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
-        - MissingAction
-        - InvalidClientTokenId
-        - InvalidQueryParameter
-        - MalformedQueryString
-        - InvalidAction
-        - UnrecognizedClientException
         # Custom error
         - EndpointUpdateError
     hooks:
@@ -357,18 +327,11 @@ resources:
           404:
             code: ResourceNotFound
       terminal_codes:
-        - ResourceLimitExceeded
         - ResourceNotFound
         - ResourceInUse
-        - OptInRequired
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
-        - MissingAction
-        - InvalidQueryParameter
-        - MalformedQueryString
-        - InvalidAction
-        - UnrecognizedClientException
     fields:
       JobDefinitionArn:
         is_arn: true
@@ -383,18 +346,11 @@ resources:
           404:
             code: ResourceNotFound
       terminal_codes:
-        - ResourceLimitExceeded
         - ResourceNotFound
         - ResourceInUse
-        - OptInRequired
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
-        - MissingAction
-        - InvalidQueryParameter
-        - MalformedQueryString
-        - InvalidAction
-        - UnrecognizedClientException
     fields:
       JobDefinitionArn:
         is_arn: true
@@ -409,18 +365,11 @@ resources:
           404:
             code: ResourceNotFound
       terminal_codes:
-        - ResourceLimitExceeded
         - ResourceNotFound
         - ResourceInUse
-        - OptInRequired
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
-        - MissingAction
-        - InvalidQueryParameter
-        - MalformedQueryString
-        - InvalidAction
-        - UnrecognizedClientException
     fields:
       JobDefinitionArn:
         is_arn: true
@@ -435,18 +384,11 @@ resources:
           404:
             code: ResourceNotFound
       terminal_codes:
-        - ResourceLimitExceeded
         - ResourceNotFound
         - ResourceInUse
-        - OptInRequired
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
-        - MissingAction
-        - InvalidQueryParameter
-        - MalformedQueryString
-        - InvalidAction
-        - UnrecognizedClientException
     fields:
       JobDefinitionArn:
         is_arn: true
@@ -464,18 +406,11 @@ resources:
           404:
             code: ResourceNotFound
       terminal_codes:
-        - ResourceLimitExceeded
         - ResourceNotFound
         - ResourceInUse
-        - OptInRequired
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
-        - MissingAction
-        - InvalidQueryParameter
-        - MalformedQueryString
-        - InvalidAction
-        - UnrecognizedClientException
     hooks:
       sdk_create_post_set_output:
         code: rm.customSetOutput(desired, aws.String("Pending"), ko)
@@ -529,18 +464,9 @@ resources:
             code: ValidationException
             message_suffix: does not exist.
       terminal_codes:
-        - ResourceLimitExceeded
-        - ResourceNotFound
-        - ResourceInUse
-        - OptInRequired
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
-        - MissingAction
-        - InvalidQueryParameter
-        - MalformedQueryString
-        - InvalidAction
-        - UnrecognizedClientException    
         - ConflictException
         # Custom error to disable support for Versioned
         # Model Package
@@ -609,18 +535,11 @@ resources:
           404:
             code: ResourceNotFound
       terminal_codes:
-        - ResourceInUse
-        - ResourceLimitExceeded
         - ResourceNotFound
-        - InvalidAction
-        - InvalidClientTokenId
+        - ResourceInUse
         - InvalidParameterCombination
         - InvalidParameterValue
-        - InvalidQueryParameter
-        - MalformedQueryString
-        - MissingAction
         - MissingParameter
-        - OptInRequired
     hooks:
       delta_pre_compare:
         code: customSetDefaults(a, b)
@@ -660,19 +579,9 @@ resources:
             code: ValidationException
             message_prefix: RecordNotFound
       terminal_codes:
-        - ResourceLimitExceeded
-        - ResourceNotFound
-        - ResourceInUse
-        - OptInRequired
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
-        - MissingAction
-        - InvalidClientTokenId
-        - InvalidQueryParameter
-        - MalformedQueryString
-        - InvalidAction
-        - UnrecognizedClientException
     hooks:
       sdk_read_one_post_set_output: 
         template_path: notebook_instance/sdk_read_one_post_set_output.go.tpl
@@ -724,18 +633,9 @@ resources:
               code: ValidationException
               message_suffix: does not exist.
         terminal_codes:
-          - ResourceLimitExceeded
-          - ResourceNotFound
-          - ResourceInUse
-          - OptInRequired
           - InvalidParameterCombination
           - InvalidParameterValue
           - MissingParameter
-          - MissingAction
-          - InvalidQueryParameter
-          - MalformedQueryString
-          - InvalidAction
-          - UnrecognizedClientException    
           - ConflictException   
       fields:
         ModelPackageGroupStatus:
@@ -762,18 +662,9 @@ resources:
             code: ValidationException
             message_prefix: Unable to describe Notebook Instance Lifecycle Config
       terminal_codes:
-        - ResourceLimitExceeded
-        - ResourceNotFound
-        - ResourceInUse
-        - OptInRequired
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
-        - MissingAction
-        - InvalidQueryParameter
-        - MalformedQueryString
-        - InvalidAction
-        - UnrecognizedClientException
     hooks:
       delta_post_compare:
         template_path: notebook_instance_lifecycle_config/delta_post_compare.go.tpl
