@@ -76,7 +76,7 @@ func (f *resourceManagerFactory) ManagerFor(
 
 // IsAdoptable returns true if the resource is able to be adopted
 func (f *resourceManagerFactory) IsAdoptable() bool {
-	return false
+	return true
 }
 
 // RequeueOnSuccessSeconds returns true if the resource should be requeued after specified seconds
