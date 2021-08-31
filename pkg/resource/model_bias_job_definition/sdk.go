@@ -680,18 +680,11 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 		return false
 	}
 	switch awsErr.Code() {
-	case "ResourceLimitExceeded",
-		"ResourceNotFound",
+	case "ResourceNotFound",
 		"ResourceInUse",
-		"OptInRequired",
 		"InvalidParameterCombination",
 		"InvalidParameterValue",
-		"MissingParameter",
-		"MissingAction",
-		"InvalidQueryParameter",
-		"MalformedQueryString",
-		"InvalidAction",
-		"UnrecognizedClientException":
+		"MissingParameter":
 		return true
 	default:
 		return false
