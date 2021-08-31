@@ -55,9 +55,6 @@ func newResourceDelta(
 			delta.Add("Spec.ModelPackageGroupName", a.ko.Spec.ModelPackageGroupName, b.ko.Spec.ModelPackageGroupName)
 		}
 	}
-	if !reflect.DeepEqual(a.ko.Spec.Tags, b.ko.Spec.Tags) {
-		delta.Add("Spec.Tags", a.ko.Spec.Tags, b.ko.Spec.Tags)
-	}
 
 	return delta
 }

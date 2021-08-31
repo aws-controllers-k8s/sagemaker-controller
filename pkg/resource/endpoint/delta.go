@@ -55,9 +55,6 @@ func newResourceDelta(
 			delta.Add("Spec.EndpointName", a.ko.Spec.EndpointName, b.ko.Spec.EndpointName)
 		}
 	}
-	if !reflect.DeepEqual(a.ko.Spec.Tags, b.ko.Spec.Tags) {
-		delta.Add("Spec.Tags", a.ko.Spec.Tags, b.ko.Spec.Tags)
-	}
 
 	return delta
 }

@@ -35,28 +35,28 @@ func customSetDefaults(
 	}
 
 	// Default value of AppManaged is false
-	DefaultAppManaged := aws.Bool(false)
+	defaultAppManaged := aws.Bool(false)
 
 	// Default value of S3DataDistributionType is FullyReplicated
-	DefaultS3DataDistributionType := aws.String("FullyReplicated")
+	defaultS3DataDistributionType := aws.String("FullyReplicated")
 
-	if ackcompare.IsNotNil(a.ko.Spec.ProcessingInputs) {
+	if ackcompare.IsNotNil(a.ko.Spec.ProcessingInputs) && ackcompare.IsNotNil(b.ko.Spec.ProcessingInputs) {
 		for index := range a.ko.Spec.ProcessingInputs {
-			if ackcompare.IsNil(a.ko.Spec.ProcessingInputs[index].AppManaged) {
-				a.ko.Spec.ProcessingInputs[index].AppManaged = DefaultAppManaged
+			if ackcompare.IsNil(a.ko.Spec.ProcessingInputs[index].AppManaged) && ackcompare.IsNotNil(b.ko.Spec.ProcessingInputs[index].AppManaged) {
+				a.ko.Spec.ProcessingInputs[index].AppManaged = defaultAppManaged
 			}
-			if ackcompare.IsNil(a.ko.Spec.ProcessingInputs[index].S3Input.S3DataDistributionType) {
-				a.ko.Spec.ProcessingInputs[index].S3Input.S3DataDistributionType = DefaultS3DataDistributionType
+			if ackcompare.IsNil(a.ko.Spec.ProcessingInputs[index].S3Input.S3DataDistributionType) && ackcompare.IsNotNil(b.ko.Spec.ProcessingInputs[index].S3Input.S3DataDistributionType) {
+				a.ko.Spec.ProcessingInputs[index].S3Input.S3DataDistributionType = defaultS3DataDistributionType
 			}
 		}
 	}
 
 	// Default value of AppManaged is false
-	if ackcompare.IsNotNil(a.ko.Spec.ProcessingOutputConfig) {
-		if ackcompare.IsNotNil(a.ko.Spec.ProcessingOutputConfig.Outputs) {
+	if ackcompare.IsNotNil(a.ko.Spec.ProcessingOutputConfig) && ackcompare.IsNotNil(b.ko.Spec.ProcessingOutputConfig) {
+		if ackcompare.IsNotNil(a.ko.Spec.ProcessingOutputConfig.Outputs) && ackcompare.IsNotNil(b.ko.Spec.ProcessingOutputConfig.Outputs) {
 			for index := range a.ko.Spec.ProcessingOutputConfig.Outputs {
-				if ackcompare.IsNil(a.ko.Spec.ProcessingOutputConfig.Outputs[index].AppManaged) {
-					a.ko.Spec.ProcessingOutputConfig.Outputs[index].AppManaged = DefaultAppManaged
+				if ackcompare.IsNil(a.ko.Spec.ProcessingOutputConfig.Outputs[index].AppManaged) && ackcompare.IsNotNil(b.ko.Spec.ProcessingOutputConfig.Outputs[index].AppManaged) {
+					a.ko.Spec.ProcessingOutputConfig.Outputs[index].AppManaged = defaultAppManaged
 				}
 			}
 		}

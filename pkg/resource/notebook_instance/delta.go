@@ -114,9 +114,6 @@ func newResourceDelta(
 			delta.Add("Spec.SubnetID", a.ko.Spec.SubnetID, b.ko.Spec.SubnetID)
 		}
 	}
-	if !reflect.DeepEqual(a.ko.Spec.Tags, b.ko.Spec.Tags) {
-		delta.Add("Spec.Tags", a.ko.Spec.Tags, b.ko.Spec.Tags)
-	}
 	if ackcompare.HasNilDifference(a.ko.Spec.VolumeSizeInGB, b.ko.Spec.VolumeSizeInGB) {
 		delta.Add("Spec.VolumeSizeInGB", a.ko.Spec.VolumeSizeInGB, b.ko.Spec.VolumeSizeInGB)
 	} else if a.ko.Spec.VolumeSizeInGB != nil && b.ko.Spec.VolumeSizeInGB != nil {

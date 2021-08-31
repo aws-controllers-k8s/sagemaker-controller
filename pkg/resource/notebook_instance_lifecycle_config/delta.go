@@ -48,12 +48,6 @@ func newResourceDelta(
 			delta.Add("Spec.NotebookInstanceLifecycleConfigName", a.ko.Spec.NotebookInstanceLifecycleConfigName, b.ko.Spec.NotebookInstanceLifecycleConfigName)
 		}
 	}
-	if !reflect.DeepEqual(a.ko.Spec.OnCreate, b.ko.Spec.OnCreate) {
-		delta.Add("Spec.OnCreate", a.ko.Spec.OnCreate, b.ko.Spec.OnCreate)
-	}
-	if !reflect.DeepEqual(a.ko.Spec.OnStart, b.ko.Spec.OnStart) {
-		delta.Add("Spec.OnStart", a.ko.Spec.OnStart, b.ko.Spec.OnStart)
-	}
 
 	delta = customDeltaOnCreate(delta, a, b)
 	delta = customDeltaOnStart(delta, a, b)

@@ -251,9 +251,6 @@ func newResourceDelta(
 			delta.Add("Spec.MonitoringScheduleName", a.ko.Spec.MonitoringScheduleName, b.ko.Spec.MonitoringScheduleName)
 		}
 	}
-	if !reflect.DeepEqual(a.ko.Spec.Tags, b.ko.Spec.Tags) {
-		delta.Add("Spec.Tags", a.ko.Spec.Tags, b.ko.Spec.Tags)
-	}
 
 	return delta
 }

@@ -36,7 +36,6 @@ spec:
               s3DataType: S3Prefix
               s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/batch/input-data
         transformOutput:
-          kmsKeyID: ""
           s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/batch/output
         transformResources:
           instanceCount: 1

@@ -127,9 +127,6 @@ func newResourceDelta(
 			delta.Add("Spec.HyperParameterTuningJobName", a.ko.Spec.HyperParameterTuningJobName, b.ko.Spec.HyperParameterTuningJobName)
 		}
 	}
-	if !reflect.DeepEqual(a.ko.Spec.Tags, b.ko.Spec.Tags) {
-		delta.Add("Spec.Tags", a.ko.Spec.Tags, b.ko.Spec.Tags)
-	}
 	if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition, b.ko.Spec.TrainingJobDefinition) {
 		delta.Add("Spec.TrainingJobDefinition", a.ko.Spec.TrainingJobDefinition, b.ko.Spec.TrainingJobDefinition)
 	} else if a.ko.Spec.TrainingJobDefinition != nil && b.ko.Spec.TrainingJobDefinition != nil {

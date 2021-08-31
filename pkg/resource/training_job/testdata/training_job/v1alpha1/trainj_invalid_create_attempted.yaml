@@ -25,7 +25,6 @@ spec:
         s3DataDistributionType: FullyReplicated
         s3DataType: S3Prefix
         s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/train
-    recordWrapperType: None
   - channelName: validation
     compressionType: None
     contentType: text/csv
@@ -34,7 +33,6 @@ spec:
         s3DataDistributionType: FullyReplicated
         s3DataType: S3Prefix
         s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/validation
-    recordWrapperType: None
   outputDataConfig:
     s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/output
   resourceConfig:

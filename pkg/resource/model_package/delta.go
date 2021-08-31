@@ -319,9 +319,6 @@ func newResourceDelta(
 			delta.Add("Spec.SourceAlgorithmSpecification.SourceAlgorithms", a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms, b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms)
 		}
 	}
-	if !reflect.DeepEqual(a.ko.Spec.Tags, b.ko.Spec.Tags) {
-		delta.Add("Spec.Tags", a.ko.Spec.Tags, b.ko.Spec.Tags)
-	}
 	if ackcompare.HasNilDifference(a.ko.Spec.ValidationSpecification, b.ko.Spec.ValidationSpecification) {
 		delta.Add("Spec.ValidationSpecification", a.ko.Spec.ValidationSpecification, b.ko.Spec.ValidationSpecification)
 	} else if a.ko.Spec.ValidationSpecification != nil && b.ko.Spec.ValidationSpecification != nil {

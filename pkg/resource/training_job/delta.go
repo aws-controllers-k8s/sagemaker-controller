@@ -292,9 +292,6 @@ func newResourceDelta(
 			}
 		}
 	}
-	if !reflect.DeepEqual(a.ko.Spec.Tags, b.ko.Spec.Tags) {
-		delta.Add("Spec.Tags", a.ko.Spec.Tags, b.ko.Spec.Tags)
-	}
 	if ackcompare.HasNilDifference(a.ko.Spec.TensorBoardOutputConfig, b.ko.Spec.TensorBoardOutputConfig) {
 		delta.Add("Spec.TensorBoardOutputConfig", a.ko.Spec.TensorBoardOutputConfig, b.ko.Spec.TensorBoardOutputConfig)
 	} else if a.ko.Spec.TensorBoardOutputConfig != nil && b.ko.Spec.TensorBoardOutputConfig != nil {

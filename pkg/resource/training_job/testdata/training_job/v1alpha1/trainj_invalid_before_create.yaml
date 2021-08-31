@@ -34,7 +34,6 @@ spec:
           s3DataDistributionType: FullyReplicated
       contentType: text/csv
       compressionType: None
-      recordWrapperType: None
     - channelName: validation
       dataSource:
         s3DataSource:
@@ -43,7 +42,6 @@ spec:
           s3DataDistributionType: FullyReplicated
       contentType: text/csv
       compressionType: None
-      recordWrapperType: None
   tags:
     - key: algorithm
       value: xgboost
