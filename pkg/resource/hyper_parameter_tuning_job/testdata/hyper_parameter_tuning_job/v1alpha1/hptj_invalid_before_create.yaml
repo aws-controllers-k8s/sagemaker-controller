@@ -3,7 +3,7 @@ kind: HyperParameterTuningJob
 metadata:
   name: unit-testing-hyper-parameter-tuning-job
 spec:
-  hyperParameterTuningJobName: !-intentionally-invalid-name
+  hyperParameterTuningJobName: intentionally@invalid-name
   hyperParameterTuningJobConfig:
     strategy: Bayesian
     hyperParameterTuningJobObjective:

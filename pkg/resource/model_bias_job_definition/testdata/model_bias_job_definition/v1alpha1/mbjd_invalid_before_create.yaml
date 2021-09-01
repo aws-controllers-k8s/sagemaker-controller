@@ -3,7 +3,7 @@ kind: ModelBiasJobDefinition
 metadata:
   name: unit-testing-model-bias-job-definition
 spec:
-  jobDefinitionName: !-intentionally-invalid-name 
+  jobDefinitionName: intentionally@invalid-name 
   jobResources:
     clusterConfig:
       instanceCount: 1

@@ -49,11 +49,12 @@ spec:
     value: testing
   - key: customer
     value: test-user
-  trainingJobName: ""
+  trainingJobName: intentionally@invalid-name
 status:
   ackResourceMetadata:
     ownerAccountID: ""
   conditions:
-  - message: The training job name must start with an alphanumeric character.
+  - message: "InvalidParameterValue: The training job name must start with an alphanumeric
+      character.\n\tstatus code: 0, request id: "
     status: "True"
     type: ACK.Terminal

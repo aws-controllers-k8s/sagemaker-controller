@@ -5,7 +5,7 @@ metadata:
 spec:
   notebookInstanceName: 
   instanceType: ml.t2.medium
-  notebookInstanceName: '!-test'
+  notebookInstanceName: intentionally@invalid-name
   roleARN: arn:aws:iam::1234:role/service-role/AmazonSageMakerServiceCatalogProductsUseRole
   volumeSizeInGB: 8
   lifecycleConfigName: my-lfc

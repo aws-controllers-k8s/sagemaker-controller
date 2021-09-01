@@ -3,7 +3,7 @@ kind: ModelQualityJobDefinition
 metadata:
   name: unit-testing-model-quality-job-definition
 spec:
-  jobDefinitionName: !-intentionally-invalid-name
+  jobDefinitionName: intentionally@invalid-name
   jobResources:
     clusterConfig:
       instanceCount: 1

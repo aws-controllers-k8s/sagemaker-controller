@@ -20,7 +20,7 @@ status:
   conditions:
   - status: "True"
     type: ACK.ResourceSynced
-  - message: Server is down
+  - message: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
     status: "True"
     type: ACK.Recoverable
   creationTime: null

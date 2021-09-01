@@ -4,12 +4,25 @@ metadata:
   creationTimestamp: null
   name: unit-testing-endpoint-config
 spec:
-  endpointConfigName: null
-  productionVariants: null
+  endpointConfigName: intentionally@invalid-name
+  productionVariants:
+  - initialInstanceCount: 2
+    initialVariantWeight: 1
+    instanceType: ml.c5.large
+    modelName: model-1
+    variantName: variant-1
+  tags:
+  - key: confidentiality
+    value: public
+  - key: environment
+    value: testing
+  - key: customer
+    value: test-user
 status:
   ackResourceMetadata:
     ownerAccountID: ""
   conditions:
-  - message: The endpoint config name must start with an alphanumeric character.
+  - message: "InvalidParameterValue: The endpoint config name must start with an alphanumeric
+      character.\n\tstatus code: 0, request id: "
     status: "True"
     type: ACK.Terminal

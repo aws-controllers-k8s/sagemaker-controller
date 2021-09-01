@@ -4,11 +4,13 @@ metadata:
   creationTimestamp: null
   name: unit-testing-model-package-group
 spec:
-  modelPackageGroupName: null
+  modelPackageGroupDescription: Description for model package group
+  modelPackageGroupName: intentionally@invalid-name
 status:
   ackResourceMetadata:
     ownerAccountID: ""
   conditions:
-  - message: The model package group name must start with an alphanumeric character.
+  - message: "InvalidParameterValue: The model package group name must start with
+      an alphanumeric character.\n\tstatus code: 0, request id: "
     status: "True"
     type: ACK.Terminal

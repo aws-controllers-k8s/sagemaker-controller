@@ -9,7 +9,7 @@ spec:
     monitoringType: DataQuality
     scheduleConfig:
       scheduleExpression: cron(0 * ? * * *)
-  monitoringScheduleName: ""
+  monitoringScheduleName: intentionally@invalid-name
   tags:
   - key: confidentiality
     value: public
@@ -21,6 +21,7 @@ status:
   ackResourceMetadata:
     ownerAccountID: ""
   conditions:
-  - message: The monitoring schedule name must start with an alphanumeric character.
+  - message: "InvalidParameterValue: The monitoring schedule name must start with
+      an alphanumeric character.\n\tstatus code: 0, request id: "
     status: "True"
     type: ACK.Terminal

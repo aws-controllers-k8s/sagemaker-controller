@@ -16,7 +16,8 @@ status:
   - message: NotebookInstance is in Stopped status.
     status: "True"
     type: ACK.ResourceSynced
-  - message: VolumeInSizeGB cannot be lower than current.
+  - message: "ValidationException: VolumeInSizeGB cannot be lower than current.\n\tstatus
+      code: 0, request id: "
     status: "True"
     type: ACK.Recoverable
   notebookInstanceStatus: Stopped
