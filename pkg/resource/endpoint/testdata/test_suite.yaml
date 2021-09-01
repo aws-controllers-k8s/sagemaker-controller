@@ -145,7 +145,7 @@ tests:
           latest_state: "v1alpha1/update/observed/error_on_update.yaml"
           error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
       - name: "Update=InService"
-        description: "This test checks if update Endpoint is called and lastEndpointConfigNameForUpdate is set"
+        description: "This test checks if update Endpoint is called and lastEndpointConfigNameForUpdate annotation is set"
         given:
           desired_state: "v1alpha1/update/desired/update_common.yaml"
           latest_state: "v1alpha1/update/desired/latest_inservice_pre_update.yaml"

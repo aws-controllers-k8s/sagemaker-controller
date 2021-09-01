@@ -3,8 +3,10 @@ kind: Endpoint
 metadata:
   creationTimestamp: null
   name: xgboost-endpoint
+  annotations:
+    sagemaker.services.k8s.aws/Endpoint-last-endpoint-config-for-update: xgboost-endpoint-single-variant-config-updated
 spec:
-  endpointConfigName: xgboost-endpoint-multi-variant-config
+  endpointConfigName: xgboost-endpoint-variant-config-updated
   endpointName: xgboost-endpoint
   tags:
   - key: confidentiality
@@ -25,8 +27,6 @@ status:
   creationTime: "0001-01-01T00:00:00Z"
   endpointStatus: InService
   lastModifiedTime: "0001-01-01T00:00:00Z"
-  latestEndpointConfigName: xgboost-endpoint-single-variant-config
-  lastEndpointConfigNameForUpdate: xgboost-endpoint-multi-variant-config
   productionVariants:
   - currentInstanceCount: 2
     currentWeight: 1
