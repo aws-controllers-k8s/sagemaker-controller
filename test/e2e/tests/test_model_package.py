@@ -24,6 +24,7 @@ from e2e import (
     service_marker,
     wait_for_status,
     create_sagemaker_resource,
+    get_sagemaker_model_package,
     sagemaker_client,
     assert_tags_in_sync,
 )
@@ -120,19 +121,6 @@ def xgboost_unversioned_model_package():
             reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
         )
         assert deleted
-
-
-def get_sagemaker_model_package(model_package_name: str):
-    try:
-        model_package = sagemaker_client().describe_model_package(
-            ModelPackageName=model_package_name
-        )
-        return model_package
-    except botocore.exceptions.ClientError as error:
-        logging.error(
-            f"SageMaker could not find a model package with the name {model_package_name}. Error {error}"
-        )
-        return None
 
 
 def get_model_package_sagemaker_status(model_package_name: str):

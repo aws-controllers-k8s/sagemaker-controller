@@ -25,6 +25,8 @@ from e2e import (
     create_adopted_resource,
     wait_sagemaker_model_package_status,
     assert_model_package_status_in_sync,
+    get_sagemaker_model_package_group,
+    get_sagemaker_model_package,
     sagemaker_client,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
@@ -92,11 +94,13 @@ def sdk_model_package(name_suffix):
         model_package_response,
     )
     model_package_arn = model_package_response.get("ModelPackageArn")
-    wait_sagemaker_model_package_status(model_package_arn, cfg.JOB_STATUS_COMPLETED)
-    sagemaker_client().delete_model_package(ModelPackageName=model_package_arn)
-    sagemaker_client().delete_model_package_group(
-        ModelPackageGroupName=model_package_group_name
-    )
+    if get_sagemaker_model_package(model_package_arn) is not None:
+        wait_sagemaker_model_package_status(model_package_arn, cfg.JOB_STATUS_COMPLETED)
+        sagemaker_client().delete_model_package(ModelPackageName=model_package_arn)
+    if get_sagemaker_model_package_group(model_package_group_name) is not None:
+        sagemaker_client().delete_model_package_group(
+            ModelPackageGroupName=model_package_group_name
+        )
 
 
 @pytest.fixture(scope="module")
@@ -215,7 +219,7 @@ class TestAdoptedModelPackage:
             namespace,
         )
         model_package_resource = k8s.wait_resource_consumed_by_controller(
-            model_package_reference, wait_periods=30, period_length=30
+            model_package_reference
         )
         assert model_package_resource is not None
 
@@ -237,3 +241,17 @@ class TestAdoptedModelPackage:
         assert k8s.wait_on_condition(
             model_package_reference, "ACK.ResourceSynced", "True"
         )
+
+        _, deleted = k8s.delete_custom_resource(
+            model_package_reference,
+            cfg.JOB_DELETE_WAIT_PERIODS,
+            cfg.JOB_DELETE_WAIT_LENGTH,
+        )
+        assert deleted is True
+
+        _, deleted = k8s.delete_custom_resource(
+            model_package_group_reference,
+            cfg.JOB_DELETE_WAIT_PERIODS,
+            cfg.JOB_DELETE_WAIT_LENGTH,
+        )
+        assert deleted is True

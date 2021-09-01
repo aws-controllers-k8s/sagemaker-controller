@@ -13,6 +13,7 @@
 
 import pytest
 import logging
+import botocore
 import time
 import boto3
 from pathlib import Path
@@ -210,6 +211,31 @@ def assert_model_package_status_in_sync(model_package_arn, reference, expected_s
         == wait_resource_model_package_status(reference, expected_status, 2)
         == expected_status
     )
+
+
+def get_sagemaker_model_package_group(model_package_group_name: str):
+    try:
+        return sagemaker_client().describe_model_package_group(
+            ModelPackageGroupName=model_package_group_name
+        )
+    except botocore.exceptions.ClientError as error:
+        logging.error(
+            f"SageMaker could not find a model package group with the name {model_package_group_name}. Error {error}"
+        )
+        return None
+
+
+def get_sagemaker_model_package(model_package_name: str):
+    try:
+        model_package = sagemaker_client().describe_model_package(
+            ModelPackageName=model_package_name
+        )
+        return model_package
+    except botocore.exceptions.ClientError as error:
+        logging.error(
+            f"SageMaker could not find a model package with the name {model_package_name}. Error {error}"
+        )
+        return None
 
 
 def assert_tags_in_sync(resource_arn, resource_tags):
