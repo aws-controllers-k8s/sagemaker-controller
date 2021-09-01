@@ -4,7 +4,8 @@ if err == nil {
 		if err != nil {
 			return nil, err
 		}
-		return observed, requeueWaitWhileDeleting
+		r.SetStatus(observed)
+		return r, requeueWaitWhileDeleting
 	}
 }
     
