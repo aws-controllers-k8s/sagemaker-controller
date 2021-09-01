@@ -25,6 +25,7 @@ from e2e import (
     assert_tags_in_sync,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
+from e2e.common import config as cfg
 from e2e.common.fixtures import (
     xgboost_churn_data_quality_job_definition,
     xgboost_churn_endpoint,
@@ -64,7 +65,7 @@ def xgboost_churn_data_quality_monitoring_schedule(
     yield (reference, resource, spec)
 
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        _, deleted = k8s.delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
         assert deleted
 
 
@@ -210,19 +211,7 @@ class TestMonitoringSchedule:
         )
 
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        _, deleted = k8s.delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
         assert deleted
+        assert get_sagemaker_monitoring_schedule(sagemaker_client, monitoring_schedule_name) is None
 
-        # 30 sec wait for server-side cleanup
-        schedule_deleted = False
-        for _ in range(3):
-            time.sleep(10)
-            if (
-                get_sagemaker_monitoring_schedule(
-                    sagemaker_client, monitoring_schedule_name
-                )
-                is None
-            ):
-                schedule_deleted = True
-                break
-        assert schedule_deleted

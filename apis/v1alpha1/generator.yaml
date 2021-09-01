@@ -81,6 +81,8 @@ resources:
         code: rm.customUpdateEndpointSetOutput(ko)
       sdk_delete_pre_build_request:
         template_path: common/sdk_delete_pre_build_request.go.tpl
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
     fields:
       EndpointStatus:
         is_read_only: true
@@ -403,16 +405,16 @@ resources:
         - InvalidParameterValue
         - MissingParameter
     hooks:
-      sdk_create_post_set_output:
-        code: rm.customSetOutput(desired, aws.String("Pending"), ko)
       sdk_read_one_post_set_output:
-        code: rm.customSetOutput(r, resp.MonitoringScheduleStatus, ko)
+        code: rm.customSetOutput(&resource{ko}, resp.MonitoringScheduleStatus)
       sdk_update_pre_build_request:
-        template_path: monitoring_schedule/sdk_update_pre_build_request.go.tpl
+        template_path: common/sdk_update_pre_build_request.go.tpl
       sdk_update_post_set_output:
-        code: rm.customSetOutput(desired, aws.String("Pending"), ko)
+        code: rm.customSetOutput(&resource{ko}, aws.String("Pending"))
       sdk_delete_pre_build_request:
-        template_path: monitoring_schedule/sdk_delete_pre_build_request.go.tpl
+        template_path: common/sdk_delete_pre_build_request.go.tpl
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
     fields:
       MonitoringScheduleStatus:
         is_read_only: true
@@ -473,7 +475,7 @@ resources:
       sdk_read_one_post_build_request:
         template_path: model_package/set_resource_name_as_arn.go.tpl
       sdk_update_pre_build_request:
-        template_path: model_package/sdk_update_pre_build_request.go.tpl
+        template_path: common/sdk_update_pre_build_request.go.tpl
     fields:
       ModelPackageStatus:
         is_read_only: true

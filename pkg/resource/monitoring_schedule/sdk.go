@@ -362,7 +362,7 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutput(r, resp.MonitoringScheduleStatus, ko)
+	rm.customSetOutput(&resource{ko}, resp.MonitoringScheduleStatus)
 	return &resource{ko}, nil
 }
 
@@ -425,7 +425,6 @@ func (rm *resourceManager) sdkCreate(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutput(desired, aws.String("Pending"), ko)
 	return &resource{ko}, nil
 }
 
@@ -683,9 +682,7 @@ func (rm *resourceManager) sdkUpdate(
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkUpdate")
 	defer exit(err)
-	// specialized logic to check if modification is allowed
-	err = rm.statusAllowUpdates(ctx, latest)
-	if err != nil {
+	if err = rm.requeueUntilCanModify(ctx, latest); err != nil {
 		return nil, err
 	}
 	input, err := rm.newUpdateRequestPayload(ctx, desired)
@@ -713,7 +710,7 @@ func (rm *resourceManager) sdkUpdate(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutput(desired, aws.String("Pending"), ko)
+	rm.customSetOutput(&resource{ko}, aws.String("Pending"))
 	return &resource{ko}, nil
 }
 
@@ -954,11 +951,10 @@ func (rm *resourceManager) sdkDelete(
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
 	defer exit(err)
-	// specialized logic to check if modification is allowed
-	err = rm.statusAllowUpdates(ctx, r)
-	if err != nil {
+	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
 		return r, err
 	}
+
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
 		return nil, err
@@ -967,6 +963,17 @@ func (rm *resourceManager) sdkDelete(
 	_ = resp
 	resp, err = rm.sdkapi.DeleteMonitoringScheduleWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteMonitoringSchedule", err)
+
+	if err == nil {
+		if observed, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
+			if err != nil {
+				return nil, err
+			}
+			r.SetStatus(observed)
+			return r, requeueWaitWhileDeleting
+		}
+	}
+
 	return nil, err
 }
 

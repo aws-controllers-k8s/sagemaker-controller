@@ -148,7 +148,8 @@ def xgboost_endpoint(name_suffix, single_variant_config):
 
     # Delete the k8s resource if not already deleted by tests
     if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        # longer wait incase endpoint is in creating/updating status
+        _, deleted = k8s.delete_custom_resource(reference, 40, cfg.DELETE_WAIT_LENGTH)
         assert deleted
 
 
@@ -352,22 +353,10 @@ class TestEndpoint:
         (reference, resource, _) = xgboost_endpoint
         endpoint_name = resource["spec"].get("endpointName", None)
 
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        _, deleted = k8s.delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
         assert deleted
 
-        # resource is removed from management from controller side if call to deleteEndpoint succeeds.
-        # Sagemaker also removes a 'Deleting' endpoint pretty quickly, but there might be a lag
-        # We wait maximum of 30 seconds for this clean up to happen
-        endpoint_deleted = False
-        for _ in range(3):
-            time.sleep(10)
-            if (
-                self._describe_sagemaker_endpoint(sagemaker_client, endpoint_name)
-                is None
-            ):
-                endpoint_deleted = True
-                break
-        assert endpoint_deleted
+        assert self._describe_sagemaker_endpoint(sagemaker_client, endpoint_name) is None
 
     def test_driver(
         self,
