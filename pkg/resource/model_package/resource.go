@@ -97,11 +97,6 @@ func (r *resource) SetIdentifiers(identifier *ackv1alpha1.AWSIdentifiers) error 
 	}
 	r.ko.Status.ACKResourceMetadata.ARN = identifier.ARN
 
-	f0, f0ok := identifier.AdditionalKeys["modelPackageName"]
-	if f0ok {
-		r.ko.Spec.ModelPackageName = &f0
-	}
-
 	return nil
 }
 
