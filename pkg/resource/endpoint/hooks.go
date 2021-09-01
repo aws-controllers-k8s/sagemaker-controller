@@ -11,13 +11,11 @@
 // express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-// Use this file if the Status/Spec of the CR needs to be modified after
-// create/describe/update operation
-
 package endpoint
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
@@ -39,39 +37,29 @@ var (
 
 	resourceName = resourceGK.Kind
 
-	FailUpdateError = awserr.New("EndpointUpdateError", "unable to update endpoint. check FailureReason", nil)
+	lastEndpointConfigForUpdateAnnotation = fmt.Sprintf("%s/%s-last-endpoint-config-for-update", resourceGK.Group, resourceGK.Kind)
 
 	FailureReasonInternalServiceErrorPrefix = "Request to service failed"
 )
 
 // customDescribeEndpointSetOutput sets the resource ResourceSynced condition to False if endpoint is
 // being modified by AWS
-func (rm *resourceManager) customDescribeEndpointSetOutput(
-	resp *svcsdk.DescribeEndpointOutput,
-	ko *svcapitypes.Endpoint,
-) {
-	// Workaround: Field config for LatestEndpointConfigName of generator config
-	// does not code generate this correctly since this field is part of Spec
-	// SageMaker users will need following information:
-	// 	 - latestEndpointConfig
-	// 	 - desiredEndpointConfig
-	// 	 - LastEndpointConfigNameForUpdate
-	// 	 - FailureReason
-	// to determine the correct course of action in case of update to Endpoint fails
-	if resp.EndpointConfigName != nil {
-		ko.Status.LatestEndpointConfigName = resp.EndpointConfigName
-	} else {
-		ko.Status.LatestEndpointConfigName = nil
-	}
-
-	svccommon.SetSyncedCondition(&resource{ko}, resp.EndpointStatus, &resourceName, &modifyingStatuses)
+func (rm *resourceManager) customDescribeEndpointSetOutput(ko *svcapitypes.Endpoint) {
+	svccommon.SetSyncedCondition(&resource{ko}, ko.Status.EndpointStatus, &resourceName, &modifyingStatuses)
 }
 
 // customUpdateEndpointSetOutput sets the resource ResourceSynced condition to False if endpoint is
 // being updated. At this stage we know call to updateEndpoint was successful.
 func (rm *resourceManager) customUpdateEndpointSetOutput(ko *svcapitypes.Endpoint) {
-	// no nil check present here since Spec.EndpointConfigName is a required field
-	ko.Status.LastEndpointConfigNameForUpdate = ko.Spec.EndpointConfigName
+	// set last endpoint config name used for udapte in annotations
+	// no nil check present since Spec.EndpointConfigName is a required field
+	annotations := ko.ObjectMeta.GetAnnotations()
+	if annotations == nil {
+		annotations = make(map[string]string)
+	}
+	annotations[lastEndpointConfigForUpdateAnnotation] = *ko.Spec.EndpointConfigName
+	ko.ObjectMeta.SetAnnotations(annotations)
+
 	// injecting Updating status to keep the Sync condition message and status.endpointStatus in sync
 	ko.Status.EndpointStatus = aws.String(svcsdk.EndpointStatusUpdating)
 
@@ -98,7 +86,15 @@ func (rm *resourceManager) customUpdateEndpointPreChecks(
 
 	failureReason := latest.ko.Status.FailureReason
 	desiredEndpointConfig := desired.ko.Spec.EndpointConfigName
-	lastEndpointConfigForUpdate := desired.ko.Status.LastEndpointConfigNameForUpdate
+	
+	var lastEndpointConfigForUpdate *string = nil
+	// get last endpoint config name used for udapte form annotation
+	annotations := desired.ko.ObjectMeta.GetAnnotations()
+	for k, v := range annotations {
+		if k == lastEndpointConfigForUpdateAnnotation {
+			lastEndpointConfigForUpdate = &v
+		}
+	}
 
 	// Case 2 - EndpointStatus == Failed
 	if *latestStatus == svcsdk.EndpointStatusFailed ||
@@ -118,7 +114,7 @@ func (rm *resourceManager) customUpdateEndpointPreChecks(
 		// 1 & 2 does not guarantee an update Failed. Hence we need to look at `*latestEndpointConfigName` to determine if the update was unsuccessful
 		// `*desiredEndpointConfig != *latestEndpointConfig` + `*desiredEndpointConfig == *lastEndpointConfigForUpdate`+ `FailureReason != nil` indicate that an update is needed,
 		// has already been tried and failed.
-		return FailUpdateError
+		return awserr.New("EndpointUpdateError", fmt.Sprintf("unable to update endpoint. check FailureReason. latest EndpointConfigName is %s", *latest.ko.Spec.EndpointConfigName), nil)
 	}
 
 	return nil

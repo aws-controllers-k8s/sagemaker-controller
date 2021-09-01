@@ -33,8 +33,8 @@ from e2e import (
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
 
-FAIL_UPDATE_ERROR_MESSAGE = "EndpointUpdateError: unable to update endpoint. check FailureReason"
-
+FAIL_UPDATE_ERROR_MESSAGE = "EndpointUpdateError: unable to update endpoint. check FailureReason. latest EndpointConfigName is "
+LAST_ENDPOINTCONFIGNNAME_FOR_UPDATE_ANNOTATION_KEY = "sagemaker.services.k8s.aws/Endpoint-last-endpoint-config-for-update"
 
 @pytest.fixture(scope="module")
 def name_suffix():
@@ -273,33 +273,24 @@ class TestEndpoint:
         )
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "False")
         endpoint_resource = k8s.get_resource(endpoint_reference)
-        assert (
-            endpoint_resource["status"].get("lastEndpointConfigNameForUpdate", None)
-            == faulty_config_name
-        )
+        annotations = endpoint_resource["metadata"].get("annotations", None)
+        assert annotations is not None
+        assert annotations[LAST_ENDPOINTCONFIGNNAME_FOR_UPDATE_ANNOTATION_KEY] == faulty_config_name
 
         assert_endpoint_status_in_sync(
             endpoint_reference.name, endpoint_reference, cfg.ENDPOINT_STATUS_INSERVICE,
         )
 
-        assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "True")
+        assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "False")
+        
+        (_, old_config_resource) = single_variant_config
+        current_config_name = old_config_resource["spec"].get("endpointConfigName", None)
         assert k8s.assert_condition_state_message(
-            endpoint_reference, "ACK.Terminal", "True", FAIL_UPDATE_ERROR_MESSAGE,
+            endpoint_reference, "ACK.Terminal", "True", FAIL_UPDATE_ERROR_MESSAGE+current_config_name,
         )
 
         endpoint_resource = k8s.get_resource(endpoint_reference)
         assert endpoint_resource["status"].get("failureReason", None) is not None
-
-        # additional check: endpoint using old endpoint config
-        (_, old_config_resource) = single_variant_config
-        current_config_name = endpoint_resource["status"].get(
-            "latestEndpointConfigName"
-        )
-        assert current_config_name is not None and current_config_name == old_config_resource[
-            "spec"
-        ].get(
-            "endpointConfigName", None
-        )
 
     def update_endpoint_successful_test(
         self, sagemaker_client, multi_variant_config, xgboost_endpoint
@@ -330,10 +321,9 @@ class TestEndpoint:
             endpoint_reference, "ACK.Terminal", "False", None
         )
         endpoint_resource = k8s.get_resource(endpoint_reference)
-        assert (
-            endpoint_resource["status"].get("lastEndpointConfigNameForUpdate", None)
-            == new_config_name
-        )
+        annotations = endpoint_resource["metadata"].get("annotations", None)
+        assert annotations is not None
+        assert annotations[LAST_ENDPOINTCONFIGNNAME_FOR_UPDATE_ANNOTATION_KEY] == new_config_name
 
         assert_endpoint_status_in_sync(
             endpoint_reference.name, endpoint_reference, cfg.ENDPOINT_STATUS_INSERVICE,

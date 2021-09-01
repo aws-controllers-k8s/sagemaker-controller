@@ -17,9 +17,13 @@
 package endpoint
 
 import (
+	ackcondition "github.com/aws-controllers-k8s/runtime/pkg/condition"
+	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
+	"github.com/aws/aws-sdk-go/aws"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	corev1 "k8s.io/api/core/v1"
 )
 
 // CustomUpdateConditions sets conditions (terminal) on supplied endpoint.
@@ -36,5 +40,21 @@ func (rm *resourceManager) CustomUpdateConditions(
 	resourceName := resourceGK.Kind
 	// If the latestStatus == terminalStatus we will set
 	// the terminal condition and terminal message.
-	return svccommon.SetTerminalState(conditionManager, latestStatus, &resourceName, terminalStatus)
+	updated := svccommon.SetTerminalState(conditionManager, latestStatus, &resourceName, terminalStatus)
+
+	// Continue setting ResourceSynced condition to false in case of failed update
+	// since desired and latest will be different until the issue is fixed.
+	// Customer can use this condition state and FailureReason to determine
+	// the correct course of action in case the update to Endpoint fails
+	// Customer will also have additional information like latest endpointconfg
+	// in condition message and last endpointconfig used for update in annotations
+	if err != nil {
+		awsErr, ok := ackerr.AWSError(err)
+		if ok && awsErr.Code() == "EndpointUpdateError" {
+			ackcondition.SetSynced(conditionManager, corev1.ConditionFalse, aws.String(awsErr.Error()), nil)
+			return true
+		}
+	}
+
+	return updated
 }
