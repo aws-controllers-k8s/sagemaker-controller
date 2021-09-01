@@ -10,7 +10,7 @@ tests:
             - operation: CreateEndpointWithContext
               error:
                 code: InvalidParameterValue
-                message: "The endpoint name must start with an alphanumeric character."
+                message: "The endpoint name must not include a special character."
         invoke: Create
         expect:
           latest_state: "v1alpha1/create/observed/invalid_create_attempted.yaml"

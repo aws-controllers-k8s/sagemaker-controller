@@ -10,7 +10,7 @@ tests:
            - operation: CreateHyperParameterTuningJobWithContext
              error:
                code: InvalidParameterValue
-               message: "The hyper parameter tuning job name must start with an alphanumeric character."
+               message: "The hyper parameter tuning job name must not include a special character."
        invoke: Create
        expect:
          latest_state: "hyper_parameter_tuning_job/v1alpha1/hptj_invalid_create_attempted.yaml"

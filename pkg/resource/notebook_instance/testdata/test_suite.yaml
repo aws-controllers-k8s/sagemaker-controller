@@ -10,7 +10,7 @@ tests:
            - operation: CreateNotebookInstanceWithContext
              error:
                code: InvalidParameterValue
-               message: "The notebook instance name must start with an alphanumeric character."
+               message: "The notebook instance name must not include a special character."
        invoke: Create
        expect:
          latest_state: "v1alpha1/create/observed/nb_invalid_after_create.yaml"
