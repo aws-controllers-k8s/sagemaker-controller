@@ -3,7 +3,7 @@ kind: ModelExplainabilityJobDefinition
 metadata:
   name: unit-testing-model-explainability-job-definition
 spec:
-  jobDefinitionName: !-intentionally-invalid-name
+  jobDefinitionName: intentionally@invalid-name
   jobResources:
     clusterConfig:
       instanceCount: 1

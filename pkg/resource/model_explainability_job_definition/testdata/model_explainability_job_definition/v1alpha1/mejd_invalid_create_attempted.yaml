@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   name: unit-testing-model-explainability-job-definition
 spec:
-  jobDefinitionName: ""
+  jobDefinitionName: intentionally@invalid-name
   jobResources:
     clusterConfig:
       instanceCount: 1
@@ -42,6 +42,7 @@ status:
   ackResourceMetadata:
     ownerAccountID: ""
   conditions:
-  - message: The job definition name must start with an alphanumeric character.
+  - message: "InvalidParameterValue: The job definition name must not include a special
+      character.\n\tstatus code: 0, request id: "
     status: "True"
     type: ACK.Terminal

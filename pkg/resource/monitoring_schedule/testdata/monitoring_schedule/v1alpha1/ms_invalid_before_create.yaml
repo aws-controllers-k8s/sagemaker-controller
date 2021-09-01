@@ -3,7 +3,7 @@ kind: MonitoringSchedule
 metadata:
   name: unit-testing-monitoring-schedule
 spec:
-  monitoringScheduleName: !-intentionally-invalid-name
+  monitoringScheduleName: intentionally@invalid-name
   monitoringScheduleConfig:
     monitoringType: DataQuality
     monitoringJobDefinitionName: unit-testing-monitoring-job-definition

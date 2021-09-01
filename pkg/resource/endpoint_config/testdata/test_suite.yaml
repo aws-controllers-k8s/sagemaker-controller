@@ -10,7 +10,7 @@ tests:
            - operation: CreateEndpointConfigWithContext
              error:
                code: InvalidParameterValue
-               message: "The endpoint config name must start with an alphanumeric character."
+               message: "The endpoint config name must not include a special character."
        invoke: Create
        expect:
          latest_state: "endpoint_config/v1alpha1/ec_invalid_create_attempted.yaml"

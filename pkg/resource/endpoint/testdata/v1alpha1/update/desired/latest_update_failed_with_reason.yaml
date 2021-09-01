@@ -1,6 +1,8 @@
 apiVersion: sagemaker.services.k8s.aws/v1alpha1
 kind: Endpoint
 metadata:
+  annotations:
+    sagemaker.services.k8s.aws/last-endpoint-config-for-update: xgboost-endpoint-single-variant-config-updated
   creationTimestamp: null
   name: xgboost-endpoint
 spec:
@@ -19,8 +21,6 @@ status:
   endpointStatus: InService
   lastModifiedTime: "0001-01-01T00:00:00.109Z"
   failureReason: ' Failed to download model data for container from URL, blah'
-  lastEndpointConfigNameForUpdate: xgboost-endpoint-single-variant-config-updated
-  latestEndpointConfigName: xgboost-endpoint-single-variant-config
   productionVariants:
   - currentInstanceCount: 2
     currentWeight: 1

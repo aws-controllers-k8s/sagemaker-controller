@@ -18,7 +18,7 @@ spec:
       s3DataSource:
         s3DataType: S3Prefix
         s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/batch/input-data
-  transformJobName: ""
+  transformJobName: intentionally@invalid-name
   transformOutput:
     s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/batch/output
   transformResources:
@@ -28,6 +28,7 @@ status:
   ackResourceMetadata:
     ownerAccountID: ""
   conditions:
-  - message: The transform job name must start with an alphanumeric character.
+  - message: "InvalidParameterValue: The transform job name must not include a special
+      character.\n\tstatus code: 0, request id: "
     status: "True"
     type: ACK.Terminal

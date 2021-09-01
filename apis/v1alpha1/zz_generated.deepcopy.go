@@ -2507,19 +2507,9 @@ func (in *EndpointStatus) DeepCopyInto(out *EndpointStatus) {
 		*out = new(string)
 		**out = **in
 	}
-	if in.LastEndpointConfigNameForUpdate != nil {
-		in, out := &in.LastEndpointConfigNameForUpdate, &out.LastEndpointConfigNameForUpdate
-		*out = new(string)
-		**out = **in
-	}
 	if in.LastModifiedTime != nil {
 		in, out := &in.LastModifiedTime, &out.LastModifiedTime
 		*out = (*in).DeepCopy()
-	}
-	if in.LatestEndpointConfigName != nil {
-		in, out := &in.LatestEndpointConfigName, &out.LatestEndpointConfigName
-		*out = new(string)
-		**out = **in
 	}
 	if in.ProductionVariants != nil {
 		in, out := &in.ProductionVariants, &out.ProductionVariants

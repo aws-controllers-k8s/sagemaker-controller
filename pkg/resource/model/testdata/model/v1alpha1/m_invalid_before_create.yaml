@@ -3,7 +3,7 @@ kind: Model
 metadata:
   name: unit-testing-model
 spec:
-  modelName: !-intentionally-invalid-name
+  modelName: intentionally@invalid-name
   primaryContainer:
     containerHostname: xgboost
     modelDataURL: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model/xgboost-mnist-model.tar.gz

@@ -3,7 +3,7 @@ kind: ModelPackage
 metadata:
   name: unit-testing-model-package
 spec:
-  modelPackageName: !-intentionally-invalid-name
+  modelPackageName: intentionally@invalid-name
   modelPackageDescription: "Description for model package"
   inferenceSpecification:
     containers:

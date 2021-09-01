@@ -9,7 +9,7 @@ spec:
     featureType: Integral
   - featureName: EventTime
     featureType: Fractional
-  featureGroupName: !-intentionally-invalid-name
+  featureGroupName: intentionally@invalid-name
   offlineStoreConfig:
     s3StorageConfig:
       s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/feature-group-data

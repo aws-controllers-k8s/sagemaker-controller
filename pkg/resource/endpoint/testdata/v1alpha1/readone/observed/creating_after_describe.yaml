@@ -25,4 +25,3 @@ status:
   creationTime: "0001-01-01T00:00:00Z"
   endpointStatus: Creating
   lastModifiedTime: "0001-01-01T00:00:00Z"
-  latestEndpointConfigName: xgboost-endpoint-single-variant-config

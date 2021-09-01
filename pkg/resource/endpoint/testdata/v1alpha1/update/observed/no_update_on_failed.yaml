@@ -12,15 +12,16 @@ status:
     ownerAccountID: ""
   conditions:
   - lastTransitionTime: "0001-01-01T00:00:00Z"
-    message: Endpoint is in Failed status.
-    status: "True"
+    message: 'EndpointUpdateError: unable to update endpoint. check FailureReason.
+      latest EndpointConfigName is xgboost-endpoint-single-variant-config'
+    status: "False"
     type: ACK.ResourceSynced
   - lastTransitionTime: "0001-01-01T00:00:00Z"
-    message: unable to update endpoint. check FailureReason
+    message: 'EndpointUpdateError: unable to update endpoint. check FailureReason.
+      latest EndpointConfigName is xgboost-endpoint-single-variant-config'
     status: "True"
     type: ACK.Terminal
   creationTime: "0001-01-01T00:00:00Z"
   endpointStatus: Failed
   failureReason: ' Failed to download model data for container from URL, blah'
   lastModifiedTime: "0001-01-01T00:00:00Z"
-  latestEndpointConfigName: xgboost-endpoint-single-variant-config

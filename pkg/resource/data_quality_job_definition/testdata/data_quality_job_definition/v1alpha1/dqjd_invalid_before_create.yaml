@@ -3,7 +3,7 @@ kind: DataQualityJobDefinition
 metadata:
   name: unit_testing_job_definition
 spec:
-  jobDefinitionName: !-intentionally-invalid-name
+  jobDefinitionName: intentionally@invalid-name
   jobResources:
     clusterConfig:
       instanceCount: 1

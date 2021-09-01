@@ -74,7 +74,7 @@ resources:
         - EndpointUpdateError
     hooks:
       sdk_read_one_post_set_output:
-        code: rm.customDescribeEndpointSetOutput(resp, ko)
+        code: rm.customDescribeEndpointSetOutput(ko)
       sdk_update_pre_build_request:
         template_path: endpoint/sdk_update_pre_build_request.go.tpl
       sdk_update_post_set_output:
@@ -97,16 +97,6 @@ resources:
         from:
           operation: DescribeEndpoint
           path: FailureReason
-      LatestEndpointConfigName:
-        is_read_only: true
-        from:
-          operation: DescribeEndpoint
-          path: EndpointConfigName
-      LastEndpointConfigNameForUpdate:
-        is_read_only: true
-        from:
-          operation: DescribeEndpointConfig
-          path: EndpointConfigName
       CreationTime:
         is_read_only: true
         from:

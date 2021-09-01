@@ -17,7 +17,7 @@ spec:
     supportedTransformInstanceTypes:
     - ml.m5.large
   modelPackageDescription: Description for model package
-  modelPackageName: ""
+  modelPackageName: intentionally@invalid-name
   tags:
   - key: algorithm
     value: xgboost
@@ -45,6 +45,7 @@ status:
   ackResourceMetadata:
     ownerAccountID: ""
   conditions:
-  - message: The model package name must start with an alphanumeric character.
+  - message: "InvalidParameterValue: The model package name must not include a special
+      character.\n\tstatus code: 0, request id: "
     status: "True"
     type: ACK.Terminal

@@ -10,7 +10,7 @@ tests:
            - operation: CreateMonitoringScheduleWithContext
              error:
                code: InvalidParameterValue
-               message: "The monitoring schedule name must start with an alphanumeric character."
+               message: "The monitoring schedule name must not include a special character."
        invoke: Create
        expect:
          latest_state: "monitoring_schedule/v1alpha1/ms_invalid_create_attempted.yaml"
