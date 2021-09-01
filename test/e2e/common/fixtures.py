@@ -91,7 +91,7 @@ def xgboost_churn_endpoint(sagemaker_client):
     yield endpoint_spec
 
     for cr in (model_reference, endpoint_config_reference, endpoint_reference):
-        _, deleted = k8s.delete_custom_resource(cr, 3, 10)
+        _, deleted = k8s.delete_custom_resource(cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
         assert deleted
 
 
