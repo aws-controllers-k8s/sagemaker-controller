@@ -46,6 +46,8 @@ function cleanup {
   kubectl delete featuregroups --all
   kubectl delete modelpackagegroups --all
   kubectl delete modelpackages --all
+  kubectl delete notebookinstances --all
+  kubectl delete notebookinstancelifecycleconfig --all
 
   print_controller_logs
 
