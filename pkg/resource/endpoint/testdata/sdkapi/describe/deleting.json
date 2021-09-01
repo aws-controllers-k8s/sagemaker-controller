@@ -1,0 +1,28 @@
+{
+    "CreationTime": "0001-01-01T00:00:00.109Z",
+    "DataCaptureConfig": null,
+    "EndpointArn": "arn:aws:sagemaker:us-west-2:123456789012:endpoint/xgboost-endpoint",
+    "EndpointConfigName": "xgboost-endpoint-single-variant-config",
+    "EndpointName": "xgboost-endpoint",
+    "EndpointStatus": "Deleting",
+    "FailureReason": null,
+    "LastDeploymentConfig": null,
+    "LastModifiedTime": "0001-01-01T00:00:00.109Z",
+    "ProductionVariants": [
+        {
+            "CurrentInstanceCount": 2,
+            "CurrentWeight": 1,
+            "DeployedImages": [
+            {
+                "ResolutionTime": "0001-01-01T00:00:00.109Z",
+                "ResolvedImage": "433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost@sha256:54004f910467ebf7cfa71b5523b81695d103abf21a37d38dc84d63ab8d510c35",
+                "SpecifiedImage": "433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:latest"
+            }
+            ],
+            "DesiredInstanceCount": 2,
+            "DesiredWeight": 1,
+            "VariantName": "variant-1"
+        }
+    ]
+}
+   

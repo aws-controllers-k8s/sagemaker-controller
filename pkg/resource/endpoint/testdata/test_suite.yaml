@@ -185,7 +185,9 @@ tests:
           desired_state: "v1alpha1/delete/desired/inservice_before_delete.yaml"
           svc_api:
             - operation: DeleteEndpointWithContext
+            - operation: DescribeEndpointWithContext
+              output_fixture: "sdkapi/describe/deleting.json"
         invoke: Delete
         expect:
-          error: nil
-      # TODO: add test for wait until deleted. Feature to be implemented in a separate PR
+          latest_state: "v1alpha1/delete/observed/deleting_no_error.yaml"
+          error: "Endpoint is Deleting."
