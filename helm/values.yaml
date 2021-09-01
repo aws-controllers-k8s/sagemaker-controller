@@ -4,7 +4,7 @@
 
 image:
   repository: public.ecr.aws/aws-controllers-k8s/sagemaker-controller
-  tag: v0.0.3
+  tag: v0.0.4
   pullPolicy: IfNotPresent
   pullSecrets: []
 
