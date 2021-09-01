@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   name: xgboost-endpoint
   annotations:
-    sagemaker.services.k8s.aws/Endpoint-last-endpoint-config-for-update: xgboost-endpoint-single-variant-config-updated
+    sagemaker.services.k8s.aws/last-endpoint-config-for-update: xgboost-endpoint-single-variant-config-updated
 spec:
   endpointConfigName: xgboost-endpoint-single-variant-config
   endpointName: xgboost-endpoint

@@ -34,7 +34,8 @@ from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
 
 FAIL_UPDATE_ERROR_MESSAGE = "EndpointUpdateError: unable to update endpoint. check FailureReason. latest EndpointConfigName is "
-LAST_ENDPOINTCONFIGNNAME_FOR_UPDATE_ANNOTATION_KEY = "sagemaker.services.k8s.aws/Endpoint-last-endpoint-config-for-update"
+# annontation key for last endpoint config name used for update
+LAST_ENDPOINTCONFIG_UPDATE_ANNOTATION = "sagemaker.services.k8s.aws/last-endpoint-config-for-update"
 
 @pytest.fixture(scope="module")
 def name_suffix():
@@ -275,7 +276,7 @@ class TestEndpoint:
         endpoint_resource = k8s.get_resource(endpoint_reference)
         annotations = endpoint_resource["metadata"].get("annotations", None)
         assert annotations is not None
-        assert annotations[LAST_ENDPOINTCONFIGNNAME_FOR_UPDATE_ANNOTATION_KEY] == faulty_config_name
+        assert annotations[LAST_ENDPOINTCONFIG_UPDATE_ANNOTATION] == faulty_config_name
 
         assert_endpoint_status_in_sync(
             endpoint_reference.name, endpoint_reference, cfg.ENDPOINT_STATUS_INSERVICE,
@@ -323,7 +324,7 @@ class TestEndpoint:
         endpoint_resource = k8s.get_resource(endpoint_reference)
         annotations = endpoint_resource["metadata"].get("annotations", None)
         assert annotations is not None
-        assert annotations[LAST_ENDPOINTCONFIGNNAME_FOR_UPDATE_ANNOTATION_KEY] == new_config_name
+        assert annotations[LAST_ENDPOINTCONFIG_UPDATE_ANNOTATION] == new_config_name
 
         assert_endpoint_status_in_sync(
             endpoint_reference.name, endpoint_reference, cfg.ENDPOINT_STATUS_INSERVICE,

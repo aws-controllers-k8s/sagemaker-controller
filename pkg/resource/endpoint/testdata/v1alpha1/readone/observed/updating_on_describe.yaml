@@ -2,7 +2,7 @@ apiVersion: sagemaker.services.k8s.aws/v1alpha1
 kind: Endpoint
 metadata:
   annotations:
-    sagemaker.services.k8s.aws/Endpoint-last-endpoint-config-for-update: xgboost-endpoint-single-variant-config-updated
+    sagemaker.services.k8s.aws/last-endpoint-config-for-update: xgboost-endpoint-single-variant-config-updated
   creationTimestamp: null
   name: xgboost-endpoint
 spec:

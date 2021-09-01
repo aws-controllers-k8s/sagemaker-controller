@@ -17,8 +17,8 @@ status:
     status: "False"
     type: ACK.ResourceSynced
   - lastTransitionTime: "0001-01-01T00:00:00Z"
-    message: unable to update endpoint. check FailureReason. latest EndpointConfigName
-      is xgboost-endpoint-single-variant-config
+    message: 'EndpointUpdateError: unable to update endpoint. check FailureReason.
+      latest EndpointConfigName is xgboost-endpoint-single-variant-config'
     status: "True"
     type: ACK.Terminal
   creationTime: "0001-01-01T00:00:00Z"

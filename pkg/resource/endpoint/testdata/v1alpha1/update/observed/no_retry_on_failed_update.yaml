@@ -2,7 +2,7 @@ apiVersion: sagemaker.services.k8s.aws/v1alpha1
 kind: Endpoint
 metadata:
   annotations:
-    sagemaker.services.k8s.aws/Endpoint-last-endpoint-config-for-update: xgboost-endpoint-single-variant-config-updated
+    sagemaker.services.k8s.aws/last-endpoint-config-for-update: xgboost-endpoint-single-variant-config-updated
   creationTimestamp: null
   name: xgboost-endpoint
 spec:
@@ -18,8 +18,8 @@ status:
       latest EndpointConfigName is xgboost-endpoint-single-variant-config'
     status: "False"
     type: ACK.ResourceSynced
-  - message: unable to update endpoint. check FailureReason. latest EndpointConfigName
-      is xgboost-endpoint-single-variant-config
+  - message: 'EndpointUpdateError: unable to update endpoint. check FailureReason.
+      latest EndpointConfigName is xgboost-endpoint-single-variant-config'
     status: "True"
     type: ACK.Terminal
   creationTime: "0001-01-01T00:00:00Z"

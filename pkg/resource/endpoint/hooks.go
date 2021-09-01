@@ -37,7 +37,7 @@ var (
 
 	resourceName = resourceGK.Kind
 
-	lastEndpointConfigForUpdateAnnotation = fmt.Sprintf("%s/%s-last-endpoint-config-for-update", resourceGK.Group, resourceGK.Kind)
+	lastEndpointConfigForUpdateAnnotation = fmt.Sprintf("%s/last-endpoint-config-for-update", resourceGK.Group)
 
 	FailureReasonInternalServiceErrorPrefix = "Request to service failed"
 )
@@ -86,9 +86,9 @@ func (rm *resourceManager) customUpdateEndpointPreChecks(
 
 	failureReason := latest.ko.Status.FailureReason
 	desiredEndpointConfig := desired.ko.Spec.EndpointConfigName
-	
+
 	var lastEndpointConfigForUpdate *string = nil
-	// get last endpoint config name used for udapte form annotation
+	// get last endpoint config name used for update from annotations
 	annotations := desired.ko.ObjectMeta.GetAnnotations()
 	for k, v := range annotations {
 		if k == lastEndpointConfigForUpdateAnnotation {
