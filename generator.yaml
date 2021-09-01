@@ -13,6 +13,7 @@ operations:
       RetainAllVariantProperties: true
   DescribeModelPackage:
     custom_check_required_fields_missing_method: customCheckRequiredFieldsMissingMethod
+    primary_identifier_field_name: ARN
   StopHyperParameterTuningJob:
     operation_type: Delete
     resource_name: HyperParameterTuningJob
@@ -460,9 +461,6 @@ resources:
         - InvalidParameterValue
         - MissingParameter
         - ConflictException
-        # Custom error to disable support for Versioned
-        # Model Package
-        - VersionedModelPackageNotSupported
     hooks:
       delta_pre_compare:
         code: customSetDefaults(a, b)
@@ -478,8 +476,6 @@ resources:
         template_path: model_package/set_resource_name_as_arn.go.tpl
       sdk_update_pre_build_request:
         template_path: common/sdk_update_pre_build_request.go.tpl
-      sdk_create_post_build_request:
-        template_path: model_package/sdk_create_post_build_request.go.tpl
     fields:
       ModelPackageStatus:
         is_read_only: true
@@ -515,11 +511,6 @@ resources:
       Tags:
         compare:
           is_ignored: true
-    # TODO: Can adopt unversioned Model Packages however versioned ModelPackages 
-    # cannot be adopted properly. Their spec will show in describe 
-    # kubecetl describe modelpackages however it cannot be deleted or updated
-    # Since this is not expected behavior adoption is disabled
-    is_adoptable: false
   FeatureGroup:
     update_conditions_custom_method_name: CustomUpdateConditions
     exceptions:

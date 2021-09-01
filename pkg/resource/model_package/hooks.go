@@ -19,7 +19,6 @@ import (
 
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
-	"github.com/aws/aws-sdk-go/aws/awserr"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 )
 
@@ -34,9 +33,6 @@ var (
 		errors.New(resourceName+" is deleting."),
 		ackrequeue.DefaultRequeueAfterDuration,
 	)
-
-	VersionedModelPackageNotSupported = awserr.New("VersionedModelPackageNotSupported",
-		"unable to create modelpackage, versioned model package not supported", nil)
 )
 
 // customSetOutput sets ConditionTypeResourceSynced condition to True or False
@@ -66,6 +62,5 @@ func (rm *resourceManager) requeueUntilCanModify(
 func (rm *resourceManager) customCheckRequiredFieldsMissingMethod(
 	r *resource,
 ) bool {
-	return r.ko.Spec.ModelPackageName == nil && r.ko.Spec.ModelPackageGroupName == nil
-
+	return r.ko.Spec.ModelPackageName == nil && r.ko.Spec.ModelPackageGroupName == nil && r.ko.Status.ACKResourceMetadata.ARN == nil
 }

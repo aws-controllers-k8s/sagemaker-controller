@@ -25,6 +25,7 @@ from e2e import (
     create_sagemaker_resource,
     wait_for_status,
     sagemaker_client,
+    get_sagemaker_model_package_group,
     assert_tags_in_sync,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
@@ -56,18 +57,6 @@ def xgboost_model_package_group():
             reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
         )
         assert deleted
-
-
-def get_sagemaker_model_package_group(model_package_group_name: str):
-    try:
-        return sagemaker_client().describe_model_package_group(
-            ModelPackageGroupName=model_package_group_name
-        )
-    except botocore.exceptions.ClientError as error:
-        logging.error(
-            f"SageMaker could not find a model package group with the name {model_package_group_name}. Error {error}"
-        )
-        return None
 
 
 def get_model_package_group_sagemaker_status(model_package_group_name: str):

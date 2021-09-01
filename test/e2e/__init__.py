@@ -13,6 +13,7 @@
 
 import pytest
 import logging
+import botocore
 import time
 import boto3
 from pathlib import Path
@@ -70,7 +71,9 @@ def create_sagemaker_resource(
     return reference, spec, resource
 
 
-def create_adopted_resource(replacements, namespace="default"):
+def create_adopted_resource(
+    replacements, namespace="default", spec_file="adopted_resource_base"
+):
     """
     Wrapper around k8s.load_and_create_resource to create a Adopoted resource
     """
@@ -81,7 +84,7 @@ def create_adopted_resource(replacements, namespace="default"):
         CRD_VERSION,
         "adoptedresources",
         replacements["ADOPTED_RESOURCE_NAME"],
-        "adopted_resource_base",
+        spec_file,
         replacements,
         namespace,
     )
@@ -159,6 +162,82 @@ def assert_endpoint_status_in_sync(endpoint_name, reference, expected_status):
     )
 
 
+def get_model_package_sagemaker_status(model_package_arn):
+    response = sagemaker_client().describe_model_package(
+        ModelPackageName=model_package_arn
+    )
+    return response["ModelPackageStatus"]
+
+
+def get_model_package_resource_status(reference: k8s.CustomResourceReference):
+    resource = k8s.get_resource(reference)
+    assert "modelPackageStatus" in resource["status"]
+    return resource["status"]["modelPackageStatus"]
+
+
+def wait_sagemaker_model_package_status(
+    model_package_arn,
+    expected_status: str,
+    wait_periods: int = 60,
+    period_length: int = 30,
+):
+    return wait_for_status(
+        expected_status,
+        wait_periods,
+        period_length,
+        get_model_package_sagemaker_status,
+        model_package_arn,
+    )
+
+
+def wait_resource_model_package_status(
+    reference: k8s.CustomResourceReference,
+    expected_status: str,
+    wait_periods: int = 30,
+    period_length: int = 30,
+):
+    return wait_for_status(
+        expected_status,
+        wait_periods,
+        period_length,
+        get_model_package_resource_status,
+        reference,
+    )
+
+
+def assert_model_package_status_in_sync(model_package_arn, reference, expected_status):
+    assert (
+        wait_sagemaker_model_package_status(model_package_arn, expected_status)
+        == wait_resource_model_package_status(reference, expected_status, 2)
+        == expected_status
+    )
+
+
+def get_sagemaker_model_package_group(model_package_group_name: str):
+    try:
+        return sagemaker_client().describe_model_package_group(
+            ModelPackageGroupName=model_package_group_name
+        )
+    except botocore.exceptions.ClientError as error:
+        logging.error(
+            f"SageMaker could not find a model package group with the name {model_package_group_name}. Error {error}"
+        )
+        return None
+
+
+def get_sagemaker_model_package(model_package_name: str):
+    try:
+        model_package = sagemaker_client().describe_model_package(
+            ModelPackageName=model_package_name
+        )
+        return model_package
+    except botocore.exceptions.ClientError as error:
+        logging.error(
+            f"SageMaker could not find a model package with the name {model_package_name}. Error {error}"
+        )
+        return None
+
+
 def assert_tags_in_sync(resource_arn, resource_tags):
     response = sagemaker_client().list_tags(ResourceArn=resource_arn)
     response_tags = response["Tags"]
@@ -199,18 +278,19 @@ def get_training_resource_status(reference: k8s.CustomResourceReference):
 
 
 def wait_resource_training_status(
-        reference: k8s.CustomResourceReference,
-        expected_status: str,
-        wait_periods: int = 30,
-        period_length: int = 30,
-    ):
-        return wait_for_status(
-            expected_status,
-            wait_periods,
-            period_length,
-            get_training_resource_status,
-            reference,
-        )
+    reference: k8s.CustomResourceReference,
+    expected_status: str,
+    wait_periods: int = 30,
+    period_length: int = 30,
+):
+    return wait_for_status(
+        expected_status,
+        wait_periods,
+        period_length,
+        get_training_resource_status,
+        reference,
+    )
+
 
 def wait_sagemaker_training_status(
     training_job_name,
@@ -226,9 +306,8 @@ def wait_sagemaker_training_status(
         training_job_name,
     )
 
-def assert_training_status_in_sync(
-    training_job_name, reference, expected_status
-):
+
+def assert_training_status_in_sync(training_job_name, reference, expected_status):
     assert (
         wait_sagemaker_training_status(training_job_name, expected_status)
         == wait_resource_training_status(reference, expected_status)
