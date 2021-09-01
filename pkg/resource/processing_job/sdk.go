@@ -771,11 +771,11 @@ func (rm *resourceManager) sdkDelete(
 	rm.metrics.RecordAPICall("DELETE", "StopProcessingJob", err)
 
 	if err == nil {
-		if _, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
+		if observed, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
 			if err != nil {
 				return nil, err
 			}
-			return r, requeueWaitWhileDeleting
+			return observed, requeueWaitWhileDeleting
 		}
 	}
 

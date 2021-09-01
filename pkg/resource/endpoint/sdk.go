@@ -342,6 +342,16 @@ func (rm *resourceManager) sdkDelete(
 	_ = resp
 	resp, err = rm.sdkapi.DeleteEndpointWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteEndpoint", err)
+
+	if err == nil {
+		if observed, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
+			if err != nil {
+				return nil, err
+			}
+			return observed, requeueWaitWhileDeleting
+		}
+	}
+
 	return nil, err
 }
 

@@ -16,9 +16,11 @@ package endpoint
 import (
 	"context"
 	"fmt"
+	"errors"
 	"strings"
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
 	"github.com/aws/aws-sdk-go/aws"
@@ -40,6 +42,11 @@ var (
 	lastEndpointConfigForUpdateAnnotation = fmt.Sprintf("%s/last-endpoint-config-for-update", resourceGK.Group)
 
 	FailureReasonInternalServiceErrorPrefix = "Request to service failed"
+
+	requeueWaitWhileDeleting = ackrequeue.NeededAfter(
+		errors.New(resourceName+" is Deleting."),
+		ackrequeue.DefaultRequeueAfterDuration,
+	)
 )
 
 // customDescribeEndpointSetOutput sets the resource ResourceSynced condition to False if endpoint is
