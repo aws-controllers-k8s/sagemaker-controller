@@ -158,17 +158,14 @@ helm chart export $CHART_REF --destination $CHART_EXPORT_PATH
       cd -
       ```
   - [Option 2] Namespace scoped deployment
-    - Specify the namespace to listen to
-      ```sh
-      export WATCH_NAMESPACE=<NAMESPACE_TO_LISTEN_TO>
-      ```
+    - The controller will watch for the resources in the helm chart release namespace. In this guide, that value is set from the `$ACK_K8S_NAMESPACE` variable in helm install section [3.1.3](#313-install-controller)
     - ```sh
       # Update values in helm chart
       cd $CHART_EXPORT_PATH/$SERVICE-chart
       yq e '.aws.region = env(AWS_DEFAULT_REGION)' -i values.yaml
       yq e '.aws.account_id = env(AWS_ACCOUNT_ID)' -i values.yaml
       yq e '.serviceAccount.annotations."eks.amazonaws.com/role-arn" = env(IAM_ROLE_ARN_FOR_IRSA)' -i values.yaml
-      yq e '.watchNamespace" = env(WATCH_NAMESPACE)' -i values.yaml
+      yq e '.installScope = namespace' -i values.yaml
       cd -
       ```
 ##### 3.1.3 Install Controller
@@ -249,16 +246,17 @@ for example, the controller default region is us-west-2 (3.a/3.b) and you want t
       apiVersion: sagemaker.services.k8s.aws/v1alpha1
       kind: TrainingJob
       metadata:
-        name: ack-sample-tainingjob
+        name: ack-sample-trainingjob
         annotations:
           services.k8s.aws/region: us-east-1
       spec:
-        trainingJobName: ack-sample-tainingjob
+        trainingJobName: ack-sample-trainingjob
         roleARN: <sagemaker_execution_role_arn>
         ...
       ```
 
   - [Option 2] Namespace default region annotation sample
+    - **Note**: Namespaced scope deployment does not support this option
     - To bind a region to a specific Namespace you will have to annotate the Namespace with `services.k8s.aws/default-region` annotation. For example:
     - ```yaml
       apiVersion: v1
@@ -278,10 +276,10 @@ for example, the controller default region is us-west-2 (3.a/3.b) and you want t
         apiVersion: sagemaker.services.k8s.aws/v1alpha1
         kind: TrainingJob
         metadata:
-          name: ack-sample-tainingjob
+          name: ack-sample-trainingjob
           namespace: production
         spec:
-          trainingJobName: ack-sample-tainingjob
+          trainingJobName: ack-sample-trainingjob
           roleARN: <sagemaker_execution_role_arn>
           ...
         ```
@@ -291,7 +289,9 @@ for example, the controller default region is us-west-2 (3.a/3.b) and you want t
 ACK service controllers can manage resources in different AWS accounts. To enable and start using this feature, you will need to:
 
 1. Configure your AWS accounts, where the resources will be managed.
-2. Create a ConfigMap to map AWS accounts with the Role ARNs that needs to be assumed
+2. Deploy ACK service controller in Cluster scope 
+  - Namespaced scope deployment does not support Cross Account Resource Management
+3. Create a ConfigMap to map AWS accounts with the Role ARNs that needs to be assumed
 3. Annotate namespaces with AWS Account IDs
 
 For detailed information about how ACK service controllers manage resource in multiple AWS accounts, please refer to [CARM](https://github.com/aws/aws-controllers-k8s/blob/main/docs/design/proposals/carm/cross-account-resource-management.md) design document.
