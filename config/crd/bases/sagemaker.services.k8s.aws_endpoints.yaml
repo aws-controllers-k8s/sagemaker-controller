@@ -162,16 +162,9 @@ spec:
                 description: If the status of the endpoint is Failed, the reason why
                   it failed.
                 type: string
-              lastEndpointConfigNameForUpdate:
-                description: Name of the Amazon SageMaker endpoint configuration.
-                type: string
               lastModifiedTime:
                 description: A timestamp that shows when the endpoint was last modified.
                 format: date-time
-                type: string
-              latestEndpointConfigName:
-                description: The name of the endpoint configuration associated with
-                  this endpoint.
                 type: string
               productionVariants:
                 description: An array of ProductionVariantSummary objects, one for

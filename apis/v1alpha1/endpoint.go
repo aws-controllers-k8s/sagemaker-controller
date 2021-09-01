@@ -87,15 +87,9 @@ type EndpointStatus struct {
 	// If the status of the endpoint is Failed, the reason why it failed.
 	// +kubebuilder:validation:Optional
 	FailureReason *string `json:"failureReason,omitempty"`
-	// Name of the Amazon SageMaker endpoint configuration.
-	// +kubebuilder:validation:Optional
-	LastEndpointConfigNameForUpdate *string `json:"lastEndpointConfigNameForUpdate,omitempty"`
 	// A timestamp that shows when the endpoint was last modified.
 	// +kubebuilder:validation:Optional
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
-	// The name of the endpoint configuration associated with this endpoint.
-	// +kubebuilder:validation:Optional
-	LatestEndpointConfigName *string `json:"latestEndpointConfigName,omitempty"`
 	// An array of ProductionVariantSummary objects, one for each model hosted behind
 	// this endpoint.
 	// +kubebuilder:validation:Optional

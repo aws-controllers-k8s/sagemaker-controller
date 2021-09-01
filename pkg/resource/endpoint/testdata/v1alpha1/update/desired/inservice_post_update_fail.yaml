@@ -3,6 +3,8 @@ kind: Endpoint
 metadata:
   creationTimestamp: null
   name: xgboost-endpoint
+  annotations:
+    sagemaker.services.k8s.aws/last-endpoint-config-for-update: xgboost-endpoint-single-variant-config-updated
 spec:
   endpointConfigName: xgboost-endpoint-single-variant-config-updated
   endpointName: xgboost-endpoint
@@ -13,13 +15,11 @@ status:
   conditions:
   - lastTransitionTime: "0001-01-01T00:00:00.109Z"
     message: Endpoint is in InService status.
-    status: "True"
+    status: "False"
     type: ACK.ResourceSynced
   creationTime: "0001-01-01T00:00:00.109Z"
   endpointStatus: InService
-  lastEndpointConfigNameForUpdate: xgboost-endpoint-single-variant-config-updated
   lastModifiedTime: "0001-01-01T00:00:00.109Z"
-  latestEndpointConfigName: xgboost-endpoint-single-variant-config
   productionVariants:
   - currentInstanceCount: 2
     currentWeight: 1

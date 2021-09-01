@@ -157,7 +157,7 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customDescribeEndpointSetOutput(resp, ko)
+	rm.customDescribeEndpointSetOutput(ko)
 	return &resource{ko}, nil
 }
 
