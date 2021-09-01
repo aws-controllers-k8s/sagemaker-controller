@@ -10,7 +10,7 @@ spec:
     featureType: Integral
   - featureName: EventTime
     featureType: Fractional
-  featureGroupName: ""
+  featureGroupName: intentionally@invalid-name
   offlineStoreConfig:
     s3StorageConfig:
       s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/feature-group-data
@@ -20,6 +20,7 @@ status:
   ackResourceMetadata:
     ownerAccountID: ""
   conditions:
-  - message: The feature group name must start with an alphanumeric character.
+  - message: "InvalidParameterValue: The feature group name must not include a special
+      character.\n\tstatus code: 0, request id: "
     status: "True"
     type: ACK.Terminal

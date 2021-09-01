@@ -33,7 +33,7 @@ from e2e import (
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
 
-FAIL_UPDATE_ERROR_MESSAGE = "unable to update endpoint. check FailureReason"
+FAIL_UPDATE_ERROR_MESSAGE = "EndpointUpdateError: unable to update endpoint. check FailureReason"
 
 
 @pytest.fixture(scope="module")

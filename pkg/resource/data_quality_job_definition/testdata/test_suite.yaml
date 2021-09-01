@@ -10,7 +10,7 @@ tests:
            - operation: CreateDataQualityJobDefinitionWithContext
              error:
                code: InvalidParameterValue
-               message: "The job definition name must start with an alphanumeric character."
+               message: "The job definition name must not include a special character."
        invoke: Create
        expect:
          latest_state: "data_quality_job_definition/v1alpha1/dqjd_invalid_create_attempted.yaml"

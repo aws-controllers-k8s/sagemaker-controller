@@ -15,7 +15,7 @@ status:
     message: Endpoint is in InService status.
     status: "True"
     type: ACK.ResourceSynced
-  - message: Server is down
+  - message: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
     status: "True"
     type: ACK.Recoverable
   creationTime: "0001-01-01T00:00:00Z"

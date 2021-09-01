@@ -10,7 +10,7 @@ tests:
            - operation: CreateModelWithContext
              error:
                code: InvalidParameterValue
-               message: "The model name must start with an alphanumeric character."
+               message: "The model name must not include a special character."
        invoke: Create
        expect:
          latest_state: "model/v1alpha1/m_invalid_create_attempted.yaml"

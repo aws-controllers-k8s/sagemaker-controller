@@ -10,7 +10,7 @@ tests:
            - operation: CreateModelQualityJobDefinitionWithContext
              error:
                code: InvalidParameterValue
-               message: "The job definition name must start with an alphanumeric character."
+               message: "The job definition name must not include a special character."
        invoke: Create
        expect:
          latest_state: "model_quality_job_definition/v1alpha1/mqjd_invalid_create_attempted.yaml"

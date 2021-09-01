@@ -3,7 +3,7 @@ kind: TransformJob
 metadata:
   name: unit-testing-transform-job
 spec:
-  transformJobName: !-intentionally-invalid-name
+  transformJobName: intentionally@invalid-name
   modelName: xgboost-churn-config-model
   transformInput:
     contentType: text/csv

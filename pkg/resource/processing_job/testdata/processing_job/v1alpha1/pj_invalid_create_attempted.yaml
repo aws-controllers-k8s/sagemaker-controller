@@ -27,7 +27,7 @@ spec:
       s3DataType: S3Prefix
       s3InputMode: File
       s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/processing/kmeans_preprocessing.py
-  processingJobName: ""
+  processingJobName: intentionally@invalid-name
   processingOutputConfig:
     outputs:
     - outputName: train_data
@@ -62,6 +62,7 @@ status:
   ackResourceMetadata:
     ownerAccountID: ""
   conditions:
-  - message: The processing job name must start with an alphanumeric character.
+  - message: "InvalidParameterValue: The processing job name must not include a special
+      character.\n\tstatus code: 0, request id: "
     status: "True"
     type: ACK.Terminal

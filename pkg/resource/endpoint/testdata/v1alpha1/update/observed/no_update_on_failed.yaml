@@ -16,7 +16,7 @@ status:
     status: "True"
     type: ACK.ResourceSynced
   - lastTransitionTime: "0001-01-01T00:00:00Z"
-    message: unable to update endpoint. check FailureReason
+    message: 'EndpointUpdateError: unable to update endpoint. check FailureReason'
     status: "True"
     type: ACK.Terminal
   creationTime: "0001-01-01T00:00:00Z"

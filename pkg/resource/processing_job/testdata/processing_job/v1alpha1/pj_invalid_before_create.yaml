@@ -3,7 +3,7 @@ kind: ProcessingJob
 metadata:
   name: unit-testing-processing-job
 spec:
-  processingJobName: !-intentionally-invalid-name
+  processingJobName: intentionally@invalid-name
   roleARN: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
   environment:
     my_var: my_value

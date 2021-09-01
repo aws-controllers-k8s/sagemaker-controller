@@ -19,7 +19,7 @@ spec:
       maxParallelTrainingJobs: 1
     strategy: Bayesian
     trainingJobEarlyStoppingType: Auto
-  hyperParameterTuningJobName: ""
+  hyperParameterTuningJobName: intentionally@invalid-name
   trainingJobDefinition:
     algorithmSpecification:
       trainingImage: 246618743249.dkr.ecr.us-west-2.amazonaws.com
@@ -30,6 +30,7 @@ status:
   ackResourceMetadata:
     ownerAccountID: ""
   conditions:
-  - message: The hyper parameter tuning job name must start with an alphanumeric character.
+  - message: "InvalidParameterValue: The hyper parameter tuning job name must not
+      include a special character.\n\tstatus code: 0, request id: "
     status: "True"
     type: ACK.Terminal
