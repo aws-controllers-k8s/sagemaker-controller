@@ -123,8 +123,26 @@ aws --region $AWS_DEFAULT_REGION iam attach-role-policy --role-name $OIDC_ROLE_N
 export IAM_ROLE_ARN_FOR_IRSA=$(aws --region $AWS_DEFAULT_REGION iam get-role --role-name $OIDC_ROLE_NAME --output text --query 'Role.Arn')
 echo $IAM_ROLE_ARN_FOR_IRSA
 ```
+Take note of `IAM_ROLE_ARN_FOR_IRSA` printed in the previous step; you will pass this value to the service account used by the controller.
 
-Take note of IAM_ROLE_ARN_FOR_IRSA printed in the previous step; you will pass this value to the service account used by the controller.
+[Optional] The `ApplicationAutoscaling ScalableTarget` resource's `Update` feature requires an additional inline policy attached to the OIDC IAM Role created above. Do this as follows -
+ - Create a JSON file with the following policy and save it as `pass_role_policy.json`
+ ```
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+          "Effect": "Allow",
+          "Action": "iam:PassRole",
+          "Resource": "*"
+      }
+  ]
+}
+```
+- Then attach the policy to the existing IAM Role - 
+```
+aws iam put-role-policy --role-name $OIDC_ROLE_NAME --policy-name "pass-role-policy" --policy-document file://pass_role_policy.json
+```
 
 ### 3.0 Install Controllers
 
