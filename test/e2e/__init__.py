@@ -313,3 +313,35 @@ def assert_training_status_in_sync(training_job_name, reference, expected_status
         == wait_resource_training_status(reference, expected_status)
         == expected_status
     )
+
+
+def get_sagemaker_endpoint(endpoint_name: str):
+    try:
+        return sagemaker_client().describe_endpoint(EndpointName=endpoint_name)
+    except botocore.exceptions.ClientError as error:
+        logging.error(
+            f"SageMaker could not find a endpoint with the name {endpoint_name}. Error {error}"
+        )
+        return None
+
+
+def get_sagemaker_model(model_name: str):
+    try:
+        return sagemaker_client().describe_model(ModelName=model_name)
+    except botocore.exceptions.ClientError as error:
+        logging.error(
+            f"SageMaker could not find a model with the name {model_name}. Error {error}"
+        )
+        return None
+
+
+def get_sagemaker_endpoint_config(config_name: str):
+    try:
+        return sagemaker_client().describe_endpoint_config(
+            EndpointConfigName=config_name
+        )
+    except botocore.exceptions.ClientError as error:
+        logging.error(
+            f"SageMaker could not find an endpoint config with the name {config_name}. Error {error}"
+        )
+        return None

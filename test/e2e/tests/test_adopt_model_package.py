@@ -242,16 +242,8 @@ class TestAdoptedModelPackage:
             model_package_reference, "ACK.ResourceSynced", "True"
         )
 
-        _, deleted = k8s.delete_custom_resource(
-            model_package_reference,
-            cfg.JOB_DELETE_WAIT_PERIODS,
-            cfg.JOB_DELETE_WAIT_LENGTH,
-        )
-        assert deleted is True
-
-        _, deleted = k8s.delete_custom_resource(
-            model_package_group_reference,
-            cfg.JOB_DELETE_WAIT_PERIODS,
-            cfg.JOB_DELETE_WAIT_LENGTH,
-        )
-        assert deleted is True
+        for cr in (model_package_reference, model_package_group_reference):
+            _, deleted = k8s.delete_custom_resource(
+                cr, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
+            )
+            assert deleted

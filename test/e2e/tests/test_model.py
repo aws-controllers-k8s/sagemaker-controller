@@ -13,9 +13,8 @@
 """Integration tests for the SageMaker Model API.
 """
 
-import botocore
 import pytest
-import logging
+import time
 from typing import Dict
 
 from acktest.resources import random_suffix_name
@@ -23,8 +22,8 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    sagemaker_client,
     assert_tags_in_sync,
+    get_sagemaker_model,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
@@ -53,16 +52,6 @@ def xgboost_model():
         assert deleted
 
 
-def get_sagemaker_model(model_name: str):
-    try:
-        return sagemaker_client().describe_model(ModelName=model_name)
-    except botocore.exceptions.ClientError as error:
-        logging.error(
-            f"SageMaker could not find a model with the name {model_name}. Error {error}"
-        )
-        return None
-
-
 @service_marker
 @pytest.mark.canary
 class TestModel:
@@ -75,6 +64,8 @@ class TestModel:
         model_arn = model_desc["ModelArn"]
         assert k8s.get_resource_arn(resource) == model_arn
 
+        # random sleep before we check for tags to reduce test flakyness
+        time.sleep(cfg.TAG_DELAY_SLEEP)
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(model_arn, resource_tags)
 
