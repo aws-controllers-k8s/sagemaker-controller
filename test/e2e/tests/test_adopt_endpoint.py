@@ -13,13 +13,9 @@
 """Integration tests for the SageMaker Endpoint API.
 """
 
-import boto3
 import pytest
-import logging
-import time
 from typing import Dict
 
-from acktest.aws import s3
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
 
@@ -31,6 +27,9 @@ from e2e import (
     wait_sagemaker_endpoint_status,
     assert_endpoint_status_in_sync,
     sagemaker_client,
+    get_sagemaker_endpoint,
+    get_sagemaker_endpoint_config,
+    get_sagemaker_model,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
@@ -112,10 +111,16 @@ def sdk_endpoint(name_suffix):
         endpoint_input,
         endpoint_response,
     )
-    wait_sagemaker_endpoint_status(endpoint_name, cfg.ENDPOINT_STATUS_INSERVICE)
-    sagemaker_client().delete_endpoint(EndpointName=endpoint_name)
-    sagemaker_client().delete_endpoint_config(EndpointConfigName=endpoint_config_name)
-    sagemaker_client().delete_model(ModelName=model_name)
+
+    if get_sagemaker_endpoint(endpoint_name) is not None:
+        wait_sagemaker_endpoint_status(endpoint_name, cfg.ENDPOINT_STATUS_INSERVICE)
+        sagemaker_client().delete_endpoint(EndpointName=endpoint_name)
+    if get_sagemaker_endpoint_config(endpoint_config_name) is not None:
+        sagemaker_client().delete_endpoint_config(
+            EndpointConfigName=endpoint_config_name
+        )
+    if get_sagemaker_model(model_name) is not None:
+        sagemaker_client().delete_model(ModelName=model_name)
 
 
 @pytest.fixture(scope="module")
@@ -262,3 +267,9 @@ class TestAdoptedEndpoint:
             endpoint_name, endpoint_reference, cfg.ENDPOINT_STATUS_INSERVICE,
         )
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "True")
+
+        for cr in (model_reference, config_reference, endpoint_reference):
+            _, deleted = k8s.delete_custom_resource(
+                cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+            )
+            assert deleted

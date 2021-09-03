@@ -16,12 +16,14 @@
 import pytest
 import logging
 import botocore
+import time
 
 from e2e import service_marker, assert_tags_in_sync
 from e2e.common.fixtures import (
     xgboost_churn_data_quality_job_definition,
     xgboost_churn_endpoint,
 )
+from e2e.common import config as cfg
 from acktest.k8s import resource as k8s
 
 # Access variable so it is loaded as a fixture
@@ -56,6 +58,8 @@ class TestDataQualityJobDefinition:
         job_definition_arn = job_definition_desc["JobDefinitionArn"]
         assert k8s.get_resource_arn(resource) == job_definition_arn
 
+        # random sleep before we check for tags to reduce test flakyness
+        time.sleep(cfg.TAG_DELAY_SLEEP)
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(job_definition_arn, resource_tags)
         # Delete the k8s resource.

@@ -13,10 +13,10 @@
 """Integration tests for the SageMaker EndpointConfig API.
 """
 
-import botocore
 import pytest
 import logging
 from typing import Dict
+import time
 
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
@@ -24,8 +24,8 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    sagemaker_client,
     assert_tags_in_sync,
+    get_sagemaker_endpoint_config,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
@@ -70,18 +70,6 @@ def single_variant_config():
         assert deleted
 
 
-def get_sagemaker_endpoint_config(config_name: str):
-    try:
-        return sagemaker_client().describe_endpoint_config(
-            EndpointConfigName=config_name
-        )
-    except botocore.exceptions.ClientError as error:
-        logging.error(
-            f"SageMaker could not find a config with the name {config_name}. Error {error}"
-        )
-        return None
-
-
 @service_marker
 @pytest.mark.canary
 class TestEndpointConfig:
@@ -94,6 +82,8 @@ class TestEndpointConfig:
         endpoint_arn = endpoint_config_desc["EndpointConfigArn"]
         assert k8s.get_resource_arn(resource) == endpoint_arn
 
+        # random sleep before we check for tags to reduce test flakyness
+        time.sleep(cfg.TAG_DELAY_SLEEP)
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(endpoint_arn, resource_tags)
         # Delete the k8s resource.

@@ -18,6 +18,7 @@ import json
 import logging
 import time
 import subprocess
+import random
 
 from acktest import resources
 from acktest.aws.identity import get_region, get_account_id
@@ -48,10 +49,15 @@ def create_execution_role() -> str:
         Description="SageMaker execution role for ACK integration and canary tests",
     )
 
+    # random sleep to prevent throttling
+    time.sleep(random.randrange(1, 3))
     iam.attach_role_policy(
         RoleName=role_name,
         PolicyArn="arn:aws:iam::aws:policy/AmazonSageMakerFullAccess",
     )
+
+    # random sleep to prevent throttling
+    time.sleep(random.randrange(1, 3))
     iam.attach_role_policy(
         RoleName=role_name, PolicyArn="arn:aws:iam::aws:policy/AmazonS3FullAccess"
     )
