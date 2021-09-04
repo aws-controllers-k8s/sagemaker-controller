@@ -77,8 +77,8 @@ eksctl utils associate-iam-oidc-provider --cluster ${CLUSTER_NAME} \
 
 Get the OIDC ID
 ```sh
-AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
-OIDC_PROVIDER_URL=$(aws eks describe-cluster --name $CLUSTER_NAME --region $AWS_DEFAULT_REGION \
+export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+export OIDC_PROVIDER_URL=$(aws eks describe-cluster --name $CLUSTER_NAME --region $AWS_DEFAULT_REGION \
 --query "cluster.identity.oidc.issuer" --output text | cut -c9-)
 ```
 
@@ -110,6 +110,21 @@ printf '{
 ' > ./trust.json
 ```
 
+Updating an ApplicationAutoscaling ScalableTarget requires the following permissions. Create a file named pass_role_policy.json to create the policy required for the IAM role.
+
+```sh
+printf '{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "iam:PassRole",
+      "Resource": "*"
+    }
+  ]
+}
+' > ./pass_role_policy.json
+```
 
 Run the following command to create a role with the trust relationship defined in `trust.json`. This role enables the Amazon EKS cluster to get and refresh credentials from IAM.
 
@@ -118,8 +133,14 @@ OIDC_ROLE_NAME=ack-controller-role-$CLUSTER_NAME
 
 aws --region $AWS_DEFAULT_REGION iam create-role --role-name $OIDC_ROLE_NAME --assume-role-policy-document file://trust.json
 
-# Attach the AmazonSageMakerFullAccess Policy to the Role
+# Attach the AmazonSageMakerFullAccess Policy to the Role. This policy provides full access to 
+# Amazon SageMaker. Also provides select access to related services (e.g., Application Autoscaling,
+# S3, ECR, CloudWatch Logs).
 aws --region $AWS_DEFAULT_REGION iam attach-role-policy --role-name $OIDC_ROLE_NAME --policy-arn arn:aws:iam::aws:policy/AmazonSageMakerFullAccess
+
+# Attach the iam:PassRole policy required for updating ApplicationAutoscaling ScalableTarget
+aws iam put-role-policy --role-name $OIDC_ROLE_NAME --policy-name "iam-pass-role-policy" --policy-document file://pass_role_policy.json
+
 export IAM_ROLE_ARN_FOR_IRSA=$(aws --region $AWS_DEFAULT_REGION iam get-role --role-name $OIDC_ROLE_NAME --output text --query 'Role.Arn')
 echo $IAM_ROLE_ARN_FOR_IRSA
 ```
@@ -135,7 +156,7 @@ Take note of IAM_ROLE_ARN_FOR_IRSA printed in the previous step; you will pass t
 ```sh
 export HELM_EXPERIMENTAL_OCI=1
 export SERVICE=sagemaker
-export RELEASE_VERSION=v0.0.3
+export RELEASE_VERSION=v0.0.4
 export CHART_EXPORT_PATH=/tmp/chart
 export CHART_REPO=public.ecr.aws/aws-controllers-k8s/$SERVICE-chart
 export CHART_REF=$CHART_REPO:$RELEASE_VERSION
@@ -184,7 +205,7 @@ helm install -n $ACK_K8S_NAMESPACE --create-namespace --skip-crds ack-$SERVICE-c
 
 Verify CRDs and helm charts were deployed
 ```sh
-kubectl get crds
+kubectl get crds | grep "k8s.aws"
 
 kubectl get pods -n $ACK_K8S_NAMESPACE
 ```
@@ -197,7 +218,7 @@ Jump to Section 4.0 if you only wish to install SageMaker controller
 ```sh
 export HELM_EXPERIMENTAL_OCI=1
 export SERVICE=applicationautoscaling
-export RELEASE_VERSION=v0.0.1
+export RELEASE_VERSION=v0.0.2
 export CHART_EXPORT_PATH=/tmp/chart
 export CHART_REPO=public.ecr.aws/aws-controllers-k8s/$SERVICE-chart
 export CHART_REF=$CHART_REPO:$RELEASE_VERSION
