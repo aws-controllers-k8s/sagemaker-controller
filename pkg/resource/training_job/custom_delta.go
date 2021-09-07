@@ -22,31 +22,6 @@ func customSetDefaults(
 	a *resource,
 	b *resource,
 ) {
-	if ackcompare.IsNil(a.ko.Spec.EnableInterContainerTrafficEncryption) && ackcompare.IsNotNil(b.ko.Spec.EnableInterContainerTrafficEncryption) {
-		a.ko.Spec.EnableInterContainerTrafficEncryption = b.ko.Spec.EnableInterContainerTrafficEncryption
-	}
-
-	if ackcompare.IsNil(a.ko.Spec.EnableManagedSpotTraining) && ackcompare.IsNotNil(b.ko.Spec.EnableManagedSpotTraining) {
-		a.ko.Spec.EnableManagedSpotTraining = b.ko.Spec.EnableManagedSpotTraining
-	}
-
-	if ackcompare.IsNil(a.ko.Spec.EnableNetworkIsolation) && ackcompare.IsNotNil(b.ko.Spec.EnableNetworkIsolation) {
-		a.ko.Spec.EnableNetworkIsolation = b.ko.Spec.EnableNetworkIsolation
-	}
-
-	// AlgorithmSpecification is a required field
-	if ackcompare.IsNotNil(a.ko.Spec.AlgorithmSpecification) && ackcompare.IsNotNil(b.ko.Spec.AlgorithmSpecification) {
-		if ackcompare.IsNil(a.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries) && ackcompare.IsNotNil(b.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries) {
-			a.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries = b.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries
-		}
-	}
-
-	// OutputDataConfig is a required field but the KMS Key is an empty string by default, it cannot be nil.
-	if ackcompare.IsNotNil(a.ko.Spec.OutputDataConfig) && ackcompare.IsNotNil(b.ko.Spec.OutputDataConfig) {
-		if ackcompare.IsNil(a.ko.Spec.OutputDataConfig.KMSKeyID) && ackcompare.IsNotNil(b.ko.Spec.OutputDataConfig.KMSKeyID) {
-			a.ko.Spec.OutputDataConfig.KMSKeyID = b.ko.Spec.OutputDataConfig.KMSKeyID
-		}
-	}
 
 	// Default value of VolumeSizeInGB is 0
 	defaultVolumeSizeInGB := aws.Int64(0)

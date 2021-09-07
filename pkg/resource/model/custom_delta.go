@@ -32,8 +32,4 @@ func customSetDefaults(
 			a.ko.Spec.PrimaryContainer.Mode = b.ko.Spec.PrimaryContainer.Mode
 		}
 	}
-
-	if ackcompare.IsNil(a.ko.Spec.EnableNetworkIsolation) && ackcompare.IsNotNil(b.ko.Spec.EnableNetworkIsolation) {
-		a.ko.Spec.EnableNetworkIsolation = b.ko.Spec.EnableNetworkIsolation
-	}
 }

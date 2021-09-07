@@ -40,7 +40,7 @@ import (
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=featuregroups,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=featuregroups/status,verbs=get;update;patch
 
-var lateInitializeFieldNames = []string{}
+var lateInitializeFieldNames = []string{"OfflineStoreConfig.DisableGlueTableCreation", "OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3URI"}
 
 // resourceManager is responsible for providing a consistent way to perform
 // CRUD operations in a backend AWS service API for Book custom resources.
@@ -232,6 +232,19 @@ func (rm *resourceManager) LateInitialize(
 func (rm *resourceManager) incompleteLateInitialization(
 	res acktypes.AWSResource,
 ) bool {
+	ko := rm.concreteResource(res).ko.DeepCopy()
+	if ko.Spec.OfflineStoreConfig != nil {
+		if ko.Spec.OfflineStoreConfig.DisableGlueTableCreation == nil {
+			return true
+		}
+	}
+	if ko.Spec.OfflineStoreConfig != nil {
+		if ko.Spec.OfflineStoreConfig.S3StorageConfig != nil {
+			if ko.Spec.OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3URI == nil {
+				return true
+			}
+		}
+	}
 	return false
 }
 
@@ -241,7 +254,21 @@ func (rm *resourceManager) lateInitializeFromReadOneOutput(
 	observed acktypes.AWSResource,
 	latest acktypes.AWSResource,
 ) acktypes.AWSResource {
-	return latest
+	observedKo := rm.concreteResource(observed).ko.DeepCopy()
+	latestKo := rm.concreteResource(latest).ko.DeepCopy()
+	if observedKo.Spec.OfflineStoreConfig != nil && latestKo.Spec.OfflineStoreConfig != nil {
+		if observedKo.Spec.OfflineStoreConfig.DisableGlueTableCreation != nil && latestKo.Spec.OfflineStoreConfig.DisableGlueTableCreation == nil {
+			latestKo.Spec.OfflineStoreConfig.DisableGlueTableCreation = observedKo.Spec.OfflineStoreConfig.DisableGlueTableCreation
+		}
+	}
+	if observedKo.Spec.OfflineStoreConfig != nil && latestKo.Spec.OfflineStoreConfig != nil {
+		if observedKo.Spec.OfflineStoreConfig.S3StorageConfig != nil && latestKo.Spec.OfflineStoreConfig.S3StorageConfig != nil {
+			if observedKo.Spec.OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3URI != nil && latestKo.Spec.OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3URI == nil {
+				latestKo.Spec.OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3URI = observedKo.Spec.OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3URI
+			}
+		}
+	}
+	return &resource{latestKo}
 }
 
 // newResourceManager returns a new struct implementing
