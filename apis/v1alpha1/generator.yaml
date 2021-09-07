@@ -43,6 +43,9 @@ resources:
       Tags:
         compare:
           is_ignored: true
+      EnableNetworkIsolation:
+        late_initialize:
+          min_backoff_seconds: 5
   EndpointConfig:
     exceptions:
       errors:

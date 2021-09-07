@@ -40,7 +40,7 @@ import (
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=models,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=models/status,verbs=get;update;patch
 
-var lateInitializeFieldNames = []string{}
+var lateInitializeFieldNames = []string{"EnableNetworkIsolation"}
 
 // resourceManager is responsible for providing a consistent way to perform
 // CRUD operations in a backend AWS service API for Book custom resources.
@@ -232,6 +232,10 @@ func (rm *resourceManager) LateInitialize(
 func (rm *resourceManager) incompleteLateInitialization(
 	res acktypes.AWSResource,
 ) bool {
+	ko := rm.concreteResource(res).ko.DeepCopy()
+	if ko.Spec.EnableNetworkIsolation == nil {
+		return true
+	}
 	return false
 }
 
@@ -241,7 +245,12 @@ func (rm *resourceManager) lateInitializeFromReadOneOutput(
 	observed acktypes.AWSResource,
 	latest acktypes.AWSResource,
 ) acktypes.AWSResource {
-	return latest
+	observedKo := rm.concreteResource(observed).ko.DeepCopy()
+	latestKo := rm.concreteResource(latest).ko.DeepCopy()
+	if observedKo.Spec.EnableNetworkIsolation != nil && latestKo.Spec.EnableNetworkIsolation == nil {
+		latestKo.Spec.EnableNetworkIsolation = observedKo.Spec.EnableNetworkIsolation
+	}
+	return &resource{latestKo}
 }
 
 // newResourceManager returns a new struct implementing
