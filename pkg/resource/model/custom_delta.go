@@ -16,6 +16,7 @@ package model
 import (
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
+	"github.com/aws/aws-sdk-go/aws"
 )
 
 func customSetDefaults(
@@ -33,7 +34,20 @@ func customSetDefaults(
 		}
 	}
 
-	if ackcompare.IsNil(a.ko.Spec.EnableNetworkIsolation) && ackcompare.IsNotNil(b.ko.Spec.EnableNetworkIsolation) {
-		a.ko.Spec.EnableNetworkIsolation = b.ko.Spec.EnableNetworkIsolation
+	// Default value of Mode is SingleModel
+	mode := aws.String("SingleModel")
+
+	if ackcompare.IsNotNil(a.ko.Spec.Containers) && ackcompare.IsNotNil(b.ko.Spec.Containers) {
+		for index := range a.ko.Spec.Containers {
+			if ackcompare.IsNil(a.ko.Spec.Containers[index].Mode) && ackcompare.IsNotNil(b.ko.Spec.Containers[index].Mode) {
+				a.ko.Spec.Containers[index].Mode = mode
+			}
+			if ackcompare.IsNotNil(a.ko.Spec.Containers[index].ImageConfig) && ackcompare.IsNotNil(b.ko.Spec.Containers[index].ImageConfig) {
+				if ackcompare.IsNil(a.ko.Spec.Containers[index].ImageConfig.RepositoryAuthConfig) && ackcompare.IsNotNil(b.ko.Spec.Containers[index].ImageConfig.RepositoryAuthConfig) {
+					a.ko.Spec.Containers[index].ImageConfig.RepositoryAuthConfig = &svcapitypes.RepositoryAuthConfig{}
+				}
+			}
+
+		}
 	}
 }
