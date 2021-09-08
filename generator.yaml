@@ -494,11 +494,6 @@ resources:
         from:
           operation: DescribeModelPackage
           path: ModelPackageStatusDetails
-      ModelApprovalStatus:
-        is_read_only: true
-        from:
-          operation: DescribeModelPackage
-          path: ModelApprovalStatus
       LastModifiedTime:
         is_read_only: true
         from:
