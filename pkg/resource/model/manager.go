@@ -167,10 +167,7 @@ func (rm *resourceManager) Delete(
 		return rm.onError(r, err)
 	}
 
-	if observed != nil {
-		return rm.onSuccess(observed)
-	}
-	return rm.onSuccess(r)
+	return rm.onSuccess(observed)
 }
 
 // ARNFromName returns an AWS Resource Name from a given string name. This
@@ -282,6 +279,9 @@ func (rm *resourceManager) onError(
 	r *resource,
 	err error,
 ) (acktypes.AWSResource, error) {
+	if ackcompare.IsNil(r) {
+		return nil, err
+	}
 	r1, updated := rm.updateConditions(r, false, err)
 	if !updated {
 		return r, err
@@ -302,6 +302,9 @@ func (rm *resourceManager) onError(
 func (rm *resourceManager) onSuccess(
 	r *resource,
 ) (acktypes.AWSResource, error) {
+	if ackcompare.IsNil(r) {
+		return nil, nil
+	}
 	r1, updated := rm.updateConditions(r, true, nil)
 	if !updated {
 		return r, nil
