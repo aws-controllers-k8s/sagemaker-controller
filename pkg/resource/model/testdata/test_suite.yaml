@@ -2,16 +2,173 @@ tests:
   - name: "Model create tests"
     description: "Part of model CRD tests."
     scenarios:
-     - name: "Create=InvalidInput"
-       description: "Given one of the parameters is invalid, ko.Status shows a terminal condition"
-       given:
-         desired_state: "model/v1alpha1/m_invalid_before_create.yaml"
-         svc_api:
-           - operation: CreateModelWithContext
-             error:
-               code: InvalidParameterValue
-               message: "The model name must not include a special character."
-       invoke: Create
-       expect:
-         latest_state: "model/v1alpha1/m_invalid_create_attempted.yaml"
-         error: resource is in terminal condition
+      - name: "Create=InvalidInput"
+        description: "Given one of the parameters is invalid, ko.Status shows a terminal condition"
+        given:
+          desired_state: "v1alpha1/create/desired/invalid_before_create.yaml"
+          svc_api:
+            - operation: CreateModelWithContext
+              error:
+                code: InvalidParameterValue
+                message: "The model name must not include a special character."
+        invoke: Create
+        expect:
+          latest_state: "v1alpha1/create/observed/invalid_create_attempted.yaml"
+          error: resource is in terminal condition
+      - name: "Create=Valid"
+        description: "Create a new model successfully (ARN in status)."
+        given:
+          desired_state: "v1alpha1/create/desired/success_before_create.yaml"
+          svc_api:
+            - operation: CreateModelWithContext
+              output_fixture: "sdkapi/create/create_success.json"
+        invoke: Create
+        expect:
+          latest_state: "v1alpha1/create/observed/success_after_create.yaml"
+          error: nil
+      - name: "Create=ValidVariation2"
+        description: "Create a new model successfully. This test is similar to Create=Valid with different set of inputs"
+        given:
+          desired_state: "v1alpha1/create/desired/before_create_primary_container.yaml"
+          svc_api:
+            - operation: CreateModelWithContext
+              output_fixture: "sdkapi/create/create_success.json"
+        invoke: Create
+        expect:
+          latest_state: "v1alpha1/create/observed/success_created_primary_container.yaml"
+          error: nil
+  - name: "Model readOne tests"
+    description: "Testing the readOne operation"
+    scenarios:
+      - name: "ReadOne=MissingRequiredField"
+        description: "Testing readOne when required field is missing. No API call is made and returns error."
+        given: 
+          desired_state: "v1alpha1/readone/desired/missing_required_field.yaml"
+        invoke: ReadOne
+        expect:
+          error: "resource not found"
+      - name: "ReadOne=NotFound"
+        description: "Testing readOne when Describe fails to find the resource on SageMaker"
+        given: 
+          desired_state: "v1alpha1/readone/desired/after_create.yaml"
+          svc_api:
+            - operation: DescribeModelWithContext
+              error:
+                code: ValidationException
+                message: "Could not find model xgboost-model"
+        invoke: ReadOne
+        expect:
+          error: "resource not found"
+      - name: "ReadOne=Fail"
+        description: "This test checks if the condition is updated if describe fails and readOne returns error"
+        given: 
+          desired_state: "v1alpha1/readone/desired/after_create.yaml"
+          svc_api:
+            - operation: DescribeModelWithContext
+              error:
+                code: ServiceUnavailable
+                message: "Server is down"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/error_on_describe.yaml"
+          error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
+      - name: "ReadOne=AfterCreate"
+        description: "Testing readOne right after create, the status should have ARN."
+        given:
+          desired_state: "v1alpha1/readone/desired/after_create.yaml"
+          svc_api:
+            - operation: DescribeModelWithContext
+              output_fixture: "sdkapi/describe/describe_success.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/created.yaml"
+      - name: "ReadOne=AfterCreateVariation2"
+        description: "Testing readOne right after create, the status should have ARN."
+        given:
+          desired_state: "v1alpha1/create/observed/success_created_primary_container.yaml"
+          svc_api:
+            - operation: DescribeModelWithContext
+              output_fixture: "sdkapi/describe/success_primary_container.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/created_primary_container.yaml"
+  - name: "Model update tests"
+    description: "Testing the Update operation"
+    scenarios:
+      - name: "Update=NotSupported"
+        description: "This test checks if the contrller throws error for update"
+        given:
+          desired_state: "v1alpha1/update/desired/updated_base.yaml"
+          latest_state: "v1alpha1/update/desired/latest_post_create.yaml"
+        invoke: Update
+        expect:
+          latest_state: "v1alpha1/update/observed/error_on_update.yaml"
+          error: "not implemented"
+  #     - name: "Update=StatusFailed"
+  #       description: "Testing update is blocked if endpoint is in Failed status and terminal condition is set"
+  #       given:
+  #         desired_state: "v1alpha1/update/desired/update_common.yaml"
+  #         latest_state: "v1alpha1/update/desired/latest_failed.yaml"
+  #       invoke: Update
+  #       expect:
+  #         latest_state: "v1alpha1/update/observed/no_update_on_failed.yaml"
+  #         error: "resource is in terminal condition"
+  #     - name: "Update=NoRetryIfSameEndpointConfigName"
+  #       description: "Testing update is blocked if an update failed previously with same endpointConfigName"
+  #       given:
+  #         desired_state: "v1alpha1/update/desired/inservice_post_update_fail.yaml"
+  #         latest_state: "v1alpha1/update/desired/latest_update_failed_with_reason.yaml"
+  #       invoke: Update
+  #       expect:
+  #         latest_state: "v1alpha1/update/observed/no_retry_on_failed_update.yaml"
+  #         error: "resource is in terminal condition"
+  #     - name: "Update=Fail"
+  #       description: "This test checks if the recoverable condition is updated if update fails and returns error"
+  #       given:
+  #         desired_state: "v1alpha1/update/desired/update_common.yaml"
+  #         latest_state: "v1alpha1/update/desired/latest_inservice_pre_update.yaml"
+  #         svc_api:
+  #           - operation: UpdateEndpointWithContext
+  #             error:
+  #               code: ServiceUnavailable
+  #               message: "Server is down"
+  #       invoke: Update
+  #       expect:
+  #         latest_state: "v1alpha1/update/observed/error_on_update.yaml"
+  #         error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
+  #     - name: "Update=InService"
+  #       description: "This test checks if update Endpoint is called and lastEndpointConfigNameForUpdate annotation is set"
+  #       given:
+  #         desired_state: "v1alpha1/update/desired/update_common.yaml"
+  #         latest_state: "v1alpha1/update/desired/latest_inservice_pre_update.yaml"
+  #         svc_api:
+  #           - operation: UpdateEndpointWithContext
+  #             output_fixture: "sdkapi/update/update_success.json"
+  #       invoke: Update
+  #       expect:
+  #         latest_state: "v1alpha1/update/observed/update_attempted_success.yaml"
+  - name: "Model delete tests"
+    description: "Testing the delete operation"
+    scenarios:
+      - name: "Delete=Fail"
+        description: "This test checks if the condition is updated if delete fails and returns error"
+        given:
+          desired_state: "v1alpha1/readone/desired/after_create.yaml"
+          svc_api:
+            - operation: DeleteModelWithContext
+              error:
+                code: ServiceUnavailable
+                message: "Server is down"
+        invoke: Delete
+        expect:
+          latest_state: "v1alpha1/delete/observed/error_on_delete.yaml"
+          error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
+      - name: "Delete=Successful"
+        description: "This test checks if the Model is deleted successfully"
+        given:
+          desired_state: "v1alpha1/readone/desired/after_create.yaml"
+          svc_api:
+            - operation: DeleteModelWithContext
+        invoke: Delete
+        expect:
+          error: nil
