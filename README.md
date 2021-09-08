@@ -186,7 +186,7 @@ helm chart export $CHART_REF --destination $CHART_EXPORT_PATH
       yq e '.aws.region = env(AWS_DEFAULT_REGION)' -i values.yaml
       yq e '.aws.account_id = env(AWS_ACCOUNT_ID)' -i values.yaml
       yq e '.serviceAccount.annotations."eks.amazonaws.com/role-arn" = env(IAM_ROLE_ARN_FOR_IRSA)' -i values.yaml
-      yq e '.installScope = namespace' -i values.yaml
+      yq e '.installScope = "namespace"' -i values.yaml
       cd -
       ```
 ##### 3.1.3 Install Controller
