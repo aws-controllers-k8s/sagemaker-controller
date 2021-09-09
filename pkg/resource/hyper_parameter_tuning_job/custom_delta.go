@@ -31,17 +31,5 @@ func customSetDefaults(
 				}
 			}
 		}
-
-		if ackcompare.IsNil(a.ko.Spec.TrainingJobDefinition.EnableManagedSpotTraining) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinition.EnableManagedSpotTraining) {
-			a.ko.Spec.TrainingJobDefinition.EnableManagedSpotTraining = b.ko.Spec.TrainingJobDefinition.EnableManagedSpotTraining
-		}
-
-		if ackcompare.IsNil(a.ko.Spec.TrainingJobDefinition.EnableNetworkIsolation) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinition.EnableNetworkIsolation) {
-			a.ko.Spec.TrainingJobDefinition.EnableNetworkIsolation = b.ko.Spec.TrainingJobDefinition.EnableNetworkIsolation
-		}
-
-		if ackcompare.IsNil(a.ko.Spec.TrainingJobDefinition.EnableInterContainerTrafficEncryption) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinition.EnableInterContainerTrafficEncryption) {
-			a.ko.Spec.TrainingJobDefinition.EnableInterContainerTrafficEncryption = b.ko.Spec.TrainingJobDefinition.EnableInterContainerTrafficEncryption
-		}
 	}
 }

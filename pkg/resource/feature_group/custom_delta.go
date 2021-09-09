@@ -22,26 +22,11 @@ func customSetDefaults(
 	a *resource,
 	b *resource,
 ) {
-	// DisableGlueTableCreation is false by default.
-	if ackcompare.IsNotNil(a.ko.Spec.OfflineStoreConfig) && ackcompare.IsNotNil(b.ko.Spec.OfflineStoreConfig) {
-		if ackcompare.IsNil(a.ko.Spec.OfflineStoreConfig.DisableGlueTableCreation) && ackcompare.IsNotNil(b.ko.Spec.OfflineStoreConfig.DisableGlueTableCreation) {
-			a.ko.Spec.OfflineStoreConfig.DisableGlueTableCreation = b.ko.Spec.OfflineStoreConfig.DisableGlueTableCreation
-		}
-	}
 
 	// DataCatalogConfig has a timestamped generated default value.
 	if ackcompare.IsNotNil(a.ko.Spec.OfflineStoreConfig) && ackcompare.IsNotNil(b.ko.Spec.OfflineStoreConfig) {
 		if ackcompare.IsNil(a.ko.Spec.OfflineStoreConfig.DataCatalogConfig) && ackcompare.IsNotNil(b.ko.Spec.OfflineStoreConfig.DataCatalogConfig) {
 			a.ko.Spec.OfflineStoreConfig.DataCatalogConfig = b.ko.Spec.OfflineStoreConfig.DataCatalogConfig
-		}
-	}
-
-	// ResolvedOutputS3URI has a timestamped generated default value.
-	if ackcompare.IsNotNil(a.ko.Spec.OfflineStoreConfig) && ackcompare.IsNotNil(b.ko.Spec.OfflineStoreConfig) {
-		if ackcompare.IsNotNil(a.ko.Spec.OfflineStoreConfig.S3StorageConfig) && ackcompare.IsNotNil(b.ko.Spec.OfflineStoreConfig.S3StorageConfig) {
-			if ackcompare.IsNil(a.ko.Spec.OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3URI) && ackcompare.IsNotNil(b.ko.Spec.OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3URI) {
-				a.ko.Spec.OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3URI = b.ko.Spec.OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3URI
-			}
 		}
 	}
 }

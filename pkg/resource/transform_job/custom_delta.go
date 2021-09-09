@@ -22,15 +22,6 @@ func customSetDefaults(
 	a *resource,
 	b *resource,
 ) {
-	// TransformInput is a required field.
-	if ackcompare.IsNil(a.ko.Spec.TransformInput.CompressionType) && ackcompare.IsNotNil(b.ko.Spec.TransformInput.CompressionType) {
-		a.ko.Spec.TransformInput.CompressionType = b.ko.Spec.TransformInput.CompressionType
-	}
-
-	if ackcompare.IsNil(a.ko.Spec.TransformInput.SplitType) && ackcompare.IsNotNil(b.ko.Spec.TransformInput.SplitType) {
-		a.ko.Spec.TransformInput.SplitType = b.ko.Spec.TransformInput.SplitType
-	}
-
 	// DataProcessing is not a required field, so first create it.
 	if ackcompare.IsNil(a.ko.Spec.DataProcessing) && ackcompare.IsNotNil(b.ko.Spec.DataProcessing) {
 		a.ko.Spec.DataProcessing = &svcapitypes.DataProcessing{}

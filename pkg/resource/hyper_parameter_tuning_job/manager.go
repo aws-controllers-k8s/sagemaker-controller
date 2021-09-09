@@ -40,7 +40,7 @@ import (
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=hyperparametertuningjobs,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=hyperparametertuningjobs/status,verbs=get;update;patch
 
-var lateInitializeFieldNames = []string{"TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions"}
+var lateInitializeFieldNames = []string{"TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions", "TrainingJobDefinition.EnableInterContainerTrafficEncryption", "TrainingJobDefinition.EnableManagedSpotTraining", "TrainingJobDefinition.EnableNetworkIsolation"}
 
 // resourceManager is responsible for providing a consistent way to perform
 // CRUD operations in a backend AWS service API for Book custom resources.
@@ -167,10 +167,7 @@ func (rm *resourceManager) Delete(
 		return rm.onError(r, err)
 	}
 
-	if observed != nil {
-		return rm.onSuccess(observed)
-	}
-	return rm.onSuccess(r)
+	return rm.onSuccess(observed)
 }
 
 // ARNFromName returns an AWS Resource Name from a given string name. This
@@ -240,6 +237,21 @@ func (rm *resourceManager) incompleteLateInitialization(
 			}
 		}
 	}
+	if ko.Spec.TrainingJobDefinition != nil {
+		if ko.Spec.TrainingJobDefinition.EnableInterContainerTrafficEncryption == nil {
+			return true
+		}
+	}
+	if ko.Spec.TrainingJobDefinition != nil {
+		if ko.Spec.TrainingJobDefinition.EnableManagedSpotTraining == nil {
+			return true
+		}
+	}
+	if ko.Spec.TrainingJobDefinition != nil {
+		if ko.Spec.TrainingJobDefinition.EnableNetworkIsolation == nil {
+			return true
+		}
+	}
 	return false
 }
 
@@ -256,6 +268,21 @@ func (rm *resourceManager) lateInitializeFromReadOneOutput(
 			if observedKo.Spec.TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions != nil && latestKo.Spec.TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions == nil {
 				latestKo.Spec.TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions = observedKo.Spec.TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions
 			}
+		}
+	}
+	if observedKo.Spec.TrainingJobDefinition != nil && latestKo.Spec.TrainingJobDefinition != nil {
+		if observedKo.Spec.TrainingJobDefinition.EnableInterContainerTrafficEncryption != nil && latestKo.Spec.TrainingJobDefinition.EnableInterContainerTrafficEncryption == nil {
+			latestKo.Spec.TrainingJobDefinition.EnableInterContainerTrafficEncryption = observedKo.Spec.TrainingJobDefinition.EnableInterContainerTrafficEncryption
+		}
+	}
+	if observedKo.Spec.TrainingJobDefinition != nil && latestKo.Spec.TrainingJobDefinition != nil {
+		if observedKo.Spec.TrainingJobDefinition.EnableManagedSpotTraining != nil && latestKo.Spec.TrainingJobDefinition.EnableManagedSpotTraining == nil {
+			latestKo.Spec.TrainingJobDefinition.EnableManagedSpotTraining = observedKo.Spec.TrainingJobDefinition.EnableManagedSpotTraining
+		}
+	}
+	if observedKo.Spec.TrainingJobDefinition != nil && latestKo.Spec.TrainingJobDefinition != nil {
+		if observedKo.Spec.TrainingJobDefinition.EnableNetworkIsolation != nil && latestKo.Spec.TrainingJobDefinition.EnableNetworkIsolation == nil {
+			latestKo.Spec.TrainingJobDefinition.EnableNetworkIsolation = observedKo.Spec.TrainingJobDefinition.EnableNetworkIsolation
 		}
 	}
 	return &resource{latestKo}
@@ -290,6 +317,9 @@ func (rm *resourceManager) onError(
 	r *resource,
 	err error,
 ) (acktypes.AWSResource, error) {
+	if ackcompare.IsNil(r) {
+		return nil, err
+	}
 	r1, updated := rm.updateConditions(r, false, err)
 	if !updated {
 		return r, err
@@ -310,6 +340,9 @@ func (rm *resourceManager) onError(
 func (rm *resourceManager) onSuccess(
 	r *resource,
 ) (acktypes.AWSResource, error) {
+	if ackcompare.IsNil(r) {
+		return nil, nil
+	}
 	r1, updated := rm.updateConditions(r, true, nil)
 	if !updated {
 		return r, nil

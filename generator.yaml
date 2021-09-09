@@ -43,6 +43,9 @@ resources:
       Tags:
         compare:
           is_ignored: true
+      EnableNetworkIsolation:
+        late_initialize:
+          min_backoff_seconds: 5
   EndpointConfig:
     exceptions:
       errors:
@@ -179,6 +182,21 @@ resources:
       AlgorithmSpecification.MetricDefinitions:
         late_initialize:
           min_backoff_seconds: 5
+      EnableInterContainerTrafficEncryption:
+        late_initialize:
+          min_backoff_seconds: 5
+      EnableManagedSpotTraining:
+        late_initialize:
+          min_backoff_seconds: 5
+      EnableNetworkIsolation:
+        late_initialize:
+          min_backoff_seconds: 5
+      AlgorithmSpecification.EnableSageMakerMetricsTimeSeries:
+        late_initialize:
+          min_backoff_seconds: 5
+      OutputDataConfig.KMSKeyID:
+        late_initialize:
+          min_backoff_seconds: 5
       Tags:
         compare:
           is_ignored: true
@@ -218,7 +236,7 @@ resources:
           priority: 1
         from:
           operation: DescribeProcessingJob
-          path: FailureReason 
+          path: FailureReason      
       Tags:
         compare:
           is_ignored: true
@@ -259,6 +277,12 @@ resources:
         from:
           operation: DescribeTransformJob
           path: FailureReason
+      TransformInput.SplitType:
+        late_initialize:
+          min_backoff_seconds: 5   
+      TransformInput.CompressionType: 
+        late_initialize:
+          min_backoff_seconds: 5  
       Tags:
         compare:
           is_ignored: true
@@ -309,6 +333,15 @@ resources:
           operation: DescribeHyperParameterTuningJob
           path: OverallBestTrainingJob
       TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions:
+        late_initialize:
+          min_backoff_seconds: 5
+      TrainingJobDefinition.EnableInterContainerTrafficEncryption:
+        late_initialize:
+          min_backoff_seconds: 5
+      TrainingJobDefinition.EnableManagedSpotTraining:
+        late_initialize:
+          min_backoff_seconds: 5
+      TrainingJobDefinition.EnableNetworkIsolation:
         late_initialize:
           min_backoff_seconds: 5
       Tags:
@@ -503,6 +536,9 @@ resources:
         from:
           operation: UpdateModelPackage
           path: ApprovalDescription
+      CertifyForMarketplace:
+        late_initialize:
+          min_backoff_seconds: 5
       Tags:
         compare:
           is_ignored: true
@@ -543,6 +579,12 @@ resources:
         from:
           operation: DescribeFeatureGroup
           path: FeatureGroupStatus
+      OfflineStoreConfig.DisableGlueTableCreation:
+        late_initialize:
+          min_backoff_seconds: 5
+      OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3URI:
+        late_initialize:
+          min_backoff_seconds: 5
       Tags:
         compare:
           is_ignored: true

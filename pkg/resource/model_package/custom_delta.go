@@ -22,14 +22,6 @@ func customSetDefaults(
 	a *resource,
 	b *resource,
 ) {
-	// Default is for CertifyForMarketplace to be set to false
-	if ackcompare.IsNil(a.ko.Spec.CertifyForMarketplace) && ackcompare.IsNotNil(b.ko.Spec.CertifyForMarketplace) {
-		a.ko.Spec.CertifyForMarketplace = b.ko.Spec.CertifyForMarketplace
-	}
-	// Default is for ModelApprovalStatus to be set to pending manual approval
-	if ackcompare.IsNil(a.ko.Spec.ModelApprovalStatus) && ackcompare.IsNotNil(b.ko.Spec.ModelApprovalStatus) {
-		a.ko.Spec.ModelApprovalStatus = b.ko.Spec.ModelApprovalStatus
-	}
 	// Default is for ImageDigest to be generated automatically by Sagemaker if not specified
 	if ackcompare.IsNotNil(a.ko.Spec.InferenceSpecification) && ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification) {
 		if ackcompare.IsNotNil(a.ko.Spec.InferenceSpecification.Containers) && ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification.Containers) {

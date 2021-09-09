@@ -40,7 +40,7 @@ import (
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=trainingjobs,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=trainingjobs/status,verbs=get;update;patch
 
-var lateInitializeFieldNames = []string{"AlgorithmSpecification.MetricDefinitions"}
+var lateInitializeFieldNames = []string{"AlgorithmSpecification.EnableSageMakerMetricsTimeSeries", "AlgorithmSpecification.MetricDefinitions", "EnableInterContainerTrafficEncryption", "EnableManagedSpotTraining", "EnableNetworkIsolation", "OutputDataConfig.KMSKeyID"}
 
 // resourceManager is responsible for providing a consistent way to perform
 // CRUD operations in a backend AWS service API for Book custom resources.
@@ -167,10 +167,7 @@ func (rm *resourceManager) Delete(
 		return rm.onError(r, err)
 	}
 
-	if observed != nil {
-		return rm.onSuccess(observed)
-	}
-	return rm.onSuccess(r)
+	return rm.onSuccess(observed)
 }
 
 // ARNFromName returns an AWS Resource Name from a given string name. This
@@ -234,7 +231,26 @@ func (rm *resourceManager) incompleteLateInitialization(
 ) bool {
 	ko := rm.concreteResource(res).ko.DeepCopy()
 	if ko.Spec.AlgorithmSpecification != nil {
+		if ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries == nil {
+			return true
+		}
+	}
+	if ko.Spec.AlgorithmSpecification != nil {
 		if ko.Spec.AlgorithmSpecification.MetricDefinitions == nil {
+			return true
+		}
+	}
+	if ko.Spec.EnableInterContainerTrafficEncryption == nil {
+		return true
+	}
+	if ko.Spec.EnableManagedSpotTraining == nil {
+		return true
+	}
+	if ko.Spec.EnableNetworkIsolation == nil {
+		return true
+	}
+	if ko.Spec.OutputDataConfig != nil {
+		if ko.Spec.OutputDataConfig.KMSKeyID == nil {
 			return true
 		}
 	}
@@ -250,8 +266,27 @@ func (rm *resourceManager) lateInitializeFromReadOneOutput(
 	observedKo := rm.concreteResource(observed).ko.DeepCopy()
 	latestKo := rm.concreteResource(latest).ko.DeepCopy()
 	if observedKo.Spec.AlgorithmSpecification != nil && latestKo.Spec.AlgorithmSpecification != nil {
+		if observedKo.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries != nil && latestKo.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries == nil {
+			latestKo.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries = observedKo.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries
+		}
+	}
+	if observedKo.Spec.AlgorithmSpecification != nil && latestKo.Spec.AlgorithmSpecification != nil {
 		if observedKo.Spec.AlgorithmSpecification.MetricDefinitions != nil && latestKo.Spec.AlgorithmSpecification.MetricDefinitions == nil {
 			latestKo.Spec.AlgorithmSpecification.MetricDefinitions = observedKo.Spec.AlgorithmSpecification.MetricDefinitions
+		}
+	}
+	if observedKo.Spec.EnableInterContainerTrafficEncryption != nil && latestKo.Spec.EnableInterContainerTrafficEncryption == nil {
+		latestKo.Spec.EnableInterContainerTrafficEncryption = observedKo.Spec.EnableInterContainerTrafficEncryption
+	}
+	if observedKo.Spec.EnableManagedSpotTraining != nil && latestKo.Spec.EnableManagedSpotTraining == nil {
+		latestKo.Spec.EnableManagedSpotTraining = observedKo.Spec.EnableManagedSpotTraining
+	}
+	if observedKo.Spec.EnableNetworkIsolation != nil && latestKo.Spec.EnableNetworkIsolation == nil {
+		latestKo.Spec.EnableNetworkIsolation = observedKo.Spec.EnableNetworkIsolation
+	}
+	if observedKo.Spec.OutputDataConfig != nil && latestKo.Spec.OutputDataConfig != nil {
+		if observedKo.Spec.OutputDataConfig.KMSKeyID != nil && latestKo.Spec.OutputDataConfig.KMSKeyID == nil {
+			latestKo.Spec.OutputDataConfig.KMSKeyID = observedKo.Spec.OutputDataConfig.KMSKeyID
 		}
 	}
 	return &resource{latestKo}
@@ -286,6 +321,9 @@ func (rm *resourceManager) onError(
 	r *resource,
 	err error,
 ) (acktypes.AWSResource, error) {
+	if ackcompare.IsNil(r) {
+		return nil, err
+	}
 	r1, updated := rm.updateConditions(r, false, err)
 	if !updated {
 		return r, err
@@ -306,6 +344,9 @@ func (rm *resourceManager) onError(
 func (rm *resourceManager) onSuccess(
 	r *resource,
 ) (acktypes.AWSResource, error) {
+	if ackcompare.IsNil(r) {
+		return nil, nil
+	}
 	r1, updated := rm.updateConditions(r, true, nil)
 	if !updated {
 		return r, nil
