@@ -1,0 +1,14 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: ModelPackageGroup
+metadata:
+  name: xgboost-model-package-group
+spec:
+  # missing model package group name
+  modelPackageGroupDescription: "Description for model package group"
+  tags:
+    - key: algorithm
+      value: xgboost
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

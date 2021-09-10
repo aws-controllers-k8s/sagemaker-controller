@@ -1,17 +1,165 @@
-tests:
+  tests:
   - name: "Model package group create tests"
     description: "Part of model package group CRD tests."
     scenarios:
-     - name: "Create=InvalidInput"
-       description: "Given one of the parameters is invalid, ko.Status shows a terminal condition"
-       given:
-         desired_state: "model_package_group/v1alpha1/mpg_invalid_before_create.yaml"
-         svc_api:
-           - operation: CreateModelPackageGroupWithContext
-             error:
-               code: InvalidParameterValue
-               message: "The model package group name must not include a special character."
-       invoke: Create
-       expect:
-         latest_state: "model_package_group/v1alpha1/mpg_invalid_create_attempted.yaml"
-         error: resource is in terminal condition
+      - name: "Create=InvalidInput"
+        description: "Given one of the parameters is invalid, Status shows a terminal condition"
+        given:
+          desired_state: "v1alpha1/create/desired/invalid_before_create.yaml"
+          svc_api:
+            - operation: CreateModelPackageGroupWithContext
+              error:
+                code: InvalidParameterValue
+                message: "The model package group name must not include a special character."
+        invoke: Create
+        expect:
+          latest_state: "v1alpha1/create/observed/invalid_create_attempted.yaml"
+          error: resource is in terminal condition
+      - name: "Create=Valid"
+        description: "Create a new model package group successfully (ARN in status)."
+        given:
+          desired_state: "v1alpha1/create/desired/success_before_create.yaml"
+          svc_api:
+            - operation: CreateModelPackageGroupWithContext
+              output_fixture: "sdkapi/create/create_success.json"
+        invoke: Create
+        expect:
+          latest_state: "v1alpha1/create/observed/success_after_create.yaml"
+          error: nil
+  - name: "Model package group readOne tests"
+    description: "Testing the readOne operation"
+    scenarios:
+      - name: "ReadOne=MissingRequiredField"
+        description: "Testing readOne when required field is missing. No API call is made and returns error."
+        given: 
+          desired_state: "v1alpha1/readone/desired/missing_required_field.yaml"
+        invoke: ReadOne
+        expect:
+          error: "resource not found"
+      - name: "ReadOne=NotFound"
+        description: "Testing readOne when Describe fails to find the resource on SageMaker"
+        given: 
+          desired_state: "v1alpha1/readone/desired/after_create.yaml"
+          svc_api:
+            - operation: DescribeModelPackageGroupWithContext
+              error:
+                code: ValidationException
+                message: "Model package group xgboost-model-package-group does not exist."
+        invoke: ReadOne
+        expect:
+          error: "resource not found"
+      - name: "ReadOne=Fail"
+        description: "This test checks if the condition is updated if describe fails and readOne returns error"
+        given: 
+          desired_state: "v1alpha1/readone/desired/after_create.yaml"
+          svc_api:
+            - operation: DescribeModelPackageGroupWithContext
+              error:
+                code: ServiceUnavailable
+                message: "Server is down"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/error_on_describe.yaml"
+          error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
+      - name: "ReadOne=Pending"
+        description: "Testing readone right after create, the status should be in Pending with Resource synced being false."
+        given: 
+          desired_state: "v1alpha1/readone/desired/pending_after_create.yaml"
+          svc_api:
+            - operation: DescribeModelPackageGroupWithContext
+              output_fixture: "sdkapi/describe/describe_pending_after_create.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/pending_after_create.yaml"
+      - name: "ReadOne=Deleting"
+        description: "Testing readone when deleting, resource synced should be false."
+        given: 
+          desired_state: "v1alpha1/readone/desired/deleting.yaml"
+          svc_api:
+            - operation: DescribeModelPackageGroupWithContext
+              output_fixture: "sdkapi/describe/describe_deleting.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/deleting.yaml"
+      - name: "ReadOne=InProgress"
+        description: "Testing readone when inprogress, resource synced should be false."
+        given: 
+          desired_state: "v1alpha1/readone/desired/inprogress_after_create.yaml"
+          svc_api:
+            - operation: DescribeModelPackageGroupWithContext
+              output_fixture: "sdkapi/describe/describe_inprogress.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/inprogess_after_create.yaml"
+      - name: "ReadOne=AfterCreate"
+        description: "Testing readOne after create, the status should have ARN."
+        given:
+          desired_state: "v1alpha1/readone/desired/after_create.yaml"
+          svc_api:
+            - operation: DescribeModelPackageGroupWithContext
+              output_fixture: "sdkapi/describe/describe_success.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/created.yaml"
+  - name: "Model package group update tests"
+    description: "Testing the Update operation"
+    scenarios:
+      - name: "Update=NotSupported"
+        description: "This test checks if the controller throws error for update"
+        given:
+          desired_state: "v1alpha1/update/desired/updated_base.yaml"
+          latest_state: "v1alpha1/readone/desired/after_create.yaml"
+        invoke: Update
+        expect:
+          latest_state: "v1alpha1/update/observed/error_on_update.yaml"
+          error: "not implemented"
+  - name: "Model package group delete tests"
+    description: "Testing the delete operation"
+    scenarios:
+      - name: "Delete=Fail"
+        description: "This test checks if the condition is updated if delete fails and returns error"
+        given:
+          desired_state: "v1alpha1/readone/desired/after_create.yaml"
+          svc_api:
+            - operation: DeleteModelPackageGroupWithContext
+              error:
+                code: ServiceUnavailable
+                message: "Server is down"
+        invoke: Delete
+        expect:
+          latest_state: "v1alpha1/delete/observed/error_on_delete.yaml"
+          error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
+      - name: "Delete=Successful"
+        description: "This test checks if the Model package group is deleted successfully"
+        given:
+          desired_state: "v1alpha1/readone/desired/after_create.yaml"
+          svc_api:
+            - operation: DeleteModelPackageGroupWithContext
+            - operation: DescribeModelPackageGroupWithContext
+              output_fixture: "sdkapi/describe/deleting.json"
+        invoke: Delete
+        expect:
+          error: ModelPackageGroup is deleting.
+      - name: "Delete=InProgress"
+        description: "This test checks if the Model Package Group requeues while deleting. It should return a requeueWaitWhileStopping error."
+        given:
+          desired_state: "v1alpha1/delete/desired/delete_inprogress.yaml"
+          svc_api:
+            - operation: DeleteModelPackageGroupWithContext
+        invoke: Delete
+        expect:
+          error: "ModelPackageGroup in InProgress state cannot be modified or deleted."
+      - name: "Delete=Deleting"
+        description: "This test checks if the Model Package Group requeues while deleting. It should return a requeueWaitWhileDeleting error."
+        given:
+          desired_state: "v1alpha1/delete/desired/delete_deleting.yaml"
+        invoke: Delete
+        expect:
+          error: "ModelPackageGroup in Deleting state cannot be modified or deleted."
+      - name: "Delete=Pending"
+        description: "This test checks if the Model Package Group requeues while in pending state."
+        given:
+          desired_state: "v1alpha1/delete/desired/delete_pending.yaml"
+        invoke: Delete
+        expect:
+          error: "ModelPackageGroup in Pending state cannot be modified or deleted."
