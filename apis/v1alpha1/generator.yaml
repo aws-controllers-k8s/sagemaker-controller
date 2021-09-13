@@ -528,10 +528,6 @@ resources:
           operation: DescribeModelPackage
           path: ModelPackageStatusDetails
       ModelApprovalStatus:
-        is_read_only: true
-        from:
-          operation: DescribeModelPackage
-          path: ModelApprovalStatus
         late_initialize:
           min_backoff_seconds: 5
       LastModifiedTime:

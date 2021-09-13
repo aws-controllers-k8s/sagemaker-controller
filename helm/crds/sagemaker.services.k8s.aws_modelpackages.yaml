@@ -386,9 +386,6 @@ spec:
                 description: The last time the model package was modified.
                 format: date-time
                 type: string
-              modelApprovalStatus:
-                description: The approval status of the model package.
-                type: string
               modelPackageStatus:
                 description: The current status of the model package.
                 type: string
