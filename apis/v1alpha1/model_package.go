@@ -100,9 +100,6 @@ type ModelPackageStatus struct {
 	// The last time the model package was modified.
 	// +kubebuilder:validation:Optional
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
-	// The approval status of the model package.
-	// +kubebuilder:validation:Optional
-	ModelApprovalStatus *string `json:"modelApprovalStatus,omitempty"`
 	// The current status of the model package.
 	// +kubebuilder:validation:Optional
 	ModelPackageStatus *string `json:"modelPackageStatus,omitempty"`
