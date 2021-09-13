@@ -25,6 +25,14 @@ You can also learn more about our [Governance](/GOVERNANCE.md) structure.
 
 This project is [licensed](/LICENSE) under the Apache-2.0 License.
 
+## Supported SageMaker Resources
+For a list of supported resources, refer to the [SageMaker API Reference](https://aws-controllers-k8s.github.io/community/reference/).
+
+Find the helm charts and controller images on Amazon ECR Public Gallery.
+- Helm Chart: https://gallery.ecr.aws/aws-controllers-k8s/sagemaker-chart
+
+- Controller Image: https://gallery.ecr.aws/aws-controllers-k8s/sagemaker-controller
+
 ## Getting Started
 
 The following sections will guide you to install SageMaker and Application Autoscaling controllers.
