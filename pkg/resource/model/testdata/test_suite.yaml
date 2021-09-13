@@ -21,7 +21,7 @@ tests:
           desired_state: "v1alpha1/create/desired/success_before_create.yaml"
           svc_api:
             - operation: CreateModelWithContext
-              output_fixture: "sdkapi/create/create_success.json"
+              output_fixture: "sdkapi/create/success_create.json"
         invoke: Create
         expect:
           latest_state: "v1alpha1/create/observed/success_after_create.yaml"
@@ -32,7 +32,7 @@ tests:
           desired_state: "v1alpha1/create/desired/before_create_primary_container.yaml"
           svc_api:
             - operation: CreateModelWithContext
-              output_fixture: "sdkapi/create/create_success.json"
+              output_fixture: "sdkapi/create/success_create.json"
         invoke: Create
         expect:
           latest_state: "v1alpha1/create/observed/success_created_primary_container.yaml"
@@ -78,7 +78,7 @@ tests:
           desired_state: "v1alpha1/readone/desired/after_create.yaml"
           svc_api:
             - operation: DescribeModelWithContext
-              output_fixture: "sdkapi/describe/describe_success.json"
+              output_fixture: "sdkapi/describe/success_describe.json"
         invoke: ReadOne
         expect:
           latest_state: "v1alpha1/readone/observed/created.yaml"
@@ -104,49 +104,6 @@ tests:
         expect:
           latest_state: "v1alpha1/update/observed/error_on_update.yaml"
           error: "not implemented"
-  #     - name: "Update=StatusFailed"
-  #       description: "Testing update is blocked if endpoint is in Failed status and terminal condition is set"
-  #       given:
-  #         desired_state: "v1alpha1/update/desired/update_common.yaml"
-  #         latest_state: "v1alpha1/update/desired/latest_failed.yaml"
-  #       invoke: Update
-  #       expect:
-  #         latest_state: "v1alpha1/update/observed/no_update_on_failed.yaml"
-  #         error: "resource is in terminal condition"
-  #     - name: "Update=NoRetryIfSameEndpointConfigName"
-  #       description: "Testing update is blocked if an update failed previously with same endpointConfigName"
-  #       given:
-  #         desired_state: "v1alpha1/update/desired/inservice_post_update_fail.yaml"
-  #         latest_state: "v1alpha1/update/desired/latest_update_failed_with_reason.yaml"
-  #       invoke: Update
-  #       expect:
-  #         latest_state: "v1alpha1/update/observed/no_retry_on_failed_update.yaml"
-  #         error: "resource is in terminal condition"
-  #     - name: "Update=Fail"
-  #       description: "This test checks if the recoverable condition is updated if update fails and returns error"
-  #       given:
-  #         desired_state: "v1alpha1/update/desired/update_common.yaml"
-  #         latest_state: "v1alpha1/update/desired/latest_inservice_pre_update.yaml"
-  #         svc_api:
-  #           - operation: UpdateEndpointWithContext
-  #             error:
-  #               code: ServiceUnavailable
-  #               message: "Server is down"
-  #       invoke: Update
-  #       expect:
-  #         latest_state: "v1alpha1/update/observed/error_on_update.yaml"
-  #         error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
-  #     - name: "Update=InService"
-  #       description: "This test checks if update Endpoint is called and lastEndpointConfigNameForUpdate annotation is set"
-  #       given:
-  #         desired_state: "v1alpha1/update/desired/update_common.yaml"
-  #         latest_state: "v1alpha1/update/desired/latest_inservice_pre_update.yaml"
-  #         svc_api:
-  #           - operation: UpdateEndpointWithContext
-  #             output_fixture: "sdkapi/update/update_success.json"
-  #       invoke: Update
-  #       expect:
-  #         latest_state: "v1alpha1/update/observed/update_attempted_success.yaml"
   - name: "Model delete tests"
     description: "Testing the delete operation"
     scenarios:
