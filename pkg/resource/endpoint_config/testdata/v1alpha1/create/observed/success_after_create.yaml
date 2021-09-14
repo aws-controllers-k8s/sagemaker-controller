@@ -1,0 +1,37 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: EndpointConfig
+metadata:
+  creationTimestamp: null
+  name: single-variant-config
+spec:
+  dataCaptureConfig:
+    captureContentTypeHeader:
+      csvContentTypes:
+      - text/csv
+      jsonContentTypes:
+      - application/json
+    captureOptions:
+    - captureMode: Input
+    - captureMode: Output
+    destinationS3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/endpoint_config/datacapture
+    enableCapture: true
+    initialSamplingPercentage: 100
+  endpointConfigName: single-variant-config
+  productionVariants:
+  - initialInstanceCount: 1
+    initialVariantWeight: 1
+    instanceType: ml.c5.large
+    modelName: single-variant-config-model
+    variantName: AllTraffic
+  tags:
+  - key: confidentiality
+    value: public
+  - key: environment
+    value: testing
+  - key: customer
+    value: test-user
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:endpoint-config/single-variant-config
+    ownerAccountID: ""
+  conditions: []
