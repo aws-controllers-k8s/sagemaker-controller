@@ -72,7 +72,7 @@ tests:
         expect:
           latest_state: "v1alpha1/create/observed/success_after_create.yaml"
       - name: "ReadOne=SuccessClearsConditions"
-        description: Testing a successful reconiliation clears conditions if terminal/recoverable condition were already set to true
+        description: Testing a successful reconciliation clears conditions if terminal/recoverable condition were already set to true
         given:
           desired_state: "v1alpha1/readone/desired/error_conditions_true.yaml"
           svc_api:

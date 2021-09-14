@@ -18,7 +18,6 @@ package model_quality_job_definition
 import (
 	"context"
 	"fmt"
-	"github.com/ghodss/yaml"
 	"time"
 
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
@@ -99,11 +98,7 @@ func (rm *resourceManager) ReadOne(
 		}
 		return rm.onError(r, err)
 	}
-	// return rm.onSuccess(observed)
-	finalOutput, err := rm.onSuccess(observed)
-	yamlMarshal, _ := yaml.Marshal(*(finalOutput.(*resource).ko))
-	fmt.Printf("\nReadOne Output: \n%s\n\n", string(yamlMarshal))
-	return finalOutput, err
+	return rm.onSuccess(observed)
 }
 
 // Create attempts to create the supplied AWSResource in the backend AWS
@@ -122,11 +117,7 @@ func (rm *resourceManager) Create(
 	if err != nil {
 		return rm.onError(r, err)
 	}
-	// return rm.onSuccess(created)
-	finalOutput, err := rm.onSuccess(created)
-	yamlMarshal, _ := yaml.Marshal(*(finalOutput.(*resource).ko))
-	fmt.Printf("\nCreateR Output: \n%s\n\n", string(yamlMarshal))
-	return finalOutput, err
+	return rm.onSuccess(created)
 }
 
 // Update attempts to mutate the supplied desired AWSResource in the backend AWS
@@ -176,12 +167,6 @@ func (rm *resourceManager) Delete(
 		return rm.onError(r, err)
 	}
 
-	if observed != nil {
-		finalOutput, err := rm.onSuccess(observed)
-		yamlMarshal, _ := yaml.Marshal(*(finalOutput.(*resource).ko))
-		fmt.Printf("\nDeleteR Output: \n%s\n\n", string(yamlMarshal))
-		return finalOutput, err
-	}
 	return rm.onSuccess(observed)
 }
 
@@ -285,7 +270,7 @@ func (rm *resourceManager) onError(
 	r *resource,
 	err error,
 ) (acktypes.AWSResource, error) {
-	if ackcompare.IsNil(r) {
+	if r == nil {
 		return nil, err
 	}
 	r1, updated := rm.updateConditions(r, false, err)
@@ -308,7 +293,7 @@ func (rm *resourceManager) onError(
 func (rm *resourceManager) onSuccess(
 	r *resource,
 ) (acktypes.AWSResource, error) {
-	if ackcompare.IsNil(r) {
+	if r == nil {
 		return nil, nil
 	}
 	r1, updated := rm.updateConditions(r, true, nil)
