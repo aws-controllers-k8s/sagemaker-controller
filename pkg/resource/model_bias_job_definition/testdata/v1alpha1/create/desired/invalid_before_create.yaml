@@ -1,7 +1,7 @@
 apiVersion: sagemaker.services.k8s.aws/v1alpha1
 kind: ModelBiasJobDefinition
 metadata:
-  name: unit-testing-model-bias-job-definition
+  name: unit-testing-mb-job-definition
 spec:
   jobDefinitionName: intentionally@invalid-name 
   jobResources:
