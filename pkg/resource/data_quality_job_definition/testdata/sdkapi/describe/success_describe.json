@@ -1,0 +1,61 @@
+{
+    "CreationTime": "2021-09-14T19:19:45.805Z",
+    "DataQualityAppSpecification": {
+     "ContainerArguments": null,
+     "ContainerEntrypoint": null,
+     "Environment": null,
+     "ImageUri": "159807026194.dkr.ecr.us-west-2.amazonaws.com/sagemaker-model-monitor-analyzer",
+     "PostAnalyticsProcessorSourceUri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/data_quality_job_definition/code/postprocessor.py",
+     "RecordPreprocessorSourceUri": null
+    },
+    "DataQualityBaselineConfig": {
+     "BaseliningJobName": null,
+     "ConstraintsResource": {
+      "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/data_quality_job_definition/baselining/constraints.json"
+     },
+     "StatisticsResource": {
+      "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/data_quality_job_definition/baselining/statistics.json"
+     }
+    },
+    "DataQualityJobInput": {
+     "EndpointInput": {
+      "EndTimeOffset": null,
+      "EndpointName": "xgboost-churn",
+      "FeaturesAttribute": null,
+      "InferenceAttribute": null,
+      "LocalPath": "/opt/ml/processing/input/endpoint",
+      "ProbabilityAttribute": null,
+      "ProbabilityThresholdAttribute": null,
+      "S3DataDistributionType": "FullyReplicated",
+      "S3InputMode": "File",
+      "StartTimeOffset": null
+     }
+    },
+    "DataQualityJobOutputConfig": {
+     "KmsKeyId": null,
+     "MonitoringOutputs": [
+      {
+       "S3Output": {
+        "LocalPath": "/opt/ml/processing/output",
+        "S3UploadMode": "Continuous",
+        "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/data_quality_job_definition/reports"
+       }
+      }
+     ]
+    },
+    "JobDefinitionArn": "arn:aws:sagemaker:us-west-2:123456789012:data-quality-job-definition/unit-dq-job-definition",
+    "JobDefinitionName": "unit-dq-job-definition",
+    "JobResources": {
+     "ClusterConfig": {
+      "InstanceCount": 1,
+      "InstanceType": "ml.m5.large",
+      "VolumeKmsKeyId": null,
+      "VolumeSizeInGB": 20
+     }
+    },
+    "NetworkConfig": null,
+    "RoleArn": "arn:aws:iam::123456789012:role/ack-sagemaker-execution-role",
+    "StoppingCondition": {
+     "MaxRuntimeInSeconds": 1800
+    }
+}

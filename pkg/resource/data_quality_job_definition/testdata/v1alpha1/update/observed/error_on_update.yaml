@@ -2,10 +2,10 @@ apiVersion: sagemaker.services.k8s.aws/v1alpha1
 kind: DataQualityJobDefinition
 metadata:
   creationTimestamp: null
-  name: unit_testing_job_definition
+  name: unit-dq-job-definition
 spec:
   dataQualityAppSpecification:
-    imageURI: 159807026194.dkr.ecr.us-west-2.amazonaws.com
+    imageURI: 159807026194.dkr.ecr.us-west-2.amazonaws.com/sagemaker-model-monitor-analyzer
     postAnalyticsProcessorSourceURI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/data_quality_job_definition/code/postprocessor.py
   dataQualityBaselineConfig:
     constraintsResource:
@@ -14,7 +14,7 @@ spec:
       s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/data_quality_job_definition/baselining/statistics.json
   dataQualityJobInput:
     endpointInput:
-      endpointName: unit_testing_endpoint
+      endpointName: xgboost-churn
       localPath: /opt/ml/processing/input/endpoint
       s3DataDistributionType: FullyReplicated
       s3InputMode: File
@@ -24,7 +24,7 @@ spec:
         localPath: /opt/ml/processing/output
         s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/data_quality_job_definition/reports
         s3UploadMode: Continuous
-  jobDefinitionName: intentionally@invalid-name
+  jobDefinitionName: unit-dq-job-definition
   jobResources:
     clusterConfig:
       instanceCount: 1
@@ -42,9 +42,9 @@ spec:
     value: test-user
 status:
   ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:data-quality-job-definition/unit-dq-job-definition
     ownerAccountID: ""
   conditions:
-  - message: "InvalidParameterValue: The job definition name must not include a special
-      character.\n\tstatus code: 0, request id: "
+  - message: not implemented
     status: "True"
-    type: ACK.Terminal
+    type: ACK.Recoverable
