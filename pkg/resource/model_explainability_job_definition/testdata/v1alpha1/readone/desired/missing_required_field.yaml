@@ -1,3 +1,5 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: ModelExplainabilityJobDefinition
 metadata:
   creationTimestamp: null
   name: unit-me-job-definition

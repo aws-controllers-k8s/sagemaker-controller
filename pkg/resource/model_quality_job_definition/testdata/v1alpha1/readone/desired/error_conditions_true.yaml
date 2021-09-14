@@ -1,32 +1,36 @@
 apiVersion: sagemaker.services.k8s.aws/v1alpha1
-kind: ModelExplainabilityJobDefinition
+kind: ModelQualityJobDefinition
 metadata:
   creationTimestamp: null
-  name: unit-me-job-definition
+  name: unit-mq-job-definition
 spec:
-  jobDefinitionName: unit-me-job-definition
+  jobDefinitionName: unit-mq-job-definition
   jobResources:
     clusterConfig:
       instanceCount: 1
       instanceType: ml.m5.large
-      volumeSizeInGB: 30
-  modelExplainabilityAppSpecification:
-    configURI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model_explainability_job_definition/baselining/analysis_config.json
-    imageURI: 306415355426.dkr.ecr.us-west-2.amazonaws.com/sagemaker-clarify-processing:1.0
-  modelExplainabilityBaselineConfig:
+      volumeSizeInGB: 20
+  modelQualityAppSpecification:
+    imageURI: 159807026194.dkr.ecr.us-west-2.amazonaws.com/sagemaker-model-monitor-analyzer
+    problemType: BinaryClassification
+  modelQualityBaselineConfig:
     constraintsResource:
-      s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model_explainability_job_definition/baselining/analysis.json
-  modelExplainabilityJobInput:
+      s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model_quality_job_definition/baselining/constraints.json
+  modelQualityJobInput:
     endpointInput:
       endpointName: xgboost-churn
-      localPath: /opt/ml/processing/input/endpoint
+      localPath: /opt/ml/processing/input_data
+      probabilityAttribute: "0"
+      probabilityThresholdAttribute: 0.5
       s3DataDistributionType: FullyReplicated
       s3InputMode: File
-  modelExplainabilityJobOutputConfig:
+    groundTruthS3Input:
+      s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model_quality_job_definition/ground_truth_data
+  modelQualityJobOutputConfig:
     monitoringOutputs:
     - s3Output:
         localPath: /opt/ml/processing/output
-        s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model_explainability_job_definition/reports
+        s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model_quality_job_definition/results
         s3UploadMode: Continuous
   roleARN: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
   stoppingCondition:
@@ -40,9 +44,9 @@ spec:
     value: test-user
 status:
   ackResourceMetadata:
-    arn: arn:aws:sagemaker:us-west-2:123456789012:model-explainability-job-definition/unit-me-job-definition
+    arn: arn:aws:sagemaker:us-west-2:123456789012:model-quality-job-definition/unit-mq-job-definition
     ownerAccountID: ""
-  conditions:  
+  conditions:
   - message: "InvalidParameterValue: The endpoint config name must not include a special
       character.\n\tstatus code: 0, request id: "
     status: "True"
