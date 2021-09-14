@@ -1,0 +1,25 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: ModelPackageGroup
+metadata:
+  name: xgboost-model-package-group
+spec:
+  modelPackageGroupName: xgboost-model-package-group
+  modelPackageGroupDescription: "Description for model package group"
+  tags:
+    - key: algorithm
+      value: xgboost
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user
+status:
+  ackResourceMetadata:
+    ownerAccountID: ""
+  conditions:
+  - message: "InvalidParameterValue: The Model package group name must not include a special
+      character.\n\tstatus code: 0, request id: "
+    status: "True"
+    type: ACK.Terminal
+  - message: "some dummy message"
+    status: "True"
+    type: ACK.Recoverable

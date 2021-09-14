@@ -101,6 +101,16 @@
         invoke: ReadOne
         expect:
           latest_state: "v1alpha1/readone/observed/created.yaml"
+      - name: "ReadOne=SuccessClearsConditions"
+        description: "Testing a successful reconciliation clears conditions if terminal/recoverable condition were already set to true"
+        given:
+          desired_state: "v1alpha1/readone/desired/error_conditions_true.yaml"
+          svc_api:
+            - operation: DescribeModelPackageGroupWithContext
+              output_fixture: "sdkapi/describe/describe_success.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/conditions_clear_on_success.yaml"
   - name: "Model package group update tests"
     description: "Testing the Update operation"
     scenarios:

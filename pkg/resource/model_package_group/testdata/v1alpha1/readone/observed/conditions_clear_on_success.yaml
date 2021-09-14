@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   name: xgboost-model-package-group
 spec:
-  modelPackageGroupDescription: Description for updated model package group
+  modelPackageGroupDescription: Description for model package group
   modelPackageGroupName: xgboost-model-package-group
   tags:
   - key: algorithm
@@ -17,4 +17,13 @@ status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-west-2:123456789012:model-package-group/xgboost-model-package-group
     ownerAccountID: ""
-  conditions: []
+  conditions:
+  - status: "False"
+    type: ACK.Terminal
+  - status: "False"
+    type: ACK.Recoverable
+  - lastTransitionTime: "0001-01-01T00:00:00Z"
+    message: ModelPackageGroup is in Completed status.
+    status: "True"
+    type: ACK.ResourceSynced
+  modelPackageGroupStatus: Completed
