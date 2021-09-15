@@ -17,9 +17,6 @@ import (
 	"errors"
 	"fmt"
 
-	"path/filepath"
-	"testing"
-
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
 	ackmetrics "github.com/aws-controllers-k8s/runtime/pkg/metrics"
 	acktypes "github.com/aws-controllers-k8s/runtime/pkg/types"
@@ -30,7 +27,9 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 	"go.uber.org/zap/zapcore"
+	"path/filepath"
 	ctrlrtzap "sigs.k8s.io/controller-runtime/pkg/log/zap"
+	"testing"
 )
 
 // provideResourceManagerWithMockSDKAPI accepts MockSageMakerAPI and returns pointer to resourceManager
