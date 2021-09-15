@@ -146,10 +146,12 @@
           svc_api:
             - operation: DeleteModelPackageGroupWithContext
             - operation: DescribeModelPackageGroupWithContext
-              output_fixture: "sdkapi/describe/deleting.json"
+              error:
+                code: ValidationException
+                message: "Model package group xgboost-model-package-group does not exist."
         invoke: Delete
         expect:
-          error: ModelPackageGroup is deleting.
+          error: nil
       - name: "Delete=InProgress"
         description: "This test checks if the Model Package Group requeues while deleting. It should return a requeueWaitWhileStopping error."
         given:
