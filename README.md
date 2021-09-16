@@ -226,7 +226,7 @@ Jump to Section 4.0 if you only wish to install SageMaker controller
 ```sh
 export HELM_EXPERIMENTAL_OCI=1
 export SERVICE=applicationautoscaling
-export RELEASE_VERSION=v0.0.3
+export RELEASE_VERSION=v0.1.0
 export CHART_EXPORT_PATH=/tmp/chart
 export CHART_REPO=public.ecr.aws/aws-controllers-k8s/$SERVICE-chart
 export CHART_REF=$CHART_REPO:$RELEASE_VERSION
@@ -462,7 +462,6 @@ Check resource exists in cluster
 kubectl describe endpoints.sagemaker xgboost-endpoint
 ```
 
-Note: This feature is not enabled in release applicationautoscaling:v0.0.1 for application autoscaling
 ### 9.0 Cleanup 
 
 Few crds are common across services like `services.k8s.aws_adoptedresources.yaml`. If you have multiple controllers installed, you should be not delete the common CRDs unless you are uninstalling all the controllers.
