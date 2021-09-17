@@ -3,11 +3,12 @@ kind: ModelPackage
 metadata:
   name: unit-testing-model-package
 spec:
-  modelPackageName: intentionally@invalid-name
+  modelPackageGroupName: xgboost-model-package-group
   modelPackageDescription: "Description for model package"
+  modelApprovalStatus: "PendingManualApproval"
   inferenceSpecification:
     containers:
-      - image: 433757028032.dkr.ecr.us-west-2.amazonaws.com
+      - image: 433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:latest
         modelDataURL: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model/xgboost-mnist-model.tar.gz
     supportedContentTypes:
       - "text/csv"
@@ -33,10 +34,3 @@ spec:
           transformResources:
             instanceCount: 1
             instanceType: ml.m5.large
-  tags:
-    - key: algorithm
-      value: xgboost
-    - key: environment
-      value: testing
-    - key: customer
-      value: test-user

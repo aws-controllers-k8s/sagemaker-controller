@@ -1,0 +1,50 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: ModelPackage
+metadata:
+  creationTimestamp: null
+  name: unit-testing-model-package
+spec:
+  inferenceSpecification:
+    containers:
+    - image: 433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:latest
+      modelDataURL: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model/xgboost-mnist-model.tar.gz
+    supportedContentTypes:
+    - text/csv
+    supportedRealtimeInferenceInstanceTypes:
+    - ml.m5.large
+    supportedResponseMIMETypes:
+    - text/csv
+    supportedTransformInstanceTypes:
+    - ml.m5.large
+  modelPackageDescription: Description for model package
+  modelPackageName: xgboost-unversioned-model-package
+  tags:
+  - key: algorithm
+    value: xgboost
+  - key: environment
+    value: testing
+  - key: customer
+    value: test-user
+  validationSpecification:
+    validationProfiles:
+    - profileName: Test-Model-Package
+      transformJobDefinition:
+        transformInput:
+          contentType: text/csv
+          dataSource:
+            s3DataSource:
+              s3DataType: S3Prefix
+              s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/batch/input-data
+        transformOutput:
+          s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/batch/output
+        transformResources:
+          instanceCount: 1
+          instanceType: ml.m5.large
+    validationRole: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
+status:
+  ackResourceMetadata:
+    ownerAccountID: ""
+  conditions:
+  - message: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
+    status: "True"
+    type: ACK.Recoverable
