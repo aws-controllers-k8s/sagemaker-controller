@@ -1,0 +1,20 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: ModelPackageGroup
+metadata:
+  creationTimestamp: null
+  name: xgboost-model-package-group
+spec:
+  modelPackageGroupDescription: Description for updated model package group
+  modelPackageGroupName: xgboost-model-package-group
+  tags:
+  - key: algorithm
+    value: xgboost
+  - key: environment
+    value: testing
+  - key: customer
+    value: test-user
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:model-package-group/xgboost-model-package-group
+    ownerAccountID: ""
+  conditions: []

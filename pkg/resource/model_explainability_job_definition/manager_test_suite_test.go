@@ -102,13 +102,25 @@ func (d *testRunnerDelegate) Equal(a acktypes.AWSResource, b acktypes.AWSResourc
 	// Ignore LastTransitionTime since it gets updated each run.
 	opts := []cmp.Option{cmpopts.EquateEmpty(), cmpopts.IgnoreFields(ackv1alpha1.Condition{}, "LastTransitionTime")}
 
-	if cmp.Equal(ac.ko.Status, bc.ko.Status, opts...) {
-		return true
+	var specMatch = false
+	if cmp.Equal(ac.ko.Spec, bc.ko.Spec, opts...) {
+		specMatch = true
 	} else {
-		fmt.Printf("Difference (-expected +actual):\n\n")
-		fmt.Println(cmp.Diff(ac.ko.Status, bc.ko.Status, opts...))
-		return false
+		fmt.Printf("Difference ko.Spec (-expected +actual):\n\n")
+		fmt.Println(cmp.Diff(ac.ko.Spec, bc.ko.Spec, opts...))
+		specMatch = false
 	}
+
+	var statusMatch = false
+	if cmp.Equal(ac.ko.Status, bc.ko.Status, opts...) {
+		statusMatch = true
+	} else {
+		fmt.Printf("Difference ko.Status (-expected +actual):\n\n")
+		fmt.Println(cmp.Diff(ac.ko.Status, bc.ko.Status, opts...))
+		statusMatch = false
+	}
+
+	return statusMatch && specMatch
 }
 
 // Checks to see if the given yaml file, with name stored as expectation,

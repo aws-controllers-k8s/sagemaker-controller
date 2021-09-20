@@ -1,0 +1,30 @@
+{
+    "Containers": [
+     {
+      "ContainerHostname": "xgboost",
+      "Environment": {
+       "my_var": "my_value",
+       "my_var2": "my_value2"
+      },
+      "Image": "246618743249.dkr.ecr.us-west-2.amazonaws.com/sagemaker-xgboost:1.0-1-cpu-py3",
+      "ImageConfig": {
+       "RepositoryAccessMode": "Platform",
+       "RepositoryAuthConfig": {
+        "RepositoryCredentialsProviderArn": null
+       }
+      },
+      "Mode": "SingleModel",
+      "ModelDataUrl": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/model/xgboost-mnist-model.tar.gz",
+      "ModelPackageName": null,
+      "MultiModelConfig": null
+     }
+    ],
+    "CreationTime": "2021-09-06T17:58:24.933Z",
+    "EnableNetworkIsolation": false,
+    "ExecutionRoleArn": "arn:aws:iam::123456789012:role/ack-sagemaker-execution-role",
+    "InferenceExecutionConfig": null,
+    "ModelArn": "arn:aws:sagemaker:us-west-2:123456789012:model/xgboost-model",
+    "ModelName": "xgboost-model",
+    "PrimaryContainer": null,
+    "VpcConfig": null
+}
