@@ -52,7 +52,7 @@ spec:
     value: test-user
 status:
   ackResourceMetadata:
-    arn: arn:aws:sagemaker:us-west-2:258812065542:model-package/xgboost-unversioned-model-package
+    arn: arn:aws:sagemaker:us-west-2:123456789012:model-package/xgboost-unversioned-model-package
     ownerAccountID: ""
   conditions:
   - lastTransitionTime: "0001-01-01T00:00:00Z"

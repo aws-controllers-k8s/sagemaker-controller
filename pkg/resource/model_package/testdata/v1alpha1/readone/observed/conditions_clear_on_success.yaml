@@ -43,10 +43,10 @@ spec:
         transformResources:
           instanceCount: 1
           instanceType: ml.m5.large
-    validationRole: arn:aws:iam::258812065542:role/ack-sagemaker-execution-role-83w8wvq6kyyke4a7ns0e167ha5c5fndodr
+    validationRole: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role-83w8wvq6kyyke4a7ns0e167ha5c5fndodr
 status:
   ackResourceMetadata:
-    arn: arn:aws:sagemaker:us-west-2:258812065542:model-package/xgboost-unversioned-model-package-test
+    arn: arn:aws:sagemaker:us-west-2:123456789012:model-package/xgboost-unversioned-model-package-test
     ownerAccountID: ""
   conditions:
   - status: "False"

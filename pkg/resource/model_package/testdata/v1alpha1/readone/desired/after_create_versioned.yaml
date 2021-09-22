@@ -37,6 +37,6 @@ spec:
     validationRole: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
 status:
   ackResourceMetadata:
-    arn: arn:aws:sagemaker:us-west-2:258812065542:model-package/xgboost-model-package-group/1
+    arn: arn:aws:sagemaker:us-west-2:123456789012:model-package/xgboost-model-package-group/1
     ownerAccountID: ""
   conditions: []

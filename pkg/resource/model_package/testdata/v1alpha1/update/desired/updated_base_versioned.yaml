@@ -23,8 +23,8 @@ spec:
   modelPackageGroupName: xgboost-model-package-group
 status:
   ackResourceMetadata:
-    arn: arn:aws:sagemaker:us-west-2:258812065542:model-package/xgboost-model-package-group/1
-    ownerAccountID: "258812065542"
+    arn: arn:aws:sagemaker:us-west-2:123456789012:model-package/xgboost-model-package-group/1
+    ownerAccountID: "123456789012"
   conditions:
   - lastTransitionTime: "2021-09-17T03:49:49Z"
     message: ModelPackage is in Completed status.
@@ -38,8 +38,3 @@ status:
   creationTime: "2021-09-17T03:49:49Z"
   modelPackageStatus: Completed
   modelPackageStatusDetails: {}
-
-
-
-
-

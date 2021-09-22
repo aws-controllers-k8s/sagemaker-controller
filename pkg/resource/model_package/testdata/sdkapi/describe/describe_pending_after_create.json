@@ -31,7 +31,7 @@
     "MetadataProperties": null,
     "ModelApprovalStatus": null,
     "ModelMetrics": null,
-    "ModelPackageArn": "arn:aws:sagemaker:us-west-2:258812065542:model-package/xgboost-unversioned-model-package-test",
+    "ModelPackageArn": "arn:aws:sagemaker:us-west-2:123456789012:model-package/xgboost-unversioned-model-package-test",
     "ModelPackageDescription": "Description for model package",
     "ModelPackageGroupName": null,
     "ModelPackageName": "xgboost-unversioned-model-package-test",
@@ -82,6 +82,6 @@
                 }
             }
         ],
-        "ValidationRole": "arn:aws:iam::258812065542:role/ack-sagemaker-execution-role-83w8wvq6kyyke4a7ns0e167ha5c5fndodr"
+        "ValidationRole": "arn:aws:iam::123456789012:role/ack-sagemaker-execution-role-83w8wvq6kyyke4a7ns0e167ha5c5fndodr"
     }
 }

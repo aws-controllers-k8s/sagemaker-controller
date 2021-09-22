@@ -70,7 +70,7 @@
             }
         }
     },
-    "ModelPackageArn": "arn:aws:sagemaker:us-west-2:258812065542:model-package/xgboost-unversioned-model-package",
+    "ModelPackageArn": "arn:aws:sagemaker:us-west-2:123456789012:model-package/xgboost-unversioned-model-package",
     "ModelPackageDescription": "Description for model package",
     "ModelPackageGroupName": null,
     "ModelPackageName": "xgboost-unversioned-model-package",
