@@ -9,7 +9,7 @@ spec:
     my_var: my_value
     my_var2: my_value2
   appSpecification:
-    imageURI: 763104351884.dkr.ecr.us-west-2.amazonaws.com
+    imageURI: 763104351884.dkr.ecr.us-west-2.amazonaws.com/pytorch-training:1.5.0-cpu-py36-ubuntu16.04
     containerEntrypoint:
       - python
       - /opt/ml/processing/code/kmeans_preprocessing.py
