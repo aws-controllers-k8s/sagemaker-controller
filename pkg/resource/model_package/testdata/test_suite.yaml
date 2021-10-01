@@ -18,7 +18,7 @@
       - name: "Create=Valid"
         description: "Create a new Model package successfully (ARN in status)."
         given:
-          desired_state: "v1alpha1/create/desired/success_before_create.yaml"
+          desired_state: "v1alpha1/create/desired/before_create.yaml"
           svc_api:
             - operation: CreateModelPackageWithContext
               output_fixture: "sdkapi/create/create_success.json"
@@ -26,10 +26,10 @@
         expect:
           latest_state: "v1alpha1/create/observed/success_after_create.yaml"
           error: nil
-      - name: "Create=ValidVariation"
-        description: "Create a new Model package with different inputs successfully (ARN in status)."
+      - name: "Create=ValidVariationModelMetrics"
+        description: "Create a new Model package with additional ModelMetrics inputs successfully (ARN in status)."
         given:
-          desired_state: "v1alpha1/create/desired/success_before_create_variation.yaml"
+          desired_state: "v1alpha1/create/desired/before_create_variation_model_metrics.yaml"
           svc_api:
             - operation: CreateModelPackageWithContext
               output_fixture: "sdkapi/create/create_success.json"
@@ -40,7 +40,7 @@
       - name: "Create=ValidVersioned"
         description: "Create a new versioned Model package successfully (ARN in status)."
         given:
-          desired_state: "v1alpha1/create/desired/success_before_create_versioned.yaml"
+          desired_state: "v1alpha1/create/desired/before_create_versioned.yaml"
           svc_api:
             - operation: CreateModelPackageWithContext
               output_fixture: "sdkapi/create/create_success_versioned.json"

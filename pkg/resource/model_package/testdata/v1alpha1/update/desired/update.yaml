@@ -18,7 +18,7 @@ spec:
     - text/csv
     supportedTransformInstanceTypes:
     - ml.m5.large
-  modelApprovalStatus: Approved
+  modelApprovalStatus: PendingManualApproval
   modelPackageDescription: Description for model package
   modelPackageGroupName: xgboost-model-package-group
 status:
