@@ -176,6 +176,10 @@ TRAINING_JOB_INSTANCE_TYPES = {
     "eu-north-1": "ml.m5.xlarge",
 }
 
+NOTEBOOK_INSTANCE_INSTANCE_TYPES = {
+    "eu-north-1": "ml.t3.medium",
+}
+
 REPLACEMENT_VALUES = {
     "SAGEMAKER_DATA_BUCKET": get_bootstrap_resources().DataBucketName,
     "XGBOOST_IMAGE_URI": f"{XGBOOST_IMAGE_URIS[get_region()]}/sagemaker-xgboost:1.0-1-cpu-py3",
@@ -185,6 +189,11 @@ REPLACEMENT_VALUES = {
     "SAGEMAKER_EXECUTION_ROLE_ARN": get_bootstrap_resources().ExecutionRoleARN,
     "MODEL_MONITOR_ANALYZER_IMAGE_URI": f"{MODEL_MONITOR_IMAGE_URIS[get_region()]}/sagemaker-model-monitor-analyzer",
     "CLARIFY_IMAGE_URI": f"{CLARIFY_IMAGE_URIS[get_region()]}/sagemaker-clarify-processing:1.0",
-    "ENDPOINT_INSTANCE_TYPE": ENDPOINT_INSTANCE_TYPES.get(get_region(), 'ml.c5.large'),
-    "TRAINING_JOB_INSTANCE_TYPE": TRAINING_JOB_INSTANCE_TYPES.get(get_region(), 'ml.m4.xlarge')
+    "ENDPOINT_INSTANCE_TYPE": ENDPOINT_INSTANCE_TYPES.get(get_region(), "ml.c5.large"),
+    "TRAINING_JOB_INSTANCE_TYPE": TRAINING_JOB_INSTANCE_TYPES.get(
+        get_region(), "ml.m4.xlarge"
+    ),
+    "NOTEBOOK_INSTANCE_INSTANCE_TYPES": NOTEBOOK_INSTANCE_INSTANCE_TYPES.get(
+        get_region(), "ml.t2.medium"
+    ),
 }
