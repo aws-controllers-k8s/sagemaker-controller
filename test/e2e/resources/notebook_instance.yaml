@@ -3,7 +3,7 @@ kind: NotebookInstance
 metadata:
   name: $NOTEBOOK_INSTANCE_NAME
 spec:
-  instanceType: ml.t2.medium
+  instanceType: $NOTEBOOK_INSTANCE_INSTANCE_TYPES
   notebookInstanceName: $NOTEBOOK_INSTANCE_NAME
   roleARN: $SAGEMAKER_EXECUTION_ROLE_ARN
   volumeSizeInGB: 6
