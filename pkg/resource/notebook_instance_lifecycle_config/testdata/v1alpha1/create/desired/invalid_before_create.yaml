@@ -1,0 +1,10 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: NotebookInstanceLifecycleConfig
+metadata:
+  name: unit-testing-notebook-instance-lifecycle-config
+spec:
+  notebookInstanceLifecycleConfigName: intentionally@invalid-name
+  onStart:
+    - content: ZWNobyAiRW50ZXJpbmcgb25TdGFydCI=
+  onCreate:
+    - content: ZWNobyAiRW50ZXJpbmcgb25DcmVhdGUi

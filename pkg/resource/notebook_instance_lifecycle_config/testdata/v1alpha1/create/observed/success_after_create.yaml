@@ -1,0 +1,16 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: NotebookInstanceLifecycleConfig
+metadata:
+  creationTimestamp: null
+  name: unit-testing-notebook-instance-lifecycle-config
+spec:
+  notebookInstanceLifecycleConfigName: unit-testing-notebook-instance-lifecycle-config
+  onCreate:
+  - content: ZWNobyAiRW50ZXJpbmcgb25DcmVhdGUi
+  onStart:
+  - content: ZWNobyAiRW50ZXJpbmcgb25TdGFydCI=
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:notebook-instance-lifecycle-config/unit-testing-notebook-instance-lifecycle-config
+    ownerAccountID: ""
+  conditions: []

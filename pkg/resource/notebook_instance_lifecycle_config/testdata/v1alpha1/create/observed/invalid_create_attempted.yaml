@@ -1,0 +1,19 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: NotebookInstanceLifecycleConfig
+metadata:
+  creationTimestamp: null
+  name: unit-testing-notebook-instance-lifecycle-config
+spec:
+  notebookInstanceLifecycleConfigName: intentionally@invalid-name
+  onCreate:
+  - content: ZWNobyAiRW50ZXJpbmcgb25DcmVhdGUi
+  onStart:
+  - content: ZWNobyAiRW50ZXJpbmcgb25TdGFydCI=
+status:
+  ackResourceMetadata:
+    ownerAccountID: ""
+  conditions:
+  - message: "InvalidParameterValue: The notebook instance lifecycle config name must
+      not include a special character.\n\tstatus code: 0, request id: "
+    status: "True"
+    type: ACK.Terminal
