@@ -6,7 +6,7 @@ metadata:
 spec:
   inferenceSpecification:
     containers:
-    - image: 433757028032.dkr.ecr.us-west-2.amazonaws.com
+    - image: 433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:latest
       modelDataURL: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model/xgboost-mnist-model.tar.gz
     supportedContentTypes:
     - text/csv
@@ -17,7 +17,7 @@ spec:
     supportedTransformInstanceTypes:
     - ml.m5.large
   modelPackageDescription: Description for model package
-  modelPackageName: intentionally@invalid-name
+  modelPackageName: xgboost-unversioned-model-package
   tags:
   - key: algorithm
     value: xgboost
@@ -44,8 +44,5 @@ spec:
 status:
   ackResourceMetadata:
     ownerAccountID: ""
-  conditions:
-  - message: "InvalidParameterValue: The model package name must not include a special
-      character.\n\tstatus code: 0, request id: "
-    status: "True"
-    type: ACK.Terminal
+  conditions: []
+  modelPackageStatus: Deleting

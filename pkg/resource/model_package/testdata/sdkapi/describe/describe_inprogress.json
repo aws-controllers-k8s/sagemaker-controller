@@ -1,0 +1,87 @@
+{
+    "ApprovalDescription": null,
+    "CertifyForMarketplace": false,
+    "CreatedBy": null,
+    "CreationTime": "2021-09-15T06:28:47.875Z",
+    "InferenceSpecification": {
+        "Containers": [
+            {
+                "ContainerHostname": null,
+                "Image": "433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:latest",
+                "ImageDigest": "sha256:a219d35e7bc4158e972b8e6fa18028b05bdc97a9fe8da2ba16f7e3dc1bc685b4",
+                "ModelDataUrl": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/model/xgboost-mnist-model.tar.gz",
+                "ProductId": null
+            }
+        ],
+        "SupportedContentTypes": [
+            "text/csv"
+        ],
+        "SupportedRealtimeInferenceInstanceTypes": [
+            "ml.m5.large"
+        ],
+        "SupportedResponseMIMETypes": [
+            "text/csv"
+        ],
+        "SupportedTransformInstanceTypes": [
+            "ml.m5.large"
+        ]
+    },
+    "LastModifiedBy": null,
+    "LastModifiedTime": null,
+    "MetadataProperties": null,
+    "ModelApprovalStatus": null,
+    "ModelMetrics": null,
+    "ModelPackageArn": "arn:aws:sagemaker:us-west-2:123456789012:model-package/xgboost-unversioned-model-package-test",
+    "ModelPackageDescription": "Description for model package",
+    "ModelPackageGroupName": null,
+    "ModelPackageName": "xgboost-unversioned-model-package-test",
+    "ModelPackageStatus": "InProgress",
+    "ModelPackageStatusDetails": {
+        "ImageScanStatuses": [],
+        "ValidationStatuses": [
+            {
+                "FailureReason": null,
+                "Name": "Test-Model-Package",
+                "Status": "InProgress"
+            }
+        ]
+    },
+    "ModelPackageVersion": null,
+    "SourceAlgorithmSpecification": null,
+    "ValidationSpecification": {
+        "ValidationProfiles": [
+            {
+                "ProfileName": "Test-Model-Package",
+                "TransformJobDefinition": {
+                    "BatchStrategy": null,
+                    "Environment": null,
+                    "MaxConcurrentTransforms": null,
+                    "MaxPayloadInMB": null,
+                    "TransformInput": {
+                        "CompressionType": null,
+                        "ContentType": "text/csv",
+                        "DataSource": {
+                            "S3DataSource": {
+                                "S3DataType": "S3Prefix",
+                                "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/batch/input-data"
+                            }
+                        },
+                        "SplitType": null
+                    },
+                    "TransformOutput": {
+                        "Accept": null,
+                        "AssembleWith": null,
+                        "KmsKeyId": "",
+                        "S3OutputPath": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/batch/output"
+                    },
+                    "TransformResources": {
+                        "InstanceCount": 1,
+                        "InstanceType": "ml.m5.large",
+                        "VolumeKmsKeyId": null
+                    }
+                }
+            }
+        ],
+        "ValidationRole": "arn:aws:iam::123456789012:role/ack-sagemaker-execution-role-83w8wvq6kyyke4a7ns0e167ha5c5fndodr"
+    }
+}

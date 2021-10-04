@@ -1,0 +1,40 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: ModelPackage
+metadata:
+  creationTimestamp: null
+  name: unit-testing-model-package
+spec:
+  certifyForMarketplace: false
+  inferenceSpecification:
+    containers:
+    - image: 433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:latest
+      imageDigest: sha256:a219d35e7bc4158e972b8e6fa18028b05bdc97a9fe8da2ba16f7e3dc1bc685b4
+      modelDataURL: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model/xgboost-mnist-model.tar.gz
+    supportedContentTypes:
+    - text/csv
+    supportedRealtimeInferenceInstanceTypes:
+    - ml.m5.large
+    supportedResponseMIMETypes:
+    - text/csv
+    supportedTransformInstanceTypes:
+    - ml.m5.large
+  modelApprovalStatus: Approved
+  modelPackageDescription: Description for model package
+  modelPackageGroupName: xgboost-model-package-group
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:model-package/xgboost-model-package-group/1
+    ownerAccountID: "123456789012"
+  conditions:
+  - lastTransitionTime: "0001-01-01T00:00:00Z"
+    message: ModelPackage is in Completed status.
+    status: "True"
+    type: ACK.ResourceSynced
+  - lastTransitionTime: "0001-01-01T00:00:00Z"
+    message: Late initialization successful
+    reason: Late initialization successful
+    status: "True"
+    type: ACK.LateInitialized
+  creationTime: "0001-01-01T00:00:00Z"
+  modelPackageStatus: Completed
+  modelPackageStatusDetails: {}
