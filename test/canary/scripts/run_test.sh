@@ -30,6 +30,7 @@ function print_controller_logs() {
 function cleanup {
   echo "Cleaning up resources"
   set +e
+  kubectl delete monitoringschedules --all
   kubectl delete endpoints.sagemaker --all
   kubectl delete endpointconfigs --all
   kubectl delete models --all
@@ -41,11 +42,10 @@ function cleanup {
   kubectl delete modelbiasjobdefinitions --all
   kubectl delete modelexplainabilityjobdefinitions --all
   kubectl delete modelqualityjobdefinitions --all
-  kubectl delete monitoringschedules --all
   kubectl delete adoptedresources --all
   kubectl delete featuregroups --all
-  kubectl delete modelpackagegroups --all
   kubectl delete modelpackages --all
+  kubectl delete modelpackagegroups --all
   kubectl delete notebookinstances --all
   kubectl delete notebookinstancelifecycleconfig --all
 
