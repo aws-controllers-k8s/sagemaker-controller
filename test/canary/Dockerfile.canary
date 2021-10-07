@@ -33,7 +33,7 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.6/b
 RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp && mv /tmp/eksctl /bin
 
 # Install Helm 
-RUN curl -q -L "https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz" | tar zxf - -C /usr/local/bin/ \
+RUN curl -q -L "https://get.helm.sh/helm-v3.7.0-linux-amd64.tar.gz" | tar zxf - -C /usr/local/bin/ \
  && mv /usr/local/bin/linux-amd64/helm /usr/local/bin/helm \
  && rm -r /usr/local/bin/linux-amd64 \
  && chmod +x /usr/local/bin/helm 

@@ -164,15 +164,16 @@ Take note of IAM_ROLE_ARN_FOR_IRSA printed in the previous step; you will pass t
 ```sh
 export HELM_EXPERIMENTAL_OCI=1
 export SERVICE=sagemaker
-export RELEASE_VERSION=v0.1.0
+export RELEASE_VERSION=v0.2.0
 export CHART_EXPORT_PATH=/tmp/chart
-export CHART_REPO=public.ecr.aws/aws-controllers-k8s/$SERVICE-chart
-export CHART_REF=$CHART_REPO:$RELEASE_VERSION
+export CHART_REF=$SERVICE-chart
+export CHART_REPO=public.ecr.aws/aws-controllers-k8s/$CHART_REF
+export CHART_PACKAGE=$CHART_REF-$RELEASE_VERSION.tgz
 
 mkdir -p $CHART_EXPORT_PATH
-helm chart pull $CHART_REF
-helm chart list
-helm chart export $CHART_REF --destination $CHART_EXPORT_PATH
+
+helm pull oci://$CHART_REPO --version $RELEASE_VERSION -d $CHART_EXPORT_PATH
+tar xvf $CHART_EXPORT_PATH/$CHART_PACKAGE -C $CHART_EXPORT_PATH
 ```
 
 ##### 3.1.2 Choose one of the two options for deployment
@@ -226,15 +227,16 @@ Jump to Section 4.0 if you only wish to install SageMaker controller
 ```sh
 export HELM_EXPERIMENTAL_OCI=1
 export SERVICE=applicationautoscaling
-export RELEASE_VERSION=v0.1.0
+export RELEASE_VERSION=v0.1.1
 export CHART_EXPORT_PATH=/tmp/chart
-export CHART_REPO=public.ecr.aws/aws-controllers-k8s/$SERVICE-chart
-export CHART_REF=$CHART_REPO:$RELEASE_VERSION
+export CHART_REF=$SERVICE-chart
+export CHART_REPO=public.ecr.aws/aws-controllers-k8s/$CHART_REF
+export CHART_PACKAGE=$CHART_REF-$RELEASE_VERSION.tgz
 
 mkdir -p $CHART_EXPORT_PATH
-helm chart pull $CHART_REF
-helm chart list
-helm chart export $CHART_REF --destination $CHART_EXPORT_PATH
+
+helm pull oci://$CHART_REPO --version $RELEASE_VERSION -d $CHART_EXPORT_PATH
+tar xvf $CHART_EXPORT_PATH/$CHART_PACKAGE -C $CHART_EXPORT_PATH
 ```
 
 ##### 3.2.2 Choose one of the two options for deployment
