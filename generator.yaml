@@ -13,18 +13,9 @@ operations:
       RetainAllVariantProperties: true
   DescribeModelPackage:
     custom_check_required_fields_missing_method: customCheckRequiredFieldsMissingMethod
-    primary_identifier_field_name: ARN
   StopHyperParameterTuningJob:
     operation_type: Delete
     resource_name: HyperParameterTuningJob
-  DescribeModelQualityJobDefinition:
-    primary_identifier_field_name: JobDefinitionName
-  DescribeModelBiasJobDefinition:
-    primary_identifier_field_name: JobDefinitionName
-  DescribeDataQualityJobDefinition:
-    primary_identifier_field_name: JobDefinitionName
-  DescribeModelExplainabilityJobDefinition:
-    primary_identifier_field_name: JobDefinitionName
 resources:
   Model:
     hooks:
@@ -363,6 +354,7 @@ resources:
         is_arn: true
       JobDefinitionName:
         is_name: true
+        is_primary_key: true
       Tags:
         compare:
           is_ignored: true
@@ -382,6 +374,7 @@ resources:
         is_arn: true
       JobDefinitionName:
         is_name: true
+        is_primary_key: true
       Tags:
         compare:
           is_ignored: true
@@ -401,6 +394,7 @@ resources:
         is_arn: true
       JobDefinitionName:
         is_name: true
+        is_primary_key: true
       Tags:
         compare:
           is_ignored: true
@@ -420,6 +414,7 @@ resources:
         is_arn: true
       JobDefinitionName:
         is_name: true
+        is_primary_key: true
       Tags:
         compare:
           is_ignored: true
@@ -484,6 +479,7 @@ resources:
           is_ignored: true
   ModelPackage:
     update_conditions_custom_method_name: CustomUpdateConditions
+    is_arn_primary_key: true
     exceptions:
       errors:
           404:
