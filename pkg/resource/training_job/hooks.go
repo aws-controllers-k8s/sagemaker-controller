@@ -31,7 +31,7 @@ var (
 		svcsdk.RuleEvaluationStatusInProgress,
 		svcsdk.RuleEvaluationStatusStopping,
 	}
-	resourceName = resourceGK.Kind
+	resourceName = GroupKind.Kind
 
 	requeueWaitWhileDeleting = ackrequeue.NeededAfter(
 		errors.New(resourceName+" is Stopping."),

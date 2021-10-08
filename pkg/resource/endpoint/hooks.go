@@ -37,9 +37,9 @@ var (
 		svcsdk.EndpointStatusDeleting,
 	}
 
-	resourceName = resourceGK.Kind
+	resourceName = GroupKind.Kind
 
-	lastEndpointConfigForUpdateAnnotation = fmt.Sprintf("%s/last-endpoint-config-for-update", resourceGK.Group)
+	lastEndpointConfigForUpdateAnnotation = fmt.Sprintf("%s/last-endpoint-config-for-update", GroupKind.Group)
 
 	FailureReasonInternalServiceErrorPrefix = "Request to service failed"
 
