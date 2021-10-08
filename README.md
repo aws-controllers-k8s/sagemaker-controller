@@ -183,7 +183,6 @@ tar xvf $CHART_EXPORT_PATH/$CHART_PACKAGE -C $CHART_EXPORT_PATH
       # Update values in helm chart
       cd $CHART_EXPORT_PATH/$SERVICE-chart
       yq e '.aws.region = env(AWS_DEFAULT_REGION)' -i values.yaml
-      yq e '.aws.account_id = env(AWS_ACCOUNT_ID)' -i values.yaml
       yq e '.serviceAccount.annotations."eks.amazonaws.com/role-arn" = env(IAM_ROLE_ARN_FOR_IRSA)' -i values.yaml
       cd -
       ```
@@ -193,7 +192,6 @@ tar xvf $CHART_EXPORT_PATH/$CHART_PACKAGE -C $CHART_EXPORT_PATH
       # Update values in helm chart
       cd $CHART_EXPORT_PATH/$SERVICE-chart
       yq e '.aws.region = env(AWS_DEFAULT_REGION)' -i values.yaml
-      yq e '.aws.account_id = env(AWS_ACCOUNT_ID)' -i values.yaml
       yq e '.serviceAccount.annotations."eks.amazonaws.com/role-arn" = env(IAM_ROLE_ARN_FOR_IRSA)' -i values.yaml
       yq e '.installScope = "namespace"' -i values.yaml
       cd -
