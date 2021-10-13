@@ -3,7 +3,7 @@ kind: TrainingJob
 metadata:
   name: unit-testing-training-job
 spec:
-  trainingJobName: intentionally@invalid-name
+  trainingJobName: xgboost-training-job
   roleARN: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
   hyperParameters:
     max_depth: "5"
