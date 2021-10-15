@@ -164,7 +164,7 @@ Take note of IAM_ROLE_ARN_FOR_IRSA printed in the previous step; you will pass t
 ```sh
 export HELM_EXPERIMENTAL_OCI=1
 export SERVICE=sagemaker
-export RELEASE_VERSION=v0.2.0
+export RELEASE_VERSION=v0.1.0
 export CHART_EXPORT_PATH=/tmp/chart
 export CHART_REF=$SERVICE-chart
 export CHART_REPO=public.ecr.aws/aws-controllers-k8s/$CHART_REF
@@ -225,7 +225,7 @@ Jump to Section 4.0 if you only wish to install SageMaker controller
 ```sh
 export HELM_EXPERIMENTAL_OCI=1
 export SERVICE=applicationautoscaling
-export RELEASE_VERSION=v0.2.0
+export RELEASE_VERSION=v0.1.1
 export CHART_EXPORT_PATH=/tmp/chart
 export CHART_REF=$SERVICE-chart
 export CHART_REPO=public.ecr.aws/aws-controllers-k8s/$CHART_REF
