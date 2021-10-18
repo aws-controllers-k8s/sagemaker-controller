@@ -65,7 +65,7 @@ tests:
           desired_state: "v1alpha1/readone/desired/error_conditions_true.yaml"
           svc_api:
             - operation: DescribeTrainingJobWithContext
-              output_fixture: "sdkapi/describe/success_describe.json"
+              output_fixture: "sdkapi/describe/inprogress_describe.json"
         invoke: ReadOne
         expect:
           latest_state: "v1alpha1/readone/observed/conditions_clear_on_success.yaml"
@@ -83,17 +83,17 @@ tests:
           latest_state: "v1alpha1/readone/observed/error_on_describe.yaml"
           error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
       - name: "ReadOne=AfterCreateInProgress"
-        description: "Testing readOne right after create, the status should have ARN."
+        description: "Testing readOne right after create, the status should have ARN and be inprogress state"
         given:
           desired_state: "v1alpha1/readone/desired/after_create_inprogress.yaml"
           svc_api:
             - operation: DescribeTrainingJobWithContext
-              output_fixture: "sdkapi/describe/success_describe.json"
+              output_fixture: "sdkapi/describe/inprogress_describe.json"
         invoke: ReadOne
         expect:
           latest_state: "v1alpha1/readone/observed/created.yaml"
       - name: "ReadOne=AfterCompletion"
-        description: "Testing readOne after Training job completes, the status should have ARN."
+        description: "Testing readOne after Training job completes, the status should have ARN and be in completed state"
         given:
           desired_state: "v1alpha1/readone/desired/after_create_inprogress.yaml"
           svc_api:
@@ -108,14 +108,14 @@ tests:
           desired_state: "v1alpha1/readone/desired/after_create_inprogress_debugger_variation.yaml"
           svc_api:
             - operation: DescribeTrainingJobWithContext
-              output_fixture: "sdkapi/describe/success_describe_debugger_variation.json"
+              output_fixture: "sdkapi/describe/inprogress_describe_debugger_variation.json"
         invoke: ReadOne
         expect:
           latest_state: "v1alpha1/readone/observed/created_debugger_variation.yaml"
       - name: "ReadOne=Stopping"
         description: "Testing readOne right after delete, the status should be in Stopping"
         given:
-          desired_state: "v1alpha1/readone/desired/stopping.yaml"
+          desired_state: "v1alpha1/readone/desired/after_create_inprogress.yaml"
           svc_api:
             - operation: DescribeTrainingJobWithContext
               output_fixture: "sdkapi/describe/stopping_describe.json"
