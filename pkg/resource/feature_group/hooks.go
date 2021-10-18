@@ -25,7 +25,7 @@ var (
 	modifyingStatuses = []string{svcsdk.FeatureGroupStatusCreating,
 		svcsdk.FeatureGroupStatusDeleting}
 
-	resourceName = resourceGK.Kind
+	resourceName = GroupKind.Kind
 
 	requeueWaitWhileDeleting = ackrequeue.NeededAfter(
 		errors.New(resourceName+" is deleting."),

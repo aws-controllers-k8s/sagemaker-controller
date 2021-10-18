@@ -27,7 +27,7 @@ var (
 		svcsdk.ModelPackageStatusPending,
 		svcsdk.ModelPackageStatusDeleting}
 
-	resourceName = resourceGK.Kind
+	resourceName = GroupKind.Kind
 
 	requeueWaitWhileDeleting = ackrequeue.NeededAfter(
 		errors.New(resourceName+" is deleting."),
