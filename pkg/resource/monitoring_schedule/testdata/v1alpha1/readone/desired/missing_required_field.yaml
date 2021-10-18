@@ -1,0 +1,46 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: MonitoringSchedule
+metadata:
+  name: unit-testing-monitoring-schedule
+spec:
+  # missing monitoring schedule name
+  monitoringScheduleConfig:
+    monitoringType: DataQuality
+    scheduleConfig:
+      scheduleExpression: "cron(0 * ? * * *)"
+    monitoringJobDefinition:
+      monitoringAppSpecification:
+        imageURI: 159807026194.dkr.ecr.us-west-2.amazonaws.com/sagemaker-model-monitor-analyzer
+        postAnalyticsProcessorSourceURI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/data_quality_job_definition/code/postprocessor.py
+      baselineConfig:
+        constraintsResource:
+          s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/data_quality_job_definition/baselining/constraints.json
+        statisticsResource:
+          s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/data_quality_job_definition/baselining/statistics.json
+      monitoringInputs:
+      - endpointInput:
+          endpointName: xgboost-churn
+          localPath: /opt/ml/processing/input/endpoint
+          s3DataDistributionType: FullyReplicated
+          s3InputMode: File
+      monitoringOutputConfig:
+        monitoringOutputs:
+        - s3Output:
+            localPath: /opt/ml/processing/output
+            s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/data_quality_job_definition/reports
+            s3UploadMode: Continuous
+      monitoringResources:
+        clusterConfig:
+          instanceCount: 1
+          instanceType: ml.m5.large
+          volumeSizeInGB: 20
+      roleARN: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
+      stoppingCondition:
+        maxRuntimeInSeconds: 1800
+  tags:
+    - key: confidentiality
+      value: public
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

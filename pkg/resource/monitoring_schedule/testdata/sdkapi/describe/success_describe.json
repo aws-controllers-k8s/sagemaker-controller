@@ -1,0 +1,78 @@
+{
+    "CreationTime": "2021-10-17T06:17:40.4Z",
+    "EndpointName": "xgboost-churn",
+    "FailureReason": null,
+    "LastModifiedTime": "2021-10-17T06:21:47.452Z",
+    "LastMonitoringExecutionSummary": null,
+    "MonitoringScheduleArn": "arn:aws:sagemaker:us-west-2:123456789012:monitoring-schedule/unit-testing-monitoring-schedule",
+    "MonitoringScheduleConfig": {
+        "MonitoringJobDefinition": {
+            "BaselineConfig": {
+                "BaseliningJobName": null,
+                "ConstraintsResource": {
+                    "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/data_quality_job_definition/baselining/constraints.json"
+                },
+                "StatisticsResource": {
+                    "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/data_quality_job_definition/baselining/statistics.json"
+                }
+            },
+            "Environment": null,
+            "MonitoringAppSpecification": {
+                "ContainerArguments": null,
+                "ContainerEntrypoint": null,
+                "ImageUri": "159807026194.dkr.ecr.us-west-2.amazonaws.com/sagemaker-model-monitor-analyzer",
+                "PostAnalyticsProcessorSourceUri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/data_quality_job_definition/code/postprocessor.py",
+                "RecordPreprocessorSourceUri": null
+            },
+            "MonitoringInputs": [
+                {
+                    "EndpointInput": {
+                        "EndTimeOffset": null,
+                        "EndpointName": "xgboost-churn",
+                        "FeaturesAttribute": null,
+                        "InferenceAttribute": null,
+                        "LocalPath": "/opt/ml/processing/input/endpoint",
+                        "ProbabilityAttribute": null,
+                        "ProbabilityThresholdAttribute": null,
+                        "S3DataDistributionType": "FullyReplicated",
+                        "S3InputMode": "File",
+                        "StartTimeOffset": null
+                    }
+                }
+            ],
+            "MonitoringOutputConfig": {
+                "KmsKeyId": null,
+                "MonitoringOutputs": [
+                    {
+                        "S3Output": {
+                            "LocalPath": "/opt/ml/processing/output",
+                            "S3UploadMode": "Continuous",
+                            "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/data_quality_job_definition/reports"
+                        }
+                    }
+                ]
+            },
+            "MonitoringResources": {
+                "ClusterConfig": {
+                    "InstanceCount": 1,
+                    "InstanceType": "ml.m5.large",
+                    "VolumeKmsKeyId": null,
+                    "VolumeSizeInGB": 20
+                }
+            },
+            "NetworkConfig": null,
+            "RoleArn": "arn:aws:iam::123456789012:role/ack-sagemaker-execution-role",
+            "StoppingCondition": {
+                "MaxRuntimeInSeconds": 1800
+            }
+        },
+        "MonitoringJobDefinitionName": null,
+        "MonitoringType": "DataQuality",
+        "ScheduleConfig": {
+            "ScheduleExpression": "cron(0 * ? * * *)"
+        }
+    },
+    "MonitoringScheduleName": "unit-testing-monitoring-schedule",
+    "MonitoringScheduleStatus": "Scheduled",
+    "MonitoringType": "DataQuality"
+}
