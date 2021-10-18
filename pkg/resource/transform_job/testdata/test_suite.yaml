@@ -54,7 +54,7 @@ tests:
           desired_state: "v1alpha1/readone/desired/error_conditions_true.yaml"
           svc_api:
             - operation: DescribeTransformJobWithContext
-              output_fixture: "sdkapi/describe/success_describe.json"
+              output_fixture: "sdkapi/describe/inprogress_describe.json"
         invoke: ReadOne
         expect:
           latest_state: "v1alpha1/readone/observed/conditions_clear_on_success.yaml"
@@ -77,7 +77,7 @@ tests:
           desired_state: "v1alpha1/readone/desired/after_create_inprogress.yaml"
           svc_api:
             - operation: DescribeTransformJobWithContext
-              output_fixture: "sdkapi/describe/success_describe.json"
+              output_fixture: "sdkapi/describe/inprogress_describe.json"
         invoke: ReadOne
         expect:
           latest_state: "v1alpha1/readone/observed/created.yaml"
