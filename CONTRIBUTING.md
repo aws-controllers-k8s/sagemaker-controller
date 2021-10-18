@@ -82,4 +82,4 @@ do **not** create a public Github issue.
 
 ## License
 
-This project is [licensed][./LICENSE] under the Apache-2.0 License.
+This project is [licensed](/LICENSE) under the Apache-2.0 License.
