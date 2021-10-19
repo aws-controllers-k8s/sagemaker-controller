@@ -1,0 +1,92 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: TrainingJob
+metadata:
+  creationTimestamp: null
+  name: unit-testing-training-job
+spec:
+  algorithmSpecification:
+    trainingImage: 246618743249.dkr.ecr.us-west-2.amazonaws.com
+    trainingInputMode: File
+  debugHookConfig:
+    collectionConfigurations:
+    - collectionName: feature_importance
+      collectionParameters:
+        name: save_interval
+        value: "5"
+    - collectionName: losses
+      collectionParameters:
+        name: save_interval
+        value: "500"
+    - collectionName: average_shap
+      collectionParameters:
+        name: save_interval
+        value: "5"
+    - collectionName: metrics
+      collectionParameters:
+        name: save_interval
+        value: "5"
+    s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/debugger/hookconfig
+  debugRuleConfigurations:
+  - ruleConfigurationName: LossNotDecreasing
+    ruleEvaluatorImage: 895741380848.dkr.ecr.us-west-2.amazonaws.com
+    ruleParameters:
+      collection_names: metrics
+      num_steps: "10"
+      rule_to_invoke: LossNotDecreasing
+  hyperParameters:
+    eta: "0.2"
+    gamma: "4"
+    max_depth: "5"
+    min_child_weight: "6"
+    num_round: "51"
+    objective: reg:squarederror
+    silent: "0"
+    subsample: "0.7"
+  inputDataConfig:
+  - channelName: train
+    compressionType: None
+    contentType: text/csv
+    dataSource:
+      s3DataSource:
+        s3DataDistributionType: FullyReplicated
+        s3DataType: S3Prefix
+        s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/train
+  - channelName: validation
+    compressionType: None
+    contentType: text/csv
+    dataSource:
+      s3DataSource:
+        s3DataDistributionType: FullyReplicated
+        s3DataType: S3Prefix
+        s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/validation
+  outputDataConfig:
+    s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/debugger/output
+  profilerConfig:
+    profilingIntervalInMilliseconds: 500
+    s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/profiler/
+  profilerRuleConfigurations:
+  - ruleConfigurationName: ProfilerReport
+    ruleEvaluatorImage: 895741380848.dkr.ecr.us-west-2.amazonaws.com
+    ruleParameters:
+      rule_to_invoke: ProfilerReport
+  resourceConfig:
+    instanceCount: 1
+    instanceType: ml.m4.xlarge
+    volumeSizeInGB: 5
+  roleARN: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
+  stoppingCondition:
+    maxRuntimeInSeconds: 86400
+  tags:
+  - key: algorithm
+    value: xgboost
+  - key: environment
+    value: testing
+  - key: customer
+    value: test-user
+  trainingJobName: xgboost-training-debugger-job
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:training-job/xgboost-training-job
+    ownerAccountID: ""
+  conditions: []
+
