@@ -3,7 +3,7 @@ kind: HyperParameterTuningJob
 metadata:
   name: unit-testing-hyper-parameter-tuning-job
 spec:
-  hyperParameterTuningJobName: intentionally@invalid-name
+  # missing hyperParameterTuningJobName
   hyperParameterTuningJobConfig:
     strategy: Bayesian
     hyperParameterTuningJobObjective:
@@ -13,6 +13,11 @@ spec:
       maxNumberOfTrainingJobs: 2
       maxParallelTrainingJobs: 1
     parameterRanges:
+      continuousParameterRanges:
+      - name: gamma
+        minValue: '0'
+        maxValue: '5'
+        scalingType: Linear
       integerParameterRanges:
       - name: num_round
         minValue: '10'
@@ -50,17 +55,17 @@ spec:
   outputDataConfig:
     s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/hpo/output
   resourceConfig:
-    instanceType: ml.m5.large
+    instanceType: ml.m4.xlarge
     instanceCount: 1
     volumeSizeInGB: 25
   stoppingCondition:
     maxRuntimeInSeconds: 3600
   enableNetworkIsolation: true
   enableInterContainerTrafficEncryption: false
-tags:
-  - key: algorithm
-    value: xgboost
-  - key: environment
-    value: testing
-  - key: customer
-    value: test-user
+  tags:
+    - key: algorithm
+      value: xgboost
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

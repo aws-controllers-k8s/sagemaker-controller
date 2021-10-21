@@ -1,0 +1,122 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: HyperParameterTuningJob
+metadata:
+  creationTimestamp: null
+  name: unit-testing-hyper-parameter-tuning-job
+spec:
+  hyperParameterTuningJobConfig:
+    hyperParameterTuningJobObjective:
+      metricName: validation:error
+      type_: Minimize
+    parameterRanges:
+      continuousParameterRanges:
+      - maxValue: "5"
+        minValue: "0"
+        name: gamma
+        scalingType: Linear
+      integerParameterRanges:
+      - maxValue: "20"
+        minValue: "10"
+        name: num_round
+        scalingType: Linear
+    resourceLimits:
+      maxNumberOfTrainingJobs: 2
+      maxParallelTrainingJobs: 1
+    strategy: Bayesian
+    trainingJobEarlyStoppingType: Auto
+  hyperParameterTuningJobName: unit-testing-hpo-job
+  tags:
+  - key: algorithm
+    value: xgboost
+  - key: environment
+    value: testing
+  - key: customer
+    value: test-user
+  trainingJobDefinition:
+    algorithmSpecification:
+      metricDefinitions:
+      - name: train:mae
+        regex: .*\[[0-9]+\].*#011train-mae:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
+      - name: validation:auc
+        regex: .*\[[0-9]+\].*#011validation-auc:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
+      - name: train:merror
+        regex: .*\[[0-9]+\].*#011train-merror:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
+      - name: train:auc
+        regex: .*\[[0-9]+\].*#011train-auc:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
+      - name: validation:mae
+        regex: .*\[[0-9]+\].*#011validation-mae:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
+      - name: validation:error
+        regex: .*\[[0-9]+\].*#011validation-error:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
+      - name: validation:merror
+        regex: .*\[[0-9]+\].*#011validation-merror:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
+      - name: validation:logloss
+        regex: .*\[[0-9]+\].*#011validation-logloss:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
+      - name: train:rmse
+        regex: .*\[[0-9]+\].*#011train-rmse:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
+      - name: train:logloss
+        regex: .*\[[0-9]+\].*#011train-logloss:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
+      - name: train:mlogloss
+        regex: .*\[[0-9]+\].*#011train-mlogloss:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
+      - name: validation:rmse
+        regex: .*\[[0-9]+\].*#011validation-rmse:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
+      - name: validation:ndcg
+        regex: .*\[[0-9]+\].*#011validation-ndcg:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
+      - name: train:error
+        regex: .*\[[0-9]+\].*#011train-error:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
+      - name: validation:mlogloss
+        regex: .*\[[0-9]+\].*#011validation-mlogloss:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
+      - name: train:ndcg
+        regex: .*\[[0-9]+\].*#011train-ndcg:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
+      - name: train:map
+        regex: .*\[[0-9]+\].*#011train-map:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
+      - name: validation:map
+        regex: .*\[[0-9]+\].*#011validation-map:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
+      - name: ObjectiveMetric
+        regex: .*\[[0-9]+\].*#011validation-error:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
+      trainingImage: 433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:1
+      trainingInputMode: File
+    enableInterContainerTrafficEncryption: false
+    enableManagedSpotTraining: false
+    enableNetworkIsolation: true
+    inputDataConfig:
+    - channelName: train
+      compressionType: None
+      contentType: text/csv
+      dataSource:
+        s3DataSource:
+          s3DataDistributionType: FullyReplicated
+          s3DataType: S3Prefix
+          s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/train
+      inputMode: File
+      recordWrapperType: None
+    - channelName: validation
+      compressionType: None
+      contentType: text/csv
+      dataSource:
+        s3DataSource:
+          s3DataDistributionType: FullyReplicated
+          s3DataType: S3Prefix
+          s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/validation/
+      inputMode: File
+      recordWrapperType: None
+    outputDataConfig:
+      s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/hpo/output
+    resourceConfig:
+      instanceCount: 1
+      instanceType: ml.m4.xlarge
+      volumeSizeInGB: 25
+    roleARN: arn:aws:iam::123456789012:role/service-role/AmazonSageMaker-ExecutionRole-20210920T111639
+    staticHyperParameters:
+      base_score: "0.5"
+    stoppingCondition:
+      maxRuntimeInSeconds: 3600
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:hyper-parameter-tuning-job/unit-testing-hpo-job
+    ownerAccountID: ""
+  conditions:
+  - lastTransitionTime: "0001-01-01T00:00:00Z"
+    message: HyperParameterTuningJob is in Stopping status.
+    status: "False"
+    type: ACK.ResourceSynced
+  hyperParameterTuningJobStatus: Stopping
