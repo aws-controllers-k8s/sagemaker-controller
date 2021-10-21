@@ -20,7 +20,7 @@ var (
 		svcsdk.NotebookInstanceStatusStopping,
 	}
 
-	resourceName = GroupKind.Kind
+	resourceName             = GroupKind.Kind
 	requeueWaitWhileDeleting = ackrequeue.NeededAfter(
 		errors.New(resourceName+" is deleting."),
 		ackrequeue.DefaultRequeueAfterDuration,
