@@ -41,7 +41,7 @@ The following sections will guide you to install SageMaker and Application Autos
 This guide assumes that you’ve the following prerequisites:
   - Installed the following tools on the client machine used to access your Kubernetes cluster:
     - [kubectl](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html) - A command line tool for working with Kubernetes clusters. 
-    - [helm](https://helm.sh/docs/intro/install/) - A tool for installing and managing Kubernetes applications
+    - [helm 3.7+](https://helm.sh/docs/intro/install/) - A tool for installing and managing Kubernetes applications
     - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv1.html) - A command line tool for interacting with AWS services. 
     - [eksctl](https://docs.aws.amazon.com/eks/latest/userguide/eksctl.html) - A command line tool for working with EKS clusters that automates many individual tasks.
     - [yq](https://mikefarah.gitbook.io/yq) - command-line YAML processor.
@@ -160,11 +160,11 @@ Take note of IAM_ROLE_ARN_FOR_IRSA printed in the previous step; you will pass t
 #### 3.1 Install SageMaker Controller
 
 ##### 3.1.1 Download helm chart
-
+ - Helm version 3.7 or greater is required. Helm versions < 3.7 are incompatible.
 ```sh
 export HELM_EXPERIMENTAL_OCI=1
 export SERVICE=sagemaker
-export RELEASE_VERSION=v0.1.0
+export RELEASE_VERSION=v0.2.0
 export CHART_EXPORT_PATH=/tmp/chart
 export CHART_REF=$SERVICE-chart
 export CHART_REPO=public.ecr.aws/aws-controllers-k8s/$CHART_REF
@@ -225,7 +225,7 @@ Jump to Section 4.0 if you only wish to install SageMaker controller
 ```sh
 export HELM_EXPERIMENTAL_OCI=1
 export SERVICE=applicationautoscaling
-export RELEASE_VERSION=v0.1.1
+export RELEASE_VERSION=v0.2.0
 export CHART_EXPORT_PATH=/tmp/chart
 export CHART_REF=$SERVICE-chart
 export CHART_REPO=public.ecr.aws/aws-controllers-k8s/$CHART_REF
