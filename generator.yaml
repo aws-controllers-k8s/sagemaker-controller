@@ -755,7 +755,37 @@ resources:
           min_backoff_seconds: 5
       Tags:
         compare:
-          is_ignored: true    
+          is_ignored: true   
+  UserProfile:
+    exceptions:
+      errors:
+          404:
+            code: ResourceNotFound
+      terminal_codes:
+        - ResourceNotFound
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+    hooks: 
+      sdk_read_one_post_set_output:
+        code: rm.customDescribeUserProfileSetOutput(ko)
+      sdk_update_pre_build_request:
+        template_path: common/sdk_update_pre_build_request.go.tpl
+      dk_delete_pre_build_request:
+        template_path: common/sdk_delete_pre_build_request.go.tpl
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
+    fields:
+      Status:
+        is_read_only: true
+        print:
+          name: STATUS
+        from:
+          operation: DescribeUserProfile
+          path: Status 
+      Tags:
+        compare:
+          is_ignored: true  
 ignore:
     resource_names:
       - Algorithm
@@ -799,7 +829,7 @@ ignore:
       # - TransformJob
       - TrialComponent
       - Trial
-      - UserProfile
+      # - UserProfile
       - Workforce
       - Workteam
     operations:

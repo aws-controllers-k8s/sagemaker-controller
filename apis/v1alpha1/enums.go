@@ -1621,16 +1621,16 @@ const (
 	UserProfileSortKey_LastModifiedTime UserProfileSortKey = "LastModifiedTime"
 )
 
-type UserProfileStatus string
+type UserProfileStatus_SDK string
 
 const (
-	UserProfileStatus_Deleting      UserProfileStatus = "Deleting"
-	UserProfileStatus_Failed        UserProfileStatus = "Failed"
-	UserProfileStatus_InService     UserProfileStatus = "InService"
-	UserProfileStatus_Pending       UserProfileStatus = "Pending"
-	UserProfileStatus_Updating      UserProfileStatus = "Updating"
-	UserProfileStatus_Update_Failed UserProfileStatus = "Update_Failed"
-	UserProfileStatus_Delete_Failed UserProfileStatus = "Delete_Failed"
+	UserProfileStatus_SDK_Deleting      UserProfileStatus_SDK = "Deleting"
+	UserProfileStatus_SDK_Failed        UserProfileStatus_SDK = "Failed"
+	UserProfileStatus_SDK_InService     UserProfileStatus_SDK = "InService"
+	UserProfileStatus_SDK_Pending       UserProfileStatus_SDK = "Pending"
+	UserProfileStatus_SDK_Updating      UserProfileStatus_SDK = "Updating"
+	UserProfileStatus_SDK_Update_Failed UserProfileStatus_SDK = "Update_Failed"
+	UserProfileStatus_SDK_Delete_Failed UserProfileStatus_SDK = "Delete_Failed"
 )
 
 type VariantPropertyType string

@@ -51,6 +51,7 @@ import (
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/processing_job"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/training_job"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/transform_job"
+	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/user_profile"
 )
 
 var (
