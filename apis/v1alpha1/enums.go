@@ -390,16 +390,16 @@ const (
 	DirectInternetAccess_Disabled DirectInternetAccess = "Disabled"
 )
 
-type DomainStatus string
+type DomainStatus_SDK string
 
 const (
-	DomainStatus_Deleting      DomainStatus = "Deleting"
-	DomainStatus_Failed        DomainStatus = "Failed"
-	DomainStatus_InService     DomainStatus = "InService"
-	DomainStatus_Pending       DomainStatus = "Pending"
-	DomainStatus_Updating      DomainStatus = "Updating"
-	DomainStatus_Update_Failed DomainStatus = "Update_Failed"
-	DomainStatus_Delete_Failed DomainStatus = "Delete_Failed"
+	DomainStatus_SDK_Deleting      DomainStatus_SDK = "Deleting"
+	DomainStatus_SDK_Failed        DomainStatus_SDK = "Failed"
+	DomainStatus_SDK_InService     DomainStatus_SDK = "InService"
+	DomainStatus_SDK_Pending       DomainStatus_SDK = "Pending"
+	DomainStatus_SDK_Updating      DomainStatus_SDK = "Updating"
+	DomainStatus_SDK_Update_Failed DomainStatus_SDK = "Update_Failed"
+	DomainStatus_SDK_Delete_Failed DomainStatus_SDK = "Delete_Failed"
 )
 
 type EdgePackagingJobStatus string

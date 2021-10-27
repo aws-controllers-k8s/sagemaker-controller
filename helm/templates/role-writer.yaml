@@ -11,6 +11,8 @@ rules:
   resources:
   - dataqualityjobdefinitions
 
+  - domains
+
   - endpoints
 
   - endpointconfigs
@@ -55,6 +57,7 @@ rules:
   - sagemaker.services.k8s.aws
   resources:
   - dataqualityjobdefinitions
+  - domains
   - endpoints
   - endpointconfigs
   - featuregroups
