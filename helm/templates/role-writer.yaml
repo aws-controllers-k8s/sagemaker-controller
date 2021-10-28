@@ -9,6 +9,8 @@ rules:
 - apiGroups:
   - sagemaker.services.k8s.aws
   resources:
+  - apps
+
   - dataqualityjobdefinitions
 
   - domains
@@ -58,6 +60,7 @@ rules:
 - apiGroups:
   - sagemaker.services.k8s.aws
   resources:
+  - apps
   - dataqualityjobdefinitions
   - domains
   - endpoints

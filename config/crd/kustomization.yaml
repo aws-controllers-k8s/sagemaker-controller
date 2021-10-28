@@ -3,6 +3,7 @@ kind: Kustomization
 bases:
   - common
 resources:
+  - bases/sagemaker.services.k8s.aws_apps.yaml
   - bases/sagemaker.services.k8s.aws_dataqualityjobdefinitions.yaml
   - bases/sagemaker.services.k8s.aws_domains.yaml
   - bases/sagemaker.services.k8s.aws_endpoints.yaml

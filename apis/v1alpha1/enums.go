@@ -108,14 +108,14 @@ const (
 	AppSortKey_CreationTime AppSortKey = "CreationTime"
 )
 
-type AppStatus string
+type AppStatus_SDK string
 
 const (
-	AppStatus_Deleted   AppStatus = "Deleted"
-	AppStatus_Deleting  AppStatus = "Deleting"
-	AppStatus_Failed    AppStatus = "Failed"
-	AppStatus_InService AppStatus = "InService"
-	AppStatus_Pending   AppStatus = "Pending"
+	AppStatus_SDK_Deleted   AppStatus_SDK = "Deleted"
+	AppStatus_SDK_Deleting  AppStatus_SDK = "Deleting"
+	AppStatus_SDK_Failed    AppStatus_SDK = "Failed"
+	AppStatus_SDK_InService AppStatus_SDK = "InService"
+	AppStatus_SDK_Pending   AppStatus_SDK = "Pending"
 )
 
 type AppType string
