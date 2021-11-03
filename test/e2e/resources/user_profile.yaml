@@ -1,0 +1,11 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: UserProfile
+metadata:
+  name: $USER_PROFILE_NAME
+spec:
+  userProfileName: $USER_PROFILE_NAME
+  domainID: $DOMAIN_ID
+  userSettings: 
+    kernelGatewayAppSettings: 
+      defaultResourceSpec:
+        instanceType: ml.t3.micro
