@@ -45,6 +45,8 @@ rules:
 
   - transformjobs
 
+  - userprofiles
+
   verbs:
   - create
   - delete
@@ -74,6 +76,7 @@ rules:
   - processingjobs
   - trainingjobs
   - transformjobs
+  - userprofiles
   verbs:
   - get
   - patch

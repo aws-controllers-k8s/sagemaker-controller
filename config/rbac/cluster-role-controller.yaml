@@ -383,6 +383,26 @@ rules:
   - patch
   - update
 - apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
+  - userprofiles
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
+  - userprofiles/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
   - services.k8s.aws
   resources:
   - adoptedresources

@@ -27,6 +27,7 @@ rules:
   - processingjobs
   - trainingjobs
   - transformjobs
+  - userprofiles
   verbs:
   - get
   - list

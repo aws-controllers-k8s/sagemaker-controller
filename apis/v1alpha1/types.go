@@ -95,8 +95,9 @@ type AlgorithmValidationSpecification struct {
 
 // Details about an Amazon SageMaker app.
 type AppDetails struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
-	DomainID     *string      `json:"domainID,omitempty"`
+	CreationTime    *metav1.Time `json:"creationTime,omitempty"`
+	DomainID        *string      `json:"domainID,omitempty"`
+	UserProfileName *string      `json:"userProfileName,omitempty"`
 }
 
 // The configuration for running a SageMaker image as a KernelGateway app.
@@ -2522,6 +2523,8 @@ type UserProfileDetails struct {
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
 	DomainID         *string      `json:"domainID,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	Status           *string      `json:"status,omitempty"`
+	UserProfileName  *string      `json:"userProfileName,omitempty"`
 }
 
 // A collection of settings that apply to users of Amazon SageMaker Studio.
