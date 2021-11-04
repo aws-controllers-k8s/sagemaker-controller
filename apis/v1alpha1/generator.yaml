@@ -713,7 +713,49 @@ resources:
           is_ignored: true  
       OnStart:
         compare:
-          is_ignored: true  
+          is_ignored: true
+  Domain:
+    exceptions:
+      errors:
+          404:
+            code: ResourceNotFound
+      terminal_codes:
+        - ResourceNotFound
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+    hooks: 
+      sdk_create_post_set_output:
+        template_path: domain/sdk_create_post_set_output.go.tpl
+      sdk_read_one_post_set_output:
+        code: rm.customDescribeDomainSetOutput(ko)
+      sdk_update_pre_build_request:
+        template_path: common/sdk_update_pre_build_request.go.tpl
+      dk_delete_pre_build_request:
+        template_path: common/sdk_delete_pre_build_request.go.tpl
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
+    fields:
+      DomainId:
+        is_read_only: true
+        print:
+          name: DOMAIN-ID
+        from:
+          operation: DescribeDomain
+          path: DomainId
+      Status:
+        is_read_only: true
+        print:
+          name: STATUS
+        from:
+          operation: DescribeDomain
+          path: Status 
+      AppNetworkAccessType:
+        late_initialize:
+          min_backoff_seconds: 5
+      Tags:
+        compare:
+          is_ignored: true    
 ignore:
     resource_names:
       - Algorithm
@@ -727,7 +769,7 @@ ignore:
       - Context
       # - DataQualityJobDefinition
       - DeviceFleet
-      - Domain
+      # - Domain
       - EdgePackagingJob
       # - EndpointConfig
       # - Endpoint

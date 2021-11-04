@@ -34,6 +34,7 @@ import (
 	svcresource "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource"
 
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/data_quality_job_definition"
+	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/domain"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/endpoint"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/endpoint_config"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/feature_group"

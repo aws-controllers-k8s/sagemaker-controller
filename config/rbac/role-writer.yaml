@@ -10,6 +10,7 @@ rules:
   - sagemaker.services.k8s.aws
   resources:
   - dataqualityjobdefinitions
+  - domains
   - endpoints
   - endpointconfigs
   - featuregroups
@@ -38,6 +39,7 @@ rules:
   - sagemaker.services.k8s.aws
   resources:
   - dataqualityjobdefinitions
+  - domains
   - endpoints
   - endpointconfigs
   - featuregroups

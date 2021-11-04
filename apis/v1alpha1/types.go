@@ -28,6 +28,12 @@ var (
 	_ = ackv1alpha1.AWSAccountID("")
 )
 
+// A structure describing the source of an action.
+type ActionSource struct {
+	SourceID   *string `json:"sourceID,omitempty"`
+	SourceType *string `json:"sourceType,omitempty"`
+}
+
 // Lists the properties of an action. An action represents an action or activity.
 // Some examples are a workflow step and a model deployment. Generally, an action
 // involves at least one input artifact or output artifact.
@@ -90,12 +96,14 @@ type AlgorithmValidationSpecification struct {
 // Details about an Amazon SageMaker app.
 type AppDetails struct {
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	DomainID     *string      `json:"domainID,omitempty"`
 }
 
 // The configuration for running a SageMaker image as a KernelGateway app.
 type AppImageConfigDetails struct {
-	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
-	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	AppImageConfigName *string      `json:"appImageConfigName,omitempty"`
+	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime   *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
 // Configuration to run a processing job in a specified container image.
@@ -105,10 +113,16 @@ type AppSpecification struct {
 	ImageURI            *string   `json:"imageURI,omitempty"`
 }
 
+// The ID and ID type of an artifact source.
+type ArtifactSourceType struct {
+	Value *string `json:"value,omitempty"`
+}
+
 // Lists a summary of the properties of an artifact. An artifact represents
 // a URI addressable object or data. Some examples are a dataset and a model.
 type ArtifactSummary struct {
 	ArtifactName     *string      `json:"artifactName,omitempty"`
+	ArtifactType     *string      `json:"artifactType,omitempty"`
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
@@ -122,7 +136,9 @@ type AssociationSummary struct {
 	CreatedBy       *UserContext `json:"createdBy,omitempty"`
 	CreationTime    *metav1.Time `json:"creationTime,omitempty"`
 	DestinationName *string      `json:"destinationName,omitempty"`
+	DestinationType *string      `json:"destinationType,omitempty"`
 	SourceName      *string      `json:"sourceName,omitempty"`
+	SourceType      *string      `json:"sourceType,omitempty"`
 }
 
 // Configuration for Athena Dataset Definition input.
@@ -319,10 +335,17 @@ type ContainerDefinition struct {
 	MultiModelConfig *MultiModelConfig `json:"multiModelConfig,omitempty"`
 }
 
+// A structure describing the source of a context.
+type ContextSource struct {
+	SourceID   *string `json:"sourceID,omitempty"`
+	SourceType *string `json:"sourceType,omitempty"`
+}
+
 // Lists a summary of the properties of a context. A context provides a logical
 // grouping of other entities.
 type ContextSummary struct {
 	ContextName      *string      `json:"contextName,omitempty"`
+	ContextType      *string      `json:"contextType,omitempty"`
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
@@ -339,6 +362,14 @@ type ContinuousParameterRange struct {
 type ContinuousParameterRangeSpecification struct {
 	MaxValue *string `json:"maxValue,omitempty"`
 	MinValue *string `json:"minValue,omitempty"`
+}
+
+// A custom SageMaker image. For more information, see Bring your own SageMaker
+// image (https://docs.aws.amazon.com/sagemaker/latest/dg/studio-byoi.html).
+type CustomImage struct {
+	AppImageConfigName *string `json:"appImageConfigName,omitempty"`
+	ImageName          *string `json:"imageName,omitempty"`
+	ImageVersionNumber *int64  `json:"imageVersionNumber,omitempty"`
 }
 
 type DataCaptureConfig struct {
@@ -509,7 +540,12 @@ type DeviceSummary struct {
 // The domain's details.
 type DomainDetails struct {
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	DomainARN        *string      `json:"domainARN,omitempty"`
+	DomainID         *string      `json:"domainID,omitempty"`
+	DomainName       *string      `json:"domainName,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	Status           *string      `json:"status,omitempty"`
+	URL              *string      `json:"url,omitempty"`
 }
 
 // The model on the edge device.
@@ -908,6 +944,8 @@ type HyperParameterTuningJobWarmStartConfig struct {
 type Image struct {
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
 	FailureReason    *string      `json:"failureReason,omitempty"`
+	ImageARN         *string      `json:"imageARN,omitempty"`
+	ImageName        *string      `json:"imageName,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
@@ -928,7 +966,10 @@ type ImageConfig struct {
 type ImageVersion struct {
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
 	FailureReason    *string      `json:"failureReason,omitempty"`
+	ImageARN         *string      `json:"imageARN,omitempty"`
+	ImageVersionARN  *string      `json:"imageVersionARN,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	Version          *int64       `json:"version,omitempty"`
 }
 
 // Specifies details about how containers in a multi-container endpoint are
@@ -966,6 +1007,21 @@ type IntegerParameterRange struct {
 type IntegerParameterRangeSpecification struct {
 	MaxValue *string `json:"maxValue,omitempty"`
 	MinValue *string `json:"minValue,omitempty"`
+}
+
+// The JupyterServer app settings.
+type JupyterServerAppSettings struct {
+	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
+	// the instance type that the version runs on.
+	DefaultResourceSpec *ResourceSpec `json:"defaultResourceSpec,omitempty"`
+}
+
+// The KernelGateway app settings.
+type KernelGatewayAppSettings struct {
+	CustomImages []*CustomImage `json:"customImages,omitempty"`
+	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
+	// the instance type that the version runs on.
+	DefaultResourceSpec *ResourceSpec `json:"defaultResourceSpec,omitempty"`
 }
 
 // Provides configuration information for auto-labeling of your data objects.
@@ -1262,6 +1318,11 @@ type ModelQualityJobInput struct {
 	EndpointInput *EndpointInput `json:"endpointInput,omitempty"`
 	// The ground truth labels for the dataset used for the monitoring job.
 	GroundTruthS3Input *MonitoringGroundTruthS3Input `json:"groundTruthS3Input,omitempty"`
+}
+
+// Metadata for Model steps.
+type ModelStepMetadata struct {
+	ARN *string `json:"arn,omitempty"`
 }
 
 // Provides summary information about a model.
@@ -1575,6 +1636,11 @@ type OutputConfig struct {
 type OutputDataConfig struct {
 	KMSKeyID     *string `json:"kmsKeyID,omitempty"`
 	S3OutputPath *string `json:"s3OutputPath,omitempty"`
+}
+
+// Assigns a value to a named Pipeline parameter.
+type Parameter struct {
+	Value *string `json:"value,omitempty"`
 }
 
 // Specifies ranges of integer, continuous, and categorical hyperparameters
@@ -1893,6 +1959,11 @@ type RedshiftDatasetDefinition struct {
 	QueryString *string `json:"queryString,omitempty"`
 }
 
+// Metadata for a register model job step.
+type RegisterModelStepMetadata struct {
+	ARN *string `json:"arn,omitempty"`
+}
+
 // A description of an error that occurred while rendering the template.
 type RenderingError struct {
 	Code    *string `json:"code,omitempty"`
@@ -1922,6 +1993,20 @@ type ResourceConfig struct {
 type ResourceLimits struct {
 	MaxNumberOfTrainingJobs *int64 `json:"maxNumberOfTrainingJobs,omitempty"`
 	MaxParallelTrainingJobs *int64 `json:"maxParallelTrainingJobs,omitempty"`
+}
+
+// Specifies the ARN's of a SageMaker image and SageMaker image version, and
+// the instance type that the version runs on.
+type ResourceSpec struct {
+	InstanceType             *string `json:"instanceType,omitempty"`
+	SageMakerImageARN        *string `json:"sageMakerImageARN,omitempty"`
+	SageMakerImageVersionARN *string `json:"sageMakerImageVersionARN,omitempty"`
+}
+
+// The retention policy for data stored on an Amazon Elastic File System (EFS)
+// volume.
+type RetentionPolicy struct {
+	HomeEFSFileSystem *string `json:"homeEFSFileSystem,omitempty"`
 }
 
 // Describes the S3 data source.
@@ -1964,8 +2049,9 @@ type SecondaryStatusTransition struct {
 // called, and as part of UserSettings when the CreateUserProfile API is called.
 // When SharingSettings is not specified, notebook sharing isn't allowed.
 type SharingSettings struct {
-	S3KMSKeyID   *string `json:"s3KMSKeyID,omitempty"`
-	S3OutputPath *string `json:"s3OutputPath,omitempty"`
+	NotebookOutputOption *string `json:"notebookOutputOption,omitempty"`
+	S3KMSKeyID           *string `json:"s3KMSKeyID,omitempty"`
+	S3OutputPath         *string `json:"s3OutputPath,omitempty"`
 }
 
 // A configuration for a shuffle option for input data in a channel. If you
@@ -2033,6 +2119,13 @@ type SubscribedWorkteam struct {
 type Tag struct {
 	Key   *string `json:"key,omitempty"`
 	Value *string `json:"value,omitempty"`
+}
+
+// The TensorBoard app settings.
+type TensorBoardAppSettings struct {
+	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
+	// the instance type that the version runs on.
+	DefaultResourceSpec *ResourceSpec `json:"defaultResourceSpec,omitempty"`
 }
 
 // Configuration of storage locations for the Debugger TensorBoard output data.
@@ -2427,6 +2520,7 @@ type UserContext struct {
 // The user profile details.
 type UserProfileDetails struct {
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	DomainID         *string      `json:"domainID,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
@@ -2438,8 +2532,19 @@ type UserProfileDetails struct {
 // settings in UserSettings, the values specified in CreateUserProfile take
 // precedence over those specified in CreateDomain.
 type UserSettings struct {
-	ExecutionRole  *string   `json:"executionRole,omitempty"`
-	SecurityGroups []*string `json:"securityGroups,omitempty"`
+	ExecutionRole *string `json:"executionRole,omitempty"`
+	// The JupyterServer app settings.
+	JupyterServerAppSettings *JupyterServerAppSettings `json:"jupyterServerAppSettings,omitempty"`
+	// The KernelGateway app settings.
+	KernelGatewayAppSettings *KernelGatewayAppSettings `json:"kernelGatewayAppSettings,omitempty"`
+	SecurityGroups           []*string                 `json:"securityGroups,omitempty"`
+	// Specifies options for sharing SageMaker Studio notebooks. These settings
+	// are specified as part of DefaultUserSettings when the CreateDomain API is
+	// called, and as part of UserSettings when the CreateUserProfile API is called.
+	// When SharingSettings is not specified, notebook sharing isn't allowed.
+	SharingSettings *SharingSettings `json:"sharingSettings,omitempty"`
+	// The TensorBoard app settings.
+	TensorBoardAppSettings *TensorBoardAppSettings `json:"tensorBoardAppSettings,omitempty"`
 }
 
 // Specifies a VPC that your training jobs and hosted models have access to.
