@@ -799,7 +799,7 @@ resources:
     hooks: 
       sdk_read_one_post_set_output:
         code: rm.customDescribeAppSetOutput(ko)
-      dk_delete_pre_build_request:
+      sdk_delete_pre_build_request:
         template_path: app/sdk_delete_pre_build_request.go.tpl
       sdk_delete_post_request:
         template_path: common/sdk_delete_post_request.go.tpl

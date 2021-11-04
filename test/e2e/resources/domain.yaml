@@ -1,0 +1,15 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: Domain
+metadata:
+  name: $DOMAIN_NAME
+spec:
+  domainName: $DOMAIN_NAME
+  authMode: IAM
+  defaultUserSettings: 
+    executionRole: $SAGEMAKER_EXECUTION_ROLE_ARN
+    kernelGatewayAppSettings: 
+      defaultResourceSpec:
+        instanceType: ml.t3.micro
+  subnetIDs:
+    - $SUBNET_ID
+  vpcID: $VPC_ID
