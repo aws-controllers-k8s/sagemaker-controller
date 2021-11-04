@@ -95,8 +95,11 @@ type AlgorithmValidationSpecification struct {
 
 // Details about an Amazon SageMaker app.
 type AppDetails struct {
+	AppName         *string      `json:"appName,omitempty"`
+	AppType         *string      `json:"appType,omitempty"`
 	CreationTime    *metav1.Time `json:"creationTime,omitempty"`
 	DomainID        *string      `json:"domainID,omitempty"`
+	Status          *string      `json:"status,omitempty"`
 	UserProfileName *string      `json:"userProfileName,omitempty"`
 }
 
