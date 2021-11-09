@@ -55,7 +55,6 @@ type expectContext struct {
 type TestRunnerDelegate interface {
 	ResourceDescriptor() acktypes.AWSResourceDescriptor
 	Equal(desired acktypes.AWSResource, latest acktypes.AWSResource) bool // remove it when ResourceDescriptor.Delta() is available
-	YamlEqual(expected string, actual acktypes.AWSResource) bool          // new
 	ResourceManager(*mocksvcsdkapi.SageMakerAPI) acktypes.AWSResourceManager
 	EmptyServiceAPIOutput(apiName string) (interface{}, error)
 	GoTestRunner() *testing.T
@@ -150,10 +149,7 @@ func (runner *TestSuiteRunner) assertExpectations(assert *assert.Assertions, exp
 			}
 		}
 
-		// Check that the yaml files are equivalent.
-		// This makes it easier to make changes to unit test cases.
-		assert.True(runner.Delegate.YamlEqual(expectation.LatestState, actual))
-		// Delta only contains `Spec` differences. Thus, we need Delegate.Equal to compare `Status`.
+		// Delegate.Equal to compare 'Spec' and 'Status' of the resource
 		assert.True(runner.Delegate.Equal(expectedLatest, actual))
 	}
 
