@@ -28,7 +28,6 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/ghodss/yaml"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 	"go.uber.org/zap/zapcore"
@@ -128,13 +127,4 @@ func (d *testRunnerDelegate) Equal(a acktypes.AWSResource, b acktypes.AWSResourc
 	}
 
 	return statusMatch && specMatch
-}
-
-// Checks to see if the given yaml file, with name stored as expectation,
-// matches the yaml marshal of the AWSResource stored as actual.
-func (d *testRunnerDelegate) YamlEqual(expectation string, actual acktypes.AWSResource) bool {
-	// Build a tmp file for the actual yaml.
-	actualResource := actual.(*resource)
-	actualYamlByteArray, _ := yaml.Marshal(actualResource.ko)
-	return testutil.IsYamlEqual(&expectation, &actualYamlByteArray)
 }
