@@ -329,7 +329,7 @@ ACK service controllers can manage resources in different AWS accounts. To enabl
 3. Create a ConfigMap to map AWS accounts with the Role ARNs that needs to be assumed
 3. Annotate namespaces with AWS Account IDs
 
-For detailed information about how ACK service controllers manage resource in multiple AWS accounts, please refer to [CARM](https://github.com/aws/aws-controllers-k8s/blob/main/docs/design/proposals/carm/cross-account-resource-management.md) design document.
+For detailed informations about how ACK service controllers manage resource in multiple AWS accounts, please refer to [CARM](https://github.com/aws/aws-controllers-k8s/blob/main/docs/design/proposals/carm/cross-account-resource-management.md) design document.
 
 #### 6.1 Setting up AWS accounts
 
