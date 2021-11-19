@@ -81,6 +81,16 @@ tests:
         invoke: ReadOne
         expect:
           latest_state: "v1alpha1/readone/observed/creating_after_describe.yaml"
+      - name: "ReadOne=LateInitialize"
+        description: "Testing late initialize after created, should expect no diff since there is nothing to late initialize"
+        given:
+          desired_state: "v1alpha1/readone/observed/creating_after_describe.yaml"
+          svc_api:
+            - operation: DescribeNotebookInstanceLifecycleConfigWithContext
+              output_fixture: "sdkapi/describe/success_describe.json"
+        invoke: LateInitialize
+        expect:
+          latest_state: "v1alpha1/readone/observed/creating_after_describe.yaml"
   - name: "Notebook instance lifecycle config update tests"
     description: "Testing the Update operation"
     scenarios:

@@ -70,6 +70,16 @@
         invoke: ReadOne
         expect:
           latest_state: "v1alpha1/readone/desired/right_after_create.yaml"
+      - name: "ReadOne=LateInitialize"
+        description: "Testing late initialize after created, should expect no diff since there is nothing to late initialize"
+        given:
+          desired_state: "v1alpha1/readone/desired/right_after_create.yaml"
+          svc_api:
+            - operation: DescribeEndpointConfigWithContext
+              output_fixture: "sdkapi/describe/success_describe.json"
+        invoke: LateInitialize
+        expect:
+          latest_state: "v1alpha1/readone/desired/right_after_create.yaml"
       - name: "ReadOne=SuccessClearsConditions"
         description: "Testing a successful reconciliation clears conditions if terminal/recoverable condition were already set to true"
         given:

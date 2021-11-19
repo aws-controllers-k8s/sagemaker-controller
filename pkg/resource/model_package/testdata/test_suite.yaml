@@ -123,6 +123,16 @@
         invoke: ReadOne
         expect:
           latest_state: "v1alpha1/readone/observed/created.yaml"
+      - name: "ReadOne=LateInitialize"
+        description: "Verifies that LateInitialize condition is set as successful"
+        given:
+          desired_state: "v1alpha1/create/observed/success_after_create_versioned.yaml"
+          svc_api:
+            - operation: DescribeModelPackageWithContext
+              output_fixture: "sdkapi/describe/describe_variation_success.json"
+        invoke: LateInitialize
+        expect:
+          latest_state: "v1alpha1/readone/observed/late_initialize_versioned.yaml"
       - name: "ReadOne=AfterCreateVariation"
         description: "Testing readOne after create with different inputs, the status should have ARN."
         given:

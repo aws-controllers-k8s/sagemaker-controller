@@ -41,6 +41,17 @@ tests:
         expect:
           latest_state: "feature_group/v1alpha1/fg_creating_state.yaml"
           error: nil
+      - name: "ReadOne=LateInitialize"
+        description: "Verifies that LateInitialize condition is set as successful"
+        given:
+          desired_state: "feature_group/v1alpha1/fg_creating_state.yaml"
+          svc_api:
+            - operation: DescribeFeatureGroupWithContext
+              output_fixture: "feature_group/read_one/fg_creating.json"
+        invoke: LateInitialize
+        expect:
+          latest_state: "feature_group/v1alpha1/fg_late_initialize.yaml"
+          error: nil
       - name: "ReadOne=CreateFailed"
         description: "A feature group in the creating state which enters the create failed state will have the terminal condition set to True."
         given:
