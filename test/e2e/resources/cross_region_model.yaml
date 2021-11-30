@@ -1,0 +1,12 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: Model
+metadata:
+  name: $MODEL_NAME
+  annotations:
+    services.k8s.aws/region: $REGION
+spec:
+  modelName: $MODEL_NAME
+  primaryContainer:
+    containerHostname: xgboost
+    image: $XGBOOST_V1_IMAGE_URI
+  executionRoleARN: $SAGEMAKER_EXECUTION_ROLE_ARN
