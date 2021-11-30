@@ -11,6 +11,7 @@
 # express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
+from acktest.aws.identity import get_region
 import pytest
 import logging
 import botocore
@@ -36,6 +37,17 @@ resource_directory = Path(__file__).parent / "resources"
 
 def sagemaker_client():
     return boto3.client("sagemaker")
+
+
+def cross_region_sagemaker_client():
+    return boto3.client("sagemaker", region_name=get_cross_region())
+
+
+def get_cross_region():
+    region = get_region()
+    if region != "us-west-2":
+        return "us-west-2"
+    return "us-east-1"
 
 
 def create_sagemaker_resource(
@@ -333,6 +345,16 @@ def get_sagemaker_model(model_name: str):
             f"SageMaker could not find a model with the name {model_name}. Error {error}"
         )
         return None
+
+
+def get_sagemaker_cross_region_model(model_name: str):
+    try:
+        return cross_region_sagemaker_client().describe_model(ModelName=model_name)
+    except botocore.exceptions.ClientError as error:
+        logging.error(
+            f"SageMaker could not find a model with the name {model_name}. Error {error}"
+        )
+    return None
 
 
 def get_sagemaker_endpoint_config(config_name: str):

@@ -14,9 +14,6 @@
 """
 
 import logging
-from acktest.aws.identity import get_region
-import boto3
-import botocore
 import pytest
 import time
 from typing import Dict
@@ -26,19 +23,11 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    assert_tags_in_sync,
+    get_cross_region,
+    get_sagemaker_cross_region_model,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES, XGBOOST_V1_IMAGE_URIS
 from e2e.common import config as cfg
-
-
-def get_cross_region():
-    region = get_region()
-    if region != "us-west-2":
-        region = "us-west-2"
-    else:
-        region = "us-east-1"
-    return region
 
 
 @pytest.fixture(scope="module")
@@ -69,29 +58,14 @@ def cross_region_model():
         assert deleted
 
 
-def get_sagemaker_cross_region_model(model_name, cross_region_sagemaker_client):
-    try:
-        return cross_region_sagemaker_client.describe_model(ModelName=model_name)
-    except botocore.exceptions.ClientError as error:
-        logging.error(
-            f"SageMaker could not find a model with the name {model_name}. Error {error}"
-        )
-        return None
-
-
 @service_marker
 class TestCrossRegionModel:
     def test_create_cross_region_model(self, cross_region_model):
         (reference, resource) = cross_region_model
         assert k8s.get_resource_exists(reference)
 
-        cross_region_sagemaker_client = boto3.client(
-            "sagemaker", region_name=get_cross_region()
-        )
         model_name = resource["spec"].get("modelName", None)
-        model_desc = get_sagemaker_cross_region_model(
-            model_name, cross_region_sagemaker_client
-        )
+        model_desc = get_sagemaker_cross_region_model(model_name)
         cross_region_model_arn = model_desc["ModelArn"]
         assert k8s.get_resource_arn(resource) == cross_region_model_arn
 
@@ -99,7 +73,4 @@ class TestCrossRegionModel:
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted
 
-        assert (
-            get_sagemaker_cross_region_model(model_name, cross_region_sagemaker_client)
-            is None
-        )
+        assert get_sagemaker_cross_region_model(model_name) is None
