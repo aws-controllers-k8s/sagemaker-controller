@@ -35,19 +35,9 @@ bootstrap_directory = Path(__file__).parent
 resource_directory = Path(__file__).parent / "resources"
 
 
-def sagemaker_client():
-    return boto3.client("sagemaker")
-
-
-def cross_region_sagemaker_client():
-    return boto3.client("sagemaker", region_name=get_cross_region())
-
-
-def get_cross_region():
-    region = get_region()
-    if region != "us-west-2":
-        return "us-west-2"
-    return "us-east-1"
+def sagemaker_client(region: str = None):
+    region = region or get_region()
+    return boto3.client("sagemaker", region_name=region)
 
 
 def create_sagemaker_resource(
@@ -337,24 +327,15 @@ def get_sagemaker_endpoint(endpoint_name: str):
         return None
 
 
-def get_sagemaker_model(model_name: str):
+def get_sagemaker_model(model_name: str, sm_client=None):
+    sm_client = sm_client or sagemaker_client()
     try:
-        return sagemaker_client().describe_model(ModelName=model_name)
+        return sm_client.describe_model(ModelName=model_name)
     except botocore.exceptions.ClientError as error:
         logging.error(
             f"SageMaker could not find a model with the name {model_name}. Error {error}"
         )
         return None
-
-
-def get_sagemaker_cross_region_model(model_name: str):
-    try:
-        return cross_region_sagemaker_client().describe_model(ModelName=model_name)
-    except botocore.exceptions.ClientError as error:
-        logging.error(
-            f"SageMaker could not find a model with the name {model_name}. Error {error}"
-        )
-    return None
 
 
 def get_sagemaker_endpoint_config(config_name: str):

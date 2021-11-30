@@ -14,6 +14,7 @@
 """
 
 import logging
+from acktest.aws.identity import get_region
 import pytest
 import time
 from typing import Dict
@@ -23,8 +24,8 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    get_cross_region,
-    get_sagemaker_cross_region_model,
+    get_sagemaker_model,
+    sagemaker_client,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES, XGBOOST_V1_IMAGE_URIS
 from e2e.common import config as cfg
@@ -58,14 +59,22 @@ def cross_region_model():
         assert deleted
 
 
+def get_cross_region():
+    region = get_region()
+    if region != "us-west-2":
+        return "us-west-2"
+    return "us-east-1"
+
+
 @service_marker
 class TestCrossRegionModel:
     def test_create_cross_region_model(self, cross_region_model):
         (reference, resource) = cross_region_model
         assert k8s.get_resource_exists(reference)
 
+        sm_client = sagemaker_client(get_cross_region())
         model_name = resource["spec"].get("modelName", None)
-        model_desc = get_sagemaker_cross_region_model(model_name)
+        model_desc = get_sagemaker_model(model_name, sm_client)
         cross_region_model_arn = model_desc["ModelArn"]
         assert k8s.get_resource_arn(resource) == cross_region_model_arn
 
@@ -73,4 +82,4 @@ class TestCrossRegionModel:
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)
         assert deleted
 
-        assert get_sagemaker_cross_region_model(model_name) is None
+        assert get_sagemaker_model(model_name, sm_client) is None
