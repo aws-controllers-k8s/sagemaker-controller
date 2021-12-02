@@ -119,8 +119,7 @@ status:
     arn: arn:aws:sagemaker:us-west-2:123456789012:hyper-parameter-tuning-job/unit-testing-hpo-job
     ownerAccountID: ""
   conditions:
-  - lastTransitionTime: null
-    message: HyperParameterTuningJob is in InProgress status.
+  - message: HyperParameterTuningJob is in InProgress status.
     status: "False"
     type: ACK.ResourceSynced
   - lastTransitionTime: "0001-01-01T00:00:00Z"

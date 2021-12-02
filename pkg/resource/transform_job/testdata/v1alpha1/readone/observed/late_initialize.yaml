@@ -37,8 +37,7 @@ status:
     arn: arn:aws:sagemaker:us-west-2:123456789012:transform-job/xgboost-transform-job
     ownerAccountID: ""
   conditions:
-  - lastTransitionTime: null
-    message: TransformJob is in InProgress status.
+  - message: TransformJob is in InProgress status.
     status: "False"
     type: ACK.ResourceSynced
   - lastTransitionTime: "0001-01-01T00:00:00Z"

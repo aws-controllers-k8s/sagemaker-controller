@@ -23,8 +23,7 @@ status:
     arn: arn:aws:sagemaker:us-west-2:123456789012:feature-group/unit-testing-feature-group
     ownerAccountID: ""
   conditions:
-  - lastTransitionTime: null
-    message: FeatureGroup is in Creating status.
+  - message: FeatureGroup is in Creating status.
     status: "False"
     type: ACK.ResourceSynced
   - lastTransitionTime: "0001-01-01T00:00:00Z"
