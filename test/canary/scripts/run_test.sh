@@ -85,5 +85,5 @@ pushd $E2E_DIR
 
   # run tests
   echo "Run Tests"
-  pytest -n 10 --dist loadfile --log-cli-level INFO -m canary
+  pytest -n 15 --dist loadfile --log-cli-level INFO -m canary
 popd
