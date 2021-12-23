@@ -91,7 +91,7 @@ class TestHPO:
         self,
         reference: k8s.CustomResourceReference,
         expected_status: str,
-        wait_periods: int = 45,
+        wait_periods: int = 90,
         period_length: int = 30,
     ):
         return wait_for_status(
@@ -106,7 +106,7 @@ class TestHPO:
         self,
         hpo_job_name,
         expected_status: str,
-        wait_periods: int = 45,
+        wait_periods: int = 90,
         period_length: int = 30,
     ):
         return wait_for_status(
