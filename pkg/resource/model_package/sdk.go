@@ -942,8 +942,6 @@ func (rm *resourceManager) newUpdateRequestPayload(
 	}
 	if r.ko.Status.ACKResourceMetadata != nil && r.ko.Status.ACKResourceMetadata.ARN != nil {
 		res.SetModelPackageArn(string(*r.ko.Status.ACKResourceMetadata.ARN))
-	} else {
-		res.SetModelPackageArn(rm.ARNFromName(*r.ko.Spec.ModelPackageName))
 	}
 
 	return res, nil
