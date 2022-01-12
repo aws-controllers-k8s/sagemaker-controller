@@ -21,76 +21,18 @@ import subprocess
 import random
 
 from acktest import resources
+from acktest.bootstrapping import Resources, BootstrapFailureException
+from acktest.bootstrapping.iam import Role
+from acktest.bootstrapping.s3 import Bucket
 from acktest.aws.identity import get_region, get_account_id
 from acktest.aws.s3 import duplicate_bucket_contents
 from e2e import bootstrap_directory
 from e2e.bootstrap_resources import TestBootstrapResources, SAGEMAKER_SOURCE_DATA_BUCKET
 
 
-def create_execution_role() -> str:
+def sync_data_bucket(bucket) -> str:
+    bucket_name = bucket.name
     region = get_region()
-    role_name = resources.random_suffix_name(f"ack-sagemaker-execution-role", 63)
-    iam = boto3.client("iam", region_name=region)
-
-    iam.create_role(
-        RoleName=role_name,
-        AssumeRolePolicyDocument=json.dumps(
-            {
-                "Version": "2012-10-17",
-                "Statement": [
-                    {
-                        "Effect": "Allow",
-                        "Principal": {"Service": "sagemaker.amazonaws.com"},
-                        "Action": "sts:AssumeRole",
-                    }
-                ],
-            }
-        ),
-        Description="SageMaker execution role for ACK integration and canary tests",
-    )
-
-    # random sleep to prevent throttling
-    time.sleep(random.randrange(1, 3))
-    iam.attach_role_policy(
-        RoleName=role_name,
-        PolicyArn="arn:aws:iam::aws:policy/AmazonSageMakerFullAccess",
-    )
-
-    # random sleep to prevent throttling
-    time.sleep(random.randrange(1, 3))
-    iam.attach_role_policy(
-        RoleName=role_name, PolicyArn="arn:aws:iam::aws:policy/AmazonS3FullAccess"
-    )
-
-    iam_resource = iam.get_role(RoleName=role_name)
-    resource_arn = iam_resource["Role"]["Arn"]
-
-    # There appears to be a delay in role availability after role creation
-    # resulting in failure that role is not present. So adding a delay
-    # to allow for the role to become available
-    time.sleep(10)
-    logging.info(f"Created SageMaker execution role {resource_arn}")
-
-    return resource_arn
-
-
-def create_data_bucket() -> str:
-    region = get_region()
-    account_id = get_account_id()
-    bucket_name = resources.random_suffix_name(
-        f"ack-data-bucket-{region}-{account_id}", 63
-    )
-
-    s3 = boto3.client("s3", region_name=region)
-    if region == "us-east-1":
-        s3.create_bucket(Bucket=bucket_name)
-    else:
-        s3.create_bucket(
-            Bucket=bucket_name, CreateBucketConfiguration={"LocationConstraint": region}
-        )
-
-    logging.info(f"Created SageMaker data bucket {bucket_name}")
-
     s3_resource = boto3.resource("s3", region_name=region)
 
     source_bucket = s3_resource.Bucket(SAGEMAKER_SOURCE_DATA_BUCKET)
@@ -122,18 +64,35 @@ def create_data_bucket() -> str:
 
     logging.info(f"Synced data bucket")
 
-    return bucket_name
+    return bucket
 
 
-def service_bootstrap() -> dict:
+def service_bootstrap() -> Resources:
     logging.getLogger().setLevel(logging.INFO)
+    region = get_region()
+    account_id = get_account_id()
+    bucket_name = f"ack-data-bucket-{region}-{account_id}"
 
-    return TestBootstrapResources(
-        create_data_bucket(), create_execution_role(),
-    ).__dict__
+    resources = TestBootstrapResources(
+        DataBucket=Bucket(bucket_name),
+        ExecutionRole=Role(
+            "ack-sagemaker-execution-role",
+            "sagemaker.amazonaws.com",
+            managed_policies=[
+                "arn:aws:iam::aws:policy/AmazonSageMakerFullAccess",
+                "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+            ],
+        ),
+    )
+    try:
+        resources.bootstrap()
+        sync_data_bucket(resources.DataBucket)
+    except BootstrapFailureException as ex:
+        exit(254)
+    return resources
 
 
 if __name__ == "__main__":
     config = service_bootstrap()
     # Write config to current directory by default
-    resources.write_bootstrap_config(config, bootstrap_directory)
+    config.serialize(bootstrap_directory)
