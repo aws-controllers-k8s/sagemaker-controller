@@ -15,27 +15,30 @@ for them.
 """
 
 from dataclasses import dataclass
-from acktest.resources import read_bootstrap_config
+from acktest.bootstrapping import Resources
+from acktest.bootstrapping.iam import Role
+from acktest.bootstrapping.s3 import Bucket
 from e2e import bootstrap_directory
 
 SAGEMAKER_SOURCE_DATA_BUCKET = "source-data-bucket-592697580195-us-west-2"
 
 
 @dataclass
-class TestBootstrapResources:
-    DataBucketName: str
-    ExecutionRoleARN: str
+class TestBootstrapResources(Resources):
+    DataBucket: Bucket
+    ExecutionRole: Role
 
 
 _bootstrap_resources = None
 
 
-def get_bootstrap_resources(bootstrap_file_name: str = "bootstrap.yaml"):
+def get_bootstrap_resources(
+    bootstrap_file_name: str = "bootstrap.pkl",
+) -> TestBootstrapResources:
+    global _bootstrap_resources
     global _bootstrap_resources
     if _bootstrap_resources is None:
-        _bootstrap_resources = TestBootstrapResources(
-            **read_bootstrap_config(
-                bootstrap_directory, bootstrap_file_name=bootstrap_file_name
-            ),
+        _bootstrap_resources = TestBootstrapResources.deserialize(
+            bootstrap_directory, bootstrap_file_name=bootstrap_file_name
         )
     return _bootstrap_resources
