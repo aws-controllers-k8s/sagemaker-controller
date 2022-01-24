@@ -280,7 +280,7 @@ def get_training_resource_status(reference: k8s.CustomResourceReference):
 def wait_resource_training_status(
     reference: k8s.CustomResourceReference,
     expected_status: str,
-    wait_periods: int = 30,
+    wait_periods: int = 60,
     period_length: int = 30,
 ):
     return wait_for_status(
@@ -295,7 +295,7 @@ def wait_resource_training_status(
 def wait_sagemaker_training_status(
     training_job_name,
     expected_status: str,
-    wait_periods: int = 30,
+    wait_periods: int = 60,
     period_length: int = 30,
 ):
     return wait_for_status(

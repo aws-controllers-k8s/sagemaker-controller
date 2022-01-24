@@ -91,7 +91,7 @@ class TestProcessingJob:
         self,
         reference: k8s.CustomResourceReference,
         expected_status: str,
-        wait_periods: int = 30,
+        wait_periods: int = 60,
         period_length: int = 30,
     ):
         return wait_for_status(
@@ -106,7 +106,7 @@ class TestProcessingJob:
         self,
         processing_job_name,
         expected_status: str,
-        wait_periods: int = 30,
+        wait_periods: int = 60,
         period_length: int = 30,
     ):
         return wait_for_status(
