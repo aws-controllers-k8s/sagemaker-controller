@@ -27,7 +27,9 @@ from e2e import (
     sagemaker_client,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
+from flaky import flaky
 import random
+
 
 DELETE_WAIT_PERIOD = 16
 DELETE_WAIT_LENGTH = 30
@@ -84,6 +86,7 @@ def get_notebook_instance_resource_status(reference: k8s.CustomResourceReference
     return resource["status"]["notebookInstanceStatus"]
 
 
+@flaky
 @pytest.mark.canary
 @service_marker
 class TestNotebookInstance:
