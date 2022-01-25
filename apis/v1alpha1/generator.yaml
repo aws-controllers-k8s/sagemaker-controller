@@ -505,6 +505,8 @@ resources:
         template_path: model_package/set_resource_name_as_arn.go.tpl
       sdk_update_pre_build_request:
         template_path: common/sdk_update_pre_build_request.go.tpl
+      sdk_update_post_set_output:
+        code: rm.customSetOutput(&resource{ko})
     fields:
       ModelPackageStatus:
         is_read_only: true
