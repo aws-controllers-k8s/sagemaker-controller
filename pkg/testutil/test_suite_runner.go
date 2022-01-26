@@ -108,6 +108,8 @@ func (runner *TestSuiteRunner) runTestScenario(t *testing.T, scenarioName string
 		actual, err = rm.Update(context.Background(), fixtureCxt.desired, fixtureCxt.latest, delta)
 	case "Delete":
 		actual, err = rm.Delete(context.Background(), fixtureCxt.desired)
+	case "LateInitialize":
+		actual, err = rm.LateInitialize(context.Background(), fixtureCxt.desired)
 	default:
 		panic(errors.New(fmt.Sprintf("unit under test: %s not supported", unitUnderTest)))
 	}

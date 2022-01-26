@@ -81,6 +81,16 @@ tests:
         invoke: ReadOne
         expect:
           latest_state: "v1alpha1/readone/observed/created.yaml"
+      - name: "ReadOne=LateInitialize"
+        description: "Verifies that LateInitialize condition is set as successful"
+        given:
+          desired_state: "v1alpha1/readone/observed/created.yaml"
+          svc_api:
+            - operation: DescribeTransformJobWithContext
+              output_fixture: "sdkapi/describe/inprogress_describe.json"
+        invoke: LateInitialize
+        expect:
+          latest_state: "v1alpha1/readone/observed/late_initialize.yaml"
       - name: "ReadOne=AfterCompletion"
         description: "Testing readOne after transform job completes, the status should have ARN."
         given:
