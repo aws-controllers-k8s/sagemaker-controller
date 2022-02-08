@@ -267,6 +267,17 @@ func newResourceDelta(
 			}
 		}
 	}
+	if ackcompare.HasNilDifference(a.ko.Spec.RetryStrategy, b.ko.Spec.RetryStrategy) {
+		delta.Add("Spec.RetryStrategy", a.ko.Spec.RetryStrategy, b.ko.Spec.RetryStrategy)
+	} else if a.ko.Spec.RetryStrategy != nil && b.ko.Spec.RetryStrategy != nil {
+		if ackcompare.HasNilDifference(a.ko.Spec.RetryStrategy.MaximumRetryAttempts, b.ko.Spec.RetryStrategy.MaximumRetryAttempts) {
+			delta.Add("Spec.RetryStrategy.MaximumRetryAttempts", a.ko.Spec.RetryStrategy.MaximumRetryAttempts, b.ko.Spec.RetryStrategy.MaximumRetryAttempts)
+		} else if a.ko.Spec.RetryStrategy.MaximumRetryAttempts != nil && b.ko.Spec.RetryStrategy.MaximumRetryAttempts != nil {
+			if *a.ko.Spec.RetryStrategy.MaximumRetryAttempts != *b.ko.Spec.RetryStrategy.MaximumRetryAttempts {
+				delta.Add("Spec.RetryStrategy.MaximumRetryAttempts", a.ko.Spec.RetryStrategy.MaximumRetryAttempts, b.ko.Spec.RetryStrategy.MaximumRetryAttempts)
+			}
+		}
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.RoleARN, b.ko.Spec.RoleARN) {
 		delta.Add("Spec.RoleARN", a.ko.Spec.RoleARN, b.ko.Spec.RoleARN)
 	} else if a.ko.Spec.RoleARN != nil && b.ko.Spec.RoleARN != nil {

@@ -144,6 +144,11 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Status.NotebookInstanceStatus = nil
 	}
+	if resp.PlatformIdentifier != nil {
+		ko.Spec.PlatformIdentifier = resp.PlatformIdentifier
+	} else {
+		ko.Spec.PlatformIdentifier = nil
+	}
 	if resp.RoleArn != nil {
 		ko.Spec.RoleARN = resp.RoleArn
 	} else {
@@ -296,6 +301,9 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.NotebookInstanceName != nil {
 		res.SetNotebookInstanceName(*r.ko.Spec.NotebookInstanceName)
 	}
+	if r.ko.Spec.PlatformIdentifier != nil {
+		res.SetPlatformIdentifier(*r.ko.Spec.PlatformIdentifier)
+	}
 	if r.ko.Spec.RoleARN != nil {
 		res.SetRoleArn(*r.ko.Spec.RoleARN)
 	}
@@ -303,30 +311,30 @@ func (rm *resourceManager) newCreateRequestPayload(
 		res.SetRootAccess(*r.ko.Spec.RootAccess)
 	}
 	if r.ko.Spec.SecurityGroupIDs != nil {
-		f10 := []*string{}
-		for _, f10iter := range r.ko.Spec.SecurityGroupIDs {
-			var f10elem string
-			f10elem = *f10iter
-			f10 = append(f10, &f10elem)
+		f11 := []*string{}
+		for _, f11iter := range r.ko.Spec.SecurityGroupIDs {
+			var f11elem string
+			f11elem = *f11iter
+			f11 = append(f11, &f11elem)
 		}
-		res.SetSecurityGroupIds(f10)
+		res.SetSecurityGroupIds(f11)
 	}
 	if r.ko.Spec.SubnetID != nil {
 		res.SetSubnetId(*r.ko.Spec.SubnetID)
 	}
 	if r.ko.Spec.Tags != nil {
-		f12 := []*svcsdk.Tag{}
-		for _, f12iter := range r.ko.Spec.Tags {
-			f12elem := &svcsdk.Tag{}
-			if f12iter.Key != nil {
-				f12elem.SetKey(*f12iter.Key)
+		f13 := []*svcsdk.Tag{}
+		for _, f13iter := range r.ko.Spec.Tags {
+			f13elem := &svcsdk.Tag{}
+			if f13iter.Key != nil {
+				f13elem.SetKey(*f13iter.Key)
 			}
-			if f12iter.Value != nil {
-				f12elem.SetValue(*f12iter.Value)
+			if f13iter.Value != nil {
+				f13elem.SetValue(*f13iter.Value)
 			}
-			f12 = append(f12, f12elem)
+			f13 = append(f13, f13elem)
 		}
-		res.SetTags(f12)
+		res.SetTags(f13)
 	}
 	if r.ko.Spec.VolumeSizeInGB != nil {
 		res.SetVolumeSizeInGB(*r.ko.Spec.VolumeSizeInGB)

@@ -22,14 +22,19 @@ import (
 
 // EndpointConfigSpec defines the desired state of EndpointConfig.
 type EndpointConfigSpec struct {
+	// Specifies configuration for how an endpoint performs asynchronous inference.
+	// This is a required field in order for your Endpoint to be invoked using InvokeEndpointAsync
+	// (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpoint.html).
+	AsyncInferenceConfig *AsyncInferenceConfig `json:"asyncInferenceConfig,omitempty"`
+
 	DataCaptureConfig *DataCaptureConfig `json:"dataCaptureConfig,omitempty"`
 	// The name of the endpoint configuration. You specify this name in a CreateEndpoint
 	// request.
 	// +kubebuilder:validation:Required
 	EndpointConfigName *string `json:"endpointConfigName"`
-	// The Amazon Resource Name (ARN) of a AWS Key Management Service key that Amazon
-	// SageMaker uses to encrypt data on the storage volume attached to the ML compute
-	// instance that hosts the endpoint.
+	// The Amazon Resource Name (ARN) of a Amazon Web Services Key Management Service
+	// key that Amazon SageMaker uses to encrypt data on the storage volume attached
+	// to the ML compute instance that hosts the endpoint.
 	//
 	// The KmsKeyId can be any of the following formats:
 	//
@@ -43,7 +48,8 @@ type EndpointConfigSpec struct {
 	//
 	// The KMS key policy must grant permission to the IAM role that you specify
 	// in your CreateEndpoint, UpdateEndpoint requests. For more information, refer
-	// to the AWS Key Management Service section Using Key Policies in AWS KMS (https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html)
+	// to the Amazon Web Services Key Management Service section Using Key Policies
+	// in Amazon Web Services KMS (https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html)
 	//
 	// Certain Nitro-based instances include local storage, dependent on the instance
 	// type. Local storage volumes are encrypted using a hardware module on the
@@ -64,9 +70,10 @@ type EndpointConfigSpec struct {
 	// host at this endpoint.
 	// +kubebuilder:validation:Required
 	ProductionVariants []*ProductionVariant `json:"productionVariants"`
-	// An array of key-value pairs. You can use tags to categorize your AWS resources
-	// in different ways, for example, by purpose, owner, or environment. For more
-	// information, see Tagging AWS Resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+	// An array of key-value pairs. You can use tags to categorize your Amazon Web
+	// Services resources in different ways, for example, by purpose, owner, or
+	// environment. For more information, see Tagging Amazon Web Services Resources
+	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
 	Tags []*Tag `json:"tags,omitempty"`
 }
 

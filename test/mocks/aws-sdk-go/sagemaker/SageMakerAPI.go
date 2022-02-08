@@ -250,6 +250,84 @@ func (_m *SageMakerAPI) AssociateTrialComponentWithContext(_a0 context.Context, 
 	return r0, r1
 }
 
+// BatchDescribeModelPackage provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) BatchDescribeModelPackage(_a0 *sagemaker.BatchDescribeModelPackageInput) (*sagemaker.BatchDescribeModelPackageOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.BatchDescribeModelPackageOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.BatchDescribeModelPackageInput) *sagemaker.BatchDescribeModelPackageOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.BatchDescribeModelPackageOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.BatchDescribeModelPackageInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// BatchDescribeModelPackageRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) BatchDescribeModelPackageRequest(_a0 *sagemaker.BatchDescribeModelPackageInput) (*request.Request, *sagemaker.BatchDescribeModelPackageOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.BatchDescribeModelPackageInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.BatchDescribeModelPackageOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.BatchDescribeModelPackageInput) *sagemaker.BatchDescribeModelPackageOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.BatchDescribeModelPackageOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// BatchDescribeModelPackageWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) BatchDescribeModelPackageWithContext(_a0 context.Context, _a1 *sagemaker.BatchDescribeModelPackageInput, _a2 ...request.Option) (*sagemaker.BatchDescribeModelPackageOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.BatchDescribeModelPackageOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.BatchDescribeModelPackageInput, ...request.Option) *sagemaker.BatchDescribeModelPackageOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.BatchDescribeModelPackageOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.BatchDescribeModelPackageInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // CreateAction provides a mock function with given fields: _a0
 func (_m *SageMakerAPI) CreateAction(_a0 *sagemaker.CreateActionInput) (*sagemaker.CreateActionOutput, error) {
 	ret := _m.Called(_a0)
@@ -3128,6 +3206,84 @@ func (_m *SageMakerAPI) CreateProjectWithContext(_a0 context.Context, _a1 *sagem
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.CreateProjectInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// CreateStudioLifecycleConfig provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) CreateStudioLifecycleConfig(_a0 *sagemaker.CreateStudioLifecycleConfigInput) (*sagemaker.CreateStudioLifecycleConfigOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.CreateStudioLifecycleConfigOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.CreateStudioLifecycleConfigInput) *sagemaker.CreateStudioLifecycleConfigOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.CreateStudioLifecycleConfigOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.CreateStudioLifecycleConfigInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// CreateStudioLifecycleConfigRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) CreateStudioLifecycleConfigRequest(_a0 *sagemaker.CreateStudioLifecycleConfigInput) (*request.Request, *sagemaker.CreateStudioLifecycleConfigOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.CreateStudioLifecycleConfigInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.CreateStudioLifecycleConfigOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.CreateStudioLifecycleConfigInput) *sagemaker.CreateStudioLifecycleConfigOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.CreateStudioLifecycleConfigOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// CreateStudioLifecycleConfigWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) CreateStudioLifecycleConfigWithContext(_a0 context.Context, _a1 *sagemaker.CreateStudioLifecycleConfigInput, _a2 ...request.Option) (*sagemaker.CreateStudioLifecycleConfigOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.CreateStudioLifecycleConfigOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.CreateStudioLifecycleConfigInput, ...request.Option) *sagemaker.CreateStudioLifecycleConfigOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.CreateStudioLifecycleConfigOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.CreateStudioLifecycleConfigInput, ...request.Option) error); ok {
 		r1 = rf(_a0, _a1, _a2...)
 	} else {
 		r1 = ret.Error(1)
@@ -6092,6 +6248,84 @@ func (_m *SageMakerAPI) DeleteProjectWithContext(_a0 context.Context, _a1 *sagem
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.DeleteProjectInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// DeleteStudioLifecycleConfig provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) DeleteStudioLifecycleConfig(_a0 *sagemaker.DeleteStudioLifecycleConfigInput) (*sagemaker.DeleteStudioLifecycleConfigOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.DeleteStudioLifecycleConfigOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.DeleteStudioLifecycleConfigInput) *sagemaker.DeleteStudioLifecycleConfigOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.DeleteStudioLifecycleConfigOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.DeleteStudioLifecycleConfigInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// DeleteStudioLifecycleConfigRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) DeleteStudioLifecycleConfigRequest(_a0 *sagemaker.DeleteStudioLifecycleConfigInput) (*request.Request, *sagemaker.DeleteStudioLifecycleConfigOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.DeleteStudioLifecycleConfigInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.DeleteStudioLifecycleConfigOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.DeleteStudioLifecycleConfigInput) *sagemaker.DeleteStudioLifecycleConfigOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.DeleteStudioLifecycleConfigOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// DeleteStudioLifecycleConfigWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) DeleteStudioLifecycleConfigWithContext(_a0 context.Context, _a1 *sagemaker.DeleteStudioLifecycleConfigInput, _a2 ...request.Option) (*sagemaker.DeleteStudioLifecycleConfigOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.DeleteStudioLifecycleConfigOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.DeleteStudioLifecycleConfigInput, ...request.Option) *sagemaker.DeleteStudioLifecycleConfigOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.DeleteStudioLifecycleConfigOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.DeleteStudioLifecycleConfigInput, ...request.Option) error); ok {
 		r1 = rf(_a0, _a1, _a2...)
 	} else {
 		r1 = ret.Error(1)
@@ -9602,6 +9836,84 @@ func (_m *SageMakerAPI) DescribeProjectWithContext(_a0 context.Context, _a1 *sag
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.DescribeProjectInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// DescribeStudioLifecycleConfig provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) DescribeStudioLifecycleConfig(_a0 *sagemaker.DescribeStudioLifecycleConfigInput) (*sagemaker.DescribeStudioLifecycleConfigOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.DescribeStudioLifecycleConfigOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.DescribeStudioLifecycleConfigInput) *sagemaker.DescribeStudioLifecycleConfigOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.DescribeStudioLifecycleConfigOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.DescribeStudioLifecycleConfigInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// DescribeStudioLifecycleConfigRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) DescribeStudioLifecycleConfigRequest(_a0 *sagemaker.DescribeStudioLifecycleConfigInput) (*request.Request, *sagemaker.DescribeStudioLifecycleConfigOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.DescribeStudioLifecycleConfigInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.DescribeStudioLifecycleConfigOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.DescribeStudioLifecycleConfigInput) *sagemaker.DescribeStudioLifecycleConfigOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.DescribeStudioLifecycleConfigOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// DescribeStudioLifecycleConfigWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) DescribeStudioLifecycleConfigWithContext(_a0 context.Context, _a1 *sagemaker.DescribeStudioLifecycleConfigInput, _a2 ...request.Option) (*sagemaker.DescribeStudioLifecycleConfigOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.DescribeStudioLifecycleConfigOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.DescribeStudioLifecycleConfigInput, ...request.Option) *sagemaker.DescribeStudioLifecycleConfigOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.DescribeStudioLifecycleConfigOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.DescribeStudioLifecycleConfigInput, ...request.Option) error); ok {
 		r1 = rf(_a0, _a1, _a2...)
 	} else {
 		r1 = ret.Error(1)
@@ -15639,6 +15951,119 @@ func (_m *SageMakerAPI) ListProjectsWithContext(_a0 context.Context, _a1 *sagema
 	return r0, r1
 }
 
+// ListStudioLifecycleConfigs provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) ListStudioLifecycleConfigs(_a0 *sagemaker.ListStudioLifecycleConfigsInput) (*sagemaker.ListStudioLifecycleConfigsOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.ListStudioLifecycleConfigsOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.ListStudioLifecycleConfigsInput) *sagemaker.ListStudioLifecycleConfigsOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.ListStudioLifecycleConfigsOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.ListStudioLifecycleConfigsInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ListStudioLifecycleConfigsPages provides a mock function with given fields: _a0, _a1
+func (_m *SageMakerAPI) ListStudioLifecycleConfigsPages(_a0 *sagemaker.ListStudioLifecycleConfigsInput, _a1 func(*sagemaker.ListStudioLifecycleConfigsOutput, bool) bool) error {
+	ret := _m.Called(_a0, _a1)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*sagemaker.ListStudioLifecycleConfigsInput, func(*sagemaker.ListStudioLifecycleConfigsOutput, bool) bool) error); ok {
+		r0 = rf(_a0, _a1)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// ListStudioLifecycleConfigsPagesWithContext provides a mock function with given fields: _a0, _a1, _a2, _a3
+func (_m *SageMakerAPI) ListStudioLifecycleConfigsPagesWithContext(_a0 context.Context, _a1 *sagemaker.ListStudioLifecycleConfigsInput, _a2 func(*sagemaker.ListStudioLifecycleConfigsOutput, bool) bool, _a3 ...request.Option) error {
+	_va := make([]interface{}, len(_a3))
+	for _i := range _a3 {
+		_va[_i] = _a3[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1, _a2)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.ListStudioLifecycleConfigsInput, func(*sagemaker.ListStudioLifecycleConfigsOutput, bool) bool, ...request.Option) error); ok {
+		r0 = rf(_a0, _a1, _a2, _a3...)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// ListStudioLifecycleConfigsRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) ListStudioLifecycleConfigsRequest(_a0 *sagemaker.ListStudioLifecycleConfigsInput) (*request.Request, *sagemaker.ListStudioLifecycleConfigsOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.ListStudioLifecycleConfigsInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.ListStudioLifecycleConfigsOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.ListStudioLifecycleConfigsInput) *sagemaker.ListStudioLifecycleConfigsOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.ListStudioLifecycleConfigsOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// ListStudioLifecycleConfigsWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) ListStudioLifecycleConfigsWithContext(_a0 context.Context, _a1 *sagemaker.ListStudioLifecycleConfigsInput, _a2 ...request.Option) (*sagemaker.ListStudioLifecycleConfigsOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.ListStudioLifecycleConfigsOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.ListStudioLifecycleConfigsInput, ...request.Option) *sagemaker.ListStudioLifecycleConfigsOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.ListStudioLifecycleConfigsOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.ListStudioLifecycleConfigsInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // ListSubscribedWorkteams provides a mock function with given fields: _a0
 func (_m *SageMakerAPI) ListSubscribedWorkteams(_a0 *sagemaker.ListSubscribedWorkteamsInput) (*sagemaker.ListSubscribedWorkteamsOutput, error) {
 	ret := _m.Called(_a0)
@@ -17003,6 +17428,84 @@ func (_m *SageMakerAPI) RenderUiTemplateWithContext(_a0 context.Context, _a1 *sa
 	return r0, r1
 }
 
+// RetryPipelineExecution provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) RetryPipelineExecution(_a0 *sagemaker.RetryPipelineExecutionInput) (*sagemaker.RetryPipelineExecutionOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.RetryPipelineExecutionOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.RetryPipelineExecutionInput) *sagemaker.RetryPipelineExecutionOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.RetryPipelineExecutionOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.RetryPipelineExecutionInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// RetryPipelineExecutionRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) RetryPipelineExecutionRequest(_a0 *sagemaker.RetryPipelineExecutionInput) (*request.Request, *sagemaker.RetryPipelineExecutionOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.RetryPipelineExecutionInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.RetryPipelineExecutionOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.RetryPipelineExecutionInput) *sagemaker.RetryPipelineExecutionOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.RetryPipelineExecutionOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// RetryPipelineExecutionWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) RetryPipelineExecutionWithContext(_a0 context.Context, _a1 *sagemaker.RetryPipelineExecutionInput, _a2 ...request.Option) (*sagemaker.RetryPipelineExecutionOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.RetryPipelineExecutionOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.RetryPipelineExecutionInput, ...request.Option) *sagemaker.RetryPipelineExecutionOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.RetryPipelineExecutionOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.RetryPipelineExecutionInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Search provides a mock function with given fields: _a0
 func (_m *SageMakerAPI) Search(_a0 *sagemaker.SearchInput) (*sagemaker.SearchOutput, error) {
 	ret := _m.Called(_a0)
@@ -17108,6 +17611,162 @@ func (_m *SageMakerAPI) SearchWithContext(_a0 context.Context, _a1 *sagemaker.Se
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.SearchInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// SendPipelineExecutionStepFailure provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) SendPipelineExecutionStepFailure(_a0 *sagemaker.SendPipelineExecutionStepFailureInput) (*sagemaker.SendPipelineExecutionStepFailureOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.SendPipelineExecutionStepFailureOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.SendPipelineExecutionStepFailureInput) *sagemaker.SendPipelineExecutionStepFailureOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.SendPipelineExecutionStepFailureOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.SendPipelineExecutionStepFailureInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// SendPipelineExecutionStepFailureRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) SendPipelineExecutionStepFailureRequest(_a0 *sagemaker.SendPipelineExecutionStepFailureInput) (*request.Request, *sagemaker.SendPipelineExecutionStepFailureOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.SendPipelineExecutionStepFailureInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.SendPipelineExecutionStepFailureOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.SendPipelineExecutionStepFailureInput) *sagemaker.SendPipelineExecutionStepFailureOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.SendPipelineExecutionStepFailureOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// SendPipelineExecutionStepFailureWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) SendPipelineExecutionStepFailureWithContext(_a0 context.Context, _a1 *sagemaker.SendPipelineExecutionStepFailureInput, _a2 ...request.Option) (*sagemaker.SendPipelineExecutionStepFailureOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.SendPipelineExecutionStepFailureOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.SendPipelineExecutionStepFailureInput, ...request.Option) *sagemaker.SendPipelineExecutionStepFailureOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.SendPipelineExecutionStepFailureOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.SendPipelineExecutionStepFailureInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// SendPipelineExecutionStepSuccess provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) SendPipelineExecutionStepSuccess(_a0 *sagemaker.SendPipelineExecutionStepSuccessInput) (*sagemaker.SendPipelineExecutionStepSuccessOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.SendPipelineExecutionStepSuccessOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.SendPipelineExecutionStepSuccessInput) *sagemaker.SendPipelineExecutionStepSuccessOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.SendPipelineExecutionStepSuccessOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.SendPipelineExecutionStepSuccessInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// SendPipelineExecutionStepSuccessRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) SendPipelineExecutionStepSuccessRequest(_a0 *sagemaker.SendPipelineExecutionStepSuccessInput) (*request.Request, *sagemaker.SendPipelineExecutionStepSuccessOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.SendPipelineExecutionStepSuccessInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.SendPipelineExecutionStepSuccessOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.SendPipelineExecutionStepSuccessInput) *sagemaker.SendPipelineExecutionStepSuccessOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.SendPipelineExecutionStepSuccessOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// SendPipelineExecutionStepSuccessWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) SendPipelineExecutionStepSuccessWithContext(_a0 context.Context, _a1 *sagemaker.SendPipelineExecutionStepSuccessInput, _a2 ...request.Option) (*sagemaker.SendPipelineExecutionStepSuccessOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.SendPipelineExecutionStepSuccessOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.SendPipelineExecutionStepSuccessInput, ...request.Option) *sagemaker.SendPipelineExecutionStepSuccessOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.SendPipelineExecutionStepSuccessOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.SendPipelineExecutionStepSuccessInput, ...request.Option) error); ok {
 		r1 = rf(_a0, _a1, _a2...)
 	} else {
 		r1 = ret.Error(1)
@@ -19612,6 +20271,84 @@ func (_m *SageMakerAPI) UpdatePipelineWithContext(_a0 context.Context, _a1 *sage
 	return r0, r1
 }
 
+// UpdateProject provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) UpdateProject(_a0 *sagemaker.UpdateProjectInput) (*sagemaker.UpdateProjectOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.UpdateProjectOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.UpdateProjectInput) *sagemaker.UpdateProjectOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.UpdateProjectOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.UpdateProjectInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdateProjectRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) UpdateProjectRequest(_a0 *sagemaker.UpdateProjectInput) (*request.Request, *sagemaker.UpdateProjectOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.UpdateProjectInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.UpdateProjectOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.UpdateProjectInput) *sagemaker.UpdateProjectOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.UpdateProjectOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// UpdateProjectWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) UpdateProjectWithContext(_a0 context.Context, _a1 *sagemaker.UpdateProjectInput, _a2 ...request.Option) (*sagemaker.UpdateProjectOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.UpdateProjectOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.UpdateProjectInput, ...request.Option) *sagemaker.UpdateProjectOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.UpdateProjectOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.UpdateProjectInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // UpdateTrainingJob provides a mock function with given fields: _a0
 func (_m *SageMakerAPI) UpdateTrainingJob(_a0 *sagemaker.UpdateTrainingJobInput) (*sagemaker.UpdateTrainingJobOutput, error) {
 	ret := _m.Called(_a0)
@@ -20142,6 +20879,181 @@ func (_m *SageMakerAPI) WaitUntilEndpointInServiceWithContext(_a0 context.Contex
 
 	var r0 error
 	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.DescribeEndpointInput, ...request.WaiterOption) error); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// WaitUntilImageCreated provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) WaitUntilImageCreated(_a0 *sagemaker.DescribeImageInput) error {
+	ret := _m.Called(_a0)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*sagemaker.DescribeImageInput) error); ok {
+		r0 = rf(_a0)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// WaitUntilImageCreatedWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) WaitUntilImageCreatedWithContext(_a0 context.Context, _a1 *sagemaker.DescribeImageInput, _a2 ...request.WaiterOption) error {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.DescribeImageInput, ...request.WaiterOption) error); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// WaitUntilImageDeleted provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) WaitUntilImageDeleted(_a0 *sagemaker.DescribeImageInput) error {
+	ret := _m.Called(_a0)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*sagemaker.DescribeImageInput) error); ok {
+		r0 = rf(_a0)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// WaitUntilImageDeletedWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) WaitUntilImageDeletedWithContext(_a0 context.Context, _a1 *sagemaker.DescribeImageInput, _a2 ...request.WaiterOption) error {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.DescribeImageInput, ...request.WaiterOption) error); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// WaitUntilImageUpdated provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) WaitUntilImageUpdated(_a0 *sagemaker.DescribeImageInput) error {
+	ret := _m.Called(_a0)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*sagemaker.DescribeImageInput) error); ok {
+		r0 = rf(_a0)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// WaitUntilImageUpdatedWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) WaitUntilImageUpdatedWithContext(_a0 context.Context, _a1 *sagemaker.DescribeImageInput, _a2 ...request.WaiterOption) error {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.DescribeImageInput, ...request.WaiterOption) error); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// WaitUntilImageVersionCreated provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) WaitUntilImageVersionCreated(_a0 *sagemaker.DescribeImageVersionInput) error {
+	ret := _m.Called(_a0)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*sagemaker.DescribeImageVersionInput) error); ok {
+		r0 = rf(_a0)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// WaitUntilImageVersionCreatedWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) WaitUntilImageVersionCreatedWithContext(_a0 context.Context, _a1 *sagemaker.DescribeImageVersionInput, _a2 ...request.WaiterOption) error {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.DescribeImageVersionInput, ...request.WaiterOption) error); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// WaitUntilImageVersionDeleted provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) WaitUntilImageVersionDeleted(_a0 *sagemaker.DescribeImageVersionInput) error {
+	ret := _m.Called(_a0)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*sagemaker.DescribeImageVersionInput) error); ok {
+		r0 = rf(_a0)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// WaitUntilImageVersionDeletedWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) WaitUntilImageVersionDeletedWithContext(_a0 context.Context, _a1 *sagemaker.DescribeImageVersionInput, _a2 ...request.WaiterOption) error {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.DescribeImageVersionInput, ...request.WaiterOption) error); ok {
 		r0 = rf(_a0, _a1, _a2...)
 	} else {
 		r0 = ret.Error(0)

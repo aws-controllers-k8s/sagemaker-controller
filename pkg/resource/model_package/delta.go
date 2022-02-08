@@ -63,6 +63,13 @@ func newResourceDelta(
 			delta.Add("Spec.ClientToken", a.ko.Spec.ClientToken, b.ko.Spec.ClientToken)
 		}
 	}
+	if ackcompare.HasNilDifference(a.ko.Spec.CustomerMetadataProperties, b.ko.Spec.CustomerMetadataProperties) {
+		delta.Add("Spec.CustomerMetadataProperties", a.ko.Spec.CustomerMetadataProperties, b.ko.Spec.CustomerMetadataProperties)
+	} else if a.ko.Spec.CustomerMetadataProperties != nil && b.ko.Spec.CustomerMetadataProperties != nil {
+		if !ackcompare.MapStringStringPEqual(a.ko.Spec.CustomerMetadataProperties, b.ko.Spec.CustomerMetadataProperties) {
+			delta.Add("Spec.CustomerMetadataProperties", a.ko.Spec.CustomerMetadataProperties, b.ko.Spec.CustomerMetadataProperties)
+		}
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.InferenceSpecification, b.ko.Spec.InferenceSpecification) {
 		delta.Add("Spec.InferenceSpecification", a.ko.Spec.InferenceSpecification, b.ko.Spec.InferenceSpecification)
 	} else if a.ko.Spec.InferenceSpecification != nil && b.ko.Spec.InferenceSpecification != nil {

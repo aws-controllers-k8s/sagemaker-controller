@@ -856,6 +856,7 @@ ignore:
       - PresignedNotebookInstanceUrl
       # - ProcessingJob
       - Project
+      - StudioLifecycleConfig
       # - TrainingJob
       # - TransformJob
       - TrialComponent
@@ -865,3 +866,5 @@ ignore:
       - Workteam
     operations:
       - UpdateTrainingJob
+    shape_names:
+      - RSessionAppSettings

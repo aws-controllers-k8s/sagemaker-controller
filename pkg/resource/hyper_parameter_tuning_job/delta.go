@@ -270,6 +270,17 @@ func newResourceDelta(
 				}
 			}
 		}
+		if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.RetryStrategy, b.ko.Spec.TrainingJobDefinition.RetryStrategy) {
+			delta.Add("Spec.TrainingJobDefinition.RetryStrategy", a.ko.Spec.TrainingJobDefinition.RetryStrategy, b.ko.Spec.TrainingJobDefinition.RetryStrategy)
+		} else if a.ko.Spec.TrainingJobDefinition.RetryStrategy != nil && b.ko.Spec.TrainingJobDefinition.RetryStrategy != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.RetryStrategy.MaximumRetryAttempts, b.ko.Spec.TrainingJobDefinition.RetryStrategy.MaximumRetryAttempts) {
+				delta.Add("Spec.TrainingJobDefinition.RetryStrategy.MaximumRetryAttempts", a.ko.Spec.TrainingJobDefinition.RetryStrategy.MaximumRetryAttempts, b.ko.Spec.TrainingJobDefinition.RetryStrategy.MaximumRetryAttempts)
+			} else if a.ko.Spec.TrainingJobDefinition.RetryStrategy.MaximumRetryAttempts != nil && b.ko.Spec.TrainingJobDefinition.RetryStrategy.MaximumRetryAttempts != nil {
+				if *a.ko.Spec.TrainingJobDefinition.RetryStrategy.MaximumRetryAttempts != *b.ko.Spec.TrainingJobDefinition.RetryStrategy.MaximumRetryAttempts {
+					delta.Add("Spec.TrainingJobDefinition.RetryStrategy.MaximumRetryAttempts", a.ko.Spec.TrainingJobDefinition.RetryStrategy.MaximumRetryAttempts, b.ko.Spec.TrainingJobDefinition.RetryStrategy.MaximumRetryAttempts)
+				}
+			}
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.RoleARN, b.ko.Spec.TrainingJobDefinition.RoleARN) {
 			delta.Add("Spec.TrainingJobDefinition.RoleARN", a.ko.Spec.TrainingJobDefinition.RoleARN, b.ko.Spec.TrainingJobDefinition.RoleARN)
 		} else if a.ko.Spec.TrainingJobDefinition.RoleARN != nil && b.ko.Spec.TrainingJobDefinition.RoleARN != nil {

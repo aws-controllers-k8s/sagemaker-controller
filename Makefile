@@ -30,7 +30,7 @@ test-cover: | mocks				## Run code tests with resources coverage
 	$(GOCOVER) -html=coverage.out -o coverage.html
 
 clean-mocks:	## Remove mocks directory
-	rm -r mocks
+	rm -r test/mocks
 
 install-mockery:
 	@test/scripts/install-mockery.sh
@@ -39,7 +39,7 @@ mocks: install-mockery ## Build mocks
 	go get -d $(AWS_SDK_GO_VERSIONED_PATH)
 	@echo "building mocks for $(SAGEMAKER_API_PATH) ... "
 	@pushd $(SAGEMAKER_API_PATH) 1>/dev/null; \
-	$(SERVICE_CONTROLLER_SRC_PATH)/bin/mockery --all --dir=. --output=$(SERVICE_CONTROLLER_SRC_PATH)/mocks/aws-sdk-go/sagemaker/ ; \
+	$(SERVICE_CONTROLLER_SRC_PATH)/test/bin/mockery --all --dir=. --output=$(SERVICE_CONTROLLER_SRC_PATH)/test/mocks/aws-sdk-go/sagemaker/ ; \
 	popd 1>/dev/null;
 	@echo "ok."
 

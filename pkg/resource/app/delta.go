@@ -72,6 +72,13 @@ func newResourceDelta(
 				delta.Add("Spec.ResourceSpec.InstanceType", a.ko.Spec.ResourceSpec.InstanceType, b.ko.Spec.ResourceSpec.InstanceType)
 			}
 		}
+		if ackcompare.HasNilDifference(a.ko.Spec.ResourceSpec.LifecycleConfigARN, b.ko.Spec.ResourceSpec.LifecycleConfigARN) {
+			delta.Add("Spec.ResourceSpec.LifecycleConfigARN", a.ko.Spec.ResourceSpec.LifecycleConfigARN, b.ko.Spec.ResourceSpec.LifecycleConfigARN)
+		} else if a.ko.Spec.ResourceSpec.LifecycleConfigARN != nil && b.ko.Spec.ResourceSpec.LifecycleConfigARN != nil {
+			if *a.ko.Spec.ResourceSpec.LifecycleConfigARN != *b.ko.Spec.ResourceSpec.LifecycleConfigARN {
+				delta.Add("Spec.ResourceSpec.LifecycleConfigARN", a.ko.Spec.ResourceSpec.LifecycleConfigARN, b.ko.Spec.ResourceSpec.LifecycleConfigARN)
+			}
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.ResourceSpec.SageMakerImageARN, b.ko.Spec.ResourceSpec.SageMakerImageARN) {
 			delta.Add("Spec.ResourceSpec.SageMakerImageARN", a.ko.Spec.ResourceSpec.SageMakerImageARN, b.ko.Spec.ResourceSpec.SageMakerImageARN)
 		} else if a.ko.Spec.ResourceSpec.SageMakerImageARN != nil && b.ko.Spec.ResourceSpec.SageMakerImageARN != nil {

@@ -48,6 +48,13 @@ func newResourceDelta(
 			delta.Add("Spec.AppNetworkAccessType", a.ko.Spec.AppNetworkAccessType, b.ko.Spec.AppNetworkAccessType)
 		}
 	}
+	if ackcompare.HasNilDifference(a.ko.Spec.AppSecurityGroupManagement, b.ko.Spec.AppSecurityGroupManagement) {
+		delta.Add("Spec.AppSecurityGroupManagement", a.ko.Spec.AppSecurityGroupManagement, b.ko.Spec.AppSecurityGroupManagement)
+	} else if a.ko.Spec.AppSecurityGroupManagement != nil && b.ko.Spec.AppSecurityGroupManagement != nil {
+		if *a.ko.Spec.AppSecurityGroupManagement != *b.ko.Spec.AppSecurityGroupManagement {
+			delta.Add("Spec.AppSecurityGroupManagement", a.ko.Spec.AppSecurityGroupManagement, b.ko.Spec.AppSecurityGroupManagement)
+		}
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.AuthMode, b.ko.Spec.AuthMode) {
 		delta.Add("Spec.AuthMode", a.ko.Spec.AuthMode, b.ko.Spec.AuthMode)
 	} else if a.ko.Spec.AuthMode != nil && b.ko.Spec.AuthMode != nil {
@@ -78,6 +85,13 @@ func newResourceDelta(
 						delta.Add("Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType", a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType, b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType)
 					}
 				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN, b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN) {
+					delta.Add("Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN", a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN, b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN)
+				} else if a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil && b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
+					if *a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN != *b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN {
+						delta.Add("Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN", a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN, b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN)
+					}
+				}
 				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN, b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN) {
 					delta.Add("Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN", a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN, b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN)
 				} else if a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN != nil && b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
@@ -92,6 +106,9 @@ func newResourceDelta(
 						delta.Add("Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN", a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN, b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN)
 					}
 				}
+			}
+			if !ackcompare.SliceStringPEqual(a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs, b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs) {
+				delta.Add("Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs", a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs, b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs)
 			}
 		}
 		if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings) {
@@ -110,6 +127,13 @@ func newResourceDelta(
 						delta.Add("Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.InstanceType", a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.InstanceType, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.InstanceType)
 					}
 				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigARN, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigARN) {
+					delta.Add("Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigARN", a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigARN, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigARN)
+				} else if a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil && b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
+					if *a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigARN != *b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigARN {
+						delta.Add("Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigARN", a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigARN, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigARN)
+					}
+				}
 				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN) {
 					delta.Add("Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN", a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN)
 				} else if a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN != nil && b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
@@ -123,6 +147,27 @@ func newResourceDelta(
 					if *a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != *b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionARN {
 						delta.Add("Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionARN", a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionARN, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionARN)
 					}
+				}
+			}
+			if !ackcompare.SliceStringPEqual(a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs) {
+				delta.Add("Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs", a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs)
+			}
+		}
+		if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings, b.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings) {
+			delta.Add("Spec.DefaultUserSettings.RStudioServerProAppSettings", a.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings, b.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings)
+		} else if a.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings != nil && b.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.AccessStatus, b.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.AccessStatus) {
+				delta.Add("Spec.DefaultUserSettings.RStudioServerProAppSettings.AccessStatus", a.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.AccessStatus, b.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.AccessStatus)
+			} else if a.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.AccessStatus != nil && b.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.AccessStatus != nil {
+				if *a.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.AccessStatus != *b.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.AccessStatus {
+					delta.Add("Spec.DefaultUserSettings.RStudioServerProAppSettings.AccessStatus", a.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.AccessStatus, b.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.AccessStatus)
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.UserGroup, b.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.UserGroup) {
+				delta.Add("Spec.DefaultUserSettings.RStudioServerProAppSettings.UserGroup", a.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.UserGroup, b.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.UserGroup)
+			} else if a.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.UserGroup != nil && b.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.UserGroup != nil {
+				if *a.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.UserGroup != *b.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.UserGroup {
+					delta.Add("Spec.DefaultUserSettings.RStudioServerProAppSettings.UserGroup", a.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.UserGroup, b.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.UserGroup)
 				}
 			}
 		}
@@ -167,6 +212,13 @@ func newResourceDelta(
 						delta.Add("Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.InstanceType", a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.InstanceType, b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.InstanceType)
 					}
 				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.LifecycleConfigARN, b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.LifecycleConfigARN) {
+					delta.Add("Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.LifecycleConfigARN", a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.LifecycleConfigARN, b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.LifecycleConfigARN)
+				} else if a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil && b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
+					if *a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.LifecycleConfigARN != *b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.LifecycleConfigARN {
+						delta.Add("Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.LifecycleConfigARN", a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.LifecycleConfigARN, b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.LifecycleConfigARN)
+					}
+				}
 				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageARN, b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageARN) {
 					delta.Add("Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageARN", a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageARN, b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageARN)
 				} else if a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageARN != nil && b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
@@ -189,6 +241,70 @@ func newResourceDelta(
 	} else if a.ko.Spec.DomainName != nil && b.ko.Spec.DomainName != nil {
 		if *a.ko.Spec.DomainName != *b.ko.Spec.DomainName {
 			delta.Add("Spec.DomainName", a.ko.Spec.DomainName, b.ko.Spec.DomainName)
+		}
+	}
+	if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings, b.ko.Spec.DomainSettings) {
+		delta.Add("Spec.DomainSettings", a.ko.Spec.DomainSettings, b.ko.Spec.DomainSettings)
+	} else if a.ko.Spec.DomainSettings != nil && b.ko.Spec.DomainSettings != nil {
+		if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.RStudioServerProDomainSettings, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings) {
+			delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings)
+		} else if a.ko.Spec.DomainSettings.RStudioServerProDomainSettings != nil && b.ko.Spec.DomainSettings.RStudioServerProDomainSettings != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec) {
+				delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec)
+			} else if a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec != nil && b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType) {
+					delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType)
+				} else if a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType != nil && b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType != nil {
+					if *a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType != *b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType {
+						delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN) {
+					delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN)
+				} else if a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN != nil && b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
+					if *a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN != *b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN {
+						delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN) {
+					delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN)
+				} else if a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN != nil && b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN != nil {
+					if *a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN != *b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN {
+						delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN) {
+					delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN)
+				} else if a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil && b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
+					if *a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN != *b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN {
+						delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN)
+					}
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN) {
+				delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN)
+			} else if a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN != nil && b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN != nil {
+				if *a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN != *b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN {
+					delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN)
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL) {
+				delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL)
+			} else if a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL != nil && b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL != nil {
+				if *a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL != *b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL {
+					delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL)
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL) {
+				delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL)
+			} else if a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL != nil && b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL != nil {
+				if *a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL != *b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL {
+					delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL)
+				}
+			}
+		}
+		if !ackcompare.SliceStringPEqual(a.ko.Spec.DomainSettings.SecurityGroupIDs, b.ko.Spec.DomainSettings.SecurityGroupIDs) {
+			delta.Add("Spec.DomainSettings.SecurityGroupIDs", a.ko.Spec.DomainSettings.SecurityGroupIDs, b.ko.Spec.DomainSettings.SecurityGroupIDs)
 		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.HomeEFSFileSystemKMSKeyID, b.ko.Spec.HomeEFSFileSystemKMSKeyID) {

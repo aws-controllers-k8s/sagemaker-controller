@@ -8,5 +8,5 @@ roleRef:
   name: ack-sagemaker-controller
 subjects:
 - kind: ServiceAccount
-  name: default
+  name: ack-sagemaker-controller
   namespace: ack-system

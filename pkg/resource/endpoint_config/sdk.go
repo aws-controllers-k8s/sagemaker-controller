@@ -80,54 +80,87 @@ func (rm *resourceManager) sdkFind(
 	// the original Kubernetes object we passed to the function
 	ko := r.ko.DeepCopy()
 
-	if resp.DataCaptureConfig != nil {
-		f1 := &svcapitypes.DataCaptureConfig{}
-		if resp.DataCaptureConfig.CaptureContentTypeHeader != nil {
-			f1f0 := &svcapitypes.CaptureContentTypeHeader{}
-			if resp.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes != nil {
-				f1f0f0 := []*string{}
-				for _, f1f0f0iter := range resp.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes {
-					var f1f0f0elem string
-					f1f0f0elem = *f1f0f0iter
-					f1f0f0 = append(f1f0f0, &f1f0f0elem)
+	if resp.AsyncInferenceConfig != nil {
+		f0 := &svcapitypes.AsyncInferenceConfig{}
+		if resp.AsyncInferenceConfig.ClientConfig != nil {
+			f0f0 := &svcapitypes.AsyncInferenceClientConfig{}
+			if resp.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance != nil {
+				f0f0.MaxConcurrentInvocationsPerInstance = resp.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance
+			}
+			f0.ClientConfig = f0f0
+		}
+		if resp.AsyncInferenceConfig.OutputConfig != nil {
+			f0f1 := &svcapitypes.AsyncInferenceOutputConfig{}
+			if resp.AsyncInferenceConfig.OutputConfig.KmsKeyId != nil {
+				f0f1.KMSKeyID = resp.AsyncInferenceConfig.OutputConfig.KmsKeyId
+			}
+			if resp.AsyncInferenceConfig.OutputConfig.NotificationConfig != nil {
+				f0f1f1 := &svcapitypes.AsyncInferenceNotificationConfig{}
+				if resp.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic != nil {
+					f0f1f1.ErrorTopic = resp.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic
 				}
-				f1f0.CsvContentTypes = f1f0f0
+				if resp.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic != nil {
+					f0f1f1.SuccessTopic = resp.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic
+				}
+				f0f1.NotificationConfig = f0f1f1
+			}
+			if resp.AsyncInferenceConfig.OutputConfig.S3OutputPath != nil {
+				f0f1.S3OutputPath = resp.AsyncInferenceConfig.OutputConfig.S3OutputPath
+			}
+			f0.OutputConfig = f0f1
+		}
+		ko.Spec.AsyncInferenceConfig = f0
+	} else {
+		ko.Spec.AsyncInferenceConfig = nil
+	}
+	if resp.DataCaptureConfig != nil {
+		f2 := &svcapitypes.DataCaptureConfig{}
+		if resp.DataCaptureConfig.CaptureContentTypeHeader != nil {
+			f2f0 := &svcapitypes.CaptureContentTypeHeader{}
+			if resp.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes != nil {
+				f2f0f0 := []*string{}
+				for _, f2f0f0iter := range resp.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes {
+					var f2f0f0elem string
+					f2f0f0elem = *f2f0f0iter
+					f2f0f0 = append(f2f0f0, &f2f0f0elem)
+				}
+				f2f0.CsvContentTypes = f2f0f0
 			}
 			if resp.DataCaptureConfig.CaptureContentTypeHeader.JsonContentTypes != nil {
-				f1f0f1 := []*string{}
-				for _, f1f0f1iter := range resp.DataCaptureConfig.CaptureContentTypeHeader.JsonContentTypes {
-					var f1f0f1elem string
-					f1f0f1elem = *f1f0f1iter
-					f1f0f1 = append(f1f0f1, &f1f0f1elem)
+				f2f0f1 := []*string{}
+				for _, f2f0f1iter := range resp.DataCaptureConfig.CaptureContentTypeHeader.JsonContentTypes {
+					var f2f0f1elem string
+					f2f0f1elem = *f2f0f1iter
+					f2f0f1 = append(f2f0f1, &f2f0f1elem)
 				}
-				f1f0.JSONContentTypes = f1f0f1
+				f2f0.JSONContentTypes = f2f0f1
 			}
-			f1.CaptureContentTypeHeader = f1f0
+			f2.CaptureContentTypeHeader = f2f0
 		}
 		if resp.DataCaptureConfig.CaptureOptions != nil {
-			f1f1 := []*svcapitypes.CaptureOption{}
-			for _, f1f1iter := range resp.DataCaptureConfig.CaptureOptions {
-				f1f1elem := &svcapitypes.CaptureOption{}
-				if f1f1iter.CaptureMode != nil {
-					f1f1elem.CaptureMode = f1f1iter.CaptureMode
+			f2f1 := []*svcapitypes.CaptureOption{}
+			for _, f2f1iter := range resp.DataCaptureConfig.CaptureOptions {
+				f2f1elem := &svcapitypes.CaptureOption{}
+				if f2f1iter.CaptureMode != nil {
+					f2f1elem.CaptureMode = f2f1iter.CaptureMode
 				}
-				f1f1 = append(f1f1, f1f1elem)
+				f2f1 = append(f2f1, f2f1elem)
 			}
-			f1.CaptureOptions = f1f1
+			f2.CaptureOptions = f2f1
 		}
 		if resp.DataCaptureConfig.DestinationS3Uri != nil {
-			f1.DestinationS3URI = resp.DataCaptureConfig.DestinationS3Uri
+			f2.DestinationS3URI = resp.DataCaptureConfig.DestinationS3Uri
 		}
 		if resp.DataCaptureConfig.EnableCapture != nil {
-			f1.EnableCapture = resp.DataCaptureConfig.EnableCapture
+			f2.EnableCapture = resp.DataCaptureConfig.EnableCapture
 		}
 		if resp.DataCaptureConfig.InitialSamplingPercentage != nil {
-			f1.InitialSamplingPercentage = resp.DataCaptureConfig.InitialSamplingPercentage
+			f2.InitialSamplingPercentage = resp.DataCaptureConfig.InitialSamplingPercentage
 		}
 		if resp.DataCaptureConfig.KmsKeyId != nil {
-			f1.KMSKeyID = resp.DataCaptureConfig.KmsKeyId
+			f2.KMSKeyID = resp.DataCaptureConfig.KmsKeyId
 		}
-		ko.Spec.DataCaptureConfig = f1
+		ko.Spec.DataCaptureConfig = f2
 	} else {
 		ko.Spec.DataCaptureConfig = nil
 	}
@@ -149,40 +182,40 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.KMSKeyID = nil
 	}
 	if resp.ProductionVariants != nil {
-		f5 := []*svcapitypes.ProductionVariant{}
-		for _, f5iter := range resp.ProductionVariants {
-			f5elem := &svcapitypes.ProductionVariant{}
-			if f5iter.AcceleratorType != nil {
-				f5elem.AcceleratorType = f5iter.AcceleratorType
+		f6 := []*svcapitypes.ProductionVariant{}
+		for _, f6iter := range resp.ProductionVariants {
+			f6elem := &svcapitypes.ProductionVariant{}
+			if f6iter.AcceleratorType != nil {
+				f6elem.AcceleratorType = f6iter.AcceleratorType
 			}
-			if f5iter.CoreDumpConfig != nil {
-				f5elemf1 := &svcapitypes.ProductionVariantCoreDumpConfig{}
-				if f5iter.CoreDumpConfig.DestinationS3Uri != nil {
-					f5elemf1.DestinationS3URI = f5iter.CoreDumpConfig.DestinationS3Uri
+			if f6iter.CoreDumpConfig != nil {
+				f6elemf1 := &svcapitypes.ProductionVariantCoreDumpConfig{}
+				if f6iter.CoreDumpConfig.DestinationS3Uri != nil {
+					f6elemf1.DestinationS3URI = f6iter.CoreDumpConfig.DestinationS3Uri
 				}
-				if f5iter.CoreDumpConfig.KmsKeyId != nil {
-					f5elemf1.KMSKeyID = f5iter.CoreDumpConfig.KmsKeyId
+				if f6iter.CoreDumpConfig.KmsKeyId != nil {
+					f6elemf1.KMSKeyID = f6iter.CoreDumpConfig.KmsKeyId
 				}
-				f5elem.CoreDumpConfig = f5elemf1
+				f6elem.CoreDumpConfig = f6elemf1
 			}
-			if f5iter.InitialInstanceCount != nil {
-				f5elem.InitialInstanceCount = f5iter.InitialInstanceCount
+			if f6iter.InitialInstanceCount != nil {
+				f6elem.InitialInstanceCount = f6iter.InitialInstanceCount
 			}
-			if f5iter.InitialVariantWeight != nil {
-				f5elem.InitialVariantWeight = f5iter.InitialVariantWeight
+			if f6iter.InitialVariantWeight != nil {
+				f6elem.InitialVariantWeight = f6iter.InitialVariantWeight
 			}
-			if f5iter.InstanceType != nil {
-				f5elem.InstanceType = f5iter.InstanceType
+			if f6iter.InstanceType != nil {
+				f6elem.InstanceType = f6iter.InstanceType
 			}
-			if f5iter.ModelName != nil {
-				f5elem.ModelName = f5iter.ModelName
+			if f6iter.ModelName != nil {
+				f6elem.ModelName = f6iter.ModelName
 			}
-			if f5iter.VariantName != nil {
-				f5elem.VariantName = f5iter.VariantName
+			if f6iter.VariantName != nil {
+				f6elem.VariantName = f6iter.VariantName
 			}
-			f5 = append(f5, f5elem)
+			f6 = append(f6, f6elem)
 		}
-		ko.Spec.ProductionVariants = f5
+		ko.Spec.ProductionVariants = f6
 	} else {
 		ko.Spec.ProductionVariants = nil
 	}
@@ -261,54 +294,85 @@ func (rm *resourceManager) newCreateRequestPayload(
 ) (*svcsdk.CreateEndpointConfigInput, error) {
 	res := &svcsdk.CreateEndpointConfigInput{}
 
-	if r.ko.Spec.DataCaptureConfig != nil {
-		f0 := &svcsdk.DataCaptureConfig{}
-		if r.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader != nil {
-			f0f0 := &svcsdk.CaptureContentTypeHeader{}
-			if r.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes != nil {
-				f0f0f0 := []*string{}
-				for _, f0f0f0iter := range r.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes {
-					var f0f0f0elem string
-					f0f0f0elem = *f0f0f0iter
-					f0f0f0 = append(f0f0f0, &f0f0f0elem)
+	if r.ko.Spec.AsyncInferenceConfig != nil {
+		f0 := &svcsdk.AsyncInferenceConfig{}
+		if r.ko.Spec.AsyncInferenceConfig.ClientConfig != nil {
+			f0f0 := &svcsdk.AsyncInferenceClientConfig{}
+			if r.ko.Spec.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance != nil {
+				f0f0.SetMaxConcurrentInvocationsPerInstance(*r.ko.Spec.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance)
+			}
+			f0.SetClientConfig(f0f0)
+		}
+		if r.ko.Spec.AsyncInferenceConfig.OutputConfig != nil {
+			f0f1 := &svcsdk.AsyncInferenceOutputConfig{}
+			if r.ko.Spec.AsyncInferenceConfig.OutputConfig.KMSKeyID != nil {
+				f0f1.SetKmsKeyId(*r.ko.Spec.AsyncInferenceConfig.OutputConfig.KMSKeyID)
+			}
+			if r.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig != nil {
+				f0f1f1 := &svcsdk.AsyncInferenceNotificationConfig{}
+				if r.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic != nil {
+					f0f1f1.SetErrorTopic(*r.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic)
 				}
-				f0f0.SetCsvContentTypes(f0f0f0)
+				if r.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic != nil {
+					f0f1f1.SetSuccessTopic(*r.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic)
+				}
+				f0f1.SetNotificationConfig(f0f1f1)
+			}
+			if r.ko.Spec.AsyncInferenceConfig.OutputConfig.S3OutputPath != nil {
+				f0f1.SetS3OutputPath(*r.ko.Spec.AsyncInferenceConfig.OutputConfig.S3OutputPath)
+			}
+			f0.SetOutputConfig(f0f1)
+		}
+		res.SetAsyncInferenceConfig(f0)
+	}
+	if r.ko.Spec.DataCaptureConfig != nil {
+		f1 := &svcsdk.DataCaptureConfig{}
+		if r.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader != nil {
+			f1f0 := &svcsdk.CaptureContentTypeHeader{}
+			if r.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes != nil {
+				f1f0f0 := []*string{}
+				for _, f1f0f0iter := range r.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes {
+					var f1f0f0elem string
+					f1f0f0elem = *f1f0f0iter
+					f1f0f0 = append(f1f0f0, &f1f0f0elem)
+				}
+				f1f0.SetCsvContentTypes(f1f0f0)
 			}
 			if r.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes != nil {
-				f0f0f1 := []*string{}
-				for _, f0f0f1iter := range r.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes {
-					var f0f0f1elem string
-					f0f0f1elem = *f0f0f1iter
-					f0f0f1 = append(f0f0f1, &f0f0f1elem)
+				f1f0f1 := []*string{}
+				for _, f1f0f1iter := range r.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes {
+					var f1f0f1elem string
+					f1f0f1elem = *f1f0f1iter
+					f1f0f1 = append(f1f0f1, &f1f0f1elem)
 				}
-				f0f0.SetJsonContentTypes(f0f0f1)
+				f1f0.SetJsonContentTypes(f1f0f1)
 			}
-			f0.SetCaptureContentTypeHeader(f0f0)
+			f1.SetCaptureContentTypeHeader(f1f0)
 		}
 		if r.ko.Spec.DataCaptureConfig.CaptureOptions != nil {
-			f0f1 := []*svcsdk.CaptureOption{}
-			for _, f0f1iter := range r.ko.Spec.DataCaptureConfig.CaptureOptions {
-				f0f1elem := &svcsdk.CaptureOption{}
-				if f0f1iter.CaptureMode != nil {
-					f0f1elem.SetCaptureMode(*f0f1iter.CaptureMode)
+			f1f1 := []*svcsdk.CaptureOption{}
+			for _, f1f1iter := range r.ko.Spec.DataCaptureConfig.CaptureOptions {
+				f1f1elem := &svcsdk.CaptureOption{}
+				if f1f1iter.CaptureMode != nil {
+					f1f1elem.SetCaptureMode(*f1f1iter.CaptureMode)
 				}
-				f0f1 = append(f0f1, f0f1elem)
+				f1f1 = append(f1f1, f1f1elem)
 			}
-			f0.SetCaptureOptions(f0f1)
+			f1.SetCaptureOptions(f1f1)
 		}
 		if r.ko.Spec.DataCaptureConfig.DestinationS3URI != nil {
-			f0.SetDestinationS3Uri(*r.ko.Spec.DataCaptureConfig.DestinationS3URI)
+			f1.SetDestinationS3Uri(*r.ko.Spec.DataCaptureConfig.DestinationS3URI)
 		}
 		if r.ko.Spec.DataCaptureConfig.EnableCapture != nil {
-			f0.SetEnableCapture(*r.ko.Spec.DataCaptureConfig.EnableCapture)
+			f1.SetEnableCapture(*r.ko.Spec.DataCaptureConfig.EnableCapture)
 		}
 		if r.ko.Spec.DataCaptureConfig.InitialSamplingPercentage != nil {
-			f0.SetInitialSamplingPercentage(*r.ko.Spec.DataCaptureConfig.InitialSamplingPercentage)
+			f1.SetInitialSamplingPercentage(*r.ko.Spec.DataCaptureConfig.InitialSamplingPercentage)
 		}
 		if r.ko.Spec.DataCaptureConfig.KMSKeyID != nil {
-			f0.SetKmsKeyId(*r.ko.Spec.DataCaptureConfig.KMSKeyID)
+			f1.SetKmsKeyId(*r.ko.Spec.DataCaptureConfig.KMSKeyID)
 		}
-		res.SetDataCaptureConfig(f0)
+		res.SetDataCaptureConfig(f1)
 	}
 	if r.ko.Spec.EndpointConfigName != nil {
 		res.SetEndpointConfigName(*r.ko.Spec.EndpointConfigName)
@@ -317,54 +381,54 @@ func (rm *resourceManager) newCreateRequestPayload(
 		res.SetKmsKeyId(*r.ko.Spec.KMSKeyID)
 	}
 	if r.ko.Spec.ProductionVariants != nil {
-		f3 := []*svcsdk.ProductionVariant{}
-		for _, f3iter := range r.ko.Spec.ProductionVariants {
-			f3elem := &svcsdk.ProductionVariant{}
-			if f3iter.AcceleratorType != nil {
-				f3elem.SetAcceleratorType(*f3iter.AcceleratorType)
+		f4 := []*svcsdk.ProductionVariant{}
+		for _, f4iter := range r.ko.Spec.ProductionVariants {
+			f4elem := &svcsdk.ProductionVariant{}
+			if f4iter.AcceleratorType != nil {
+				f4elem.SetAcceleratorType(*f4iter.AcceleratorType)
 			}
-			if f3iter.CoreDumpConfig != nil {
-				f3elemf1 := &svcsdk.ProductionVariantCoreDumpConfig{}
-				if f3iter.CoreDumpConfig.DestinationS3URI != nil {
-					f3elemf1.SetDestinationS3Uri(*f3iter.CoreDumpConfig.DestinationS3URI)
+			if f4iter.CoreDumpConfig != nil {
+				f4elemf1 := &svcsdk.ProductionVariantCoreDumpConfig{}
+				if f4iter.CoreDumpConfig.DestinationS3URI != nil {
+					f4elemf1.SetDestinationS3Uri(*f4iter.CoreDumpConfig.DestinationS3URI)
 				}
-				if f3iter.CoreDumpConfig.KMSKeyID != nil {
-					f3elemf1.SetKmsKeyId(*f3iter.CoreDumpConfig.KMSKeyID)
+				if f4iter.CoreDumpConfig.KMSKeyID != nil {
+					f4elemf1.SetKmsKeyId(*f4iter.CoreDumpConfig.KMSKeyID)
 				}
-				f3elem.SetCoreDumpConfig(f3elemf1)
+				f4elem.SetCoreDumpConfig(f4elemf1)
 			}
-			if f3iter.InitialInstanceCount != nil {
-				f3elem.SetInitialInstanceCount(*f3iter.InitialInstanceCount)
+			if f4iter.InitialInstanceCount != nil {
+				f4elem.SetInitialInstanceCount(*f4iter.InitialInstanceCount)
 			}
-			if f3iter.InitialVariantWeight != nil {
-				f3elem.SetInitialVariantWeight(*f3iter.InitialVariantWeight)
+			if f4iter.InitialVariantWeight != nil {
+				f4elem.SetInitialVariantWeight(*f4iter.InitialVariantWeight)
 			}
-			if f3iter.InstanceType != nil {
-				f3elem.SetInstanceType(*f3iter.InstanceType)
+			if f4iter.InstanceType != nil {
+				f4elem.SetInstanceType(*f4iter.InstanceType)
 			}
-			if f3iter.ModelName != nil {
-				f3elem.SetModelName(*f3iter.ModelName)
+			if f4iter.ModelName != nil {
+				f4elem.SetModelName(*f4iter.ModelName)
 			}
-			if f3iter.VariantName != nil {
-				f3elem.SetVariantName(*f3iter.VariantName)
-			}
-			f3 = append(f3, f3elem)
-		}
-		res.SetProductionVariants(f3)
-	}
-	if r.ko.Spec.Tags != nil {
-		f4 := []*svcsdk.Tag{}
-		for _, f4iter := range r.ko.Spec.Tags {
-			f4elem := &svcsdk.Tag{}
-			if f4iter.Key != nil {
-				f4elem.SetKey(*f4iter.Key)
-			}
-			if f4iter.Value != nil {
-				f4elem.SetValue(*f4iter.Value)
+			if f4iter.VariantName != nil {
+				f4elem.SetVariantName(*f4iter.VariantName)
 			}
 			f4 = append(f4, f4elem)
 		}
-		res.SetTags(f4)
+		res.SetProductionVariants(f4)
+	}
+	if r.ko.Spec.Tags != nil {
+		f5 := []*svcsdk.Tag{}
+		for _, f5iter := range r.ko.Spec.Tags {
+			f5elem := &svcsdk.Tag{}
+			if f5iter.Key != nil {
+				f5elem.SetKey(*f5iter.Key)
+			}
+			if f5iter.Value != nil {
+				f5elem.SetValue(*f5iter.Value)
+			}
+			f5 = append(f5, f5elem)
+		}
+		res.SetTags(f5)
 	}
 
 	return res, nil

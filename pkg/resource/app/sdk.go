@@ -107,6 +107,9 @@ func (rm *resourceManager) sdkFind(
 		if resp.ResourceSpec.InstanceType != nil {
 			f8.InstanceType = resp.ResourceSpec.InstanceType
 		}
+		if resp.ResourceSpec.LifecycleConfigArn != nil {
+			f8.LifecycleConfigARN = resp.ResourceSpec.LifecycleConfigArn
+		}
 		if resp.ResourceSpec.SageMakerImageArn != nil {
 			f8.SageMakerImageARN = resp.ResourceSpec.SageMakerImageArn
 		}
@@ -225,6 +228,9 @@ func (rm *resourceManager) newCreateRequestPayload(
 		f3 := &svcsdk.ResourceSpec{}
 		if r.ko.Spec.ResourceSpec.InstanceType != nil {
 			f3.SetInstanceType(*r.ko.Spec.ResourceSpec.InstanceType)
+		}
+		if r.ko.Spec.ResourceSpec.LifecycleConfigARN != nil {
+			f3.SetLifecycleConfigArn(*r.ko.Spec.ResourceSpec.LifecycleConfigARN)
 		}
 		if r.ko.Spec.ResourceSpec.SageMakerImageARN != nil {
 			f3.SetSageMakerImageArn(*r.ko.Spec.ResourceSpec.SageMakerImageARN)

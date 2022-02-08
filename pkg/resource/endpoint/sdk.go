@@ -118,44 +118,61 @@ func (rm *resourceManager) sdkFind(
 		ko.Status.LastModifiedTime = nil
 	}
 	if resp.ProductionVariants != nil {
-		f9 := []*svcapitypes.ProductionVariantSummary{}
-		for _, f9iter := range resp.ProductionVariants {
-			f9elem := &svcapitypes.ProductionVariantSummary{}
-			if f9iter.CurrentInstanceCount != nil {
-				f9elem.CurrentInstanceCount = f9iter.CurrentInstanceCount
+		f11 := []*svcapitypes.ProductionVariantSummary{}
+		for _, f11iter := range resp.ProductionVariants {
+			f11elem := &svcapitypes.ProductionVariantSummary{}
+			if f11iter.CurrentInstanceCount != nil {
+				f11elem.CurrentInstanceCount = f11iter.CurrentInstanceCount
 			}
-			if f9iter.CurrentWeight != nil {
-				f9elem.CurrentWeight = f9iter.CurrentWeight
+			if f11iter.CurrentWeight != nil {
+				f11elem.CurrentWeight = f11iter.CurrentWeight
 			}
-			if f9iter.DeployedImages != nil {
-				f9elemf2 := []*svcapitypes.DeployedImage{}
-				for _, f9elemf2iter := range f9iter.DeployedImages {
-					f9elemf2elem := &svcapitypes.DeployedImage{}
-					if f9elemf2iter.ResolutionTime != nil {
-						f9elemf2elem.ResolutionTime = &metav1.Time{*f9elemf2iter.ResolutionTime}
+			if f11iter.DeployedImages != nil {
+				f11elemf2 := []*svcapitypes.DeployedImage{}
+				for _, f11elemf2iter := range f11iter.DeployedImages {
+					f11elemf2elem := &svcapitypes.DeployedImage{}
+					if f11elemf2iter.ResolutionTime != nil {
+						f11elemf2elem.ResolutionTime = &metav1.Time{*f11elemf2iter.ResolutionTime}
 					}
-					if f9elemf2iter.ResolvedImage != nil {
-						f9elemf2elem.ResolvedImage = f9elemf2iter.ResolvedImage
+					if f11elemf2iter.ResolvedImage != nil {
+						f11elemf2elem.ResolvedImage = f11elemf2iter.ResolvedImage
 					}
-					if f9elemf2iter.SpecifiedImage != nil {
-						f9elemf2elem.SpecifiedImage = f9elemf2iter.SpecifiedImage
+					if f11elemf2iter.SpecifiedImage != nil {
+						f11elemf2elem.SpecifiedImage = f11elemf2iter.SpecifiedImage
 					}
-					f9elemf2 = append(f9elemf2, f9elemf2elem)
+					f11elemf2 = append(f11elemf2, f11elemf2elem)
 				}
-				f9elem.DeployedImages = f9elemf2
+				f11elem.DeployedImages = f11elemf2
 			}
-			if f9iter.DesiredInstanceCount != nil {
-				f9elem.DesiredInstanceCount = f9iter.DesiredInstanceCount
+			if f11iter.DesiredInstanceCount != nil {
+				f11elem.DesiredInstanceCount = f11iter.DesiredInstanceCount
 			}
-			if f9iter.DesiredWeight != nil {
-				f9elem.DesiredWeight = f9iter.DesiredWeight
+			if f11iter.DesiredWeight != nil {
+				f11elem.DesiredWeight = f11iter.DesiredWeight
 			}
-			if f9iter.VariantName != nil {
-				f9elem.VariantName = f9iter.VariantName
+			if f11iter.VariantName != nil {
+				f11elem.VariantName = f11iter.VariantName
 			}
-			f9 = append(f9, f9elem)
+			if f11iter.VariantStatus != nil {
+				f11elemf6 := []*svcapitypes.ProductionVariantStatus{}
+				for _, f11elemf6iter := range f11iter.VariantStatus {
+					f11elemf6elem := &svcapitypes.ProductionVariantStatus{}
+					if f11elemf6iter.StartTime != nil {
+						f11elemf6elem.StartTime = &metav1.Time{*f11elemf6iter.StartTime}
+					}
+					if f11elemf6iter.Status != nil {
+						f11elemf6elem.Status = f11elemf6iter.Status
+					}
+					if f11elemf6iter.StatusMessage != nil {
+						f11elemf6elem.StatusMessage = f11elemf6iter.StatusMessage
+					}
+					f11elemf6 = append(f11elemf6, f11elemf6elem)
+				}
+				f11elem.VariantStatus = f11elemf6
+			}
+			f11 = append(f11, f11elem)
 		}
-		ko.Status.ProductionVariants = f9
+		ko.Status.ProductionVariants = f11
 	} else {
 		ko.Status.ProductionVariants = nil
 	}
@@ -235,6 +252,65 @@ func (rm *resourceManager) newCreateRequestPayload(
 ) (*svcsdk.CreateEndpointInput, error) {
 	res := &svcsdk.CreateEndpointInput{}
 
+	if r.ko.Spec.DeploymentConfig != nil {
+		f0 := &svcsdk.DeploymentConfig{}
+		if r.ko.Spec.DeploymentConfig.AutoRollbackConfiguration != nil {
+			f0f0 := &svcsdk.AutoRollbackConfig{}
+			if r.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms != nil {
+				f0f0f0 := []*svcsdk.Alarm{}
+				for _, f0f0f0iter := range r.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms {
+					f0f0f0elem := &svcsdk.Alarm{}
+					if f0f0f0iter.AlarmName != nil {
+						f0f0f0elem.SetAlarmName(*f0f0f0iter.AlarmName)
+					}
+					f0f0f0 = append(f0f0f0, f0f0f0elem)
+				}
+				f0f0.SetAlarms(f0f0f0)
+			}
+			f0.SetAutoRollbackConfiguration(f0f0)
+		}
+		if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy != nil {
+			f0f1 := &svcsdk.BlueGreenUpdatePolicy{}
+			if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds != nil {
+				f0f1.SetMaximumExecutionTimeoutInSeconds(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds)
+			}
+			if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds != nil {
+				f0f1.SetTerminationWaitInSeconds(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds)
+			}
+			if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration != nil {
+				f0f1f2 := &svcsdk.TrafficRoutingConfig{}
+				if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize != nil {
+					f0f1f2f0 := &svcsdk.CapacitySize{}
+					if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type != nil {
+						f0f1f2f0.SetType(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type)
+					}
+					if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value != nil {
+						f0f1f2f0.SetValue(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value)
+					}
+					f0f1f2.SetCanarySize(f0f1f2f0)
+				}
+				if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize != nil {
+					f0f1f2f1 := &svcsdk.CapacitySize{}
+					if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type != nil {
+						f0f1f2f1.SetType(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type)
+					}
+					if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value != nil {
+						f0f1f2f1.SetValue(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value)
+					}
+					f0f1f2.SetLinearStepSize(f0f1f2f1)
+				}
+				if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type != nil {
+					f0f1f2.SetType(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type)
+				}
+				if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds != nil {
+					f0f1f2.SetWaitIntervalInSeconds(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds)
+				}
+				f0f1.SetTrafficRoutingConfiguration(f0f1f2)
+			}
+			f0.SetBlueGreenUpdatePolicy(f0f1)
+		}
+		res.SetDeploymentConfig(f0)
+	}
 	if r.ko.Spec.EndpointConfigName != nil {
 		res.SetEndpointConfigName(*r.ko.Spec.EndpointConfigName)
 	}
@@ -242,18 +318,18 @@ func (rm *resourceManager) newCreateRequestPayload(
 		res.SetEndpointName(*r.ko.Spec.EndpointName)
 	}
 	if r.ko.Spec.Tags != nil {
-		f2 := []*svcsdk.Tag{}
-		for _, f2iter := range r.ko.Spec.Tags {
-			f2elem := &svcsdk.Tag{}
-			if f2iter.Key != nil {
-				f2elem.SetKey(*f2iter.Key)
+		f3 := []*svcsdk.Tag{}
+		for _, f3iter := range r.ko.Spec.Tags {
+			f3elem := &svcsdk.Tag{}
+			if f3iter.Key != nil {
+				f3elem.SetKey(*f3iter.Key)
 			}
-			if f2iter.Value != nil {
-				f2elem.SetValue(*f2iter.Value)
+			if f3iter.Value != nil {
+				f3elem.SetValue(*f3iter.Value)
 			}
-			f2 = append(f2, f2elem)
+			f3 = append(f3, f3elem)
 		}
-		res.SetTags(f2)
+		res.SetTags(f3)
 	}
 
 	return res, nil
@@ -315,6 +391,65 @@ func (rm *resourceManager) newUpdateRequestPayload(
 ) (*svcsdk.UpdateEndpointInput, error) {
 	res := &svcsdk.UpdateEndpointInput{}
 
+	if r.ko.Spec.DeploymentConfig != nil {
+		f0 := &svcsdk.DeploymentConfig{}
+		if r.ko.Spec.DeploymentConfig.AutoRollbackConfiguration != nil {
+			f0f0 := &svcsdk.AutoRollbackConfig{}
+			if r.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms != nil {
+				f0f0f0 := []*svcsdk.Alarm{}
+				for _, f0f0f0iter := range r.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms {
+					f0f0f0elem := &svcsdk.Alarm{}
+					if f0f0f0iter.AlarmName != nil {
+						f0f0f0elem.SetAlarmName(*f0f0f0iter.AlarmName)
+					}
+					f0f0f0 = append(f0f0f0, f0f0f0elem)
+				}
+				f0f0.SetAlarms(f0f0f0)
+			}
+			f0.SetAutoRollbackConfiguration(f0f0)
+		}
+		if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy != nil {
+			f0f1 := &svcsdk.BlueGreenUpdatePolicy{}
+			if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds != nil {
+				f0f1.SetMaximumExecutionTimeoutInSeconds(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds)
+			}
+			if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds != nil {
+				f0f1.SetTerminationWaitInSeconds(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds)
+			}
+			if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration != nil {
+				f0f1f2 := &svcsdk.TrafficRoutingConfig{}
+				if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize != nil {
+					f0f1f2f0 := &svcsdk.CapacitySize{}
+					if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type != nil {
+						f0f1f2f0.SetType(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type)
+					}
+					if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value != nil {
+						f0f1f2f0.SetValue(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value)
+					}
+					f0f1f2.SetCanarySize(f0f1f2f0)
+				}
+				if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize != nil {
+					f0f1f2f1 := &svcsdk.CapacitySize{}
+					if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type != nil {
+						f0f1f2f1.SetType(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type)
+					}
+					if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value != nil {
+						f0f1f2f1.SetValue(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value)
+					}
+					f0f1f2.SetLinearStepSize(f0f1f2f1)
+				}
+				if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type != nil {
+					f0f1f2.SetType(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type)
+				}
+				if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds != nil {
+					f0f1f2.SetWaitIntervalInSeconds(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds)
+				}
+				f0f1.SetTrafficRoutingConfiguration(f0f1f2)
+			}
+			f0.SetBlueGreenUpdatePolicy(f0f1)
+		}
+		res.SetDeploymentConfig(f0)
+	}
 	if r.ko.Spec.EndpointConfigName != nil {
 		res.SetEndpointConfigName(*r.ko.Spec.EndpointConfigName)
 	}
