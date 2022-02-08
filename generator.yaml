@@ -869,4 +869,5 @@ ignore:
     operations:
       - UpdateTrainingJob
     shape_names:
+      # RSessionAppSettings is an empty struct that causes generation errors
       - RSessionAppSettings
