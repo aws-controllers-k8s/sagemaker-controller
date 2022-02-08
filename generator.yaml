@@ -525,9 +525,6 @@ resources:
         from:
           operation: DescribeModelPackage
           path: ModelPackageStatusDetails
-      ModelApprovalStatus:
-        late_initialize:
-          min_backoff_seconds: 5
       LastModifiedTime:
         is_read_only: true
         from:
