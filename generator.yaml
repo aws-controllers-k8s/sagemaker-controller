@@ -623,6 +623,9 @@ resources:
         from:
           operation: DescribeNotebookInstance
           path: NotebookInstanceStatus
+      PlatformIdentifier:
+        late_initialize:
+          min_backoff_seconds: 5
       Url:
         is_read_only: true
         from:
