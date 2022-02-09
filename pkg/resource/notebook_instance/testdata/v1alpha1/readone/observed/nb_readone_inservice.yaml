@@ -14,6 +14,7 @@ spec:
   kmsKeyID: op
   lifecycleConfigName: my-lfc
   notebookInstanceName: test
+  platformIdentifier: notebook-al1-v1
   roleARN: arn:aws:iam::1234:role/service-role/AmazonSageMakerServiceCatalogProductsUseRole
   rootAccess: Enabled
   securityGroupIDs:
