@@ -16,9 +16,14 @@ status:
     arn: arn:aws:sagemaker:us-east-2:1234:notebook-instance/test
     ownerAccountID: ""
   conditions:
-  - lastTransitionTime: "0001-01-01T00:00:00Z"
-    message: NotebookInstance is in Updating status.
+  - lastTransitionTime: null
+    message: NotebookInstance is in Pending status.
     status: "False"
     type: ACK.ResourceSynced
-  notebookInstanceStatus: Updating
+  - lastTransitionTime: "0001-01-01T00:00:00Z"
+    message: Late initialization successful
+    reason: Late initialization successful
+    status: "True"
+    type: ACK.LateInitialized
+  notebookInstanceStatus: Pending
   url: test.notebook.us-east-2.sagemaker.aws
