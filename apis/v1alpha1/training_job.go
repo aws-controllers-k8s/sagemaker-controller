@@ -112,8 +112,6 @@ type TrainingJobSpec struct {
 	// distributed training algorithms, specify an instance count greater than 1.
 	// +kubebuilder:validation:Required
 	ResourceConfig *ResourceConfig `json:"resourceConfig"`
-	// The number of times to retry the job when the job fails due to an InternalServerError.
-	RetryStrategy *RetryStrategy `json:"retryStrategy,omitempty"`
 	// The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
 	// to perform tasks on your behalf.
 	//

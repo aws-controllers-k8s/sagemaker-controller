@@ -24,7 +24,6 @@ import (
 //
 // A hosted endpoint for real-time inference.
 type EndpointSpec struct {
-	DeploymentConfig *DeploymentConfig `json:"deploymentConfig,omitempty"`
 	// The name of an endpoint configuration. For more information, see CreateEndpointConfig.
 	// +kubebuilder:validation:Required
 	EndpointConfigName *string `json:"endpointConfigName"`

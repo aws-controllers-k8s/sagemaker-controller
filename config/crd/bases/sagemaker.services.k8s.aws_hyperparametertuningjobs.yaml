@@ -434,17 +434,6 @@ spec:
                         format: int64
                         type: integer
                     type: object
-                  retryStrategy:
-                    description: The retry strategy to use when a training job fails
-                      due to an InternalServerError. RetryStrategy is specified as
-                      part of the CreateTrainingJob and CreateHyperParameterTuningJob
-                      requests. You can add the StoppingCondition parameter to the
-                      request to limit the training time for the complete job.
-                    properties:
-                      maximumRetryAttempts:
-                        format: int64
-                        type: integer
-                    type: object
                   roleARN:
                     type: string
                   staticHyperParameters:
@@ -770,17 +759,6 @@ spec:
                         volumeKMSKeyID:
                           type: string
                         volumeSizeInGB:
-                          format: int64
-                          type: integer
-                      type: object
-                    retryStrategy:
-                      description: The retry strategy to use when a training job fails
-                        due to an InternalServerError. RetryStrategy is specified
-                        as part of the CreateTrainingJob and CreateHyperParameterTuningJob
-                        requests. You can add the StoppingCondition parameter to the
-                        request to limit the training time for the complete job.
-                      properties:
-                        maximumRetryAttempts:
                           format: int64
                           type: integer
                       type: object

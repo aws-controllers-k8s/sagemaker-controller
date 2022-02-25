@@ -410,14 +410,6 @@ spec:
                     format: int64
                     type: integer
                 type: object
-              retryStrategy:
-                description: The number of times to retry the job when the job fails
-                  due to an InternalServerError.
-                properties:
-                  maximumRetryAttempts:
-                    format: int64
-                    type: integer
-                type: object
               roleARN:
                 description: "The Amazon Resource Name (ARN) of an IAM role that Amazon
                   SageMaker can assume to perform tasks on your behalf. \n During
