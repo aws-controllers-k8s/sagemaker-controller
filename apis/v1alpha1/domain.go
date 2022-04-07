@@ -29,6 +29,11 @@ type DomainSpec struct {
 	//
 	//    * VpcOnly - All Studio traffic is through the specified VPC and subnets
 	AppNetworkAccessType *string `json:"appNetworkAccessType,omitempty"`
+	// The entity that creates and manages the required security groups for inter-app
+	// communication in VPCOnly mode. Required when CreateDomain.AppNetworkAccessType
+	// is VPCOnly and DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleArn
+	// is provided.
+	AppSecurityGroupManagement *string `json:"appSecurityGroupManagement,omitempty"`
 	// The mode of authentication that members use to access the domain.
 	// +kubebuilder:validation:Required
 	AuthMode *string `json:"authMode"`
@@ -43,11 +48,13 @@ type DomainSpec struct {
 	// A name for the domain.
 	// +kubebuilder:validation:Required
 	DomainName *string `json:"domainName"`
+	// A collection of Domain settings.
+	DomainSettings *DomainSettings `json:"domainSettings,omitempty"`
 	// This member is deprecated and replaced with KmsKeyId.
 	HomeEFSFileSystemKMSKeyID *string `json:"homeEFSFileSystemKMSKeyID,omitempty"`
-	// SageMaker uses AWS KMS to encrypt the EFS volume attached to the domain with
-	// an AWS managed customer master key (CMK) by default. For more control, specify
-	// a customer managed CMK.
+	// SageMaker uses Amazon Web Services KMS to encrypt the EFS volume attached
+	// to the domain with an Amazon Web Services managed key by default. For more
+	// control, specify a customer managed key.
 	KMSKeyID *string `json:"kmsKeyID,omitempty"`
 	// The VPC subnets that Studio uses for communication.
 	// +kubebuilder:validation:Required
@@ -55,6 +62,9 @@ type DomainSpec struct {
 	// Tags to associated with the Domain. Each tag consists of a key and an optional
 	// value. Tag keys must be unique per resource. Tags are searchable using the
 	// Search API.
+	//
+	// Tags that you specify for the Domain are also added to all Apps that the
+	// Domain launches.
 	Tags []*Tag `json:"tags,omitempty"`
 	// The ID of the Amazon Virtual Private Cloud (VPC) that Studio uses for communication.
 	// +kubebuilder:validation:Required

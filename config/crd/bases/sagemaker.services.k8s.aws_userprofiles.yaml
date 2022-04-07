@@ -50,16 +50,29 @@ spec:
                   is not SSO, this field cannot be specified.
                 type: string
               singleSignOnUserValue:
-                description: The username of the associated AWS Single Sign-On User
-                  for this UserProfile. If the Domain's AuthMode is SSO, this field
-                  is required, and must match a valid username of a user in your directory.
-                  If the Domain's AuthMode is not SSO, this field cannot be specified.
+                description: The username of the associated Amazon Web Services Single
+                  Sign-On User for this UserProfile. If the Domain's AuthMode is SSO,
+                  this field is required, and must match a valid username of a user
+                  in your directory. If the Domain's AuthMode is not SSO, this field
+                  cannot be specified.
                 type: string
               tags:
-                description: Each tag consists of a key and an optional value. Tag
-                  keys must be unique per resource.
+                description: "Each tag consists of a key and an optional value. Tag
+                  keys must be unique per resource. \n Tags that you specify for the
+                  User Profile are also added to all Apps that the User Profile launches."
                 items:
-                  description: Describes a tag.
+                  description: "A tag object that consists of a key and an optional
+                    value, used to manage metadata for SageMaker Amazon Web Services
+                    resources. \n You can add tags to notebook instances, training
+                    jobs, hyperparameter tuning jobs, batch transform jobs, models,
+                    labeling jobs, work teams, endpoint configurations, and endpoints.
+                    For more information on adding tags to SageMaker resources, see
+                    AddTags. \n For more information on adding metadata to your Amazon
+                    Web Services resources with tagging, see Tagging Amazon Web Services
+                    resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+                    For advice on best practices for managing Amazon Web Services
+                    resources with tagging, see Tagging Best Practices: Implement
+                    an Effective Amazon Web Services Resource Tagging Strategy (https://d1.awsstatic.com/whitepapers/aws-tagging-best-practices.pdf)."
                   properties:
                     key:
                       type: string
@@ -68,7 +81,7 @@ spec:
                   type: object
                 type: array
               userProfileName:
-                description: A name for the UserProfile.
+                description: A name for the UserProfile. This value is not case sensitive.
                 type: string
               userSettings:
                 description: A collection of settings.
@@ -85,11 +98,17 @@ spec:
                         properties:
                           instanceType:
                             type: string
+                          lifecycleConfigARN:
+                            type: string
                           sageMakerImageARN:
                             type: string
                           sageMakerImageVersionARN:
                             type: string
                         type: object
+                      lifecycleConfigARNs:
+                        items:
+                          type: string
+                        type: array
                     type: object
                   kernelGatewayAppSettings:
                     description: The KernelGateway app settings.
@@ -115,11 +134,28 @@ spec:
                         properties:
                           instanceType:
                             type: string
+                          lifecycleConfigARN:
+                            type: string
                           sageMakerImageARN:
                             type: string
                           sageMakerImageVersionARN:
                             type: string
                         type: object
+                      lifecycleConfigARNs:
+                        items:
+                          type: string
+                        type: array
+                    type: object
+                  rStudioServerProAppSettings:
+                    description: A collection of settings that configure user interaction
+                      with the RStudioServerPro app. RStudioServerProAppSettings cannot
+                      be updated. The RStudioServerPro app must be deleted and a new
+                      one created to make any changes.
+                    properties:
+                      accessStatus:
+                        type: string
+                      userGroup:
+                        type: string
                     type: object
                   securityGroups:
                     items:
@@ -148,6 +184,8 @@ spec:
                           version runs on.
                         properties:
                           instanceType:
+                            type: string
+                          lifecycleConfigARN:
                             type: string
                           sageMakerImageARN:
                             type: string

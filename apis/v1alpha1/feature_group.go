@@ -55,8 +55,8 @@ type FeatureGroupSpec struct {
 	// You can create up to 2,500 FeatureDefinitions per FeatureGroup.
 	// +kubebuilder:validation:Required
 	FeatureDefinitions []*FeatureDefinition `json:"featureDefinitions"`
-	// The name of the FeatureGroup. The name must be unique within an AWS Region
-	// in an AWS account. The name:
+	// The name of the FeatureGroup. The name must be unique within an Amazon Web
+	// Services Region in an Amazon Web Services account. The name:
 	//
 	//    * Must start and end with an alphanumeric character.
 	//
@@ -69,17 +69,23 @@ type FeatureGroupSpec struct {
 	//
 	//    * The Amazon Simple Storage Service (Amazon S3) location of an OfflineStore.
 	//
-	//    * A configuration for an AWS Glue or AWS Hive data cataolgue.
+	//    * A configuration for an Amazon Web Services Glue or Amazon Web Services
+	//    Hive data catalog.
 	//
 	//    * An KMS encryption key to encrypt the Amazon S3 location used for OfflineStore.
+	//    If KMS encryption key is not specified, by default we encrypt all data
+	//    at rest using Amazon Web Services KMS key. By defining your bucket-level
+	//    key (https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-key.html)
+	//    for SSE, you can reduce Amazon Web Services KMS requests costs by up to
+	//    99 percent.
 	//
 	// To learn more about this parameter, see OfflineStoreConfig.
 	OfflineStoreConfig *OfflineStoreConfig `json:"offlineStoreConfig,omitempty"`
 	// You can turn the OnlineStore on or off by specifying True for the EnableOnlineStore
 	// flag in OnlineStoreConfig; the default value is False.
 	//
-	// You can also include an AWS KMS key ID (KMSKeyId) for at-rest encryption
-	// of the OnlineStore.
+	// You can also include an Amazon Web Services KMS key ID (KMSKeyId) for at-rest
+	// encryption of the OnlineStore.
 	OnlineStoreConfig *OnlineStoreConfig `json:"onlineStoreConfig,omitempty"`
 	// The name of the Feature whose value uniquely identifies a Record defined
 	// in the FeatureStore. Only the latest record per identifier value will be

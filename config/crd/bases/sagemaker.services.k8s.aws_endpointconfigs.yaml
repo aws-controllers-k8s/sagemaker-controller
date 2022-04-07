@@ -36,6 +36,39 @@ spec:
           spec:
             description: EndpointConfigSpec defines the desired state of EndpointConfig.
             properties:
+              asyncInferenceConfig:
+                description: Specifies configuration for how an endpoint performs
+                  asynchronous inference. This is a required field in order for your
+                  Endpoint to be invoked using InvokeEndpointAsync (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpoint.html).
+                properties:
+                  clientConfig:
+                    description: Configures the behavior of the client used by Amazon
+                      SageMaker to interact with the model container during asynchronous
+                      inference.
+                    properties:
+                      maxConcurrentInvocationsPerInstance:
+                        format: int64
+                        type: integer
+                    type: object
+                  outputConfig:
+                    description: Specifies the configuration for asynchronous inference
+                      invocation outputs.
+                    properties:
+                      kmsKeyID:
+                        type: string
+                      notificationConfig:
+                        description: Specifies the configuration for notifications
+                          of inference results for asynchronous inference.
+                        properties:
+                          errorTopic:
+                            type: string
+                          successTopic:
+                            type: string
+                        type: object
+                      s3OutputPath:
+                        type: string
+                    type: object
+                type: object
               dataCaptureConfig:
                 properties:
                   captureContentTypeHeader:
@@ -71,16 +104,17 @@ spec:
                   name in a CreateEndpoint request.
                 type: string
               kmsKeyID:
-                description: "The Amazon Resource Name (ARN) of a AWS Key Management
-                  Service key that Amazon SageMaker uses to encrypt data on the storage
-                  volume attached to the ML compute instance that hosts the endpoint.
-                  \n The KmsKeyId can be any of the following formats: \n    * Key
-                  ID: 1234abcd-12ab-34cd-56ef-1234567890ab \n    * Key ARN: arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
+                description: "The Amazon Resource Name (ARN) of a Amazon Web Services
+                  Key Management Service key that Amazon SageMaker uses to encrypt
+                  data on the storage volume attached to the ML compute instance that
+                  hosts the endpoint. \n The KmsKeyId can be any of the following
+                  formats: \n    * Key ID: 1234abcd-12ab-34cd-56ef-1234567890ab \n
+                  \   * Key ARN: arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
                   \n    * Alias name: alias/ExampleAlias \n    * Alias name ARN: arn:aws:kms:us-west-2:111122223333:alias/ExampleAlias
                   \n The KMS key policy must grant permission to the IAM role that
                   you specify in your CreateEndpoint, UpdateEndpoint requests. For
-                  more information, refer to the AWS Key Management Service section
-                  Using Key Policies in AWS KMS (https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html)
+                  more information, refer to the Amazon Web Services Key Management
+                  Service section Using Key Policies in Amazon Web Services KMS (https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html)
                   \n Certain Nitro-based instances include local storage, dependent
                   on the instance type. Local storage volumes are encrypted using
                   a hardware module on the instance. You can't request a KmsKeyId
@@ -99,9 +133,9 @@ spec:
                   that you want to host at this endpoint.
                 items:
                   description: Identifies a model that you want to host and the resources
-                    to deploy for hosting it. If you are deploying multiple models,
-                    tell Amazon SageMaker how to distribute traffic among the models
-                    by specifying variant weights.
+                    chosen to deploy for hosting it. If you are deploying multiple
+                    models, tell Amazon SageMaker how to distribute traffic among
+                    the models by specifying variant weights.
                   properties:
                     acceleratorType:
                       type: string
@@ -129,11 +163,22 @@ spec:
                 type: array
               tags:
                 description: An array of key-value pairs. You can use tags to categorize
-                  your AWS resources in different ways, for example, by purpose, owner,
-                  or environment. For more information, see Tagging AWS Resources
-                  (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+                  your Amazon Web Services resources in different ways, for example,
+                  by purpose, owner, or environment. For more information, see Tagging
+                  Amazon Web Services Resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
                 items:
-                  description: Describes a tag.
+                  description: "A tag object that consists of a key and an optional
+                    value, used to manage metadata for SageMaker Amazon Web Services
+                    resources. \n You can add tags to notebook instances, training
+                    jobs, hyperparameter tuning jobs, batch transform jobs, models,
+                    labeling jobs, work teams, endpoint configurations, and endpoints.
+                    For more information on adding tags to SageMaker resources, see
+                    AddTags. \n For more information on adding metadata to your Amazon
+                    Web Services resources with tagging, see Tagging Amazon Web Services
+                    resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+                    For advice on best practices for managing Amazon Web Services
+                    resources with tagging, see Tagging Best Practices: Implement
+                    an Effective Amazon Web Services Resource Tagging Strategy (https://d1.awsstatic.com/whitepapers/aws-tagging-best-practices.pdf)."
                   properties:
                     key:
                       type: string

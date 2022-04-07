@@ -53,4 +53,15 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          runAsNonRoot: true
+          capabilities:
+            drop:
+              - ALL
       terminationGracePeriodSeconds: 10
+      serviceAccountName: ack-sagemaker-controller
+      hostIPC: false
+      hostNetwork: false
+      hostPID: false

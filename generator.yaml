@@ -505,6 +505,8 @@ resources:
         template_path: model_package/set_resource_name_as_arn.go.tpl
       sdk_update_pre_build_request:
         template_path: common/sdk_update_pre_build_request.go.tpl
+      sdk_update_post_set_output:
+        code: rm.customSetOutput(&resource{ko})
     fields:
       ModelPackageStatus:
         is_read_only: true
@@ -523,9 +525,6 @@ resources:
         from:
           operation: DescribeModelPackage
           path: ModelPackageStatusDetails
-      ModelApprovalStatus:
-        late_initialize:
-          min_backoff_seconds: 5
       LastModifiedTime:
         is_read_only: true
         from:
@@ -624,6 +623,9 @@ resources:
         from:
           operation: DescribeNotebookInstance
           path: NotebookInstanceStatus
+      PlatformIdentifier:
+        late_initialize:
+          min_backoff_seconds: 5
       Url:
         is_read_only: true
         from:
@@ -856,6 +858,7 @@ ignore:
       - PresignedNotebookInstanceUrl
       # - ProcessingJob
       - Project
+      - StudioLifecycleConfig
       # - TrainingJob
       # - TransformJob
       - TrialComponent
@@ -865,3 +868,8 @@ ignore:
       - Workteam
     operations:
       - UpdateTrainingJob
+    shape_names:
+      # RSessionAppSettings is an empty struct that causes generation errors
+      - RSessionAppSettings
+      - RetryStrategy
+      - DeploymentConfig

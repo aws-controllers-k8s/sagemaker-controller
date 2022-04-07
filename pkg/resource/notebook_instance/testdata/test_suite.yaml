@@ -39,7 +39,7 @@ tests:
          expect:
            latest_state: "v1alpha1/readone/observed/nb_readone_pending_after_create.yaml"
        - name: "ReadOne=LateInitialize"
-         description: "Testing late initialize after created, should expect no diff since there is nothing to late initialize"
+         description: "Testing late initialize after created"
          given: 
            desired_state: "v1alpha1/readone/observed/nb_readone_pending_after_create.yaml"
            svc_api:
@@ -47,7 +47,7 @@ tests:
                output_fixture: "sdkapi/readone/readone_pending_after_create.json"
          invoke: LateInitialize
          expect:
-           latest_state: "v1alpha1/readone/observed/nb_readone_pending_after_create.yaml"
+           latest_state: "v1alpha1/readone/observed/nb_readone_late_initialized.yaml"
        - name: "ReadOne=Deleting"
          description: "Testing readone when deleting, resource synced should be false."
          given: 

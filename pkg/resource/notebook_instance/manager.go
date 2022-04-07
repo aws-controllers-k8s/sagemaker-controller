@@ -29,6 +29,7 @@ import (
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
 	acktypes "github.com/aws-controllers-k8s/runtime/pkg/types"
+	ackutil "github.com/aws-controllers-k8s/runtime/pkg/util"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/go-logr/logr"
 	corev1 "k8s.io/api/core/v1"
@@ -37,10 +38,14 @@ import (
 	svcsdkapi "github.com/aws/aws-sdk-go/service/sagemaker/sagemakeriface"
 )
 
+var (
+	_ = ackutil.InStrings
+)
+
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=notebookinstances,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=notebookinstances/status,verbs=get;update;patch
 
-var lateInitializeFieldNames = []string{}
+var lateInitializeFieldNames = []string{"PlatformIdentifier"}
 
 // resourceManager is responsible for providing a consistent way to perform
 // CRUD operations in a backend AWS service API for Book custom resources.
@@ -229,6 +234,10 @@ func (rm *resourceManager) LateInitialize(
 func (rm *resourceManager) incompleteLateInitialization(
 	res acktypes.AWSResource,
 ) bool {
+	ko := rm.concreteResource(res).ko.DeepCopy()
+	if ko.Spec.PlatformIdentifier == nil {
+		return true
+	}
 	return false
 }
 
@@ -238,7 +247,23 @@ func (rm *resourceManager) lateInitializeFromReadOneOutput(
 	observed acktypes.AWSResource,
 	latest acktypes.AWSResource,
 ) acktypes.AWSResource {
-	return latest
+	observedKo := rm.concreteResource(observed).ko.DeepCopy()
+	latestKo := rm.concreteResource(latest).ko.DeepCopy()
+	if observedKo.Spec.PlatformIdentifier != nil && latestKo.Spec.PlatformIdentifier == nil {
+		latestKo.Spec.PlatformIdentifier = observedKo.Spec.PlatformIdentifier
+	}
+	return &resource{latestKo}
+}
+
+// IsSynced returns true if the resource is synced.
+func (rm *resourceManager) IsSynced(ctx context.Context, res acktypes.AWSResource) (bool, error) {
+	r := rm.concreteResource(res)
+	if r.ko == nil {
+		// Should never happen... if it does, it's buggy code.
+		panic("resource manager's IsSynced() method received resource with nil CR object")
+	}
+
+	return true, nil
 }
 
 // newResourceManager returns a new struct implementing

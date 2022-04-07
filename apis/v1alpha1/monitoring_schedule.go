@@ -29,13 +29,13 @@ type MonitoringScheduleSpec struct {
 	// the monitoring job.
 	// +kubebuilder:validation:Required
 	MonitoringScheduleConfig *MonitoringScheduleConfig `json:"monitoringScheduleConfig"`
-	// The name of the monitoring schedule. The name must be unique within an AWS
-	// Region within an AWS account.
+	// The name of the monitoring schedule. The name must be unique within an Amazon
+	// Web Services Region within an Amazon Web Services account.
 	// +kubebuilder:validation:Required
 	MonitoringScheduleName *string `json:"monitoringScheduleName"`
 	// (Optional) An array of key-value pairs. For more information, see Using Cost
 	// Allocation Tags (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html#allocation-whatURL)
-	// in the AWS Billing and Cost Management User Guide.
+	// in the Amazon Web Services Billing and Cost Management User Guide.
 	Tags []*Tag `json:"tags,omitempty"`
 }
 

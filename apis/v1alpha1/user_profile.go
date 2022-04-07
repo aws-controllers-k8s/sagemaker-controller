@@ -30,15 +30,18 @@ type UserProfileSpec struct {
 	// this field is required. If the Domain's AuthMode is not SSO, this field cannot
 	// be specified.
 	SingleSignOnUserIdentifier *string `json:"singleSignOnUserIdentifier,omitempty"`
-	// The username of the associated AWS Single Sign-On User for this UserProfile.
-	// If the Domain's AuthMode is SSO, this field is required, and must match a
-	// valid username of a user in your directory. If the Domain's AuthMode is not
-	// SSO, this field cannot be specified.
+	// The username of the associated Amazon Web Services Single Sign-On User for
+	// this UserProfile. If the Domain's AuthMode is SSO, this field is required,
+	// and must match a valid username of a user in your directory. If the Domain's
+	// AuthMode is not SSO, this field cannot be specified.
 	SingleSignOnUserValue *string `json:"singleSignOnUserValue,omitempty"`
 	// Each tag consists of a key and an optional value. Tag keys must be unique
 	// per resource.
+	//
+	// Tags that you specify for the User Profile are also added to all Apps that
+	// the User Profile launches.
 	Tags []*Tag `json:"tags,omitempty"`
-	// A name for the UserProfile.
+	// A name for the UserProfile. This value is not case sensitive.
 	// +kubebuilder:validation:Required
 	UserProfileName *string `json:"userProfileName"`
 	// A collection of settings.
