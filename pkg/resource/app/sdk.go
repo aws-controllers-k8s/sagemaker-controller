@@ -17,6 +17,7 @@ package app
 
 import (
 	"context"
+	"errors"
 	"reflect"
 	"strings"
 
@@ -342,6 +343,9 @@ func (rm *resourceManager) setStatusDefaults(
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
 	}
+	if ko.Status.ACKResourceMetadata.Region == nil {
+		ko.Status.ACKResourceMetadata.Region = &rm.awsRegion
+	}
 	if ko.Status.ACKResourceMetadata.OwnerAccountID == nil {
 		ko.Status.ACKResourceMetadata.OwnerAccountID = &rm.awsAccountID
 	}
@@ -375,8 +379,8 @@ func (rm *resourceManager) updateConditions(
 			syncCondition = condition
 		}
 	}
-
-	if rm.terminalAWSError(err) || err == ackerr.SecretTypeNotSupported || err == ackerr.SecretNotFound {
+	var termError *ackerr.TerminalError
+	if rm.terminalAWSError(err) || err == ackerr.SecretTypeNotSupported || err == ackerr.SecretNotFound || errors.As(err, &termError) {
 		if terminalCondition == nil {
 			terminalCondition = &ackv1alpha1.Condition{
 				Type: ackv1alpha1.ConditionTypeTerminal,
@@ -384,7 +388,7 @@ func (rm *resourceManager) updateConditions(
 			ko.Status.Conditions = append(ko.Status.Conditions, terminalCondition)
 		}
 		var errorMessage = ""
-		if err == ackerr.SecretTypeNotSupported || err == ackerr.SecretNotFound {
+		if err == ackerr.SecretTypeNotSupported || err == ackerr.SecretNotFound || errors.As(err, &termError) {
 			errorMessage = err.Error()
 		} else {
 			awsErr, _ := ackerr.AWSError(err)
