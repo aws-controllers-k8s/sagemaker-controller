@@ -34,6 +34,7 @@ status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-west-2:123456789012:endpoint-config/single-variant-config
     ownerAccountID: ""
+    region: ""
   conditions:
   - message: not implemented
     status: "True"

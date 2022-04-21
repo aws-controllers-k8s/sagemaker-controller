@@ -44,6 +44,7 @@ status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-west-2:123456789012:data-quality-job-definition/unit-dq-job-definition
     ownerAccountID: ""
+    region: ""
   conditions:
   - status: "False"
     type: ACK.Terminal

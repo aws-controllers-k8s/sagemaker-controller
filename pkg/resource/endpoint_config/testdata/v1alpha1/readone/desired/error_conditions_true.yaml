@@ -33,6 +33,7 @@ spec:
 status:
   ackResourceMetadata:
     ownerAccountID: ""
+    region: ""
   conditions:
   - message: "InvalidParameterValue: The endpoint config name must not include a special
       character.\n\tstatus code: 0, request id: "

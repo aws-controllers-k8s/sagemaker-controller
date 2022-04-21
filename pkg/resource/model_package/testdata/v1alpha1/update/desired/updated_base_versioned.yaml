@@ -25,6 +25,7 @@ status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-west-2:123456789012:model-package/xgboost-model-package-group/1
     ownerAccountID: "123456789012"
+    region: ""
   conditions:
   - lastTransitionTime: "2021-09-17T03:49:49Z"
     message: ModelPackage is in Completed status.

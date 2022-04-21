@@ -28,6 +28,7 @@ status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-west-2:transform-job/xgboost-transform-job
     ownerAccountID: ""
+    region: ""
   conditions:
   - message: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
     status: "True"

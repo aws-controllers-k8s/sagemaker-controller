@@ -39,4 +39,5 @@ status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-west-2:123456789012:model-package/xgboost-model-package-group/1
     ownerAccountID: ""
+    region: ""
   conditions: []

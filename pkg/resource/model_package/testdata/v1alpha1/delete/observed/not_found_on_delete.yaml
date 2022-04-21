@@ -39,6 +39,7 @@ status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-west-2:123456789012:model-package/xgboost-model-package-group/1
     ownerAccountID: ""
+    region: ""
   conditions:
   - message: "ValidationException: Model package xgboost-unversioned-model-package
       does not exist.\n\tstatus code: 0, request id: "

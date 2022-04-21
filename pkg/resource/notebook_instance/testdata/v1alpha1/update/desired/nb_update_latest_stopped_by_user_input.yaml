@@ -13,6 +13,7 @@ status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-east-2:1234:notebook-instance/test
     ownerAccountID: ""
+    region: ""
   conditions:
   - lastTransitionTime: null
     message: NotebookInstance is in Stopped status.

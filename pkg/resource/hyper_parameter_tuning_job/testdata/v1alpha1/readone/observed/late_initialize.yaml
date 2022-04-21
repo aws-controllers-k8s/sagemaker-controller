@@ -118,6 +118,7 @@ status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-west-2:123456789012:hyper-parameter-tuning-job/unit-testing-hpo-job
     ownerAccountID: ""
+    region: ""
   conditions:
   - message: HyperParameterTuningJob is in InProgress status.
     status: "False"

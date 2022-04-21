@@ -15,6 +15,7 @@ spec:
 status:
   ackResourceMetadata:
     ownerAccountID: ""
+    region: ""
   conditions:
   - message: "InvalidParameterValue: The Model package group name must not include a special
       character.\n\tstatus code: 0, request id: "

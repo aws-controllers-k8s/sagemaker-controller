@@ -19,6 +19,7 @@ status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-west-2:123456789012:model/xgboost-model
     ownerAccountID: ""
+    region: ""
   conditions:
   - message: not implemented
     status: "True"
