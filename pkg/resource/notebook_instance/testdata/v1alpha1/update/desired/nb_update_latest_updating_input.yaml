@@ -12,6 +12,7 @@ status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-east-2:1234:notebook-instance/test
     ownerAccountID: ""
+    region: ""
   conditions:
   - lastTransitionTime: "0001-01-01T00:00:00Z"
     message: NotebookInstance is in Updating status.

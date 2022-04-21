@@ -19,6 +19,7 @@ spec:
 status:
   ackResourceMetadata:
     ownerAccountID: ""
+    region: ""
   conditions:
   - message: "InvalidParameterValue: The feature group name must not include a special
       character.\n\tstatus code: 0, request id: "

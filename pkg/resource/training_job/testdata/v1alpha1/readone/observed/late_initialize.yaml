@@ -98,6 +98,7 @@ status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-west-2:123456789012:training-job/xgboost-training-jobsa
     ownerAccountID: ""
+    region: ""
   conditions:
   - message: TrainingJob is in InProgress status.
     status: "False"

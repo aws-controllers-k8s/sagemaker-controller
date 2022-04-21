@@ -28,5 +28,6 @@ status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-west-2:transform-job/xgboost-transform-job
     ownerAccountID: ""
+    region: ""
     transformJobStatus: Stopping
   conditions: []

@@ -17,6 +17,7 @@ status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-west-2:123456789012:model-package-group/xgboost-model-package-group
     ownerAccountID: ""
+    region: ""
   conditions:
   - message: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
     status: "True"

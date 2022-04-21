@@ -44,6 +44,7 @@ spec:
 status:
   ackResourceMetadata:
     ownerAccountID: ""
+    region: ""
   conditions:
   - message: "ValidationException: missing required field, UpdateModelPackageInput.ModelApprovalStatus.\n\tstatus
       code: 0, request id: "

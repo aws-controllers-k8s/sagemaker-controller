@@ -36,6 +36,7 @@ status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-west-2:123456789012:transform-job/xgboost-transform-job
     ownerAccountID: ""
+    region: ""
   conditions:
   - lastTransitionTime: "0001-01-01T00:00:00Z"
     message: TransformJob is in Completed status.

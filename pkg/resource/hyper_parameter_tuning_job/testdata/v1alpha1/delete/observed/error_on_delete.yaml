@@ -78,6 +78,7 @@ status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-west-2:123456789012:hyperparameter-tuning-job/unit-testing-hyper-parameter-tuning-job
     ownerAccountID: ""
+    region: ""
   conditions:
   - message: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
     status: "True"
