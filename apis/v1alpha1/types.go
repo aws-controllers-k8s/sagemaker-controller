@@ -305,7 +305,7 @@ type Bias struct {
 
 // Metadata about a callback step.
 type CallbackStepMetadata struct {
-	SQSQueueURL *string `json:"snsQueueURL,omitempty"`
+	SQSQueueURL *string `json:"sqsQueueURL,omitempty"`
 }
 
 type CaptureContentTypeHeader struct {
@@ -1206,7 +1206,7 @@ type LabelingJobOutput struct {
 type LabelingJobOutputConfig struct {
 	KMSKeyID     *string `json:"kmsKeyID,omitempty"`
 	S3OutputPath *string `json:"s3OutputPath,omitempty"`
-	SnsTopicARN  *string `json:"snsTopicARN,omitempty"`
+	SNSTopicARN  *string `json:"snsTopicARN,omitempty"`
 }
 
 // Configure encryption on the storage volume attached to the ML compute instance
@@ -1221,8 +1221,8 @@ type LabelingJobS3DataSource struct {
 }
 
 // An Amazon SNS data source used for streaming labeling jobs.
-type LabelingJobSnsDataSource struct {
-	SnsTopicARN *string `json:"snsTopicARN,omitempty"`
+type LabelingJobSNSDataSource struct {
+	SNSTopicARN *string `json:"snsTopicARN,omitempty"`
 }
 
 // Provides summary information about a labeling job.

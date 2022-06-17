@@ -716,6 +716,8 @@ resources:
       OnStart:
         compare:
           is_ignored: true
+    tags:
+      ignore: true
   Domain:
     exceptions:
       errors:

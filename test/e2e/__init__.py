@@ -12,6 +12,7 @@
 # permissions and limitations under the License.
 
 from acktest.aws.identity import get_region
+from acktest import tags
 import pytest
 import logging
 import botocore
@@ -252,7 +253,7 @@ def assert_tags_in_sync(resource_arn, resource_tags):
 
     # SageMaker returns tags with Key,Value while ACK returns key,value
     response_tags = [{"key": d["Key"], "value": d["Value"]} for d in response_tags]
-    TestCase().assertCountEqual(response_tags, resource_tags)
+    TestCase().assertCountEqual(tags.clean(response_tags), resource_tags)
 
 
 def get_sagemaker_training_job(training_job_name: str):
