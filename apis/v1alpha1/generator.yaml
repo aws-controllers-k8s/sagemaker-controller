@@ -540,6 +540,8 @@ resources:
       Tags:
         compare:
           is_ignored: true
+    tags:
+      ignore: true
   FeatureGroup:
     update_conditions_custom_method_name: CustomUpdateConditions
     exceptions:

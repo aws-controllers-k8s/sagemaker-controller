@@ -12,7 +12,7 @@
 # permissions and limitations under the License.
 
 from acktest.aws.identity import get_region
-from acktest import tags
+from . import tags
 import pytest
 import logging
 import botocore
