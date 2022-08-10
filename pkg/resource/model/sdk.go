@@ -120,6 +120,9 @@ func (rm *resourceManager) sdkFind(
 				}
 				f0elem.ImageConfig = f0elemf3
 			}
+			if f0iter.InferenceSpecificationName != nil {
+				f0elem.InferenceSpecificationName = f0iter.InferenceSpecificationName
+			}
 			if f0iter.Mode != nil {
 				f0elem.Mode = f0iter.Mode
 			}
@@ -130,11 +133,11 @@ func (rm *resourceManager) sdkFind(
 				f0elem.ModelPackageName = f0iter.ModelPackageName
 			}
 			if f0iter.MultiModelConfig != nil {
-				f0elemf7 := &svcapitypes.MultiModelConfig{}
+				f0elemf8 := &svcapitypes.MultiModelConfig{}
 				if f0iter.MultiModelConfig.ModelCacheSetting != nil {
-					f0elemf7.ModelCacheSetting = f0iter.MultiModelConfig.ModelCacheSetting
+					f0elemf8.ModelCacheSetting = f0iter.MultiModelConfig.ModelCacheSetting
 				}
-				f0elem.MultiModelConfig = f0elemf7
+				f0elem.MultiModelConfig = f0elemf8
 			}
 			f0 = append(f0, f0elem)
 		}
@@ -204,6 +207,9 @@ func (rm *resourceManager) sdkFind(
 			}
 			f7.ImageConfig = f7f3
 		}
+		if resp.PrimaryContainer.InferenceSpecificationName != nil {
+			f7.InferenceSpecificationName = resp.PrimaryContainer.InferenceSpecificationName
+		}
 		if resp.PrimaryContainer.Mode != nil {
 			f7.Mode = resp.PrimaryContainer.Mode
 		}
@@ -214,11 +220,11 @@ func (rm *resourceManager) sdkFind(
 			f7.ModelPackageName = resp.PrimaryContainer.ModelPackageName
 		}
 		if resp.PrimaryContainer.MultiModelConfig != nil {
-			f7f7 := &svcapitypes.MultiModelConfig{}
+			f7f8 := &svcapitypes.MultiModelConfig{}
 			if resp.PrimaryContainer.MultiModelConfig.ModelCacheSetting != nil {
-				f7f7.ModelCacheSetting = resp.PrimaryContainer.MultiModelConfig.ModelCacheSetting
+				f7f8.ModelCacheSetting = resp.PrimaryContainer.MultiModelConfig.ModelCacheSetting
 			}
-			f7.MultiModelConfig = f7f7
+			f7.MultiModelConfig = f7f8
 		}
 		ko.Spec.PrimaryContainer = f7
 	} else {
@@ -358,6 +364,9 @@ func (rm *resourceManager) newCreateRequestPayload(
 				}
 				f0elem.SetImageConfig(f0elemf3)
 			}
+			if f0iter.InferenceSpecificationName != nil {
+				f0elem.SetInferenceSpecificationName(*f0iter.InferenceSpecificationName)
+			}
 			if f0iter.Mode != nil {
 				f0elem.SetMode(*f0iter.Mode)
 			}
@@ -368,11 +377,11 @@ func (rm *resourceManager) newCreateRequestPayload(
 				f0elem.SetModelPackageName(*f0iter.ModelPackageName)
 			}
 			if f0iter.MultiModelConfig != nil {
-				f0elemf7 := &svcsdk.MultiModelConfig{}
+				f0elemf8 := &svcsdk.MultiModelConfig{}
 				if f0iter.MultiModelConfig.ModelCacheSetting != nil {
-					f0elemf7.SetModelCacheSetting(*f0iter.MultiModelConfig.ModelCacheSetting)
+					f0elemf8.SetModelCacheSetting(*f0iter.MultiModelConfig.ModelCacheSetting)
 				}
-				f0elem.SetMultiModelConfig(f0elemf7)
+				f0elem.SetMultiModelConfig(f0elemf8)
 			}
 			f0 = append(f0, f0elem)
 		}
@@ -425,6 +434,9 @@ func (rm *resourceManager) newCreateRequestPayload(
 			}
 			f5.SetImageConfig(f5f3)
 		}
+		if r.ko.Spec.PrimaryContainer.InferenceSpecificationName != nil {
+			f5.SetInferenceSpecificationName(*r.ko.Spec.PrimaryContainer.InferenceSpecificationName)
+		}
 		if r.ko.Spec.PrimaryContainer.Mode != nil {
 			f5.SetMode(*r.ko.Spec.PrimaryContainer.Mode)
 		}
@@ -435,11 +447,11 @@ func (rm *resourceManager) newCreateRequestPayload(
 			f5.SetModelPackageName(*r.ko.Spec.PrimaryContainer.ModelPackageName)
 		}
 		if r.ko.Spec.PrimaryContainer.MultiModelConfig != nil {
-			f5f7 := &svcsdk.MultiModelConfig{}
+			f5f8 := &svcsdk.MultiModelConfig{}
 			if r.ko.Spec.PrimaryContainer.MultiModelConfig.ModelCacheSetting != nil {
-				f5f7.SetModelCacheSetting(*r.ko.Spec.PrimaryContainer.MultiModelConfig.ModelCacheSetting)
+				f5f8.SetModelCacheSetting(*r.ko.Spec.PrimaryContainer.MultiModelConfig.ModelCacheSetting)
 			}
-			f5.SetMultiModelConfig(f5f7)
+			f5.SetMultiModelConfig(f5f8)
 		}
 		res.SetPrimaryContainer(f5)
 	}

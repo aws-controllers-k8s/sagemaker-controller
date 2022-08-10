@@ -43,6 +43,19 @@ type ActionSummary struct {
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
+// A structure of additional Inference Specification. Additional Inference Specification
+// specifies details about inference jobs that can be run with models based
+// on this model package
+type AdditionalInferenceSpecificationDefinition struct {
+	Containers                              []*ModelPackageContainerDefinition `json:"containers,omitempty"`
+	Description                             *string                            `json:"description,omitempty"`
+	Name                                    *string                            `json:"name,omitempty"`
+	SupportedContentTypes                   []*string                          `json:"supportedContentTypes,omitempty"`
+	SupportedRealtimeInferenceInstanceTypes []*string                          `json:"supportedRealtimeInferenceInstanceTypes,omitempty"`
+	SupportedResponseMIMETypes              []*string                          `json:"supportedResponseMIMETypes,omitempty"`
+	SupportedTransformInstanceTypes         []*string                          `json:"supportedTransformInstanceTypes,omitempty"`
+}
+
 // Specifies the training algorithm to use in a CreateTrainingJob request.
 //
 // For more information about algorithms provided by Amazon SageMaker, see Algorithms
@@ -167,7 +180,7 @@ type ArtifactSummary struct {
 // be an association between a training job and a model.
 type AssociationSummary struct {
 	// Information about the user who created or modified an experiment, trial,
-	// trial component, or project.
+	// trial component, lineage group, or project.
 	CreatedBy       *UserContext `json:"createdBy,omitempty"`
 	CreationTime    *metav1.Time `json:"creationTime,omitempty"`
 	DestinationName *string      `json:"destinationName,omitempty"`
@@ -238,6 +251,7 @@ type AutoMLCandidate struct {
 // more information, see .
 type AutoMLChannel struct {
 	CompressionType *string `json:"compressionType,omitempty"`
+	ContentType     *string `json:"contentType,omitempty"`
 }
 
 // A list of container definitions that describe the different containers that
@@ -300,7 +314,9 @@ type BatchDescribeModelPackageSummary struct {
 
 // Contains bias metrics for a model.
 type Bias struct {
-	Report *MetricsSource `json:"report,omitempty"`
+	PostTrainingReport *MetricsSource `json:"postTrainingReport,omitempty"`
+	PreTrainingReport  *MetricsSource `json:"preTrainingReport,omitempty"`
+	Report             *MetricsSource `json:"report,omitempty"`
 }
 
 // Metadata about a callback step.
@@ -405,6 +421,20 @@ type CheckpointConfig struct {
 	S3URI     *string `json:"s3URI,omitempty"`
 }
 
+// The container for the metadata for the ClarifyCheck step. For more information,
+// see the topic on ClarifyCheck step (https://docs.aws.amazon.com/sagemaker/latest/dg/build-and-manage-steps.html#step-type-clarify-check)
+// in the Amazon SageMaker Developer Guide.
+type ClarifyCheckStepMetadata struct {
+	BaselineUsedForDriftCheckConstraints *string `json:"baselineUsedForDriftCheckConstraints,omitempty"`
+	CalculatedBaselineConstraints        *string `json:"calculatedBaselineConstraints,omitempty"`
+	CheckJobARN                          *string `json:"checkJobARN,omitempty"`
+	CheckType                            *string `json:"checkType,omitempty"`
+	ModelPackageGroupName                *string `json:"modelPackageGroupName,omitempty"`
+	RegisterNewBaseline                  *bool   `json:"registerNewBaseline,omitempty"`
+	SkipCheck                            *bool   `json:"skipCheck,omitempty"`
+	ViolationReport                      *string `json:"violationReport,omitempty"`
+}
+
 // Specifies summary information about a Git repository.
 type CodeRepositorySummary struct {
 	CodeRepositoryName *string      `json:"codeRepositoryName,omitempty"`
@@ -434,10 +464,11 @@ type ContainerDefinition struct {
 	Image             *string            `json:"image,omitempty"`
 	// Specifies whether the model container is in Amazon ECR or a private Docker
 	// registry accessible from your Amazon Virtual Private Cloud (VPC).
-	ImageConfig      *ImageConfig `json:"imageConfig,omitempty"`
-	Mode             *string      `json:"mode,omitempty"`
-	ModelDataURL     *string      `json:"modelDataURL,omitempty"`
-	ModelPackageName *string      `json:"modelPackageName,omitempty"`
+	ImageConfig                *ImageConfig `json:"imageConfig,omitempty"`
+	InferenceSpecificationName *string      `json:"inferenceSpecificationName,omitempty"`
+	Mode                       *string      `json:"mode,omitempty"`
+	ModelDataURL               *string      `json:"modelDataURL,omitempty"`
+	ModelPackageName           *string      `json:"modelPackageName,omitempty"`
 	// Specifies additional configuration for hosting multi-model endpoints.
 	MultiModelConfig *MultiModelConfig `json:"multiModelConfig,omitempty"`
 }
@@ -663,6 +694,62 @@ type DomainSettingsForUpdate struct {
 	RStudioServerProDomainSettingsForUpdate *RStudioServerProDomainSettingsForUpdate `json:"rStudioServerProDomainSettingsForUpdate,omitempty"`
 }
 
+// Represents the drift check baselines that can be used when the model monitor
+// is set using the model package.
+type DriftCheckBaselines struct {
+	// Represents the drift check bias baselines that can be used when the model
+	// monitor is set using the model package.
+	Bias *DriftCheckBias `json:"bias,omitempty"`
+	// Represents the drift check explainability baselines that can be used when
+	// the model monitor is set using the model package.
+	Explainability *DriftCheckExplainability `json:"explainability,omitempty"`
+	// Represents the drift check data quality baselines that can be used when the
+	// model monitor is set using the model package.
+	ModelDataQuality *DriftCheckModelDataQuality `json:"modelDataQuality,omitempty"`
+	// Represents the drift check model quality baselines that can be used when
+	// the model monitor is set using the model package.
+	ModelQuality *DriftCheckModelQuality `json:"modelQuality,omitempty"`
+}
+
+// Represents the drift check bias baselines that can be used when the model
+// monitor is set using the model package.
+type DriftCheckBias struct {
+	// Contains details regarding the file source.
+	ConfigFile              *FileSource    `json:"configFile,omitempty"`
+	PostTrainingConstraints *MetricsSource `json:"postTrainingConstraints,omitempty"`
+	PreTrainingConstraints  *MetricsSource `json:"preTrainingConstraints,omitempty"`
+}
+
+// Represents the drift check explainability baselines that can be used when
+// the model monitor is set using the model package.
+type DriftCheckExplainability struct {
+	// Contains details regarding the file source.
+	ConfigFile  *FileSource    `json:"configFile,omitempty"`
+	Constraints *MetricsSource `json:"constraints,omitempty"`
+}
+
+// Represents the drift check data quality baselines that can be used when the
+// model monitor is set using the model package.
+type DriftCheckModelDataQuality struct {
+	Constraints *MetricsSource `json:"constraints,omitempty"`
+	Statistics  *MetricsSource `json:"statistics,omitempty"`
+}
+
+// Represents the drift check model quality baselines that can be used when
+// the model monitor is set using the model package.
+type DriftCheckModelQuality struct {
+	Constraints *MetricsSource `json:"constraints,omitempty"`
+	Statistics  *MetricsSource `json:"statistics,omitempty"`
+}
+
+// The configurations and outcomes of an Amazon EMR step execution.
+type EMRStepMetadata struct {
+	ClusterID   *string `json:"clusterID,omitempty"`
+	LogFilePath *string `json:"logFilePath,omitempty"`
+	StepID      *string `json:"stepID,omitempty"`
+	StepName    *string `json:"stepName,omitempty"`
+}
+
 // The model on the edge device.
 type EdgeModel struct {
 	LatestInference  *metav1.Time `json:"latestInference,omitempty"`
@@ -722,6 +809,20 @@ type EndpointInput struct {
 	StartTimeOffset               *string  `json:"startTimeOffset,omitempty"`
 }
 
+// The endpoint configuration for the load test.
+type EndpointInputConfiguration struct {
+	InferenceSpecificationName *string `json:"inferenceSpecificationName,omitempty"`
+	InstanceType               *string `json:"instanceType,omitempty"`
+}
+
+// The endpoint configuration made by Inference Recommender during a recommendation
+// job.
+type EndpointOutputConfiguration struct {
+	EndpointName *string `json:"endpointName,omitempty"`
+	InstanceType *string `json:"instanceType,omitempty"`
+	VariantName  *string `json:"variantName,omitempty"`
+}
+
 // Provides summary information for an endpoint.
 type EndpointSummary struct {
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
@@ -745,16 +846,24 @@ type Endpoint_SDK struct {
 	Tags               []*Tag                      `json:"tags,omitempty"`
 }
 
+// A list of environment parameters suggested by the Amazon SageMaker Inference
+// Recommender.
+type EnvironmentParameter struct {
+	Key       *string `json:"key,omitempty"`
+	Value     *string `json:"value,omitempty"`
+	ValueType *string `json:"valueType,omitempty"`
+}
+
 // The properties of an experiment as returned by the Search API.
 type Experiment struct {
 	// Information about the user who created or modified an experiment, trial,
-	// trial component, or project.
+	// trial component, lineage group, or project.
 	CreatedBy      *UserContext `json:"createdBy,omitempty"`
 	CreationTime   *metav1.Time `json:"creationTime,omitempty"`
 	DisplayName    *string      `json:"displayName,omitempty"`
 	ExperimentName *string      `json:"experimentName,omitempty"`
 	// Information about the user who created or modified an experiment, trial,
-	// trial component, or project.
+	// trial component, lineage group, or project.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	Tags             []*Tag       `json:"tags,omitempty"`
@@ -837,6 +946,13 @@ type FeatureGroup_SDK struct {
 	RecordIdentifierFeatureName *string            `json:"recordIdentifierFeatureName,omitempty"`
 	RoleARN                     *string            `json:"roleARN,omitempty"`
 	Tags                        []*Tag             `json:"tags,omitempty"`
+}
+
+// Contains details regarding the file source.
+type FileSource struct {
+	ContentDigest *string `json:"contentDigest,omitempty"`
+	ContentType   *string `json:"contentType,omitempty"`
+	S3URI         *string `json:"s3URI,omitempty"`
 }
 
 // Specifies a file system data source for a channel.
@@ -1137,6 +1253,15 @@ type InferenceExecutionConfig struct {
 	Mode *string `json:"mode,omitempty"`
 }
 
+// A structure that contains a list of recommendation jobs.
+type InferenceRecommendationsJob struct {
+	CompletionTime   *metav1.Time `json:"completionTime,omitempty"`
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	FailureReason    *string      `json:"failureReason,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	RoleARN          *string      `json:"roleARN,omitempty"`
+}
+
 // Defines how to perform inference generation after a training job is run.
 type InferenceSpecification struct {
 	Containers                              []*ModelPackageContainerDefinition `json:"containers,omitempty"`
@@ -1150,7 +1275,9 @@ type InferenceSpecification struct {
 // and shape of the expected data inputs, and the framework in which the model
 // was trained.
 type InputConfig struct {
-	S3URI *string `json:"s3URI,omitempty"`
+	DataInputConfig  *string `json:"dataInputConfig,omitempty"`
+	FrameworkVersion *string `json:"frameworkVersion,omitempty"`
+	S3URI            *string `json:"s3URI,omitempty"`
 }
 
 // For a hyperparameter of the integer type, specifies the range that a hyperparameter
@@ -1238,6 +1365,15 @@ type LambdaStepMetadata struct {
 	ARN *string `json:"arn,omitempty"`
 }
 
+// Lists a summary of the properties of a lineage group. A lineage group provides
+// a group of shareable lineage entity resources.
+type LineageGroupSummary struct {
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	DisplayName      *string      `json:"displayName,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	LineageGroupName *string      `json:"lineageGroupName,omitempty"`
+}
+
 // Metadata properties of the tracking entity, trial, or trial component.
 type MetadataProperties struct {
 	CommitID    *string `json:"commitID,omitempty"`
@@ -1313,6 +1449,12 @@ type ModelClientConfig struct {
 	InvocationsTimeoutInSeconds *int64 `json:"invocationsTimeoutInSeconds,omitempty"`
 }
 
+// Defines the model configuration. Includes the specification name and environment
+// parameters.
+type ModelConfiguration struct {
+	InferenceSpecificationName *string `json:"inferenceSpecificationName,omitempty"`
+}
+
 // Data quality constraints and statistics for a model.
 type ModelDataQuality struct {
 	Constraints *MetricsSource `json:"constraints,omitempty"`
@@ -1351,6 +1493,26 @@ type ModelExplainabilityJobInput struct {
 	EndpointInput *EndpointInput `json:"endpointInput,omitempty"`
 }
 
+// Input object for the model.
+type ModelInput struct {
+	DataInputConfig *string `json:"dataInputConfig,omitempty"`
+}
+
+// Part of the search expression. You can specify the name and value (domain,
+// task, framework, framework version, task, and model).
+type ModelMetadataFilter struct {
+	Value *string `json:"value,omitempty"`
+}
+
+// A summary of the model metadata.
+type ModelMetadataSummary struct {
+	Domain           *string `json:"domain,omitempty"`
+	Framework        *string `json:"framework,omitempty"`
+	FrameworkVersion *string `json:"frameworkVersion,omitempty"`
+	Model            *string `json:"model,omitempty"`
+	Task             *string `json:"task,omitempty"`
+}
+
 // Contains metrics captured from a model.
 type ModelMetrics struct {
 	// Contains bias metrics for a model.
@@ -1367,10 +1529,15 @@ type ModelMetrics struct {
 type ModelPackageContainerDefinition struct {
 	ContainerHostname *string            `json:"containerHostname,omitempty"`
 	Environment       map[string]*string `json:"environment,omitempty"`
+	Framework         *string            `json:"framework,omitempty"`
+	FrameworkVersion  *string            `json:"frameworkVersion,omitempty"`
 	Image             *string            `json:"image,omitempty"`
 	ImageDigest       *string            `json:"imageDigest,omitempty"`
 	ModelDataURL      *string            `json:"modelDataURL,omitempty"`
-	ProductID         *string            `json:"productID,omitempty"`
+	// Input object for the model.
+	ModelInput       *ModelInput `json:"modelInput,omitempty"`
+	NearestModelName *string     `json:"nearestModelName,omitempty"`
+	ProductID        *string     `json:"productID,omitempty"`
 }
 
 // Summary information about a model group.
@@ -1385,7 +1552,7 @@ type ModelPackageGroupSummary struct {
 // A group of versioned models in the model registry.
 type ModelPackageGroup_SDK struct {
 	// Information about the user who created or modified an experiment, trial,
-	// trial component, or project.
+	// trial component, lineage group, or project.
 	CreatedBy                    *UserContext `json:"createdBy,omitempty"`
 	CreationTime                 *metav1.Time `json:"creationTime,omitempty"`
 	ModelPackageGroupARN         *string      `json:"modelPackageGroupARN,omitempty"`
@@ -1441,17 +1608,22 @@ type ModelPackageValidationSpecification struct {
 
 // A versioned model that can be deployed for SageMaker inference.
 type ModelPackage_SDK struct {
-	ApprovalDescription   *string `json:"approvalDescription,omitempty"`
-	CertifyForMarketplace *bool   `json:"certifyForMarketplace,omitempty"`
+	AdditionalInferenceSpecifications []*AdditionalInferenceSpecificationDefinition `json:"additionalInferenceSpecifications,omitempty"`
+	ApprovalDescription               *string                                       `json:"approvalDescription,omitempty"`
+	CertifyForMarketplace             *bool                                         `json:"certifyForMarketplace,omitempty"`
 	// Information about the user who created or modified an experiment, trial,
-	// trial component, or project.
+	// trial component, lineage group, or project.
 	CreatedBy                  *UserContext       `json:"createdBy,omitempty"`
 	CreationTime               *metav1.Time       `json:"creationTime,omitempty"`
 	CustomerMetadataProperties map[string]*string `json:"customerMetadataProperties,omitempty"`
+	Domain                     *string            `json:"domain,omitempty"`
+	// Represents the drift check baselines that can be used when the model monitor
+	// is set using the model package.
+	DriftCheckBaselines *DriftCheckBaselines `json:"driftCheckBaselines,omitempty"`
 	// Defines how to perform inference generation after a training job is run.
 	InferenceSpecification *InferenceSpecification `json:"inferenceSpecification,omitempty"`
 	// Information about the user who created or modified an experiment, trial,
-	// trial component, or project.
+	// trial component, lineage group, or project.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	// Metadata properties of the tracking entity, trial, or trial component.
@@ -1467,9 +1639,11 @@ type ModelPackage_SDK struct {
 	// Specifies the validation and image scan statuses of the model package.
 	ModelPackageStatusDetails *ModelPackageStatusDetails `json:"modelPackageStatusDetails,omitempty"`
 	ModelPackageVersion       *int64                     `json:"modelPackageVersion,omitempty"`
+	SamplePayloadURL          *string                    `json:"samplePayloadURL,omitempty"`
 	// A list of algorithms that were used to create a model package.
 	SourceAlgorithmSpecification *SourceAlgorithmSpecification `json:"sourceAlgorithmSpecification,omitempty"`
 	Tags                         []*Tag                        `json:"tags,omitempty"`
+	Task                         *string                       `json:"task,omitempty"`
 	// Specifies batch transform jobs that Amazon SageMaker runs to validate your
 	// model package.
 	ValidationSpecification *ModelPackageValidationSpecification `json:"validationSpecification,omitempty"`
@@ -1897,11 +2071,11 @@ type PendingProductionVariantSummary struct {
 // A SageMaker Model Building Pipeline instance.
 type Pipeline struct {
 	// Information about the user who created or modified an experiment, trial,
-	// trial component, or project.
+	// trial component, lineage group, or project.
 	CreatedBy    *UserContext `json:"createdBy,omitempty"`
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	// Information about the user who created or modified an experiment, trial,
-	// trial component, or project.
+	// trial component, lineage group, or project.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	LastRunTime      *metav1.Time `json:"lastRunTime,omitempty"`
@@ -1912,11 +2086,11 @@ type Pipeline struct {
 // An execution of a pipeline.
 type PipelineExecution struct {
 	// Information about the user who created or modified an experiment, trial,
-	// trial component, or project.
+	// trial component, lineage group, or project.
 	CreatedBy    *UserContext `json:"createdBy,omitempty"`
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	// Information about the user who created or modified an experiment, trial,
-	// trial component, or project.
+	// trial component, lineage group, or project.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
@@ -2172,11 +2346,11 @@ type ProfilerRuleEvaluationStatus struct {
 // The properties of a project as returned by the Search API.
 type Project struct {
 	// Information about the user who created or modified an experiment, trial,
-	// trial component, or project.
+	// trial component, lineage group, or project.
 	CreatedBy    *UserContext `json:"createdBy,omitempty"`
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	// Information about the user who created or modified an experiment, trial,
-	// trial component, or project.
+	// trial component, lineage group, or project.
 	LastModifiedBy     *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime   *metav1.Time `json:"lastModifiedTime,omitempty"`
 	ProjectDescription *string      `json:"projectDescription,omitempty"`
@@ -2187,6 +2361,31 @@ type Project struct {
 type ProjectSummary struct {
 	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
 	ProjectDescription *string      `json:"projectDescription,omitempty"`
+}
+
+// Container for the metadata for a Quality check step. For more information,
+// see the topic on QualityCheck step (https://docs.aws.amazon.com/sagemaker/latest/dg/build-and-manage-steps.html#step-type-quality-check)
+// in the Amazon SageMaker Developer Guide.
+type QualityCheckStepMetadata struct {
+	BaselineUsedForDriftCheckConstraints *string `json:"baselineUsedForDriftCheckConstraints,omitempty"`
+	BaselineUsedForDriftCheckStatistics  *string `json:"baselineUsedForDriftCheckStatistics,omitempty"`
+	CalculatedBaselineConstraints        *string `json:"calculatedBaselineConstraints,omitempty"`
+	CalculatedBaselineStatistics         *string `json:"calculatedBaselineStatistics,omitempty"`
+	CheckJobARN                          *string `json:"checkJobARN,omitempty"`
+	CheckType                            *string `json:"checkType,omitempty"`
+	ModelPackageGroupName                *string `json:"modelPackageGroupName,omitempty"`
+	RegisterNewBaseline                  *bool   `json:"registerNewBaseline,omitempty"`
+	SkipCheck                            *bool   `json:"skipCheck,omitempty"`
+	ViolationReport                      *string `json:"violationReport,omitempty"`
+}
+
+// A set of filters to narrow the set of lineage entities connected to the StartArn(s)
+// returned by the QueryLineage API action.
+type QueryFilters struct {
+	CreatedAfter   *metav1.Time `json:"createdAfter,omitempty"`
+	CreatedBefore  *metav1.Time `json:"createdBefore,omitempty"`
+	ModifiedAfter  *metav1.Time `json:"modifiedAfter,omitempty"`
+	ModifiedBefore *metav1.Time `json:"modifiedBefore,omitempty"`
 }
 
 // A collection of settings that configure user interaction with the RStudioServerPro
@@ -2215,6 +2414,17 @@ type RStudioServerProDomainSettingsForUpdate struct {
 	// the instance type that the version runs on.
 	DefaultResourceSpec    *ResourceSpec `json:"defaultResourceSpec,omitempty"`
 	DomainExecutionRoleARN *string       `json:"domainExecutionRoleARN,omitempty"`
+}
+
+// The input configuration of the recommendation job.
+type RecommendationJobInputConfig struct {
+	ModelPackageVersionARN *string `json:"modelPackageVersionARN,omitempty"`
+}
+
+// The metrics of recommendations.
+type RecommendationMetrics struct {
+	CostPerHour      *float64 `json:"costPerHour,omitempty"`
+	CostPerInference *float64 `json:"costPerInference,omitempty"`
 }
 
 // Configuration for Redshift Dataset Definition input.
@@ -2752,13 +2962,13 @@ type TransformS3DataSource struct {
 // The properties of a trial as returned by the Search API.
 type Trial struct {
 	// Information about the user who created or modified an experiment, trial,
-	// trial component, or project.
+	// trial component, lineage group, or project.
 	CreatedBy      *UserContext `json:"createdBy,omitempty"`
 	CreationTime   *metav1.Time `json:"creationTime,omitempty"`
 	DisplayName    *string      `json:"displayName,omitempty"`
 	ExperimentName *string      `json:"experimentName,omitempty"`
 	// Information about the user who created or modified an experiment, trial,
-	// trial component, or project.
+	// trial component, lineage group, or project.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	// Metadata properties of the tracking entity, trial, or trial component.
@@ -2770,13 +2980,13 @@ type Trial struct {
 // The properties of a trial component as returned by the Search API.
 type TrialComponent struct {
 	// Information about the user who created or modified an experiment, trial,
-	// trial component, or project.
+	// trial component, lineage group, or project.
 	CreatedBy    *UserContext `json:"createdBy,omitempty"`
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	DisplayName  *string      `json:"displayName,omitempty"`
 	EndTime      *metav1.Time `json:"endTime,omitempty"`
 	// Information about the user who created or modified an experiment, trial,
-	// trial component, or project.
+	// trial component, lineage group, or project.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	// Metadata properties of the tracking entity, trial, or trial component.
@@ -2795,7 +3005,7 @@ type TrialComponentMetricSummary struct {
 // A short summary of a trial component.
 type TrialComponentSimpleSummary struct {
 	// Information about the user who created or modified an experiment, trial,
-	// trial component, or project.
+	// trial component, lineage group, or project.
 	CreatedBy          *UserContext `json:"createdBy,omitempty"`
 	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
 	TrialComponentName *string      `json:"trialComponentName,omitempty"`
@@ -2805,13 +3015,13 @@ type TrialComponentSimpleSummary struct {
 // call the DescribeTrialComponent API and provide the TrialComponentName.
 type TrialComponentSummary struct {
 	// Information about the user who created or modified an experiment, trial,
-	// trial component, or project.
+	// trial component, lineage group, or project.
 	CreatedBy    *UserContext `json:"createdBy,omitempty"`
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	DisplayName  *string      `json:"displayName,omitempty"`
 	EndTime      *metav1.Time `json:"endTime,omitempty"`
 	// Information about the user who created or modified an experiment, trial,
-	// trial component, or project.
+	// trial component, lineage group, or project.
 	LastModifiedBy     *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime   *metav1.Time `json:"lastModifiedTime,omitempty"`
 	StartTime          *metav1.Time `json:"startTime,omitempty"`
@@ -2851,7 +3061,7 @@ type UiConfig struct {
 }
 
 // Information about the user who created or modified an experiment, trial,
-// trial component, or project.
+// trial component, lineage group, or project.
 type UserContext struct {
 	DomainID        *string `json:"domainID,omitempty"`
 	UserProfileARN  *string `json:"userProfileARN,omitempty"`
