@@ -212,7 +212,7 @@ spec:
                     type: array
                 type: object
               homeEFSFileSystemKMSKeyID:
-                description: This member is deprecated and replaced with KmsKeyId.
+                description: Use KmsKeyId.
                 type: string
               kmsKeyID:
                 description: SageMaker uses Amazon Web Services KMS to encrypt the

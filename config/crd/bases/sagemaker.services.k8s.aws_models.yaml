@@ -69,6 +69,8 @@ spec:
                               type: string
                           type: object
                       type: object
+                    inferenceSpecificationName:
+                      type: string
                     mode:
                       type: string
                     modelDataURL:
@@ -140,6 +142,8 @@ spec:
                             type: string
                         type: object
                     type: object
+                  inferenceSpecificationName:
+                    type: string
                   mode:
                     type: string
                   modelDataURL:

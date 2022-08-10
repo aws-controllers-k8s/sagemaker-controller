@@ -123,6 +123,13 @@ func newResourceDelta(
 				}
 			}
 		}
+		if ackcompare.HasNilDifference(a.ko.Spec.PrimaryContainer.InferenceSpecificationName, b.ko.Spec.PrimaryContainer.InferenceSpecificationName) {
+			delta.Add("Spec.PrimaryContainer.InferenceSpecificationName", a.ko.Spec.PrimaryContainer.InferenceSpecificationName, b.ko.Spec.PrimaryContainer.InferenceSpecificationName)
+		} else if a.ko.Spec.PrimaryContainer.InferenceSpecificationName != nil && b.ko.Spec.PrimaryContainer.InferenceSpecificationName != nil {
+			if *a.ko.Spec.PrimaryContainer.InferenceSpecificationName != *b.ko.Spec.PrimaryContainer.InferenceSpecificationName {
+				delta.Add("Spec.PrimaryContainer.InferenceSpecificationName", a.ko.Spec.PrimaryContainer.InferenceSpecificationName, b.ko.Spec.PrimaryContainer.InferenceSpecificationName)
+			}
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.PrimaryContainer.Mode, b.ko.Spec.PrimaryContainer.Mode) {
 			delta.Add("Spec.PrimaryContainer.Mode", a.ko.Spec.PrimaryContainer.Mode, b.ko.Spec.PrimaryContainer.Mode)
 		} else if a.ko.Spec.PrimaryContainer.Mode != nil && b.ko.Spec.PrimaryContainer.Mode != nil {

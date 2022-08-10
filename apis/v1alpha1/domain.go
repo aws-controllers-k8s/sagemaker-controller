@@ -50,7 +50,7 @@ type DomainSpec struct {
 	DomainName *string `json:"domainName"`
 	// A collection of Domain settings.
 	DomainSettings *DomainSettings `json:"domainSettings,omitempty"`
-	// This member is deprecated and replaced with KmsKeyId.
+	// Use KmsKeyId.
 	HomeEFSFileSystemKMSKeyID *string `json:"homeEFSFileSystemKMSKeyID,omitempty"`
 	// SageMaker uses Amazon Web Services KMS to encrypt the EFS volume attached
 	// to the domain with an Amazon Web Services managed key by default. For more

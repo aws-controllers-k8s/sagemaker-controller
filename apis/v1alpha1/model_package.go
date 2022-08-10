@@ -24,6 +24,11 @@ import (
 //
 // A versioned model that can be deployed for SageMaker inference.
 type ModelPackageSpec struct {
+	// An array of additional Inference Specification objects. Each additional Inference
+	// Specification specifies artifacts based on this model package that can be
+	// used on inference endpoints. Generally used with SageMaker Neo to store the
+	// compiled artifacts.
+	AdditionalInferenceSpecifications []*AdditionalInferenceSpecificationDefinition `json:"additionalInferenceSpecifications,omitempty"`
 	// A description for the approval status of the model.
 	ApprovalDescription *string `json:"approvalDescription,omitempty"`
 	// Whether to certify the model package for listing on Amazon Web Services Marketplace.
@@ -35,6 +40,14 @@ type ModelPackageSpec struct {
 	ClientToken *string `json:"clientToken,omitempty"`
 	// The metadata properties associated with the model package versions.
 	CustomerMetadataProperties map[string]*string `json:"customerMetadataProperties,omitempty"`
+	// The machine learning domain of your model package and its components. Common
+	// machine learning domains include computer vision and natural language processing.
+	Domain *string `json:"domain,omitempty"`
+	// Represents the drift check baselines that can be used when the model monitor
+	// is set using the model package. For more information, see the topic on Drift
+	// Detection against Previous Baselines in SageMaker Pipelines (https://docs.aws.amazon.com/sagemaker/latest/dg/pipelines-quality-clarify-baseline-lifecycle.html#pipelines-quality-clarify-baseline-drift-detection)
+	// in the Amazon SageMaker Developer Guide.
+	DriftCheckBaselines *DriftCheckBaselines `json:"driftCheckBaselines,omitempty"`
 	// Specifies details about inference jobs that can be run with models based
 	// on this model package, including the following:
 	//
@@ -73,12 +86,19 @@ type ModelPackageSpec struct {
 	// This parameter is required for unversioned models. It is not applicable to
 	// versioned models.
 	ModelPackageName *string `json:"modelPackageName,omitempty"`
+	// The Amazon Simple Storage Service (Amazon S3) path where the sample payload
+	// are stored. This path must point to a single gzip compressed tar archive
+	// (.tar.gz suffix).
+	SamplePayloadURL *string `json:"samplePayloadURL,omitempty"`
 	// Details about the algorithm that was used to create the model package.
 	SourceAlgorithmSpecification *SourceAlgorithmSpecification `json:"sourceAlgorithmSpecification,omitempty"`
 	// A list of key value pairs associated with the model. For more information,
 	// see Tagging Amazon Web Services resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html)
 	// in the Amazon Web Services General Reference Guide.
 	Tags []*Tag `json:"tags,omitempty"`
+	// The machine learning task your model package accomplishes. Common machine
+	// learning tasks include object detection and image classification.
+	Task *string `json:"task,omitempty"`
 	// Specifies configurations for one or more transform jobs that Amazon SageMaker
 	// runs to test the model package.
 	ValidationSpecification *ModelPackageValidationSpecification `json:"validationSpecification,omitempty"`

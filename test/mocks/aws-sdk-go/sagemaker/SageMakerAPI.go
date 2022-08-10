@@ -2044,6 +2044,84 @@ func (_m *SageMakerAPI) CreateImageWithContext(_a0 context.Context, _a1 *sagemak
 	return r0, r1
 }
 
+// CreateInferenceRecommendationsJob provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) CreateInferenceRecommendationsJob(_a0 *sagemaker.CreateInferenceRecommendationsJobInput) (*sagemaker.CreateInferenceRecommendationsJobOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.CreateInferenceRecommendationsJobOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.CreateInferenceRecommendationsJobInput) *sagemaker.CreateInferenceRecommendationsJobOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.CreateInferenceRecommendationsJobOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.CreateInferenceRecommendationsJobInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// CreateInferenceRecommendationsJobRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) CreateInferenceRecommendationsJobRequest(_a0 *sagemaker.CreateInferenceRecommendationsJobInput) (*request.Request, *sagemaker.CreateInferenceRecommendationsJobOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.CreateInferenceRecommendationsJobInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.CreateInferenceRecommendationsJobOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.CreateInferenceRecommendationsJobInput) *sagemaker.CreateInferenceRecommendationsJobOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.CreateInferenceRecommendationsJobOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// CreateInferenceRecommendationsJobWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) CreateInferenceRecommendationsJobWithContext(_a0 context.Context, _a1 *sagemaker.CreateInferenceRecommendationsJobInput, _a2 ...request.Option) (*sagemaker.CreateInferenceRecommendationsJobOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.CreateInferenceRecommendationsJobOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.CreateInferenceRecommendationsJobInput, ...request.Option) *sagemaker.CreateInferenceRecommendationsJobOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.CreateInferenceRecommendationsJobOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.CreateInferenceRecommendationsJobInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // CreateLabelingJob provides a mock function with given fields: _a0
 func (_m *SageMakerAPI) CreateLabelingJob(_a0 *sagemaker.CreateLabelingJobInput) (*sagemaker.CreateLabelingJobOutput, error) {
 	ret := _m.Called(_a0)
@@ -8674,6 +8752,84 @@ func (_m *SageMakerAPI) DescribeImageWithContext(_a0 context.Context, _a1 *sagem
 	return r0, r1
 }
 
+// DescribeInferenceRecommendationsJob provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) DescribeInferenceRecommendationsJob(_a0 *sagemaker.DescribeInferenceRecommendationsJobInput) (*sagemaker.DescribeInferenceRecommendationsJobOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.DescribeInferenceRecommendationsJobOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.DescribeInferenceRecommendationsJobInput) *sagemaker.DescribeInferenceRecommendationsJobOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.DescribeInferenceRecommendationsJobOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.DescribeInferenceRecommendationsJobInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// DescribeInferenceRecommendationsJobRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) DescribeInferenceRecommendationsJobRequest(_a0 *sagemaker.DescribeInferenceRecommendationsJobInput) (*request.Request, *sagemaker.DescribeInferenceRecommendationsJobOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.DescribeInferenceRecommendationsJobInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.DescribeInferenceRecommendationsJobOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.DescribeInferenceRecommendationsJobInput) *sagemaker.DescribeInferenceRecommendationsJobOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.DescribeInferenceRecommendationsJobOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// DescribeInferenceRecommendationsJobWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) DescribeInferenceRecommendationsJobWithContext(_a0 context.Context, _a1 *sagemaker.DescribeInferenceRecommendationsJobInput, _a2 ...request.Option) (*sagemaker.DescribeInferenceRecommendationsJobOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.DescribeInferenceRecommendationsJobOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.DescribeInferenceRecommendationsJobInput, ...request.Option) *sagemaker.DescribeInferenceRecommendationsJobOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.DescribeInferenceRecommendationsJobOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.DescribeInferenceRecommendationsJobInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // DescribeLabelingJob provides a mock function with given fields: _a0
 func (_m *SageMakerAPI) DescribeLabelingJob(_a0 *sagemaker.DescribeLabelingJobInput) (*sagemaker.DescribeLabelingJobOutput, error) {
 	ret := _m.Called(_a0)
@@ -8744,6 +8900,84 @@ func (_m *SageMakerAPI) DescribeLabelingJobWithContext(_a0 context.Context, _a1 
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.DescribeLabelingJobInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// DescribeLineageGroup provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) DescribeLineageGroup(_a0 *sagemaker.DescribeLineageGroupInput) (*sagemaker.DescribeLineageGroupOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.DescribeLineageGroupOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.DescribeLineageGroupInput) *sagemaker.DescribeLineageGroupOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.DescribeLineageGroupOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.DescribeLineageGroupInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// DescribeLineageGroupRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) DescribeLineageGroupRequest(_a0 *sagemaker.DescribeLineageGroupInput) (*request.Request, *sagemaker.DescribeLineageGroupOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.DescribeLineageGroupInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.DescribeLineageGroupOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.DescribeLineageGroupInput) *sagemaker.DescribeLineageGroupOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.DescribeLineageGroupOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// DescribeLineageGroupWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) DescribeLineageGroupWithContext(_a0 context.Context, _a1 *sagemaker.DescribeLineageGroupInput, _a2 ...request.Option) (*sagemaker.DescribeLineageGroupOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.DescribeLineageGroupOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.DescribeLineageGroupInput, ...request.Option) *sagemaker.DescribeLineageGroupOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.DescribeLineageGroupOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.DescribeLineageGroupInput, ...request.Option) error); ok {
 		r1 = rf(_a0, _a1, _a2...)
 	} else {
 		r1 = ret.Error(1)
@@ -10850,6 +11084,84 @@ func (_m *SageMakerAPI) GetDeviceFleetReportWithContext(_a0 context.Context, _a1
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.GetDeviceFleetReportInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetLineageGroupPolicy provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) GetLineageGroupPolicy(_a0 *sagemaker.GetLineageGroupPolicyInput) (*sagemaker.GetLineageGroupPolicyOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.GetLineageGroupPolicyOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.GetLineageGroupPolicyInput) *sagemaker.GetLineageGroupPolicyOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.GetLineageGroupPolicyOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.GetLineageGroupPolicyInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetLineageGroupPolicyRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) GetLineageGroupPolicyRequest(_a0 *sagemaker.GetLineageGroupPolicyInput) (*request.Request, *sagemaker.GetLineageGroupPolicyOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.GetLineageGroupPolicyInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.GetLineageGroupPolicyOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.GetLineageGroupPolicyInput) *sagemaker.GetLineageGroupPolicyOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.GetLineageGroupPolicyOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// GetLineageGroupPolicyWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) GetLineageGroupPolicyWithContext(_a0 context.Context, _a1 *sagemaker.GetLineageGroupPolicyInput, _a2 ...request.Option) (*sagemaker.GetLineageGroupPolicyOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.GetLineageGroupPolicyOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.GetLineageGroupPolicyInput, ...request.Option) *sagemaker.GetLineageGroupPolicyOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.GetLineageGroupPolicyOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.GetLineageGroupPolicyInput, ...request.Option) error); ok {
 		r1 = rf(_a0, _a1, _a2...)
 	} else {
 		r1 = ret.Error(1)
@@ -13917,6 +14229,119 @@ func (_m *SageMakerAPI) ListImagesWithContext(_a0 context.Context, _a1 *sagemake
 	return r0, r1
 }
 
+// ListInferenceRecommendationsJobs provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) ListInferenceRecommendationsJobs(_a0 *sagemaker.ListInferenceRecommendationsJobsInput) (*sagemaker.ListInferenceRecommendationsJobsOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.ListInferenceRecommendationsJobsOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.ListInferenceRecommendationsJobsInput) *sagemaker.ListInferenceRecommendationsJobsOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.ListInferenceRecommendationsJobsOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.ListInferenceRecommendationsJobsInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ListInferenceRecommendationsJobsPages provides a mock function with given fields: _a0, _a1
+func (_m *SageMakerAPI) ListInferenceRecommendationsJobsPages(_a0 *sagemaker.ListInferenceRecommendationsJobsInput, _a1 func(*sagemaker.ListInferenceRecommendationsJobsOutput, bool) bool) error {
+	ret := _m.Called(_a0, _a1)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*sagemaker.ListInferenceRecommendationsJobsInput, func(*sagemaker.ListInferenceRecommendationsJobsOutput, bool) bool) error); ok {
+		r0 = rf(_a0, _a1)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// ListInferenceRecommendationsJobsPagesWithContext provides a mock function with given fields: _a0, _a1, _a2, _a3
+func (_m *SageMakerAPI) ListInferenceRecommendationsJobsPagesWithContext(_a0 context.Context, _a1 *sagemaker.ListInferenceRecommendationsJobsInput, _a2 func(*sagemaker.ListInferenceRecommendationsJobsOutput, bool) bool, _a3 ...request.Option) error {
+	_va := make([]interface{}, len(_a3))
+	for _i := range _a3 {
+		_va[_i] = _a3[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1, _a2)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.ListInferenceRecommendationsJobsInput, func(*sagemaker.ListInferenceRecommendationsJobsOutput, bool) bool, ...request.Option) error); ok {
+		r0 = rf(_a0, _a1, _a2, _a3...)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// ListInferenceRecommendationsJobsRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) ListInferenceRecommendationsJobsRequest(_a0 *sagemaker.ListInferenceRecommendationsJobsInput) (*request.Request, *sagemaker.ListInferenceRecommendationsJobsOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.ListInferenceRecommendationsJobsInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.ListInferenceRecommendationsJobsOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.ListInferenceRecommendationsJobsInput) *sagemaker.ListInferenceRecommendationsJobsOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.ListInferenceRecommendationsJobsOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// ListInferenceRecommendationsJobsWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) ListInferenceRecommendationsJobsWithContext(_a0 context.Context, _a1 *sagemaker.ListInferenceRecommendationsJobsInput, _a2 ...request.Option) (*sagemaker.ListInferenceRecommendationsJobsOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.ListInferenceRecommendationsJobsOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.ListInferenceRecommendationsJobsInput, ...request.Option) *sagemaker.ListInferenceRecommendationsJobsOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.ListInferenceRecommendationsJobsOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.ListInferenceRecommendationsJobsInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // ListLabelingJobs provides a mock function with given fields: _a0
 func (_m *SageMakerAPI) ListLabelingJobs(_a0 *sagemaker.ListLabelingJobsInput) (*sagemaker.ListLabelingJobsOutput, error) {
 	ret := _m.Called(_a0)
@@ -14143,6 +14568,119 @@ func (_m *SageMakerAPI) ListLabelingJobsWithContext(_a0 context.Context, _a1 *sa
 	return r0, r1
 }
 
+// ListLineageGroups provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) ListLineageGroups(_a0 *sagemaker.ListLineageGroupsInput) (*sagemaker.ListLineageGroupsOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.ListLineageGroupsOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.ListLineageGroupsInput) *sagemaker.ListLineageGroupsOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.ListLineageGroupsOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.ListLineageGroupsInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ListLineageGroupsPages provides a mock function with given fields: _a0, _a1
+func (_m *SageMakerAPI) ListLineageGroupsPages(_a0 *sagemaker.ListLineageGroupsInput, _a1 func(*sagemaker.ListLineageGroupsOutput, bool) bool) error {
+	ret := _m.Called(_a0, _a1)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*sagemaker.ListLineageGroupsInput, func(*sagemaker.ListLineageGroupsOutput, bool) bool) error); ok {
+		r0 = rf(_a0, _a1)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// ListLineageGroupsPagesWithContext provides a mock function with given fields: _a0, _a1, _a2, _a3
+func (_m *SageMakerAPI) ListLineageGroupsPagesWithContext(_a0 context.Context, _a1 *sagemaker.ListLineageGroupsInput, _a2 func(*sagemaker.ListLineageGroupsOutput, bool) bool, _a3 ...request.Option) error {
+	_va := make([]interface{}, len(_a3))
+	for _i := range _a3 {
+		_va[_i] = _a3[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1, _a2)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.ListLineageGroupsInput, func(*sagemaker.ListLineageGroupsOutput, bool) bool, ...request.Option) error); ok {
+		r0 = rf(_a0, _a1, _a2, _a3...)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// ListLineageGroupsRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) ListLineageGroupsRequest(_a0 *sagemaker.ListLineageGroupsInput) (*request.Request, *sagemaker.ListLineageGroupsOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.ListLineageGroupsInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.ListLineageGroupsOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.ListLineageGroupsInput) *sagemaker.ListLineageGroupsOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.ListLineageGroupsOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// ListLineageGroupsWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) ListLineageGroupsWithContext(_a0 context.Context, _a1 *sagemaker.ListLineageGroupsInput, _a2 ...request.Option) (*sagemaker.ListLineageGroupsOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.ListLineageGroupsOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.ListLineageGroupsInput, ...request.Option) *sagemaker.ListLineageGroupsOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.ListLineageGroupsOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.ListLineageGroupsInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // ListModelBiasJobDefinitions provides a mock function with given fields: _a0
 func (_m *SageMakerAPI) ListModelBiasJobDefinitions(_a0 *sagemaker.ListModelBiasJobDefinitionsInput) (*sagemaker.ListModelBiasJobDefinitionsOutput, error) {
 	ret := _m.Called(_a0)
@@ -14361,6 +14899,119 @@ func (_m *SageMakerAPI) ListModelExplainabilityJobDefinitionsWithContext(_a0 con
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.ListModelExplainabilityJobDefinitionsInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ListModelMetadata provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) ListModelMetadata(_a0 *sagemaker.ListModelMetadataInput) (*sagemaker.ListModelMetadataOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.ListModelMetadataOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.ListModelMetadataInput) *sagemaker.ListModelMetadataOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.ListModelMetadataOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.ListModelMetadataInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ListModelMetadataPages provides a mock function with given fields: _a0, _a1
+func (_m *SageMakerAPI) ListModelMetadataPages(_a0 *sagemaker.ListModelMetadataInput, _a1 func(*sagemaker.ListModelMetadataOutput, bool) bool) error {
+	ret := _m.Called(_a0, _a1)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*sagemaker.ListModelMetadataInput, func(*sagemaker.ListModelMetadataOutput, bool) bool) error); ok {
+		r0 = rf(_a0, _a1)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// ListModelMetadataPagesWithContext provides a mock function with given fields: _a0, _a1, _a2, _a3
+func (_m *SageMakerAPI) ListModelMetadataPagesWithContext(_a0 context.Context, _a1 *sagemaker.ListModelMetadataInput, _a2 func(*sagemaker.ListModelMetadataOutput, bool) bool, _a3 ...request.Option) error {
+	_va := make([]interface{}, len(_a3))
+	for _i := range _a3 {
+		_va[_i] = _a3[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1, _a2)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.ListModelMetadataInput, func(*sagemaker.ListModelMetadataOutput, bool) bool, ...request.Option) error); ok {
+		r0 = rf(_a0, _a1, _a2, _a3...)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// ListModelMetadataRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) ListModelMetadataRequest(_a0 *sagemaker.ListModelMetadataInput) (*request.Request, *sagemaker.ListModelMetadataOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.ListModelMetadataInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.ListModelMetadataOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.ListModelMetadataInput) *sagemaker.ListModelMetadataOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.ListModelMetadataOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// ListModelMetadataWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) ListModelMetadataWithContext(_a0 context.Context, _a1 *sagemaker.ListModelMetadataInput, _a2 ...request.Option) (*sagemaker.ListModelMetadataOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.ListModelMetadataOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.ListModelMetadataInput, ...request.Option) *sagemaker.ListModelMetadataOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.ListModelMetadataOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.ListModelMetadataInput, ...request.Option) error); ok {
 		r1 = rf(_a0, _a1, _a2...)
 	} else {
 		r1 = ret.Error(1)
@@ -17272,6 +17923,119 @@ func (_m *SageMakerAPI) PutModelPackageGroupPolicyWithContext(_a0 context.Contex
 	return r0, r1
 }
 
+// QueryLineage provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) QueryLineage(_a0 *sagemaker.QueryLineageInput) (*sagemaker.QueryLineageOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.QueryLineageOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.QueryLineageInput) *sagemaker.QueryLineageOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.QueryLineageOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.QueryLineageInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// QueryLineagePages provides a mock function with given fields: _a0, _a1
+func (_m *SageMakerAPI) QueryLineagePages(_a0 *sagemaker.QueryLineageInput, _a1 func(*sagemaker.QueryLineageOutput, bool) bool) error {
+	ret := _m.Called(_a0, _a1)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*sagemaker.QueryLineageInput, func(*sagemaker.QueryLineageOutput, bool) bool) error); ok {
+		r0 = rf(_a0, _a1)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// QueryLineagePagesWithContext provides a mock function with given fields: _a0, _a1, _a2, _a3
+func (_m *SageMakerAPI) QueryLineagePagesWithContext(_a0 context.Context, _a1 *sagemaker.QueryLineageInput, _a2 func(*sagemaker.QueryLineageOutput, bool) bool, _a3 ...request.Option) error {
+	_va := make([]interface{}, len(_a3))
+	for _i := range _a3 {
+		_va[_i] = _a3[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1, _a2)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.QueryLineageInput, func(*sagemaker.QueryLineageOutput, bool) bool, ...request.Option) error); ok {
+		r0 = rf(_a0, _a1, _a2, _a3...)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// QueryLineageRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) QueryLineageRequest(_a0 *sagemaker.QueryLineageInput) (*request.Request, *sagemaker.QueryLineageOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.QueryLineageInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.QueryLineageOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.QueryLineageInput) *sagemaker.QueryLineageOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.QueryLineageOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// QueryLineageWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) QueryLineageWithContext(_a0 context.Context, _a1 *sagemaker.QueryLineageInput, _a2 ...request.Option) (*sagemaker.QueryLineageOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.QueryLineageOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.QueryLineageInput, ...request.Option) *sagemaker.QueryLineageOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.QueryLineageOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.QueryLineageInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // RegisterDevices provides a mock function with given fields: _a0
 func (_m *SageMakerAPI) RegisterDevices(_a0 *sagemaker.RegisterDevicesInput) (*sagemaker.RegisterDevicesOutput, error) {
 	ret := _m.Called(_a0)
@@ -18313,6 +19077,84 @@ func (_m *SageMakerAPI) StopHyperParameterTuningJobWithContext(_a0 context.Conte
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.StopHyperParameterTuningJobInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// StopInferenceRecommendationsJob provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) StopInferenceRecommendationsJob(_a0 *sagemaker.StopInferenceRecommendationsJobInput) (*sagemaker.StopInferenceRecommendationsJobOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.StopInferenceRecommendationsJobOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.StopInferenceRecommendationsJobInput) *sagemaker.StopInferenceRecommendationsJobOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.StopInferenceRecommendationsJobOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.StopInferenceRecommendationsJobInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// StopInferenceRecommendationsJobRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) StopInferenceRecommendationsJobRequest(_a0 *sagemaker.StopInferenceRecommendationsJobInput) (*request.Request, *sagemaker.StopInferenceRecommendationsJobOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.StopInferenceRecommendationsJobInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.StopInferenceRecommendationsJobOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.StopInferenceRecommendationsJobInput) *sagemaker.StopInferenceRecommendationsJobOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.StopInferenceRecommendationsJobOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// StopInferenceRecommendationsJobWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) StopInferenceRecommendationsJobWithContext(_a0 context.Context, _a1 *sagemaker.StopInferenceRecommendationsJobInput, _a2 ...request.Option) (*sagemaker.StopInferenceRecommendationsJobOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.StopInferenceRecommendationsJobOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.StopInferenceRecommendationsJobInput, ...request.Option) *sagemaker.StopInferenceRecommendationsJobOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.StopInferenceRecommendationsJobOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.StopInferenceRecommendationsJobInput, ...request.Option) error); ok {
 		r1 = rf(_a0, _a1, _a2...)
 	} else {
 		r1 = ret.Error(1)

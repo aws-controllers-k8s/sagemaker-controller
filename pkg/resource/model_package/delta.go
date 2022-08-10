@@ -42,6 +42,9 @@ func newResourceDelta(
 	}
 	customSetDefaults(a, b)
 
+	if !reflect.DeepEqual(a.ko.Spec.AdditionalInferenceSpecifications, b.ko.Spec.AdditionalInferenceSpecifications) {
+		delta.Add("Spec.AdditionalInferenceSpecifications", a.ko.Spec.AdditionalInferenceSpecifications, b.ko.Spec.AdditionalInferenceSpecifications)
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.ApprovalDescription, b.ko.Spec.ApprovalDescription) {
 		delta.Add("Spec.ApprovalDescription", a.ko.Spec.ApprovalDescription, b.ko.Spec.ApprovalDescription)
 	} else if a.ko.Spec.ApprovalDescription != nil && b.ko.Spec.ApprovalDescription != nil {
@@ -68,6 +71,258 @@ func newResourceDelta(
 	} else if a.ko.Spec.CustomerMetadataProperties != nil && b.ko.Spec.CustomerMetadataProperties != nil {
 		if !ackcompare.MapStringStringPEqual(a.ko.Spec.CustomerMetadataProperties, b.ko.Spec.CustomerMetadataProperties) {
 			delta.Add("Spec.CustomerMetadataProperties", a.ko.Spec.CustomerMetadataProperties, b.ko.Spec.CustomerMetadataProperties)
+		}
+	}
+	if ackcompare.HasNilDifference(a.ko.Spec.Domain, b.ko.Spec.Domain) {
+		delta.Add("Spec.Domain", a.ko.Spec.Domain, b.ko.Spec.Domain)
+	} else if a.ko.Spec.Domain != nil && b.ko.Spec.Domain != nil {
+		if *a.ko.Spec.Domain != *b.ko.Spec.Domain {
+			delta.Add("Spec.Domain", a.ko.Spec.Domain, b.ko.Spec.Domain)
+		}
+	}
+	if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines, b.ko.Spec.DriftCheckBaselines) {
+		delta.Add("Spec.DriftCheckBaselines", a.ko.Spec.DriftCheckBaselines, b.ko.Spec.DriftCheckBaselines)
+	} else if a.ko.Spec.DriftCheckBaselines != nil && b.ko.Spec.DriftCheckBaselines != nil {
+		if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Bias, b.ko.Spec.DriftCheckBaselines.Bias) {
+			delta.Add("Spec.DriftCheckBaselines.Bias", a.ko.Spec.DriftCheckBaselines.Bias, b.ko.Spec.DriftCheckBaselines.Bias)
+		} else if a.ko.Spec.DriftCheckBaselines.Bias != nil && b.ko.Spec.DriftCheckBaselines.Bias != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Bias.ConfigFile, b.ko.Spec.DriftCheckBaselines.Bias.ConfigFile) {
+				delta.Add("Spec.DriftCheckBaselines.Bias.ConfigFile", a.ko.Spec.DriftCheckBaselines.Bias.ConfigFile, b.ko.Spec.DriftCheckBaselines.Bias.ConfigFile)
+			} else if a.ko.Spec.DriftCheckBaselines.Bias.ConfigFile != nil && b.ko.Spec.DriftCheckBaselines.Bias.ConfigFile != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.ContentDigest, b.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.ContentDigest) {
+					delta.Add("Spec.DriftCheckBaselines.Bias.ConfigFile.ContentDigest", a.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.ContentDigest, b.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.ContentDigest)
+				} else if a.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.ContentDigest != nil && b.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.ContentDigest != nil {
+					if *a.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.ContentDigest != *b.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.ContentDigest {
+						delta.Add("Spec.DriftCheckBaselines.Bias.ConfigFile.ContentDigest", a.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.ContentDigest, b.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.ContentDigest)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.ContentType, b.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.ContentType) {
+					delta.Add("Spec.DriftCheckBaselines.Bias.ConfigFile.ContentType", a.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.ContentType, b.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.ContentType)
+				} else if a.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.ContentType != nil && b.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.ContentType != nil {
+					if *a.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.ContentType != *b.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.ContentType {
+						delta.Add("Spec.DriftCheckBaselines.Bias.ConfigFile.ContentType", a.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.ContentType, b.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.ContentType)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.S3URI, b.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.S3URI) {
+					delta.Add("Spec.DriftCheckBaselines.Bias.ConfigFile.S3URI", a.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.S3URI, b.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.S3URI)
+				} else if a.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.S3URI != nil && b.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.S3URI != nil {
+					if *a.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.S3URI != *b.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.S3URI {
+						delta.Add("Spec.DriftCheckBaselines.Bias.ConfigFile.S3URI", a.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.S3URI, b.ko.Spec.DriftCheckBaselines.Bias.ConfigFile.S3URI)
+					}
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints, b.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints) {
+				delta.Add("Spec.DriftCheckBaselines.Bias.PostTrainingConstraints", a.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints, b.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints)
+			} else if a.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints != nil && b.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentDigest, b.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentDigest) {
+					delta.Add("Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentDigest", a.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentDigest, b.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentDigest)
+				} else if a.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentDigest != nil && b.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentDigest != nil {
+					if *a.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentDigest != *b.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentDigest {
+						delta.Add("Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentDigest", a.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentDigest, b.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentDigest)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentType, b.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentType) {
+					delta.Add("Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentType", a.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentType, b.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentType)
+				} else if a.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentType != nil && b.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentType != nil {
+					if *a.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentType != *b.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentType {
+						delta.Add("Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentType", a.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentType, b.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.ContentType)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.S3URI, b.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.S3URI) {
+					delta.Add("Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.S3URI", a.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.S3URI, b.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.S3URI)
+				} else if a.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.S3URI != nil && b.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.S3URI != nil {
+					if *a.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.S3URI != *b.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.S3URI {
+						delta.Add("Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.S3URI", a.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.S3URI, b.ko.Spec.DriftCheckBaselines.Bias.PostTrainingConstraints.S3URI)
+					}
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints, b.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints) {
+				delta.Add("Spec.DriftCheckBaselines.Bias.PreTrainingConstraints", a.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints, b.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints)
+			} else if a.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints != nil && b.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentDigest, b.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentDigest) {
+					delta.Add("Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentDigest", a.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentDigest, b.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentDigest)
+				} else if a.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentDigest != nil && b.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentDigest != nil {
+					if *a.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentDigest != *b.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentDigest {
+						delta.Add("Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentDigest", a.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentDigest, b.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentDigest)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentType, b.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentType) {
+					delta.Add("Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentType", a.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentType, b.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentType)
+				} else if a.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentType != nil && b.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentType != nil {
+					if *a.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentType != *b.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentType {
+						delta.Add("Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentType", a.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentType, b.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.ContentType)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.S3URI, b.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.S3URI) {
+					delta.Add("Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.S3URI", a.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.S3URI, b.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.S3URI)
+				} else if a.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.S3URI != nil && b.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.S3URI != nil {
+					if *a.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.S3URI != *b.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.S3URI {
+						delta.Add("Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.S3URI", a.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.S3URI, b.ko.Spec.DriftCheckBaselines.Bias.PreTrainingConstraints.S3URI)
+					}
+				}
+			}
+		}
+		if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Explainability, b.ko.Spec.DriftCheckBaselines.Explainability) {
+			delta.Add("Spec.DriftCheckBaselines.Explainability", a.ko.Spec.DriftCheckBaselines.Explainability, b.ko.Spec.DriftCheckBaselines.Explainability)
+		} else if a.ko.Spec.DriftCheckBaselines.Explainability != nil && b.ko.Spec.DriftCheckBaselines.Explainability != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile, b.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile) {
+				delta.Add("Spec.DriftCheckBaselines.Explainability.ConfigFile", a.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile, b.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile)
+			} else if a.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile != nil && b.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentDigest, b.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentDigest) {
+					delta.Add("Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentDigest", a.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentDigest, b.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentDigest)
+				} else if a.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentDigest != nil && b.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentDigest != nil {
+					if *a.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentDigest != *b.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentDigest {
+						delta.Add("Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentDigest", a.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentDigest, b.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentDigest)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentType, b.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentType) {
+					delta.Add("Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentType", a.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentType, b.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentType)
+				} else if a.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentType != nil && b.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentType != nil {
+					if *a.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentType != *b.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentType {
+						delta.Add("Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentType", a.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentType, b.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.ContentType)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.S3URI, b.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.S3URI) {
+					delta.Add("Spec.DriftCheckBaselines.Explainability.ConfigFile.S3URI", a.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.S3URI, b.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.S3URI)
+				} else if a.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.S3URI != nil && b.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.S3URI != nil {
+					if *a.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.S3URI != *b.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.S3URI {
+						delta.Add("Spec.DriftCheckBaselines.Explainability.ConfigFile.S3URI", a.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.S3URI, b.ko.Spec.DriftCheckBaselines.Explainability.ConfigFile.S3URI)
+					}
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Explainability.Constraints, b.ko.Spec.DriftCheckBaselines.Explainability.Constraints) {
+				delta.Add("Spec.DriftCheckBaselines.Explainability.Constraints", a.ko.Spec.DriftCheckBaselines.Explainability.Constraints, b.ko.Spec.DriftCheckBaselines.Explainability.Constraints)
+			} else if a.ko.Spec.DriftCheckBaselines.Explainability.Constraints != nil && b.ko.Spec.DriftCheckBaselines.Explainability.Constraints != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Explainability.Constraints.ContentDigest, b.ko.Spec.DriftCheckBaselines.Explainability.Constraints.ContentDigest) {
+					delta.Add("Spec.DriftCheckBaselines.Explainability.Constraints.ContentDigest", a.ko.Spec.DriftCheckBaselines.Explainability.Constraints.ContentDigest, b.ko.Spec.DriftCheckBaselines.Explainability.Constraints.ContentDigest)
+				} else if a.ko.Spec.DriftCheckBaselines.Explainability.Constraints.ContentDigest != nil && b.ko.Spec.DriftCheckBaselines.Explainability.Constraints.ContentDigest != nil {
+					if *a.ko.Spec.DriftCheckBaselines.Explainability.Constraints.ContentDigest != *b.ko.Spec.DriftCheckBaselines.Explainability.Constraints.ContentDigest {
+						delta.Add("Spec.DriftCheckBaselines.Explainability.Constraints.ContentDigest", a.ko.Spec.DriftCheckBaselines.Explainability.Constraints.ContentDigest, b.ko.Spec.DriftCheckBaselines.Explainability.Constraints.ContentDigest)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Explainability.Constraints.ContentType, b.ko.Spec.DriftCheckBaselines.Explainability.Constraints.ContentType) {
+					delta.Add("Spec.DriftCheckBaselines.Explainability.Constraints.ContentType", a.ko.Spec.DriftCheckBaselines.Explainability.Constraints.ContentType, b.ko.Spec.DriftCheckBaselines.Explainability.Constraints.ContentType)
+				} else if a.ko.Spec.DriftCheckBaselines.Explainability.Constraints.ContentType != nil && b.ko.Spec.DriftCheckBaselines.Explainability.Constraints.ContentType != nil {
+					if *a.ko.Spec.DriftCheckBaselines.Explainability.Constraints.ContentType != *b.ko.Spec.DriftCheckBaselines.Explainability.Constraints.ContentType {
+						delta.Add("Spec.DriftCheckBaselines.Explainability.Constraints.ContentType", a.ko.Spec.DriftCheckBaselines.Explainability.Constraints.ContentType, b.ko.Spec.DriftCheckBaselines.Explainability.Constraints.ContentType)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.Explainability.Constraints.S3URI, b.ko.Spec.DriftCheckBaselines.Explainability.Constraints.S3URI) {
+					delta.Add("Spec.DriftCheckBaselines.Explainability.Constraints.S3URI", a.ko.Spec.DriftCheckBaselines.Explainability.Constraints.S3URI, b.ko.Spec.DriftCheckBaselines.Explainability.Constraints.S3URI)
+				} else if a.ko.Spec.DriftCheckBaselines.Explainability.Constraints.S3URI != nil && b.ko.Spec.DriftCheckBaselines.Explainability.Constraints.S3URI != nil {
+					if *a.ko.Spec.DriftCheckBaselines.Explainability.Constraints.S3URI != *b.ko.Spec.DriftCheckBaselines.Explainability.Constraints.S3URI {
+						delta.Add("Spec.DriftCheckBaselines.Explainability.Constraints.S3URI", a.ko.Spec.DriftCheckBaselines.Explainability.Constraints.S3URI, b.ko.Spec.DriftCheckBaselines.Explainability.Constraints.S3URI)
+					}
+				}
+			}
+		}
+		if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.ModelDataQuality, b.ko.Spec.DriftCheckBaselines.ModelDataQuality) {
+			delta.Add("Spec.DriftCheckBaselines.ModelDataQuality", a.ko.Spec.DriftCheckBaselines.ModelDataQuality, b.ko.Spec.DriftCheckBaselines.ModelDataQuality)
+		} else if a.ko.Spec.DriftCheckBaselines.ModelDataQuality != nil && b.ko.Spec.DriftCheckBaselines.ModelDataQuality != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints) {
+				delta.Add("Spec.DriftCheckBaselines.ModelDataQuality.Constraints", a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints)
+			} else if a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints != nil && b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentDigest, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentDigest) {
+					delta.Add("Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentDigest", a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentDigest, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentDigest)
+				} else if a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentDigest != nil && b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentDigest != nil {
+					if *a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentDigest != *b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentDigest {
+						delta.Add("Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentDigest", a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentDigest, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentDigest)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentType, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentType) {
+					delta.Add("Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentType", a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentType, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentType)
+				} else if a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentType != nil && b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentType != nil {
+					if *a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentType != *b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentType {
+						delta.Add("Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentType", a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentType, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.ContentType)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.S3URI, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.S3URI) {
+					delta.Add("Spec.DriftCheckBaselines.ModelDataQuality.Constraints.S3URI", a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.S3URI, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.S3URI)
+				} else if a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.S3URI != nil && b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.S3URI != nil {
+					if *a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.S3URI != *b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.S3URI {
+						delta.Add("Spec.DriftCheckBaselines.ModelDataQuality.Constraints.S3URI", a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.S3URI, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Constraints.S3URI)
+					}
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics) {
+				delta.Add("Spec.DriftCheckBaselines.ModelDataQuality.Statistics", a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics)
+			} else if a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics != nil && b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentDigest, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentDigest) {
+					delta.Add("Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentDigest", a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentDigest, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentDigest)
+				} else if a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentDigest != nil && b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentDigest != nil {
+					if *a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentDigest != *b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentDigest {
+						delta.Add("Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentDigest", a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentDigest, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentDigest)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentType, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentType) {
+					delta.Add("Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentType", a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentType, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentType)
+				} else if a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentType != nil && b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentType != nil {
+					if *a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentType != *b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentType {
+						delta.Add("Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentType", a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentType, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.ContentType)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.S3URI, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.S3URI) {
+					delta.Add("Spec.DriftCheckBaselines.ModelDataQuality.Statistics.S3URI", a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.S3URI, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.S3URI)
+				} else if a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.S3URI != nil && b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.S3URI != nil {
+					if *a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.S3URI != *b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.S3URI {
+						delta.Add("Spec.DriftCheckBaselines.ModelDataQuality.Statistics.S3URI", a.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.S3URI, b.ko.Spec.DriftCheckBaselines.ModelDataQuality.Statistics.S3URI)
+					}
+				}
+			}
+		}
+		if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.ModelQuality, b.ko.Spec.DriftCheckBaselines.ModelQuality) {
+			delta.Add("Spec.DriftCheckBaselines.ModelQuality", a.ko.Spec.DriftCheckBaselines.ModelQuality, b.ko.Spec.DriftCheckBaselines.ModelQuality)
+		} else if a.ko.Spec.DriftCheckBaselines.ModelQuality != nil && b.ko.Spec.DriftCheckBaselines.ModelQuality != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints, b.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints) {
+				delta.Add("Spec.DriftCheckBaselines.ModelQuality.Constraints", a.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints, b.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints)
+			} else if a.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints != nil && b.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentDigest, b.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentDigest) {
+					delta.Add("Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentDigest", a.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentDigest, b.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentDigest)
+				} else if a.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentDigest != nil && b.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentDigest != nil {
+					if *a.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentDigest != *b.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentDigest {
+						delta.Add("Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentDigest", a.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentDigest, b.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentDigest)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentType, b.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentType) {
+					delta.Add("Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentType", a.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentType, b.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentType)
+				} else if a.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentType != nil && b.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentType != nil {
+					if *a.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentType != *b.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentType {
+						delta.Add("Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentType", a.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentType, b.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.ContentType)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.S3URI, b.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.S3URI) {
+					delta.Add("Spec.DriftCheckBaselines.ModelQuality.Constraints.S3URI", a.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.S3URI, b.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.S3URI)
+				} else if a.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.S3URI != nil && b.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.S3URI != nil {
+					if *a.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.S3URI != *b.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.S3URI {
+						delta.Add("Spec.DriftCheckBaselines.ModelQuality.Constraints.S3URI", a.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.S3URI, b.ko.Spec.DriftCheckBaselines.ModelQuality.Constraints.S3URI)
+					}
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics, b.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics) {
+				delta.Add("Spec.DriftCheckBaselines.ModelQuality.Statistics", a.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics, b.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics)
+			} else if a.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics != nil && b.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentDigest, b.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentDigest) {
+					delta.Add("Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentDigest", a.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentDigest, b.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentDigest)
+				} else if a.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentDigest != nil && b.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentDigest != nil {
+					if *a.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentDigest != *b.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentDigest {
+						delta.Add("Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentDigest", a.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentDigest, b.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentDigest)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentType, b.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentType) {
+					delta.Add("Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentType", a.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentType, b.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentType)
+				} else if a.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentType != nil && b.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentType != nil {
+					if *a.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentType != *b.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentType {
+						delta.Add("Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentType", a.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentType, b.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.ContentType)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.S3URI, b.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.S3URI) {
+					delta.Add("Spec.DriftCheckBaselines.ModelQuality.Statistics.S3URI", a.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.S3URI, b.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.S3URI)
+				} else if a.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.S3URI != nil && b.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.S3URI != nil {
+					if *a.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.S3URI != *b.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.S3URI {
+						delta.Add("Spec.DriftCheckBaselines.ModelQuality.Statistics.S3URI", a.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.S3URI, b.ko.Spec.DriftCheckBaselines.ModelQuality.Statistics.S3URI)
+					}
+				}
+			}
 		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.InferenceSpecification, b.ko.Spec.InferenceSpecification) {
@@ -134,6 +389,56 @@ func newResourceDelta(
 		if ackcompare.HasNilDifference(a.ko.Spec.ModelMetrics.Bias, b.ko.Spec.ModelMetrics.Bias) {
 			delta.Add("Spec.ModelMetrics.Bias", a.ko.Spec.ModelMetrics.Bias, b.ko.Spec.ModelMetrics.Bias)
 		} else if a.ko.Spec.ModelMetrics.Bias != nil && b.ko.Spec.ModelMetrics.Bias != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.ModelMetrics.Bias.PostTrainingReport, b.ko.Spec.ModelMetrics.Bias.PostTrainingReport) {
+				delta.Add("Spec.ModelMetrics.Bias.PostTrainingReport", a.ko.Spec.ModelMetrics.Bias.PostTrainingReport, b.ko.Spec.ModelMetrics.Bias.PostTrainingReport)
+			} else if a.ko.Spec.ModelMetrics.Bias.PostTrainingReport != nil && b.ko.Spec.ModelMetrics.Bias.PostTrainingReport != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.ModelMetrics.Bias.PostTrainingReport.ContentDigest, b.ko.Spec.ModelMetrics.Bias.PostTrainingReport.ContentDigest) {
+					delta.Add("Spec.ModelMetrics.Bias.PostTrainingReport.ContentDigest", a.ko.Spec.ModelMetrics.Bias.PostTrainingReport.ContentDigest, b.ko.Spec.ModelMetrics.Bias.PostTrainingReport.ContentDigest)
+				} else if a.ko.Spec.ModelMetrics.Bias.PostTrainingReport.ContentDigest != nil && b.ko.Spec.ModelMetrics.Bias.PostTrainingReport.ContentDigest != nil {
+					if *a.ko.Spec.ModelMetrics.Bias.PostTrainingReport.ContentDigest != *b.ko.Spec.ModelMetrics.Bias.PostTrainingReport.ContentDigest {
+						delta.Add("Spec.ModelMetrics.Bias.PostTrainingReport.ContentDigest", a.ko.Spec.ModelMetrics.Bias.PostTrainingReport.ContentDigest, b.ko.Spec.ModelMetrics.Bias.PostTrainingReport.ContentDigest)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.ModelMetrics.Bias.PostTrainingReport.ContentType, b.ko.Spec.ModelMetrics.Bias.PostTrainingReport.ContentType) {
+					delta.Add("Spec.ModelMetrics.Bias.PostTrainingReport.ContentType", a.ko.Spec.ModelMetrics.Bias.PostTrainingReport.ContentType, b.ko.Spec.ModelMetrics.Bias.PostTrainingReport.ContentType)
+				} else if a.ko.Spec.ModelMetrics.Bias.PostTrainingReport.ContentType != nil && b.ko.Spec.ModelMetrics.Bias.PostTrainingReport.ContentType != nil {
+					if *a.ko.Spec.ModelMetrics.Bias.PostTrainingReport.ContentType != *b.ko.Spec.ModelMetrics.Bias.PostTrainingReport.ContentType {
+						delta.Add("Spec.ModelMetrics.Bias.PostTrainingReport.ContentType", a.ko.Spec.ModelMetrics.Bias.PostTrainingReport.ContentType, b.ko.Spec.ModelMetrics.Bias.PostTrainingReport.ContentType)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.ModelMetrics.Bias.PostTrainingReport.S3URI, b.ko.Spec.ModelMetrics.Bias.PostTrainingReport.S3URI) {
+					delta.Add("Spec.ModelMetrics.Bias.PostTrainingReport.S3URI", a.ko.Spec.ModelMetrics.Bias.PostTrainingReport.S3URI, b.ko.Spec.ModelMetrics.Bias.PostTrainingReport.S3URI)
+				} else if a.ko.Spec.ModelMetrics.Bias.PostTrainingReport.S3URI != nil && b.ko.Spec.ModelMetrics.Bias.PostTrainingReport.S3URI != nil {
+					if *a.ko.Spec.ModelMetrics.Bias.PostTrainingReport.S3URI != *b.ko.Spec.ModelMetrics.Bias.PostTrainingReport.S3URI {
+						delta.Add("Spec.ModelMetrics.Bias.PostTrainingReport.S3URI", a.ko.Spec.ModelMetrics.Bias.PostTrainingReport.S3URI, b.ko.Spec.ModelMetrics.Bias.PostTrainingReport.S3URI)
+					}
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.ModelMetrics.Bias.PreTrainingReport, b.ko.Spec.ModelMetrics.Bias.PreTrainingReport) {
+				delta.Add("Spec.ModelMetrics.Bias.PreTrainingReport", a.ko.Spec.ModelMetrics.Bias.PreTrainingReport, b.ko.Spec.ModelMetrics.Bias.PreTrainingReport)
+			} else if a.ko.Spec.ModelMetrics.Bias.PreTrainingReport != nil && b.ko.Spec.ModelMetrics.Bias.PreTrainingReport != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.ModelMetrics.Bias.PreTrainingReport.ContentDigest, b.ko.Spec.ModelMetrics.Bias.PreTrainingReport.ContentDigest) {
+					delta.Add("Spec.ModelMetrics.Bias.PreTrainingReport.ContentDigest", a.ko.Spec.ModelMetrics.Bias.PreTrainingReport.ContentDigest, b.ko.Spec.ModelMetrics.Bias.PreTrainingReport.ContentDigest)
+				} else if a.ko.Spec.ModelMetrics.Bias.PreTrainingReport.ContentDigest != nil && b.ko.Spec.ModelMetrics.Bias.PreTrainingReport.ContentDigest != nil {
+					if *a.ko.Spec.ModelMetrics.Bias.PreTrainingReport.ContentDigest != *b.ko.Spec.ModelMetrics.Bias.PreTrainingReport.ContentDigest {
+						delta.Add("Spec.ModelMetrics.Bias.PreTrainingReport.ContentDigest", a.ko.Spec.ModelMetrics.Bias.PreTrainingReport.ContentDigest, b.ko.Spec.ModelMetrics.Bias.PreTrainingReport.ContentDigest)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.ModelMetrics.Bias.PreTrainingReport.ContentType, b.ko.Spec.ModelMetrics.Bias.PreTrainingReport.ContentType) {
+					delta.Add("Spec.ModelMetrics.Bias.PreTrainingReport.ContentType", a.ko.Spec.ModelMetrics.Bias.PreTrainingReport.ContentType, b.ko.Spec.ModelMetrics.Bias.PreTrainingReport.ContentType)
+				} else if a.ko.Spec.ModelMetrics.Bias.PreTrainingReport.ContentType != nil && b.ko.Spec.ModelMetrics.Bias.PreTrainingReport.ContentType != nil {
+					if *a.ko.Spec.ModelMetrics.Bias.PreTrainingReport.ContentType != *b.ko.Spec.ModelMetrics.Bias.PreTrainingReport.ContentType {
+						delta.Add("Spec.ModelMetrics.Bias.PreTrainingReport.ContentType", a.ko.Spec.ModelMetrics.Bias.PreTrainingReport.ContentType, b.ko.Spec.ModelMetrics.Bias.PreTrainingReport.ContentType)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.ModelMetrics.Bias.PreTrainingReport.S3URI, b.ko.Spec.ModelMetrics.Bias.PreTrainingReport.S3URI) {
+					delta.Add("Spec.ModelMetrics.Bias.PreTrainingReport.S3URI", a.ko.Spec.ModelMetrics.Bias.PreTrainingReport.S3URI, b.ko.Spec.ModelMetrics.Bias.PreTrainingReport.S3URI)
+				} else if a.ko.Spec.ModelMetrics.Bias.PreTrainingReport.S3URI != nil && b.ko.Spec.ModelMetrics.Bias.PreTrainingReport.S3URI != nil {
+					if *a.ko.Spec.ModelMetrics.Bias.PreTrainingReport.S3URI != *b.ko.Spec.ModelMetrics.Bias.PreTrainingReport.S3URI {
+						delta.Add("Spec.ModelMetrics.Bias.PreTrainingReport.S3URI", a.ko.Spec.ModelMetrics.Bias.PreTrainingReport.S3URI, b.ko.Spec.ModelMetrics.Bias.PreTrainingReport.S3URI)
+					}
+				}
+			}
 			if ackcompare.HasNilDifference(a.ko.Spec.ModelMetrics.Bias.Report, b.ko.Spec.ModelMetrics.Bias.Report) {
 				delta.Add("Spec.ModelMetrics.Bias.Report", a.ko.Spec.ModelMetrics.Bias.Report, b.ko.Spec.ModelMetrics.Bias.Report)
 			} else if a.ko.Spec.ModelMetrics.Bias.Report != nil && b.ko.Spec.ModelMetrics.Bias.Report != nil {
@@ -319,11 +624,25 @@ func newResourceDelta(
 			delta.Add("Spec.ModelPackageName", a.ko.Spec.ModelPackageName, b.ko.Spec.ModelPackageName)
 		}
 	}
+	if ackcompare.HasNilDifference(a.ko.Spec.SamplePayloadURL, b.ko.Spec.SamplePayloadURL) {
+		delta.Add("Spec.SamplePayloadURL", a.ko.Spec.SamplePayloadURL, b.ko.Spec.SamplePayloadURL)
+	} else if a.ko.Spec.SamplePayloadURL != nil && b.ko.Spec.SamplePayloadURL != nil {
+		if *a.ko.Spec.SamplePayloadURL != *b.ko.Spec.SamplePayloadURL {
+			delta.Add("Spec.SamplePayloadURL", a.ko.Spec.SamplePayloadURL, b.ko.Spec.SamplePayloadURL)
+		}
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.SourceAlgorithmSpecification, b.ko.Spec.SourceAlgorithmSpecification) {
 		delta.Add("Spec.SourceAlgorithmSpecification", a.ko.Spec.SourceAlgorithmSpecification, b.ko.Spec.SourceAlgorithmSpecification)
 	} else if a.ko.Spec.SourceAlgorithmSpecification != nil && b.ko.Spec.SourceAlgorithmSpecification != nil {
 		if !reflect.DeepEqual(a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms, b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms) {
 			delta.Add("Spec.SourceAlgorithmSpecification.SourceAlgorithms", a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms, b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms)
+		}
+	}
+	if ackcompare.HasNilDifference(a.ko.Spec.Task, b.ko.Spec.Task) {
+		delta.Add("Spec.Task", a.ko.Spec.Task, b.ko.Spec.Task)
+	} else if a.ko.Spec.Task != nil && b.ko.Spec.Task != nil {
+		if *a.ko.Spec.Task != *b.ko.Spec.Task {
+			delta.Add("Spec.Task", a.ko.Spec.Task, b.ko.Spec.Task)
 		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.ValidationSpecification, b.ko.Spec.ValidationSpecification) {

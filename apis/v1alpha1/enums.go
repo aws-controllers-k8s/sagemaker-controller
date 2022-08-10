@@ -418,6 +418,14 @@ const (
 	DirectInternetAccess_Disabled DirectInternetAccess = "Disabled"
 )
 
+type Direction string
+
+const (
+	Direction_Both        Direction = "Both"
+	Direction_Ascendants  Direction = "Ascendants"
+	Direction_Descendants Direction = "Descendants"
+)
+
 type DomainStatus_SDK string
 
 const (
@@ -770,6 +778,15 @@ const (
 	LabelingJobStatus_Stopped      LabelingJobStatus = "Stopped"
 )
 
+type LineageType string
+
+const (
+	LineageType_TrialComponent LineageType = "TrialComponent"
+	LineageType_Artifact       LineageType = "Artifact"
+	LineageType_Context        LineageType = "Context"
+	LineageType_Action         LineageType = "Action"
+)
+
 type ListCompilationJobsSortBy string
 
 const (
@@ -794,6 +811,14 @@ const (
 	ListEdgePackagingJobsSortBy_CREATION_TIME      ListEdgePackagingJobsSortBy = "CREATION_TIME"
 	ListEdgePackagingJobsSortBy_LAST_MODIFIED_TIME ListEdgePackagingJobsSortBy = "LAST_MODIFIED_TIME"
 	ListEdgePackagingJobsSortBy_STATUS             ListEdgePackagingJobsSortBy = "STATUS"
+)
+
+type ListInferenceRecommendationsJobsSortBy string
+
+const (
+	ListInferenceRecommendationsJobsSortBy_Name         ListInferenceRecommendationsJobsSortBy = "Name"
+	ListInferenceRecommendationsJobsSortBy_CreationTime ListInferenceRecommendationsJobsSortBy = "CreationTime"
+	ListInferenceRecommendationsJobsSortBy_Status       ListInferenceRecommendationsJobsSortBy = "Status"
 )
 
 type ListLabelingJobsForWorkteamSortByOptions string
@@ -837,6 +862,15 @@ type ModelCacheSetting string
 const (
 	ModelCacheSetting_Enabled  ModelCacheSetting = "Enabled"
 	ModelCacheSetting_Disabled ModelCacheSetting = "Disabled"
+)
+
+type ModelMetadataFilterType string
+
+const (
+	ModelMetadataFilterType_Domain           ModelMetadataFilterType = "Domain"
+	ModelMetadataFilterType_Framework        ModelMetadataFilterType = "Framework"
+	ModelMetadataFilterType_Task             ModelMetadataFilterType = "Task"
+	ModelMetadataFilterType_FrameworkVersion ModelMetadataFilterType = "FrameworkVersion"
 )
 
 type ModelPackageGroupSortBy string
@@ -1286,6 +1320,24 @@ const (
 	RStudioServerProUserGroup_R_STUDIO_USER  RStudioServerProUserGroup = "R_STUDIO_USER"
 )
 
+type RecommendationJobStatus string
+
+const (
+	RecommendationJobStatus_PENDING     RecommendationJobStatus = "PENDING"
+	RecommendationJobStatus_IN_PROGRESS RecommendationJobStatus = "IN_PROGRESS"
+	RecommendationJobStatus_COMPLETED   RecommendationJobStatus = "COMPLETED"
+	RecommendationJobStatus_FAILED      RecommendationJobStatus = "FAILED"
+	RecommendationJobStatus_STOPPING    RecommendationJobStatus = "STOPPING"
+	RecommendationJobStatus_STOPPED     RecommendationJobStatus = "STOPPED"
+)
+
+type RecommendationJobType string
+
+const (
+	RecommendationJobType_Default  RecommendationJobType = "Default"
+	RecommendationJobType_Advanced RecommendationJobType = "Advanced"
+)
+
 type RecordWrapper string
 
 const (
@@ -1462,6 +1514,13 @@ const (
 	SortExperimentsBy_CreationTime SortExperimentsBy = "CreationTime"
 )
 
+type SortLineageGroupsBy string
+
+const (
+	SortLineageGroupsBy_Name         SortLineageGroupsBy = "Name"
+	SortLineageGroupsBy_CreationTime SortLineageGroupsBy = "CreationTime"
+)
+
 type SortOrder string
 
 const (
@@ -1559,6 +1618,7 @@ const (
 	TargetDevice_qcs605         TargetDevice = "qcs605"
 	TargetDevice_qcs603         TargetDevice = "qcs603"
 	TargetDevice_sitara_am57x   TargetDevice = "sitara_am57x"
+	TargetDevice_amba_cv2       TargetDevice = "amba_cv2"
 	TargetDevice_amba_cv22      TargetDevice = "amba_cv22"
 	TargetDevice_amba_cv25      TargetDevice = "amba_cv25"
 	TargetDevice_x86_win32      TargetDevice = "x86_win32"
@@ -1599,6 +1659,12 @@ const (
 	TrafficRoutingConfigType_ALL_AT_ONCE TrafficRoutingConfigType = "ALL_AT_ONCE"
 	TrafficRoutingConfigType_CANARY      TrafficRoutingConfigType = "CANARY"
 	TrafficRoutingConfigType_LINEAR      TrafficRoutingConfigType = "LINEAR"
+)
+
+type TrafficType string
+
+const (
+	TrafficType_PHASES TrafficType = "PHASES"
 )
 
 type TrainingInputMode string
@@ -1651,6 +1717,14 @@ const (
 	TrainingInstanceType_ml_c5n_4xlarge   TrainingInstanceType = "ml.c5n.4xlarge"
 	TrainingInstanceType_ml_c5n_9xlarge   TrainingInstanceType = "ml.c5n.9xlarge"
 	TrainingInstanceType_ml_c5n_18xlarge  TrainingInstanceType = "ml.c5n.18xlarge"
+	TrainingInstanceType_ml_g5_xlarge     TrainingInstanceType = "ml.g5.xlarge"
+	TrainingInstanceType_ml_g5_2xlarge    TrainingInstanceType = "ml.g5.2xlarge"
+	TrainingInstanceType_ml_g5_4xlarge    TrainingInstanceType = "ml.g5.4xlarge"
+	TrainingInstanceType_ml_g5_8xlarge    TrainingInstanceType = "ml.g5.8xlarge"
+	TrainingInstanceType_ml_g5_16xlarge   TrainingInstanceType = "ml.g5.16xlarge"
+	TrainingInstanceType_ml_g5_12xlarge   TrainingInstanceType = "ml.g5.12xlarge"
+	TrainingInstanceType_ml_g5_24xlarge   TrainingInstanceType = "ml.g5.24xlarge"
+	TrainingInstanceType_ml_g5_48xlarge   TrainingInstanceType = "ml.g5.48xlarge"
 )
 
 type TrainingJobEarlyStoppingType string

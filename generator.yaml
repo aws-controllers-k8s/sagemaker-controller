@@ -845,6 +845,7 @@ ignore:
       - FlowDefinition
       - HumanTaskUi
       # - HyperParameterTuningJob
+      - InferenceRecommendationsJob
       - Image
       - ImageVersion
       - LabelingJob
@@ -877,3 +878,4 @@ ignore:
       - RSessionAppSettings
       - RetryStrategy
       - DeploymentConfig
+      - ProductionVariantServerlessConfig
