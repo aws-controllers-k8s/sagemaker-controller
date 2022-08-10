@@ -181,12 +181,12 @@ NOTEBOOK_INSTANCE_INSTANCE_TYPES = {
 }
 
 REPLACEMENT_VALUES = {
-    "SAGEMAKER_DATA_BUCKET": get_bootstrap_resources().DataBucketName,
+    "SAGEMAKER_DATA_BUCKET": get_bootstrap_resources().DataBucket.name,
     "XGBOOST_IMAGE_URI": f"{XGBOOST_IMAGE_URIS[get_region()]}/sagemaker-xgboost:1.0-1-cpu-py3",
     "DEBUGGER_IMAGE_URI": f"{DEBUGGER_IMAGE_URIS[get_region()]}/sagemaker-debugger-rules:latest",
     "XGBOOST_V1_IMAGE_URI": f"{XGBOOST_V1_IMAGE_URIS[get_region()]}/xgboost:latest",
     "PYTORCH_TRAIN_IMAGE_URI": f"{PYTORCH_TRAIN_IMAGE_URIS[get_region()]}/pytorch-training:1.5.0-cpu-py36-ubuntu16.04",
-    "SAGEMAKER_EXECUTION_ROLE_ARN": get_bootstrap_resources().ExecutionRoleARN,
+    "SAGEMAKER_EXECUTION_ROLE_ARN": get_bootstrap_resources().ExecutionRole.arn,
     "MODEL_MONITOR_ANALYZER_IMAGE_URI": f"{MODEL_MONITOR_IMAGE_URIS[get_region()]}/sagemaker-model-monitor-analyzer",
     "CLARIFY_IMAGE_URI": f"{CLARIFY_IMAGE_URIS[get_region()]}/sagemaker-clarify-processing:1.0",
     "ENDPOINT_INSTANCE_TYPE": ENDPOINT_INSTANCE_TYPES.get(get_region(), "ml.c5.large"),

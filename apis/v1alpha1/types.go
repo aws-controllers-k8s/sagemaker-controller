@@ -28,6 +28,12 @@ var (
 	_ = ackv1alpha1.AWSAccountID("")
 )
 
+// A structure describing the source of an action.
+type ActionSource struct {
+	SourceID   *string `json:"sourceID,omitempty"`
+	SourceType *string `json:"sourceType,omitempty"`
+}
+
 // Lists the properties of an action. An action represents an action or activity.
 // Some examples are a workflow step and a model deployment. Generally, an action
 // involves at least one input artifact or output artifact.
@@ -35,11 +41,6 @@ type ActionSummary struct {
 	ActionName       *string      `json:"actionName,omitempty"`
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
-}
-
-// This API is not supported.
-type Alarm struct {
-	AlarmName *string `json:"alarmName,omitempty"`
 }
 
 // Specifies the training algorithm to use in a CreateTrainingJob request.
@@ -53,7 +54,43 @@ type AlgorithmSpecification struct {
 	EnableSageMakerMetricsTimeSeries *bool               `json:"enableSageMakerMetricsTimeSeries,omitempty"`
 	MetricDefinitions                []*MetricDefinition `json:"metricDefinitions,omitempty"`
 	TrainingImage                    *string             `json:"trainingImage,omitempty"`
-	TrainingInputMode                *string             `json:"trainingInputMode,omitempty"`
+	// The training input mode that the algorithm supports. For more information
+	// about input modes, see Algorithms (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html).
+	//
+	// Pipe mode
+	//
+	// If an algorithm supports Pipe mode, Amazon SageMaker streams data directly
+	// from Amazon S3 to the container.
+	//
+	// File mode
+	//
+	// If an algorithm supports File mode, SageMaker downloads the training data
+	// from S3 to the provisioned ML storage volume, and mounts the directory to
+	// the Docker volume for the training container.
+	//
+	// You must provision the ML storage volume with sufficient capacity to accommodate
+	// the data downloaded from S3. In addition to the training data, the ML storage
+	// volume also stores the output model. The algorithm container uses the ML
+	// storage volume to also store intermediate information, if any.
+	//
+	// For distributed algorithms, training data is distributed uniformly. Your
+	// training duration is predictable if the input data objects sizes are approximately
+	// the same. SageMaker does not split the files any further for model training.
+	// If the object sizes are skewed, training won't be optimal as the data distribution
+	// is also skewed when one host in a training cluster is overloaded, thus becoming
+	// a bottleneck in training.
+	//
+	// FastFile mode
+	//
+	// If an algorithm supports FastFile mode, SageMaker streams data directly from
+	// S3 to the container with no code changes, and provides file system access
+	// to the data. Users can author their training script to interact with these
+	// files as if they were stored on disk.
+	//
+	// FastFile mode works best when the data is read sequentially. Augmented manifest
+	// files aren't supported. The startup time is lower when there are fewer files
+	// in the S3 bucket provided.
+	TrainingInputMode *string `json:"trainingInputMode,omitempty"`
 }
 
 // Represents the overall status of an algorithm.
@@ -73,7 +110,7 @@ type AlgorithmSummary struct {
 // to validate your algorithm.
 //
 // The data provided in the validation profile is made available to your buyers
-// on AWS Marketplace.
+// on Amazon Web Services Marketplace.
 type AlgorithmValidationProfile struct {
 	ProfileName *string `json:"profileName,omitempty"`
 	// Defines the input needed to run a transform job using the inference specification
@@ -89,13 +126,19 @@ type AlgorithmValidationSpecification struct {
 
 // Details about an Amazon SageMaker app.
 type AppDetails struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	AppName         *string      `json:"appName,omitempty"`
+	AppType         *string      `json:"appType,omitempty"`
+	CreationTime    *metav1.Time `json:"creationTime,omitempty"`
+	DomainID        *string      `json:"domainID,omitempty"`
+	Status          *string      `json:"status,omitempty"`
+	UserProfileName *string      `json:"userProfileName,omitempty"`
 }
 
 // The configuration for running a SageMaker image as a KernelGateway app.
 type AppImageConfigDetails struct {
-	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
-	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	AppImageConfigName *string      `json:"appImageConfigName,omitempty"`
+	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime   *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
 // Configuration to run a processing job in a specified container image.
@@ -105,10 +148,16 @@ type AppSpecification struct {
 	ImageURI            *string   `json:"imageURI,omitempty"`
 }
 
+// The ID and ID type of an artifact source.
+type ArtifactSourceType struct {
+	Value *string `json:"value,omitempty"`
+}
+
 // Lists a summary of the properties of an artifact. An artifact represents
 // a URI addressable object or data. Some examples are a dataset and a model.
 type ArtifactSummary struct {
 	ArtifactName     *string      `json:"artifactName,omitempty"`
+	ArtifactType     *string      `json:"artifactType,omitempty"`
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
@@ -118,11 +167,44 @@ type ArtifactSummary struct {
 // be an association between a training job and a model.
 type AssociationSummary struct {
 	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
+	// trial component, or project.
 	CreatedBy       *UserContext `json:"createdBy,omitempty"`
 	CreationTime    *metav1.Time `json:"creationTime,omitempty"`
 	DestinationName *string      `json:"destinationName,omitempty"`
+	DestinationType *string      `json:"destinationType,omitempty"`
 	SourceName      *string      `json:"sourceName,omitempty"`
+	SourceType      *string      `json:"sourceType,omitempty"`
+}
+
+// Configures the behavior of the client used by Amazon SageMaker to interact
+// with the model container during asynchronous inference.
+type AsyncInferenceClientConfig struct {
+	MaxConcurrentInvocationsPerInstance *int64 `json:"maxConcurrentInvocationsPerInstance,omitempty"`
+}
+
+// Specifies configuration for how an endpoint performs asynchronous inference.
+type AsyncInferenceConfig struct {
+	// Configures the behavior of the client used by Amazon SageMaker to interact
+	// with the model container during asynchronous inference.
+	ClientConfig *AsyncInferenceClientConfig `json:"clientConfig,omitempty"`
+	// Specifies the configuration for asynchronous inference invocation outputs.
+	OutputConfig *AsyncInferenceOutputConfig `json:"outputConfig,omitempty"`
+}
+
+// Specifies the configuration for notifications of inference results for asynchronous
+// inference.
+type AsyncInferenceNotificationConfig struct {
+	ErrorTopic   *string `json:"errorTopic,omitempty"`
+	SuccessTopic *string `json:"successTopic,omitempty"`
+}
+
+// Specifies the configuration for asynchronous inference invocation outputs.
+type AsyncInferenceOutputConfig struct {
+	KMSKeyID *string `json:"kmsKeyID,omitempty"`
+	// Specifies the configuration for notifications of inference results for asynchronous
+	// inference.
+	NotificationConfig *AsyncInferenceNotificationConfig `json:"notificationConfig,omitempty"`
+	S3OutputPath       *string                           `json:"s3OutputPath,omitempty"`
 }
 
 // Configuration for Athena Dataset Definition input.
@@ -143,8 +225,8 @@ type AthenaDatasetDefinition struct {
 	WorkGroup *string `json:"workGroup,omitempty"`
 }
 
-// An Autopilot job returns recommendations, or candidates. Each candidate has
-// futher details about the steps involed, and the status.
+// Information about a candidate produced by an AutoML training job, including
+// its status, steps, and other properties.
 type AutoMLCandidate struct {
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
 	EndTime          *metav1.Time `json:"endTime,omitempty"`
@@ -197,9 +279,23 @@ type AutoMLSecurityConfig struct {
 	VPCConfig *VPCConfig `json:"vpcConfig,omitempty"`
 }
 
-// Currently, the AutoRollbackConfig API is not supported.
-type AutoRollbackConfig struct {
-	Alarms []*Alarm `json:"alarms,omitempty"`
+// The error code and error description associated with the resource.
+type BatchDescribeModelPackageError struct {
+	ErrorCode     *string `json:"errorCode,omitempty"`
+	ErrorResponse *string `json:"errorResponse,omitempty"`
+}
+
+// Provides summary information about the model package.
+type BatchDescribeModelPackageSummary struct {
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	// Defines how to perform inference generation after a training job is run.
+	InferenceSpecification  *InferenceSpecification `json:"inferenceSpecification,omitempty"`
+	ModelApprovalStatus     *string                 `json:"modelApprovalStatus,omitempty"`
+	ModelPackageARN         *string                 `json:"modelPackageARN,omitempty"`
+	ModelPackageDescription *string                 `json:"modelPackageDescription,omitempty"`
+	ModelPackageGroupName   *string                 `json:"modelPackageGroupName,omitempty"`
+	ModelPackageStatus      *string                 `json:"modelPackageStatus,omitempty"`
+	ModelPackageVersion     *int64                  `json:"modelPackageVersion,omitempty"`
 }
 
 // Contains bias metrics for a model.
@@ -207,18 +303,9 @@ type Bias struct {
 	Report *MetricsSource `json:"report,omitempty"`
 }
 
-// Currently, the BlueGreenUpdatePolicy API is not supported.
-type BlueGreenUpdatePolicy struct {
-	MaximumExecutionTimeoutInSeconds *int64 `json:"maximumExecutionTimeoutInSeconds,omitempty"`
-	TerminationWaitInSeconds         *int64 `json:"terminationWaitInSeconds,omitempty"`
-	// Currently, the TrafficRoutingConfig API is not supported.
-	TrafficRoutingConfiguration *TrafficRoutingConfig `json:"trafficRoutingConfiguration,omitempty"`
-}
-
-// Currently, the CapacitySize API is not supported.
-type CapacitySize struct {
-	Type  *string `json:"type_,omitempty"`
-	Value *int64  `json:"value,omitempty"`
+// Metadata about a callback step.
+type CallbackStepMetadata struct {
+	SQSQueueURL *string `json:"sqsQueueURL,omitempty"`
 }
 
 type CaptureContentTypeHeader struct {
@@ -247,9 +334,45 @@ type Channel struct {
 	CompressionType *string `json:"compressionType,omitempty"`
 	ContentType     *string `json:"contentType,omitempty"`
 	// Describes the location of the channel data.
-	DataSource        *DataSource `json:"dataSource,omitempty"`
-	InputMode         *string     `json:"inputMode,omitempty"`
-	RecordWrapperType *string     `json:"recordWrapperType,omitempty"`
+	DataSource *DataSource `json:"dataSource,omitempty"`
+	// The training input mode that the algorithm supports. For more information
+	// about input modes, see Algorithms (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html).
+	//
+	// Pipe mode
+	//
+	// If an algorithm supports Pipe mode, Amazon SageMaker streams data directly
+	// from Amazon S3 to the container.
+	//
+	// File mode
+	//
+	// If an algorithm supports File mode, SageMaker downloads the training data
+	// from S3 to the provisioned ML storage volume, and mounts the directory to
+	// the Docker volume for the training container.
+	//
+	// You must provision the ML storage volume with sufficient capacity to accommodate
+	// the data downloaded from S3. In addition to the training data, the ML storage
+	// volume also stores the output model. The algorithm container uses the ML
+	// storage volume to also store intermediate information, if any.
+	//
+	// For distributed algorithms, training data is distributed uniformly. Your
+	// training duration is predictable if the input data objects sizes are approximately
+	// the same. SageMaker does not split the files any further for model training.
+	// If the object sizes are skewed, training won't be optimal as the data distribution
+	// is also skewed when one host in a training cluster is overloaded, thus becoming
+	// a bottleneck in training.
+	//
+	// FastFile mode
+	//
+	// If an algorithm supports FastFile mode, SageMaker streams data directly from
+	// S3 to the container with no code changes, and provides file system access
+	// to the data. Users can author their training script to interact with these
+	// files as if they were stored on disk.
+	//
+	// FastFile mode works best when the data is read sequentially. Augmented manifest
+	// files aren't supported. The startup time is lower when there are fewer files
+	// in the S3 bucket provided.
+	InputMode         *string `json:"inputMode,omitempty"`
+	RecordWrapperType *string `json:"recordWrapperType,omitempty"`
 	// A configuration for a shuffle option for input data in a channel. If you
 	// use S3Prefix for S3DataType, the results of the S3 key prefix matches are
 	// shuffled. If you use ManifestFile, the order of the S3 object references
@@ -319,10 +442,17 @@ type ContainerDefinition struct {
 	MultiModelConfig *MultiModelConfig `json:"multiModelConfig,omitempty"`
 }
 
+// A structure describing the source of a context.
+type ContextSource struct {
+	SourceID   *string `json:"sourceID,omitempty"`
+	SourceType *string `json:"sourceType,omitempty"`
+}
+
 // Lists a summary of the properties of a context. A context provides a logical
 // grouping of other entities.
 type ContextSummary struct {
 	ContextName      *string      `json:"contextName,omitempty"`
+	ContextType      *string      `json:"contextType,omitempty"`
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
@@ -339,6 +469,14 @@ type ContinuousParameterRange struct {
 type ContinuousParameterRangeSpecification struct {
 	MaxValue *string `json:"maxValue,omitempty"`
 	MinValue *string `json:"minValue,omitempty"`
+}
+
+// A custom SageMaker image. For more information, see Bring your own SageMaker
+// image (https://docs.aws.amazon.com/sagemaker/latest/dg/studio-byoi.html).
+type CustomImage struct {
+	AppImageConfigName *string `json:"appImageConfigName,omitempty"`
+	ImageName          *string `json:"imageName,omitempty"`
+	ImageVersionNumber *int64  `json:"imageVersionNumber,omitempty"`
 }
 
 type DataCaptureConfig struct {
@@ -476,14 +614,6 @@ type DeployedImage struct {
 	SpecifiedImage *string      `json:"specifiedImage,omitempty"`
 }
 
-// Currently, the DeploymentConfig API is not supported.
-type DeploymentConfig struct {
-	// Currently, the AutoRollbackConfig API is not supported.
-	AutoRollbackConfiguration *AutoRollbackConfig `json:"autoRollbackConfiguration,omitempty"`
-	// Currently, the BlueGreenUpdatePolicy API is not supported.
-	BlueGreenUpdatePolicy *BlueGreenUpdatePolicy `json:"blueGreenUpdatePolicy,omitempty"`
-}
-
 // Specifies weight and capacity values for a production variant.
 type DesiredWeightAndCapacity struct {
 	DesiredInstanceCount *int64   `json:"desiredInstanceCount,omitempty"`
@@ -509,7 +639,28 @@ type DeviceSummary struct {
 // The domain's details.
 type DomainDetails struct {
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	DomainARN        *string      `json:"domainARN,omitempty"`
+	DomainID         *string      `json:"domainID,omitempty"`
+	DomainName       *string      `json:"domainName,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	Status           *string      `json:"status,omitempty"`
+	URL              *string      `json:"url,omitempty"`
+}
+
+// A collection of settings that apply to the SageMaker Domain. These settings
+// are specified through the CreateDomain API call.
+type DomainSettings struct {
+	// A collection of settings that configure the RStudioServerPro Domain-level
+	// app.
+	RStudioServerProDomainSettings *RStudioServerProDomainSettings `json:"rStudioServerProDomainSettings,omitempty"`
+	SecurityGroupIDs               []*string                       `json:"securityGroupIDs,omitempty"`
+}
+
+// A collection of Domain configuration settings to update.
+type DomainSettingsForUpdate struct {
+	// A collection of settings that update the current configuration for the RStudioServerPro
+	// Domain-level app.
+	RStudioServerProDomainSettingsForUpdate *RStudioServerProDomainSettingsForUpdate `json:"rStudioServerProDomainSettingsForUpdate,omitempty"`
 }
 
 // The model on the edge device.
@@ -531,8 +682,9 @@ type EdgeModelSummary struct {
 
 // The output configuration.
 type EdgeOutputConfig struct {
-	KMSKeyID         *string `json:"kmsKeyID,omitempty"`
-	S3OutputLocation *string `json:"s3OutputLocation,omitempty"`
+	KMSKeyID               *string `json:"kmsKeyID,omitempty"`
+	PresetDeploymentConfig *string `json:"presetDeploymentConfig,omitempty"`
+	S3OutputLocation       *string `json:"s3OutputLocation,omitempty"`
 }
 
 // Summary of edge packaging job.
@@ -542,6 +694,11 @@ type EdgePackagingJobSummary struct {
 	EdgePackagingJobName *string      `json:"edgePackagingJobName,omitempty"`
 	LastModifiedTime     *metav1.Time `json:"lastModifiedTime,omitempty"`
 	ModelName            *string      `json:"modelName,omitempty"`
+}
+
+// The output of a SageMaker Edge Manager deployable resource.
+type EdgePresetDeploymentOutput struct {
+	StatusMessage *string `json:"statusMessage,omitempty"`
 }
 
 // Provides summary information for an endpoint configuration.
@@ -591,13 +748,13 @@ type Endpoint_SDK struct {
 // The properties of an experiment as returned by the Search API.
 type Experiment struct {
 	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
+	// trial component, or project.
 	CreatedBy      *UserContext `json:"createdBy,omitempty"`
 	CreationTime   *metav1.Time `json:"creationTime,omitempty"`
 	DisplayName    *string      `json:"displayName,omitempty"`
 	ExperimentName *string      `json:"experimentName,omitempty"`
 	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
+	// trial component, or project.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	Tags             []*Tag       `json:"tags,omitempty"`
@@ -667,14 +824,15 @@ type FeatureGroup_SDK struct {
 	// Provide an OfflineStoreConfig in a request to CreateFeatureGroup to create
 	// an OfflineStore.
 	//
-	// To encrypt an OfflineStore using at rest data encryption, specify AWS Key
-	// Management Service (KMS) key ID, or KMSKeyId, in S3StorageConfig.
+	// To encrypt an OfflineStore using at rest data encryption, specify Amazon
+	// Web Services Key Management Service (KMS) key ID, or KMSKeyId, in S3StorageConfig.
 	OfflineStoreConfig *OfflineStoreConfig `json:"offlineStoreConfig,omitempty"`
 	// The status of OfflineStore.
 	OfflineStoreStatus *OfflineStoreStatus `json:"offlineStoreStatus,omitempty"`
-	// Use this to specify the AWS Key Management Service (KMS) Key ID, or KMSKeyId,
-	// for at rest data encryption. You can turn OnlineStore on or off by specifying
-	// the EnableOnlineStore flag at General Assembly; the default value is False.
+	// Use this to specify the Amazon Web Services Key Management Service (KMS)
+	// Key ID, or KMSKeyId, for at rest data encryption. You can turn OnlineStore
+	// on or off by specifying the EnableOnlineStore flag at General Assembly; the
+	// default value is False.
 	OnlineStoreConfig           *OnlineStoreConfig `json:"onlineStoreConfig,omitempty"`
 	RecordIdentifierFeatureName *string            `json:"recordIdentifierFeatureName,omitempty"`
 	RoleARN                     *string            `json:"roleARN,omitempty"`
@@ -726,7 +884,43 @@ type HyperParameterAlgorithmSpecification struct {
 	AlgorithmName     *string             `json:"algorithmName,omitempty"`
 	MetricDefinitions []*MetricDefinition `json:"metricDefinitions,omitempty"`
 	TrainingImage     *string             `json:"trainingImage,omitempty"`
-	TrainingInputMode *string             `json:"trainingInputMode,omitempty"`
+	// The training input mode that the algorithm supports. For more information
+	// about input modes, see Algorithms (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html).
+	//
+	// Pipe mode
+	//
+	// If an algorithm supports Pipe mode, Amazon SageMaker streams data directly
+	// from Amazon S3 to the container.
+	//
+	// File mode
+	//
+	// If an algorithm supports File mode, SageMaker downloads the training data
+	// from S3 to the provisioned ML storage volume, and mounts the directory to
+	// the Docker volume for the training container.
+	//
+	// You must provision the ML storage volume with sufficient capacity to accommodate
+	// the data downloaded from S3. In addition to the training data, the ML storage
+	// volume also stores the output model. The algorithm container uses the ML
+	// storage volume to also store intermediate information, if any.
+	//
+	// For distributed algorithms, training data is distributed uniformly. Your
+	// training duration is predictable if the input data objects sizes are approximately
+	// the same. SageMaker does not split the files any further for model training.
+	// If the object sizes are skewed, training won't be optimal as the data distribution
+	// is also skewed when one host in a training cluster is overloaded, thus becoming
+	// a bottleneck in training.
+	//
+	// FastFile mode
+	//
+	// If an algorithm supports FastFile mode, SageMaker streams data directly from
+	// S3 to the container with no code changes, and provides file system access
+	// to the data. Users can author their training script to interact with these
+	// files as if they were stored on disk.
+	//
+	// FastFile mode works best when the data is read sequentially. Augmented manifest
+	// files aren't supported. The startup time is lower when there are fewer files
+	// in the S3 bucket provided.
+	TrainingInputMode *string `json:"trainingInputMode,omitempty"`
 }
 
 // Defines a hyperparameter to be used by an algorithm.
@@ -768,14 +962,15 @@ type HyperParameterTrainingJobDefinition struct {
 	ResourceConfig        *ResourceConfig    `json:"resourceConfig,omitempty"`
 	RoleARN               *string            `json:"roleARN,omitempty"`
 	StaticHyperParameters map[string]*string `json:"staticHyperParameters,omitempty"`
-	// Specifies a limit to how long a model training or compilation job can run.
-	// It also specifies how long you are willing to wait for a managed spot training
-	// job to complete. When the job reaches the time limit, Amazon SageMaker ends
-	// the training or compilation job. Use this API to cap model training costs.
+	// Specifies a limit to how long a model training job or model compilation job
+	// can run. It also specifies how long a managed spot training job has to complete.
+	// When the job reaches the time limit, Amazon SageMaker ends the training or
+	// compilation job. Use this API to cap model training costs.
 	//
-	// To stop a job, Amazon SageMaker sends the algorithm the SIGTERM signal, which
-	// delays job termination for 120 seconds. Algorithms can use this 120-second
-	// window to save the model artifacts, so the results of training are not lost.
+	// To stop a training job, Amazon SageMaker sends the algorithm the SIGTERM
+	// signal, which delays job termination for 120 seconds. Algorithms can use
+	// this 120-second window to save the model artifacts, so the results of training
+	// are not lost.
 	//
 	// The training algorithms provided by Amazon SageMaker automatically save the
 	// intermediate results of a model training job when possible. This attempt
@@ -908,6 +1103,8 @@ type HyperParameterTuningJobWarmStartConfig struct {
 type Image struct {
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
 	FailureReason    *string      `json:"failureReason,omitempty"`
+	ImageARN         *string      `json:"imageARN,omitempty"`
+	ImageName        *string      `json:"imageName,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
@@ -928,7 +1125,10 @@ type ImageConfig struct {
 type ImageVersion struct {
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
 	FailureReason    *string      `json:"failureReason,omitempty"`
+	ImageARN         *string      `json:"imageARN,omitempty"`
+	ImageVersionARN  *string      `json:"imageVersionARN,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	Version          *int64       `json:"version,omitempty"`
 }
 
 // Specifies details about how containers in a multi-container endpoint are
@@ -968,6 +1168,23 @@ type IntegerParameterRangeSpecification struct {
 	MinValue *string `json:"minValue,omitempty"`
 }
 
+// The JupyterServer app settings.
+type JupyterServerAppSettings struct {
+	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
+	// the instance type that the version runs on.
+	DefaultResourceSpec *ResourceSpec `json:"defaultResourceSpec,omitempty"`
+	LifecycleConfigARNs []*string     `json:"lifecycleConfigARNs,omitempty"`
+}
+
+// The KernelGateway app settings.
+type KernelGatewayAppSettings struct {
+	CustomImages []*CustomImage `json:"customImages,omitempty"`
+	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
+	// the instance type that the version runs on.
+	DefaultResourceSpec *ResourceSpec `json:"defaultResourceSpec,omitempty"`
+	LifecycleConfigARNs []*string     `json:"lifecycleConfigARNs,omitempty"`
+}
+
 // Provides configuration information for auto-labeling of your data objects.
 // A LabelingJobAlgorithmsConfig object must be supplied in order to use auto-labeling.
 type LabelingJobAlgorithmsConfig struct {
@@ -989,6 +1206,7 @@ type LabelingJobOutput struct {
 type LabelingJobOutputConfig struct {
 	KMSKeyID     *string `json:"kmsKeyID,omitempty"`
 	S3OutputPath *string `json:"s3OutputPath,omitempty"`
+	SNSTopicARN  *string `json:"snsTopicARN,omitempty"`
 }
 
 // Configure encryption on the storage volume attached to the ML compute instance
@@ -1002,12 +1220,22 @@ type LabelingJobS3DataSource struct {
 	ManifestS3URI *string `json:"manifestS3URI,omitempty"`
 }
 
+// An Amazon SNS data source used for streaming labeling jobs.
+type LabelingJobSNSDataSource struct {
+	SNSTopicARN *string `json:"snsTopicARN,omitempty"`
+}
+
 // Provides summary information about a labeling job.
 type LabelingJobSummary struct {
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
 	FailureReason    *string      `json:"failureReason,omitempty"`
 	LabelingJobARN   *string      `json:"labelingJobARN,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+}
+
+// Metadata for a Lambda step.
+type LambdaStepMetadata struct {
+	ARN *string `json:"arn,omitempty"`
 }
 
 // Metadata properties of the tracking entity, trial, or trial component.
@@ -1026,10 +1254,15 @@ type MetricData struct {
 	Value      *float64     `json:"value,omitempty"`
 }
 
-// Specifies a metric that the training algorithm writes to stderr or stdout
-// . Amazon SageMakerhyperparameter tuning captures all defined metrics. You
-// specify one metric that a hyperparameter tuning job uses as its objective
-// metric to choose the best training job.
+// Information about the metric for a candidate produced by an AutoML job.
+type MetricDatum struct {
+	Value *float64 `json:"value,omitempty"`
+}
+
+// Specifies a metric that the training algorithm writes to stderr or stdout.
+// Amazon SageMakerhyperparameter tuning captures all defined metrics. You specify
+// one metric that a hyperparameter tuning job uses as its objective metric
+// to choose the best training job.
 type MetricDefinition struct {
 	Name  *string `json:"name,omitempty"`
 	Regex *string `json:"regex,omitempty"`
@@ -1045,7 +1278,7 @@ type MetricsSource struct {
 // artifacts.
 //
 // Model artifacts are the output that results from training a model, and typically
-// consist of trained parameters, a model defintion that desribes how to compute
+// consist of trained parameters, a model definition that describes how to compute
 // inferences, and other metadata.
 type ModelArtifacts struct {
 	S3ModelArtifacts *string `json:"s3ModelArtifacts,omitempty"`
@@ -1086,6 +1319,17 @@ type ModelDataQuality struct {
 	Statistics  *MetricsSource `json:"statistics,omitempty"`
 }
 
+// Specifies how to generate the endpoint name for an automatic one-click Autopilot
+// model deployment.
+type ModelDeployConfig struct {
+	EndpointName *string `json:"endpointName,omitempty"`
+}
+
+// Provides information about the endpoint of the model deployment.
+type ModelDeployResult struct {
+	EndpointName *string `json:"endpointName,omitempty"`
+}
+
 // Docker container image configuration object for the model explainability
 // job.
 type ModelExplainabilityAppSpecification struct {
@@ -1121,11 +1365,12 @@ type ModelMetrics struct {
 
 // Describes the Docker container for the model package.
 type ModelPackageContainerDefinition struct {
-	ContainerHostname *string `json:"containerHostname,omitempty"`
-	Image             *string `json:"image,omitempty"`
-	ImageDigest       *string `json:"imageDigest,omitempty"`
-	ModelDataURL      *string `json:"modelDataURL,omitempty"`
-	ProductID         *string `json:"productID,omitempty"`
+	ContainerHostname *string            `json:"containerHostname,omitempty"`
+	Environment       map[string]*string `json:"environment,omitempty"`
+	Image             *string            `json:"image,omitempty"`
+	ImageDigest       *string            `json:"imageDigest,omitempty"`
+	ModelDataURL      *string            `json:"modelDataURL,omitempty"`
+	ProductID         *string            `json:"productID,omitempty"`
 }
 
 // Summary information about a model group.
@@ -1140,7 +1385,7 @@ type ModelPackageGroupSummary struct {
 // A group of versioned models in the model registry.
 type ModelPackageGroup_SDK struct {
 	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
+	// trial component, or project.
 	CreatedBy                    *UserContext `json:"createdBy,omitempty"`
 	CreationTime                 *metav1.Time `json:"creationTime,omitempty"`
 	ModelPackageGroupARN         *string      `json:"modelPackageGroupARN,omitempty"`
@@ -1179,7 +1424,7 @@ type ModelPackageSummary struct {
 // in the process of validating the model package.
 //
 // The data provided in the validation profile is made available to your buyers
-// on AWS Marketplace.
+// on Amazon Web Services Marketplace.
 type ModelPackageValidationProfile struct {
 	ProfileName *string `json:"profileName,omitempty"`
 	// Defines the input needed to run a transform job using the inference specification
@@ -1199,13 +1444,14 @@ type ModelPackage_SDK struct {
 	ApprovalDescription   *string `json:"approvalDescription,omitempty"`
 	CertifyForMarketplace *bool   `json:"certifyForMarketplace,omitempty"`
 	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
-	CreatedBy    *UserContext `json:"createdBy,omitempty"`
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	// trial component, or project.
+	CreatedBy                  *UserContext       `json:"createdBy,omitempty"`
+	CreationTime               *metav1.Time       `json:"creationTime,omitempty"`
+	CustomerMetadataProperties map[string]*string `json:"customerMetadataProperties,omitempty"`
 	// Defines how to perform inference generation after a training job is run.
 	InferenceSpecification *InferenceSpecification `json:"inferenceSpecification,omitempty"`
 	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
+	// trial component, or project.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	// Metadata properties of the tracking entity, trial, or trial component.
@@ -1262,6 +1508,11 @@ type ModelQualityJobInput struct {
 	EndpointInput *EndpointInput `json:"endpointInput,omitempty"`
 	// The ground truth labels for the dataset used for the monitoring job.
 	GroundTruthS3Input *MonitoringGroundTruthS3Input `json:"groundTruthS3Input,omitempty"`
+}
+
+// Metadata for Model steps.
+type ModelStepMetadata struct {
+	ARN *string `json:"arn,omitempty"`
 }
 
 // Provides summary information about a model.
@@ -1528,8 +1779,8 @@ type ObjectiveStatusCounters struct {
 // Provide an OfflineStoreConfig in a request to CreateFeatureGroup to create
 // an OfflineStore.
 //
-// To encrypt an OfflineStore using at rest data encryption, specify AWS Key
-// Management Service (KMS) key ID, or KMSKeyId, in S3StorageConfig.
+// To encrypt an OfflineStore using at rest data encryption, specify Amazon
+// Web Services Key Management Service (KMS) key ID, or KMSKeyId, in S3StorageConfig.
 type OfflineStoreConfig struct {
 	// The meta data of the Glue table which serves as data catalog for the OfflineStore.
 	DataCatalogConfig        *DataCatalogConfig `json:"dataCatalogConfig,omitempty"`
@@ -1545,9 +1796,10 @@ type OfflineStoreStatus struct {
 	Status        *string `json:"status,omitempty"`
 }
 
-// Use this to specify the AWS Key Management Service (KMS) Key ID, or KMSKeyId,
-// for at rest data encryption. You can turn OnlineStore on or off by specifying
-// the EnableOnlineStore flag at General Assembly; the default value is False.
+// Use this to specify the Amazon Web Services Key Management Service (KMS)
+// Key ID, or KMSKeyId, for at rest data encryption. You can turn OnlineStore
+// on or off by specifying the EnableOnlineStore flag at General Assembly; the
+// default value is False.
 type OnlineStoreConfig struct {
 	EnableOnlineStore *bool `json:"enableOnlineStore,omitempty"`
 	// The security configuration for OnlineStore.
@@ -1575,6 +1827,17 @@ type OutputConfig struct {
 type OutputDataConfig struct {
 	KMSKeyID     *string `json:"kmsKeyID,omitempty"`
 	S3OutputPath *string `json:"s3OutputPath,omitempty"`
+}
+
+// An output parameter of a pipeline step.
+type OutputParameter struct {
+	Name  *string `json:"name,omitempty"`
+	Value *string `json:"value,omitempty"`
+}
+
+// Assigns a value to a named Pipeline parameter.
+type Parameter struct {
+	Value *string `json:"value,omitempty"`
 }
 
 // Specifies ranges of integer, continuous, and categorical hyperparameters
@@ -1607,14 +1870,38 @@ type ParentHyperParameterTuningJob struct {
 	HyperParameterTuningJobName *string `json:"hyperParameterTuningJobName,omitempty"`
 }
 
+// The summary of an in-progress deployment when an endpoint is creating or
+// updating with a new endpoint configuration.
+type PendingDeploymentSummary struct {
+	EndpointConfigName *string                            `json:"endpointConfigName,omitempty"`
+	ProductionVariants []*PendingProductionVariantSummary `json:"productionVariants,omitempty"`
+	StartTime          *metav1.Time                       `json:"startTime,omitempty"`
+}
+
+// The production variant summary for a deployment when an endpoint is creating
+// or updating with the CreateEndpoint or UpdateEndpoint operations. Describes
+// the VariantStatus , weight and capacity for a production variant associated
+// with an endpoint.
+type PendingProductionVariantSummary struct {
+	AcceleratorType      *string                    `json:"acceleratorType,omitempty"`
+	CurrentInstanceCount *int64                     `json:"currentInstanceCount,omitempty"`
+	CurrentWeight        *float64                   `json:"currentWeight,omitempty"`
+	DeployedImages       []*DeployedImage           `json:"deployedImages,omitempty"`
+	DesiredInstanceCount *int64                     `json:"desiredInstanceCount,omitempty"`
+	DesiredWeight        *float64                   `json:"desiredWeight,omitempty"`
+	InstanceType         *string                    `json:"instanceType,omitempty"`
+	VariantName          *string                    `json:"variantName,omitempty"`
+	VariantStatus        []*ProductionVariantStatus `json:"variantStatus,omitempty"`
+}
+
 // A SageMaker Model Building Pipeline instance.
 type Pipeline struct {
 	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
+	// trial component, or project.
 	CreatedBy    *UserContext `json:"createdBy,omitempty"`
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
+	// trial component, or project.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	LastRunTime      *metav1.Time `json:"lastRunTime,omitempty"`
@@ -1625,11 +1912,11 @@ type Pipeline struct {
 // An execution of a pipeline.
 type PipelineExecution struct {
 	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
+	// trial component, or project.
 	CreatedBy    *UserContext `json:"createdBy,omitempty"`
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
+	// trial component, or project.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
@@ -1644,6 +1931,12 @@ type PipelineExecutionStep struct {
 // A pipeline execution summary.
 type PipelineExecutionSummary struct {
 	StartTime *metav1.Time `json:"startTime,omitempty"`
+}
+
+// Specifies the names of the experiment and trial created by a pipeline.
+type PipelineExperimentConfig struct {
+	ExperimentName *string `json:"experimentName,omitempty"`
+	TrialName      *string `json:"trialName,omitempty"`
 }
 
 // A summary of a pipeline.
@@ -1797,9 +2090,9 @@ type ProcessingStoppingCondition struct {
 	MaxRuntimeInSeconds *int64 `json:"maxRuntimeInSeconds,omitempty"`
 }
 
-// Identifies a model that you want to host and the resources to deploy for
-// hosting it. If you are deploying multiple models, tell Amazon SageMaker how
-// to distribute traffic among the models by specifying variant weights.
+// Identifies a model that you want to host and the resources chosen to deploy
+// for hosting it. If you are deploying multiple models, tell Amazon SageMaker
+// how to distribute traffic among the models by specifying variant weights.
 type ProductionVariant struct {
 	AcceleratorType *string `json:"acceleratorType,omitempty"`
 	// Specifies configuration for a core dump from the model container when the
@@ -1819,17 +2112,25 @@ type ProductionVariantCoreDumpConfig struct {
 	KMSKeyID         *string `json:"kmsKeyID,omitempty"`
 }
 
+// Describes the status of the production variant.
+type ProductionVariantStatus struct {
+	StartTime     *metav1.Time `json:"startTime,omitempty"`
+	Status        *string      `json:"status,omitempty"`
+	StatusMessage *string      `json:"statusMessage,omitempty"`
+}
+
 // Describes weight and capacities for a production variant associated with
 // an endpoint. If you sent a request to the UpdateEndpointWeightsAndCapacities
 // API and the endpoint status is Updating, you get different desired and current
 // values.
 type ProductionVariantSummary struct {
-	CurrentInstanceCount *int64           `json:"currentInstanceCount,omitempty"`
-	CurrentWeight        *float64         `json:"currentWeight,omitempty"`
-	DeployedImages       []*DeployedImage `json:"deployedImages,omitempty"`
-	DesiredInstanceCount *int64           `json:"desiredInstanceCount,omitempty"`
-	DesiredWeight        *float64         `json:"desiredWeight,omitempty"`
-	VariantName          *string          `json:"variantName,omitempty"`
+	CurrentInstanceCount *int64                     `json:"currentInstanceCount,omitempty"`
+	CurrentWeight        *float64                   `json:"currentWeight,omitempty"`
+	DeployedImages       []*DeployedImage           `json:"deployedImages,omitempty"`
+	DesiredInstanceCount *int64                     `json:"desiredInstanceCount,omitempty"`
+	DesiredWeight        *float64                   `json:"desiredWeight,omitempty"`
+	VariantName          *string                    `json:"variantName,omitempty"`
+	VariantStatus        []*ProductionVariantStatus `json:"variantStatus,omitempty"`
 }
 
 // Configuration information for Debugger system monitoring, framework profiling,
@@ -1868,10 +2169,52 @@ type ProfilerRuleEvaluationStatus struct {
 	StatusDetails         *string      `json:"statusDetails,omitempty"`
 }
 
+// The properties of a project as returned by the Search API.
+type Project struct {
+	// Information about the user who created or modified an experiment, trial,
+	// trial component, or project.
+	CreatedBy    *UserContext `json:"createdBy,omitempty"`
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	// Information about the user who created or modified an experiment, trial,
+	// trial component, or project.
+	LastModifiedBy     *UserContext `json:"lastModifiedBy,omitempty"`
+	LastModifiedTime   *metav1.Time `json:"lastModifiedTime,omitempty"`
+	ProjectDescription *string      `json:"projectDescription,omitempty"`
+	Tags               []*Tag       `json:"tags,omitempty"`
+}
+
 // Information about a project.
 type ProjectSummary struct {
 	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
 	ProjectDescription *string      `json:"projectDescription,omitempty"`
+}
+
+// A collection of settings that configure user interaction with the RStudioServerPro
+// app. RStudioServerProAppSettings cannot be updated. The RStudioServerPro
+// app must be deleted and a new one created to make any changes.
+type RStudioServerProAppSettings struct {
+	AccessStatus *string `json:"accessStatus,omitempty"`
+	UserGroup    *string `json:"userGroup,omitempty"`
+}
+
+// A collection of settings that configure the RStudioServerPro Domain-level
+// app.
+type RStudioServerProDomainSettings struct {
+	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
+	// the instance type that the version runs on.
+	DefaultResourceSpec      *ResourceSpec `json:"defaultResourceSpec,omitempty"`
+	DomainExecutionRoleARN   *string       `json:"domainExecutionRoleARN,omitempty"`
+	RStudioConnectURL        *string       `json:"rStudioConnectURL,omitempty"`
+	RStudioPackageManagerURL *string       `json:"rStudioPackageManagerURL,omitempty"`
+}
+
+// A collection of settings that update the current configuration for the RStudioServerPro
+// Domain-level app.
+type RStudioServerProDomainSettingsForUpdate struct {
+	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
+	// the instance type that the version runs on.
+	DefaultResourceSpec    *ResourceSpec `json:"defaultResourceSpec,omitempty"`
+	DomainExecutionRoleARN *string       `json:"domainExecutionRoleARN,omitempty"`
 }
 
 // Configuration for Redshift Dataset Definition input.
@@ -1891,6 +2234,11 @@ type RedshiftDatasetDefinition struct {
 	OutputS3URI  *string `json:"outputS3URI,omitempty"`
 	// The SQL query statements to be executed.
 	QueryString *string `json:"queryString,omitempty"`
+}
+
+// Metadata for a register model job step.
+type RegisterModelStepMetadata struct {
+	ARN *string `json:"arn,omitempty"`
 }
 
 // A description of an error that occurred while rendering the template.
@@ -1922,6 +2270,21 @@ type ResourceConfig struct {
 type ResourceLimits struct {
 	MaxNumberOfTrainingJobs *int64 `json:"maxNumberOfTrainingJobs,omitempty"`
 	MaxParallelTrainingJobs *int64 `json:"maxParallelTrainingJobs,omitempty"`
+}
+
+// Specifies the ARN's of a SageMaker image and SageMaker image version, and
+// the instance type that the version runs on.
+type ResourceSpec struct {
+	InstanceType             *string `json:"instanceType,omitempty"`
+	LifecycleConfigARN       *string `json:"lifecycleConfigARN,omitempty"`
+	SageMakerImageARN        *string `json:"sageMakerImageARN,omitempty"`
+	SageMakerImageVersionARN *string `json:"sageMakerImageVersionARN,omitempty"`
+}
+
+// The retention policy for data stored on an Amazon Elastic File System (EFS)
+// volume.
+type RetentionPolicy struct {
+	HomeEFSFileSystem *string `json:"homeEFSFileSystem,omitempty"`
 }
 
 // Describes the S3 data source.
@@ -1964,8 +2327,9 @@ type SecondaryStatusTransition struct {
 // called, and as part of UserSettings when the CreateUserProfile API is called.
 // When SharingSettings is not specified, notebook sharing isn't allowed.
 type SharingSettings struct {
-	S3KMSKeyID   *string `json:"s3KMSKeyID,omitempty"`
-	S3OutputPath *string `json:"s3OutputPath,omitempty"`
+	NotebookOutputOption *string `json:"notebookOutputOption,omitempty"`
+	S3KMSKeyID           *string `json:"s3KMSKeyID,omitempty"`
+	S3OutputPath         *string `json:"s3OutputPath,omitempty"`
 }
 
 // A configuration for a shuffle option for input data in a channel. If you
@@ -1988,7 +2352,7 @@ type ShuffleConfig struct {
 
 // Specifies an algorithm that was used to create the model package. The algorithm
 // must be either an algorithm resource in your Amazon SageMaker account or
-// an algorithm in AWS Marketplace that you are subscribed to.
+// an algorithm in Amazon Web Services Marketplace that you are subscribed to.
 type SourceAlgorithm struct {
 	AlgorithmName *string `json:"algorithmName,omitempty"`
 	ModelDataURL  *string `json:"modelDataURL,omitempty"`
@@ -1999,14 +2363,15 @@ type SourceAlgorithmSpecification struct {
 	SourceAlgorithms []*SourceAlgorithm `json:"sourceAlgorithms,omitempty"`
 }
 
-// Specifies a limit to how long a model training or compilation job can run.
-// It also specifies how long you are willing to wait for a managed spot training
-// job to complete. When the job reaches the time limit, Amazon SageMaker ends
-// the training or compilation job. Use this API to cap model training costs.
+// Specifies a limit to how long a model training job or model compilation job
+// can run. It also specifies how long a managed spot training job has to complete.
+// When the job reaches the time limit, Amazon SageMaker ends the training or
+// compilation job. Use this API to cap model training costs.
 //
-// To stop a job, Amazon SageMaker sends the algorithm the SIGTERM signal, which
-// delays job termination for 120 seconds. Algorithms can use this 120-second
-// window to save the model artifacts, so the results of training are not lost.
+// To stop a training job, Amazon SageMaker sends the algorithm the SIGTERM
+// signal, which delays job termination for 120 seconds. Algorithms can use
+// this 120-second window to save the model artifacts, so the results of training
+// are not lost.
 //
 // The training algorithms provided by Amazon SageMaker automatically save the
 // intermediate results of a model training job when possible. This attempt
@@ -2023,30 +2388,48 @@ type StoppingCondition struct {
 	MaxWaitTimeInSeconds *int64 `json:"maxWaitTimeInSeconds,omitempty"`
 }
 
+// Details of the Studio Lifecycle Configuration.
+type StudioLifecycleConfigDetails struct {
+	CreationTime             *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime         *metav1.Time `json:"lastModifiedTime,omitempty"`
+	StudioLifecycleConfigARN *string      `json:"studioLifecycleConfigARN,omitempty"`
+}
+
 // Describes a work team of a vendor that does the a labelling job.
 type SubscribedWorkteam struct {
 	ListingID  *string `json:"listingID,omitempty"`
 	SellerName *string `json:"sellerName,omitempty"`
 }
 
-// Describes a tag.
+// A tag object that consists of a key and an optional value, used to manage
+// metadata for SageMaker Amazon Web Services resources.
+//
+// You can add tags to notebook instances, training jobs, hyperparameter tuning
+// jobs, batch transform jobs, models, labeling jobs, work teams, endpoint configurations,
+// and endpoints. For more information on adding tags to SageMaker resources,
+// see AddTags.
+//
+// For more information on adding metadata to your Amazon Web Services resources
+// with tagging, see Tagging Amazon Web Services resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+// For advice on best practices for managing Amazon Web Services resources with
+// tagging, see Tagging Best Practices: Implement an Effective Amazon Web Services
+// Resource Tagging Strategy (https://d1.awsstatic.com/whitepapers/aws-tagging-best-practices.pdf).
 type Tag struct {
 	Key   *string `json:"key,omitempty"`
 	Value *string `json:"value,omitempty"`
+}
+
+// The TensorBoard app settings.
+type TensorBoardAppSettings struct {
+	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
+	// the instance type that the version runs on.
+	DefaultResourceSpec *ResourceSpec `json:"defaultResourceSpec,omitempty"`
 }
 
 // Configuration of storage locations for the Debugger TensorBoard output data.
 type TensorBoardOutputConfig struct {
 	LocalPath    *string `json:"localPath,omitempty"`
 	S3OutputPath *string `json:"s3OutputPath,omitempty"`
-}
-
-// Currently, the TrafficRoutingConfig API is not supported.
-type TrafficRoutingConfig struct {
-	// Currently, the CapacitySize API is not supported.
-	CanarySize            *CapacitySize `json:"canarySize,omitempty"`
-	Type                  *string       `json:"type_,omitempty"`
-	WaitIntervalInSeconds *int64        `json:"waitIntervalInSeconds,omitempty"`
 }
 
 // Defines the input needed to run a training job using the algorithm.
@@ -2058,14 +2441,15 @@ type TrainingJobDefinition struct {
 	// Describes the resources, including ML compute instances and ML storage volumes,
 	// to use for model training.
 	ResourceConfig *ResourceConfig `json:"resourceConfig,omitempty"`
-	// Specifies a limit to how long a model training or compilation job can run.
-	// It also specifies how long you are willing to wait for a managed spot training
-	// job to complete. When the job reaches the time limit, Amazon SageMaker ends
-	// the training or compilation job. Use this API to cap model training costs.
+	// Specifies a limit to how long a model training job or model compilation job
+	// can run. It also specifies how long a managed spot training job has to complete.
+	// When the job reaches the time limit, Amazon SageMaker ends the training or
+	// compilation job. Use this API to cap model training costs.
 	//
-	// To stop a job, Amazon SageMaker sends the algorithm the SIGTERM signal, which
-	// delays job termination for 120 seconds. Algorithms can use this 120-second
-	// window to save the model artifacts, so the results of training are not lost.
+	// To stop a training job, Amazon SageMaker sends the algorithm the SIGTERM
+	// signal, which delays job termination for 120 seconds. Algorithms can use
+	// this 120-second window to save the model artifacts, so the results of training
+	// are not lost.
 	//
 	// The training algorithms provided by Amazon SageMaker automatically save the
 	// intermediate results of a model training job when possible. This attempt
@@ -2078,7 +2462,43 @@ type TrainingJobDefinition struct {
 	// model artifacts. When training NTMs, make sure that the maximum runtime is
 	// sufficient for the training job to complete.
 	StoppingCondition *StoppingCondition `json:"stoppingCondition,omitempty"`
-	TrainingInputMode *string            `json:"trainingInputMode,omitempty"`
+	// The training input mode that the algorithm supports. For more information
+	// about input modes, see Algorithms (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html).
+	//
+	// Pipe mode
+	//
+	// If an algorithm supports Pipe mode, Amazon SageMaker streams data directly
+	// from Amazon S3 to the container.
+	//
+	// File mode
+	//
+	// If an algorithm supports File mode, SageMaker downloads the training data
+	// from S3 to the provisioned ML storage volume, and mounts the directory to
+	// the Docker volume for the training container.
+	//
+	// You must provision the ML storage volume with sufficient capacity to accommodate
+	// the data downloaded from S3. In addition to the training data, the ML storage
+	// volume also stores the output model. The algorithm container uses the ML
+	// storage volume to also store intermediate information, if any.
+	//
+	// For distributed algorithms, training data is distributed uniformly. Your
+	// training duration is predictable if the input data objects sizes are approximately
+	// the same. SageMaker does not split the files any further for model training.
+	// If the object sizes are skewed, training won't be optimal as the data distribution
+	// is also skewed when one host in a training cluster is overloaded, thus becoming
+	// a bottleneck in training.
+	//
+	// FastFile mode
+	//
+	// If an algorithm supports FastFile mode, SageMaker streams data directly from
+	// S3 to the container with no code changes, and provides file system access
+	// to the data. Users can author their training script to interact with these
+	// files as if they were stored on disk.
+	//
+	// FastFile mode works best when the data is read sequentially. Augmented manifest
+	// files aren't supported. The startup time is lower when there are fewer files
+	// in the S3 bucket provided.
+	TrainingInputMode *string `json:"trainingInputMode,omitempty"`
 }
 
 // The numbers of training jobs launched by a hyperparameter tuning job, categorized
@@ -2151,7 +2571,7 @@ type TrainingJob_SDK struct {
 	// artifacts.
 	//
 	// Model artifacts are the output that results from training a model, and typically
-	// consist of trained parameters, a model defintion that desribes how to compute
+	// consist of trained parameters, a model definition that describes how to compute
 	// inferences, and other metadata.
 	ModelArtifacts *ModelArtifacts `json:"modelArtifacts,omitempty"`
 	// Provides information about how to store model training results (model artifacts).
@@ -2162,14 +2582,15 @@ type TrainingJob_SDK struct {
 	RoleARN                    *string                      `json:"roleARN,omitempty"`
 	SecondaryStatus            *string                      `json:"secondaryStatus,omitempty"`
 	SecondaryStatusTransitions []*SecondaryStatusTransition `json:"secondaryStatusTransitions,omitempty"`
-	// Specifies a limit to how long a model training or compilation job can run.
-	// It also specifies how long you are willing to wait for a managed spot training
-	// job to complete. When the job reaches the time limit, Amazon SageMaker ends
-	// the training or compilation job. Use this API to cap model training costs.
+	// Specifies a limit to how long a model training job or model compilation job
+	// can run. It also specifies how long a managed spot training job has to complete.
+	// When the job reaches the time limit, Amazon SageMaker ends the training or
+	// compilation job. Use this API to cap model training costs.
 	//
-	// To stop a job, Amazon SageMaker sends the algorithm the SIGTERM signal, which
-	// delays job termination for 120 seconds. Algorithms can use this 120-second
-	// window to save the model artifacts, so the results of training are not lost.
+	// To stop a training job, Amazon SageMaker sends the algorithm the SIGTERM
+	// signal, which delays job termination for 120 seconds. Algorithms can use
+	// this 120-second window to save the model artifacts, so the results of training
+	// are not lost.
 	//
 	// The training algorithms provided by Amazon SageMaker automatically save the
 	// intermediate results of a model training job when possible. This attempt
@@ -2331,13 +2752,13 @@ type TransformS3DataSource struct {
 // The properties of a trial as returned by the Search API.
 type Trial struct {
 	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
+	// trial component, or project.
 	CreatedBy      *UserContext `json:"createdBy,omitempty"`
 	CreationTime   *metav1.Time `json:"creationTime,omitempty"`
 	DisplayName    *string      `json:"displayName,omitempty"`
 	ExperimentName *string      `json:"experimentName,omitempty"`
 	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
+	// trial component, or project.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	// Metadata properties of the tracking entity, trial, or trial component.
@@ -2349,13 +2770,13 @@ type Trial struct {
 // The properties of a trial component as returned by the Search API.
 type TrialComponent struct {
 	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
+	// trial component, or project.
 	CreatedBy    *UserContext `json:"createdBy,omitempty"`
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	DisplayName  *string      `json:"displayName,omitempty"`
 	EndTime      *metav1.Time `json:"endTime,omitempty"`
 	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
+	// trial component, or project.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	// Metadata properties of the tracking entity, trial, or trial component.
@@ -2374,7 +2795,7 @@ type TrialComponentMetricSummary struct {
 // A short summary of a trial component.
 type TrialComponentSimpleSummary struct {
 	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
+	// trial component, or project.
 	CreatedBy          *UserContext `json:"createdBy,omitempty"`
 	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
 	TrialComponentName *string      `json:"trialComponentName,omitempty"`
@@ -2384,13 +2805,13 @@ type TrialComponentSimpleSummary struct {
 // call the DescribeTrialComponent API and provide the TrialComponentName.
 type TrialComponentSummary struct {
 	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
+	// trial component, or project.
 	CreatedBy    *UserContext `json:"createdBy,omitempty"`
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	DisplayName  *string      `json:"displayName,omitempty"`
 	EndTime      *metav1.Time `json:"endTime,omitempty"`
 	// Information about the user who created or modified an experiment, trial,
-	// or trial component.
+	// trial component, or project.
 	LastModifiedBy     *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime   *metav1.Time `json:"lastModifiedTime,omitempty"`
 	StartTime          *metav1.Time `json:"startTime,omitempty"`
@@ -2411,13 +2832,26 @@ type TuningJobCompletionCriteria struct {
 	TargetObjectiveMetricValue *float64 `json:"targetObjectiveMetricValue,omitempty"`
 }
 
+// Metadata for a tuning step.
+type TuningJobStepMetaData struct {
+	ARN *string `json:"arn,omitempty"`
+}
+
 // Provided configuration information for the worker UI for a labeling job.
+// Provide either HumanTaskUiArn or UiTemplateS3Uri.
+//
+// For named entity recognition, 3D point cloud and video frame labeling jobs,
+// use HumanTaskUiArn.
+//
+// For all other Ground Truth built-in task types and custom task types, use
+// UiTemplateS3Uri to specify the location of a worker task template in Amazon
+// S3.
 type UiConfig struct {
 	UiTemplateS3URI *string `json:"uiTemplateS3URI,omitempty"`
 }
 
 // Information about the user who created or modified an experiment, trial,
-// or trial component.
+// trial component, or project.
 type UserContext struct {
 	DomainID        *string `json:"domainID,omitempty"`
 	UserProfileARN  *string `json:"userProfileARN,omitempty"`
@@ -2427,7 +2861,10 @@ type UserContext struct {
 // The user profile details.
 type UserProfileDetails struct {
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	DomainID         *string      `json:"domainID,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	Status           *string      `json:"status,omitempty"`
+	UserProfileName  *string      `json:"userProfileName,omitempty"`
 }
 
 // A collection of settings that apply to users of Amazon SageMaker Studio.
@@ -2438,8 +2875,23 @@ type UserProfileDetails struct {
 // settings in UserSettings, the values specified in CreateUserProfile take
 // precedence over those specified in CreateDomain.
 type UserSettings struct {
-	ExecutionRole  *string   `json:"executionRole,omitempty"`
-	SecurityGroups []*string `json:"securityGroups,omitempty"`
+	ExecutionRole *string `json:"executionRole,omitempty"`
+	// The JupyterServer app settings.
+	JupyterServerAppSettings *JupyterServerAppSettings `json:"jupyterServerAppSettings,omitempty"`
+	// The KernelGateway app settings.
+	KernelGatewayAppSettings *KernelGatewayAppSettings `json:"kernelGatewayAppSettings,omitempty"`
+	// A collection of settings that configure user interaction with the RStudioServerPro
+	// app. RStudioServerProAppSettings cannot be updated. The RStudioServerPro
+	// app must be deleted and a new one created to make any changes.
+	RStudioServerProAppSettings *RStudioServerProAppSettings `json:"rStudioServerProAppSettings,omitempty"`
+	SecurityGroups              []*string                    `json:"securityGroups,omitempty"`
+	// Specifies options for sharing SageMaker Studio notebooks. These settings
+	// are specified as part of DefaultUserSettings when the CreateDomain API is
+	// called, and as part of UserSettings when the CreateUserProfile API is called.
+	// When SharingSettings is not specified, notebook sharing isn't allowed.
+	SharingSettings *SharingSettings `json:"sharingSettings,omitempty"`
+	// The TensorBoard app settings.
+	TensorBoardAppSettings *TensorBoardAppSettings `json:"tensorBoardAppSettings,omitempty"`
 }
 
 // Specifies a VPC that your training jobs and hosted models have access to.
@@ -2463,9 +2915,10 @@ type VariantProperty struct {
 
 // A single private workforce, which is automatically created when you create
 // your first private work team. You can create one private work force in each
-// AWS Region. By default, any workforce-related API operation used in a specific
-// region will apply to the workforce created in that region. To learn how to
-// create a private workforce, see Create a Private Workforce (https://docs.aws.amazon.com/sagemaker/latest/dg/sms-workforce-create-private.html).
+// Amazon Web Services Region. By default, any workforce-related API operation
+// used in a specific region will apply to the workforce created in that region.
+// To learn how to create a private workforce, see Create a Private Workforce
+// (https://docs.aws.amazon.com/sagemaker/latest/dg/sms-workforce-create-private.html).
 type Workforce struct {
 	CreateDate      *metav1.Time `json:"createDate,omitempty"`
 	LastUpdatedDate *metav1.Time `json:"lastUpdatedDate,omitempty"`

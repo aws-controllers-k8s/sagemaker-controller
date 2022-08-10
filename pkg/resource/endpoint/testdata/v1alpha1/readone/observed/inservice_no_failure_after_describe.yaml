@@ -17,6 +17,7 @@ status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-west-2:123456789012:endpoint/xgboost-endpoint
     ownerAccountID: ""
+    region: ""
   conditions:
   - lastTransitionTime: "0001-01-01T00:00:00Z"
     message: Endpoint is in InService status.

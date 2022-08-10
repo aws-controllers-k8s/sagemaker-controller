@@ -75,19 +75,19 @@ type TransformJobSpec struct {
 	// job invocation.
 	ModelClientConfig *ModelClientConfig `json:"modelClientConfig,omitempty"`
 	// The name of the model that you want to use for the transform job. ModelName
-	// must be the name of an existing Amazon SageMaker model within an AWS Region
-	// in an AWS account.
+	// must be the name of an existing Amazon SageMaker model within an Amazon Web
+	// Services Region in an Amazon Web Services account.
 	// +kubebuilder:validation:Required
 	ModelName *string `json:"modelName"`
 	// (Optional) An array of key-value pairs. For more information, see Using Cost
 	// Allocation Tags (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html#allocation-what)
-	// in the AWS Billing and Cost Management User Guide.
+	// in the Amazon Web Services Billing and Cost Management User Guide.
 	Tags []*Tag `json:"tags,omitempty"`
 	// Describes the input source and the way the transform job consumes it.
 	// +kubebuilder:validation:Required
 	TransformInput *TransformInput `json:"transformInput"`
-	// The name of the transform job. The name must be unique within an AWS Region
-	// in an AWS account.
+	// The name of the transform job. The name must be unique within an Amazon Web
+	// Services Region in an Amazon Web Services account.
 	// +kubebuilder:validation:Required
 	TransformJobName *string `json:"transformJobName"`
 	// Describes the results of the transform job.

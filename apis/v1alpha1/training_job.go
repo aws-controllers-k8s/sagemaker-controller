@@ -126,23 +126,25 @@ type TrainingJobSpec struct {
 	// must have the iam:PassRole permission.
 	// +kubebuilder:validation:Required
 	RoleARN *string `json:"roleARN"`
-	// Specifies a limit to how long a model training job can run. When the job
-	// reaches the time limit, Amazon SageMaker ends the training job. Use this
-	// API to cap model training costs.
+	// Specifies a limit to how long a model training job can run. It also specifies
+	// how long a managed Spot training job has to complete. When the job reaches
+	// the time limit, Amazon SageMaker ends the training job. Use this API to cap
+	// model training costs.
 	//
 	// To stop a job, Amazon SageMaker sends the algorithm the SIGTERM signal, which
 	// delays job termination for 120 seconds. Algorithms can use this 120-second
 	// window to save the model artifacts, so the results of training are not lost.
 	// +kubebuilder:validation:Required
 	StoppingCondition *StoppingCondition `json:"stoppingCondition"`
-	// An array of key-value pairs. You can use tags to categorize your AWS resources
-	// in different ways, for example, by purpose, owner, or environment. For more
-	// information, see Tagging AWS Resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+	// An array of key-value pairs. You can use tags to categorize your Amazon Web
+	// Services resources in different ways, for example, by purpose, owner, or
+	// environment. For more information, see Tagging Amazon Web Services Resources
+	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
 	Tags []*Tag `json:"tags,omitempty"`
 
 	TensorBoardOutputConfig *TensorBoardOutputConfig `json:"tensorBoardOutputConfig,omitempty"`
-	// The name of the training job. The name must be unique within an AWS Region
-	// in an AWS account.
+	// The name of the training job. The name must be unique within an Amazon Web
+	// Services Region in an Amazon Web Services account.
 	// +kubebuilder:validation:Required
 	TrainingJobName *string `json:"trainingJobName"`
 	// A VpcConfig object that specifies the VPC that you want your training job
@@ -230,7 +232,7 @@ type TrainingJobStatus struct {
 	//
 	//    * LaunchingMLInstances
 	//
-	//    * PreparingTrainingStack
+	//    * PreparingTraining
 	//
 	//    * DownloadingTrainingImage
 	// +kubebuilder:validation:Optional

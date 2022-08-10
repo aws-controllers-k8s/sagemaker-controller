@@ -18,5 +18,6 @@
   "SecurityGroups": null,
   "SubnetId": null,
   "Url": "test.notebook.us-east-2.sagemaker.aws",
-  "VolumeSizeInGB": 8
- }
+  "VolumeSizeInGB": 8,
+  "PlatformIdentifier": "notebook-al1-v1"
+}

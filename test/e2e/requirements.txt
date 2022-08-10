@@ -1,2 +1,2 @@
-acktest @ git+https://github.com/aws-controllers-k8s/test-infra.git@6045316542f9699db4aba2829fa0c394eebae8e8
+acktest @ git+https://github.com/aws-controllers-k8s/test-infra.git@fe6fadc3e1437f2785155c21e27dac3fd8c74f9b
 black==20.8b1

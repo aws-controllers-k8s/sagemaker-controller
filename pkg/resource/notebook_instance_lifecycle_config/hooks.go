@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	resourceName = resourceGK.Kind
+	resourceName = GroupKind.Kind
 
 	requeueWaitWhileUpdating = ackrequeue.NeededAfter(
 		errors.New(resourceName+" is updating."),

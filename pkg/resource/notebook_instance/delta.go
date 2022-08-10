@@ -90,6 +90,13 @@ func newResourceDelta(
 			delta.Add("Spec.NotebookInstanceName", a.ko.Spec.NotebookInstanceName, b.ko.Spec.NotebookInstanceName)
 		}
 	}
+	if ackcompare.HasNilDifference(a.ko.Spec.PlatformIdentifier, b.ko.Spec.PlatformIdentifier) {
+		delta.Add("Spec.PlatformIdentifier", a.ko.Spec.PlatformIdentifier, b.ko.Spec.PlatformIdentifier)
+	} else if a.ko.Spec.PlatformIdentifier != nil && b.ko.Spec.PlatformIdentifier != nil {
+		if *a.ko.Spec.PlatformIdentifier != *b.ko.Spec.PlatformIdentifier {
+			delta.Add("Spec.PlatformIdentifier", a.ko.Spec.PlatformIdentifier, b.ko.Spec.PlatformIdentifier)
+		}
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.RoleARN, b.ko.Spec.RoleARN) {
 		delta.Add("Spec.RoleARN", a.ko.Spec.RoleARN, b.ko.Spec.RoleARN)
 	} else if a.ko.Spec.RoleARN != nil && b.ko.Spec.RoleARN != nil {

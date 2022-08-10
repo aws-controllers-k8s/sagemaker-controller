@@ -1,0 +1,31 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: Model
+metadata:
+  creationTimestamp: null
+  name: xgboost-model
+spec:
+  containers:
+  - containerHostname: xgboost
+    environment:
+      my_var: my_value
+      my_var2: my_value2
+    image: 246618743249.dkr.ecr.us-west-2.amazonaws.com/sagemaker-xgboost:1.0-1-cpu-py3
+    imageConfig:
+      repositoryAccessMode: Platform
+      repositoryAuthConfig: {}
+    mode: SingleModel
+    modelDataURL: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model/xgboost-mnist-model.tar.gz
+  enableNetworkIsolation: false
+  executionRoleARN: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
+  modelName: xgboost-model
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:model/xgboost-model
+    ownerAccountID: ""
+    region: ""
+  conditions:
+  - lastTransitionTime: "0001-01-01T00:00:00Z"
+    message: Late initialization successful
+    reason: Late initialization successful
+    status: "True"
+    type: ACK.LateInitialized

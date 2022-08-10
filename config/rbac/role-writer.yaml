@@ -9,7 +9,9 @@ rules:
 - apiGroups:
   - sagemaker.services.k8s.aws
   resources:
+  - apps
   - dataqualityjobdefinitions
+  - domains
   - endpoints
   - endpointconfigs
   - featuregroups
@@ -26,6 +28,7 @@ rules:
   - processingjobs
   - trainingjobs
   - transformjobs
+  - userprofiles
   verbs:
   - create
   - delete
@@ -37,7 +40,9 @@ rules:
 - apiGroups:
   - sagemaker.services.k8s.aws
   resources:
+  - apps
   - dataqualityjobdefinitions
+  - domains
   - endpoints
   - endpointconfigs
   - featuregroups
@@ -54,6 +59,7 @@ rules:
   - processingjobs
   - trainingjobs
   - transformjobs
+  - userprofiles
   verbs:
   - get
   - patch

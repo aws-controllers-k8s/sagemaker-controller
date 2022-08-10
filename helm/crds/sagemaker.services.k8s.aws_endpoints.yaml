@@ -4,7 +4,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.6.1
+    controller-gen.kubebuilder.io/version: v0.7.0
   creationTimestamp: null
   name: endpoints.sagemaker.services.k8s.aws
 spec:
@@ -51,17 +51,28 @@ spec:
                 type: string
               endpointName:
                 description: The name of the endpoint.The name must be unique within
-                  an AWS Region in your AWS account. The name is case-insensitive
-                  in CreateEndpoint, but the case is preserved and must be matched
-                  in .
+                  an Amazon Web Services Region in your Amazon Web Services account.
+                  The name is case-insensitive in CreateEndpoint, but the case is
+                  preserved and must be matched in .
                 type: string
               tags:
                 description: An array of key-value pairs. You can use tags to categorize
-                  your AWS resources in different ways, for example, by purpose, owner,
-                  or environment. For more information, see Tagging AWS Resources
-                  (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+                  your Amazon Web Services resources in different ways, for example,
+                  by purpose, owner, or environment. For more information, see Tagging
+                  Amazon Web Services Resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
                 items:
-                  description: Describes a tag.
+                  description: "A tag object that consists of a key and an optional
+                    value, used to manage metadata for SageMaker Amazon Web Services
+                    resources. \n You can add tags to notebook instances, training
+                    jobs, hyperparameter tuning jobs, batch transform jobs, models,
+                    labeling jobs, work teams, endpoint configurations, and endpoints.
+                    For more information on adding tags to SageMaker resources, see
+                    AddTags. \n For more information on adding metadata to your Amazon
+                    Web Services resources with tagging, see Tagging Amazon Web Services
+                    resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+                    For advice on best practices for managing Amazon Web Services
+                    resources with tagging, see Tagging Best Practices: Implement
+                    an Effective Amazon Web Services Resource Tagging Strategy (https://d1.awsstatic.com/whitepapers/aws-tagging-best-practices.pdf)."
                   properties:
                     key:
                       type: string
@@ -96,8 +107,13 @@ spec:
                     description: OwnerAccountID is the AWS Account ID of the account
                       that owns the backend AWS service API resource.
                     type: string
+                  region:
+                    description: Region is the AWS region in which the resource exists
+                      or will exist.
+                    type: string
                 required:
                 - ownerAccountID
+                - region
                 type: object
               conditions:
                 description: All CRS managed by ACK have a common `Status.Conditions`
@@ -209,6 +225,19 @@ spec:
                       type: number
                     variantName:
                       type: string
+                    variantStatus:
+                      items:
+                        description: Describes the status of the production variant.
+                        properties:
+                          startTime:
+                            format: date-time
+                            type: string
+                          status:
+                            type: string
+                          statusMessage:
+                            type: string
+                        type: object
+                      type: array
                   type: object
                 type: array
             type: object

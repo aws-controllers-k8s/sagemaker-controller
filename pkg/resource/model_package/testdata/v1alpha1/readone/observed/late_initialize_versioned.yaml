@@ -1,0 +1,49 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: ModelPackage
+metadata:
+  creationTimestamp: null
+  name: unit-testing-model-package
+spec:
+  certifyForMarketplace: false
+  inferenceSpecification:
+    containers:
+    - image: 433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:latest
+      modelDataURL: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model/xgboost-mnist-model.tar.gz
+    supportedContentTypes:
+    - text/csv
+    supportedRealtimeInferenceInstanceTypes:
+    - ml.m5.large
+    supportedResponseMIMETypes:
+    - text/csv
+    supportedTransformInstanceTypes:
+    - ml.m5.large
+  modelApprovalStatus: PendingManualApproval
+  modelPackageDescription: Description for model package
+  modelPackageGroupName: xgboost-model-package-group
+  validationSpecification:
+    validationProfiles:
+    - profileName: Test-Model-Package
+      transformJobDefinition:
+        transformInput:
+          contentType: text/csv
+          dataSource:
+            s3DataSource:
+              s3DataType: S3Prefix
+              s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/batch/input-data
+        transformOutput:
+          s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/batch/output
+        transformResources:
+          instanceCount: 1
+          instanceType: ml.m5.large
+    validationRole: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:model-package/xgboost-model-package-group/1
+    ownerAccountID: ""
+    region: ""
+  conditions:
+  - lastTransitionTime: "0001-01-01T00:00:00Z"
+    message: Late initialization successful
+    reason: Late initialization successful
+    status: "True"
+    type: ACK.LateInitialized

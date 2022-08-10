@@ -26,13 +26,15 @@ import (
 type ModelPackageSpec struct {
 	// A description for the approval status of the model.
 	ApprovalDescription *string `json:"approvalDescription,omitempty"`
-	// Whether to certify the model package for listing on AWS Marketplace.
+	// Whether to certify the model package for listing on Amazon Web Services Marketplace.
 	//
 	// This parameter is optional for unversioned models, and does not apply to
 	// versioned models.
 	CertifyForMarketplace *bool `json:"certifyForMarketplace,omitempty"`
 	// A unique token that guarantees that the call to this API is idempotent.
 	ClientToken *string `json:"clientToken,omitempty"`
+	// The metadata properties associated with the model package versions.
+	CustomerMetadataProperties map[string]*string `json:"customerMetadataProperties,omitempty"`
 	// Specifies details about inference jobs that can be run with models based
 	// on this model package, including the following:
 	//
@@ -59,7 +61,8 @@ type ModelPackageSpec struct {
 	ModelMetrics *ModelMetrics `json:"modelMetrics,omitempty"`
 	// A description of the model package.
 	ModelPackageDescription *string `json:"modelPackageDescription,omitempty"`
-	// The name of the model group that this model version belongs to.
+	// The name or Amazon Resource Name (ARN) of the model package group that this
+	// model version belongs to.
 	//
 	// This parameter is required for versioned models, and does not apply to unversioned
 	// models.
@@ -73,8 +76,8 @@ type ModelPackageSpec struct {
 	// Details about the algorithm that was used to create the model package.
 	SourceAlgorithmSpecification *SourceAlgorithmSpecification `json:"sourceAlgorithmSpecification,omitempty"`
 	// A list of key value pairs associated with the model. For more information,
-	// see Tagging AWS resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html)
-	// in the AWS General Reference Guide.
+	// see Tagging Amazon Web Services resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html)
+	// in the Amazon Web Services General Reference Guide.
 	Tags []*Tag `json:"tags,omitempty"`
 	// Specifies configurations for one or more transform jobs that Amazon SageMaker
 	// runs to test the model package.

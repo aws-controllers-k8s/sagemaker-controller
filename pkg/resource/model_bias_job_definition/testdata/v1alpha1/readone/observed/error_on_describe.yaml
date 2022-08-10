@@ -1,0 +1,54 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: ModelBiasJobDefinition
+metadata:
+  creationTimestamp: null
+  name: unit-testing-mb-job-definition
+spec:
+  jobDefinitionName: unit-testing-mb-job-definition
+  jobResources:
+    clusterConfig:
+      instanceCount: 1
+      instanceType: ml.m5.large
+      volumeSizeInGB: 30
+  modelBiasAppSpecification:
+    configURI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model_bias_job_definition/baselining/analysis_config.json
+    imageURI: 306415355426.dkr.ecr.us-west-2.amazonaws.com/sagemaker-clarify-processing:1.0
+  modelBiasBaselineConfig:
+    constraintsResource:
+      s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model_bias_job_definition/baselining/analysis.json
+  modelBiasJobInput:
+    endpointInput:
+      endTimeOffset: -PT0H
+      endpointName: unit-testing-endpoint
+      localPath: /opt/ml/processing/input/endpoint
+      probabilityThresholdAttribute: 0.8
+      s3DataDistributionType: FullyReplicated
+      s3InputMode: File
+      startTimeOffset: -PT1H
+    groundTruthS3Input:
+      s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model_bias_job_definition/ground_truth_data
+  modelBiasJobOutputConfig:
+    monitoringOutputs:
+    - s3Output:
+        localPath: /opt/ml/processing/output
+        s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/model_bias_job_definition/reports
+        s3UploadMode: Continuous
+  roleARN: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
+  stoppingCondition:
+    maxRuntimeInSeconds: 1800
+  tags:
+  - key: confidentiality
+    value: public
+  - key: environment
+    value: testing
+  - key: customer
+    value: test-user
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:model-bias-job-definition/unit-testing-mb-job-definition
+    ownerAccountID: ""
+    region: ""
+  conditions:
+  - message: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
+    status: "True"
+    type: ACK.Recoverable

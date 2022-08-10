@@ -33,7 +33,7 @@ func (rm *resourceManager) CustomUpdateConditions(
 	latestStatus := r.ko.Status.MonitoringScheduleStatus
 	terminalStatus := svcsdk.ScheduleStatusFailed
 	conditionManager := &resource{ko}
-	resourceName := resourceGK.Kind
+	resourceName := GroupKind.Kind
 	// If the latestStatus == terminalStatus we will set
 	// the terminal condition and terminal message.
 	return svccommon.SetTerminalState(conditionManager, latestStatus, &resourceName, terminalStatus)

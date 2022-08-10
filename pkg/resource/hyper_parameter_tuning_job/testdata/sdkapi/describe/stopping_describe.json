@@ -1,0 +1,205 @@
+{
+    "BestTrainingJob": null,
+    "CreationTime": "2021-10-18T04:21:01.477Z",
+    "FailureReason": null,
+    "HyperParameterTuningEndTime": null,
+    "HyperParameterTuningJobArn": "arn:aws:sagemaker:us-west-2:123456789012:hyper-parameter-tuning-job/unit-testing-hpo-job",
+    "HyperParameterTuningJobConfig": {
+        "HyperParameterTuningJobObjective": {
+            "MetricName": "validation:error",
+            "Type": "Minimize"
+        },
+        "ParameterRanges": {
+            "CategoricalParameterRanges": null,
+            "ContinuousParameterRanges": [
+                {
+                    "MaxValue": "5",
+                    "MinValue": "0",
+                    "Name": "gamma",
+                    "ScalingType": "Linear"
+                }
+            ],
+            "IntegerParameterRanges": [
+                {
+                    "MaxValue": "20",
+                    "MinValue": "10",
+                    "Name": "num_round",
+                    "ScalingType": "Linear"
+                }
+            ]
+        },
+        "ResourceLimits": {
+            "MaxNumberOfTrainingJobs": 2,
+            "MaxParallelTrainingJobs": 1
+        },
+        "Strategy": "Bayesian",
+        "TrainingJobEarlyStoppingType": "Auto",
+        "TuningJobCompletionCriteria": null
+    },
+    "HyperParameterTuningJobName": "unit-testing-hpo-job",
+    "HyperParameterTuningJobStatus": "Stopping",
+    "LastModifiedTime": "2021-10-18T04:21:01.477Z",
+    "ObjectiveStatusCounters": {
+        "Failed": 0,
+        "Pending": 0,
+        "Succeeded": 0
+    },
+    "OverallBestTrainingJob": null,
+    "TrainingJobDefinition": {
+        "AlgorithmSpecification": {
+            "AlgorithmName": null,
+            "MetricDefinitions": [
+                {
+                    "Name": "train:mae",
+                    "Regex": ".*\\[[0-9]+\\].*#011train-mae:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+                },
+                {
+                    "Name": "validation:auc",
+                    "Regex": ".*\\[[0-9]+\\].*#011validation-auc:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+                },
+                {
+                    "Name": "train:merror",
+                    "Regex": ".*\\[[0-9]+\\].*#011train-merror:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+                },
+                {
+                    "Name": "train:auc",
+                    "Regex": ".*\\[[0-9]+\\].*#011train-auc:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+                },
+                {
+                    "Name": "validation:mae",
+                    "Regex": ".*\\[[0-9]+\\].*#011validation-mae:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+                },
+                {
+                    "Name": "validation:error",
+                    "Regex": ".*\\[[0-9]+\\].*#011validation-error:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+                },
+                {
+                    "Name": "validation:merror",
+                    "Regex": ".*\\[[0-9]+\\].*#011validation-merror:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+                },
+                {
+                    "Name": "validation:logloss",
+                    "Regex": ".*\\[[0-9]+\\].*#011validation-logloss:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+                },
+                {
+                    "Name": "train:rmse",
+                    "Regex": ".*\\[[0-9]+\\].*#011train-rmse:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+                },
+                {
+                    "Name": "train:logloss",
+                    "Regex": ".*\\[[0-9]+\\].*#011train-logloss:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+                },
+                {
+                    "Name": "train:mlogloss",
+                    "Regex": ".*\\[[0-9]+\\].*#011train-mlogloss:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+                },
+                {
+                    "Name": "validation:rmse",
+                    "Regex": ".*\\[[0-9]+\\].*#011validation-rmse:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+                },
+                {
+                    "Name": "validation:ndcg",
+                    "Regex": ".*\\[[0-9]+\\].*#011validation-ndcg:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+                },
+                {
+                    "Name": "train:error",
+                    "Regex": ".*\\[[0-9]+\\].*#011train-error:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+                },
+                {
+                    "Name": "validation:mlogloss",
+                    "Regex": ".*\\[[0-9]+\\].*#011validation-mlogloss:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+                },
+                {
+                    "Name": "train:ndcg",
+                    "Regex": ".*\\[[0-9]+\\].*#011train-ndcg:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+                },
+                {
+                    "Name": "train:map",
+                    "Regex": ".*\\[[0-9]+\\].*#011train-map:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+                },
+                {
+                    "Name": "validation:map",
+                    "Regex": ".*\\[[0-9]+\\].*#011validation-map:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+                },
+                {
+                    "Name": "ObjectiveMetric",
+                    "Regex": ".*\\[[0-9]+\\].*#011validation-error:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+                }
+            ],
+            "TrainingImage": "433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:1",
+            "TrainingInputMode": "File"
+        },
+        "CheckpointConfig": null,
+        "DefinitionName": null,
+        "EnableInterContainerTrafficEncryption": false,
+        "EnableManagedSpotTraining": false,
+        "EnableNetworkIsolation": true,
+        "HyperParameterRanges": null,
+        "InputDataConfig": [
+            {
+                "ChannelName": "train",
+                "CompressionType": "None",
+                "ContentType": "text/csv",
+                "DataSource": {
+                    "FileSystemDataSource": null,
+                    "S3DataSource": {
+                        "AttributeNames": null,
+                        "S3DataDistributionType": "FullyReplicated",
+                        "S3DataType": "S3Prefix",
+                        "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/train"
+                    }
+                },
+                "InputMode": "File",
+                "RecordWrapperType": "None",
+                "ShuffleConfig": null
+            },
+            {
+                "ChannelName": "validation",
+                "CompressionType": "None",
+                "ContentType": "text/csv",
+                "DataSource": {
+                    "FileSystemDataSource": null,
+                    "S3DataSource": {
+                        "AttributeNames": null,
+                        "S3DataDistributionType": "FullyReplicated",
+                        "S3DataType": "S3Prefix",
+                        "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/validation/"
+                    }
+                },
+                "InputMode": "File",
+                "RecordWrapperType": "None",
+                "ShuffleConfig": null
+            }
+        ],
+        "OutputDataConfig": {
+            "KmsKeyId": null,
+            "S3OutputPath": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/hpo/output"
+        },
+        "ResourceConfig": {
+            "InstanceCount": 1,
+            "InstanceType": "ml.m4.xlarge",
+            "VolumeKmsKeyId": null,
+            "VolumeSizeInGB": 25
+        },
+        "RoleArn": "arn:aws:iam::123456789012:role/service-role/AmazonSageMaker-ExecutionRole-20210920T111639",
+        "StaticHyperParameters": {
+            "_tuning_objective_metric": "validation:error",
+            "base_score": "0.5"
+        },
+        "StoppingCondition": {
+            "MaxRuntimeInSeconds": 3600,
+            "MaxWaitTimeInSeconds": null
+        },
+        "TuningObjective": null,
+        "VpcConfig": null
+    },
+    "TrainingJobDefinitions": null,
+    "TrainingJobStatusCounters": {
+        "Completed": 0,
+        "InProgress": 0,
+        "NonRetryableError": 0,
+        "RetryableError": 0,
+        "Stopped": 0
+    },
+    "WarmStartConfig": null
+}

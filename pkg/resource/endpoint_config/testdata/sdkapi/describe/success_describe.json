@@ -1,0 +1,39 @@
+{
+    "CreationTime": "2021-09-09T01:05:28.204Z",
+    "DataCaptureConfig": {
+     "CaptureContentTypeHeader": {
+      "CsvContentTypes": [
+       "text/csv"
+      ],
+      "JsonContentTypes": [
+       "application/json"
+      ]
+     },
+     "CaptureOptions": [
+      {
+       "CaptureMode": "Input"
+      },
+      {
+       "CaptureMode": "Output"
+      }
+     ],
+     "DestinationS3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/endpoint_config/datacapture",
+     "EnableCapture": true,
+     "InitialSamplingPercentage": 100,
+     "KmsKeyId": null
+    },
+    "EndpointConfigArn": "arn:aws:sagemaker:us-west-2:123456789012:endpoint-config/single-variant-config",
+    "EndpointConfigName": "single-variant-config",
+    "KmsKeyId": null,
+    "ProductionVariants": [
+     {
+      "AcceleratorType": null,
+      "CoreDumpConfig": null,
+      "InitialInstanceCount": 1,
+      "InitialVariantWeight": 1,
+      "InstanceType": "ml.c5.large",
+      "ModelName": "single-variant-config-model",
+      "VariantName": "AllTraffic"
+     }
+    ]
+}

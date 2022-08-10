@@ -4,7 +4,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.6.1
+    controller-gen.kubebuilder.io/version: v0.7.0
   creationTimestamp: null
   name: modelpackages.sagemaker.services.k8s.aws
 spec:
@@ -46,13 +46,19 @@ spec:
                 type: string
               certifyForMarketplace:
                 description: "Whether to certify the model package for listing on
-                  AWS Marketplace. \n This parameter is optional for unversioned models,
-                  and does not apply to versioned models."
+                  Amazon Web Services Marketplace. \n This parameter is optional for
+                  unversioned models, and does not apply to versioned models."
                 type: boolean
               clientToken:
                 description: A unique token that guarantees that the call to this
                   API is idempotent.
                 type: string
+              customerMetadataProperties:
+                additionalProperties:
+                  type: string
+                description: The metadata properties associated with the model package
+                  versions.
+                type: object
               inferenceSpecification:
                 description: "Specifies details about inference jobs that can be run
                   with models based on this model package, including the following:
@@ -68,6 +74,10 @@ spec:
                       properties:
                         containerHostname:
                           type: string
+                        environment:
+                          additionalProperties:
+                            type: string
+                          type: object
                         image:
                           type: string
                         imageDigest:
@@ -192,9 +202,10 @@ spec:
                 description: A description of the model package.
                 type: string
               modelPackageGroupName:
-                description: "The name of the model group that this model version
-                  belongs to. \n This parameter is required for versioned models,
-                  and does not apply to unversioned models."
+                description: "The name or Amazon Resource Name (ARN) of the model
+                  package group that this model version belongs to. \n This parameter
+                  is required for versioned models, and does not apply to unversioned
+                  models."
                 type: string
               modelPackageName:
                 description: "The name of the model package. The name must have 1
@@ -211,7 +222,8 @@ spec:
                       description: Specifies an algorithm that was used to create
                         the model package. The algorithm must be either an algorithm
                         resource in your Amazon SageMaker account or an algorithm
-                        in AWS Marketplace that you are subscribed to.
+                        in Amazon Web Services Marketplace that you are subscribed
+                        to.
                       properties:
                         algorithmName:
                           type: string
@@ -222,10 +234,22 @@ spec:
                 type: object
               tags:
                 description: A list of key value pairs associated with the model.
-                  For more information, see Tagging AWS resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html)
-                  in the AWS General Reference Guide.
+                  For more information, see Tagging Amazon Web Services resources
+                  (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html)
+                  in the Amazon Web Services General Reference Guide.
                 items:
-                  description: Describes a tag.
+                  description: "A tag object that consists of a key and an optional
+                    value, used to manage metadata for SageMaker Amazon Web Services
+                    resources. \n You can add tags to notebook instances, training
+                    jobs, hyperparameter tuning jobs, batch transform jobs, models,
+                    labeling jobs, work teams, endpoint configurations, and endpoints.
+                    For more information on adding tags to SageMaker resources, see
+                    AddTags. \n For more information on adding metadata to your Amazon
+                    Web Services resources with tagging, see Tagging Amazon Web Services
+                    resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+                    For advice on best practices for managing Amazon Web Services
+                    resources with tagging, see Tagging Best Practices: Implement
+                    an Effective Amazon Web Services Resource Tagging Strategy (https://d1.awsstatic.com/whitepapers/aws-tagging-best-practices.pdf)."
                   properties:
                     key:
                       type: string
@@ -242,7 +266,8 @@ spec:
                       description: "Contains data, such as the inputs and targeted
                         instance types that are used in the process of validating
                         the model package. \n The data provided in the validation
-                        profile is made available to your buyers on AWS Marketplace."
+                        profile is made available to your buyers on Amazon Web Services
+                        Marketplace."
                       properties:
                         profileName:
                           type: string
@@ -342,8 +367,13 @@ spec:
                     description: OwnerAccountID is the AWS Account ID of the account
                       that owns the backend AWS service API resource.
                     type: string
+                  region:
+                    description: Region is the AWS region in which the resource exists
+                      or will exist.
+                    type: string
                 required:
                 - ownerAccountID
+                - region
                 type: object
               conditions:
                 description: All CRS managed by ACK have a common `Status.Conditions`

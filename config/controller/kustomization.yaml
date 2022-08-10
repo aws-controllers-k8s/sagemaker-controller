@@ -5,5 +5,5 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
 - name: controller
-  newName: ack-sagemaker-controller
-  newTag: latest
+  newName: public.ecr.aws/aws-controllers-k8s/sagemaker-controller
+  newTag: v0.3.4

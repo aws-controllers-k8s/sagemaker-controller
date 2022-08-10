@@ -1,0 +1,76 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: HyperParameterTuningJob
+metadata:
+  name: unit-testing-hyper-parameter-tuning-job
+spec:
+  hyperParameterTuningJobName: unit-testing-hpo-definitions-variant
+  hyperParameterTuningJobConfig:
+    strategy: Bayesian
+    resourceLimits:
+      maxNumberOfTrainingJobs: 2
+      maxParallelTrainingJobs: 1
+    trainingJobEarlyStoppingType: Auto
+  trainingJobDefinitions:
+  - staticHyperParameters:
+      base_score: '0.5'
+    definitionName: training-job-for-hpo
+    algorithmSpecification:
+      trainingImage: 433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:1
+      trainingInputMode: File
+    roleARN: arn:aws:iam::123456789012:role/service-role/AmazonSageMaker-ExecutionRole-20210920T111639
+    tuningObjective:
+      type_: Minimize
+      metricName: validation:error
+    hyperParameterRanges:
+      categoricalParameterRanges:
+      - name: category
+        values:
+        - test
+      integerParameterRanges:
+      - name: num_round
+        minValue: '10'
+        maxValue: '20'
+        scalingType: Linear
+      continuousParameterRanges:
+      - name: gamma
+        minValue: '0'
+        maxValue: '5'
+        scalingType: Linear
+    inputDataConfig:
+    - channelName: train
+      dataSource:
+        s3DataSource:
+          s3DataType: S3Prefix
+          s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/train
+          s3DataDistributionType: FullyReplicated
+      contentType: text/csv
+      compressionType: None
+      recordWrapperType: None
+      inputMode: File
+    - channelName: validation
+      dataSource:
+        s3DataSource:
+          s3DataType: S3Prefix
+          s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/validation/
+          s3DataDistributionType: FullyReplicated
+      contentType: text/csv
+      compressionType: None
+      recordWrapperType: None
+      inputMode: File
+    outputDataConfig:
+      s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/hpo/output
+    resourceConfig:
+      instanceType: ml.m5.large
+      instanceCount: 1
+      volumeSizeInGB: 25
+    stoppingCondition:
+      maxRuntimeInSeconds: 3600
+    enableNetworkIsolation: true
+    enableInterContainerTrafficEncryption: false
+  tags:
+    - key: algorithm
+      value: xgboost
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

@@ -1,0 +1,45 @@
+{
+    "AutoMLJobArn": null,
+    "BatchStrategy": null,
+    "CreationTime": "2021-10-05T05:47:02.644Z",
+    "DataProcessing": {
+        "InputFilter": "$",
+        "JoinSource": "None",
+        "OutputFilter": "$"
+    },
+    "Environment": null,
+    "ExperimentConfig": null,
+    "FailureReason": null,
+    "LabelingJobArn": null,
+    "MaxConcurrentTransforms": null,
+    "MaxPayloadInMB": null,
+    "ModelClientConfig": null,
+    "ModelName": "xgboost-churn-config-model",
+    "TransformEndTime": null,
+    "TransformInput": {
+        "CompressionType": "None",
+        "ContentType": "text/csv",
+        "DataSource": {
+            "S3DataSource": {
+                "S3DataType": "S3Prefix",
+                "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/batch/input-data"
+            }
+        },
+        "SplitType": "None"
+    },
+    "TransformJobArn": "arn:aws:sagemaker:us-west-2:123456789012:transform-job/xgboost-transform-job",
+    "TransformJobName": "xgboost-transform-job",
+    "TransformJobStatus": "Stopping",
+    "TransformOutput": {
+        "Accept": null,
+        "AssembleWith": "None",
+        "KmsKeyId": "",
+        "S3OutputPath": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/batch/output"
+    },
+    "TransformResources": {
+        "InstanceCount": 1,
+        "InstanceType": "ml.m5.large",
+        "VolumeKmsKeyId": null
+    },
+    "TransformStartTime": null
+}

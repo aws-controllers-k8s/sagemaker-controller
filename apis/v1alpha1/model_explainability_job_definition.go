@@ -23,7 +23,7 @@ import (
 // ModelExplainabilityJobDefinitionSpec defines the desired state of ModelExplainabilityJobDefinition.
 type ModelExplainabilityJobDefinitionSpec struct {
 	// The name of the model explainability job definition. The name must be unique
-	// within an AWS Region in the AWS account.
+	// within an Amazon Web Services Region in the Amazon Web Services account.
 	// +kubebuilder:validation:Required
 	JobDefinitionName *string `json:"jobDefinitionName"`
 
@@ -51,7 +51,7 @@ type ModelExplainabilityJobDefinitionSpec struct {
 	StoppingCondition *MonitoringStoppingCondition `json:"stoppingCondition,omitempty"`
 	// (Optional) An array of key-value pairs. For more information, see Using Cost
 	// Allocation Tags (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html#allocation-whatURL)
-	// in the AWS Billing and Cost Management User Guide.
+	// in the Amazon Web Services Billing and Cost Management User Guide.
 	Tags []*Tag `json:"tags,omitempty"`
 }
 

@@ -15,7 +15,7 @@ description: |-
   train, and deploy high-quality machine learning (ML) models quickly by
   bringing together a broad set of capabilities purpose-built for ML.
 
-  
+
   For more information on Amazon SageMaker, visit the [product
   page](https://aws.amazon.com/sagemaker/).
 
@@ -23,9 +23,14 @@ description: |-
   **About the AWS Controllers for Kubernetes**
 
 
-  This controller is a component of the [AWS Controller for
-  Kubernetes](https://github.com/aws/aws-controllers-k8s)project. This project
-  is currently in **developer preview**. 
+  This controller is a component of the [AWS Controller for Kubernetes](https://github.com/aws/aws-controllers-k8s)
+  project.
+
+
+  **Pre-Installation Steps**
+
+
+  Please follow the following link: [Red Hat OpenShift](https://aws-controllers-k8s.github.io/community/docs/user-docs/openshift/)
 samples:
 - kind: DataQualityJobDefinition
   spec: '{}'
@@ -43,6 +48,8 @@ samples:
   spec: '{}'
 - kind: Model
   spec: '{}'
+- kind: ModelPackageGroup
+  spec: '{}'
 - kind: MonitoringSchedule
   spec: '{}'
 - kind: ProcessingJob
@@ -51,9 +58,23 @@ samples:
   spec: '{}'
 - kind: TransformJob
   spec: '{}'
+- kind: NotebookInstance
+  spec: '{}'
+- kind: NotebookInstanceLifecycleConfig
+  spec: '{}'
+- kind: ModelPackage
+  spec: '{}'
+- kind: FeatureGroup
+  spec: '{}'
+- kind: UserProfile
+  spec: '{}'
+- kind: Domain
+  spec: '{}'
+- kind: App
+  spec: '{}'
 maintainers:
-- name: "Your Team Name"
-  email: "your-team@example.com"
+- name: "sagemaker maintainer team"
+  email: "ack-maintainers@amazon.com"
 links:
 - name: Amazon SageMaker Developer Resources
   url: https://aws.amazon.com/sagemaker/developer-resources/

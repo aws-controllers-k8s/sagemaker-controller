@@ -1,17 +1,172 @@
 tests:
   - name: "Transform job create tests"
-    description: "Part of transform job CRD tests."
+    description: "Testing the Create operation"
     scenarios:
-     - name: "Create=InvalidInput"
-       description: "Given one of the parameters is invalid, ko.Status shows a terminal condition"
-       given:
-         desired_state: "transform_job/v1alpha1/transformj_invalid_before_create.yaml"
-         svc_api:
-           - operation: CreateTransformJobWithContext
-             error:
-               code: InvalidParameterValue
-               message: "The transform job name must not include a special character."
-       invoke: Create
-       expect:
-         latest_state: "transform_job/v1alpha1/transformj_invalid_create_attempted.yaml"
-         error: resource is in terminal condition
+      - name: "Create=InvalidInput"
+        description: "Given one of the parameters is invalid, ko.Status shows a terminal condition"
+        given:
+          desired_state: "v1alpha1/create/desired/invalid_before_create.yaml"
+          svc_api:
+            - operation: CreateTransformJobWithContext
+              error:
+                code: InvalidParameterValue
+                message: "The transform job name must not include a special character."
+        invoke: Create
+        expect:
+          latest_state: "v1alpha1/create/observed/invalid_create_attempted.yaml"
+          error: resource is in terminal condition
+      - name: "Create=Valid"
+        description: "Create a new transform job successfully (ARN in status)."
+        given:
+          desired_state: "v1alpha1/create/desired/success_before_create.yaml"
+          svc_api:
+            - operation: CreateTransformJobWithContext
+              output_fixture: "sdkapi/create/success_create.json"
+        invoke: Create
+        expect:
+          latest_state: "v1alpha1/create/observed/success_after_create.yaml"
+          error: nil
+  - name: "Transform job readOne tests"
+    description: "Testing the readOne operation"
+    scenarios:
+      - name: "ReadOne=MissingRequiredField"
+        description: "Testing readOne when required field is missing. No API call is made and returns error."
+        given: 
+          desired_state: "v1alpha1/readone/desired/missing_required_field.yaml"
+        invoke: ReadOne
+        expect:
+          error: "resource not found"
+      - name: "ReadOne=NotFound"
+        description: "Testing readOne when Describe fails to find the resource on SageMaker"
+        given: 
+          desired_state: "v1alpha1/readone/desired/after_create_inprogress.yaml"
+          svc_api:
+            - operation: DescribeTransformJobWithContext
+              error:
+                code: ValidationException
+                message: "Could not find requested job with name"
+        invoke: ReadOne
+        expect:
+          error: "resource not found"
+      - name: "ReadOne=SuccessClearsConditions"
+        description: Testing a successful reconciliation clears conditions if terminal/recoverable condition were already set to true
+        given:
+          desired_state: "v1alpha1/readone/desired/error_conditions_true.yaml"
+          svc_api:
+            - operation: DescribeTransformJobWithContext
+              output_fixture: "sdkapi/describe/inprogress_describe.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/conditions_clear_on_success.yaml"
+      - name: "ReadOne=Fail"
+        description: "This test checks if the condition is updated if describe fails and readOne returns error"
+        given: 
+          desired_state: "v1alpha1/readone/desired/after_create_inprogress.yaml"
+          svc_api:
+            - operation: DescribeTransformJobWithContext
+              error:
+                code: ServiceUnavailable
+                message: "Server is down"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/error_on_describe.yaml"
+          error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
+      - name: "ReadOne=AfterCreateInProgress"
+        description: "Testing readOne right after create, the status should have ARN."
+        given:
+          desired_state: "v1alpha1/readone/desired/after_create_inprogress.yaml"
+          svc_api:
+            - operation: DescribeTransformJobWithContext
+              output_fixture: "sdkapi/describe/inprogress_describe.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/created.yaml"
+      - name: "ReadOne=LateInitialize"
+        description: "Verifies that LateInitialize condition is set as successful"
+        given:
+          desired_state: "v1alpha1/readone/observed/created.yaml"
+          svc_api:
+            - operation: DescribeTransformJobWithContext
+              output_fixture: "sdkapi/describe/inprogress_describe.json"
+        invoke: LateInitialize
+        expect:
+          latest_state: "v1alpha1/readone/observed/late_initialize.yaml"
+      - name: "ReadOne=AfterCompletion"
+        description: "Testing readOne after transform job completes, the status should have ARN."
+        given:
+          desired_state: "v1alpha1/readone/desired/after_create_inprogress.yaml"
+          svc_api:
+            - operation: DescribeTransformJobWithContext
+              output_fixture: "sdkapi/describe/success_completed_describe.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/completed.yaml"
+      - name: "ReadOne=Stopping"
+        description: "Testing readOne right after delete, the status should be in Stopping"
+        given:
+          desired_state: "v1alpha1/readone/desired/stopping.yaml"
+          svc_api:
+            - operation: DescribeTransformJobWithContext
+              output_fixture: "sdkapi/describe/stopping_describe.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/stopping.yaml"
+  - name: "Transform job update tests"
+    description: "Testing the Update operation"
+    scenarios:
+      - name: "Update=NotSupported"
+        description: "This test checks if the controller throws error for update"
+        given:
+          desired_state: "v1alpha1/update/desired/updated_base.yaml"
+          latest_state: "v1alpha1/create/observed/success_after_create.yaml"
+        invoke: Update
+        expect:
+          latest_state: "v1alpha1/update/observed/error_on_update.yaml"
+          error: "not implemented"
+  - name: "Transform job delete tests"
+    description: "Testing the delete operation"
+    scenarios:
+      - name: "Delete=Fail"
+        description: "This test checks if the condition is updated if delete fails and returns error"
+        given:
+          desired_state: "v1alpha1/readone/desired/after_create_inprogress.yaml"
+          svc_api:
+            - operation: StopTransformJobWithContext
+              error:
+                code: ServiceUnavailable
+                message: "Server is down"
+        invoke: Delete
+        expect:
+          latest_state: "v1alpha1/delete/observed/error_on_delete.yaml"
+          error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
+      - name: "Delete=Successful"
+        description: "This test checks if the Transform job is deleted successfully"
+        given:
+          desired_state: "v1alpha1/readone/desired/after_create_inprogress.yaml"
+          svc_api:
+            - operation: StopTransformJobWithContext
+            - operation: DescribeTransformJobWithContext
+              error:
+                code: ValidationException
+                message: "Could not find requested job with name"
+        invoke: Delete
+        expect:
+          error: nil      
+      - name: "Delete=MarkUnmanaged"
+        description: "This test checks if the Transform job returns nil to mark the resource Unmanaged if job not in InProgress/Stopping state"
+        given:
+          desired_state: "v1alpha1/readone/observed/completed.yaml"
+          svc_api:
+            - operation: StopTransformJobWithContext
+        invoke: Delete
+        expect:
+          error: nil
+      - name: "Delete=RequeueDeleting"
+        description: "This test checks if the Transform job requeues if job is in Stopping state"
+        given:
+          desired_state: "v1alpha1/readone/observed/stopping.yaml"
+          svc_api:
+            - operation: StopTransformJobWithContext
+        invoke: Delete
+        expect:
+          error: TransformJob is Stopping.

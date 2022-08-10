@@ -1,0 +1,29 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: EndpointConfig
+metadata:
+  creationTimestamp: null
+  name: unit-testing-endpoint-config
+spec:
+  endpointConfigName: intentionally@invalid-name
+  productionVariants:
+  - initialInstanceCount: 2
+    initialVariantWeight: 1
+    instanceType: ml.c5.large
+    modelName: model-1
+    variantName: variant-1
+  tags:
+  - key: confidentiality
+    value: public
+  - key: environment
+    value: testing
+  - key: customer
+    value: test-user
+status:
+  ackResourceMetadata:
+    ownerAccountID: ""
+    region: ""
+  conditions:
+  - message: "InvalidParameterValue: The endpoint config name must not include a special
+      character.\n\tstatus code: 0, request id: "
+    status: "True"
+    type: ACK.Terminal

@@ -1,0 +1,35 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: FeatureGroup
+metadata:
+  creationTimestamp: null
+  name: unit-testing-feature-group
+spec:
+  eventTimeFeatureName: EventTime
+  featureDefinitions:
+  - featureName: TransactionID
+    featureType: Integral
+  - featureName: EventTime
+    featureType: Fractional
+  featureGroupName: unit-testing-feature-group
+  offlineStoreConfig:
+    disableGlueTableCreation: false
+    s3StorageConfig:
+      resolvedOutputS3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/feature-group-data/123456789012/sagemaker/us-west-2/offline-store/unit-testing-feature-group-1627432365/data
+      s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/feature-group-data
+  recordIdentifierFeatureName: TransactionID
+  roleARN: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:feature-group/unit-testing-feature-group
+    ownerAccountID: ""
+    region: ""
+  conditions:
+  - message: FeatureGroup is in Creating status.
+    status: "False"
+    type: ACK.ResourceSynced
+  - lastTransitionTime: "0001-01-01T00:00:00Z"
+    message: Late initialization successful
+    reason: Late initialization successful
+    status: "True"
+    type: ACK.LateInitialized
+  featureGroupStatus: Creating

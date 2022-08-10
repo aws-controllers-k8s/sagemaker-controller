@@ -13,18 +13,9 @@ operations:
       RetainAllVariantProperties: true
   DescribeModelPackage:
     custom_check_required_fields_missing_method: customCheckRequiredFieldsMissingMethod
-    primary_identifier_field_name: ARN
   StopHyperParameterTuningJob:
     operation_type: Delete
     resource_name: HyperParameterTuningJob
-  DescribeModelQualityJobDefinition:
-    primary_identifier_field_name: JobDefinitionName
-  DescribeModelBiasJobDefinition:
-    primary_identifier_field_name: JobDefinitionName
-  DescribeDataQualityJobDefinition:
-    primary_identifier_field_name: JobDefinitionName
-  DescribeModelExplainabilityJobDefinition:
-    primary_identifier_field_name: JobDefinitionName
 resources:
   Model:
     hooks:
@@ -363,6 +354,7 @@ resources:
         is_arn: true
       JobDefinitionName:
         is_name: true
+        is_primary_key: true
       Tags:
         compare:
           is_ignored: true
@@ -382,6 +374,7 @@ resources:
         is_arn: true
       JobDefinitionName:
         is_name: true
+        is_primary_key: true
       Tags:
         compare:
           is_ignored: true
@@ -401,6 +394,7 @@ resources:
         is_arn: true
       JobDefinitionName:
         is_name: true
+        is_primary_key: true
       Tags:
         compare:
           is_ignored: true
@@ -420,6 +414,7 @@ resources:
         is_arn: true
       JobDefinitionName:
         is_name: true
+        is_primary_key: true
       Tags:
         compare:
           is_ignored: true
@@ -484,6 +479,7 @@ resources:
           is_ignored: true
   ModelPackage:
     update_conditions_custom_method_name: CustomUpdateConditions
+    is_arn_primary_key: true
     exceptions:
       errors:
           404:
@@ -509,6 +505,8 @@ resources:
         template_path: model_package/set_resource_name_as_arn.go.tpl
       sdk_update_pre_build_request:
         template_path: common/sdk_update_pre_build_request.go.tpl
+      sdk_update_post_set_output:
+        code: rm.customSetOutput(&resource{ko})
     fields:
       ModelPackageStatus:
         is_read_only: true
@@ -527,9 +525,6 @@ resources:
         from:
           operation: DescribeModelPackage
           path: ModelPackageStatusDetails
-      ModelApprovalStatus:
-        late_initialize:
-          min_backoff_seconds: 5
       LastModifiedTime:
         is_read_only: true
         from:
@@ -545,6 +540,8 @@ resources:
       Tags:
         compare:
           is_ignored: true
+    tags:
+      ignore: true
   FeatureGroup:
     update_conditions_custom_method_name: CustomUpdateConditions
     exceptions:
@@ -628,6 +625,9 @@ resources:
         from:
           operation: DescribeNotebookInstance
           path: NotebookInstanceStatus
+      PlatformIdentifier:
+        late_initialize:
+          min_backoff_seconds: 5
       Url:
         is_read_only: true
         from:
@@ -717,11 +717,116 @@ resources:
           is_ignored: true  
       OnStart:
         compare:
+          is_ignored: true
+    tags:
+      ignore: true
+  Domain:
+    exceptions:
+      errors:
+          404:
+            code: ResourceNotFound
+      terminal_codes:
+        - ResourceNotFound
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+    hooks: 
+      sdk_create_post_set_output:
+        template_path: domain/sdk_create_post_set_output.go.tpl
+      sdk_read_one_post_set_output:
+        code: rm.customDescribeDomainSetOutput(ko)
+      sdk_update_pre_build_request:
+        template_path: common/sdk_update_pre_build_request.go.tpl
+      dk_delete_pre_build_request:
+        template_path: common/sdk_delete_pre_build_request.go.tpl
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
+    fields:
+      DomainId:
+        is_read_only: true
+        print:
+          name: DOMAIN-ID
+        from:
+          operation: DescribeDomain
+          path: DomainId
+      Status:
+        is_read_only: true
+        print:
+          name: STATUS
+        from:
+          operation: DescribeDomain
+          path: Status 
+      AppNetworkAccessType:
+        late_initialize:
+          min_backoff_seconds: 5
+      Tags:
+        compare:
+          is_ignored: true   
+  UserProfile:
+    exceptions:
+      errors:
+          404:
+            code: ResourceNotFound
+      terminal_codes:
+        - ResourceNotFound
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+    hooks: 
+      sdk_read_one_post_set_output:
+        code: rm.customDescribeUserProfileSetOutput(ko)
+      sdk_update_pre_build_request:
+        template_path: common/sdk_update_pre_build_request.go.tpl
+      dk_delete_pre_build_request:
+        template_path: common/sdk_delete_pre_build_request.go.tpl
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
+    fields:
+      Status:
+        is_read_only: true
+        print:
+          name: STATUS
+        from:
+          operation: DescribeUserProfile
+          path: Status 
+      Tags:
+        compare:
           is_ignored: true  
+  App:
+    exceptions:
+      errors:
+          404:
+            code: ResourceNotFound
+      terminal_codes:
+        - ResourceNotFound
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+    hooks: 
+      sdk_read_one_post_set_output:
+        code: rm.customDescribeAppSetOutput(ko)
+      sdk_delete_pre_build_request:
+        template_path: app/sdk_delete_pre_build_request.go.tpl
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
+    fields:
+      Status:
+        is_read_only: true
+        print:
+          name: STATUS
+        from:
+          operation: DescribeApp
+          path: Status 
+      ResourceSpec:
+        late_initialize:
+          min_backoff_seconds: 5
+      Tags:
+        compare:
+          is_ignored: true
 ignore:
     resource_names:
       - Algorithm
-      - App
+      # - App
       - AutoMLJob
       - Action
       - AppImageConfig
@@ -731,7 +836,7 @@ ignore:
       - Context
       # - DataQualityJobDefinition
       - DeviceFleet
-      - Domain
+      # - Domain
       - EdgePackagingJob
       # - EndpointConfig
       # - Endpoint
@@ -757,12 +862,18 @@ ignore:
       - PresignedNotebookInstanceUrl
       # - ProcessingJob
       - Project
+      - StudioLifecycleConfig
       # - TrainingJob
       # - TransformJob
       - TrialComponent
       - Trial
-      - UserProfile
+      # - UserProfile
       - Workforce
       - Workteam
     operations:
       - UpdateTrainingJob
+    shape_names:
+      # RSessionAppSettings is an empty struct that causes generation errors
+      - RSessionAppSettings
+      - RetryStrategy
+      - DeploymentConfig

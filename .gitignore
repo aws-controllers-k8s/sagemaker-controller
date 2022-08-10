@@ -4,6 +4,7 @@
 .idea
 /docs/site
 bin
+test/bin
 build
 
 *.out

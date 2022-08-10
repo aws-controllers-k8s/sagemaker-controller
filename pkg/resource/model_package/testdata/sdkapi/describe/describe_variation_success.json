@@ -1,0 +1,85 @@
+{
+    "ApprovalDescription": null,
+    "CertifyForMarketplace": false,
+    "CreatedBy": null,
+    "CreationTime": "2021-09-17T18:22:59.007Z",
+    "InferenceSpecification": {
+        "Containers": [
+            {
+                "ContainerHostname": null,
+                "Image": "433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:latest",
+                "ImageDigest": "sha256:a219d35e7bc4158e972b8e6fa18028b05bdc97a9fe8da2ba16f7e3dc1bc685b4",
+                "ModelDataUrl": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/model/xgboost-mnist-model.tar.gz",
+                "ProductId": null
+            }
+        ],
+        "SupportedContentTypes": [
+            "text/csv"
+        ],
+        "SupportedRealtimeInferenceInstanceTypes": [
+            "ml.m5.large"
+        ],
+        "SupportedResponseMIMETypes": [
+            "text/csv"
+        ],
+        "SupportedTransformInstanceTypes": [
+            "ml.m5.large"
+        ]
+    },
+    "LastModifiedBy": null,
+    "LastModifiedTime": null,
+    "MetadataProperties": null,
+    "ModelApprovalStatus": null,
+    "ModelMetrics": {
+        "Bias": {
+            "Report": {
+                "ContentDigest": null,
+                "ContentType": "text/csv",
+                "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/model-package/bias/metrics"
+            }
+        },
+        "Explainability": {
+            "Report": {
+                "ContentDigest": null,
+                "ContentType": "text/csv",
+                "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/model-package/explainability/metrics"
+            }
+        },
+        "ModelDataQuality": {
+            "Constraints": {
+                "ContentDigest": null,
+                "ContentType": "text/csv",
+                "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/model-package/model-data-quality/metrics"
+            },
+            "Statistics": {
+                "ContentDigest": null,
+                "ContentType": "text/csv",
+                "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/model-package/model-data-quality/metrics"
+            }
+        },
+        "ModelQuality": {
+            "Constraints": {
+                "ContentDigest": null,
+                "ContentType": "text/csv",
+                "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/model-package/model-quality/metrics"
+            },
+            "Statistics": {
+                "ContentDigest": null,
+                "ContentType": "text/csv",
+                "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/model-package/model-quality/metrics"
+            }
+        }
+    },
+    "ModelPackageArn": "arn:aws:sagemaker:us-west-2:123456789012:model-package/xgboost-unversioned-model-package",
+    "ModelPackageDescription": "Description for model package",
+    "ModelPackageGroupName": null,
+    "ModelPackageName": "xgboost-unversioned-model-package",
+    "ModelPackageStatus": "Completed",
+    "ModelPackageStatusDetails": {
+        "ImageScanStatuses": [],
+        "ValidationStatuses": []
+    },
+    "ModelPackageVersion": null,
+    "SourceAlgorithmSpecification": null,
+    "ValidationSpecification": null
+}

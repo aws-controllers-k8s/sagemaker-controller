@@ -39,8 +39,8 @@ type ProcessingJobSpec struct {
 	NetworkConfig *NetworkConfig `json:"networkConfig,omitempty"`
 	// An array of inputs configuring the data to download into the processing container.
 	ProcessingInputs []*ProcessingInput `json:"processingInputs,omitempty"`
-	// The name of the processing job. The name must be unique within an AWS Region
-	// in the AWS account.
+	// The name of the processing job. The name must be unique within an Amazon
+	// Web Services Region in the Amazon Web Services account.
 	// +kubebuilder:validation:Required
 	ProcessingJobName *string `json:"processingJobName"`
 	// Output configuration for the processing job.
@@ -58,7 +58,7 @@ type ProcessingJobSpec struct {
 	StoppingCondition *ProcessingStoppingCondition `json:"stoppingCondition,omitempty"`
 	// (Optional) An array of key-value pairs. For more information, see Using Cost
 	// Allocation Tags (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html#allocation-whatURL)
-	// in the AWS Billing and Cost Management User Guide.
+	// in the Amazon Web Services Billing and Cost Management User Guide.
 	Tags []*Tag `json:"tags,omitempty"`
 }
 

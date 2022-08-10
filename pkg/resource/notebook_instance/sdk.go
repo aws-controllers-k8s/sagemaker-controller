@@ -17,12 +17,16 @@ package notebook_instance
 
 import (
 	"context"
+	"errors"
+	"fmt"
+	"reflect"
 	"strings"
 
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	ackcondition "github.com/aws-controllers-k8s/runtime/pkg/condition"
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
+	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
 	"github.com/aws/aws-sdk-go/aws"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
@@ -42,6 +46,9 @@ var (
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
 	_ = &ackcondition.NotManagedMessage
+	_ = &reflect.Value{}
+	_ = fmt.Sprintf("")
+	_ = &ackrequeue.NoRequeue{}
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -51,7 +58,9 @@ func (rm *resourceManager) sdkFind(
 ) (latest *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkFind")
-	defer exit(err)
+	defer func() {
+		exit(err)
+	}()
 	// If any required fields in the input shape are missing, AWS resource is
 	// not created yet. Return NotFound here to indicate to callers that the
 	// resource isn't yet created.
@@ -142,6 +151,11 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Status.NotebookInstanceStatus = nil
 	}
+	if resp.PlatformIdentifier != nil {
+		ko.Spec.PlatformIdentifier = resp.PlatformIdentifier
+	} else {
+		ko.Spec.PlatformIdentifier = nil
+	}
 	if resp.RoleArn != nil {
 		ko.Spec.RoleARN = resp.RoleArn
 	} else {
@@ -221,7 +235,9 @@ func (rm *resourceManager) sdkCreate(
 ) (created *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkCreate")
-	defer exit(err)
+	defer func() {
+		exit(err)
+	}()
 	input, err := rm.newCreateRequestPayload(ctx, desired)
 	if err != nil {
 		return nil, err
@@ -294,6 +310,9 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.NotebookInstanceName != nil {
 		res.SetNotebookInstanceName(*r.ko.Spec.NotebookInstanceName)
 	}
+	if r.ko.Spec.PlatformIdentifier != nil {
+		res.SetPlatformIdentifier(*r.ko.Spec.PlatformIdentifier)
+	}
 	if r.ko.Spec.RoleARN != nil {
 		res.SetRoleArn(*r.ko.Spec.RoleARN)
 	}
@@ -301,30 +320,30 @@ func (rm *resourceManager) newCreateRequestPayload(
 		res.SetRootAccess(*r.ko.Spec.RootAccess)
 	}
 	if r.ko.Spec.SecurityGroupIDs != nil {
-		f10 := []*string{}
-		for _, f10iter := range r.ko.Spec.SecurityGroupIDs {
-			var f10elem string
-			f10elem = *f10iter
-			f10 = append(f10, &f10elem)
+		f11 := []*string{}
+		for _, f11iter := range r.ko.Spec.SecurityGroupIDs {
+			var f11elem string
+			f11elem = *f11iter
+			f11 = append(f11, &f11elem)
 		}
-		res.SetSecurityGroupIds(f10)
+		res.SetSecurityGroupIds(f11)
 	}
 	if r.ko.Spec.SubnetID != nil {
 		res.SetSubnetId(*r.ko.Spec.SubnetID)
 	}
 	if r.ko.Spec.Tags != nil {
-		f12 := []*svcsdk.Tag{}
-		for _, f12iter := range r.ko.Spec.Tags {
-			f12elem := &svcsdk.Tag{}
-			if f12iter.Key != nil {
-				f12elem.SetKey(*f12iter.Key)
+		f13 := []*svcsdk.Tag{}
+		for _, f13iter := range r.ko.Spec.Tags {
+			f13elem := &svcsdk.Tag{}
+			if f13iter.Key != nil {
+				f13elem.SetKey(*f13iter.Key)
 			}
-			if f12iter.Value != nil {
-				f12elem.SetValue(*f12iter.Value)
+			if f13iter.Value != nil {
+				f13elem.SetValue(*f13iter.Value)
 			}
-			f12 = append(f12, f12elem)
+			f13 = append(f13, f13elem)
 		}
-		res.SetTags(f12)
+		res.SetTags(f13)
 	}
 	if r.ko.Spec.VolumeSizeInGB != nil {
 		res.SetVolumeSizeInGB(*r.ko.Spec.VolumeSizeInGB)
@@ -343,7 +362,9 @@ func (rm *resourceManager) sdkUpdate(
 ) (updated *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkUpdate")
-	defer exit(err)
+	defer func() {
+		exit(err)
+	}()
 	if err = rm.requeueUntilCanModify(ctx, latest); err != nil {
 		return latest, err
 	}
@@ -440,7 +461,9 @@ func (rm *resourceManager) sdkDelete(
 ) (latest *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
-	defer exit(err)
+	defer func() {
+		exit(err)
+	}()
 	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
 		return r, err
 	}
@@ -498,6 +521,9 @@ func (rm *resourceManager) setStatusDefaults(
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
 	}
+	if ko.Status.ACKResourceMetadata.Region == nil {
+		ko.Status.ACKResourceMetadata.Region = &rm.awsRegion
+	}
 	if ko.Status.ACKResourceMetadata.OwnerAccountID == nil {
 		ko.Status.ACKResourceMetadata.OwnerAccountID = &rm.awsAccountID
 	}
@@ -531,8 +557,8 @@ func (rm *resourceManager) updateConditions(
 			syncCondition = condition
 		}
 	}
-
-	if rm.terminalAWSError(err) || err == ackerr.SecretTypeNotSupported || err == ackerr.SecretNotFound {
+	var termError *ackerr.TerminalError
+	if rm.terminalAWSError(err) || err == ackerr.SecretTypeNotSupported || err == ackerr.SecretNotFound || errors.As(err, &termError) {
 		if terminalCondition == nil {
 			terminalCondition = &ackv1alpha1.Condition{
 				Type: ackv1alpha1.ConditionTypeTerminal,
@@ -540,7 +566,7 @@ func (rm *resourceManager) updateConditions(
 			ko.Status.Conditions = append(ko.Status.Conditions, terminalCondition)
 		}
 		var errorMessage = ""
-		if err == ackerr.SecretTypeNotSupported || err == ackerr.SecretNotFound {
+		if err == ackerr.SecretTypeNotSupported || err == ackerr.SecretNotFound || errors.As(err, &termError) {
 			errorMessage = err.Error()
 		} else {
 			awsErr, _ := ackerr.AWSError(err)

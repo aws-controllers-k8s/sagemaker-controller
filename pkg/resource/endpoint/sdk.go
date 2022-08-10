@@ -17,12 +17,16 @@ package endpoint
 
 import (
 	"context"
+	"errors"
+	"fmt"
+	"reflect"
 	"strings"
 
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	ackcondition "github.com/aws-controllers-k8s/runtime/pkg/condition"
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
+	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
 	"github.com/aws/aws-sdk-go/aws"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
@@ -42,6 +46,9 @@ var (
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
 	_ = &ackcondition.NotManagedMessage
+	_ = &reflect.Value{}
+	_ = fmt.Sprintf("")
+	_ = &ackrequeue.NoRequeue{}
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -51,7 +58,9 @@ func (rm *resourceManager) sdkFind(
 ) (latest *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkFind")
-	defer exit(err)
+	defer func() {
+		exit(err)
+	}()
 	// If any required fields in the input shape are missing, AWS resource is
 	// not created yet. Return NotFound here to indicate to callers that the
 	// resource isn't yet created.
@@ -116,44 +125,61 @@ func (rm *resourceManager) sdkFind(
 		ko.Status.LastModifiedTime = nil
 	}
 	if resp.ProductionVariants != nil {
-		f9 := []*svcapitypes.ProductionVariantSummary{}
-		for _, f9iter := range resp.ProductionVariants {
-			f9elem := &svcapitypes.ProductionVariantSummary{}
-			if f9iter.CurrentInstanceCount != nil {
-				f9elem.CurrentInstanceCount = f9iter.CurrentInstanceCount
+		f10 := []*svcapitypes.ProductionVariantSummary{}
+		for _, f10iter := range resp.ProductionVariants {
+			f10elem := &svcapitypes.ProductionVariantSummary{}
+			if f10iter.CurrentInstanceCount != nil {
+				f10elem.CurrentInstanceCount = f10iter.CurrentInstanceCount
 			}
-			if f9iter.CurrentWeight != nil {
-				f9elem.CurrentWeight = f9iter.CurrentWeight
+			if f10iter.CurrentWeight != nil {
+				f10elem.CurrentWeight = f10iter.CurrentWeight
 			}
-			if f9iter.DeployedImages != nil {
-				f9elemf2 := []*svcapitypes.DeployedImage{}
-				for _, f9elemf2iter := range f9iter.DeployedImages {
-					f9elemf2elem := &svcapitypes.DeployedImage{}
-					if f9elemf2iter.ResolutionTime != nil {
-						f9elemf2elem.ResolutionTime = &metav1.Time{*f9elemf2iter.ResolutionTime}
+			if f10iter.DeployedImages != nil {
+				f10elemf2 := []*svcapitypes.DeployedImage{}
+				for _, f10elemf2iter := range f10iter.DeployedImages {
+					f10elemf2elem := &svcapitypes.DeployedImage{}
+					if f10elemf2iter.ResolutionTime != nil {
+						f10elemf2elem.ResolutionTime = &metav1.Time{*f10elemf2iter.ResolutionTime}
 					}
-					if f9elemf2iter.ResolvedImage != nil {
-						f9elemf2elem.ResolvedImage = f9elemf2iter.ResolvedImage
+					if f10elemf2iter.ResolvedImage != nil {
+						f10elemf2elem.ResolvedImage = f10elemf2iter.ResolvedImage
 					}
-					if f9elemf2iter.SpecifiedImage != nil {
-						f9elemf2elem.SpecifiedImage = f9elemf2iter.SpecifiedImage
+					if f10elemf2iter.SpecifiedImage != nil {
+						f10elemf2elem.SpecifiedImage = f10elemf2iter.SpecifiedImage
 					}
-					f9elemf2 = append(f9elemf2, f9elemf2elem)
+					f10elemf2 = append(f10elemf2, f10elemf2elem)
 				}
-				f9elem.DeployedImages = f9elemf2
+				f10elem.DeployedImages = f10elemf2
 			}
-			if f9iter.DesiredInstanceCount != nil {
-				f9elem.DesiredInstanceCount = f9iter.DesiredInstanceCount
+			if f10iter.DesiredInstanceCount != nil {
+				f10elem.DesiredInstanceCount = f10iter.DesiredInstanceCount
 			}
-			if f9iter.DesiredWeight != nil {
-				f9elem.DesiredWeight = f9iter.DesiredWeight
+			if f10iter.DesiredWeight != nil {
+				f10elem.DesiredWeight = f10iter.DesiredWeight
 			}
-			if f9iter.VariantName != nil {
-				f9elem.VariantName = f9iter.VariantName
+			if f10iter.VariantName != nil {
+				f10elem.VariantName = f10iter.VariantName
 			}
-			f9 = append(f9, f9elem)
+			if f10iter.VariantStatus != nil {
+				f10elemf6 := []*svcapitypes.ProductionVariantStatus{}
+				for _, f10elemf6iter := range f10iter.VariantStatus {
+					f10elemf6elem := &svcapitypes.ProductionVariantStatus{}
+					if f10elemf6iter.StartTime != nil {
+						f10elemf6elem.StartTime = &metav1.Time{*f10elemf6iter.StartTime}
+					}
+					if f10elemf6iter.Status != nil {
+						f10elemf6elem.Status = f10elemf6iter.Status
+					}
+					if f10elemf6iter.StatusMessage != nil {
+						f10elemf6elem.StatusMessage = f10elemf6iter.StatusMessage
+					}
+					f10elemf6 = append(f10elemf6, f10elemf6elem)
+				}
+				f10elem.VariantStatus = f10elemf6
+			}
+			f10 = append(f10, f10elem)
 		}
-		ko.Status.ProductionVariants = f9
+		ko.Status.ProductionVariants = f10
 	} else {
 		ko.Status.ProductionVariants = nil
 	}
@@ -196,7 +222,9 @@ func (rm *resourceManager) sdkCreate(
 ) (created *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkCreate")
-	defer exit(err)
+	defer func() {
+		exit(err)
+	}()
 	input, err := rm.newCreateRequestPayload(ctx, desired)
 	if err != nil {
 		return nil, err
@@ -267,7 +295,9 @@ func (rm *resourceManager) sdkUpdate(
 ) (updated *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkUpdate")
-	defer exit(err)
+	defer func() {
+		exit(err)
+	}()
 	if err = rm.requeueUntilCanModify(ctx, latest); err != nil {
 		return nil, err
 	}
@@ -331,7 +361,9 @@ func (rm *resourceManager) sdkDelete(
 ) (latest *resource, err error) {
 	rlog := ackrtlog.FromContext(ctx)
 	exit := rlog.Trace("rm.sdkDelete")
-	defer exit(err)
+	defer func() {
+		exit(err)
+	}()
 	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
 		return r, err
 	}
@@ -379,6 +411,9 @@ func (rm *resourceManager) setStatusDefaults(
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
 	}
+	if ko.Status.ACKResourceMetadata.Region == nil {
+		ko.Status.ACKResourceMetadata.Region = &rm.awsRegion
+	}
 	if ko.Status.ACKResourceMetadata.OwnerAccountID == nil {
 		ko.Status.ACKResourceMetadata.OwnerAccountID = &rm.awsAccountID
 	}
@@ -412,8 +447,8 @@ func (rm *resourceManager) updateConditions(
 			syncCondition = condition
 		}
 	}
-
-	if rm.terminalAWSError(err) || err == ackerr.SecretTypeNotSupported || err == ackerr.SecretNotFound {
+	var termError *ackerr.TerminalError
+	if rm.terminalAWSError(err) || err == ackerr.SecretTypeNotSupported || err == ackerr.SecretNotFound || errors.As(err, &termError) {
 		if terminalCondition == nil {
 			terminalCondition = &ackv1alpha1.Condition{
 				Type: ackv1alpha1.ConditionTypeTerminal,
@@ -421,7 +456,7 @@ func (rm *resourceManager) updateConditions(
 			ko.Status.Conditions = append(ko.Status.Conditions, terminalCondition)
 		}
 		var errorMessage = ""
-		if err == ackerr.SecretTypeNotSupported || err == ackerr.SecretNotFound {
+		if err == ackerr.SecretTypeNotSupported || err == ackerr.SecretNotFound || errors.As(err, &termError) {
 			errorMessage = err.Error()
 		} else {
 			awsErr, _ := ackerr.AWSError(err)

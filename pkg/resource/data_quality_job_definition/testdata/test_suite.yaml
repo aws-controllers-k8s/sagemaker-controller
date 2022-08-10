@@ -2,16 +2,129 @@ tests:
   - name: "Data quality job definition create tests"
     description: "Part of data quality job definition CRD tests."
     scenarios:
-     - name: "Create=InvalidInput"
-       description: "Given one of the parameters is invalid, ko.Status shows a terminal condition"
-       given:
-         desired_state: "data_quality_job_definition/v1alpha1/dqjd_invalid_before_create.yaml"
-         svc_api:
-           - operation: CreateDataQualityJobDefinitionWithContext
-             error:
-               code: InvalidParameterValue
-               message: "The job definition name must not include a special character."
-       invoke: Create
-       expect:
-         latest_state: "data_quality_job_definition/v1alpha1/dqjd_invalid_create_attempted.yaml"
-         error: resource is in terminal condition
+    - name: "Create=InvalidInput"
+      description: "Given one of the parameters is invalid, ko.Status shows a terminal condition"
+      given:
+        desired_state: "v1alpha1/create/desired/invalid_before_create.yaml"
+        svc_api:
+          - operation: CreateDataQualityJobDefinitionWithContext
+            error:
+              code: InvalidParameterValue
+              message: "The job definition name must not include a special character."
+      invoke: Create
+      expect:
+        latest_state: "v1alpha1/create/observed/invalid_create_attempted.yaml"
+        error: resource is in terminal condition
+    - name: "Create=Valid"
+      description: "Create a new job definition successfully (ARN in status)."
+      given:
+        desired_state: "v1alpha1/create/desired/success_before_create.yaml"
+        svc_api:
+          - operation: CreateDataQualityJobDefinitionWithContext
+            output_fixture: "sdkapi/create/success_create.json"
+      invoke: Create
+      expect:
+        latest_state: "v1alpha1/create/observed/success_after_create.yaml"
+        error: null
+  - name: "Data Quality job definition readOne tests"
+    description: "Testing the readOne operation"
+    scenarios:
+    - name: "ReadOne=MissingRequiredField"
+      description: "Testing readOne when required field is missing. No API call is made and returns error."
+      given: 
+        desired_state: "v1alpha1/readone/desired/missing_required_field.yaml"
+      invoke: ReadOne
+      expect:
+        error: "resource not found"
+    - name: "ReadOne=NotFound"
+      description: "Testing readOne when Describe fails to find the resource on SageMaker"
+      given: 
+        desired_state: "v1alpha1/create/observed/success_after_create.yaml"
+        svc_api:
+          - operation: DescribeDataQualityJobDefinitionWithContext
+            error:
+              code: ResourceNotFound
+              message: "Could not find job definition"
+      invoke: ReadOne
+      expect:
+        error: "resource not found"
+    - name: "ReadOne=Fail"
+      description: "This test checks if the condition is updated if describe fails and readOne returns error"
+      given: 
+        desired_state: "v1alpha1/create/observed/success_after_create.yaml"
+        svc_api:
+          - operation: DescribeDataQualityJobDefinitionWithContext
+            error:
+              code: ServiceUnavailable
+              message: "Server is down"
+      invoke: ReadOne
+      expect:
+        latest_state: "v1alpha1/readone/observed/error_on_describe.yaml"
+        error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
+    - name: "ReadOne=AfterCreate"
+      description: "Testing readOne right after create, there should be no delta."
+      given:
+        desired_state: "v1alpha1/create/observed/success_after_create.yaml"
+        svc_api:
+          - operation: DescribeDataQualityJobDefinitionWithContext
+            output_fixture: "sdkapi/describe/success_describe.json"
+      invoke: ReadOne
+      expect:
+        latest_state: "v1alpha1/create/observed/success_after_create.yaml"
+    - name: "ReadOne=LateInitialize"
+      description: "Testing late initialize after created, should expect no diff since there is nothing to late initialize"
+      given:
+        desired_state: "v1alpha1/create/observed/success_after_create.yaml"
+        svc_api:
+          - operation: DescribeDataQualityJobDefinitionWithContext
+            output_fixture: "sdkapi/describe/success_describe.json"
+      invoke: LateInitialize
+      expect:
+        latest_state: "v1alpha1/create/observed/success_after_create.yaml"
+    - name: "ReadOne=SuccessClearsConditions"
+      description: Testing a successful reconciliation clears conditions if terminal/recoverable condition were already set to true
+      given:
+        desired_state: "v1alpha1/readone/desired/error_conditions_true.yaml"
+        svc_api:
+          - operation: DescribeDataQualityJobDefinitionWithContext
+            output_fixture: "sdkapi/describe/success_describe.json"
+      invoke: ReadOne
+      expect:
+        latest_state: "v1alpha1/readone/observed/conditions_clear_on_success.yaml"
+  - name: "Data Quality job definition update tests"
+    description: "Testing the update operation"
+    scenarios:
+    - name: "Update=NotSupported"
+      description: "This test checks if the controller throws error for update"
+      given:
+        desired_state: "v1alpha1/update/desired/updated_base.yaml"
+        latest_state: "v1alpha1/create/observed/success_after_create.yaml"
+      invoke: Update
+      expect:
+        latest_state: "v1alpha1/update/observed/error_on_update.yaml"
+        error: "not implemented"
+  - name: "Data Quality job definition delete tests"
+    description: "Testing the delete operation"
+    scenarios:
+    - name: "Delete=Fail"
+      description: "This test checks if the condition is updated if delete fails and returns error"
+      given:
+        desired_state: "v1alpha1/create/observed/success_after_create.yaml"
+        svc_api:
+          - operation: DeleteDataQualityJobDefinitionWithContext
+            error:
+              code: ServiceUnavailable
+              message: "Server is down"
+      invoke: Delete
+      expect:
+        latest_state: "v1alpha1/delete/observed/error_on_delete.yaml"
+        error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
+    - name: "Delete=Successful"
+      description: "This test checks if the Job definition is deleted successfully"
+      given:
+        desired_state: "v1alpha1/create/observed/success_after_create.yaml"
+        svc_api:
+          - operation: DeleteDataQualityJobDefinitionWithContext
+      invoke: Delete
+      expect:
+        error: nil

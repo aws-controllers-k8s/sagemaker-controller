@@ -6,12 +6,14 @@ metadata:
 spec:
   instanceType: ml.t2.medium
   notebookInstanceName: test
+  platformIdentifier: notebook-al1-v1
   roleARN: arn:aws:iam::1234:role/service-role/AmazonSageMakerServiceCatalogProductsUseRole
   volumeSizeInGB: 8
 status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-east-2:1234:notebook-instance/test
     ownerAccountID: ""
+    region: ""
   conditions:
   - lastTransitionTime: null
     message: NotebookInstance is in InService status.

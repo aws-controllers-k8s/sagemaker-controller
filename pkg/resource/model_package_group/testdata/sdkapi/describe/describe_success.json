@@ -1,0 +1,8 @@
+{
+    "CreatedBy": null,
+    "CreationTime": "2021-09-09T00:45:10.556Z",
+    "ModelPackageGroupArn": "arn:aws:sagemaker:us-west-2:123456789012:model-package-group/xgboost-model-package-group",
+    "ModelPackageGroupDescription": "Description for model package group",
+    "ModelPackageGroupName": "xgboost-model-package-group",
+    "ModelPackageGroupStatus": "Completed"
+}

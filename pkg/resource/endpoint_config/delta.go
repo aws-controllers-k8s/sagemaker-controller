@@ -41,6 +41,57 @@ func newResourceDelta(
 		return delta
 	}
 
+	if ackcompare.HasNilDifference(a.ko.Spec.AsyncInferenceConfig, b.ko.Spec.AsyncInferenceConfig) {
+		delta.Add("Spec.AsyncInferenceConfig", a.ko.Spec.AsyncInferenceConfig, b.ko.Spec.AsyncInferenceConfig)
+	} else if a.ko.Spec.AsyncInferenceConfig != nil && b.ko.Spec.AsyncInferenceConfig != nil {
+		if ackcompare.HasNilDifference(a.ko.Spec.AsyncInferenceConfig.ClientConfig, b.ko.Spec.AsyncInferenceConfig.ClientConfig) {
+			delta.Add("Spec.AsyncInferenceConfig.ClientConfig", a.ko.Spec.AsyncInferenceConfig.ClientConfig, b.ko.Spec.AsyncInferenceConfig.ClientConfig)
+		} else if a.ko.Spec.AsyncInferenceConfig.ClientConfig != nil && b.ko.Spec.AsyncInferenceConfig.ClientConfig != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance, b.ko.Spec.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance) {
+				delta.Add("Spec.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance", a.ko.Spec.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance, b.ko.Spec.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance)
+			} else if a.ko.Spec.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance != nil && b.ko.Spec.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance != nil {
+				if *a.ko.Spec.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance != *b.ko.Spec.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance {
+					delta.Add("Spec.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance", a.ko.Spec.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance, b.ko.Spec.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance)
+				}
+			}
+		}
+		if ackcompare.HasNilDifference(a.ko.Spec.AsyncInferenceConfig.OutputConfig, b.ko.Spec.AsyncInferenceConfig.OutputConfig) {
+			delta.Add("Spec.AsyncInferenceConfig.OutputConfig", a.ko.Spec.AsyncInferenceConfig.OutputConfig, b.ko.Spec.AsyncInferenceConfig.OutputConfig)
+		} else if a.ko.Spec.AsyncInferenceConfig.OutputConfig != nil && b.ko.Spec.AsyncInferenceConfig.OutputConfig != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.AsyncInferenceConfig.OutputConfig.KMSKeyID, b.ko.Spec.AsyncInferenceConfig.OutputConfig.KMSKeyID) {
+				delta.Add("Spec.AsyncInferenceConfig.OutputConfig.KMSKeyID", a.ko.Spec.AsyncInferenceConfig.OutputConfig.KMSKeyID, b.ko.Spec.AsyncInferenceConfig.OutputConfig.KMSKeyID)
+			} else if a.ko.Spec.AsyncInferenceConfig.OutputConfig.KMSKeyID != nil && b.ko.Spec.AsyncInferenceConfig.OutputConfig.KMSKeyID != nil {
+				if *a.ko.Spec.AsyncInferenceConfig.OutputConfig.KMSKeyID != *b.ko.Spec.AsyncInferenceConfig.OutputConfig.KMSKeyID {
+					delta.Add("Spec.AsyncInferenceConfig.OutputConfig.KMSKeyID", a.ko.Spec.AsyncInferenceConfig.OutputConfig.KMSKeyID, b.ko.Spec.AsyncInferenceConfig.OutputConfig.KMSKeyID)
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig, b.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig) {
+				delta.Add("Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig", a.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig, b.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig)
+			} else if a.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig != nil && b.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic, b.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic) {
+					delta.Add("Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic", a.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic, b.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic)
+				} else if a.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic != nil && b.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic != nil {
+					if *a.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic != *b.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic {
+						delta.Add("Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic", a.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic, b.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic, b.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic) {
+					delta.Add("Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic", a.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic, b.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic)
+				} else if a.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic != nil && b.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic != nil {
+					if *a.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic != *b.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic {
+						delta.Add("Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic", a.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic, b.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic)
+					}
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.AsyncInferenceConfig.OutputConfig.S3OutputPath, b.ko.Spec.AsyncInferenceConfig.OutputConfig.S3OutputPath) {
+				delta.Add("Spec.AsyncInferenceConfig.OutputConfig.S3OutputPath", a.ko.Spec.AsyncInferenceConfig.OutputConfig.S3OutputPath, b.ko.Spec.AsyncInferenceConfig.OutputConfig.S3OutputPath)
+			} else if a.ko.Spec.AsyncInferenceConfig.OutputConfig.S3OutputPath != nil && b.ko.Spec.AsyncInferenceConfig.OutputConfig.S3OutputPath != nil {
+				if *a.ko.Spec.AsyncInferenceConfig.OutputConfig.S3OutputPath != *b.ko.Spec.AsyncInferenceConfig.OutputConfig.S3OutputPath {
+					delta.Add("Spec.AsyncInferenceConfig.OutputConfig.S3OutputPath", a.ko.Spec.AsyncInferenceConfig.OutputConfig.S3OutputPath, b.ko.Spec.AsyncInferenceConfig.OutputConfig.S3OutputPath)
+				}
+			}
+		}
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.DataCaptureConfig, b.ko.Spec.DataCaptureConfig) {
 		delta.Add("Spec.DataCaptureConfig", a.ko.Spec.DataCaptureConfig, b.ko.Spec.DataCaptureConfig)
 	} else if a.ko.Spec.DataCaptureConfig != nil && b.ko.Spec.DataCaptureConfig != nil {

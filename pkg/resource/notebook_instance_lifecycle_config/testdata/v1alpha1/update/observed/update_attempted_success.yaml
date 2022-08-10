@@ -1,0 +1,19 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: NotebookInstanceLifecycleConfig
+metadata:
+  creationTimestamp: null
+  name: unit-testing-notebook-instance-lifecycle-config
+spec:
+  notebookInstanceLifecycleConfigName: unit-testing-notebook-instance-lifecycle-config
+  onCreate:
+  - content: dGVzdGluZyB1cGRhdGU=
+  onStart:
+  - content: cGlwIGluc3RhbGwgc2l4
+status:
+  ackResourceMetadata:
+    ownerAccountID: ""
+    region: ""
+  conditions:
+  - message: NotebookInstanceLifecycleConfig is updating.
+    status: "True"
+    type: ACK.Recoverable

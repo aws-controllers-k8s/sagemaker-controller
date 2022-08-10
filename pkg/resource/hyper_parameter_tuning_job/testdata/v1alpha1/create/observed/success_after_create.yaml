@@ -1,0 +1,82 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: HyperParameterTuningJob
+metadata:
+  creationTimestamp: null
+  name: unit-testing-hyper-parameter-tuning-job
+spec:
+  hyperParameterTuningJobConfig:
+    hyperParameterTuningJobObjective:
+      metricName: validation:error
+      type_: Minimize
+    parameterRanges:
+      categoricalParameterRanges:
+      - name: category
+        values:
+        - test
+      continuousParameterRanges:
+      - maxValue: "5"
+        minValue: "0"
+        name: gamma
+        scalingType: Linear
+      integerParameterRanges:
+      - maxValue: "20"
+        minValue: "10"
+        name: num_round
+        scalingType: Linear
+    resourceLimits:
+      maxNumberOfTrainingJobs: 2
+      maxParallelTrainingJobs: 1
+    strategy: Bayesian
+    trainingJobEarlyStoppingType: Auto
+  hyperParameterTuningJobName: unit-testing-hpo-job
+  tags:
+  - key: algorithm
+    value: xgboost
+  - key: environment
+    value: testing
+  - key: customer
+    value: test-user
+  trainingJobDefinition:
+    algorithmSpecification:
+      trainingImage: 433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:1
+      trainingInputMode: File
+    enableInterContainerTrafficEncryption: false
+    enableNetworkIsolation: true
+    inputDataConfig:
+    - channelName: train
+      compressionType: None
+      contentType: text/csv
+      dataSource:
+        s3DataSource:
+          s3DataDistributionType: FullyReplicated
+          s3DataType: S3Prefix
+          s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/train
+      inputMode: File
+      recordWrapperType: None
+    - channelName: validation
+      compressionType: None
+      contentType: text/csv
+      dataSource:
+        s3DataSource:
+          s3DataDistributionType: FullyReplicated
+          s3DataType: S3Prefix
+          s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/validation/
+      inputMode: File
+      recordWrapperType: None
+    outputDataConfig:
+      s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/hpo/output
+    resourceConfig:
+      instanceCount: 1
+      instanceType: ml.m4.xlarge
+      volumeSizeInGB: 25
+    roleARN: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
+    staticHyperParameters:
+      base_score: "0.5"
+    stoppingCondition:
+      maxRuntimeInSeconds: 3600
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:hyperparameter-tuning-job/unit-testing-hyper-parameter-tuning-job
+    ownerAccountID: ""
+    region: ""
+  conditions: []

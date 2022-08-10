@@ -4,7 +4,7 @@
 
 image:
   repository: public.ecr.aws/aws-controllers-k8s/sagemaker-controller
-  tag: v0.1.0
+  tag: v0.3.4
   pullPolicy: IfNotPresent
   pullSecrets: []
 
@@ -15,9 +15,20 @@ deployment:
   annotations: {}
   labels: {}
   containerPort: 8080
+  # Which nodeSelector to set?
+  # See: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
   nodeSelector:
     kubernetes.io/os: linux
-
+  # Which tolerations to set?
+  # See: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
+  tolerations: []
+  # What affinity to set?
+  # See: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
+  affinity: {}
+  # Which priorityClassName to set?
+  # See: https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/#pod-priority
+  priorityClassName: ""
+  
 metrics:
   service:
     # Set to true to automatically create a Kubernetes Service resource for the
@@ -38,8 +49,14 @@ resources:
 aws:
   # If specified, use the AWS region for AWS API calls
   region: ""
-  account_id: ""
   endpoint_url: ""
+  credentials:
+    # If specified, Secret with shared credentials file to use.
+    secretName: ""
+    # Secret stringData key that contains the credentials
+    secretKey: "credentials"
+    # Profile used for AWS credentials
+    profile: "default"  
 
 # log level for the controller
 log:
@@ -54,9 +71,8 @@ installScope: cluster
 resourceTags:
   # Configures the ACK service controller to always set key/value pairs tags on
   # resources that it manages.
-  - services.k8s.aws/managed=true
-  - services.k8s.aws/created=%UTCNOW%
-  - services.k8s.aws/namespace=%KUBERNETES_NAMESPACE%
+  - services.k8s.aws/controller-version=%CONTROLLER_SERVICE%-%CONTROLLER_VERSION%
+  - services.k8s.aws/namespace=%K8S_NAMESPACE%
 
 serviceAccount:
   # Specifies whether a service account should be created

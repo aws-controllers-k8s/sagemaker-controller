@@ -33,12 +33,16 @@ spec:
 {{- end }}
     spec:
       serviceAccountName: {{ include "service-account.name" . }}
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end }}
+      {{- end }}
       containers:
       - command:
         - ./bin/controller
         args:
-        - --aws-account-id
-        - "$(AWS_ACCOUNT_ID)"
         - --aws-region
         - "$(AWS_REGION)"
         - --aws-endpoint-url
@@ -52,18 +56,18 @@ spec:
         - --watch-namespace
         - "$(ACK_WATCH_NAMESPACE)"
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         name: controller
         ports:
-          - containerPort: {{ .Values.deployment.containerPort }}
+          - name: http
+            containerPort: {{ .Values.deployment.containerPort }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         env:
-        - name: K8S_NAMESPACE
+        - name: ACK_SYSTEM_NAMESPACE
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        - name: AWS_ACCOUNT_ID
-          value: {{ .Values.aws.account_id | quote }}
         - name: AWS_REGION
           value: {{ .Values.aws.region }}
         - name: AWS_ENDPOINT_URL
@@ -76,5 +80,40 @@ spec:
           value: {{ .Values.log.level | quote }}
         - name: ACK_RESOURCE_TAGS
           value: {{ join "," .Values.resourceTags | quote }}
+        {{- if .Values.aws.credentials.secretName }}
+        - name: AWS_SHARED_CREDENTIALS_FILE
+          value: {{ include "aws.credentials.path" . }}
+        - name: AWS_PROFILE
+          value: {{ .Values.aws.credentials.profile }}
+        volumeMounts:
+          - name: {{ .Values.aws.credentials.secretName }}
+            mountPath: {{ include "aws.credentials.secret_mount_path" . }}
+            readOnly: true
+        {{- end }}          
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          runAsNonRoot: true
+          capabilities:
+            drop:
+              - ALL
       terminationGracePeriodSeconds: 10
       nodeSelector: {{ toYaml .Values.deployment.nodeSelector | nindent 8 }}
+      {{ if .Values.deployment.tolerations -}}
+      tolerations: {{ toYaml .Values.deployment.tolerations | nindent 8 }}
+      {{ end -}}
+      {{ if .Values.deployment.affinity -}}
+      affinity: {{ toYaml .Values.deployment.affinity | nindent 8 }}
+      {{ end -}}
+      {{ if .Values.deployment.priorityClassName -}}
+      priorityClassName: {{ .Values.deployment.priorityClassName -}}
+      {{ end -}}
+      hostIPC: false
+      hostNetwork: false
+      hostPID: false
+      {{ if .Values.aws.credentials.secretName -}}
+      volumes:
+        - name: {{ .Values.aws.credentials.secretName }}
+          secret:
+            secretName: {{ .Values.aws.credentials.secretName }}
+      {{ end -}}

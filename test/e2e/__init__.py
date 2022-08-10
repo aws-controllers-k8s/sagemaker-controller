@@ -11,6 +11,8 @@
 # express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
+from acktest.aws.identity import get_region
+from . import tags
 import pytest
 import logging
 import botocore
@@ -34,8 +36,9 @@ bootstrap_directory = Path(__file__).parent
 resource_directory = Path(__file__).parent / "resources"
 
 
-def sagemaker_client():
-    return boto3.client("sagemaker")
+def sagemaker_client(region: str = None):
+    region = region or get_region()
+    return boto3.client("sagemaker", region_name=region)
 
 
 def create_sagemaker_resource(
@@ -250,7 +253,7 @@ def assert_tags_in_sync(resource_arn, resource_tags):
 
     # SageMaker returns tags with Key,Value while ACK returns key,value
     response_tags = [{"key": d["Key"], "value": d["Value"]} for d in response_tags]
-    TestCase().assertCountEqual(response_tags, resource_tags)
+    TestCase().assertCountEqual(tags.clean(response_tags), resource_tags)
 
 
 def get_sagemaker_training_job(training_job_name: str):
@@ -280,7 +283,7 @@ def get_training_resource_status(reference: k8s.CustomResourceReference):
 def wait_resource_training_status(
     reference: k8s.CustomResourceReference,
     expected_status: str,
-    wait_periods: int = 30,
+    wait_periods: int = 60,
     period_length: int = 30,
 ):
     return wait_for_status(
@@ -295,7 +298,7 @@ def wait_resource_training_status(
 def wait_sagemaker_training_status(
     training_job_name,
     expected_status: str,
-    wait_periods: int = 30,
+    wait_periods: int = 60,
     period_length: int = 30,
 ):
     return wait_for_status(
@@ -325,9 +328,10 @@ def get_sagemaker_endpoint(endpoint_name: str):
         return None
 
 
-def get_sagemaker_model(model_name: str):
+def get_sagemaker_model(model_name: str, sm_client=None):
+    sm_client = sm_client or sagemaker_client()
     try:
-        return sagemaker_client().describe_model(ModelName=model_name)
+        return sm_client.describe_model(ModelName=model_name)
     except botocore.exceptions.ClientError as error:
         logging.error(
             f"SageMaker could not find a model with the name {model_name}. Error {error}"

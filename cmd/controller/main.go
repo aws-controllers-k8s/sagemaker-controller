@@ -18,8 +18,10 @@ package main
 import (
 	"os"
 
+	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
 	ackcfg "github.com/aws-controllers-k8s/runtime/pkg/config"
 	ackrt "github.com/aws-controllers-k8s/runtime/pkg/runtime"
+	acktypes "github.com/aws-controllers-k8s/runtime/pkg/types"
 	ackrtutil "github.com/aws-controllers-k8s/runtime/pkg/util"
 	ackrtwebhook "github.com/aws-controllers-k8s/runtime/pkg/webhook"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
@@ -29,11 +31,12 @@ import (
 	ctrlrt "sigs.k8s.io/controller-runtime"
 	ctrlrtmetrics "sigs.k8s.io/controller-runtime/pkg/metrics"
 
-	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
 	svctypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svcresource "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource"
 
+	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/app"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/data_quality_job_definition"
+	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/domain"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/endpoint"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/endpoint_config"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/feature_group"
@@ -50,6 +53,9 @@ import (
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/processing_job"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/training_job"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/transform_job"
+	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/user_profile"
+
+	"github.com/aws-controllers-k8s/sagemaker-controller/pkg/version"
 )
 
 var (
@@ -115,7 +121,11 @@ func main() {
 	)
 	sc := ackrt.NewServiceController(
 		awsServiceAlias, awsServiceAPIGroup, awsServiceEndpointsID,
-		ackrt.VersionInfo{}, // TODO: populate version info
+		acktypes.VersionInfo{
+			version.GitCommit,
+			version.GitVersion,
+			version.BuildDate,
+		},
 	).WithLogger(
 		ctrlrt.Log,
 	).WithResourceManagerFactories(

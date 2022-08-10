@@ -1,0 +1,3 @@
+{
+    "NotebookInstanceLifecycleConfigArn": "arn:aws:sagemaker:us-west-2:123456789012:notebook-instance-lifecycle-config/unit-testing-notebook-instance-lifecycle-config"
+}
