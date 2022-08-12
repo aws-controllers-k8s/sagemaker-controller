@@ -28,7 +28,7 @@ func customSetDefaults(
 
 	if ackcompare.IsNotNil(a.ko.Spec.ProfilerRuleConfigurations) && ackcompare.IsNotNil(b.ko.Spec.ProfilerRuleConfigurations) {
 		for index := range a.ko.Spec.ProfilerRuleConfigurations {
-			if ackcompare.IsNil(a.ko.Spec.ProfilerRuleConfigurations[index].VolumeSizeInGB) && ackcompare.IsNotNil(b.ko.Spec.DebugRuleConfigurations[index].VolumeSizeInGB) {
+			if ackcompare.IsNil(a.ko.Spec.ProfilerRuleConfigurations[index].VolumeSizeInGB) && ackcompare.IsNotNil(b.ko.Spec.ProfilerRuleConfigurations[index].VolumeSizeInGB) {
 				a.ko.Spec.ProfilerRuleConfigurations[index].VolumeSizeInGB = defaultVolumeSizeInGB
 			}
 		}
