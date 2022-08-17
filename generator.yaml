@@ -171,8 +171,8 @@ resources:
           operation: DescribeTrainingJob
           path: FailureReason 
       AlgorithmSpecification.MetricDefinitions:
-        late_initialize:
-          min_backoff_seconds: 5
+        compare:
+          is_ignored: true
       EnableInterContainerTrafficEncryption:
         late_initialize:
           min_backoff_seconds: 5

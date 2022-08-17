@@ -59,9 +59,6 @@ func newResourceDelta(
 				delta.Add("Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries", a.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries, b.ko.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries)
 			}
 		}
-		if !reflect.DeepEqual(a.ko.Spec.AlgorithmSpecification.MetricDefinitions, b.ko.Spec.AlgorithmSpecification.MetricDefinitions) {
-			delta.Add("Spec.AlgorithmSpecification.MetricDefinitions", a.ko.Spec.AlgorithmSpecification.MetricDefinitions, b.ko.Spec.AlgorithmSpecification.MetricDefinitions)
-		}
 		if ackcompare.HasNilDifference(a.ko.Spec.AlgorithmSpecification.TrainingImage, b.ko.Spec.AlgorithmSpecification.TrainingImage) {
 			delta.Add("Spec.AlgorithmSpecification.TrainingImage", a.ko.Spec.AlgorithmSpecification.TrainingImage, b.ko.Spec.AlgorithmSpecification.TrainingImage)
 		} else if a.ko.Spec.AlgorithmSpecification.TrainingImage != nil && b.ko.Spec.AlgorithmSpecification.TrainingImage != nil {
