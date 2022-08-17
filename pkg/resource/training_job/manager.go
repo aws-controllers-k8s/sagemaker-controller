@@ -51,7 +51,7 @@ var (
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=trainingjobs,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=trainingjobs/status,verbs=get;update;patch
 
-var lateInitializeFieldNames = []string{"AlgorithmSpecification.EnableSageMakerMetricsTimeSeries", "AlgorithmSpecification.MetricDefinitions", "EnableInterContainerTrafficEncryption", "EnableManagedSpotTraining", "EnableNetworkIsolation", "OutputDataConfig.KMSKeyID"}
+var lateInitializeFieldNames = []string{"AlgorithmSpecification.EnableSageMakerMetricsTimeSeries", "EnableInterContainerTrafficEncryption", "EnableManagedSpotTraining", "EnableNetworkIsolation", "OutputDataConfig.KMSKeyID"}
 
 // resourceManager is responsible for providing a consistent way to perform
 // CRUD operations in a backend AWS service API for Book custom resources.
@@ -254,11 +254,6 @@ func (rm *resourceManager) incompleteLateInitialization(
 			return true
 		}
 	}
-	if ko.Spec.AlgorithmSpecification != nil {
-		if ko.Spec.AlgorithmSpecification.MetricDefinitions == nil {
-			return true
-		}
-	}
 	if ko.Spec.EnableInterContainerTrafficEncryption == nil {
 		return true
 	}
@@ -287,11 +282,6 @@ func (rm *resourceManager) lateInitializeFromReadOneOutput(
 	if observedKo.Spec.AlgorithmSpecification != nil && latestKo.Spec.AlgorithmSpecification != nil {
 		if observedKo.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries != nil && latestKo.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries == nil {
 			latestKo.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries = observedKo.Spec.AlgorithmSpecification.EnableSageMakerMetricsTimeSeries
-		}
-	}
-	if observedKo.Spec.AlgorithmSpecification != nil && latestKo.Spec.AlgorithmSpecification != nil {
-		if observedKo.Spec.AlgorithmSpecification.MetricDefinitions != nil && latestKo.Spec.AlgorithmSpecification.MetricDefinitions == nil {
-			latestKo.Spec.AlgorithmSpecification.MetricDefinitions = observedKo.Spec.AlgorithmSpecification.MetricDefinitions
 		}
 	}
 	if observedKo.Spec.EnableInterContainerTrafficEncryption != nil && latestKo.Spec.EnableInterContainerTrafficEncryption == nil {
