@@ -15,6 +15,7 @@ package training_job
 
 import (
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	"github.com/aws/aws-sdk-go/aws"
 )
 
@@ -45,6 +46,11 @@ func customSetDefaults(
 
 	// Default value of RecordWrapperType is None
 	defaultRecordWrapperType := aws.String("None")
+
+	// inputDataConfig is an optional field. Its default value is an empty list
+	if ackcompare.IsNil(a.ko.Spec.InputDataConfig) && ackcompare.IsNotNil(b.ko.Spec.InputDataConfig) {
+		a.ko.Spec.InputDataConfig = []*svcapitypes.Channel{}
+	}
 
 	if ackcompare.IsNotNil(a.ko.Spec.InputDataConfig) && ackcompare.IsNotNil(b.ko.Spec.InputDataConfig) {
 		for index := range a.ko.Spec.InputDataConfig {
