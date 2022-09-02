@@ -63,6 +63,8 @@ Head over to the [Manage Resources In Multiple AWS Accounts](https://aws-control
 
 ### 6.0 Adopt Resources
 
+> :warning: For more information on migrating existing resources from the old [SageMaker Operators for Kubernetes](https://github.com/aws/amazon-sagemaker-operator-for-k8s) to the SageMaker ACK controller, see [Migrate resources to the new SageMaker Operators for Kubernetes](https://docs.aws.amazon.com/sagemaker/latest/dg/kubernetes-sagemaker-operators-migrate.html) in the *Amazon SageMaker Developer Guide*.
+
 ACK controller provides to provide the ability to “adopt” resources that were not originally created by ACK service controller. Given the user configures the controller with permissions which has access to existing resource, the controller will be able to determine the current specification and status of the AWS resource and reconcile said resource as if the ACK controller had originally created it.
 
 Sample:
