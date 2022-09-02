@@ -63,11 +63,11 @@ Head over to the [Manage Resources In Multiple AWS Accounts](https://aws-control
 
 ### 6.0 Adopt Resources
 
-> :warning: For more information on migrating existing resources from the old [SageMaker Operators for Kubernetes](https://github.com/aws/amazon-sagemaker-operator-for-k8s) to the SageMaker ACK controller, see [Migrate resources to the new SageMaker Operators for Kubernetes](https://docs.aws.amazon.com/sagemaker/latest/dg/kubernetes-sagemaker-operators-migrate.html) in the *Amazon SageMaker Developer Guide*.
+ACK controllers provide the ability to “adopt” resources that were not originally created by an ACK service controller. For more information, see [Adopting Existing AWS Resources](https://aws-controllers-k8s.github.io/community/docs/user-docs/adopted-resource/) in the ACK documentation.
 
-ACK controller provides to provide the ability to “adopt” resources that were not originally created by ACK service controller. Given the user configures the controller with permissions which has access to existing resource, the controller will be able to determine the current specification and status of the AWS resource and reconcile said resource as if the ACK controller had originally created it.
+Example: 
 
-Sample:
+Save the following sample to a file called `adopt-endpoint-sample.yaml`.
 ```yaml
 apiVersion: services.k8s.aws/v1alpha1
 kind: AdoptedResource
@@ -84,20 +84,18 @@ spec:
       # target K8s CR name
       name: xgboost-endpoint
 ```
-Save the above to a file name adopt-endpoint-sample.yaml.
 
-Submit the CR
+Submit the CR:
 ```sh
 kubectl apply -f adopt-endpoint-sample.yaml
 ```
 
-Check for `ACK.Adopted` condition to be true under `status.conditions`
-
+Check that the `ACK.Adopted` condition under `status.conditions` is `True`:
 ```sh
 kubectl describe adoptedresource adopt-endpoint-sample
 ```
 
-Output should look similar to this:
+Your output should look similar to the following:
 ```yaml
 ---
 kind: AdoptedResource
@@ -127,9 +125,11 @@ status:
     type: ACK.Adopted
 ```
 
-Check resource exists in cluster
+Check that the resource exists in your cluster:
 ```sh
 kubectl describe endpoints.sagemaker xgboost-endpoint
 ```
 
+### 7.0 Migrate resources from the old SageMaker Operators for Kubernetes
 
+For information about migrating resources from the old [SageMaker Operators for Kubernetes](https://github.com/aws/amazon-sagemaker-operator-for-k8s) to the ACK SageMaker controller, see [Migrate resources to the new SageMaker Operators for Kubernetes](https://docs.aws.amazon.com/sagemaker/latest/dg/kubernetes-sagemaker-operators-migrate.html) in the *Amazon SageMaker Developer Guide*.
