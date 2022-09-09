@@ -8,31 +8,6 @@ Kubernetes Github project.
 
 [ack-issues]: https://github.com/aws/aws-controllers-k8s/issues
 
-## Contributing
-
-We welcome community contributions and pull requests.
-
-See our [contribution guide](/CONTRIBUTING.md) for more information on how to
-report issues, set up a development environment, and submit code.
-
-We adhere to the [Amazon Open Source Code of Conduct][coc].
-
-You can also learn more about our [Governance](/GOVERNANCE.md) structure.
-
-[coc]: https://aws.github.io/code-of-conduct
-
-## License
-
-This project is [licensed](/LICENSE) under the Apache-2.0 License.
-
-## Supported SageMaker Resources
-For a list of supported resources, refer to the [SageMaker API Reference](https://aws-controllers-k8s.github.io/community/reference/).
-
-Find the helm charts and controller images on Amazon ECR Public Gallery.
-- Helm Chart: https://gallery.ecr.aws/aws-controllers-k8s/sagemaker-chart
-
-- Controller Image: https://gallery.ecr.aws/aws-controllers-k8s/sagemaker-controller
-
 ## Getting Started
 
 ### 1.0 ACK SageMaker Controller
@@ -63,9 +38,11 @@ Head over to the [Manage Resources In Multiple AWS Accounts](https://aws-control
 
 ### 6.0 Adopt Resources
 
-ACK controller provides to provide the ability to “adopt” resources that were not originally created by ACK service controller. Given the user configures the controller with permissions which has access to existing resource, the controller will be able to determine the current specification and status of the AWS resource and reconcile said resource as if the ACK controller had originally created it.
+ACK controllers provide the ability to “adopt” resources that were not originally created by an ACK service controller. For more information, see [Adopting Existing AWS Resources](https://aws-controllers-k8s.github.io/community/docs/user-docs/adopted-resource/) in the ACK documentation.
 
-Sample:
+The following steps demonstrate how to adopt a SageMaker Endpoint.
+
+Save the following sample to a file called `adopt-endpoint-sample.yaml`.
 ```yaml
 apiVersion: services.k8s.aws/v1alpha1
 kind: AdoptedResource
@@ -82,20 +59,18 @@ spec:
       # target K8s CR name
       name: xgboost-endpoint
 ```
-Save the above to a file name adopt-endpoint-sample.yaml.
 
-Submit the CR
+Submit the CR:
 ```sh
 kubectl apply -f adopt-endpoint-sample.yaml
 ```
 
-Check for `ACK.Adopted` condition to be true under `status.conditions`
-
+Check that the `ACK.Adopted` condition under `status.conditions` is `True`:
 ```sh
 kubectl describe adoptedresource adopt-endpoint-sample
 ```
 
-Output should look similar to this:
+Your output should look similar to the following:
 ```yaml
 ---
 kind: AdoptedResource
@@ -125,9 +100,36 @@ status:
     type: ACK.Adopted
 ```
 
-Check resource exists in cluster
+Check that the resource exists in your cluster:
 ```sh
 kubectl describe endpoints.sagemaker xgboost-endpoint
 ```
 
+### 7.0 Migrate resources from the old SageMaker Operators for Kubernetes
 
+For information about migrating resources from the old [SageMaker Operators for Kubernetes](https://github.com/aws/amazon-sagemaker-operator-for-k8s) to the ACK SageMaker controller, see [Migrate resources to the new SageMaker Operators for Kubernetes](https://docs.aws.amazon.com/sagemaker/latest/dg/kubernetes-sagemaker-operators-migrate.html) in the *Amazon SageMaker Developer Guide*.
+
+## Supported SageMaker Resources
+For a list of supported resources, refer to the [SageMaker API Reference](https://aws-controllers-k8s.github.io/community/reference/).
+
+Find the helm charts and controller images on Amazon ECR Public Gallery.
+- Helm Chart: https://gallery.ecr.aws/aws-controllers-k8s/sagemaker-chart
+
+- Controller Image: https://gallery.ecr.aws/aws-controllers-k8s/sagemaker-controller
+
+## Contributing
+
+We welcome community contributions and pull requests.
+
+See our [contribution guide](/CONTRIBUTING.md) for more information on how to
+report issues, set up a development environment, and submit code.
+
+We adhere to the [Amazon Open Source Code of Conduct][coc].
+
+You can also learn more about our [Governance](/GOVERNANCE.md) structure.
+
+[coc]: https://aws.github.io/code-of-conduct
+
+## License
+
+This project is [licensed](/LICENSE) under the Apache-2.0 License.
