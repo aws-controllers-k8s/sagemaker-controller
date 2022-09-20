@@ -66,6 +66,10 @@ type TransformJobSpec struct {
 	// ensure that the records fit within the maximum payload size, we recommend
 	// using a slightly larger value. The default value is 6 MB.
 	//
+	// The value of MaxPayloadInMB cannot be greater than 100 MB. If you specify
+	// the MaxConcurrentTransforms parameter, the value of (MaxConcurrentTransforms
+	// * MaxPayloadInMB) also cannot exceed 100 MB.
+	//
 	// For cases where the payload might be arbitrarily large and is transmitted
 	// using HTTP chunked encoding, set the value to 0. This feature works only
 	// in supported algorithms. Currently, Amazon SageMaker built-in algorithms

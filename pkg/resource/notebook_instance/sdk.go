@@ -124,6 +124,15 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Status.FailureReason = nil
 	}
+	if resp.InstanceMetadataServiceConfiguration != nil {
+		f6 := &svcapitypes.InstanceMetadataServiceConfiguration{}
+		if resp.InstanceMetadataServiceConfiguration.MinimumInstanceMetadataServiceVersion != nil {
+			f6.MinimumInstanceMetadataServiceVersion = resp.InstanceMetadataServiceConfiguration.MinimumInstanceMetadataServiceVersion
+		}
+		ko.Spec.InstanceMetadataServiceConfiguration = f6
+	} else {
+		ko.Spec.InstanceMetadataServiceConfiguration = nil
+	}
 	if resp.InstanceType != nil {
 		ko.Spec.InstanceType = resp.InstanceType
 	} else {
@@ -298,6 +307,13 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.DirectInternetAccess != nil {
 		res.SetDirectInternetAccess(*r.ko.Spec.DirectInternetAccess)
 	}
+	if r.ko.Spec.InstanceMetadataServiceConfiguration != nil {
+		f4 := &svcsdk.InstanceMetadataServiceConfiguration{}
+		if r.ko.Spec.InstanceMetadataServiceConfiguration.MinimumInstanceMetadataServiceVersion != nil {
+			f4.SetMinimumInstanceMetadataServiceVersion(*r.ko.Spec.InstanceMetadataServiceConfiguration.MinimumInstanceMetadataServiceVersion)
+		}
+		res.SetInstanceMetadataServiceConfiguration(f4)
+	}
 	if r.ko.Spec.InstanceType != nil {
 		res.SetInstanceType(*r.ko.Spec.InstanceType)
 	}
@@ -320,30 +336,30 @@ func (rm *resourceManager) newCreateRequestPayload(
 		res.SetRootAccess(*r.ko.Spec.RootAccess)
 	}
 	if r.ko.Spec.SecurityGroupIDs != nil {
-		f11 := []*string{}
-		for _, f11iter := range r.ko.Spec.SecurityGroupIDs {
-			var f11elem string
-			f11elem = *f11iter
-			f11 = append(f11, &f11elem)
+		f12 := []*string{}
+		for _, f12iter := range r.ko.Spec.SecurityGroupIDs {
+			var f12elem string
+			f12elem = *f12iter
+			f12 = append(f12, &f12elem)
 		}
-		res.SetSecurityGroupIds(f11)
+		res.SetSecurityGroupIds(f12)
 	}
 	if r.ko.Spec.SubnetID != nil {
 		res.SetSubnetId(*r.ko.Spec.SubnetID)
 	}
 	if r.ko.Spec.Tags != nil {
-		f13 := []*svcsdk.Tag{}
-		for _, f13iter := range r.ko.Spec.Tags {
-			f13elem := &svcsdk.Tag{}
-			if f13iter.Key != nil {
-				f13elem.SetKey(*f13iter.Key)
+		f14 := []*svcsdk.Tag{}
+		for _, f14iter := range r.ko.Spec.Tags {
+			f14elem := &svcsdk.Tag{}
+			if f14iter.Key != nil {
+				f14elem.SetKey(*f14iter.Key)
 			}
-			if f13iter.Value != nil {
-				f13elem.SetValue(*f13iter.Value)
+			if f14iter.Value != nil {
+				f14elem.SetValue(*f14iter.Value)
 			}
-			f13 = append(f13, f13elem)
+			f14 = append(f14, f14elem)
 		}
-		res.SetTags(f13)
+		res.SetTags(f14)
 	}
 	if r.ko.Spec.VolumeSizeInGB != nil {
 		res.SetVolumeSizeInGB(*r.ko.Spec.VolumeSizeInGB)
@@ -431,6 +447,13 @@ func (rm *resourceManager) newUpdateRequestPayload(
 	}
 	if r.ko.Spec.DefaultCodeRepository != nil {
 		res.SetDefaultCodeRepository(*r.ko.Spec.DefaultCodeRepository)
+	}
+	if r.ko.Spec.InstanceMetadataServiceConfiguration != nil {
+		f7 := &svcsdk.InstanceMetadataServiceConfiguration{}
+		if r.ko.Spec.InstanceMetadataServiceConfiguration.MinimumInstanceMetadataServiceVersion != nil {
+			f7.SetMinimumInstanceMetadataServiceVersion(*r.ko.Spec.InstanceMetadataServiceConfiguration.MinimumInstanceMetadataServiceVersion)
+		}
+		res.SetInstanceMetadataServiceConfiguration(f7)
 	}
 	if r.ko.Spec.InstanceType != nil {
 		res.SetInstanceType(*r.ko.Spec.InstanceType)

@@ -24,7 +24,7 @@ import (
 type EndpointConfigSpec struct {
 	// Specifies configuration for how an endpoint performs asynchronous inference.
 	// This is a required field in order for your Endpoint to be invoked using InvokeEndpointAsync
-	// (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpoint.html).
+	// (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpointAsync.html).
 	AsyncInferenceConfig *AsyncInferenceConfig `json:"asyncInferenceConfig,omitempty"`
 
 	DataCaptureConfig *DataCaptureConfig `json:"dataCaptureConfig,omitempty"`
@@ -33,8 +33,8 @@ type EndpointConfigSpec struct {
 	// +kubebuilder:validation:Required
 	EndpointConfigName *string `json:"endpointConfigName"`
 	// The Amazon Resource Name (ARN) of a Amazon Web Services Key Management Service
-	// key that Amazon SageMaker uses to encrypt data on the storage volume attached
-	// to the ML compute instance that hosts the endpoint.
+	// key that SageMaker uses to encrypt data on the storage volume attached to
+	// the ML compute instance that hosts the endpoint.
 	//
 	// The KmsKeyId can be any of the following formats:
 	//

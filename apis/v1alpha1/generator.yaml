@@ -838,6 +838,8 @@ ignore:
       - DeviceFleet
       # - Domain
       - EdgePackagingJob
+      - EdgeDeploymentPlan
+      - EdgeDeploymentStage
       # - EndpointConfig
       # - Endpoint
       - Experiment

@@ -1,10 +1,9 @@
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.7.0
+    controller-gen.kubebuilder.io/version: v0.9.2
   creationTimestamp: null
   name: hyperparametertuningjobs.sagemaker.services.k8s.aws
 spec:
@@ -72,9 +71,11 @@ spec:
                       values within these ranges to find the combination of values
                       that result in the training job with the best performance as
                       measured by the objective metric of the hyperparameter tuning
-                      job. \n You can specify a maximum of 20 hyperparameters that
-                      a hyperparameter tuning job can search over. Every possible
-                      value of a categorical parameter range counts against this limit."
+                      job. \n The maximum number of items specified for Array Members
+                      refers to the maximum number of hyperparameters for each range
+                      and also the maximum for the hyperparameter tuning job itself.
+                      That is, the sum of the number of hyperparameters for all the
+                      ranges can't exceed the maximum number specified."
                     properties:
                       categoricalParameterRanges:
                         items:
@@ -195,10 +196,10 @@ spec:
                       metricDefinitions:
                         items:
                           description: Specifies a metric that the training algorithm
-                            writes to stderr or stdout. Amazon SageMakerhyperparameter
-                            tuning captures all defined metrics. You specify one metric
-                            that a hyperparameter tuning job uses as its objective
-                            metric to choose the best training job.
+                            writes to stderr or stdout. SageMakerhyperparameter tuning
+                            captures all defined metrics. You specify one metric that
+                            a hyperparameter tuning job uses as its objective metric
+                            to choose the best training job.
                           properties:
                             name:
                               type: string
@@ -263,9 +264,11 @@ spec:
                       values within these ranges to find the combination of values
                       that result in the training job with the best performance as
                       measured by the objective metric of the hyperparameter tuning
-                      job. \n You can specify a maximum of 20 hyperparameters that
-                      a hyperparameter tuning job can search over. Every possible
-                      value of a categorical parameter range counts against this limit."
+                      job. \n The maximum number of items specified for Array Members
+                      refers to the maximum number of hyperparameters for each range
+                      and also the maximum for the hyperparameter tuning job itself.
+                      That is, the sum of the number of hyperparameters for all the
+                      ranges can't exceed the maximum number specified."
                     properties:
                       categoricalParameterRanges:
                         items:
@@ -309,6 +312,46 @@ spec:
                           type: object
                         type: array
                     type: object
+                  hyperParameterTuningResourceConfig:
+                    description: "The configuration of resources, including compute
+                      instances and storage volumes for use in training jobs launched
+                      by hyperparameter tuning jobs. Specify one or more instance
+                      type and count and the allocation strategy for instance selection.
+                      \n HyperParameterTuningResourceConfig supports all of the capabilities
+                      of ResourceConfig with added functionality for flexible instance
+                      management."
+                    properties:
+                      allocationStrategy:
+                        type: string
+                      instanceConfigs:
+                        items:
+                          description: The configuration for hyperparameter tuning
+                            resources for use in training jobs launched by the tuning
+                            job. These resources include compute instances and storage
+                            volumes. Specify one or more compute instance configurations
+                            and allocation strategies to select resources (optional).
+                          properties:
+                            instanceCount:
+                              format: int64
+                              type: integer
+                            instanceType:
+                              type: string
+                            volumeSizeInGB:
+                              format: int64
+                              type: integer
+                          type: object
+                        type: array
+                      instanceCount:
+                        format: int64
+                        type: integer
+                      instanceType:
+                        type: string
+                      volumeKMSKeyID:
+                        type: string
+                      volumeSizeInGB:
+                        format: int64
+                        type: integer
+                    type: object
                   inputDataConfig:
                     items:
                       description: A channel is a named input source that training
@@ -340,6 +383,10 @@ spec:
                               description: Describes the S3 data source.
                               properties:
                                 attributeNames:
+                                  items:
+                                    type: string
+                                  type: array
+                                instanceGroupNames:
                                   items:
                                     type: string
                                   type: array
@@ -426,6 +473,22 @@ spec:
                       instanceCount:
                         format: int64
                         type: integer
+                      instanceGroups:
+                        items:
+                          description: Defines an instance group for heterogeneous
+                            cluster training. When requesting a training job using
+                            the CreateTrainingJob (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingJob.html)
+                            API, you can configure multiple instance groups .
+                          properties:
+                            instanceCount:
+                              format: int64
+                              type: integer
+                            instanceGroupName:
+                              type: string
+                            instanceType:
+                              type: string
+                          type: object
+                        type: array
                       instanceType:
                         type: string
                       volumeKMSKeyID:
@@ -444,22 +507,22 @@ spec:
                     description: "Specifies a limit to how long a model training job
                       or model compilation job can run. It also specifies how long
                       a managed spot training job has to complete. When the job reaches
-                      the time limit, Amazon SageMaker ends the training or compilation
-                      job. Use this API to cap model training costs. \n To stop a
-                      training job, Amazon SageMaker sends the algorithm the SIGTERM
-                      signal, which delays job termination for 120 seconds. Algorithms
-                      can use this 120-second window to save the model artifacts,
-                      so the results of training are not lost. \n The training algorithms
-                      provided by Amazon SageMaker automatically save the intermediate
-                      results of a model training job when possible. This attempt
-                      to save artifacts is only a best effort case as model might
-                      not be in a state from which it can be saved. For example, if
-                      training has just started, the model might not be ready to save.
-                      When saved, this intermediate data is a valid model artifact.
-                      You can use it to create a model with CreateModel. \n The Neural
-                      Topic Model (NTM) currently does not support saving intermediate
-                      model artifacts. When training NTMs, make sure that the maximum
-                      runtime is sufficient for the training job to complete."
+                      the time limit, SageMaker ends the training or compilation job.
+                      Use this API to cap model training costs. \n To stop a training
+                      job, SageMaker sends the algorithm the SIGTERM signal, which
+                      delays job termination for 120 seconds. Algorithms can use this
+                      120-second window to save the model artifacts, so the results
+                      of training are not lost. \n The training algorithms provided
+                      by SageMaker automatically save the intermediate results of
+                      a model training job when possible. This attempt to save artifacts
+                      is only a best effort case as model might not be in a state
+                      from which it can be saved. For example, if training has just
+                      started, the model might not be ready to save. When saved, this
+                      intermediate data is a valid model artifact. You can use it
+                      to create a model with CreateModel. \n The Neural Topic Model
+                      (NTM) currently does not support saving intermediate model artifacts.
+                      When training NTMs, make sure that the maximum runtime is sufficient
+                      for the training job to complete."
                     properties:
                       maxRuntimeInSeconds:
                         format: int64
@@ -516,7 +579,7 @@ spec:
                         metricDefinitions:
                           items:
                             description: Specifies a metric that the training algorithm
-                              writes to stderr or stdout. Amazon SageMakerhyperparameter
+                              writes to stderr or stdout. SageMakerhyperparameter
                               tuning captures all defined metrics. You specify one
                               metric that a hyperparameter tuning job uses as its
                               objective metric to choose the best training job.
@@ -586,10 +649,11 @@ spec:
                         hyperparameter values within these ranges to find the combination
                         of values that result in the training job with the best performance
                         as measured by the objective metric of the hyperparameter
-                        tuning job. \n You can specify a maximum of 20 hyperparameters
-                        that a hyperparameter tuning job can search over. Every possible
-                        value of a categorical parameter range counts against this
-                        limit."
+                        tuning job. \n The maximum number of items specified for Array
+                        Members refers to the maximum number of hyperparameters for
+                        each range and also the maximum for the hyperparameter tuning
+                        job itself. That is, the sum of the number of hyperparameters
+                        for all the ranges can't exceed the maximum number specified."
                       properties:
                         categoricalParameterRanges:
                           items:
@@ -635,6 +699,46 @@ spec:
                             type: object
                           type: array
                       type: object
+                    hyperParameterTuningResourceConfig:
+                      description: "The configuration of resources, including compute
+                        instances and storage volumes for use in training jobs launched
+                        by hyperparameter tuning jobs. Specify one or more instance
+                        type and count and the allocation strategy for instance selection.
+                        \n HyperParameterTuningResourceConfig supports all of the
+                        capabilities of ResourceConfig with added functionality for
+                        flexible instance management."
+                      properties:
+                        allocationStrategy:
+                          type: string
+                        instanceConfigs:
+                          items:
+                            description: The configuration for hyperparameter tuning
+                              resources for use in training jobs launched by the tuning
+                              job. These resources include compute instances and storage
+                              volumes. Specify one or more compute instance configurations
+                              and allocation strategies to select resources (optional).
+                            properties:
+                              instanceCount:
+                                format: int64
+                                type: integer
+                              instanceType:
+                                type: string
+                              volumeSizeInGB:
+                                format: int64
+                                type: integer
+                            type: object
+                          type: array
+                        instanceCount:
+                          format: int64
+                          type: integer
+                        instanceType:
+                          type: string
+                        volumeKMSKeyID:
+                          type: string
+                        volumeSizeInGB:
+                          format: int64
+                          type: integer
+                      type: object
                     inputDataConfig:
                       items:
                         description: A channel is a named input source that training
@@ -666,6 +770,10 @@ spec:
                                 description: Describes the S3 data source.
                                 properties:
                                   attributeNames:
+                                    items:
+                                      type: string
+                                    type: array
+                                  instanceGroupNames:
                                     items:
                                       type: string
                                     type: array
@@ -754,6 +862,22 @@ spec:
                         instanceCount:
                           format: int64
                           type: integer
+                        instanceGroups:
+                          items:
+                            description: Defines an instance group for heterogeneous
+                              cluster training. When requesting a training job using
+                              the CreateTrainingJob (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingJob.html)
+                              API, you can configure multiple instance groups .
+                            properties:
+                              instanceCount:
+                                format: int64
+                                type: integer
+                              instanceGroupName:
+                                type: string
+                              instanceType:
+                                type: string
+                            type: object
+                          type: array
                         instanceType:
                           type: string
                         volumeKMSKeyID:
@@ -772,23 +896,23 @@ spec:
                       description: "Specifies a limit to how long a model training
                         job or model compilation job can run. It also specifies how
                         long a managed spot training job has to complete. When the
-                        job reaches the time limit, Amazon SageMaker ends the training
-                        or compilation job. Use this API to cap model training costs.
-                        \n To stop a training job, Amazon SageMaker sends the algorithm
-                        the SIGTERM signal, which delays job termination for 120 seconds.
+                        job reaches the time limit, SageMaker ends the training or
+                        compilation job. Use this API to cap model training costs.
+                        \n To stop a training job, SageMaker sends the algorithm the
+                        SIGTERM signal, which delays job termination for 120 seconds.
                         Algorithms can use this 120-second window to save the model
                         artifacts, so the results of training are not lost. \n The
-                        training algorithms provided by Amazon SageMaker automatically
-                        save the intermediate results of a model training job when
-                        possible. This attempt to save artifacts is only a best effort
-                        case as model might not be in a state from which it can be
-                        saved. For example, if training has just started, the model
-                        might not be ready to save. When saved, this intermediate
-                        data is a valid model artifact. You can use it to create a
-                        model with CreateModel. \n The Neural Topic Model (NTM) currently
-                        does not support saving intermediate model artifacts. When
-                        training NTMs, make sure that the maximum runtime is sufficient
-                        for the training job to complete."
+                        training algorithms provided by SageMaker automatically save
+                        the intermediate results of a model training job when possible.
+                        This attempt to save artifacts is only a best effort case
+                        as model might not be in a state from which it can be saved.
+                        For example, if training has just started, the model might
+                        not be ready to save. When saved, this intermediate data is
+                        a valid model artifact. You can use it to create a model with
+                        CreateModel. \n The Neural Topic Model (NTM) currently does
+                        not support saving intermediate model artifacts. When training
+                        NTMs, make sure that the maximum runtime is sufficient for
+                        the training job to complete."
                       properties:
                         maxRuntimeInSeconds:
                           format: int64
@@ -1034,9 +1158,3 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []

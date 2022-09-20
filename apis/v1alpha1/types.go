@@ -58,7 +58,7 @@ type AdditionalInferenceSpecificationDefinition struct {
 
 // Specifies the training algorithm to use in a CreateTrainingJob request.
 //
-// For more information about algorithms provided by Amazon SageMaker, see Algorithms
+// For more information about algorithms provided by SageMaker, see Algorithms
 // (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html). For information
 // about using your own algorithms, see Using Your Own Algorithms with Amazon
 // SageMaker (https://docs.aws.amazon.com/sagemaker/latest/dg/your-algorithms.html).
@@ -119,8 +119,8 @@ type AlgorithmSummary struct {
 	CreationTime         *metav1.Time `json:"creationTime,omitempty"`
 }
 
-// Defines a training job and a batch transform job that Amazon SageMaker runs
-// to validate your algorithm.
+// Defines a training job and a batch transform job that SageMaker runs to validate
+// your algorithm.
 //
 // The data provided in the validation profile is made available to your buyers
 // on Amazon Web Services Marketplace.
@@ -131,8 +131,8 @@ type AlgorithmValidationProfile struct {
 	TransformJobDefinition *TransformJobDefinition `json:"transformJobDefinition,omitempty"`
 }
 
-// Specifies configurations for one or more training jobs that Amazon SageMaker
-// runs to test the algorithm.
+// Specifies configurations for one or more training jobs that SageMaker runs
+// to test the algorithm.
 type AlgorithmValidationSpecification struct {
 	ValidationRole *string `json:"validationRole,omitempty"`
 }
@@ -189,16 +189,16 @@ type AssociationSummary struct {
 	SourceType      *string      `json:"sourceType,omitempty"`
 }
 
-// Configures the behavior of the client used by Amazon SageMaker to interact
-// with the model container during asynchronous inference.
+// Configures the behavior of the client used by SageMaker to interact with
+// the model container during asynchronous inference.
 type AsyncInferenceClientConfig struct {
 	MaxConcurrentInvocationsPerInstance *int64 `json:"maxConcurrentInvocationsPerInstance,omitempty"`
 }
 
 // Specifies configuration for how an endpoint performs asynchronous inference.
 type AsyncInferenceConfig struct {
-	// Configures the behavior of the client used by Amazon SageMaker to interact
-	// with the model container during asynchronous inference.
+	// Configures the behavior of the client used by SageMaker to interact with
+	// the model container during asynchronous inference.
 	ClientConfig *AsyncInferenceClientConfig `json:"clientConfig,omitempty"`
 	// Specifies the configuration for asynchronous inference invocation outputs.
 	OutputConfig *AsyncInferenceOutputConfig `json:"outputConfig,omitempty"`
@@ -247,8 +247,16 @@ type AutoMLCandidate struct {
 	ObjectiveStatus  *string      `json:"objectiveStatus,omitempty"`
 }
 
-// A channel is a named input source that training algorithms can consume. For
-// more information, see .
+// Stores the config information for how a candidate is generated (optional).
+type AutoMLCandidateGenerationConfig struct {
+	FeatureSpecificationS3URI *string `json:"featureSpecificationS3URI,omitempty"`
+}
+
+// A channel is a named input source that training algorithms can consume. The
+// validation dataset size is limited to less than 2 GB. The training dataset
+// size must be less than 100 GB. For more information, see .
+//
+// A validation dataset must contain the same headers as the training dataset.
 type AutoMLChannel struct {
 	CompressionType *string `json:"compressionType,omitempty"`
 	ContentType     *string `json:"contentType,omitempty"`
@@ -314,9 +322,12 @@ type BatchDescribeModelPackageSummary struct {
 
 // Contains bias metrics for a model.
 type Bias struct {
+	// Details about the metrics source.
 	PostTrainingReport *MetricsSource `json:"postTrainingReport,omitempty"`
-	PreTrainingReport  *MetricsSource `json:"preTrainingReport,omitempty"`
-	Report             *MetricsSource `json:"report,omitempty"`
+	// Details about the metrics source.
+	PreTrainingReport *MetricsSource `json:"preTrainingReport,omitempty"`
+	// Details about the metrics source.
+	Report *MetricsSource `json:"report,omitempty"`
 }
 
 // Metadata about a callback step.
@@ -324,11 +335,14 @@ type CallbackStepMetadata struct {
 	SQSQueueURL *string `json:"sqsQueueURL,omitempty"`
 }
 
+// Configuration specifying how to treat different headers. If no headers are
+// specified SageMaker will by default base64 encode when capturing the data.
 type CaptureContentTypeHeader struct {
 	CsvContentTypes  []*string `json:"csvContentTypes,omitempty"`
 	JSONContentTypes []*string `json:"jsonContentTypes,omitempty"`
 }
 
+// Specifies data Model Monitor will capture.
 type CaptureOption struct {
 	CaptureMode *string `json:"captureMode,omitempty"`
 }
@@ -510,7 +524,10 @@ type CustomImage struct {
 	ImageVersionNumber *int64  `json:"imageVersionNumber,omitempty"`
 }
 
+// Configuration to control how SageMaker captures inference data.
 type DataCaptureConfig struct {
+	// Configuration specifying how to treat different headers. If no headers are
+	// specified SageMaker will by default base64 encode when capturing the data.
 	CaptureContentTypeHeader  *CaptureContentTypeHeader `json:"captureContentTypeHeader,omitempty"`
 	CaptureOptions            []*CaptureOption          `json:"captureOptions,omitempty"`
 	DestinationS3URI          *string                   `json:"destinationS3URI,omitempty"`
@@ -519,6 +536,7 @@ type DataCaptureConfig struct {
 	KMSKeyID                  *string                   `json:"kmsKeyID,omitempty"`
 }
 
+// The currently active data capture configuration used by your Endpoint.
 type DataCaptureConfigSummary struct {
 	CaptureStatus             *string `json:"captureStatus,omitempty"`
 	CurrentSamplingPercentage *int64  `json:"currentSamplingPercentage,omitempty"`
@@ -645,11 +663,31 @@ type DeployedImage struct {
 	SpecifiedImage *string      `json:"specifiedImage,omitempty"`
 }
 
+// Contains information about a stage in an edge deployment plan.
+type DeploymentStage struct {
+	StageName *string `json:"stageName,omitempty"`
+}
+
+// Contains information summarizing the deployment stage results.
+type DeploymentStageStatusSummary struct {
+	StageName *string `json:"stageName,omitempty"`
+}
+
 // Specifies weight and capacity values for a production variant.
 type DesiredWeightAndCapacity struct {
 	DesiredInstanceCount *int64   `json:"desiredInstanceCount,omitempty"`
 	DesiredWeight        *float64 `json:"desiredWeight,omitempty"`
 	VariantName          *string  `json:"variantName,omitempty"`
+}
+
+// Contains information summarizing device details and deployment status.
+type DeviceDeploymentSummary struct {
+	DeployedStageName             *string      `json:"deployedStageName,omitempty"`
+	DeploymentStartTime           *metav1.Time `json:"deploymentStartTime,omitempty"`
+	DeviceDeploymentStatusMessage *string      `json:"deviceDeploymentStatusMessage,omitempty"`
+	DeviceFleetName               *string      `json:"deviceFleetName,omitempty"`
+	EdgeDeploymentPlanName        *string      `json:"edgeDeploymentPlanName,omitempty"`
+	StageName                     *string      `json:"stageName,omitempty"`
 }
 
 // Summary of the device fleet.
@@ -681,6 +719,7 @@ type DomainDetails struct {
 // A collection of settings that apply to the SageMaker Domain. These settings
 // are specified through the CreateDomain API call.
 type DomainSettings struct {
+	ExecutionRoleIdentityConfig *string `json:"executionRoleIdentityConfig,omitempty"`
 	// A collection of settings that configure the RStudioServerPro Domain-level
 	// app.
 	RStudioServerProDomainSettings *RStudioServerProDomainSettings `json:"rStudioServerProDomainSettings,omitempty"`
@@ -689,6 +728,7 @@ type DomainSettings struct {
 
 // A collection of Domain configuration settings to update.
 type DomainSettingsForUpdate struct {
+	ExecutionRoleIdentityConfig *string `json:"executionRoleIdentityConfig,omitempty"`
 	// A collection of settings that update the current configuration for the RStudioServerPro
 	// Domain-level app.
 	RStudioServerProDomainSettingsForUpdate *RStudioServerProDomainSettingsForUpdate `json:"rStudioServerProDomainSettingsForUpdate,omitempty"`
@@ -715,31 +755,38 @@ type DriftCheckBaselines struct {
 // monitor is set using the model package.
 type DriftCheckBias struct {
 	// Contains details regarding the file source.
-	ConfigFile              *FileSource    `json:"configFile,omitempty"`
+	ConfigFile *FileSource `json:"configFile,omitempty"`
+	// Details about the metrics source.
 	PostTrainingConstraints *MetricsSource `json:"postTrainingConstraints,omitempty"`
-	PreTrainingConstraints  *MetricsSource `json:"preTrainingConstraints,omitempty"`
+	// Details about the metrics source.
+	PreTrainingConstraints *MetricsSource `json:"preTrainingConstraints,omitempty"`
 }
 
 // Represents the drift check explainability baselines that can be used when
 // the model monitor is set using the model package.
 type DriftCheckExplainability struct {
 	// Contains details regarding the file source.
-	ConfigFile  *FileSource    `json:"configFile,omitempty"`
+	ConfigFile *FileSource `json:"configFile,omitempty"`
+	// Details about the metrics source.
 	Constraints *MetricsSource `json:"constraints,omitempty"`
 }
 
 // Represents the drift check data quality baselines that can be used when the
 // model monitor is set using the model package.
 type DriftCheckModelDataQuality struct {
+	// Details about the metrics source.
 	Constraints *MetricsSource `json:"constraints,omitempty"`
-	Statistics  *MetricsSource `json:"statistics,omitempty"`
+	// Details about the metrics source.
+	Statistics *MetricsSource `json:"statistics,omitempty"`
 }
 
 // Represents the drift check model quality baselines that can be used when
 // the model monitor is set using the model package.
 type DriftCheckModelQuality struct {
+	// Details about the metrics source.
 	Constraints *MetricsSource `json:"constraints,omitempty"`
-	Statistics  *MetricsSource `json:"statistics,omitempty"`
+	// Details about the metrics source.
+	Statistics *MetricsSource `json:"statistics,omitempty"`
 }
 
 // The configurations and outcomes of an Amazon EMR step execution.
@@ -748,6 +795,26 @@ type EMRStepMetadata struct {
 	LogFilePath *string `json:"logFilePath,omitempty"`
 	StepID      *string `json:"stepID,omitempty"`
 	StepName    *string `json:"stepName,omitempty"`
+}
+
+// Contains information about the configuration of a model in a deployment.
+type EdgeDeploymentModelConfig struct {
+	EdgePackagingJobName *string `json:"edgePackagingJobName,omitempty"`
+	ModelHandle          *string `json:"modelHandle,omitempty"`
+}
+
+// Contains information summarizing an edge deployment plan.
+type EdgeDeploymentPlanSummary struct {
+	CreationTime           *metav1.Time `json:"creationTime,omitempty"`
+	DeviceFleetName        *string      `json:"deviceFleetName,omitempty"`
+	EdgeDeploymentPlanName *string      `json:"edgeDeploymentPlanName,omitempty"`
+	LastModifiedTime       *metav1.Time `json:"lastModifiedTime,omitempty"`
+}
+
+// Contains information summarizing the deployment stage results.
+type EdgeDeploymentStatus struct {
+	EdgeDeploymentStageStartTime *metav1.Time `json:"edgeDeploymentStageStartTime,omitempty"`
+	EdgeDeploymentStatusMessage  *string      `json:"edgeDeploymentStatusMessage,omitempty"`
 }
 
 // The model on the edge device.
@@ -834,7 +901,8 @@ type EndpointSummary struct {
 
 // A hosted endpoint for real-time inference.
 type Endpoint_SDK struct {
-	CreationTime       *metav1.Time                `json:"creationTime,omitempty"`
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	// The currently active data capture configuration used by your Endpoint.
 	DataCaptureConfig  *DataCaptureConfigSummary   `json:"dataCaptureConfig,omitempty"`
 	EndpointARN        *string                     `json:"endpointARN,omitempty"`
 	EndpointConfigName *string                     `json:"endpointConfigName,omitempty"`
@@ -894,6 +962,7 @@ type ExperimentSummary struct {
 
 // Contains explainability metrics for a model.
 type Explainability struct {
+	// Details about the metrics source.
 	Report *MetricsSource `json:"report,omitempty"`
 }
 
@@ -928,6 +997,9 @@ type FeatureGroup_SDK struct {
 	FeatureGroupARN      *string              `json:"featureGroupARN,omitempty"`
 	FeatureGroupName     *string              `json:"featureGroupName,omitempty"`
 	FeatureGroupStatus   *string              `json:"featureGroupStatus,omitempty"`
+	LastModifiedTime     *metav1.Time         `json:"lastModifiedTime,omitempty"`
+	// A value that indicates whether the update was successful.
+	LastUpdateStatus *LastUpdateStatus `json:"lastUpdateStatus,omitempty"`
 	// The configuration of an OfflineStore.
 	//
 	// Provide an OfflineStoreConfig in a request to CreateFeatureGroup to create
@@ -946,6 +1018,17 @@ type FeatureGroup_SDK struct {
 	RecordIdentifierFeatureName *string            `json:"recordIdentifierFeatureName,omitempty"`
 	RoleARN                     *string            `json:"roleARN,omitempty"`
 	Tags                        []*Tag             `json:"tags,omitempty"`
+}
+
+// The metadata for a feature. It can either be metadata that you specify, or
+// metadata that is updated automatically.
+type FeatureMetadata struct {
+	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
+	FeatureGroupARN  *string      `json:"featureGroupARN,omitempty"`
+	FeatureGroupName *string      `json:"featureGroupName,omitempty"`
+	FeatureName      *string      `json:"featureName,omitempty"`
+	FeatureType      *string      `json:"featureType,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
 // Contains details regarding the file source.
@@ -1066,11 +1149,20 @@ type HyperParameterTrainingJobDefinition struct {
 	// performance as measured by the objective metric of the hyperparameter tuning
 	// job.
 	//
-	// You can specify a maximum of 20 hyperparameters that a hyperparameter tuning
-	// job can search over. Every possible value of a categorical parameter range
-	// counts against this limit.
+	// The maximum number of items specified for Array Members refers to the maximum
+	// number of hyperparameters for each range and also the maximum for the hyperparameter
+	// tuning job itself. That is, the sum of the number of hyperparameters for
+	// all the ranges can't exceed the maximum number specified.
 	HyperParameterRanges *ParameterRanges `json:"hyperParameterRanges,omitempty"`
-	InputDataConfig      []*Channel       `json:"inputDataConfig,omitempty"`
+	// The configuration of resources, including compute instances and storage volumes
+	// for use in training jobs launched by hyperparameter tuning jobs. Specify
+	// one or more instance type and count and the allocation strategy for instance
+	// selection.
+	//
+	// HyperParameterTuningResourceConfig supports all of the capabilities of ResourceConfig
+	// with added functionality for flexible instance management.
+	HyperParameterTuningResourceConfig *HyperParameterTuningResourceConfig `json:"hyperParameterTuningResourceConfig,omitempty"`
+	InputDataConfig                    []*Channel                          `json:"inputDataConfig,omitempty"`
 	// Provides information about how to store model training results (model artifacts).
 	OutputDataConfig *OutputDataConfig `json:"outputDataConfig,omitempty"`
 	// Describes the resources, including ML compute instances and ML storage volumes,
@@ -1080,20 +1172,19 @@ type HyperParameterTrainingJobDefinition struct {
 	StaticHyperParameters map[string]*string `json:"staticHyperParameters,omitempty"`
 	// Specifies a limit to how long a model training job or model compilation job
 	// can run. It also specifies how long a managed spot training job has to complete.
-	// When the job reaches the time limit, Amazon SageMaker ends the training or
-	// compilation job. Use this API to cap model training costs.
+	// When the job reaches the time limit, SageMaker ends the training or compilation
+	// job. Use this API to cap model training costs.
 	//
-	// To stop a training job, Amazon SageMaker sends the algorithm the SIGTERM
-	// signal, which delays job termination for 120 seconds. Algorithms can use
-	// this 120-second window to save the model artifacts, so the results of training
-	// are not lost.
+	// To stop a training job, SageMaker sends the algorithm the SIGTERM signal,
+	// which delays job termination for 120 seconds. Algorithms can use this 120-second
+	// window to save the model artifacts, so the results of training are not lost.
 	//
-	// The training algorithms provided by Amazon SageMaker automatically save the
-	// intermediate results of a model training job when possible. This attempt
-	// to save artifacts is only a best effort case as model might not be in a state
-	// from which it can be saved. For example, if training has just started, the
-	// model might not be ready to save. When saved, this intermediate data is a
-	// valid model artifact. You can use it to create a model with CreateModel.
+	// The training algorithms provided by SageMaker automatically save the intermediate
+	// results of a model training job when possible. This attempt to save artifacts
+	// is only a best effort case as model might not be in a state from which it
+	// can be saved. For example, if training has just started, the model might
+	// not be ready to save. When saved, this intermediate data is a valid model
+	// artifact. You can use it to create a model with CreateModel.
 	//
 	// The Neural Topic Model (NTM) currently does not support saving intermediate
 	// model artifacts. When training NTMs, make sure that the maximum runtime is
@@ -1112,7 +1203,7 @@ type HyperParameterTrainingJobDefinition struct {
 	VPCConfig *VPCConfig `json:"vpcConfig,omitempty"`
 }
 
-// Specifies summary information about a training job.
+// The container for the summary information about a training job.
 type HyperParameterTrainingJobSummary struct {
 	CreationTime  *metav1.Time `json:"creationTime,omitempty"`
 	FailureReason *string      `json:"failureReason,omitempty"`
@@ -1131,6 +1222,16 @@ type HyperParameterTrainingJobSummary struct {
 	TuningJobName                               *string                                      `json:"tuningJobName,omitempty"`
 }
 
+// The configuration for hyperparameter tuning resources for use in training
+// jobs launched by the tuning job. These resources include compute instances
+// and storage volumes. Specify one or more compute instance configurations
+// and allocation strategies to select resources (optional).
+type HyperParameterTuningInstanceConfig struct {
+	InstanceCount  *int64  `json:"instanceCount,omitempty"`
+	InstanceType   *string `json:"instanceType,omitempty"`
+	VolumeSizeInGB *int64  `json:"volumeSizeInGB,omitempty"`
+}
+
 // Configures a hyperparameter tuning job.
 type HyperParameterTuningJobConfig struct {
 	// Defines the objective metric for a hyperparameter tuning job. Hyperparameter
@@ -1145,9 +1246,10 @@ type HyperParameterTuningJobConfig struct {
 	// performance as measured by the objective metric of the hyperparameter tuning
 	// job.
 	//
-	// You can specify a maximum of 20 hyperparameters that a hyperparameter tuning
-	// job can search over. Every possible value of a categorical parameter range
-	// counts against this limit.
+	// The maximum number of items specified for Array Members refers to the maximum
+	// number of hyperparameters for each range and also the maximum for the hyperparameter
+	// tuning job itself. That is, the sum of the number of hyperparameters for
+	// all the ranges can't exceed the maximum number specified.
 	ParameterRanges *ParameterRanges `json:"parameterRanges,omitempty"`
 	// Specifies the maximum number of training jobs and parallel training jobs
 	// that a hyperparameter tuning job can launch.
@@ -1167,6 +1269,52 @@ type HyperParameterTuningJobConfig struct {
 type HyperParameterTuningJobObjective struct {
 	MetricName *string `json:"metricName,omitempty"`
 	Type       *string `json:"type_,omitempty"`
+}
+
+// An entity having characteristics over which a user can search for a hyperparameter
+// tuning job.
+type HyperParameterTuningJobSearchEntity struct {
+	// The container for the summary information about a training job.
+	BestTrainingJob             *HyperParameterTrainingJobSummary `json:"bestTrainingJob,omitempty"`
+	CreationTime                *metav1.Time                      `json:"creationTime,omitempty"`
+	FailureReason               *string                           `json:"failureReason,omitempty"`
+	HyperParameterTuningEndTime *metav1.Time                      `json:"hyperParameterTuningEndTime,omitempty"`
+	HyperParameterTuningJobARN  *string                           `json:"hyperParameterTuningJobARN,omitempty"`
+	// Configures a hyperparameter tuning job.
+	HyperParameterTuningJobConfig *HyperParameterTuningJobConfig `json:"hyperParameterTuningJobConfig,omitempty"`
+	HyperParameterTuningJobName   *string                        `json:"hyperParameterTuningJobName,omitempty"`
+	HyperParameterTuningJobStatus *string                        `json:"hyperParameterTuningJobStatus,omitempty"`
+	LastModifiedTime              *metav1.Time                   `json:"lastModifiedTime,omitempty"`
+	// Specifies the number of training jobs that this hyperparameter tuning job
+	// launched, categorized by the status of their objective metric. The objective
+	// metric status shows whether the final objective metric for the training job
+	// has been evaluated by the tuning job and used in the hyperparameter tuning
+	// process.
+	ObjectiveStatusCounters *ObjectiveStatusCounters `json:"objectiveStatusCounters,omitempty"`
+	// The container for the summary information about a training job.
+	OverallBestTrainingJob *HyperParameterTrainingJobSummary `json:"overallBestTrainingJob,omitempty"`
+	Tags                   []*Tag                            `json:"tags,omitempty"`
+	// Defines the training jobs launched by a hyperparameter tuning job.
+	TrainingJobDefinition  *HyperParameterTrainingJobDefinition   `json:"trainingJobDefinition,omitempty"`
+	TrainingJobDefinitions []*HyperParameterTrainingJobDefinition `json:"trainingJobDefinitions,omitempty"`
+	// The numbers of training jobs launched by a hyperparameter tuning job, categorized
+	// by status.
+	TrainingJobStatusCounters *TrainingJobStatusCounters `json:"trainingJobStatusCounters,omitempty"`
+	// Specifies the configuration for a hyperparameter tuning job that uses one
+	// or more previous hyperparameter tuning jobs as a starting point. The results
+	// of previous tuning jobs are used to inform which combinations of hyperparameters
+	// to search over in the new tuning job.
+	//
+	// All training jobs launched by the new hyperparameter tuning job are evaluated
+	// by using the objective metric, and the training job that performs the best
+	// is compared to the best training jobs from the parent tuning jobs. From these,
+	// the training job that performs the best as measured by the objective metric
+	// is returned as the overall best training job.
+	//
+	// All training jobs launched by parent hyperparameter tuning jobs and the new
+	// hyperparameter tuning jobs count against the limit of training jobs for the
+	// tuning job.
+	WarmStartConfig *HyperParameterTuningJobWarmStartConfig `json:"warmStartConfig,omitempty"`
 }
 
 // Provides summary information about a hyperparameter tuning job.
@@ -1211,6 +1359,22 @@ type HyperParameterTuningJobSummary struct {
 type HyperParameterTuningJobWarmStartConfig struct {
 	ParentHyperParameterTuningJobs []*ParentHyperParameterTuningJob `json:"parentHyperParameterTuningJobs,omitempty"`
 	WarmStartType                  *string                          `json:"warmStartType,omitempty"`
+}
+
+// The configuration of resources, including compute instances and storage volumes
+// for use in training jobs launched by hyperparameter tuning jobs. Specify
+// one or more instance type and count and the allocation strategy for instance
+// selection.
+//
+// HyperParameterTuningResourceConfig supports all of the capabilities of ResourceConfig
+// with added functionality for flexible instance management.
+type HyperParameterTuningResourceConfig struct {
+	AllocationStrategy *string                               `json:"allocationStrategy,omitempty"`
+	InstanceConfigs    []*HyperParameterTuningInstanceConfig `json:"instanceConfigs,omitempty"`
+	InstanceCount      *int64                                `json:"instanceCount,omitempty"`
+	InstanceType       *string                               `json:"instanceType,omitempty"`
+	VolumeKMSKeyID     *string                               `json:"volumeKMSKeyID,omitempty"`
+	VolumeSizeInGB     *int64                                `json:"volumeSizeInGB,omitempty"`
 }
 
 // A SageMaker image. A SageMaker image represents a set of container images
@@ -1280,6 +1444,20 @@ type InputConfig struct {
 	S3URI            *string `json:"s3URI,omitempty"`
 }
 
+// Defines an instance group for heterogeneous cluster training. When requesting
+// a training job using the CreateTrainingJob (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingJob.html)
+// API, you can configure multiple instance groups .
+type InstanceGroup struct {
+	InstanceCount     *int64  `json:"instanceCount,omitempty"`
+	InstanceGroupName *string `json:"instanceGroupName,omitempty"`
+	InstanceType      *string `json:"instanceType,omitempty"`
+}
+
+// Information on the IMDS configuration of the notebook instance
+type InstanceMetadataServiceConfiguration struct {
+	MinimumInstanceMetadataServiceVersion *string `json:"minimumInstanceMetadataServiceVersion,omitempty"`
+}
+
 // For a hyperparameter of the integer type, specifies the range that a hyperparameter
 // tuning job searches.
 type IntegerParameterRange struct {
@@ -1340,6 +1518,12 @@ type LabelingJobOutputConfig struct {
 // used to run automated data labeling model training and inference.
 type LabelingJobResourceConfig struct {
 	VolumeKMSKeyID *string `json:"volumeKMSKeyID,omitempty"`
+	// Specifies a VPC that your training jobs and hosted models have access to.
+	// Control access to and from your training and model containers by configuring
+	// the VPC. For more information, see Protect Endpoints by Using an Amazon Virtual
+	// Private Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/host-vpc.html)
+	// and Protect Training Jobs by Using an Amazon Virtual Private Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/train-vpc.html).
+	VPCConfig *VPCConfig `json:"vpcConfig,omitempty"`
 }
 
 // The Amazon S3 location of the input data objects.
@@ -1363,6 +1547,12 @@ type LabelingJobSummary struct {
 // Metadata for a Lambda step.
 type LambdaStepMetadata struct {
 	ARN *string `json:"arn,omitempty"`
+}
+
+// A value that indicates whether the update was successful.
+type LastUpdateStatus struct {
+	FailureReason *string `json:"failureReason,omitempty"`
+	Status        *string `json:"status,omitempty"`
 }
 
 // Lists a summary of the properties of a lineage group. A lineage group provides
@@ -1396,7 +1586,7 @@ type MetricDatum struct {
 }
 
 // Specifies a metric that the training algorithm writes to stderr or stdout.
-// Amazon SageMakerhyperparameter tuning captures all defined metrics. You specify
+// SageMakerhyperparameter tuning captures all defined metrics. You specify
 // one metric that a hyperparameter tuning job uses as its objective metric
 // to choose the best training job.
 type MetricDefinition struct {
@@ -1404,6 +1594,7 @@ type MetricDefinition struct {
 	Regex *string `json:"regex,omitempty"`
 }
 
+// Details about the metrics source.
 type MetricsSource struct {
 	ContentDigest *string `json:"contentDigest,omitempty"`
 	ContentType   *string `json:"contentType,omitempty"`
@@ -1457,8 +1648,10 @@ type ModelConfiguration struct {
 
 // Data quality constraints and statistics for a model.
 type ModelDataQuality struct {
+	// Details about the metrics source.
 	Constraints *MetricsSource `json:"constraints,omitempty"`
-	Statistics  *MetricsSource `json:"statistics,omitempty"`
+	// Details about the metrics source.
+	Statistics *MetricsSource `json:"statistics,omitempty"`
 }
 
 // Specifies how to generate the endpoint name for an automatic one-click Autopilot
@@ -1599,8 +1792,8 @@ type ModelPackageValidationProfile struct {
 	TransformJobDefinition *TransformJobDefinition `json:"transformJobDefinition,omitempty"`
 }
 
-// Specifies batch transform jobs that Amazon SageMaker runs to validate your
-// model package.
+// Specifies batch transform jobs that SageMaker runs to validate your model
+// package.
 type ModelPackageValidationSpecification struct {
 	ValidationProfiles []*ModelPackageValidationProfile `json:"validationProfiles,omitempty"`
 	ValidationRole     *string                          `json:"validationRole,omitempty"`
@@ -1644,15 +1837,17 @@ type ModelPackage_SDK struct {
 	SourceAlgorithmSpecification *SourceAlgorithmSpecification `json:"sourceAlgorithmSpecification,omitempty"`
 	Tags                         []*Tag                        `json:"tags,omitempty"`
 	Task                         *string                       `json:"task,omitempty"`
-	// Specifies batch transform jobs that Amazon SageMaker runs to validate your
-	// model package.
+	// Specifies batch transform jobs that SageMaker runs to validate your model
+	// package.
 	ValidationSpecification *ModelPackageValidationSpecification `json:"validationSpecification,omitempty"`
 }
 
 // Model quality statistics and constraints.
 type ModelQuality struct {
+	// Details about the metrics source.
 	Constraints *MetricsSource `json:"constraints,omitempty"`
-	Statistics  *MetricsSource `json:"statistics,omitempty"`
+	// Details about the metrics source.
+	Statistics *MetricsSource `json:"statistics,omitempty"`
 }
 
 // Container image configuration object for the monitoring job.
@@ -1923,7 +2118,7 @@ type NotebookInstanceLifecycleHook struct {
 	Content *string `json:"content,omitempty"`
 }
 
-// Provides summary information for an Amazon SageMaker notebook instance.
+// Provides summary information for an SageMaker notebook instance.
 type NotebookInstanceSummary struct {
 	AdditionalCodeRepositories          []*string    `json:"additionalCodeRepositories,omitempty"`
 	CreationTime                        *metav1.Time `json:"creationTime,omitempty"`
@@ -2021,9 +2216,10 @@ type Parameter struct {
 // performance as measured by the objective metric of the hyperparameter tuning
 // job.
 //
-// You can specify a maximum of 20 hyperparameters that a hyperparameter tuning
-// job can search over. Every possible value of a categorical parameter range
-// counts against this limit.
+// The maximum number of items specified for Array Members refers to the maximum
+// number of hyperparameters for each range and also the maximum for the hyperparameter
+// tuning job itself. That is, the sum of the number of hyperparameters for
+// all the ranges can't exceed the maximum number specified.
 type ParameterRanges struct {
 	CategoricalParameterRanges []*CategoricalParameterRange `json:"categoricalParameterRanges,omitempty"`
 	ContinuousParameterRanges  []*ContinuousParameterRange  `json:"continuousParameterRanges,omitempty"`
@@ -2265,18 +2461,21 @@ type ProcessingStoppingCondition struct {
 }
 
 // Identifies a model that you want to host and the resources chosen to deploy
-// for hosting it. If you are deploying multiple models, tell Amazon SageMaker
-// how to distribute traffic among the models by specifying variant weights.
+// for hosting it. If you are deploying multiple models, tell SageMaker how
+// to distribute traffic among the models by specifying variant weights.
 type ProductionVariant struct {
-	AcceleratorType *string `json:"acceleratorType,omitempty"`
+	AcceleratorType                             *string `json:"acceleratorType,omitempty"`
+	ContainerStartupHealthCheckTimeoutInSeconds *int64  `json:"containerStartupHealthCheckTimeoutInSeconds,omitempty"`
 	// Specifies configuration for a core dump from the model container when the
 	// process crashes.
-	CoreDumpConfig       *ProductionVariantCoreDumpConfig `json:"coreDumpConfig,omitempty"`
-	InitialInstanceCount *int64                           `json:"initialInstanceCount,omitempty"`
-	InitialVariantWeight *float64                         `json:"initialVariantWeight,omitempty"`
-	InstanceType         *string                          `json:"instanceType,omitempty"`
-	ModelName            *string                          `json:"modelName,omitempty"`
-	VariantName          *string                          `json:"variantName,omitempty"`
+	CoreDumpConfig                    *ProductionVariantCoreDumpConfig `json:"coreDumpConfig,omitempty"`
+	InitialInstanceCount              *int64                           `json:"initialInstanceCount,omitempty"`
+	InitialVariantWeight              *float64                         `json:"initialVariantWeight,omitempty"`
+	InstanceType                      *string                          `json:"instanceType,omitempty"`
+	ModelDataDownloadTimeoutInSeconds *int64                           `json:"modelDataDownloadTimeoutInSeconds,omitempty"`
+	ModelName                         *string                          `json:"modelName,omitempty"`
+	VariantName                       *string                          `json:"variantName,omitempty"`
+	VolumeSizeInGB                    *int64                           `json:"volumeSizeInGB,omitempty"`
 }
 
 // Specifies configuration for a core dump from the model container when the
@@ -2416,9 +2615,38 @@ type RStudioServerProDomainSettingsForUpdate struct {
 	DomainExecutionRoleARN *string       `json:"domainExecutionRoleARN,omitempty"`
 }
 
+// Provides information about the output configuration for the compiled model.
+type RecommendationJobCompiledOutputConfig struct {
+	S3OutputURI *string `json:"s3OutputURI,omitempty"`
+}
+
+// Specifies mandatory fields for running an Inference Recommender job directly
+// in the CreateInferenceRecommendationsJob (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateInferenceRecommendationsJob.html)
+// API. The fields specified in ContainerConfig override the corresponding fields
+// in the model package. Use ContainerConfig if you want to specify these fields
+// for the recommendation job but don't want to edit them in your model package.
+type RecommendationJobContainerConfig struct {
+	Domain           *string `json:"domain,omitempty"`
+	Framework        *string `json:"framework,omitempty"`
+	FrameworkVersion *string `json:"frameworkVersion,omitempty"`
+	NearestModelName *string `json:"nearestModelName,omitempty"`
+	Task             *string `json:"task,omitempty"`
+}
+
 // The input configuration of the recommendation job.
 type RecommendationJobInputConfig struct {
 	ModelPackageVersionARN *string `json:"modelPackageVersionARN,omitempty"`
+	VolumeKMSKeyID         *string `json:"volumeKMSKeyID,omitempty"`
+}
+
+// Provides information about the output configuration for the compiled model.
+type RecommendationJobOutputConfig struct {
+	KMSKeyID *string `json:"kmsKeyID,omitempty"`
+}
+
+// The configuration for the payload for a recommendation job.
+type RecommendationJobPayloadConfig struct {
+	SamplePayloadURL *string `json:"samplePayloadURL,omitempty"`
 }
 
 // The metrics of recommendations.
@@ -2469,10 +2697,11 @@ type RepositoryAuthConfig struct {
 // Describes the resources, including ML compute instances and ML storage volumes,
 // to use for model training.
 type ResourceConfig struct {
-	InstanceCount  *int64  `json:"instanceCount,omitempty"`
-	InstanceType   *string `json:"instanceType,omitempty"`
-	VolumeKMSKeyID *string `json:"volumeKMSKeyID,omitempty"`
-	VolumeSizeInGB *int64  `json:"volumeSizeInGB,omitempty"`
+	InstanceCount  *int64           `json:"instanceCount,omitempty"`
+	InstanceGroups []*InstanceGroup `json:"instanceGroups,omitempty"`
+	InstanceType   *string          `json:"instanceType,omitempty"`
+	VolumeKMSKeyID *string          `json:"volumeKMSKeyID,omitempty"`
+	VolumeSizeInGB *int64           `json:"volumeSizeInGB,omitempty"`
 }
 
 // Specifies the maximum number of training jobs and parallel training jobs
@@ -2500,6 +2729,7 @@ type RetentionPolicy struct {
 // Describes the S3 data source.
 type S3DataSource struct {
 	AttributeNames         []*string `json:"attributeNames,omitempty"`
+	InstanceGroupNames     []*string `json:"instanceGroupNames,omitempty"`
 	S3DataDistributionType *string   `json:"s3DataDistributionType,omitempty"`
 	S3DataType             *string   `json:"s3DataType,omitempty"`
 	S3URI                  *string   `json:"s3URI,omitempty"`
@@ -2522,7 +2752,7 @@ type ScheduleConfig struct {
 // It provides additional details about a status that the training job has transitioned
 // through. A training job can be in one of several states, for example, starting,
 // downloading, training, or uploading. Within each state, there are a number
-// of intermediate states. For example, within the starting state, Amazon SageMaker
+// of intermediate states. For example, within the starting state, SageMaker
 // could be starting the training job or launching the ML instances. These transitional
 // states are referred to as the job's secondary status.
 type SecondaryStatusTransition struct {
@@ -2561,8 +2791,8 @@ type ShuffleConfig struct {
 }
 
 // Specifies an algorithm that was used to create the model package. The algorithm
-// must be either an algorithm resource in your Amazon SageMaker account or
-// an algorithm in Amazon Web Services Marketplace that you are subscribed to.
+// must be either an algorithm resource in your SageMaker account or an algorithm
+// in Amazon Web Services Marketplace that you are subscribed to.
 type SourceAlgorithm struct {
 	AlgorithmName *string `json:"algorithmName,omitempty"`
 	ModelDataURL  *string `json:"modelDataURL,omitempty"`
@@ -2575,20 +2805,19 @@ type SourceAlgorithmSpecification struct {
 
 // Specifies a limit to how long a model training job or model compilation job
 // can run. It also specifies how long a managed spot training job has to complete.
-// When the job reaches the time limit, Amazon SageMaker ends the training or
-// compilation job. Use this API to cap model training costs.
+// When the job reaches the time limit, SageMaker ends the training or compilation
+// job. Use this API to cap model training costs.
 //
-// To stop a training job, Amazon SageMaker sends the algorithm the SIGTERM
-// signal, which delays job termination for 120 seconds. Algorithms can use
-// this 120-second window to save the model artifacts, so the results of training
-// are not lost.
+// To stop a training job, SageMaker sends the algorithm the SIGTERM signal,
+// which delays job termination for 120 seconds. Algorithms can use this 120-second
+// window to save the model artifacts, so the results of training are not lost.
 //
-// The training algorithms provided by Amazon SageMaker automatically save the
-// intermediate results of a model training job when possible. This attempt
-// to save artifacts is only a best effort case as model might not be in a state
-// from which it can be saved. For example, if training has just started, the
-// model might not be ready to save. When saved, this intermediate data is a
-// valid model artifact. You can use it to create a model with CreateModel.
+// The training algorithms provided by SageMaker automatically save the intermediate
+// results of a model training job when possible. This attempt to save artifacts
+// is only a best effort case as model might not be in a state from which it
+// can be saved. For example, if training has just started, the model might
+// not be ready to save. When saved, this intermediate data is a valid model
+// artifact. You can use it to create a model with CreateModel.
 //
 // The Neural Topic Model (NTM) currently does not support saving intermediate
 // model artifacts. When training NTMs, make sure that the maximum runtime is
@@ -2653,20 +2882,19 @@ type TrainingJobDefinition struct {
 	ResourceConfig *ResourceConfig `json:"resourceConfig,omitempty"`
 	// Specifies a limit to how long a model training job or model compilation job
 	// can run. It also specifies how long a managed spot training job has to complete.
-	// When the job reaches the time limit, Amazon SageMaker ends the training or
-	// compilation job. Use this API to cap model training costs.
+	// When the job reaches the time limit, SageMaker ends the training or compilation
+	// job. Use this API to cap model training costs.
 	//
-	// To stop a training job, Amazon SageMaker sends the algorithm the SIGTERM
-	// signal, which delays job termination for 120 seconds. Algorithms can use
-	// this 120-second window to save the model artifacts, so the results of training
-	// are not lost.
+	// To stop a training job, SageMaker sends the algorithm the SIGTERM signal,
+	// which delays job termination for 120 seconds. Algorithms can use this 120-second
+	// window to save the model artifacts, so the results of training are not lost.
 	//
-	// The training algorithms provided by Amazon SageMaker automatically save the
-	// intermediate results of a model training job when possible. This attempt
-	// to save artifacts is only a best effort case as model might not be in a state
-	// from which it can be saved. For example, if training has just started, the
-	// model might not be ready to save. When saved, this intermediate data is a
-	// valid model artifact. You can use it to create a model with CreateModel.
+	// The training algorithms provided by SageMaker automatically save the intermediate
+	// results of a model training job when possible. This attempt to save artifacts
+	// is only a best effort case as model might not be in a state from which it
+	// can be saved. For example, if training has just started, the model might
+	// not be ready to save. When saved, this intermediate data is a valid model
+	// artifact. You can use it to create a model with CreateModel.
 	//
 	// The Neural Topic Model (NTM) currently does not support saving intermediate
 	// model artifacts. When training NTMs, make sure that the maximum runtime is
@@ -2740,7 +2968,7 @@ type TrainingJobSummary struct {
 type TrainingJob_SDK struct {
 	// Specifies the training algorithm to use in a CreateTrainingJob request.
 	//
-	// For more information about algorithms provided by Amazon SageMaker, see Algorithms
+	// For more information about algorithms provided by SageMaker, see Algorithms
 	// (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html). For information
 	// about using your own algorithms, see Using Your Own Algorithms with Amazon
 	// SageMaker (https://docs.aws.amazon.com/sagemaker/latest/dg/your-algorithms.html).
@@ -2794,20 +3022,19 @@ type TrainingJob_SDK struct {
 	SecondaryStatusTransitions []*SecondaryStatusTransition `json:"secondaryStatusTransitions,omitempty"`
 	// Specifies a limit to how long a model training job or model compilation job
 	// can run. It also specifies how long a managed spot training job has to complete.
-	// When the job reaches the time limit, Amazon SageMaker ends the training or
-	// compilation job. Use this API to cap model training costs.
+	// When the job reaches the time limit, SageMaker ends the training or compilation
+	// job. Use this API to cap model training costs.
 	//
-	// To stop a training job, Amazon SageMaker sends the algorithm the SIGTERM
-	// signal, which delays job termination for 120 seconds. Algorithms can use
-	// this 120-second window to save the model artifacts, so the results of training
-	// are not lost.
+	// To stop a training job, SageMaker sends the algorithm the SIGTERM signal,
+	// which delays job termination for 120 seconds. Algorithms can use this 120-second
+	// window to save the model artifacts, so the results of training are not lost.
 	//
-	// The training algorithms provided by Amazon SageMaker automatically save the
-	// intermediate results of a model training job when possible. This attempt
-	// to save artifacts is only a best effort case as model might not be in a state
-	// from which it can be saved. For example, if training has just started, the
-	// model might not be ready to save. When saved, this intermediate data is a
-	// valid model artifact. You can use it to create a model with CreateModel.
+	// The training algorithms provided by SageMaker automatically save the intermediate
+	// results of a model training job when possible. This attempt to save artifacts
+	// is only a best effort case as model might not be in a state from which it
+	// can be saved. For example, if training has just started, the model might
+	// not be ready to save. When saved, this intermediate data is a valid model
+	// artifact. You can use it to create a model with CreateModel.
 	//
 	// The Neural Topic Model (NTM) currently does not support saving intermediate
 	// model artifacts. When training NTMs, make sure that the maximum runtime is

@@ -26,7 +26,7 @@ import (
 type TrainingJobSpec struct {
 	// The registry path of the Docker image that contains the training algorithm
 	// and algorithm-specific metadata, including the input mode. For more information
-	// about algorithms provided by Amazon SageMaker, see Algorithms (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html).
+	// about algorithms provided by SageMaker, see Algorithms (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html).
 	// For information about providing your own algorithms, see Using Your Own Algorithms
 	// with Amazon SageMaker (https://docs.aws.amazon.com/sagemaker/latest/dg/your-algorithms.html).
 	// +kubebuilder:validation:Required
@@ -60,9 +60,9 @@ type TrainingJobSpec struct {
 	// Isolates the training container. No inbound or outbound network calls can
 	// be made, except for calls between peers within a training cluster for distributed
 	// training. If you enable network isolation for training jobs that are configured
-	// to use a VPC, Amazon SageMaker downloads and uploads customer data and model
-	// artifacts through the specified VPC, but the training container does not
-	// have network access.
+	// to use a VPC, SageMaker downloads and uploads customer data and model artifacts
+	// through the specified VPC, but the training container does not have network
+	// access.
 	EnableNetworkIsolation *bool `json:"enableNetworkIsolation,omitempty"`
 	// The environment variables to set in the Docker container.
 	Environment map[string]*string `json:"environment,omitempty"`
@@ -70,8 +70,8 @@ type TrainingJobSpec struct {
 	ExperimentConfig *ExperimentConfig `json:"experimentConfig,omitempty"`
 	// Algorithm-specific parameters that influence the quality of the model. You
 	// set hyperparameters before you start the learning process. For a list of
-	// hyperparameters for each training algorithm provided by Amazon SageMaker,
-	// see Algorithms (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html).
+	// hyperparameters for each training algorithm provided by SageMaker, see Algorithms
+	// (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html).
 	//
 	// You can specify a maximum of 100 hyperparameters. Each hyperparameter is
 	// a key-value pair. Each key and value is limited to 256 characters, as specified
@@ -87,14 +87,14 @@ type TrainingJobSpec struct {
 	// data: the MIME type, compression method, and whether the data is wrapped
 	// in RecordIO format.
 	//
-	// Depending on the input mode that the algorithm supports, Amazon SageMaker
-	// either copies input data files from an S3 bucket to a local directory in
-	// the Docker container, or makes it available as input streams. For example,
-	// if you specify an EFS location, input data files will be made available as
-	// input streams. They do not need to be downloaded.
+	// Depending on the input mode that the algorithm supports, SageMaker either
+	// copies input data files from an S3 bucket to a local directory in the Docker
+	// container, or makes it available as input streams. For example, if you specify
+	// an EFS location, input data files are available as input streams. They do
+	// not need to be downloaded.
 	InputDataConfig []*Channel `json:"inputDataConfig,omitempty"`
 	// Specifies the path to the S3 location where you want to store model artifacts.
-	// Amazon SageMaker creates subfolders for the artifacts.
+	// SageMaker creates subfolders for the artifacts.
 	// +kubebuilder:validation:Required
 	OutputDataConfig *OutputDataConfig `json:"outputDataConfig"`
 
@@ -107,33 +107,32 @@ type TrainingJobSpec struct {
 	//
 	// ML storage volumes store model artifacts and incremental states. Training
 	// algorithms might also use ML storage volumes for scratch space. If you want
-	// Amazon SageMaker to use the ML storage volume to store the training data,
-	// choose File as the TrainingInputMode in the algorithm specification. For
-	// distributed training algorithms, specify an instance count greater than 1.
+	// SageMaker to use the ML storage volume to store the training data, choose
+	// File as the TrainingInputMode in the algorithm specification. For distributed
+	// training algorithms, specify an instance count greater than 1.
 	// +kubebuilder:validation:Required
 	ResourceConfig *ResourceConfig `json:"resourceConfig"`
-	// The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
-	// to perform tasks on your behalf.
+	// The Amazon Resource Name (ARN) of an IAM role that SageMaker can assume to
+	// perform tasks on your behalf.
 	//
-	// During model training, Amazon SageMaker needs your permission to read input
-	// data from an S3 bucket, download a Docker image that contains training code,
-	// write model artifacts to an S3 bucket, write logs to Amazon CloudWatch Logs,
-	// and publish metrics to Amazon CloudWatch. You grant permissions for all of
-	// these tasks to an IAM role. For more information, see Amazon SageMaker Roles
-	// (https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-roles.html).
+	// During model training, SageMaker needs your permission to read input data
+	// from an S3 bucket, download a Docker image that contains training code, write
+	// model artifacts to an S3 bucket, write logs to Amazon CloudWatch Logs, and
+	// publish metrics to Amazon CloudWatch. You grant permissions for all of these
+	// tasks to an IAM role. For more information, see SageMaker Roles (https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-roles.html).
 	//
-	// To be able to pass this role to Amazon SageMaker, the caller of this API
-	// must have the iam:PassRole permission.
+	// To be able to pass this role to SageMaker, the caller of this API must have
+	// the iam:PassRole permission.
 	// +kubebuilder:validation:Required
 	RoleARN *string `json:"roleARN"`
 	// Specifies a limit to how long a model training job can run. It also specifies
 	// how long a managed Spot training job has to complete. When the job reaches
-	// the time limit, Amazon SageMaker ends the training job. Use this API to cap
-	// model training costs.
+	// the time limit, SageMaker ends the training job. Use this API to cap model
+	// training costs.
 	//
-	// To stop a job, Amazon SageMaker sends the algorithm the SIGTERM signal, which
-	// delays job termination for 120 seconds. Algorithms can use this 120-second
-	// window to save the model artifacts, so the results of training are not lost.
+	// To stop a job, SageMaker sends the algorithm the SIGTERM signal, which delays
+	// job termination for 120 seconds. Algorithms can use this 120-second window
+	// to save the model artifacts, so the results of training are not lost.
 	// +kubebuilder:validation:Required
 	StoppingCondition *StoppingCondition `json:"stoppingCondition"`
 	// An array of key-value pairs. You can use tags to categorize your Amazon Web
@@ -184,8 +183,8 @@ type TrainingJobStatus struct {
 	// information on the secondary status of the training job, see StatusMessage
 	// under SecondaryStatusTransition.
 	//
-	// Amazon SageMaker provides primary statuses and secondary statuses that apply
-	// to each of them:
+	// SageMaker provides primary statuses and secondary statuses that apply to
+	// each of them:
 	//
 	// InProgress
 	//
@@ -239,7 +238,7 @@ type TrainingJobStatus struct {
 	SecondaryStatus *string `json:"secondaryStatus,omitempty"`
 	// The status of the training job.
 	//
-	// Amazon SageMaker provides the following training job statuses:
+	// SageMaker provides the following training job statuses:
 	//
 	//    * InProgress - The training is in progress.
 	//

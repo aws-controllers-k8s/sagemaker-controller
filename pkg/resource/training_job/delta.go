@@ -242,6 +242,9 @@ func newResourceDelta(
 				delta.Add("Spec.ResourceConfig.InstanceCount", a.ko.Spec.ResourceConfig.InstanceCount, b.ko.Spec.ResourceConfig.InstanceCount)
 			}
 		}
+		if !reflect.DeepEqual(a.ko.Spec.ResourceConfig.InstanceGroups, b.ko.Spec.ResourceConfig.InstanceGroups) {
+			delta.Add("Spec.ResourceConfig.InstanceGroups", a.ko.Spec.ResourceConfig.InstanceGroups, b.ko.Spec.ResourceConfig.InstanceGroups)
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.ResourceConfig.InstanceType, b.ko.Spec.ResourceConfig.InstanceType) {
 			delta.Add("Spec.ResourceConfig.InstanceType", a.ko.Spec.ResourceConfig.InstanceType, b.ko.Spec.ResourceConfig.InstanceType)
 		} else if a.ko.Spec.ResourceConfig.InstanceType != nil && b.ko.Spec.ResourceConfig.InstanceType != nil {

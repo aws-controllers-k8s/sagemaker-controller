@@ -110,6 +110,14 @@ const (
 	AppInstanceType_ml_r5_12xlarge   AppInstanceType = "ml.r5.12xlarge"
 	AppInstanceType_ml_r5_16xlarge   AppInstanceType = "ml.r5.16xlarge"
 	AppInstanceType_ml_r5_24xlarge   AppInstanceType = "ml.r5.24xlarge"
+	AppInstanceType_ml_g5_xlarge     AppInstanceType = "ml.g5.xlarge"
+	AppInstanceType_ml_g5_2xlarge    AppInstanceType = "ml.g5.2xlarge"
+	AppInstanceType_ml_g5_4xlarge    AppInstanceType = "ml.g5.4xlarge"
+	AppInstanceType_ml_g5_8xlarge    AppInstanceType = "ml.g5.8xlarge"
+	AppInstanceType_ml_g5_16xlarge   AppInstanceType = "ml.g5.16xlarge"
+	AppInstanceType_ml_g5_12xlarge   AppInstanceType = "ml.g5.12xlarge"
+	AppInstanceType_ml_g5_24xlarge   AppInstanceType = "ml.g5.24xlarge"
+	AppInstanceType_ml_g5_48xlarge   AppInstanceType = "ml.g5.48xlarge"
 )
 
 type AppNetworkAccessType string
@@ -202,6 +210,13 @@ const (
 	AuthMode_IAM AuthMode = "IAM"
 )
 
+type AutoMLChannelType string
+
+const (
+	AutoMLChannelType_training   AutoMLChannelType = "training"
+	AutoMLChannelType_validation AutoMLChannelType = "validation"
+)
+
 type AutoMLJobObjectiveType string
 
 const (
@@ -227,6 +242,8 @@ const (
 	AutoMLJobSecondaryStatus_ExplainabilityError            AutoMLJobSecondaryStatus = "ExplainabilityError"
 	AutoMLJobSecondaryStatus_DeployingModel                 AutoMLJobSecondaryStatus = "DeployingModel"
 	AutoMLJobSecondaryStatus_ModelDeploymentError           AutoMLJobSecondaryStatus = "ModelDeploymentError"
+	AutoMLJobSecondaryStatus_GeneratingModelInsightsReport  AutoMLJobSecondaryStatus = "GeneratingModelInsightsReport"
+	AutoMLJobSecondaryStatus_ModelInsightsError             AutoMLJobSecondaryStatus = "ModelInsightsError"
 )
 
 type AutoMLJobStatus string
@@ -247,6 +264,25 @@ const (
 	AutoMLMetricEnum_F1       AutoMLMetricEnum = "F1"
 	AutoMLMetricEnum_F1macro  AutoMLMetricEnum = "F1macro"
 	AutoMLMetricEnum_AUC      AutoMLMetricEnum = "AUC"
+)
+
+type AutoMLMetricExtendedEnum string
+
+const (
+	AutoMLMetricExtendedEnum_Accuracy         AutoMLMetricExtendedEnum = "Accuracy"
+	AutoMLMetricExtendedEnum_MSE              AutoMLMetricExtendedEnum = "MSE"
+	AutoMLMetricExtendedEnum_F1               AutoMLMetricExtendedEnum = "F1"
+	AutoMLMetricExtendedEnum_F1macro          AutoMLMetricExtendedEnum = "F1macro"
+	AutoMLMetricExtendedEnum_AUC              AutoMLMetricExtendedEnum = "AUC"
+	AutoMLMetricExtendedEnum_RMSE             AutoMLMetricExtendedEnum = "RMSE"
+	AutoMLMetricExtendedEnum_MAE              AutoMLMetricExtendedEnum = "MAE"
+	AutoMLMetricExtendedEnum_R2               AutoMLMetricExtendedEnum = "R2"
+	AutoMLMetricExtendedEnum_BalancedAccuracy AutoMLMetricExtendedEnum = "BalancedAccuracy"
+	AutoMLMetricExtendedEnum_Precision        AutoMLMetricExtendedEnum = "Precision"
+	AutoMLMetricExtendedEnum_PrecisionMacro   AutoMLMetricExtendedEnum = "PrecisionMacro"
+	AutoMLMetricExtendedEnum_Recall           AutoMLMetricExtendedEnum = "Recall"
+	AutoMLMetricExtendedEnum_RecallMacro      AutoMLMetricExtendedEnum = "RecallMacro"
+	AutoMLMetricExtendedEnum_LogLoss          AutoMLMetricExtendedEnum = "LogLoss"
 )
 
 type AutoMLS3DataType string
@@ -411,6 +447,25 @@ const (
 	DetailedModelPackageStatus_Failed     DetailedModelPackageStatus = "Failed"
 )
 
+type DeviceDeploymentStatus string
+
+const (
+	DeviceDeploymentStatus_READYTODEPLOY DeviceDeploymentStatus = "READYTODEPLOY"
+	DeviceDeploymentStatus_INPROGRESS    DeviceDeploymentStatus = "INPROGRESS"
+	DeviceDeploymentStatus_DEPLOYED      DeviceDeploymentStatus = "DEPLOYED"
+	DeviceDeploymentStatus_FAILED        DeviceDeploymentStatus = "FAILED"
+	DeviceDeploymentStatus_STOPPING      DeviceDeploymentStatus = "STOPPING"
+	DeviceDeploymentStatus_STOPPED       DeviceDeploymentStatus = "STOPPED"
+)
+
+type DeviceSubsetType string
+
+const (
+	DeviceSubsetType_PERCENTAGE   DeviceSubsetType = "PERCENTAGE"
+	DeviceSubsetType_SELECTION    DeviceSubsetType = "SELECTION"
+	DeviceSubsetType_NAMECONTAINS DeviceSubsetType = "NAMECONTAINS"
+)
+
 type DirectInternetAccess string
 
 const (
@@ -490,6 +545,13 @@ const (
 	EndpointStatus_SDK_Failed         EndpointStatus_SDK = "Failed"
 )
 
+type ExecutionRoleIdentityConfig string
+
+const (
+	ExecutionRoleIdentityConfig_USER_PROFILE_NAME ExecutionRoleIdentityConfig = "USER_PROFILE_NAME"
+	ExecutionRoleIdentityConfig_DISABLED          ExecutionRoleIdentityConfig = "DISABLED"
+)
+
 type ExecutionStatus string
 
 const (
@@ -500,6 +562,13 @@ const (
 	ExecutionStatus_Failed                  ExecutionStatus = "Failed"
 	ExecutionStatus_Stopping                ExecutionStatus = "Stopping"
 	ExecutionStatus_Stopped                 ExecutionStatus = "Stopped"
+)
+
+type FailureHandlingPolicy string
+
+const (
+	FailureHandlingPolicy_ROLLBACK_ON_FAILURE FailureHandlingPolicy = "ROLLBACK_ON_FAILURE"
+	FailureHandlingPolicy_DO_NOTHING          FailureHandlingPolicy = "DO_NOTHING"
 )
 
 type FeatureGroupSortBy string
@@ -587,6 +656,12 @@ const (
 	HyperParameterScalingType_Linear             HyperParameterScalingType = "Linear"
 	HyperParameterScalingType_Logarithmic        HyperParameterScalingType = "Logarithmic"
 	HyperParameterScalingType_ReverseLogarithmic HyperParameterScalingType = "ReverseLogarithmic"
+)
+
+type HyperParameterTuningAllocationStrategy string
+
+const (
+	HyperParameterTuningAllocationStrategy_Prioritized HyperParameterTuningAllocationStrategy = "Prioritized"
 )
 
 type HyperParameterTuningJobObjectiveType string
@@ -758,6 +833,14 @@ const (
 	InstanceType_ml_r5_12xlarge   InstanceType = "ml.r5.12xlarge"
 	InstanceType_ml_r5_16xlarge   InstanceType = "ml.r5.16xlarge"
 	InstanceType_ml_r5_24xlarge   InstanceType = "ml.r5.24xlarge"
+	InstanceType_ml_g5_xlarge     InstanceType = "ml.g5.xlarge"
+	InstanceType_ml_g5_2xlarge    InstanceType = "ml.g5.2xlarge"
+	InstanceType_ml_g5_4xlarge    InstanceType = "ml.g5.4xlarge"
+	InstanceType_ml_g5_8xlarge    InstanceType = "ml.g5.8xlarge"
+	InstanceType_ml_g5_16xlarge   InstanceType = "ml.g5.16xlarge"
+	InstanceType_ml_g5_12xlarge   InstanceType = "ml.g5.12xlarge"
+	InstanceType_ml_g5_24xlarge   InstanceType = "ml.g5.24xlarge"
+	InstanceType_ml_g5_48xlarge   InstanceType = "ml.g5.48xlarge"
 )
 
 type JoinSource string
@@ -776,6 +859,14 @@ const (
 	LabelingJobStatus_Failed       LabelingJobStatus = "Failed"
 	LabelingJobStatus_Stopping     LabelingJobStatus = "Stopping"
 	LabelingJobStatus_Stopped      LabelingJobStatus = "Stopped"
+)
+
+type LastUpdateStatusValue string
+
+const (
+	LastUpdateStatusValue_Successful LastUpdateStatusValue = "Successful"
+	LastUpdateStatusValue_Failed     LastUpdateStatusValue = "Failed"
+	LastUpdateStatusValue_InProgress LastUpdateStatusValue = "InProgress"
 )
 
 type LineageType string
@@ -801,6 +892,15 @@ const (
 	ListDeviceFleetsSortBy_NAME               ListDeviceFleetsSortBy = "NAME"
 	ListDeviceFleetsSortBy_CREATION_TIME      ListDeviceFleetsSortBy = "CREATION_TIME"
 	ListDeviceFleetsSortBy_LAST_MODIFIED_TIME ListDeviceFleetsSortBy = "LAST_MODIFIED_TIME"
+)
+
+type ListEdgeDeploymentPlansSortBy string
+
+const (
+	ListEdgeDeploymentPlansSortBy_NAME               ListEdgeDeploymentPlansSortBy = "NAME"
+	ListEdgeDeploymentPlansSortBy_DEVICE_FLEET_NAME  ListEdgeDeploymentPlansSortBy = "DEVICE_FLEET_NAME"
+	ListEdgeDeploymentPlansSortBy_CREATION_TIME      ListEdgeDeploymentPlansSortBy = "CREATION_TIME"
+	ListEdgeDeploymentPlansSortBy_LAST_MODIFIED_TIME ListEdgeDeploymentPlansSortBy = "LAST_MODIFIED_TIME"
 )
 
 type ListEdgePackagingJobsSortBy string
@@ -1268,6 +1368,24 @@ const (
 	ProductionVariantInstanceType_ml_inf1_2xlarge  ProductionVariantInstanceType = "ml.inf1.2xlarge"
 	ProductionVariantInstanceType_ml_inf1_6xlarge  ProductionVariantInstanceType = "ml.inf1.6xlarge"
 	ProductionVariantInstanceType_ml_inf1_24xlarge ProductionVariantInstanceType = "ml.inf1.24xlarge"
+	ProductionVariantInstanceType_ml_c6i_large     ProductionVariantInstanceType = "ml.c6i.large"
+	ProductionVariantInstanceType_ml_c6i_xlarge    ProductionVariantInstanceType = "ml.c6i.xlarge"
+	ProductionVariantInstanceType_ml_c6i_2xlarge   ProductionVariantInstanceType = "ml.c6i.2xlarge"
+	ProductionVariantInstanceType_ml_c6i_4xlarge   ProductionVariantInstanceType = "ml.c6i.4xlarge"
+	ProductionVariantInstanceType_ml_c6i_8xlarge   ProductionVariantInstanceType = "ml.c6i.8xlarge"
+	ProductionVariantInstanceType_ml_c6i_12xlarge  ProductionVariantInstanceType = "ml.c6i.12xlarge"
+	ProductionVariantInstanceType_ml_c6i_16xlarge  ProductionVariantInstanceType = "ml.c6i.16xlarge"
+	ProductionVariantInstanceType_ml_c6i_24xlarge  ProductionVariantInstanceType = "ml.c6i.24xlarge"
+	ProductionVariantInstanceType_ml_c6i_32xlarge  ProductionVariantInstanceType = "ml.c6i.32xlarge"
+	ProductionVariantInstanceType_ml_g5_xlarge     ProductionVariantInstanceType = "ml.g5.xlarge"
+	ProductionVariantInstanceType_ml_g5_2xlarge    ProductionVariantInstanceType = "ml.g5.2xlarge"
+	ProductionVariantInstanceType_ml_g5_4xlarge    ProductionVariantInstanceType = "ml.g5.4xlarge"
+	ProductionVariantInstanceType_ml_g5_8xlarge    ProductionVariantInstanceType = "ml.g5.8xlarge"
+	ProductionVariantInstanceType_ml_g5_12xlarge   ProductionVariantInstanceType = "ml.g5.12xlarge"
+	ProductionVariantInstanceType_ml_g5_16xlarge   ProductionVariantInstanceType = "ml.g5.16xlarge"
+	ProductionVariantInstanceType_ml_g5_24xlarge   ProductionVariantInstanceType = "ml.g5.24xlarge"
+	ProductionVariantInstanceType_ml_g5_48xlarge   ProductionVariantInstanceType = "ml.g5.48xlarge"
+	ProductionVariantInstanceType_ml_p4d_24xlarge  ProductionVariantInstanceType = "ml.p4d.24xlarge"
 )
 
 type ProfilingStatus string
@@ -1383,6 +1501,8 @@ const (
 	ResourceType_PipelineExecution        ResourceType = "PipelineExecution"
 	ResourceType_FeatureGroup             ResourceType = "FeatureGroup"
 	ResourceType_Project                  ResourceType = "Project"
+	ResourceType_FeatureMetadata          ResourceType = "FeatureMetadata"
+	ResourceType_HyperParameterTuningJob  ResourceType = "HyperParameterTuningJob"
 )
 
 type RetentionType string
@@ -1565,6 +1685,19 @@ const (
 	SplitType_TFRecord SplitType = "TFRecord"
 )
 
+type StageStatus string
+
+const (
+	StageStatus_CREATING      StageStatus = "CREATING"
+	StageStatus_READYTODEPLOY StageStatus = "READYTODEPLOY"
+	StageStatus_STARTING      StageStatus = "STARTING"
+	StageStatus_INPROGRESS    StageStatus = "INPROGRESS"
+	StageStatus_DEPLOYED      StageStatus = "DEPLOYED"
+	StageStatus_FAILED        StageStatus = "FAILED"
+	StageStatus_STOPPING      StageStatus = "STOPPING"
+	StageStatus_STOPPED       StageStatus = "STOPPED"
+)
+
 type StepStatus string
 
 const (
@@ -1634,6 +1767,7 @@ const (
 	TargetPlatformAccelerator_INTEL_GRAPHICS TargetPlatformAccelerator = "INTEL_GRAPHICS"
 	TargetPlatformAccelerator_MALI           TargetPlatformAccelerator = "MALI"
 	TargetPlatformAccelerator_NVIDIA         TargetPlatformAccelerator = "NVIDIA"
+	TargetPlatformAccelerator_NNA            TargetPlatformAccelerator = "NNA"
 )
 
 type TargetPlatformArch string
@@ -1845,4 +1979,14 @@ const (
 	VariantStatus_Deleting          VariantStatus = "Deleting"
 	VariantStatus_ActivatingTraffic VariantStatus = "ActivatingTraffic"
 	VariantStatus_Baking            VariantStatus = "Baking"
+)
+
+type WorkforceStatus string
+
+const (
+	WorkforceStatus_Initializing WorkforceStatus = "Initializing"
+	WorkforceStatus_Updating     WorkforceStatus = "Updating"
+	WorkforceStatus_Deleting     WorkforceStatus = "Deleting"
+	WorkforceStatus_Failed       WorkforceStatus = "Failed"
+	WorkforceStatus_Active       WorkforceStatus = "Active"
 )

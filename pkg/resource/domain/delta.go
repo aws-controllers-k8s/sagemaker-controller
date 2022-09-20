@@ -246,6 +246,13 @@ func newResourceDelta(
 	if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings, b.ko.Spec.DomainSettings) {
 		delta.Add("Spec.DomainSettings", a.ko.Spec.DomainSettings, b.ko.Spec.DomainSettings)
 	} else if a.ko.Spec.DomainSettings != nil && b.ko.Spec.DomainSettings != nil {
+		if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.ExecutionRoleIdentityConfig, b.ko.Spec.DomainSettings.ExecutionRoleIdentityConfig) {
+			delta.Add("Spec.DomainSettings.ExecutionRoleIdentityConfig", a.ko.Spec.DomainSettings.ExecutionRoleIdentityConfig, b.ko.Spec.DomainSettings.ExecutionRoleIdentityConfig)
+		} else if a.ko.Spec.DomainSettings.ExecutionRoleIdentityConfig != nil && b.ko.Spec.DomainSettings.ExecutionRoleIdentityConfig != nil {
+			if *a.ko.Spec.DomainSettings.ExecutionRoleIdentityConfig != *b.ko.Spec.DomainSettings.ExecutionRoleIdentityConfig {
+				delta.Add("Spec.DomainSettings.ExecutionRoleIdentityConfig", a.ko.Spec.DomainSettings.ExecutionRoleIdentityConfig, b.ko.Spec.DomainSettings.ExecutionRoleIdentityConfig)
+			}
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.RStudioServerProDomainSettings, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings) {
 			delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings)
 		} else if a.ko.Spec.DomainSettings.RStudioServerProDomainSettings != nil && b.ko.Spec.DomainSettings.RStudioServerProDomainSettings != nil {

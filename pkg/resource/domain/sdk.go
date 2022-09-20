@@ -257,43 +257,46 @@ func (rm *resourceManager) sdkFind(
 	}
 	if resp.DomainSettings != nil {
 		f8 := &svcapitypes.DomainSettings{}
+		if resp.DomainSettings.ExecutionRoleIdentityConfig != nil {
+			f8.ExecutionRoleIdentityConfig = resp.DomainSettings.ExecutionRoleIdentityConfig
+		}
 		if resp.DomainSettings.RStudioServerProDomainSettings != nil {
-			f8f0 := &svcapitypes.RStudioServerProDomainSettings{}
+			f8f1 := &svcapitypes.RStudioServerProDomainSettings{}
 			if resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec != nil {
-				f8f0f0 := &svcapitypes.ResourceSpec{}
+				f8f1f0 := &svcapitypes.ResourceSpec{}
 				if resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType != nil {
-					f8f0f0.InstanceType = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType
+					f8f1f0.InstanceType = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType
 				}
 				if resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigArn != nil {
-					f8f0f0.LifecycleConfigARN = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigArn
+					f8f1f0.LifecycleConfigARN = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigArn
 				}
 				if resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageArn != nil {
-					f8f0f0.SageMakerImageARN = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageArn
+					f8f1f0.SageMakerImageARN = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageArn
 				}
 				if resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionArn != nil {
-					f8f0f0.SageMakerImageVersionARN = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionArn
+					f8f1f0.SageMakerImageVersionARN = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionArn
 				}
-				f8f0.DefaultResourceSpec = f8f0f0
+				f8f1.DefaultResourceSpec = f8f1f0
 			}
 			if resp.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleArn != nil {
-				f8f0.DomainExecutionRoleARN = resp.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleArn
+				f8f1.DomainExecutionRoleARN = resp.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleArn
 			}
 			if resp.DomainSettings.RStudioServerProDomainSettings.RStudioConnectUrl != nil {
-				f8f0.RStudioConnectURL = resp.DomainSettings.RStudioServerProDomainSettings.RStudioConnectUrl
+				f8f1.RStudioConnectURL = resp.DomainSettings.RStudioServerProDomainSettings.RStudioConnectUrl
 			}
 			if resp.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerUrl != nil {
-				f8f0.RStudioPackageManagerURL = resp.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerUrl
+				f8f1.RStudioPackageManagerURL = resp.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerUrl
 			}
-			f8.RStudioServerProDomainSettings = f8f0
+			f8.RStudioServerProDomainSettings = f8f1
 		}
 		if resp.DomainSettings.SecurityGroupIds != nil {
-			f8f1 := []*string{}
-			for _, f8f1iter := range resp.DomainSettings.SecurityGroupIds {
-				var f8f1elem string
-				f8f1elem = *f8f1iter
-				f8f1 = append(f8f1, &f8f1elem)
+			f8f2 := []*string{}
+			for _, f8f2iter := range resp.DomainSettings.SecurityGroupIds {
+				var f8f2elem string
+				f8f2elem = *f8f2iter
+				f8f2 = append(f8f2, &f8f2elem)
 			}
-			f8.SecurityGroupIDs = f8f1
+			f8.SecurityGroupIDs = f8f2
 		}
 		ko.Spec.DomainSettings = f8
 	} else {
@@ -571,43 +574,46 @@ func (rm *resourceManager) newCreateRequestPayload(
 	}
 	if r.ko.Spec.DomainSettings != nil {
 		f5 := &svcsdk.DomainSettings{}
+		if r.ko.Spec.DomainSettings.ExecutionRoleIdentityConfig != nil {
+			f5.SetExecutionRoleIdentityConfig(*r.ko.Spec.DomainSettings.ExecutionRoleIdentityConfig)
+		}
 		if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings != nil {
-			f5f0 := &svcsdk.RStudioServerProDomainSettings{}
+			f5f1 := &svcsdk.RStudioServerProDomainSettings{}
 			if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec != nil {
-				f5f0f0 := &svcsdk.ResourceSpec{}
+				f5f1f0 := &svcsdk.ResourceSpec{}
 				if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType != nil {
-					f5f0f0.SetInstanceType(*r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType)
+					f5f1f0.SetInstanceType(*r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType)
 				}
 				if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
-					f5f0f0.SetLifecycleConfigArn(*r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN)
+					f5f1f0.SetLifecycleConfigArn(*r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN)
 				}
 				if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN != nil {
-					f5f0f0.SetSageMakerImageArn(*r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN)
+					f5f1f0.SetSageMakerImageArn(*r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN)
 				}
 				if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
-					f5f0f0.SetSageMakerImageVersionArn(*r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN)
+					f5f1f0.SetSageMakerImageVersionArn(*r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN)
 				}
-				f5f0.SetDefaultResourceSpec(f5f0f0)
+				f5f1.SetDefaultResourceSpec(f5f1f0)
 			}
 			if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN != nil {
-				f5f0.SetDomainExecutionRoleArn(*r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN)
+				f5f1.SetDomainExecutionRoleArn(*r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN)
 			}
 			if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL != nil {
-				f5f0.SetRStudioConnectUrl(*r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL)
+				f5f1.SetRStudioConnectUrl(*r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL)
 			}
 			if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL != nil {
-				f5f0.SetRStudioPackageManagerUrl(*r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL)
+				f5f1.SetRStudioPackageManagerUrl(*r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL)
 			}
-			f5.SetRStudioServerProDomainSettings(f5f0)
+			f5.SetRStudioServerProDomainSettings(f5f1)
 		}
 		if r.ko.Spec.DomainSettings.SecurityGroupIDs != nil {
-			f5f1 := []*string{}
-			for _, f5f1iter := range r.ko.Spec.DomainSettings.SecurityGroupIDs {
-				var f5f1elem string
-				f5f1elem = *f5f1iter
-				f5f1 = append(f5f1, &f5f1elem)
+			f5f2 := []*string{}
+			for _, f5f2iter := range r.ko.Spec.DomainSettings.SecurityGroupIDs {
+				var f5f2elem string
+				f5f2elem = *f5f2iter
+				f5f2 = append(f5f2, &f5f2elem)
 			}
-			f5.SetSecurityGroupIds(f5f1)
+			f5.SetSecurityGroupIds(f5f2)
 		}
 		res.SetDomainSettings(f5)
 	}

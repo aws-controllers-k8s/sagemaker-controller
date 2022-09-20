@@ -1264,6 +1264,162 @@ func (_m *SageMakerAPI) CreateDomainWithContext(_a0 context.Context, _a1 *sagema
 	return r0, r1
 }
 
+// CreateEdgeDeploymentPlan provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) CreateEdgeDeploymentPlan(_a0 *sagemaker.CreateEdgeDeploymentPlanInput) (*sagemaker.CreateEdgeDeploymentPlanOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.CreateEdgeDeploymentPlanOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.CreateEdgeDeploymentPlanInput) *sagemaker.CreateEdgeDeploymentPlanOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.CreateEdgeDeploymentPlanOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.CreateEdgeDeploymentPlanInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// CreateEdgeDeploymentPlanRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) CreateEdgeDeploymentPlanRequest(_a0 *sagemaker.CreateEdgeDeploymentPlanInput) (*request.Request, *sagemaker.CreateEdgeDeploymentPlanOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.CreateEdgeDeploymentPlanInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.CreateEdgeDeploymentPlanOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.CreateEdgeDeploymentPlanInput) *sagemaker.CreateEdgeDeploymentPlanOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.CreateEdgeDeploymentPlanOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// CreateEdgeDeploymentPlanWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) CreateEdgeDeploymentPlanWithContext(_a0 context.Context, _a1 *sagemaker.CreateEdgeDeploymentPlanInput, _a2 ...request.Option) (*sagemaker.CreateEdgeDeploymentPlanOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.CreateEdgeDeploymentPlanOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.CreateEdgeDeploymentPlanInput, ...request.Option) *sagemaker.CreateEdgeDeploymentPlanOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.CreateEdgeDeploymentPlanOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.CreateEdgeDeploymentPlanInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// CreateEdgeDeploymentStage provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) CreateEdgeDeploymentStage(_a0 *sagemaker.CreateEdgeDeploymentStageInput) (*sagemaker.CreateEdgeDeploymentStageOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.CreateEdgeDeploymentStageOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.CreateEdgeDeploymentStageInput) *sagemaker.CreateEdgeDeploymentStageOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.CreateEdgeDeploymentStageOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.CreateEdgeDeploymentStageInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// CreateEdgeDeploymentStageRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) CreateEdgeDeploymentStageRequest(_a0 *sagemaker.CreateEdgeDeploymentStageInput) (*request.Request, *sagemaker.CreateEdgeDeploymentStageOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.CreateEdgeDeploymentStageInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.CreateEdgeDeploymentStageOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.CreateEdgeDeploymentStageInput) *sagemaker.CreateEdgeDeploymentStageOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.CreateEdgeDeploymentStageOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// CreateEdgeDeploymentStageWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) CreateEdgeDeploymentStageWithContext(_a0 context.Context, _a1 *sagemaker.CreateEdgeDeploymentStageInput, _a2 ...request.Option) (*sagemaker.CreateEdgeDeploymentStageOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.CreateEdgeDeploymentStageOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.CreateEdgeDeploymentStageInput, ...request.Option) *sagemaker.CreateEdgeDeploymentStageOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.CreateEdgeDeploymentStageOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.CreateEdgeDeploymentStageInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // CreateEdgePackagingJob provides a mock function with given fields: _a0
 func (_m *SageMakerAPI) CreateEdgePackagingJob(_a0 *sagemaker.CreateEdgePackagingJobInput) (*sagemaker.CreateEdgePackagingJobOutput, error) {
 	ret := _m.Called(_a0)
@@ -4774,6 +4930,162 @@ func (_m *SageMakerAPI) DeleteDomainWithContext(_a0 context.Context, _a1 *sagema
 	return r0, r1
 }
 
+// DeleteEdgeDeploymentPlan provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) DeleteEdgeDeploymentPlan(_a0 *sagemaker.DeleteEdgeDeploymentPlanInput) (*sagemaker.DeleteEdgeDeploymentPlanOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.DeleteEdgeDeploymentPlanOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.DeleteEdgeDeploymentPlanInput) *sagemaker.DeleteEdgeDeploymentPlanOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.DeleteEdgeDeploymentPlanOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.DeleteEdgeDeploymentPlanInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// DeleteEdgeDeploymentPlanRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) DeleteEdgeDeploymentPlanRequest(_a0 *sagemaker.DeleteEdgeDeploymentPlanInput) (*request.Request, *sagemaker.DeleteEdgeDeploymentPlanOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.DeleteEdgeDeploymentPlanInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.DeleteEdgeDeploymentPlanOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.DeleteEdgeDeploymentPlanInput) *sagemaker.DeleteEdgeDeploymentPlanOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.DeleteEdgeDeploymentPlanOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// DeleteEdgeDeploymentPlanWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) DeleteEdgeDeploymentPlanWithContext(_a0 context.Context, _a1 *sagemaker.DeleteEdgeDeploymentPlanInput, _a2 ...request.Option) (*sagemaker.DeleteEdgeDeploymentPlanOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.DeleteEdgeDeploymentPlanOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.DeleteEdgeDeploymentPlanInput, ...request.Option) *sagemaker.DeleteEdgeDeploymentPlanOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.DeleteEdgeDeploymentPlanOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.DeleteEdgeDeploymentPlanInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// DeleteEdgeDeploymentStage provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) DeleteEdgeDeploymentStage(_a0 *sagemaker.DeleteEdgeDeploymentStageInput) (*sagemaker.DeleteEdgeDeploymentStageOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.DeleteEdgeDeploymentStageOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.DeleteEdgeDeploymentStageInput) *sagemaker.DeleteEdgeDeploymentStageOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.DeleteEdgeDeploymentStageOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.DeleteEdgeDeploymentStageInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// DeleteEdgeDeploymentStageRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) DeleteEdgeDeploymentStageRequest(_a0 *sagemaker.DeleteEdgeDeploymentStageInput) (*request.Request, *sagemaker.DeleteEdgeDeploymentStageOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.DeleteEdgeDeploymentStageInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.DeleteEdgeDeploymentStageOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.DeleteEdgeDeploymentStageInput) *sagemaker.DeleteEdgeDeploymentStageOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.DeleteEdgeDeploymentStageOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// DeleteEdgeDeploymentStageWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) DeleteEdgeDeploymentStageWithContext(_a0 context.Context, _a1 *sagemaker.DeleteEdgeDeploymentStageInput, _a2 ...request.Option) (*sagemaker.DeleteEdgeDeploymentStageOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.DeleteEdgeDeploymentStageOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.DeleteEdgeDeploymentStageInput, ...request.Option) *sagemaker.DeleteEdgeDeploymentStageOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.DeleteEdgeDeploymentStageOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.DeleteEdgeDeploymentStageInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // DeleteEndpoint provides a mock function with given fields: _a0
 func (_m *SageMakerAPI) DeleteEndpoint(_a0 *sagemaker.DeleteEndpointInput) (*sagemaker.DeleteEndpointOutput, error) {
 	ret := _m.Called(_a0)
@@ -7972,6 +8284,84 @@ func (_m *SageMakerAPI) DescribeDomainWithContext(_a0 context.Context, _a1 *sage
 	return r0, r1
 }
 
+// DescribeEdgeDeploymentPlan provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) DescribeEdgeDeploymentPlan(_a0 *sagemaker.DescribeEdgeDeploymentPlanInput) (*sagemaker.DescribeEdgeDeploymentPlanOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.DescribeEdgeDeploymentPlanOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.DescribeEdgeDeploymentPlanInput) *sagemaker.DescribeEdgeDeploymentPlanOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.DescribeEdgeDeploymentPlanOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.DescribeEdgeDeploymentPlanInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// DescribeEdgeDeploymentPlanRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) DescribeEdgeDeploymentPlanRequest(_a0 *sagemaker.DescribeEdgeDeploymentPlanInput) (*request.Request, *sagemaker.DescribeEdgeDeploymentPlanOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.DescribeEdgeDeploymentPlanInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.DescribeEdgeDeploymentPlanOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.DescribeEdgeDeploymentPlanInput) *sagemaker.DescribeEdgeDeploymentPlanOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.DescribeEdgeDeploymentPlanOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// DescribeEdgeDeploymentPlanWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) DescribeEdgeDeploymentPlanWithContext(_a0 context.Context, _a1 *sagemaker.DescribeEdgeDeploymentPlanInput, _a2 ...request.Option) (*sagemaker.DescribeEdgeDeploymentPlanOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.DescribeEdgeDeploymentPlanOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.DescribeEdgeDeploymentPlanInput, ...request.Option) *sagemaker.DescribeEdgeDeploymentPlanOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.DescribeEdgeDeploymentPlanOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.DescribeEdgeDeploymentPlanInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // DescribeEdgePackagingJob provides a mock function with given fields: _a0
 func (_m *SageMakerAPI) DescribeEdgePackagingJob(_a0 *sagemaker.DescribeEdgePackagingJobInput) (*sagemaker.DescribeEdgePackagingJobOutput, error) {
 	ret := _m.Called(_a0)
@@ -8354,6 +8744,84 @@ func (_m *SageMakerAPI) DescribeFeatureGroupWithContext(_a0 context.Context, _a1
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.DescribeFeatureGroupInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// DescribeFeatureMetadata provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) DescribeFeatureMetadata(_a0 *sagemaker.DescribeFeatureMetadataInput) (*sagemaker.DescribeFeatureMetadataOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.DescribeFeatureMetadataOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.DescribeFeatureMetadataInput) *sagemaker.DescribeFeatureMetadataOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.DescribeFeatureMetadataOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.DescribeFeatureMetadataInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// DescribeFeatureMetadataRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) DescribeFeatureMetadataRequest(_a0 *sagemaker.DescribeFeatureMetadataInput) (*request.Request, *sagemaker.DescribeFeatureMetadataOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.DescribeFeatureMetadataInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.DescribeFeatureMetadataOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.DescribeFeatureMetadataInput) *sagemaker.DescribeFeatureMetadataOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.DescribeFeatureMetadataOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// DescribeFeatureMetadataWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) DescribeFeatureMetadataWithContext(_a0 context.Context, _a1 *sagemaker.DescribeFeatureMetadataInput, _a2 ...request.Option) (*sagemaker.DescribeFeatureMetadataOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.DescribeFeatureMetadataOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.DescribeFeatureMetadataInput, ...request.Option) *sagemaker.DescribeFeatureMetadataOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.DescribeFeatureMetadataOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.DescribeFeatureMetadataInput, ...request.Option) error); ok {
 		r1 = rf(_a0, _a1, _a2...)
 	} else {
 		r1 = ret.Error(1)
@@ -13099,6 +13567,119 @@ func (_m *SageMakerAPI) ListDomainsWithContext(_a0 context.Context, _a1 *sagemak
 	return r0, r1
 }
 
+// ListEdgeDeploymentPlans provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) ListEdgeDeploymentPlans(_a0 *sagemaker.ListEdgeDeploymentPlansInput) (*sagemaker.ListEdgeDeploymentPlansOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.ListEdgeDeploymentPlansOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.ListEdgeDeploymentPlansInput) *sagemaker.ListEdgeDeploymentPlansOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.ListEdgeDeploymentPlansOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.ListEdgeDeploymentPlansInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ListEdgeDeploymentPlansPages provides a mock function with given fields: _a0, _a1
+func (_m *SageMakerAPI) ListEdgeDeploymentPlansPages(_a0 *sagemaker.ListEdgeDeploymentPlansInput, _a1 func(*sagemaker.ListEdgeDeploymentPlansOutput, bool) bool) error {
+	ret := _m.Called(_a0, _a1)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*sagemaker.ListEdgeDeploymentPlansInput, func(*sagemaker.ListEdgeDeploymentPlansOutput, bool) bool) error); ok {
+		r0 = rf(_a0, _a1)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// ListEdgeDeploymentPlansPagesWithContext provides a mock function with given fields: _a0, _a1, _a2, _a3
+func (_m *SageMakerAPI) ListEdgeDeploymentPlansPagesWithContext(_a0 context.Context, _a1 *sagemaker.ListEdgeDeploymentPlansInput, _a2 func(*sagemaker.ListEdgeDeploymentPlansOutput, bool) bool, _a3 ...request.Option) error {
+	_va := make([]interface{}, len(_a3))
+	for _i := range _a3 {
+		_va[_i] = _a3[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1, _a2)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.ListEdgeDeploymentPlansInput, func(*sagemaker.ListEdgeDeploymentPlansOutput, bool) bool, ...request.Option) error); ok {
+		r0 = rf(_a0, _a1, _a2, _a3...)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// ListEdgeDeploymentPlansRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) ListEdgeDeploymentPlansRequest(_a0 *sagemaker.ListEdgeDeploymentPlansInput) (*request.Request, *sagemaker.ListEdgeDeploymentPlansOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.ListEdgeDeploymentPlansInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.ListEdgeDeploymentPlansOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.ListEdgeDeploymentPlansInput) *sagemaker.ListEdgeDeploymentPlansOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.ListEdgeDeploymentPlansOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// ListEdgeDeploymentPlansWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) ListEdgeDeploymentPlansWithContext(_a0 context.Context, _a1 *sagemaker.ListEdgeDeploymentPlansInput, _a2 ...request.Option) (*sagemaker.ListEdgeDeploymentPlansOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.ListEdgeDeploymentPlansOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.ListEdgeDeploymentPlansInput, ...request.Option) *sagemaker.ListEdgeDeploymentPlansOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.ListEdgeDeploymentPlansOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.ListEdgeDeploymentPlansInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // ListEdgePackagingJobs provides a mock function with given fields: _a0
 func (_m *SageMakerAPI) ListEdgePackagingJobs(_a0 *sagemaker.ListEdgePackagingJobsInput) (*sagemaker.ListEdgePackagingJobsOutput, error) {
 	ret := _m.Called(_a0)
@@ -16602,6 +17183,119 @@ func (_m *SageMakerAPI) ListProjectsWithContext(_a0 context.Context, _a1 *sagema
 	return r0, r1
 }
 
+// ListStageDevices provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) ListStageDevices(_a0 *sagemaker.ListStageDevicesInput) (*sagemaker.ListStageDevicesOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.ListStageDevicesOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.ListStageDevicesInput) *sagemaker.ListStageDevicesOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.ListStageDevicesOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.ListStageDevicesInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ListStageDevicesPages provides a mock function with given fields: _a0, _a1
+func (_m *SageMakerAPI) ListStageDevicesPages(_a0 *sagemaker.ListStageDevicesInput, _a1 func(*sagemaker.ListStageDevicesOutput, bool) bool) error {
+	ret := _m.Called(_a0, _a1)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*sagemaker.ListStageDevicesInput, func(*sagemaker.ListStageDevicesOutput, bool) bool) error); ok {
+		r0 = rf(_a0, _a1)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// ListStageDevicesPagesWithContext provides a mock function with given fields: _a0, _a1, _a2, _a3
+func (_m *SageMakerAPI) ListStageDevicesPagesWithContext(_a0 context.Context, _a1 *sagemaker.ListStageDevicesInput, _a2 func(*sagemaker.ListStageDevicesOutput, bool) bool, _a3 ...request.Option) error {
+	_va := make([]interface{}, len(_a3))
+	for _i := range _a3 {
+		_va[_i] = _a3[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1, _a2)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.ListStageDevicesInput, func(*sagemaker.ListStageDevicesOutput, bool) bool, ...request.Option) error); ok {
+		r0 = rf(_a0, _a1, _a2, _a3...)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// ListStageDevicesRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) ListStageDevicesRequest(_a0 *sagemaker.ListStageDevicesInput) (*request.Request, *sagemaker.ListStageDevicesOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.ListStageDevicesInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.ListStageDevicesOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.ListStageDevicesInput) *sagemaker.ListStageDevicesOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.ListStageDevicesOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// ListStageDevicesWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) ListStageDevicesWithContext(_a0 context.Context, _a1 *sagemaker.ListStageDevicesInput, _a2 ...request.Option) (*sagemaker.ListStageDevicesOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.ListStageDevicesOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.ListStageDevicesInput, ...request.Option) *sagemaker.ListStageDevicesOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.ListStageDevicesOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.ListStageDevicesInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // ListStudioLifecycleConfigs provides a mock function with given fields: _a0
 func (_m *SageMakerAPI) ListStudioLifecycleConfigs(_a0 *sagemaker.ListStudioLifecycleConfigsInput) (*sagemaker.ListStudioLifecycleConfigsOutput, error) {
 	ret := _m.Called(_a0)
@@ -18539,6 +19233,84 @@ func (_m *SageMakerAPI) SendPipelineExecutionStepSuccessWithContext(_a0 context.
 	return r0, r1
 }
 
+// StartEdgeDeploymentStage provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) StartEdgeDeploymentStage(_a0 *sagemaker.StartEdgeDeploymentStageInput) (*sagemaker.StartEdgeDeploymentStageOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.StartEdgeDeploymentStageOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.StartEdgeDeploymentStageInput) *sagemaker.StartEdgeDeploymentStageOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.StartEdgeDeploymentStageOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.StartEdgeDeploymentStageInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// StartEdgeDeploymentStageRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) StartEdgeDeploymentStageRequest(_a0 *sagemaker.StartEdgeDeploymentStageInput) (*request.Request, *sagemaker.StartEdgeDeploymentStageOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.StartEdgeDeploymentStageInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.StartEdgeDeploymentStageOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.StartEdgeDeploymentStageInput) *sagemaker.StartEdgeDeploymentStageOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.StartEdgeDeploymentStageOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// StartEdgeDeploymentStageWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) StartEdgeDeploymentStageWithContext(_a0 context.Context, _a1 *sagemaker.StartEdgeDeploymentStageInput, _a2 ...request.Option) (*sagemaker.StartEdgeDeploymentStageOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.StartEdgeDeploymentStageOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.StartEdgeDeploymentStageInput, ...request.Option) *sagemaker.StartEdgeDeploymentStageOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.StartEdgeDeploymentStageOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.StartEdgeDeploymentStageInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // StartMonitoringSchedule provides a mock function with given fields: _a0
 func (_m *SageMakerAPI) StartMonitoringSchedule(_a0 *sagemaker.StartMonitoringScheduleInput) (*sagemaker.StartMonitoringScheduleOutput, error) {
 	ret := _m.Called(_a0)
@@ -18921,6 +19693,84 @@ func (_m *SageMakerAPI) StopCompilationJobWithContext(_a0 context.Context, _a1 *
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.StopCompilationJobInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// StopEdgeDeploymentStage provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) StopEdgeDeploymentStage(_a0 *sagemaker.StopEdgeDeploymentStageInput) (*sagemaker.StopEdgeDeploymentStageOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.StopEdgeDeploymentStageOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.StopEdgeDeploymentStageInput) *sagemaker.StopEdgeDeploymentStageOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.StopEdgeDeploymentStageOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.StopEdgeDeploymentStageInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// StopEdgeDeploymentStageRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) StopEdgeDeploymentStageRequest(_a0 *sagemaker.StopEdgeDeploymentStageInput) (*request.Request, *sagemaker.StopEdgeDeploymentStageOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.StopEdgeDeploymentStageInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.StopEdgeDeploymentStageOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.StopEdgeDeploymentStageInput) *sagemaker.StopEdgeDeploymentStageOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.StopEdgeDeploymentStageOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// StopEdgeDeploymentStageWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) StopEdgeDeploymentStageWithContext(_a0 context.Context, _a1 *sagemaker.StopEdgeDeploymentStageInput, _a2 ...request.Option) (*sagemaker.StopEdgeDeploymentStageOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.StopEdgeDeploymentStageOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.StopEdgeDeploymentStageInput, ...request.Option) *sagemaker.StopEdgeDeploymentStageOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.StopEdgeDeploymentStageOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.StopEdgeDeploymentStageInput, ...request.Option) error); ok {
 		r1 = rf(_a0, _a1, _a2...)
 	} else {
 		r1 = ret.Error(1)
@@ -20559,6 +21409,162 @@ func (_m *SageMakerAPI) UpdateExperimentWithContext(_a0 context.Context, _a1 *sa
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.UpdateExperimentInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdateFeatureGroup provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) UpdateFeatureGroup(_a0 *sagemaker.UpdateFeatureGroupInput) (*sagemaker.UpdateFeatureGroupOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.UpdateFeatureGroupOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.UpdateFeatureGroupInput) *sagemaker.UpdateFeatureGroupOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.UpdateFeatureGroupOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.UpdateFeatureGroupInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdateFeatureGroupRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) UpdateFeatureGroupRequest(_a0 *sagemaker.UpdateFeatureGroupInput) (*request.Request, *sagemaker.UpdateFeatureGroupOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.UpdateFeatureGroupInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.UpdateFeatureGroupOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.UpdateFeatureGroupInput) *sagemaker.UpdateFeatureGroupOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.UpdateFeatureGroupOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// UpdateFeatureGroupWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) UpdateFeatureGroupWithContext(_a0 context.Context, _a1 *sagemaker.UpdateFeatureGroupInput, _a2 ...request.Option) (*sagemaker.UpdateFeatureGroupOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.UpdateFeatureGroupOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.UpdateFeatureGroupInput, ...request.Option) *sagemaker.UpdateFeatureGroupOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.UpdateFeatureGroupOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.UpdateFeatureGroupInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdateFeatureMetadata provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) UpdateFeatureMetadata(_a0 *sagemaker.UpdateFeatureMetadataInput) (*sagemaker.UpdateFeatureMetadataOutput, error) {
+	ret := _m.Called(_a0)
+
+	var r0 *sagemaker.UpdateFeatureMetadataOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.UpdateFeatureMetadataInput) *sagemaker.UpdateFeatureMetadataOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.UpdateFeatureMetadataOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*sagemaker.UpdateFeatureMetadataInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdateFeatureMetadataRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) UpdateFeatureMetadataRequest(_a0 *sagemaker.UpdateFeatureMetadataInput) (*request.Request, *sagemaker.UpdateFeatureMetadataOutput) {
+	ret := _m.Called(_a0)
+
+	var r0 *request.Request
+	if rf, ok := ret.Get(0).(func(*sagemaker.UpdateFeatureMetadataInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	var r1 *sagemaker.UpdateFeatureMetadataOutput
+	if rf, ok := ret.Get(1).(func(*sagemaker.UpdateFeatureMetadataInput) *sagemaker.UpdateFeatureMetadataOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.UpdateFeatureMetadataOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// UpdateFeatureMetadataWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) UpdateFeatureMetadataWithContext(_a0 context.Context, _a1 *sagemaker.UpdateFeatureMetadataInput, _a2 ...request.Option) (*sagemaker.UpdateFeatureMetadataOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *sagemaker.UpdateFeatureMetadataOutput
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.UpdateFeatureMetadataInput, ...request.Option) *sagemaker.UpdateFeatureMetadataOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.UpdateFeatureMetadataOutput)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.UpdateFeatureMetadataInput, ...request.Option) error); ok {
 		r1 = rf(_a0, _a1, _a2...)
 	} else {
 		r1 = ret.Error(1)
