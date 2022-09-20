@@ -333,15 +333,6 @@ func (rm *resourceManager) sdkFind(
 						}
 						f16elemf3f1.AttributeNames = f16elemf3f1f0
 					}
-					if f16iter.DataSource.S3DataSource.InstanceGroupNames != nil {
-						f16elemf3f1f1 := []*string{}
-						for _, f16elemf3f1f1iter := range f16iter.DataSource.S3DataSource.InstanceGroupNames {
-							var f16elemf3f1f1elem string
-							f16elemf3f1f1elem = *f16elemf3f1f1iter
-							f16elemf3f1f1 = append(f16elemf3f1f1, &f16elemf3f1f1elem)
-						}
-						f16elemf3f1.InstanceGroupNames = f16elemf3f1f1
-					}
 					if f16iter.DataSource.S3DataSource.S3DataDistributionType != nil {
 						f16elemf3f1.S3DataDistributionType = f16iter.DataSource.S3DataSource.S3DataDistributionType
 					}
@@ -482,23 +473,6 @@ func (rm *resourceManager) sdkFind(
 		f25 := &svcapitypes.ResourceConfig{}
 		if resp.ResourceConfig.InstanceCount != nil {
 			f25.InstanceCount = resp.ResourceConfig.InstanceCount
-		}
-		if resp.ResourceConfig.InstanceGroups != nil {
-			f25f1 := []*svcapitypes.InstanceGroup{}
-			for _, f25f1iter := range resp.ResourceConfig.InstanceGroups {
-				f25f1elem := &svcapitypes.InstanceGroup{}
-				if f25f1iter.InstanceCount != nil {
-					f25f1elem.InstanceCount = f25f1iter.InstanceCount
-				}
-				if f25f1iter.InstanceGroupName != nil {
-					f25f1elem.InstanceGroupName = f25f1iter.InstanceGroupName
-				}
-				if f25f1iter.InstanceType != nil {
-					f25f1elem.InstanceType = f25f1iter.InstanceType
-				}
-				f25f1 = append(f25f1, f25f1elem)
-			}
-			f25.InstanceGroups = f25f1
 		}
 		if resp.ResourceConfig.InstanceType != nil {
 			f25.InstanceType = resp.ResourceConfig.InstanceType
@@ -862,15 +836,6 @@ func (rm *resourceManager) newCreateRequestPayload(
 						}
 						f10elemf3f1.SetAttributeNames(f10elemf3f1f0)
 					}
-					if f10iter.DataSource.S3DataSource.InstanceGroupNames != nil {
-						f10elemf3f1f1 := []*string{}
-						for _, f10elemf3f1f1iter := range f10iter.DataSource.S3DataSource.InstanceGroupNames {
-							var f10elemf3f1f1elem string
-							f10elemf3f1f1elem = *f10elemf3f1f1iter
-							f10elemf3f1f1 = append(f10elemf3f1f1, &f10elemf3f1f1elem)
-						}
-						f10elemf3f1.SetInstanceGroupNames(f10elemf3f1f1)
-					}
 					if f10iter.DataSource.S3DataSource.S3DataDistributionType != nil {
 						f10elemf3f1.SetS3DataDistributionType(*f10iter.DataSource.S3DataSource.S3DataDistributionType)
 					}
@@ -969,23 +934,6 @@ func (rm *resourceManager) newCreateRequestPayload(
 		f14 := &svcsdk.ResourceConfig{}
 		if r.ko.Spec.ResourceConfig.InstanceCount != nil {
 			f14.SetInstanceCount(*r.ko.Spec.ResourceConfig.InstanceCount)
-		}
-		if r.ko.Spec.ResourceConfig.InstanceGroups != nil {
-			f14f1 := []*svcsdk.InstanceGroup{}
-			for _, f14f1iter := range r.ko.Spec.ResourceConfig.InstanceGroups {
-				f14f1elem := &svcsdk.InstanceGroup{}
-				if f14f1iter.InstanceCount != nil {
-					f14f1elem.SetInstanceCount(*f14f1iter.InstanceCount)
-				}
-				if f14f1iter.InstanceGroupName != nil {
-					f14f1elem.SetInstanceGroupName(*f14f1iter.InstanceGroupName)
-				}
-				if f14f1iter.InstanceType != nil {
-					f14f1elem.SetInstanceType(*f14f1iter.InstanceType)
-				}
-				f14f1 = append(f14f1, f14f1elem)
-			}
-			f14.SetInstanceGroups(f14f1)
 		}
 		if r.ko.Spec.ResourceConfig.InstanceType != nil {
 			f14.SetInstanceType(*r.ko.Spec.ResourceConfig.InstanceType)

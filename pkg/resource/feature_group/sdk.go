@@ -375,53 +375,9 @@ func (rm *resourceManager) sdkUpdate(
 	desired *resource,
 	latest *resource,
 	delta *ackcompare.Delta,
-) (updated *resource, err error) {
-	rlog := ackrtlog.FromContext(ctx)
-	exit := rlog.Trace("rm.sdkUpdate")
-	defer func() {
-		exit(err)
-	}()
-	input, err := rm.newUpdateRequestPayload(ctx, desired)
-	if err != nil {
-		return nil, err
-	}
-
-	var resp *svcsdk.UpdateFeatureGroupOutput
-	_ = resp
-	resp, err = rm.sdkapi.UpdateFeatureGroupWithContext(ctx, input)
-	rm.metrics.RecordAPICall("UPDATE", "UpdateFeatureGroup", err)
-	if err != nil {
-		return nil, err
-	}
-	// Merge in the information we read from the API call above to the copy of
-	// the original Kubernetes object we passed to the function
-	ko := desired.ko.DeepCopy()
-
-	if ko.Status.ACKResourceMetadata == nil {
-		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
-	}
-	if resp.FeatureGroupArn != nil {
-		arn := ackv1alpha1.AWSResourceName(*resp.FeatureGroupArn)
-		ko.Status.ACKResourceMetadata.ARN = &arn
-	}
-
-	rm.setStatusDefaults(ko)
-	return &resource{ko}, nil
-}
-
-// newUpdateRequestPayload returns an SDK-specific struct for the HTTP request
-// payload of the Update API call for the resource
-func (rm *resourceManager) newUpdateRequestPayload(
-	ctx context.Context,
-	r *resource,
-) (*svcsdk.UpdateFeatureGroupInput, error) {
-	res := &svcsdk.UpdateFeatureGroupInput{}
-
-	if r.ko.Spec.FeatureGroupName != nil {
-		res.SetFeatureGroupName(*r.ko.Spec.FeatureGroupName)
-	}
-
-	return res, nil
+) (*resource, error) {
+	// TODO(jaypipes): Figure this out...
+	return nil, ackerr.NotImplemented
 }
 
 // sdkDelete deletes the supplied resource in the backend AWS service API

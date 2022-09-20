@@ -83,13 +83,6 @@ spec:
                   You can set the value of this parameter to Disabled only if you
                   set a value for the SubnetId parameter."
                 type: string
-              instanceMetadataServiceConfiguration:
-                description: Information on the IMDS configuration of the notebook
-                  instance
-                properties:
-                  minimumInstanceMetadataServiceVersion:
-                    type: string
-                type: object
               instanceType:
                 description: The type of ML compute instance to launch for the notebook
                   instance.

@@ -180,8 +180,6 @@ spec:
               domainSettings:
                 description: A collection of Domain settings.
                 properties:
-                  executionRoleIdentityConfig:
-                    type: string
                   rStudioServerProDomainSettings:
                     description: A collection of settings that configure the RStudioServerPro
                       Domain-level app.

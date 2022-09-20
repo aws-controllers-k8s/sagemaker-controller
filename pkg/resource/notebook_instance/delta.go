@@ -62,17 +62,6 @@ func newResourceDelta(
 			delta.Add("Spec.DirectInternetAccess", a.ko.Spec.DirectInternetAccess, b.ko.Spec.DirectInternetAccess)
 		}
 	}
-	if ackcompare.HasNilDifference(a.ko.Spec.InstanceMetadataServiceConfiguration, b.ko.Spec.InstanceMetadataServiceConfiguration) {
-		delta.Add("Spec.InstanceMetadataServiceConfiguration", a.ko.Spec.InstanceMetadataServiceConfiguration, b.ko.Spec.InstanceMetadataServiceConfiguration)
-	} else if a.ko.Spec.InstanceMetadataServiceConfiguration != nil && b.ko.Spec.InstanceMetadataServiceConfiguration != nil {
-		if ackcompare.HasNilDifference(a.ko.Spec.InstanceMetadataServiceConfiguration.MinimumInstanceMetadataServiceVersion, b.ko.Spec.InstanceMetadataServiceConfiguration.MinimumInstanceMetadataServiceVersion) {
-			delta.Add("Spec.InstanceMetadataServiceConfiguration.MinimumInstanceMetadataServiceVersion", a.ko.Spec.InstanceMetadataServiceConfiguration.MinimumInstanceMetadataServiceVersion, b.ko.Spec.InstanceMetadataServiceConfiguration.MinimumInstanceMetadataServiceVersion)
-		} else if a.ko.Spec.InstanceMetadataServiceConfiguration.MinimumInstanceMetadataServiceVersion != nil && b.ko.Spec.InstanceMetadataServiceConfiguration.MinimumInstanceMetadataServiceVersion != nil {
-			if *a.ko.Spec.InstanceMetadataServiceConfiguration.MinimumInstanceMetadataServiceVersion != *b.ko.Spec.InstanceMetadataServiceConfiguration.MinimumInstanceMetadataServiceVersion {
-				delta.Add("Spec.InstanceMetadataServiceConfiguration.MinimumInstanceMetadataServiceVersion", a.ko.Spec.InstanceMetadataServiceConfiguration.MinimumInstanceMetadataServiceVersion, b.ko.Spec.InstanceMetadataServiceConfiguration.MinimumInstanceMetadataServiceVersion)
-			}
-		}
-	}
 	if ackcompare.HasNilDifference(a.ko.Spec.InstanceType, b.ko.Spec.InstanceType) {
 		delta.Add("Spec.InstanceType", a.ko.Spec.InstanceType, b.ko.Spec.InstanceType)
 	} else if a.ko.Spec.InstanceType != nil && b.ko.Spec.InstanceType != nil {

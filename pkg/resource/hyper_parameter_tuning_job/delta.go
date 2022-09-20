@@ -217,48 +217,6 @@ func newResourceDelta(
 				delta.Add("Spec.TrainingJobDefinition.HyperParameterRanges.IntegerParameterRanges", a.ko.Spec.TrainingJobDefinition.HyperParameterRanges.IntegerParameterRanges, b.ko.Spec.TrainingJobDefinition.HyperParameterRanges.IntegerParameterRanges)
 			}
 		}
-		if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig, b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig) {
-			delta.Add("Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig", a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig, b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig)
-		} else if a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig != nil && b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig != nil {
-			if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.AllocationStrategy, b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.AllocationStrategy) {
-				delta.Add("Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.AllocationStrategy", a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.AllocationStrategy, b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.AllocationStrategy)
-			} else if a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.AllocationStrategy != nil && b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.AllocationStrategy != nil {
-				if *a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.AllocationStrategy != *b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.AllocationStrategy {
-					delta.Add("Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.AllocationStrategy", a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.AllocationStrategy, b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.AllocationStrategy)
-				}
-			}
-			if !reflect.DeepEqual(a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceConfigs, b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceConfigs) {
-				delta.Add("Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceConfigs", a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceConfigs, b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceConfigs)
-			}
-			if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceCount, b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceCount) {
-				delta.Add("Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceCount", a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceCount, b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceCount)
-			} else if a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceCount != nil && b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceCount != nil {
-				if *a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceCount != *b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceCount {
-					delta.Add("Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceCount", a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceCount, b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceCount)
-				}
-			}
-			if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceType, b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceType) {
-				delta.Add("Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceType", a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceType, b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceType)
-			} else if a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceType != nil && b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceType != nil {
-				if *a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceType != *b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceType {
-					delta.Add("Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceType", a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceType, b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.InstanceType)
-				}
-			}
-			if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeKMSKeyID, b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeKMSKeyID) {
-				delta.Add("Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeKMSKeyID", a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeKMSKeyID, b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeKMSKeyID)
-			} else if a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeKMSKeyID != nil && b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeKMSKeyID != nil {
-				if *a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeKMSKeyID != *b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeKMSKeyID {
-					delta.Add("Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeKMSKeyID", a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeKMSKeyID, b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeKMSKeyID)
-				}
-			}
-			if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeSizeInGB, b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeSizeInGB) {
-				delta.Add("Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeSizeInGB", a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeSizeInGB, b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeSizeInGB)
-			} else if a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeSizeInGB != nil && b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeSizeInGB != nil {
-				if *a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeSizeInGB != *b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeSizeInGB {
-					delta.Add("Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeSizeInGB", a.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeSizeInGB, b.ko.Spec.TrainingJobDefinition.HyperParameterTuningResourceConfig.VolumeSizeInGB)
-				}
-			}
-		}
 		if !reflect.DeepEqual(a.ko.Spec.TrainingJobDefinition.InputDataConfig, b.ko.Spec.TrainingJobDefinition.InputDataConfig) {
 			delta.Add("Spec.TrainingJobDefinition.InputDataConfig", a.ko.Spec.TrainingJobDefinition.InputDataConfig, b.ko.Spec.TrainingJobDefinition.InputDataConfig)
 		}
@@ -289,9 +247,6 @@ func newResourceDelta(
 				if *a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceCount != *b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceCount {
 					delta.Add("Spec.TrainingJobDefinition.ResourceConfig.InstanceCount", a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceCount, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceCount)
 				}
-			}
-			if !reflect.DeepEqual(a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceGroups, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceGroups) {
-				delta.Add("Spec.TrainingJobDefinition.ResourceConfig.InstanceGroups", a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceGroups, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceGroups)
 			}
 			if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType) {
 				delta.Add("Spec.TrainingJobDefinition.ResourceConfig.InstanceType", a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType)

@@ -53,8 +53,6 @@ type NotebookInstanceSpec struct {
 	// You can set the value of this parameter to Disabled only if you set a value
 	// for the SubnetId parameter.
 	DirectInternetAccess *string `json:"directInternetAccess,omitempty"`
-	// Information on the IMDS configuration of the notebook instance
-	InstanceMetadataServiceConfiguration *InstanceMetadataServiceConfiguration `json:"instanceMetadataServiceConfiguration,omitempty"`
 	// The type of ML compute instance to launch for the notebook instance.
 	// +kubebuilder:validation:Required
 	InstanceType *string `json:"instanceType"`

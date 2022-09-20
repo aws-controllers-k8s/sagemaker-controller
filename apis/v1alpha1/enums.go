@@ -545,13 +545,6 @@ const (
 	EndpointStatus_SDK_Failed         EndpointStatus_SDK = "Failed"
 )
 
-type ExecutionRoleIdentityConfig string
-
-const (
-	ExecutionRoleIdentityConfig_USER_PROFILE_NAME ExecutionRoleIdentityConfig = "USER_PROFILE_NAME"
-	ExecutionRoleIdentityConfig_DISABLED          ExecutionRoleIdentityConfig = "DISABLED"
-)
-
 type ExecutionStatus string
 
 const (
