@@ -97,10 +97,15 @@ type ModelPackageSpec struct {
 	// in the Amazon Web Services General Reference Guide.
 	Tags []*Tag `json:"tags,omitempty"`
 	// The machine learning task your model package accomplishes. Common machine
-	// learning tasks include object detection and image classification.
+	// learning tasks include object detection and image classification. The following
+	// tasks are supported by Inference Recommender: "IMAGE_CLASSIFICATION" | "OBJECT_DETECTION"
+	// | "TEXT_GENERATION" |"IMAGE_SEGMENTATION" | "FILL_MASK" | "CLASSIFICATION"
+	// | "REGRESSION" | "OTHER".
+	//
+	// Specify "OTHER" if none of the tasks listed fit your use case.
 	Task *string `json:"task,omitempty"`
-	// Specifies configurations for one or more transform jobs that Amazon SageMaker
-	// runs to test the model package.
+	// Specifies configurations for one or more transform jobs that SageMaker runs
+	// to test the model package.
 	ValidationSpecification *ModelPackageValidationSpecification `json:"validationSpecification,omitempty"`
 }
 
@@ -120,7 +125,7 @@ type ModelPackageStatus struct {
 	// A timestamp specifying when the model package was created.
 	// +kubebuilder:validation:Optional
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
-	// The last time the model package was modified.
+	// The last time that the model package was modified.
 	// +kubebuilder:validation:Optional
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	// The current status of the model package.

@@ -195,15 +195,18 @@ func (rm *resourceManager) sdkFind(
 			if f6iter.AcceleratorType != nil {
 				f6elem.AcceleratorType = f6iter.AcceleratorType
 			}
+			if f6iter.ContainerStartupHealthCheckTimeoutInSeconds != nil {
+				f6elem.ContainerStartupHealthCheckTimeoutInSeconds = f6iter.ContainerStartupHealthCheckTimeoutInSeconds
+			}
 			if f6iter.CoreDumpConfig != nil {
-				f6elemf1 := &svcapitypes.ProductionVariantCoreDumpConfig{}
+				f6elemf2 := &svcapitypes.ProductionVariantCoreDumpConfig{}
 				if f6iter.CoreDumpConfig.DestinationS3Uri != nil {
-					f6elemf1.DestinationS3URI = f6iter.CoreDumpConfig.DestinationS3Uri
+					f6elemf2.DestinationS3URI = f6iter.CoreDumpConfig.DestinationS3Uri
 				}
 				if f6iter.CoreDumpConfig.KmsKeyId != nil {
-					f6elemf1.KMSKeyID = f6iter.CoreDumpConfig.KmsKeyId
+					f6elemf2.KMSKeyID = f6iter.CoreDumpConfig.KmsKeyId
 				}
-				f6elem.CoreDumpConfig = f6elemf1
+				f6elem.CoreDumpConfig = f6elemf2
 			}
 			if f6iter.InitialInstanceCount != nil {
 				f6elem.InitialInstanceCount = f6iter.InitialInstanceCount
@@ -214,11 +217,17 @@ func (rm *resourceManager) sdkFind(
 			if f6iter.InstanceType != nil {
 				f6elem.InstanceType = f6iter.InstanceType
 			}
+			if f6iter.ModelDataDownloadTimeoutInSeconds != nil {
+				f6elem.ModelDataDownloadTimeoutInSeconds = f6iter.ModelDataDownloadTimeoutInSeconds
+			}
 			if f6iter.ModelName != nil {
 				f6elem.ModelName = f6iter.ModelName
 			}
 			if f6iter.VariantName != nil {
 				f6elem.VariantName = f6iter.VariantName
+			}
+			if f6iter.VolumeSizeInGB != nil {
+				f6elem.VolumeSizeInGB = f6iter.VolumeSizeInGB
 			}
 			f6 = append(f6, f6elem)
 		}
@@ -396,15 +405,18 @@ func (rm *resourceManager) newCreateRequestPayload(
 			if f4iter.AcceleratorType != nil {
 				f4elem.SetAcceleratorType(*f4iter.AcceleratorType)
 			}
+			if f4iter.ContainerStartupHealthCheckTimeoutInSeconds != nil {
+				f4elem.SetContainerStartupHealthCheckTimeoutInSeconds(*f4iter.ContainerStartupHealthCheckTimeoutInSeconds)
+			}
 			if f4iter.CoreDumpConfig != nil {
-				f4elemf1 := &svcsdk.ProductionVariantCoreDumpConfig{}
+				f4elemf2 := &svcsdk.ProductionVariantCoreDumpConfig{}
 				if f4iter.CoreDumpConfig.DestinationS3URI != nil {
-					f4elemf1.SetDestinationS3Uri(*f4iter.CoreDumpConfig.DestinationS3URI)
+					f4elemf2.SetDestinationS3Uri(*f4iter.CoreDumpConfig.DestinationS3URI)
 				}
 				if f4iter.CoreDumpConfig.KMSKeyID != nil {
-					f4elemf1.SetKmsKeyId(*f4iter.CoreDumpConfig.KMSKeyID)
+					f4elemf2.SetKmsKeyId(*f4iter.CoreDumpConfig.KMSKeyID)
 				}
-				f4elem.SetCoreDumpConfig(f4elemf1)
+				f4elem.SetCoreDumpConfig(f4elemf2)
 			}
 			if f4iter.InitialInstanceCount != nil {
 				f4elem.SetInitialInstanceCount(*f4iter.InitialInstanceCount)
@@ -415,11 +427,17 @@ func (rm *resourceManager) newCreateRequestPayload(
 			if f4iter.InstanceType != nil {
 				f4elem.SetInstanceType(*f4iter.InstanceType)
 			}
+			if f4iter.ModelDataDownloadTimeoutInSeconds != nil {
+				f4elem.SetModelDataDownloadTimeoutInSeconds(*f4iter.ModelDataDownloadTimeoutInSeconds)
+			}
 			if f4iter.ModelName != nil {
 				f4elem.SetModelName(*f4iter.ModelName)
 			}
 			if f4iter.VariantName != nil {
 				f4elem.SetVariantName(*f4iter.VariantName)
+			}
+			if f4iter.VolumeSizeInGB != nil {
+				f4elem.SetVolumeSizeInGB(*f4iter.VolumeSizeInGB)
 			}
 			f4 = append(f4, f4elem)
 		}

@@ -27,14 +27,13 @@ type ModelSpec struct {
 	// Isolates the model container. No inbound or outbound network calls can be
 	// made to or from the model container.
 	EnableNetworkIsolation *bool `json:"enableNetworkIsolation,omitempty"`
-	// The Amazon Resource Name (ARN) of the IAM role that Amazon SageMaker can
-	// assume to access model artifacts and docker image for deployment on ML compute
-	// instances or for batch transform jobs. Deploying on ML compute instances
-	// is part of model hosting. For more information, see Amazon SageMaker Roles
-	// (https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-roles.html).
+	// The Amazon Resource Name (ARN) of the IAM role that SageMaker can assume
+	// to access model artifacts and docker image for deployment on ML compute instances
+	// or for batch transform jobs. Deploying on ML compute instances is part of
+	// model hosting. For more information, see SageMaker Roles (https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-roles.html).
 	//
-	// To be able to pass this role to Amazon SageMaker, the caller of this API
-	// must have the iam:PassRole permission.
+	// To be able to pass this role to SageMaker, the caller of this API must have
+	// the iam:PassRole permission.
 	// +kubebuilder:validation:Required
 	ExecutionRoleARN *string `json:"executionRoleARN"`
 	// Specifies details of how containers in a multi-container endpoint are called.

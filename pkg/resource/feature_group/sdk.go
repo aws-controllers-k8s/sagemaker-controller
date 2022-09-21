@@ -136,53 +136,53 @@ func (rm *resourceManager) sdkFind(
 		ko.Status.FeatureGroupStatus = nil
 	}
 	if resp.OfflineStoreConfig != nil {
-		f9 := &svcapitypes.OfflineStoreConfig{}
+		f11 := &svcapitypes.OfflineStoreConfig{}
 		if resp.OfflineStoreConfig.DataCatalogConfig != nil {
-			f9f0 := &svcapitypes.DataCatalogConfig{}
+			f11f0 := &svcapitypes.DataCatalogConfig{}
 			if resp.OfflineStoreConfig.DataCatalogConfig.Catalog != nil {
-				f9f0.Catalog = resp.OfflineStoreConfig.DataCatalogConfig.Catalog
+				f11f0.Catalog = resp.OfflineStoreConfig.DataCatalogConfig.Catalog
 			}
 			if resp.OfflineStoreConfig.DataCatalogConfig.Database != nil {
-				f9f0.Database = resp.OfflineStoreConfig.DataCatalogConfig.Database
+				f11f0.Database = resp.OfflineStoreConfig.DataCatalogConfig.Database
 			}
 			if resp.OfflineStoreConfig.DataCatalogConfig.TableName != nil {
-				f9f0.TableName = resp.OfflineStoreConfig.DataCatalogConfig.TableName
+				f11f0.TableName = resp.OfflineStoreConfig.DataCatalogConfig.TableName
 			}
-			f9.DataCatalogConfig = f9f0
+			f11.DataCatalogConfig = f11f0
 		}
 		if resp.OfflineStoreConfig.DisableGlueTableCreation != nil {
-			f9.DisableGlueTableCreation = resp.OfflineStoreConfig.DisableGlueTableCreation
+			f11.DisableGlueTableCreation = resp.OfflineStoreConfig.DisableGlueTableCreation
 		}
 		if resp.OfflineStoreConfig.S3StorageConfig != nil {
-			f9f2 := &svcapitypes.S3StorageConfig{}
+			f11f2 := &svcapitypes.S3StorageConfig{}
 			if resp.OfflineStoreConfig.S3StorageConfig.KmsKeyId != nil {
-				f9f2.KMSKeyID = resp.OfflineStoreConfig.S3StorageConfig.KmsKeyId
+				f11f2.KMSKeyID = resp.OfflineStoreConfig.S3StorageConfig.KmsKeyId
 			}
 			if resp.OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3Uri != nil {
-				f9f2.ResolvedOutputS3URI = resp.OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3Uri
+				f11f2.ResolvedOutputS3URI = resp.OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3Uri
 			}
 			if resp.OfflineStoreConfig.S3StorageConfig.S3Uri != nil {
-				f9f2.S3URI = resp.OfflineStoreConfig.S3StorageConfig.S3Uri
+				f11f2.S3URI = resp.OfflineStoreConfig.S3StorageConfig.S3Uri
 			}
-			f9.S3StorageConfig = f9f2
+			f11.S3StorageConfig = f11f2
 		}
-		ko.Spec.OfflineStoreConfig = f9
+		ko.Spec.OfflineStoreConfig = f11
 	} else {
 		ko.Spec.OfflineStoreConfig = nil
 	}
 	if resp.OnlineStoreConfig != nil {
-		f11 := &svcapitypes.OnlineStoreConfig{}
+		f13 := &svcapitypes.OnlineStoreConfig{}
 		if resp.OnlineStoreConfig.EnableOnlineStore != nil {
-			f11.EnableOnlineStore = resp.OnlineStoreConfig.EnableOnlineStore
+			f13.EnableOnlineStore = resp.OnlineStoreConfig.EnableOnlineStore
 		}
 		if resp.OnlineStoreConfig.SecurityConfig != nil {
-			f11f1 := &svcapitypes.OnlineStoreSecurityConfig{}
+			f13f1 := &svcapitypes.OnlineStoreSecurityConfig{}
 			if resp.OnlineStoreConfig.SecurityConfig.KmsKeyId != nil {
-				f11f1.KMSKeyID = resp.OnlineStoreConfig.SecurityConfig.KmsKeyId
+				f13f1.KMSKeyID = resp.OnlineStoreConfig.SecurityConfig.KmsKeyId
 			}
-			f11.SecurityConfig = f11f1
+			f13.SecurityConfig = f13f1
 		}
-		ko.Spec.OnlineStoreConfig = f11
+		ko.Spec.OnlineStoreConfig = f13
 	} else {
 		ko.Spec.OnlineStoreConfig = nil
 	}

@@ -1,10 +1,9 @@
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.7.0
+    controller-gen.kubebuilder.io/version: v0.9.2
   creationTimestamp: null
   name: modelpackages.sagemaker.services.k8s.aws
 spec:
@@ -151,6 +150,7 @@ spec:
                             type: string
                         type: object
                       postTrainingConstraints:
+                        description: Details about the metrics source.
                         properties:
                           contentDigest:
                             type: string
@@ -160,6 +160,7 @@ spec:
                             type: string
                         type: object
                       preTrainingConstraints:
+                        description: Details about the metrics source.
                         properties:
                           contentDigest:
                             type: string
@@ -185,6 +186,7 @@ spec:
                             type: string
                         type: object
                       constraints:
+                        description: Details about the metrics source.
                         properties:
                           contentDigest:
                             type: string
@@ -200,6 +202,7 @@ spec:
                       package.
                     properties:
                       constraints:
+                        description: Details about the metrics source.
                         properties:
                           contentDigest:
                             type: string
@@ -209,6 +212,7 @@ spec:
                             type: string
                         type: object
                       statistics:
+                        description: Details about the metrics source.
                         properties:
                           contentDigest:
                             type: string
@@ -224,6 +228,7 @@ spec:
                       package.
                     properties:
                       constraints:
+                        description: Details about the metrics source.
                         properties:
                           contentDigest:
                             type: string
@@ -233,6 +238,7 @@ spec:
                             type: string
                         type: object
                       statistics:
+                        description: Details about the metrics source.
                         properties:
                           contentDigest:
                             type: string
@@ -246,11 +252,11 @@ spec:
               inferenceSpecification:
                 description: "Specifies details about inference jobs that can be run
                   with models based on this model package, including the following:
-                  \n    * The Amazon ECR paths of containers that contain the inference
-                  code and    model artifacts. \n    * The instance types that the
-                  model package supports for transform jobs    and real-time endpoints
-                  used for inference. \n    * The input and output content formats
-                  that the model package supports    for inference."
+                  \n * The Amazon ECR paths of containers that contain the inference
+                  code and model artifacts. \n * The instance types that the model
+                  package supports for transform jobs and real-time endpoints used
+                  for inference. \n * The input and output content formats that the
+                  model package supports for inference."
                 properties:
                   containers:
                     items:
@@ -327,6 +333,7 @@ spec:
                     description: Contains bias metrics for a model.
                     properties:
                       postTrainingReport:
+                        description: Details about the metrics source.
                         properties:
                           contentDigest:
                             type: string
@@ -336,6 +343,7 @@ spec:
                             type: string
                         type: object
                       preTrainingReport:
+                        description: Details about the metrics source.
                         properties:
                           contentDigest:
                             type: string
@@ -345,6 +353,7 @@ spec:
                             type: string
                         type: object
                       report:
+                        description: Details about the metrics source.
                         properties:
                           contentDigest:
                             type: string
@@ -358,6 +367,7 @@ spec:
                     description: Contains explainability metrics for a model.
                     properties:
                       report:
+                        description: Details about the metrics source.
                         properties:
                           contentDigest:
                             type: string
@@ -371,6 +381,7 @@ spec:
                     description: Data quality constraints and statistics for a model.
                     properties:
                       constraints:
+                        description: Details about the metrics source.
                         properties:
                           contentDigest:
                             type: string
@@ -380,6 +391,7 @@ spec:
                             type: string
                         type: object
                       statistics:
+                        description: Details about the metrics source.
                         properties:
                           contentDigest:
                             type: string
@@ -393,6 +405,7 @@ spec:
                     description: Model quality statistics and constraints.
                     properties:
                       constraints:
+                        description: Details about the metrics source.
                         properties:
                           contentDigest:
                             type: string
@@ -402,6 +415,7 @@ spec:
                             type: string
                         type: object
                       statistics:
+                        description: Details about the metrics source.
                         properties:
                           contentDigest:
                             type: string
@@ -440,9 +454,8 @@ spec:
                     items:
                       description: Specifies an algorithm that was used to create
                         the model package. The algorithm must be either an algorithm
-                        resource in your Amazon SageMaker account or an algorithm
-                        in Amazon Web Services Marketplace that you are subscribed
-                        to.
+                        resource in your SageMaker account or an algorithm in Amazon
+                        Web Services Marketplace that you are subscribed to.
                       properties:
                         algorithmName:
                           type: string
@@ -477,13 +490,17 @@ spec:
                   type: object
                 type: array
               task:
-                description: The machine learning task your model package accomplishes.
+                description: "The machine learning task your model package accomplishes.
                   Common machine learning tasks include object detection and image
-                  classification.
+                  classification. The following tasks are supported by Inference Recommender:
+                  \"IMAGE_CLASSIFICATION\" | \"OBJECT_DETECTION\" | \"TEXT_GENERATION\"
+                  |\"IMAGE_SEGMENTATION\" | \"FILL_MASK\" | \"CLASSIFICATION\" | \"REGRESSION\"
+                  | \"OTHER\". \n Specify \"OTHER\" if none of the tasks listed fit
+                  your use case."
                 type: string
               validationSpecification:
                 description: Specifies configurations for one or more transform jobs
-                  that Amazon SageMaker runs to test the model package.
+                  that SageMaker runs to test the model package.
                 properties:
                   validationProfiles:
                     items:
@@ -637,7 +654,7 @@ spec:
                 format: date-time
                 type: string
               lastModifiedTime:
-                description: The last time the model package was modified.
+                description: The last time that the model package was modified.
                 format: date-time
                 type: string
               modelPackageStatus:
@@ -677,9 +694,3 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []

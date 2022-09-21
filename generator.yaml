@@ -838,6 +838,8 @@ ignore:
       - DeviceFleet
       # - Domain
       - EdgePackagingJob
+      - EdgeDeploymentPlan
+      - EdgeDeploymentStage
       # - EndpointConfig
       # - Endpoint
       - Experiment
@@ -873,9 +875,15 @@ ignore:
       - Workteam
     operations:
       - UpdateTrainingJob
+      - UpdateFeatureGroup
     shape_names:
       # RSessionAppSettings is an empty struct that causes generation errors
       - RSessionAppSettings
       - RetryStrategy
       - DeploymentConfig
       - ProductionVariantServerlessConfig
+      - ExecutionRoleIdentityConfig
+      - HyperParameterTuningResourceConfig
+      - InstanceMetadataServiceConfiguration
+      - InstanceGroups
+      - InstanceGroupNames

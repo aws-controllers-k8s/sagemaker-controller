@@ -34,6 +34,12 @@ type AppSpec struct {
 	DomainID *string `json:"domainID"`
 	// The instance type and the Amazon Resource Name (ARN) of the SageMaker image
 	// created on the instance.
+	//
+	// The value of InstanceType passed as part of the ResourceSpec in the CreateApp
+	// call overrides the value passed as part of the ResourceSpec configured for
+	// the user profile or the domain. If InstanceType is not specified in any of
+	// those three ResourceSpec values for a KernelGateway app, the CreateApp call
+	// fails with a request validation error.
 	ResourceSpec *ResourceSpec `json:"resourceSpec,omitempty"`
 	// Each tag consists of a key and an optional value. Tag keys must be unique
 	// per resource.
