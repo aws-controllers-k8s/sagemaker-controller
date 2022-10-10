@@ -25,6 +25,7 @@ rules:
   - monitoringschedules
   - notebookinstances
   - notebookinstancelifecycleconfigs
+  - pipelineexecutions
   - processingjobs
   - trainingjobs
   - transformjobs

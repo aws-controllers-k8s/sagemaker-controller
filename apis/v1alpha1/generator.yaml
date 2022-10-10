@@ -16,7 +16,44 @@ operations:
   StopHyperParameterTuningJob:
     operation_type: Delete
     resource_name: HyperParameterTuningJob
+  StartPipelineExecution:
+    operation_type: Create
+    resource_name: PipelineExecution
+  StopPipelineExecution:
+    operation_type: Delete
+    resource_name: PipelineExecution
 resources:
+  PipelineExecution:
+    hooks:
+      sdk_read_one_post_set_output:
+        code: rm.customSetOutput(&resource{ko})
+      sdk_delete_pre_build_request:
+        template_path: pipeline_execution/sdk_delete_pre_build_request.go.tpl
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
+    fields:
+      PipelineExecutionStatus:
+        is_read_only: true
+        print:
+          name: STATUS
+        from:
+          operation: DescribePipelineExecution
+          path: PipelineExecutionStatus
+      FailureReason:
+        is_read_only: true
+        print:
+          name: FAILURE-REASON
+          priority: 1
+        from:
+          operation: DescribePipelineExecution
+          path: FailureReason
+    exceptions:
+      errors:
+        404:
+          code: ResourceNotFound
+          message_suffix: does not exist
+    tags:
+      ignore: true
   Model:
     hooks:
       delta_pre_compare:

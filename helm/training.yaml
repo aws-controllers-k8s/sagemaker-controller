@@ -1,0 +1,50 @@
+
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: TrainingJob
+metadata:
+  name: ack-xgboost-training-job-024825446905
+spec:
+  # Name that will appear in the SageMaker console
+  trainingJobName: ack-xgboost-training-job-024825446905
+  hyperParameters: 
+    max_depth: "5"
+    gamma: "4"
+    eta: "0.2"
+    min_child_weight: "6"
+    objective: "multi:softmax"
+    num_class: "10"
+    num_round: "10"
+  algorithmSpecification:
+    # The URL and tag of your ECR container
+    trainingImage: 257758044811.dkr.ecr.us-east-2.amazonaws.com/sagemaker-xgboost:1.2-1
+    trainingInputMode: File
+  # A role with SageMaker and S3 access
+  roleARN: arn:aws:iam::024825446905:role/ack-sagemaker-execution-role-024825446905 
+  outputDataConfig:
+    # The output path of your model
+    s3OutputPath: s3://pipeline-test-oct6 
+  resourceConfig:
+    instanceCount: 1
+    instanceType: ml.m4.xlarge
+    volumeSizeInGB: 5
+  stoppingCondition:
+    maxRuntimeInSeconds: 86400
+  inputDataConfig:
+    - channelName: train
+      dataSource:
+        s3DataSource:
+          s3DataType: S3Prefix
+          # The input path of your train data 
+          s3URI: s3://pipeline-test-oct6/sagemaker/xgboost/train
+          s3DataDistributionType: FullyReplicated
+      contentType: text/libsvm
+      compressionType: None
+    - channelName: validation
+      dataSource:
+        s3DataSource:
+          s3DataType: S3Prefix
+          # The input path of your validation data 
+          s3URI: s3://pipeline-test-oct6/sagemaker/xgboost/validation
+          s3DataDistributionType: FullyReplicated
+      contentType: text/libsvm
+      compressionType: None
