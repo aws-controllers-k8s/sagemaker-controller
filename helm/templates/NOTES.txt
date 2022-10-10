@@ -1,5 +1,5 @@
 {{ .Chart.Name }} has been installed.
-This chart deploys "public.ecr.aws/aws-controllers-k8s/sagemaker-controller:v0.5.0".
+This chart deploys "public.ecr.aws/g0g3n5n9/sagemaker:v0.5.0-rc.0".
 
 Check its status by running:
   kubectl --namespace {{ .Release.Namespace }} get pods -l "app.kubernetes.io/instance={{ .Release.Name }}"

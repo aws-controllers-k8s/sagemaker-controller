@@ -3,8 +3,8 @@
 # Declare variables to be passed into your templates.
 
 image:
-  repository: public.ecr.aws/aws-controllers-k8s/sagemaker-controller
-  tag: v0.5.0
+  repository: public.ecr.aws/g0g3n5n9/sagemaker
+  tag: v0.5.0-rc.0
   pullPolicy: IfNotPresent
   pullSecrets: []
 
