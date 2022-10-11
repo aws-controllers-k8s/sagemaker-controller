@@ -24,10 +24,6 @@ import (
 //
 // An execution of a pipeline.
 type PipelineExecutionSpec struct {
-	// A unique, case-sensitive identifier that you provide to ensure the idempotency
-	// of the operation. An idempotent operation completes no more than once.
-	// +kubebuilder:validation:Required
-	ClientRequestToken *string `json:"clientRequestToken"`
 	// This configuration, if specified, overrides the parallelism configuration
 	// of the parent pipeline for this specific run.
 	ParallelismConfiguration *ParallelismConfiguration `json:"parallelismConfiguration,omitempty"`

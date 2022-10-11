@@ -201,15 +201,12 @@ func (rm *resourceManager) newCreateRequestPayload(
 ) (*svcsdk.StartPipelineExecutionInput, error) {
 	res := &svcsdk.StartPipelineExecutionInput{}
 
-	if r.ko.Spec.ClientRequestToken != nil {
-		res.SetClientRequestToken(*r.ko.Spec.ClientRequestToken)
-	}
 	if r.ko.Spec.ParallelismConfiguration != nil {
-		f1 := &svcsdk.ParallelismConfiguration{}
+		f0 := &svcsdk.ParallelismConfiguration{}
 		if r.ko.Spec.ParallelismConfiguration.MaxParallelExecutionSteps != nil {
-			f1.SetMaxParallelExecutionSteps(*r.ko.Spec.ParallelismConfiguration.MaxParallelExecutionSteps)
+			f0.SetMaxParallelExecutionSteps(*r.ko.Spec.ParallelismConfiguration.MaxParallelExecutionSteps)
 		}
-		res.SetParallelismConfiguration(f1)
+		res.SetParallelismConfiguration(f0)
 	}
 	if r.ko.Spec.PipelineExecutionDescription != nil {
 		res.SetPipelineExecutionDescription(*r.ko.Spec.PipelineExecutionDescription)
@@ -221,18 +218,18 @@ func (rm *resourceManager) newCreateRequestPayload(
 		res.SetPipelineName(*r.ko.Spec.PipelineName)
 	}
 	if r.ko.Spec.PipelineParameters != nil {
-		f5 := []*svcsdk.Parameter{}
-		for _, f5iter := range r.ko.Spec.PipelineParameters {
-			f5elem := &svcsdk.Parameter{}
-			if f5iter.Name != nil {
-				f5elem.SetName(*f5iter.Name)
+		f4 := []*svcsdk.Parameter{}
+		for _, f4iter := range r.ko.Spec.PipelineParameters {
+			f4elem := &svcsdk.Parameter{}
+			if f4iter.Name != nil {
+				f4elem.SetName(*f4iter.Name)
 			}
-			if f5iter.Value != nil {
-				f5elem.SetValue(*f5iter.Value)
+			if f4iter.Value != nil {
+				f4elem.SetValue(*f4iter.Value)
 			}
-			f5 = append(f5, f5elem)
+			f4 = append(f4, f4elem)
 		}
-		res.SetPipelineParameters(f5)
+		res.SetPipelineParameters(f4)
 	}
 
 	return res, nil
@@ -358,9 +355,6 @@ func (rm *resourceManager) newDeleteRequestPayload(
 ) (*svcsdk.StopPipelineExecutionInput, error) {
 	res := &svcsdk.StopPipelineExecutionInput{}
 
-	if r.ko.Spec.ClientRequestToken != nil {
-		res.SetClientRequestToken(*r.ko.Spec.ClientRequestToken)
-	}
 	if r.ko.Status.ACKResourceMetadata != nil && r.ko.Status.ACKResourceMetadata.ARN != nil {
 		res.SetPipelineExecutionArn(string(*r.ko.Status.ACKResourceMetadata.ARN))
 	}

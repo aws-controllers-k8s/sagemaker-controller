@@ -924,3 +924,5 @@ ignore:
       - InstanceMetadataServiceConfiguration
       - InstanceGroups
       - InstanceGroupNames
+    field_paths:
+      - StartPipelineExecutionInput.ClientRequestToken
