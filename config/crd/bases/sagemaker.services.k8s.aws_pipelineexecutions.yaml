@@ -140,8 +140,16 @@ spec:
                   - type
                   type: object
                 type: array
+              creationTime:
+                description: The time when the pipeline execution was created.
+                format: date-time
+                type: string
               failureReason:
                 description: If the execution failed, a message describing why.
+                type: string
+              lastModifiedTime:
+                description: The time when the pipeline execution was modified last.
+                format: date-time
                 type: string
               pipelineExecutionStatus:
                 description: The status of the pipeline execution.

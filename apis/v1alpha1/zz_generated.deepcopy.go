@@ -10365,10 +10365,18 @@ func (in *PipelineExecutionStatus) DeepCopyInto(out *PipelineExecutionStatus) {
 			}
 		}
 	}
+	if in.CreationTime != nil {
+		in, out := &in.CreationTime, &out.CreationTime
+		*out = (*in).DeepCopy()
+	}
 	if in.FailureReason != nil {
 		in, out := &in.FailureReason, &out.FailureReason
 		*out = new(string)
 		**out = **in
+	}
+	if in.LastModifiedTime != nil {
+		in, out := &in.LastModifiedTime, &out.LastModifiedTime
+		*out = (*in).DeepCopy()
 	}
 	if in.PipelineExecutionStatus != nil {
 		in, out := &in.PipelineExecutionStatus, &out.PipelineExecutionStatus

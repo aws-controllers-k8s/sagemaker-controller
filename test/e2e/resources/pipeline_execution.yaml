@@ -5,4 +5,8 @@ metadata:
 spec:
   pipelineExecutionDisplayName: $PIPELINE_EXECUTION_RESOURCE_NAME
   pipelineName: serial-inference-pipeline
-  clientRequestToken: $PIPELINE_EXECUTION_CLIENT_REQUEST_TOKEN
+  pipelineParameters:
+    - name: AccuracyMseThreshold
+      value: "1.0"
+  parallelismConfiguration:
+    maxParallelExecutionSteps: 2

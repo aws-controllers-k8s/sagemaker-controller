@@ -51,9 +51,15 @@ type PipelineExecutionStatus struct {
 	// resource
 	// +kubebuilder:validation:Optional
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	// The time when the pipeline execution was created.
+	// +kubebuilder:validation:Optional
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	// If the execution failed, a message describing why.
 	// +kubebuilder:validation:Optional
 	FailureReason *string `json:"failureReason,omitempty"`
+	// The time when the pipeline execution was modified last.
+	// +kubebuilder:validation:Optional
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	// The status of the pipeline execution.
 	// +kubebuilder:validation:Optional
 	PipelineExecutionStatus *string `json:"pipelineExecutionStatus,omitempty"`
