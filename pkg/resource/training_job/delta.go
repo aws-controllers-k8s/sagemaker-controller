@@ -249,6 +249,13 @@ func newResourceDelta(
 				delta.Add("Spec.ResourceConfig.InstanceType", a.ko.Spec.ResourceConfig.InstanceType, b.ko.Spec.ResourceConfig.InstanceType)
 			}
 		}
+		if ackcompare.HasNilDifference(a.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds, b.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds) {
+			delta.Add("Spec.ResourceConfig.KeepAlivePeriodInSeconds", a.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds, b.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds)
+		} else if a.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds != nil && b.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds != nil {
+			if *a.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds != *b.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds {
+				delta.Add("Spec.ResourceConfig.KeepAlivePeriodInSeconds", a.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds, b.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds)
+			}
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.ResourceConfig.VolumeKMSKeyID, b.ko.Spec.ResourceConfig.VolumeKMSKeyID) {
 			delta.Add("Spec.ResourceConfig.VolumeKMSKeyID", a.ko.Spec.ResourceConfig.VolumeKMSKeyID, b.ko.Spec.ResourceConfig.VolumeKMSKeyID)
 		} else if a.ko.Spec.ResourceConfig.VolumeKMSKeyID != nil && b.ko.Spec.ResourceConfig.VolumeKMSKeyID != nil {

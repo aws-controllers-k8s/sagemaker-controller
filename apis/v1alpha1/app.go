@@ -25,8 +25,7 @@ type AppSpec struct {
 	// The name of the app.
 	// +kubebuilder:validation:Required
 	AppName *string `json:"appName"`
-	// The type of app. Supported apps are JupyterServer and KernelGateway. TensorBoard
-	// is not supported.
+	// The type of app.
 	// +kubebuilder:validation:Required
 	AppType *string `json:"appType"`
 	// The domain ID.

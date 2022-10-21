@@ -255,6 +255,13 @@ func newResourceDelta(
 					delta.Add("Spec.TrainingJobDefinition.ResourceConfig.InstanceType", a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType)
 				}
 			}
+			if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds, b.ko.Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds) {
+				delta.Add("Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds", a.ko.Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds, b.ko.Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds)
+			} else if a.ko.Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds != nil && b.ko.Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds != nil {
+				if *a.ko.Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds != *b.ko.Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds {
+					delta.Add("Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds", a.ko.Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds, b.ko.Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds)
+				}
+			}
 			if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID, b.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID) {
 				delta.Add("Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID", a.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID, b.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID)
 			} else if a.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID != nil && b.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID != nil {

@@ -477,6 +477,9 @@ func (rm *resourceManager) sdkFind(
 		if resp.ResourceConfig.InstanceType != nil {
 			f25.InstanceType = resp.ResourceConfig.InstanceType
 		}
+		if resp.ResourceConfig.KeepAlivePeriodInSeconds != nil {
+			f25.KeepAlivePeriodInSeconds = resp.ResourceConfig.KeepAlivePeriodInSeconds
+		}
 		if resp.ResourceConfig.VolumeKmsKeyId != nil {
 			f25.VolumeKMSKeyID = resp.ResourceConfig.VolumeKmsKeyId
 		}
@@ -937,6 +940,9 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		if r.ko.Spec.ResourceConfig.InstanceType != nil {
 			f14.SetInstanceType(*r.ko.Spec.ResourceConfig.InstanceType)
+		}
+		if r.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds != nil {
+			f14.SetKeepAlivePeriodInSeconds(*r.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds)
 		}
 		if r.ko.Spec.ResourceConfig.VolumeKMSKeyID != nil {
 			f14.SetVolumeKmsKeyId(*r.ko.Spec.ResourceConfig.VolumeKMSKeyID)

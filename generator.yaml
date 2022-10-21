@@ -887,3 +887,6 @@ ignore:
       - InstanceMetadataServiceConfiguration
       - InstanceGroups
       - InstanceGroupNames
+      - CanvasAppSettings
+      - ExplainerConfig
+      - HyperParameterTuningJobStrategyConfig

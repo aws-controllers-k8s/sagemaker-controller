@@ -227,7 +227,11 @@ spec:
                   provided by SageMaker, see Algorithms (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html).
                   \n You can specify a maximum of 100 hyperparameters. Each hyperparameter
                   is a key-value pair. Each key and value is limited to 256 characters,
-                  as specified by the Length Constraint."
+                  as specified by the Length Constraint. \n Do not include any security-sensitive
+                  information including account access IDs, secrets or tokens in any
+                  hyperparameter field. If the use of security-sensitive credentials
+                  are detected, SageMaker will reject your training job request and
+                  return an exception error."
                 type: object
               inputDataConfig:
                 description: "An array of Channel objects. Each channel is a named
@@ -402,6 +406,9 @@ spec:
                     type: integer
                   instanceType:
                     type: string
+                  keepAlivePeriodInSeconds:
+                    format: int64
+                    type: integer
                   volumeKMSKeyID:
                     type: string
                   volumeSizeInGB:

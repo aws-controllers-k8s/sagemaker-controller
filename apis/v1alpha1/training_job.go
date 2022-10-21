@@ -76,6 +76,11 @@ type TrainingJobSpec struct {
 	// You can specify a maximum of 100 hyperparameters. Each hyperparameter is
 	// a key-value pair. Each key and value is limited to 256 characters, as specified
 	// by the Length Constraint.
+	//
+	// Do not include any security-sensitive information including account access
+	// IDs, secrets or tokens in any hyperparameter field. If the use of security-sensitive
+	// credentials are detected, SageMaker will reject your training job request
+	// and return an exception error.
 	HyperParameters map[string]*string `json:"hyperParameters,omitempty"`
 	// An array of Channel objects. Each channel is a named input source. InputDataConfig
 	// describes the input data and its location.

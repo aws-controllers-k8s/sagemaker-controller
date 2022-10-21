@@ -431,6 +431,9 @@ spec:
                         type: integer
                       instanceType:
                         type: string
+                      keepAlivePeriodInSeconds:
+                        format: int64
+                        type: integer
                       volumeKMSKeyID:
                         type: string
                       volumeSizeInGB:
@@ -760,6 +763,9 @@ spec:
                           type: integer
                         instanceType:
                           type: string
+                        keepAlivePeriodInSeconds:
+                          format: int64
+                          type: integer
                         volumeKMSKeyID:
                           type: string
                         volumeSizeInGB:
