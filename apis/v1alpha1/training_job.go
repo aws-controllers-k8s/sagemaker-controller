@@ -260,6 +260,9 @@ type TrainingJobStatus struct {
 	// For more detailed information, see SecondaryStatus.
 	// +kubebuilder:validation:Optional
 	TrainingJobStatus *string `json:"trainingJobStatus,omitempty"`
+	// The status of the warm pool associated with the training job.
+	// +kubebuilder:validation:Optional
+	WarmPoolStatus *WarmPoolStatus `json:"warmPoolStatus,omitempty"`
 }
 
 // TrainingJob is the Schema for the TrainingJobs API

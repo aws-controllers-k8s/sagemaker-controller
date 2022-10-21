@@ -565,9 +565,28 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.VPCConfig = nil
 	}
+	if resp.WarmPoolStatus != nil {
+		f39 := &svcapitypes.WarmPoolStatus{}
+		if resp.WarmPoolStatus.ResourceRetainedBillableTimeInSeconds != nil {
+			f39.ResourceRetainedBillableTimeInSeconds = resp.WarmPoolStatus.ResourceRetainedBillableTimeInSeconds
+		}
+		if resp.WarmPoolStatus.ReusedByJob != nil {
+			f39.ReusedByJob = resp.WarmPoolStatus.ReusedByJob
+		}
+		if resp.WarmPoolStatus.Status != nil {
+			f39.Status = resp.WarmPoolStatus.Status
+		}
+		ko.Status.WarmPoolStatus = f39
+	} else {
+		ko.Status.WarmPoolStatus = nil
+	}
 
 	rm.setStatusDefaults(ko)
 	rm.customSetOutput(&resource{ko})
+	wp_err := rm.customSetWarmPoolOutput(&resource{ko})
+	if wp_err != nil {
+		return &resource{ko}, wp_err
+	}
 	return &resource{ko}, nil
 }
 

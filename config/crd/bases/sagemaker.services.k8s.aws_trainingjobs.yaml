@@ -652,6 +652,18 @@ spec:
                   - The training job has stopped. \n For more detailed information,
                   see SecondaryStatus."
                 type: string
+              warmPoolStatus:
+                description: The status of the warm pool associated with the training
+                  job.
+                properties:
+                  resourceRetainedBillableTimeInSeconds:
+                    format: int64
+                    type: integer
+                  reusedByJob:
+                    type: string
+                  status:
+                    type: string
+                type: object
             type: object
         type: object
     served: true
