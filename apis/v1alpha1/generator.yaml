@@ -338,6 +338,9 @@ resources:
       TrainingJobDefinition.EnableNetworkIsolation:
         late_initialize:
           min_backoff_seconds: 5
+      TrainingJobDefinition.ResourceConfig.InstanceCount:
+        late_initialize:
+          min_backoff_seconds: 5
       Tags:
         compare:
           is_ignored: true
