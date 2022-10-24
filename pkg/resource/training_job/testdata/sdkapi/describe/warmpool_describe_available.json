@@ -1,0 +1,191 @@
+{
+    "AlgorithmSpecification": {
+        "AlgorithmName": null,
+        "EnableSageMakerMetricsTimeSeries": false,
+        "MetricDefinitions": [
+            {
+                "Name": "train:mae",
+                "Regex": ".*\\[[0-9]+\\].*#011train-mae:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:auc",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-auc:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "train:merror",
+                "Regex": ".*\\[[0-9]+\\].*#011train-merror:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "train:auc",
+                "Regex": ".*\\[[0-9]+\\].*#011train-auc:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:mae",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-mae:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:error",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-error:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:merror",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-merror:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:logloss",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-logloss:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "train:rmse",
+                "Regex": ".*\\[[0-9]+\\].*#011train-rmse:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "train:logloss",
+                "Regex": ".*\\[[0-9]+\\].*#011train-logloss:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "train:mlogloss",
+                "Regex": ".*\\[[0-9]+\\].*#011train-mlogloss:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:rmse",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-rmse:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:ndcg",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-ndcg:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "train:error",
+                "Regex": ".*\\[[0-9]+\\].*#011train-error:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:mlogloss",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-mlogloss:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "train:ndcg",
+                "Regex": ".*\\[[0-9]+\\].*#011train-ndcg:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "train:map",
+                "Regex": ".*\\[[0-9]+\\].*#011train-map:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            },
+            {
+                "Name": "validation:map",
+                "Regex": ".*\\[[0-9]+\\].*#011validation-map:([-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*"
+            }
+        ],
+        "TrainingImage": "246618743249.dkr.ecr.us-west-2.amazonaws.com/xgboost:1",
+        "TrainingInputMode": "File"
+    },
+    "AutoMLJobArn": null,
+    "BillableTimeInSeconds": null,
+    "CheckpointConfig": null,
+    "CreationTime": "2021-10-12T05:49:40.493Z",
+    "DebugHookConfig": null,
+    "DebugRuleConfigurations": null,
+    "DebugRuleEvaluationStatuses": null,
+    "EnableInterContainerTrafficEncryption": false,
+    "EnableManagedSpotTraining": false,
+    "EnableNetworkIsolation": false,
+    "Environment": null,
+    "ExperimentConfig": null,
+    "FailureReason": null,
+    "FinalMetricDataList": null,
+    "HyperParameters": {
+        "eta": "0.2",
+        "gamma": "4",
+        "max_depth": "5",
+        "min_child_weight": "6",
+        "num_class": "10",
+        "num_round": "10",
+        "objective": "multi:softmax",
+        "silent": "0"
+    },
+    "InputDataConfig": [
+        {
+            "ChannelName": "train",
+            "CompressionType": "None",
+            "ContentType": "text/csv",
+            "DataSource": {
+                "FileSystemDataSource": null,
+                "S3DataSource": {
+                    "AttributeNames": null,
+                    "S3DataDistributionType": "FullyReplicated",
+                    "S3DataType": "S3Prefix",
+                    "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/train"
+                }
+            },
+            "InputMode": null,
+            "RecordWrapperType": "None",
+            "ShuffleConfig": null
+        },
+        {
+            "ChannelName": "validation",
+            "CompressionType": "None",
+            "ContentType": "text/csv",
+            "DataSource": {
+                "FileSystemDataSource": null,
+                "S3DataSource": {
+                    "AttributeNames": null,
+                    "S3DataDistributionType": "FullyReplicated",
+                    "S3DataType": "S3Prefix",
+                    "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/validation"
+                }
+            },
+            "InputMode": null,
+            "RecordWrapperType": "None",
+            "ShuffleConfig": null
+        }
+    ],
+    "LabelingJobArn": null,
+    "LastModifiedTime": "2021-10-12T05:52:46.108Z",
+    "ModelArtifacts": null,
+    "OutputDataConfig": {
+        "KmsKeyId": "",
+        "S3OutputPath": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/output"
+    },
+    "ProfilerConfig": null,
+    "ProfilerRuleConfigurations": null,
+    "ProfilerRuleEvaluationStatuses": null,
+    "ProfilingStatus": "Disabled",
+    "ResourceConfig": {
+        "InstanceCount": 1,
+        "InstanceType": "ml.m4.xlarge",
+        "VolumeKmsKeyId": null,
+        "VolumeSizeInGB": 5
+    },
+    "RoleArn": "arn:aws:iam::123456789012:role/service-role/AmazonSageMaker",
+    "SecondaryStatus": "Completed",
+    "SecondaryStatusTransitions": [
+        {
+            "EndTime": "2021-10-12T05:52:46.108Z",
+            "StartTime": "2021-10-12T05:49:40.493Z",
+            "Status": "Starting",
+            "StatusMessage": "Preparing the instances for training"
+        },
+        {
+            "EndTime": null,
+            "StartTime": "2021-10-12T05:52:46.108Z",
+            "Status": "Downloading",
+            "StatusMessage": "Downloading input data"
+        }
+    ],
+    "StoppingCondition": {
+        "MaxRuntimeInSeconds": 86400,
+        "MaxWaitTimeInSeconds": null
+    },
+    "WarmPoolStatus": {
+        "Status":"Available"
+    },
+    "TensorBoardOutputConfig": null,
+    "TrainingEndTime": null,
+    "TrainingJobArn": "arn:aws:sagemaker:us-west-2:123456789012:training-job/xgboost-training-job",
+    "TrainingJobName": "xgboost-training-job",
+    "TrainingJobStatus": "Completed",
+    "TrainingStartTime": "2021-10-12T05:52:46.108Z",
+    "TrainingTimeInSeconds": 31,
+    "TuningJobArn": null,
+    "VpcConfig": null
+}

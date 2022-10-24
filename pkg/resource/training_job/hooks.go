@@ -76,6 +76,7 @@ func (rm *resourceManager) customSetOutput(r *resource) {
 	svccommon.SetSyncedCondition(r, trainingJobStatus, &resourceName, &trainingJobModifyingStatuses)
 }
 
+// Requeue whenever Warmpool cluster is in Available or Inuse state.
 func (rm *resourceManager) customSetWarmPoolOutput(r *resource) error {
 	if ackcompare.IsNil(r.ko.Status.WarmPoolStatus) {
 		return nil

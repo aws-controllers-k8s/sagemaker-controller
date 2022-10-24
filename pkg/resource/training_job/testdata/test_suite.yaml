@@ -142,6 +142,26 @@ tests:
         invoke: ReadOne
         expect:
           latest_state: "v1alpha1/readone/observed/stopping_debugger_variation.yaml"
+      - name: "ReadOne=WarmPool"
+        description: "Test readOne after training job finishes when user specifies a warm pool"
+        given:
+          desired_state: "v1alpha1/readone/desired/warmpool_available.yaml"
+          svc_api:
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/describe/warmpool_describe_available.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/warmpool_available.yaml"
+      - name: "ReadOne=WarmPoolTerminated"
+        description: "Test readOne after training job and warm pool complete/terminate."
+        given:
+          desired_state: "v1alpha1/readone/desired/warmpool_terminated.yaml"
+          svc_api:
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/describe/warmpool_describe_terminated.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/warmpool_terminated.yaml"
   - name: "Training job update tests"
     description: "Testing the Update operation"
     scenarios:
