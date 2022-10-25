@@ -81,6 +81,13 @@ func (rm *resourceManager) customSetWarmPoolOutput(r *resource) error {
 	if ackcompare.IsNil(r.ko.Status.WarmPoolStatus) {
 		return nil
 	}
+
+	trainingJobStatus := r.ko.Status.TrainingJobStatus
+	// Currently the warm pool status does not appear in the api resonse, but that could change
+	// in the future, warm pool should only dealt with after the training job finishes.
+	if trainingJobStatus != nil && *trainingJobStatus == svcsdk.TrainingJobStatusInProgress {
+		return nil
+	}
 	if svccommon.IsModifyingStatus(r.ko.Status.WarmPoolStatus.Status, &WarmPoolModifyingStatuses) {
 		return requeueWaitWhileWarmPoolInUse
 	}
