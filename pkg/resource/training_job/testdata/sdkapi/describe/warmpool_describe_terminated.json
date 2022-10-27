@@ -1,6 +1,5 @@
 {
     "AlgorithmSpecification": {
-        "AlgorithmName": null,
         "EnableSageMakerMetricsTimeSeries": false,
         "MetricDefinitions": [
             {
@@ -79,20 +78,10 @@
         "TrainingImage": "246618743249.dkr.ecr.us-west-2.amazonaws.com/xgboost:1",
         "TrainingInputMode": "File"
     },
-    "AutoMLJobArn": null,
-    "BillableTimeInSeconds": null,
-    "CheckpointConfig": null,
     "CreationTime": "2021-10-12T05:49:40.493Z",
-    "DebugHookConfig": null,
-    "DebugRuleConfigurations": null,
-    "DebugRuleEvaluationStatuses": null,
     "EnableInterContainerTrafficEncryption": false,
     "EnableManagedSpotTraining": false,
     "EnableNetworkIsolation": false,
-    "Environment": null,
-    "ExperimentConfig": null,
-    "FailureReason": null,
-    "FinalMetricDataList": null,
     "HyperParameters": {
         "eta": "0.2",
         "gamma": "4",
@@ -109,51 +98,37 @@
             "CompressionType": "None",
             "ContentType": "text/csv",
             "DataSource": {
-                "FileSystemDataSource": null,
                 "S3DataSource": {
-                    "AttributeNames": null,
                     "S3DataDistributionType": "FullyReplicated",
                     "S3DataType": "S3Prefix",
                     "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/train"
                 }
             },
-            "InputMode": null,
-            "RecordWrapperType": "None",
-            "ShuffleConfig": null
+            "RecordWrapperType": "None"
         },
         {
             "ChannelName": "validation",
             "CompressionType": "None",
             "ContentType": "text/csv",
             "DataSource": {
-                "FileSystemDataSource": null,
                 "S3DataSource": {
-                    "AttributeNames": null,
                     "S3DataDistributionType": "FullyReplicated",
                     "S3DataType": "S3Prefix",
                     "S3Uri": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/validation"
                 }
             },
-            "InputMode": null,
-            "RecordWrapperType": "None",
-            "ShuffleConfig": null
+            "RecordWrapperType": "None"
         }
     ],
-    "LabelingJobArn": null,
     "LastModifiedTime": "2021-10-12T05:52:46.108Z",
-    "ModelArtifacts": null,
     "OutputDataConfig": {
         "KmsKeyId": "",
         "S3OutputPath": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/output"
     },
-    "ProfilerConfig": null,
-    "ProfilerRuleConfigurations": null,
-    "ProfilerRuleEvaluationStatuses": null,
     "ProfilingStatus": "Disabled",
     "ResourceConfig": {
         "InstanceCount": 1,
         "InstanceType": "ml.m4.xlarge",
-        "VolumeKmsKeyId": null,
         "VolumeSizeInGB": 5
     },
     "RoleArn": "arn:aws:iam::123456789012:role/service-role/AmazonSageMaker",
@@ -166,27 +141,21 @@
             "StatusMessage": "Preparing the instances for training"
         },
         {
-            "EndTime": null,
             "StartTime": "2021-10-12T05:52:46.108Z",
             "Status": "Downloading",
             "StatusMessage": "Downloading input data"
         }
     ],
     "StoppingCondition": {
-        "MaxRuntimeInSeconds": 86400,
-        "MaxWaitTimeInSeconds": null
+        "MaxRuntimeInSeconds": 86400
     },
     "WarmPoolStatus": {
         "Status":"Terminated",
         "ResourceRetainedBillableTimeInSeconds": 69
     },
-    "TensorBoardOutputConfig": null,
-    "TrainingEndTime": null,
     "TrainingJobArn": "arn:aws:sagemaker:us-west-2:123456789012:training-job/xgboost-training-job",
     "TrainingJobName": "xgboost-training-job",
     "TrainingJobStatus": "Completed",
     "TrainingStartTime": "2021-10-12T05:52:46.108Z",
-    "TrainingTimeInSeconds": 31,
-    "TuningJobArn": null,
-    "VpcConfig": null
+    "TrainingTimeInSeconds": 31
 }

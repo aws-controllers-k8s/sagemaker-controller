@@ -105,11 +105,9 @@ status:
     message: TrainingJob is in Completed status.
     status: "True"
     type: ACK.ResourceSynced
-  - lastTransitionTime: "0001-01-01T00:00:00Z"
-    message: Provisioned infrastructure is still being retained.
-    status: "True"
-    type: ACK.Recoverable
   warmPoolStatus:
-    status: Available
+    status: Reused
+    reusedByJob: Trainingjob-ccsjjbdsjhhcsvdj
+    resourceRetainedBillableTimeInSeconds: 69
   secondaryStatus: Completed
   trainingJobStatus: Completed

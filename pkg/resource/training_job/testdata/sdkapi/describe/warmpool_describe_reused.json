@@ -150,7 +150,9 @@
         "MaxRuntimeInSeconds": 86400
     },
     "WarmPoolStatus": {
-        "Status":"Available"
+        "Status":"Reused",
+        "ResourceRetainedBillableTimeInSeconds": 69,
+        "ReusedByJob":"Trainingjob-ccsjjbdsjhhcsvdj"
     },
     "TrainingJobArn": "arn:aws:sagemaker:us-west-2:123456789012:training-job/xgboost-training-job",
     "TrainingJobName": "xgboost-training-job",

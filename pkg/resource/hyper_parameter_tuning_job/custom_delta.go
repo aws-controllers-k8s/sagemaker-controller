@@ -43,5 +43,17 @@ func customSetDefaults(
 				}
 			}
 		}
+		// HPO does not support custom warm pool durations and the Server side default will
+		// always be nil.
+		if ackcompare.IsNotNil(a.ko.Spec.TrainingJobDefinitions) {
+			for i, trainDefinition := range a.ko.Spec.TrainingJobDefinitions {
+				if ackcompare.IsNotNil(trainDefinition) {
+					if ackcompare.IsNotNil(trainDefinition.ResourceConfig) && ackcompare.IsNotNil(trainDefinition.ResourceConfig.KeepAlivePeriodInSeconds) {
+						a.ko.Spec.TrainingJobDefinitions[i].ResourceConfig.KeepAlivePeriodInSeconds = nil
+					}
+				}
+			}
+		}
+
 	}
 }

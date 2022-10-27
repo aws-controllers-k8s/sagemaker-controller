@@ -132,7 +132,7 @@
         "VolumeSizeInGB": 5
     },
     "RoleArn": "arn:aws:iam::123456789012:role/service-role/AmazonSageMaker",
-    "SecondaryStatus": "Completed",
+    "SecondaryStatus": "Starting",
     "SecondaryStatusTransitions": [
         {
             "EndTime": "2021-10-12T05:52:46.108Z",
@@ -150,11 +150,11 @@
         "MaxRuntimeInSeconds": 86400
     },
     "WarmPoolStatus": {
-        "Status":"Available"
-    },
+        "Status": "InUse"
+       },
     "TrainingJobArn": "arn:aws:sagemaker:us-west-2:123456789012:training-job/xgboost-training-job",
     "TrainingJobName": "xgboost-training-job",
-    "TrainingJobStatus": "Completed",
+    "TrainingJobStatus": "InProgress",
     "TrainingStartTime": "2021-10-12T05:52:46.108Z",
     "TrainingTimeInSeconds": 31
 }
