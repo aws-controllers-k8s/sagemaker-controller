@@ -32,4 +32,35 @@ func customSetDefaults(
 			}
 		}
 	}
+
+	// TODO: Use late initialize instead once code generator supports late initializing slices.
+	if ackcompare.IsNotNil(a.ko.Spec.TrainingJobDefinitions) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions) {
+		if len(a.ko.Spec.TrainingJobDefinitions) == len(b.ko.Spec.TrainingJobDefinitions) {
+			for i := 0; i < len(a.ko.Spec.TrainingJobDefinitions); i++ {
+				latestStaticHyperParameters := b.ko.Spec.TrainingJobDefinitions[i].StaticHyperParameters
+				if ackcompare.IsNotNil(latestStaticHyperParameters) {
+					for key, _ := range latestStaticHyperParameters {
+						if key[0:1] == "_" {
+							delete(b.ko.Spec.TrainingJobDefinitions[i].StaticHyperParameters, key)
+						}
+					}
+				}
+				if ackcompare.IsNotNil(a.ko.Spec.TrainingJobDefinitions[i].AlgorithmSpecification) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions[i].AlgorithmSpecification) {
+					if ackcompare.IsNil(a.ko.Spec.TrainingJobDefinitions[i].AlgorithmSpecification.MetricDefinitions) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions[i].AlgorithmSpecification.MetricDefinitions) {
+						a.ko.Spec.TrainingJobDefinitions[i].AlgorithmSpecification.MetricDefinitions = b.ko.Spec.TrainingJobDefinitions[i].AlgorithmSpecification.MetricDefinitions
+					}
+				}
+				if ackcompare.IsNil(a.ko.Spec.TrainingJobDefinitions[i].EnableInterContainerTrafficEncryption) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions[i].EnableInterContainerTrafficEncryption) {
+					a.ko.Spec.TrainingJobDefinitions[i].EnableInterContainerTrafficEncryption = b.ko.Spec.TrainingJobDefinitions[i].EnableInterContainerTrafficEncryption
+				}
+				if ackcompare.IsNil(a.ko.Spec.TrainingJobDefinitions[i].EnableManagedSpotTraining) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions[i].EnableManagedSpotTraining) {
+					a.ko.Spec.TrainingJobDefinitions[i].EnableManagedSpotTraining = b.ko.Spec.TrainingJobDefinitions[i].EnableManagedSpotTraining
+				}
+				if ackcompare.IsNil(a.ko.Spec.TrainingJobDefinitions[i].EnableNetworkIsolation) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions[i].EnableNetworkIsolation) {
+					a.ko.Spec.TrainingJobDefinitions[i].EnableNetworkIsolation = b.ko.Spec.TrainingJobDefinitions[i].EnableNetworkIsolation
+				}
+			}
+		}
+	}
+
 }
