@@ -47,8 +47,8 @@ func (rm *resourceManager) customSetOutput(
 
 // requeueUntilCanModify is a helper method to determine if monitoring schedule status allows modification
 // Modifications to monitoring schedule are only allowed if:
-//   1. The schedule is in a terminal state i.e. Status != Pending
-//   2. There are no pending or in-progress jobs/executions
+//  1. The schedule is in a terminal state i.e. Status != Pending
+//  2. There are no pending or in-progress jobs/executions
 func (rm *resourceManager) requeueUntilCanModify(
 	ctx context.Context,
 	r *resource,

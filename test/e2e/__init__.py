@@ -349,3 +349,13 @@ def get_sagemaker_endpoint_config(config_name: str):
             f"SageMaker could not find an endpoint config with the name {config_name}. Error {error}"
         )
         return None
+
+
+def get_sagemaker_pipeline(pipeline_name: str):
+    try:
+        return sagemaker_client().describe_pipeline(PipelineName=pipeline_name)
+    except botocore.exceptions.ClientError as error:
+        logging.error(
+            f"SageMaker could not find a pipeline with the name {pipeline_name}. Error {error}"
+        )
+        return None

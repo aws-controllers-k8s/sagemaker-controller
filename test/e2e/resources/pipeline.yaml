@@ -1,0 +1,13 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: Pipeline
+metadata:
+  name: $PIPELINE_NAME
+spec:
+  pipelineDisplayName: $PIPELINE_NAME
+  pipelineName: $PIPELINE_NAME
+  pipelineDefinitionS3Location: 
+    bucket: $SAGEMAKER_DATA_BUCKET
+    objectKey: sagemaker/pipeline/pipeline-definition
+  roleARN: $SAGEMAKER_EXECUTION_ROLE_ARN
+  parallelismConfiguration:
+    maxParallelExecutionSteps: 2

@@ -17,6 +17,40 @@ operations:
     operation_type: Delete
     resource_name: HyperParameterTuningJob
 resources:
+  Pipeline:
+    fields:
+      PipelineStatus:
+        is_read_only: true
+        print:
+          name: STATUS
+        from:
+          operation: DescribePipeline
+          path: PipelineStatus
+      CreationTime:
+        is_read_only: true
+        from:
+          operation: DescribePipeline
+          path: CreationTime
+      LastModifiedTime:
+        is_read_only: true
+        from:
+          operation: DescribePipeline
+          path: LastModifiedTime
+      LastRunTime:
+        is_read_only: true
+        from:
+          operation: DescribePipeline
+          path: LastRunTime
+    exceptions:
+      errors:
+        404:
+          code: ResourceNotFound
+          message_suffix: does not exist.
+      terminal_codes:
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+        - ResourceNotFound
   Model:
     hooks:
       delta_pre_compare:
@@ -860,7 +894,7 @@ ignore:
       # - MonitoringSchedule
       # - NotebookInstanceLifecycleConfig
       # - NotebookInstance
-      - Pipeline
+      # - Pipeline
       - PresignedDomainUrl
       - PresignedNotebookInstanceUrl
       # - ProcessingJob
@@ -887,3 +921,5 @@ ignore:
       - InstanceMetadataServiceConfiguration
       - InstanceGroups
       - InstanceGroupNames
+    field_paths:
+      - CreatePipelineInput.ClientRequestToken
