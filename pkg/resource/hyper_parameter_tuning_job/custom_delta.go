@@ -36,28 +36,28 @@ func customSetDefaults(
 	// TODO: Use late initialize instead once code generator supports late initializing slices.
 	if ackcompare.IsNotNil(a.ko.Spec.TrainingJobDefinitions) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions) {
 		if len(a.ko.Spec.TrainingJobDefinitions) == len(b.ko.Spec.TrainingJobDefinitions) {
-			for i := 0; i < len(a.ko.Spec.TrainingJobDefinitions); i++ {
-				latestStaticHyperParameters := b.ko.Spec.TrainingJobDefinitions[i].StaticHyperParameters
+			for index := range a.ko.Spec.TrainingJobDefinitions {
+				latestStaticHyperParameters := b.ko.Spec.TrainingJobDefinitions[index].StaticHyperParameters
 				if ackcompare.IsNotNil(latestStaticHyperParameters) {
 					for key, _ := range latestStaticHyperParameters {
 						if key[0:1] == "_" {
-							delete(b.ko.Spec.TrainingJobDefinitions[i].StaticHyperParameters, key)
+							delete(b.ko.Spec.TrainingJobDefinitions[index].StaticHyperParameters, key)
 						}
 					}
 				}
-				if ackcompare.IsNotNil(a.ko.Spec.TrainingJobDefinitions[i].AlgorithmSpecification) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions[i].AlgorithmSpecification) {
-					if ackcompare.IsNil(a.ko.Spec.TrainingJobDefinitions[i].AlgorithmSpecification.MetricDefinitions) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions[i].AlgorithmSpecification.MetricDefinitions) {
-						a.ko.Spec.TrainingJobDefinitions[i].AlgorithmSpecification.MetricDefinitions = b.ko.Spec.TrainingJobDefinitions[i].AlgorithmSpecification.MetricDefinitions
+				if ackcompare.IsNotNil(a.ko.Spec.TrainingJobDefinitions[index].AlgorithmSpecification) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions[index].AlgorithmSpecification) {
+					if ackcompare.IsNil(a.ko.Spec.TrainingJobDefinitions[index].AlgorithmSpecification.MetricDefinitions) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions[index].AlgorithmSpecification.MetricDefinitions) {
+						a.ko.Spec.TrainingJobDefinitions[index].AlgorithmSpecification.MetricDefinitions = b.ko.Spec.TrainingJobDefinitions[index].AlgorithmSpecification.MetricDefinitions
 					}
 				}
-				if ackcompare.IsNil(a.ko.Spec.TrainingJobDefinitions[i].EnableInterContainerTrafficEncryption) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions[i].EnableInterContainerTrafficEncryption) {
-					a.ko.Spec.TrainingJobDefinitions[i].EnableInterContainerTrafficEncryption = b.ko.Spec.TrainingJobDefinitions[i].EnableInterContainerTrafficEncryption
+				if ackcompare.IsNil(a.ko.Spec.TrainingJobDefinitions[index].EnableInterContainerTrafficEncryption) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions[index].EnableInterContainerTrafficEncryption) {
+					a.ko.Spec.TrainingJobDefinitions[index].EnableInterContainerTrafficEncryption = b.ko.Spec.TrainingJobDefinitions[index].EnableInterContainerTrafficEncryption
 				}
-				if ackcompare.IsNil(a.ko.Spec.TrainingJobDefinitions[i].EnableManagedSpotTraining) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions[i].EnableManagedSpotTraining) {
-					a.ko.Spec.TrainingJobDefinitions[i].EnableManagedSpotTraining = b.ko.Spec.TrainingJobDefinitions[i].EnableManagedSpotTraining
+				if ackcompare.IsNil(a.ko.Spec.TrainingJobDefinitions[index].EnableManagedSpotTraining) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions[index].EnableManagedSpotTraining) {
+					a.ko.Spec.TrainingJobDefinitions[index].EnableManagedSpotTraining = b.ko.Spec.TrainingJobDefinitions[index].EnableManagedSpotTraining
 				}
-				if ackcompare.IsNil(a.ko.Spec.TrainingJobDefinitions[i].EnableNetworkIsolation) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions[i].EnableNetworkIsolation) {
-					a.ko.Spec.TrainingJobDefinitions[i].EnableNetworkIsolation = b.ko.Spec.TrainingJobDefinitions[i].EnableNetworkIsolation
+				if ackcompare.IsNil(a.ko.Spec.TrainingJobDefinitions[index].EnableNetworkIsolation) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions[index].EnableNetworkIsolation) {
+					a.ko.Spec.TrainingJobDefinitions[index].EnableNetworkIsolation = b.ko.Spec.TrainingJobDefinitions[index].EnableNetworkIsolation
 				}
 				if ackcompare.IsNotNil(a.ko.Spec.TrainingJobDefinitions[i].ResourceConfig) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions[i].ResourceConfig) {
 					if ackcompare.IsNil(a.ko.Spec.TrainingJobDefinitions[i].ResourceConfig.InstanceCount) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions[i].ResourceConfig.InstanceCount) {
