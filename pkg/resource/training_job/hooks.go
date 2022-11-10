@@ -42,47 +42,40 @@ var (
 		errors.New(resourceName+" is Stopping."),
 		ackrequeue.DefaultRequeueAfterDuration,
 	)
-
-	requeueWaitWhileWarmPoolInUse = ackrequeue.NeededAfter(
-		errors.New("Provisioned infrastructure is still being retained."),
-		ackrequeue.DefaultRequeueAfterDuration,
-	)
 )
 
 // customSetOutput sets the resource ResourceSynced condition to False if
 // TrainingJob is being modified by AWS. It checks for debug and profiler rule status in addition to TrainingJobStatus
-func (rm *resourceManager) customSetOutput(r *resource) error {
+func (rm *resourceManager) customSetOutput(r *resource) {
 	trainingJobStatus := r.ko.Status.TrainingJobStatus
 	// early exit if training job is InProgress
 	if trainingJobStatus != nil && *trainingJobStatus == svcsdk.TrainingJobStatusInProgress {
 		svccommon.SetSyncedCondition(r, trainingJobStatus, &resourceName, &trainingJobModifyingStatuses)
-		return nil
+		return
 	}
 
 	for _, rule := range r.ko.Status.DebugRuleEvaluationStatuses {
 		if rule.RuleEvaluationStatus != nil && svccommon.IsModifyingStatus(rule.RuleEvaluationStatus, &ruleModifyingStatuses) {
 			svccommon.SetSyncedCondition(r, rule.RuleEvaluationStatus, aws.String("DebugRule"), &ruleModifyingStatuses)
-			return nil
+			return
 		}
 	}
 
 	for _, rule := range r.ko.Status.ProfilerRuleEvaluationStatuses {
 		if rule.RuleEvaluationStatus != nil && svccommon.IsModifyingStatus(rule.RuleEvaluationStatus, &ruleModifyingStatuses) {
 			svccommon.SetSyncedCondition(r, rule.RuleEvaluationStatus, aws.String("ProfilerRule"), &ruleModifyingStatuses)
-			return nil
+			return
 		}
 	}
 
 	svccommon.SetSyncedCondition(r, trainingJobStatus, &resourceName, &trainingJobModifyingStatuses)
 
-	// Requeue whenever Warmpool cluster is in Available or Inuse state.
-	if ackcompare.IsNil(r.ko.Status.WarmPoolStatus) {
-		return nil
+	if ackcompare.IsNil(r.ko.Status.WarmPoolStatus) || ackcompare.IsNil(r.ko.Status.WarmPoolStatus.Status) {
+		return
 	}
-
+	// Set synced condition to False if Warm Pool is in Inuse or Available state
 	if svccommon.IsModifyingStatus(r.ko.Status.WarmPoolStatus.Status, &WarmPoolModifyingStatuses) {
-		return requeueWaitWhileWarmPoolInUse
+		svccommon.SetSyncedCondition(r, r.ko.Status.WarmPoolStatus.Status, aws.String("Warm Pool Infrastructure"), &WarmPoolModifyingStatuses)
 	}
-	return nil
 
 }
