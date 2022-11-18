@@ -184,6 +184,9 @@ type TrainingJobStatus struct {
 	// Evaluation status of Debugger rules for profiling on a training job.
 	// +kubebuilder:validation:Optional
 	ProfilerRuleEvaluationStatuses []*ProfilerRuleEvaluationStatus `json:"profilerRuleEvaluationStatuses,omitempty"`
+	// Profiling status of a training job.
+	// +kubebuilder:validation:Optional
+	ProfilingStatus *string `json:"profilingStatus,omitempty"`
 	// Provides detailed information about the state of the training job. For detailed
 	// information on the secondary status of the training job, see StatusMessage
 	// under SecondaryStatusTransition.

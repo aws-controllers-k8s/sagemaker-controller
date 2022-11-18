@@ -110,4 +110,5 @@ status:
     resourceRetainedBillableTimeInSeconds: 69
   secondaryStatus: Completed
   trainingJobStatus: Completed
-  
+  profilingStatus: Disabled
+

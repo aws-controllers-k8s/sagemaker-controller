@@ -108,3 +108,4 @@ status:
     type: ACK.ResourceSynced
   secondaryStatus: Downloading
   trainingJobStatus: InProgress
+  profilingStatus: Disabled

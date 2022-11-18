@@ -110,3 +110,4 @@ status:
     type: ACK.LateInitialized
   secondaryStatus: Downloading
   trainingJobStatus: InProgress
+  profilingStatus: Disabled

@@ -109,3 +109,4 @@ status:
     status: Available
   secondaryStatus: Completed
   trainingJobStatus: Completed
+  profilingStatus: Disabled

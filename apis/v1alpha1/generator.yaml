@@ -123,10 +123,17 @@ resources:
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
+    update_conditions_custom_method_name: CustomUpdateConditions
     hooks:
       delta_pre_compare:
         code: customSetDefaults(a, b)
+      delta_post_compare:
+        code: customPostCompare(b, a, delta)
       sdk_read_one_post_set_output:
+        code: rm.customSetOutput(&resource{ko})
+      sdk_update_post_build_request:
+        template_path: training_job/sdk_update_post_build_request.go.tpl
+      sdk_update_post_set_output:
         code: rm.customSetOutput(&resource{ko})
       sdk_delete_pre_build_request:
         template_path: training_job/sdk_delete_pre_build_request.go.tpl
@@ -175,6 +182,11 @@ resources:
         from:
           operation: DescribeTrainingJob
           path: WarmPoolStatus
+      ProfilingStatus:
+        is_read_only: true
+        from: 
+          operation: DescribeTrainingJob
+          path: ProfilingStatus
       AlgorithmSpecification.MetricDefinitions:
         compare:
           is_ignored: true
@@ -879,7 +891,6 @@ ignore:
       - Workforce
       - Workteam
     operations:
-      - UpdateTrainingJob
       - UpdateFeatureGroup
     shape_names:
       # RSessionAppSettings is an empty struct that causes generation errors
@@ -895,3 +906,4 @@ ignore:
       - CanvasAppSettings
       - ExplainerConfig
       - HyperParameterTuningJobStrategyConfig
+      - DisableProfiler
