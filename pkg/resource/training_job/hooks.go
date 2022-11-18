@@ -196,5 +196,164 @@ func customSetOutputPostUpdate(ko *svcapitypes.TrainingJob, delta *ackcompare.De
 	if warmpool_diff {
 		svccommon.SetSyncedCondition(&resource{ko}, aws.String("Available"), aws.String("Warm Pool Infrastructure"), &WarmPoolModifyingStatuses)
 	}
+	}
 
+}
+
+// customSetOutputUpdateWarmpool makes the controller requeue if there is an update and
+// the training job is still in InProgress
+func customSetOutputUpdateWarmpool(r *resource) error {
+	trainingJobStatus := r.ko.Status.TrainingJobStatus
+	if ackcompare.IsNotNil(trainingJobStatus) && *trainingJobStatus == svcsdk.TrainingJobStatusInProgress {
+		return requeueBeforeUpdate
+	}
+	return nil
+}
+
+// warmPoolTerminalCheck checks if warm pool has reached a state where it is not updateable
+func warmPoolTerminalCheck(latest *resource) bool {
+	trainingJobStatus := latest.ko.Status.TrainingJobStatus
+	if ackcompare.IsNotNil(latest.ko.Spec.ResourceConfig) {
+		if ackcompare.IsNil(latest.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds) {
+			return true // Warm pool can only be updated iff there is a provisioned cluster.
+		}
+	} else {
+		return false
+	}
+
+	if ackcompare.IsNotNil(trainingJobStatus) {
+		if *trainingJobStatus == svcsdk.TrainingJobStatusInProgress {
+			return false
+		}
+		if *trainingJobStatus == svcsdk.TrainingJobStatusCompleted {
+			if ackcompare.IsNotNil(latest.ko.Status.WarmPoolStatus) {
+				wp_modifying := svccommon.IsModifyingStatus(latest.ko.Status.WarmPoolStatus.Status, &WarmPoolModifyingStatuses)
+				return !wp_modifying
+			} else {
+				return false // Sometimes the API (briefly) does not return the WP status even if it completes.
+			}
+		} else {
+			// Training Job is in 'Failed'|'Stopping'|'Stopped' (Terminal)
+			return true
+		}
+	}
+
+	// ACK OIDC is misconfigured (Terminal)
+	return true
+}
+
+// customSetOutputUpdateProfiler decides whether the training job is ready/eligible for update
+// depending on the status.
+func customSetOutputUpdateProfiler(r *resource) error {
+	trainingSecondaryStatus := r.ko.Status.SecondaryStatus
+	trainingJobStatus := r.ko.Status.TrainingJobStatus
+	if ackcompare.IsNotNil(trainingSecondaryStatus) && *trainingSecondaryStatus == svcsdk.SecondaryStatusStarting {
+		return requeueBeforeUpdateStarting
+	}
+	if ackcompare.IsNotNil(trainingJobStatus) {
+		for _, terminalStatus := range TrainingJobTerminalProfiler {
+			if terminalStatus == *trainingJobStatus {
+				return ackerr.NewTerminalError(errors.New("profiler can only be updated when Training Job is in InProgress state"))
+			}
+		}
+	}
+	return nil
+}
+
+// profilerRemovalCheck checks if the profiler was removed.
+func profilerRemovalCheck(desired *resource, latest *resource) bool {
+	if ackcompare.IsNotNil(desired.ko.Spec) && ackcompare.IsNotNil(latest.ko.Spec) {
+		if ackcompare.IsNil(desired.ko.Spec.ProfilerRuleConfigurations) && ackcompare.IsNotNil(latest.ko.Spec.ProfilerRuleConfigurations) {
+			return true
+		}
+		if ackcompare.IsNil(desired.ko.Spec.ProfilerConfig) && ackcompare.IsNotNil(latest.ko.Spec.ProfilerConfig) {
+			return true
+		}
+	}
+	return false
+}
+
+// customSetOutputPostUpdate sets the synced condition at the end of the update.
+func customSetOutputPostUpdate(ko *svcapitypes.TrainingJob, delta *ackcompare.Delta) {
+	warmpool_diff := delta.DifferentAt("Spec.ResourceConfig.KeepAlivePeriodInSeconds")
+	profiler_diff := delta.DifferentAt("Spec.ProfilerConfig") || delta.DifferentAt("Spec.ProfilerRuleConfigurations")
+	if profiler_diff {
+		svccommon.SetSyncedCondition(&resource{ko}, aws.String("InProgress"), &resourceName, &trainingJobModifyingStatuses)
+	}
+	if warmpool_diff {
+		svccommon.SetSyncedCondition(&resource{ko}, aws.String("Available"), aws.String("Warm Pool Infrastructure"), &WarmPoolModifyingStatuses)
+	}
+
+}
+
+// This function makes the controller requeue if there is an update and
+// the training job is still in InProgress
+func customSetOutputUpdateWarmpool(r *resource) error {
+	trainingJobStatus := r.ko.Status.TrainingJobStatus
+	if ackcompare.IsNotNil(trainingJobStatus) && *trainingJobStatus == svcsdk.TrainingJobStatusInProgress {
+		return requeueBeforeUpdate
+	}
+	return nil
+}
+
+// Check if warm pool has reached a state where it is not updateable
+func warmPoolTerminalCheck(latest *resource) bool {
+	trainingJobStatus := latest.ko.Status.TrainingJobStatus
+	if ackcompare.IsNotNil(latest.ko.Spec.ResourceConfig) {
+		if ackcompare.IsNil(latest.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds) {
+			return true // Warm pool can only be updated iff there is a provisioned cluster.
+		}
+	} else {
+		return false
+	}
+
+	if ackcompare.IsNotNil(trainingJobStatus) {
+		if *trainingJobStatus == svcsdk.TrainingJobStatusInProgress {
+			return false
+		}
+		if *trainingJobStatus == svcsdk.TrainingJobStatusCompleted {
+			if ackcompare.IsNotNil(latest.ko.Status.WarmPoolStatus) {
+				wp_modifying := svccommon.IsModifyingStatus(latest.ko.Status.WarmPoolStatus.Status, &WarmPoolModifyingStatuses)
+				return !wp_modifying
+			} else {
+				return false // Sometimes the API (briefly) does not return the WP status even if it completes.
+			}
+		} else {
+			// Training Job is in 'Failed'|'Stopping'|'Stopped' (Terminal)
+			return true
+		}
+	}
+
+	// ACK OIDC is misconfigured (Terminal)
+	return true
+}
+
+// Profiler cannot be updated at certain statuses.
+func customSetOutputUpdateProfiler(r *resource) error {
+	trainingSecondaryStatus := r.ko.Status.SecondaryStatus
+	trainingJobStatus := r.ko.Status.TrainingJobStatus
+	if ackcompare.IsNotNil(trainingSecondaryStatus) && *trainingSecondaryStatus == svcsdk.SecondaryStatusStarting {
+		return requeueBeforeUpdateStarting
+	}
+	if ackcompare.IsNotNil(trainingJobStatus) {
+		for _, terminalStatus := range TrainingJobTerminalProfiler {
+			if terminalStatus == *trainingJobStatus {
+				return errors.New("[ACK_SM] Profiler can only be updated when Training Job is in InProgress state")
+			}
+		}
+	}
+	return nil
+}
+
+// Checks if the profiler was removed.
+func profilerRemovalCheck(desired *resource, latest *resource) bool {
+	if ackcompare.IsNotNil(desired.ko.Spec) && ackcompare.IsNotNil(latest.ko.Spec) {
+		if ackcompare.IsNil(desired.ko.Spec.ProfilerRuleConfigurations) && ackcompare.IsNotNil(latest.ko.Spec.ProfilerRuleConfigurations) {
+			return true
+		}
+		if ackcompare.IsNil(desired.ko.Spec.ProfilerConfig) && ackcompare.IsNotNil(latest.ko.Spec.ProfilerConfig) {
+			return true
+		}
+	}
+	return false
 }

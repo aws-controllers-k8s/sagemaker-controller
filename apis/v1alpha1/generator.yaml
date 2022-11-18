@@ -123,6 +123,7 @@ resources:
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
+    update_conditions_custom_method_name: CustomUpdateConditions
     hooks:
       delta_pre_compare:
         code: customSetDefaults(a, b)
