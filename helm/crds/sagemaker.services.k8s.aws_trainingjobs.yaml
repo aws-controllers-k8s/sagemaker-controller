@@ -618,6 +618,9 @@ spec:
                       type: string
                   type: object
                 type: array
+              profilingStatus:
+                description: Profiling status of a training job.
+                type: string
               secondaryStatus:
                 description: "Provides detailed information about the state of the
                   training job. For detailed information on the secondary status of

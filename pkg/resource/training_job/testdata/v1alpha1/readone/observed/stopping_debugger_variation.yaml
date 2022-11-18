@@ -152,3 +152,4 @@ status:
     ruleEvaluationStatus: InProgress
   secondaryStatus: Starting
   trainingJobStatus: Stopping
+  profilingStatus: Enabled

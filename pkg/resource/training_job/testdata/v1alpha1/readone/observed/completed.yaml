@@ -108,3 +108,4 @@ status:
     s3ModelArtifacts: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/output/model.tar.gz
   secondaryStatus: Completed
   trainingJobStatus: Completed
+  profilingStatus: Disabled

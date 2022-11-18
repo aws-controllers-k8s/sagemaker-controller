@@ -182,18 +182,6 @@ tests:
         invoke: ReadOne
         expect:
           latest_state: "v1alpha1/readone/observed/warmpool_inuse.yaml"
-  - name: "Training job update tests"
-    description: "Testing the Update operation"
-    scenarios:
-      - name: "Update=NotSupported"
-        description: "This test checks if the controller throws error for update"
-        given:
-          desired_state: "v1alpha1/update/desired/updated_base.yaml"
-          latest_state: "v1alpha1/create/observed/success_after_create.yaml"
-        invoke: Update
-        expect:
-          latest_state: "v1alpha1/update/observed/error_on_update.yaml"
-          error: "not implemented"
   - name: "Training job delete tests"
     description: "Testing the delete operation"
     scenarios:

@@ -12748,6 +12748,11 @@ func (in *TrainingJobStatus) DeepCopyInto(out *TrainingJobStatus) {
 			}
 		}
 	}
+	if in.ProfilingStatus != nil {
+		in, out := &in.ProfilingStatus, &out.ProfilingStatus
+		*out = new(string)
+		**out = **in
+	}
 	if in.SecondaryStatus != nil {
 		in, out := &in.SecondaryStatus, &out.SecondaryStatus
 		*out = new(string)

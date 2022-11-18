@@ -150,3 +150,4 @@ status:
     ruleEvaluationStatus: InProgress
   secondaryStatus: Starting
   trainingJobStatus: InProgress
+  profilingStatus: Enabled

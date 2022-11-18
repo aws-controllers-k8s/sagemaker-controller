@@ -109,3 +109,4 @@ status:
     status: InUse
   secondaryStatus: Starting
   trainingJobStatus: InProgress
+  profilingStatus: Disabled
