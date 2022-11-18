@@ -30,6 +30,7 @@ from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
 
 RESOURCE_PLURAL = "trainingjobs"
+NEW_PROFILER_INTERVAL = 200
 
 
 @pytest.fixture(scope="function")
@@ -37,7 +38,7 @@ def xgboost_training_job_debugger():
     resource_name = random_suffix_name("xgboost-trainingjob-debugger", 50)
     replacements = REPLACEMENT_VALUES.copy()
     replacements["TRAINING_JOB_NAME"] = resource_name
-    reference, _, resource = create_sagemaker_resource(
+    reference, spec, resource = create_sagemaker_resource(
         resource_plural=RESOURCE_PLURAL,
         resource_name=resource_name,
         spec_file="xgboost_trainingjob_debugger",
@@ -45,7 +46,7 @@ def xgboost_training_job_debugger():
     )
     assert resource is not None
 
-    yield (reference, resource)
+    yield (reference, resource, spec)
 
     if k8s.get_resource_exists(reference):
         _, deleted = k8s.delete_custom_resource(reference, 3, 10)
@@ -54,16 +55,19 @@ def xgboost_training_job_debugger():
 
 def get_training_rule_eval_sagemaker_status(training_job_name: str, rule_type: str):
     training_sm_desc = get_sagemaker_training_job(training_job_name)
-    return training_sm_desc[rule_type+"EvaluationStatuses"][0]["RuleEvaluationStatus"]
+    return training_sm_desc[rule_type + "EvaluationStatuses"][0]["RuleEvaluationStatus"]
 
 
-def get_training_rule_eval_resource_status(reference: k8s.CustomResourceReference, rule_type: str):
+def get_training_rule_eval_resource_status(
+    reference: k8s.CustomResourceReference, rule_type: str
+):
     resource = k8s.get_resource(reference)
-    resource_status = resource["status"][rule_type+"EvaluationStatuses"][0][
+    resource_status = resource["status"][rule_type + "EvaluationStatuses"][0][
         "ruleEvaluationStatus"
     ]
     assert resource_status is not None
     return resource_status
+
 
 @service_marker
 class TestTrainingDebuggerJob:
@@ -107,14 +111,18 @@ class TestTrainingDebuggerJob:
         resource_rule_type = sagemaker_rule_type[0].lower() + sagemaker_rule_type[1:]
         assert (
             self._wait_sagemaker_training_rule_eval_status(
-                training_job_name, sagemaker_rule_type, expected_status, 
+                training_job_name,
+                sagemaker_rule_type,
+                expected_status,
             )
-            == self._wait_resource_training_rule_eval_status(reference, resource_rule_type, expected_status)
+            == self._wait_resource_training_rule_eval_status(
+                reference, resource_rule_type, expected_status
+            )
             == expected_status
         )
 
     def test_completed(self, xgboost_training_job_debugger):
-        (reference, resource) = xgboost_training_job_debugger
+        (reference, resource, _) = xgboost_training_job_debugger
         assert k8s.get_resource_exists(reference)
 
         training_job_name = resource["spec"].get("trainingJobName", None)
@@ -122,7 +130,7 @@ class TestTrainingDebuggerJob:
 
         training_job_desc = get_sagemaker_training_job(training_job_name)
         training_job_arn = training_job_desc["TrainingJobArn"]
-        
+
         resource_arn = k8s.get_resource_arn(resource)
         if resource_arn is None:
             logging.error(
@@ -142,7 +150,7 @@ class TestTrainingDebuggerJob:
         self._assert_training_rule_eval_status_in_sync(
             training_job_name, "DebugRule", reference, cfg.RULE_STATUS_COMPLETED
         )
-        
+
         # Assert profiler rule evaluation completed
         self._assert_training_rule_eval_status_in_sync(
             training_job_name, "ProfilerRule", reference, cfg.RULE_STATUS_COMPLETED
@@ -153,5 +161,66 @@ class TestTrainingDebuggerJob:
         assert_tags_in_sync(training_job_arn, resource_tags)
 
         # Check that you can delete a completed resource from k8s
-        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
+        _, deleted = k8s.delete_custom_resource(
+            reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
+        )
+        assert deleted is True
+
+    def test_update(self, xgboost_training_job_debugger):
+        (reference, resource, spec) = xgboost_training_job_debugger
+        assert k8s.get_resource_exists(reference)
+
+        training_job_name = resource["spec"].get("trainingJobName", None)
+        assert training_job_name is not None
+
+        training_job_desc = get_sagemaker_training_job(training_job_name)
+        training_job_arn = training_job_desc["TrainingJobArn"]
+
+        resource_arn = k8s.get_resource_arn(resource)
+        if resource_arn is None:
+            logging.error(
+                f"ARN for this resource is None, resource status is: {resource['status']}"
+            )
+        assert resource_arn == training_job_arn
+
+        assert training_job_desc["TrainingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
+
+        spec["spec"]["profilerConfig"][
+            "profilingIntervalInMilliseconds"
+        ] = NEW_PROFILER_INTERVAL
+        k8s.patch_custom_resource(reference, spec)
+
+        assert_training_status_in_sync(
+            training_job_name, reference, cfg.JOB_STATUS_COMPLETED
+        )
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
+
+        # Assert debugger rule evaluation completed
+        self._assert_training_rule_eval_status_in_sync(
+            training_job_name, "DebugRule", reference, cfg.RULE_STATUS_COMPLETED
+        )
+
+        # Assert profiler rule evaluation completed
+        self._assert_training_rule_eval_status_in_sync(
+            training_job_name, "ProfilerRule", reference, cfg.RULE_STATUS_COMPLETED
+        )
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+
+        # Check if the update worked.
+        training_sm_desc = get_sagemaker_training_job(training_job_name)
+        assert (
+            training_sm_desc["ProfilerConfig"]["ProfilingIntervalInMilliseconds"]
+            == NEW_PROFILER_INTERVAL
+        )
+        resource = k8s.get_resource(reference)
+        assert (
+            resource["spec"]["profilerConfig"]["profilingIntervalInMilliseconds"]
+            == NEW_PROFILER_INTERVAL
+        )
+
+        # Check that you can delete a completed resource from k8s
+        _, deleted = k8s.delete_custom_resource(
+            reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
+        )
         assert deleted is True
