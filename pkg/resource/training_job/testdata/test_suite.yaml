@@ -229,3 +229,34 @@ tests:
         invoke: Delete
         expect:
           error: nil
+  - name: "Training job Update tests"
+    description: "Tests for update operation"
+    scenarios:
+      - name: "Update=RemoveProfilerBothParams"
+        desciption: "This test checks if the Controller can remove the profiler properly"
+        given:
+          desired_state: "v1alpha1/update/desired/removeProfilerboth.yaml"
+          latest_state: "v1alpha1/update/latest/profilerHappyBase.yaml"
+          svc_api: 
+            - operation: UpdateTrainingJobWithContext
+              output_fixture: "sdkapi/update/update_sucess.json"
+        invoke: Update
+        expect:
+          latest_state: "v1alpha1/update/observed/removeProfilerBoth.yaml"
+          error: nil
+      # - name: "Update=RemoveProfilerRule"
+      # - name: "Update=RemoveProfilerConfig"
+      # - name: "Update=BothProfiler"
+      # - name: "Update=ProfilerConfig"
+      # - name: "Update=ProfilerStarting"
+      # - name: "Update=ProfilerTerminal"
+      # - name: "Update=ProfilerInvalid"
+      # - name: "Update=WarmPool"
+      # - name: "Update=WarmPoolInProgress"
+      # - name: "Update=WarmPoolTerminal"
+      # - name: "Update=AddProfiler"
+      # - name: "Update=AddWarmPool"
+
+      
+      
+      
