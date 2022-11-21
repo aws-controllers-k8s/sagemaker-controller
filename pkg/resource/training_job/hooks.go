@@ -189,10 +189,10 @@ func customSetOutputPostUpdate(ko *svcapitypes.TrainingJob, delta *ackcompare.De
 	warmpool_diff := delta.DifferentAt("Spec.ResourceConfig.KeepAlivePeriodInSeconds")
 	profiler_diff := delta.DifferentAt("Spec.ProfilerConfig") || delta.DifferentAt("Spec.ProfilerRuleConfigurations")
 	if profiler_diff {
-		svccommon.SetSyncedCondition(&resource{ko}, aws.string("InProgress"), &resourceName, &trainingJobModifyingStatuses)
+		svccommon.SetSyncedCondition(&resource{ko}, aws.String("InProgress"), &resourceName, &trainingJobModifyingStatuses)
 	}
 	if warmpool_diff {
-		svccommon.SetSyncedCondition(&resource{ko}, aws.string("Availible"), aws.String("Warm Pool Infrastructure"), &WarmPoolModifyingStatuses)
+		svccommon.SetSyncedCondition(&resource{ko}, aws.String("Availible"), aws.String("Warm Pool Infrastructure"), &WarmPoolModifyingStatuses)
 	}
 
 }
