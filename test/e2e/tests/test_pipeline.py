@@ -23,7 +23,7 @@ from e2e import (
     wait_for_status,
     create_sagemaker_resource,
     get_sagemaker_pipeline,
-    sagemaker_client,
+    assert_tags_in_sync,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
@@ -159,6 +159,10 @@ class TestPipeline:
             resource["spec"].get("lastModifiedTime", None)
             != old_pipeline_last_modified_time
         )
+
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(pipeline_arn, resource_tags)
+
         # Check that you can delete a completed resource from k8s
         _, deleted = k8s.delete_custom_resource(
             reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH

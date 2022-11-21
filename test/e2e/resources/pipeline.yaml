@@ -11,3 +11,6 @@ spec:
   roleARN: $SAGEMAKER_EXECUTION_ROLE_ARN
   parallelismConfiguration:
     maxParallelExecutionSteps: 2
+  tags:
+    - key: environment
+      value: testing
