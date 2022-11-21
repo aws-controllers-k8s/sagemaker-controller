@@ -18,6 +18,7 @@ import (
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
+	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
 	"github.com/aws/aws-sdk-go/aws"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
@@ -181,4 +182,17 @@ func profilerRemovalCheck(desired *resource, latest *resource) bool {
 		}
 	}
 	return false
+}
+
+// The statuses in ko object in the end of update are empty, using customSetOutput wont work.
+func customSetOutputPostUpdate(ko *svcapitypes.TrainingJob, delta *ackcompare.Delta) {
+	warmpool_diff := delta.DifferentAt("Spec.ResourceConfig.KeepAlivePeriodInSeconds")
+	profiler_diff := delta.DifferentAt("Spec.ProfilerConfig") || delta.DifferentAt("Spec.ProfilerRuleConfigurations")
+	if profiler_diff {
+		svccommon.SetSyncedCondition(&resource{ko}, aws.string("InProgress"), &resourceName, &trainingJobModifyingStatuses)
+	}
+	if warmpool_diff {
+		svccommon.SetSyncedCondition(&resource{ko}, aws.string("Availible"), aws.String("Warm Pool Infrastructure"), &WarmPoolModifyingStatuses)
+	}
+
 }

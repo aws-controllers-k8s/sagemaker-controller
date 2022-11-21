@@ -134,7 +134,7 @@ resources:
       sdk_update_post_build_request:
         template_path: training_job/sdk_update_post_build_request.go.tpl
       sdk_update_post_set_output:
-        code: rm.customSetOutput(&resource{ko})
+        code: customSetOutputPostUpdate(ko, delta)
       sdk_delete_pre_build_request:
         template_path: training_job/sdk_delete_pre_build_request.go.tpl
       sdk_delete_post_request:
