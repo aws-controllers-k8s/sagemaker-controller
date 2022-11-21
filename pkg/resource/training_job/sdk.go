@@ -1067,6 +1067,7 @@ func (rm *resourceManager) sdkUpdate(
 		if warmpool_terminal {
 			return latest, errors.New("[ACK_SM] Warm pool either does not exist or has reached a non updatable state.")
 		}
+		//Requeue if TrainingJob is in InProgress state
 		if err := customSetOutputUpdateWarmpool(latest); err != nil {
 			return nil, err
 		}
@@ -1106,7 +1107,7 @@ func (rm *resourceManager) sdkUpdate(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutput(&resource{ko})
+	customSetOutputPostUpdate(ko, delta)
 	return &resource{ko}, nil
 }
 
