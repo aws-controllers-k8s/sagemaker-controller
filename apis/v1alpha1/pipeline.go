@@ -66,9 +66,6 @@ type PipelineStatus struct {
 	// The time when the pipeline was last modified.
 	// +kubebuilder:validation:Optional
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
-	// The time when the pipeline was last run.
-	// +kubebuilder:validation:Optional
-	LastRunTime *metav1.Time `json:"lastRunTime,omitempty"`
 	// The status of the pipeline execution.
 	// +kubebuilder:validation:Optional
 	PipelineStatus *string `json:"pipelineStatus,omitempty"`

@@ -10415,10 +10415,6 @@ func (in *PipelineStatus) DeepCopyInto(out *PipelineStatus) {
 		in, out := &in.LastModifiedTime, &out.LastModifiedTime
 		*out = (*in).DeepCopy()
 	}
-	if in.LastRunTime != nil {
-		in, out := &in.LastRunTime, &out.LastRunTime
-		*out = (*in).DeepCopy()
-	}
 	if in.PipelineStatus != nil {
 		in, out := &in.PipelineStatus, &out.PipelineStatus
 		*out = new(string)

@@ -131,6 +131,7 @@ class TestPipeline:
             )
 
         pipeline_arn = pipeline_desc["PipelineArn"]
+        old_pipeline_last_modified_time = pipeline_desc["LastModifiedTime"]
         assert k8s.get_resource_arn(resource) == pipeline_arn
 
         self._assert_pipeline_status_in_sync(pipeline_arn, reference, "Active")
@@ -153,7 +154,11 @@ class TestPipeline:
             resource["spec"].get("pipelineDisplayName", None)
             == new_pipeline_display_name
         )
-
+        assert old_pipeline_last_modified_time != pipeline_desc["LastModifiedTime"]
+        assert (
+            resource["spec"].get("lastModifiedTime", None)
+            != old_pipeline_last_modified_time
+        )
         # Check that you can delete a completed resource from k8s
         _, deleted = k8s.delete_custom_resource(
             reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH

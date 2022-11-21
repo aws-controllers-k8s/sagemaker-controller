@@ -97,11 +97,6 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Status.LastModifiedTime = nil
 	}
-	if resp.LastRunTime != nil {
-		ko.Status.LastRunTime = &metav1.Time{*resp.LastRunTime}
-	} else {
-		ko.Status.LastRunTime = nil
-	}
 	if resp.ParallelismConfiguration != nil {
 		f5 := &svcapitypes.ParallelismConfiguration{}
 		if resp.ParallelismConfiguration.MaxParallelExecutionSteps != nil {
