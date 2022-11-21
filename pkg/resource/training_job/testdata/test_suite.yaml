@@ -320,7 +320,7 @@ tests:
           latest_state: "v1alpha1/update/latest/WPDownloading.yaml"
         invoke: Update
         expect:
-          error: Warm pool cannot be updated in InProgress state requeuing until TrainingJob reaches completed state.
+          error: Warm pool cannot be updated in InProgress state, requeuing until TrainingJob reaches completed state.
       - name: "Update=WarmPoolTerminal"
         given:
           desired_state: "v1alpha1/update/desired/updateWarmPool.yaml"
