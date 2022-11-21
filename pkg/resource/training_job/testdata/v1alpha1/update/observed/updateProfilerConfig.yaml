@@ -1,101 +1,46 @@
 apiVersion: sagemaker.services.k8s.aws/v1alpha1
 kind: TrainingJob
 metadata:
-  creationTimestamp: null
   name: training-test
 spec:
-  algorithmSpecification:
-    enableSageMakerMetricsTimeSeries: false
-    metricDefinitions:
-    - name: train:mae
-      regex: .*\[[0-9]+\].*#011train-mae:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
-    - name: validation:auc
-      regex: .*\[[0-9]+\].*#011validation-auc:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
-    - name: train:merror
-      regex: .*\[[0-9]+\].*#011train-merror:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
-    - name: train:auc
-      regex: .*\[[0-9]+\].*#011train-auc:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
-    - name: validation:mae
-      regex: .*\[[0-9]+\].*#011validation-mae:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
-    - name: validation:error
-      regex: .*\[[0-9]+\].*#011validation-error:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
-    - name: validation:merror
-      regex: .*\[[0-9]+\].*#011validation-merror:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
-    - name: validation:logloss
-      regex: .*\[[0-9]+\].*#011validation-logloss:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
-    - name: train:rmse
-      regex: .*\[[0-9]+\].*#011train-rmse:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
-    - name: train:logloss
-      regex: .*\[[0-9]+\].*#011train-logloss:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
-    - name: train:mlogloss
-      regex: .*\[[0-9]+\].*#011train-mlogloss:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
-    - name: validation:rmse
-      regex: .*\[[0-9]+\].*#011validation-rmse:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
-    - name: validation:ndcg
-      regex: .*\[[0-9]+\].*#011validation-ndcg:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
-    - name: train:error
-      regex: .*\[[0-9]+\].*#011train-error:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
-    - name: validation:mlogloss
-      regex: .*\[[0-9]+\].*#011validation-mlogloss:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
-    - name: train:ndcg
-      regex: .*\[[0-9]+\].*#011train-ndcg:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
-    - name: train:map
-      regex: .*\[[0-9]+\].*#011train-map:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
-    - name: validation:map
-      regex: .*\[[0-9]+\].*#011validation-map:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
-    trainingImage: 433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:1
-    trainingInputMode: File
-  enableInterContainerTrafficEncryption: false
-  enableManagedSpotTraining: false
-  enableNetworkIsolation: false
-  hyperParameters:
-    eta: "0.2"
-    gamma: "4"
+  trainingJobName: training-test
+  hyperParameters: 
     max_depth: "5"
+    gamma: "4"
+    eta: "0.2"
     min_child_weight: "6"
-    num_class: "10"
-    num_round: "10"
-    objective: multi:softmax
-    silent: "0"
-  inputDataConfig:
-  - channelName: train
-    compressionType: None
-    contentType: text/csv
-    dataSource:
-      s3DataSource:
-        s3DataDistributionType: FullyReplicated
-        s3DataType: S3Prefix
-        s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/train
-    recordWrapperType: None
-  - channelName: validation
-    compressionType: None
-    contentType: text/csv
-    dataSource:
-      s3DataSource:
-        s3DataDistributionType: FullyReplicated
-        s3DataType: S3Prefix
-        s3URI: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/validation
-    recordWrapperType: None
+    objective: "reg:squarederror"
+    subsample: "0.7"
+    num_round: "51"
+  algorithmSpecification:
+    trainingImage: 246618743249.dkr.ecr.us-west-2.amazonaws.com/sagemaker-xgboost:1.2-1
+    trainingInputMode: File
+  roleARN: arn:aws:iam::123456789012:role/service-role/AmazonSageMaker
   outputDataConfig:
-    kmsKeyID: ""
     s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/output
   resourceConfig:
     instanceCount: 1
     instanceType: ml.m4.xlarge
     volumeSizeInGB: 5
-  roleARN: arn:aws:iam::123456789012:role/service-role/AmazonSageMaker
   stoppingCondition:
     maxRuntimeInSeconds: 86400
-  trainingJobName: training-test
+  inputDataConfig:
+    - channelName: train
+      dataSource:
+        s3DataSource:
+          s3DataType: S3Prefix
+          s3URI: s3://ack-sagemaker-bucket-592697580195/sagemaker/xgboost/train/
+          s3DataDistributionType: FullyReplicated
+      contentType: text/libsvm
+      compressionType: None
   profilerConfig:
     profilingIntervalInMilliseconds: 200
     s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/profiler/
   profilerRuleConfigurations:
   - ruleConfigurationName: ProfilerReport
-    ruleEvaluatorImage: 895741380848.dkr.ecr.us-west-2.amazonaws.com/sagemaker-debugger-rules:1
+    ruleEvaluatorImage: 895741380848.dkr.ecr.us-west-2.amazonaws.com/sagemaker-debugger-rules:latest
     ruleParameters:
       rule_to_invoke: ProfilerReport
-    volumeSizeInGB: 0
 status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-west-2:123456789012:training-job/training-test
@@ -106,11 +51,3 @@ status:
     message: TrainingJob is in InProgress status.
     status: "False"
     type: ACK.ResourceSynced
-  secondaryStatus: Downloading
-  trainingJobStatus: InProgress
-  profilingStatus: Enabled
-  profilerRuleEvaluationStatuses:
-  - lastModifiedTime: "0001-01-01T00:00:00Z"
-    ruleConfigurationName: ProfilerReport
-    ruleEvaluationJobARN: arn:aws:sagemaker:us-west-2:123456789012:processing-job/xgboost-training-debugger--profilerreport-f81883f8
-    ruleEvaluationStatus: InProgress
