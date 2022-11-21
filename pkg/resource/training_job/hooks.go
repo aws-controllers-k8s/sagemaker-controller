@@ -51,7 +51,7 @@ var (
 	)
 
 	requeueBeforeUpdate = ackrequeue.NeededAfter(
-		errors.New("Warm pool cannot be updated in InProgress state requeuing until TrainingJob reaches completed state."),
+		errors.New("Warm pool cannot be updated in InProgress state, requeuing until TrainingJob reaches completed state."),
 		ackrequeue.DefaultRequeueAfterDuration,
 	)
 	requeueBeforeUpdateStarting = ackrequeue.NeededAfter(
@@ -192,7 +192,7 @@ func customSetOutputPostUpdate(ko *svcapitypes.TrainingJob, delta *ackcompare.De
 		svccommon.SetSyncedCondition(&resource{ko}, aws.String("InProgress"), &resourceName, &trainingJobModifyingStatuses)
 	}
 	if warmpool_diff {
-		svccommon.SetSyncedCondition(&resource{ko}, aws.String("Availible"), aws.String("Warm Pool Infrastructure"), &WarmPoolModifyingStatuses)
+		svccommon.SetSyncedCondition(&resource{ko}, aws.String("Available"), aws.String("Warm Pool Infrastructure"), &WarmPoolModifyingStatuses)
 	}
 
 }
