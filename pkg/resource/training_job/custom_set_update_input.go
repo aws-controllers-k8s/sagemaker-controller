@@ -20,16 +20,17 @@ import (
 	"errors"
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	smv1alpha "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 )
 
+// customSetUpdateInput modifies the input of UpdateTrainingJob.
 // Three conditions:
 // 1. Customer updates both profiler parameters: Recreate the input for profiler Rule.
 // 2. Customer only updates Profiler Config: Set the profiler rule configuration to nil to avoid validation error.
 // 3. Customer only updates Rule Configurations: Recreate the input for profiler Rule and set Profiler config to nil.
 //	  safer to do this because the "only add" behavior might reappear.
-
 func customSetUpdateInput(desired *resource, latest *resource, delta *ackcompare.Delta, input *svcsdk.UpdateTrainingJobInput) error {
 	if delta.DifferentAt("Spec.ProfilerConfig") && delta.DifferentAt("Spec.ProfilerRuleConfigurations") {
 		err := handleProfilerRuleConfig(desired, latest, input)
@@ -47,6 +48,8 @@ func customSetUpdateInput(desired *resource, latest *resource, delta *ackcompare
 	return nil
 }
 
+// handleProfilerRuleConfig sets the input of the ProfilerRuleConfiguration so that
+// it is compatible with the sagemaker API.
 // Update training job is post operation wrt to the profiler parameters.
 // Because of this only NEW rules can be specified.
 // In this function we check to see if any new profiler configurstions have been added.
@@ -55,13 +58,13 @@ func handleProfilerRuleConfig(desired *resource, latest *resource, input *svcsdk
 	profilerRuleLatest := latest.ko.Spec.ProfilerRuleConfigurations
 
 	if ackcompare.IsNil(profilerRuleDesired) {
-		return errors.New("[ACK_SM] Cannot remove a profiler rule.")
+		return ackerr.NewTerminalError(errors.New("cannot remove a profiler rule."))
 	}
 	if ackcompare.IsNil(profilerRuleLatest) {
 		return nil
 	}
 	if len(profilerRuleDesired) < len(profilerRuleLatest) {
-		return errors.New("[ACK_SM] Cannot remove a profiler rule.")
+		return ackerr.NewTerminalError(errors.New("cannot remove a profiler rule."))
 	}
 
 	ruleMap := map[string]int{}
@@ -83,7 +86,7 @@ func handleProfilerRuleConfig(desired *resource, latest *resource, input *svcsdk
 	return nil
 }
 
-// Recreates input and sets disable profiler to true
+// handleProfilerRemoval sets the input parameters to disable the profiler.
 func handleProfilerRemoval(input *svcsdk.UpdateTrainingJobInput) {
 	input.SetProfilerRuleConfigurations(nil)
 	profilerConfig := svcsdk.ProfilerConfigForUpdate{}
@@ -91,6 +94,8 @@ func handleProfilerRemoval(input *svcsdk.UpdateTrainingJobInput) {
 	input.SetProfilerConfig(&profilerConfig)
 }
 
+// convertProfileRuleType converts the kubernetes object ProfilerRuleConfiguration into
+// a type that is compatible with the AWS API.
 // Sagemaker and kubernetes types are not the same so the input has to be reconstructed.
 func convertProfileRuleType(rule *smv1alpha.ProfilerRuleConfiguration) *svcsdk.ProfilerRuleConfiguration {
 	smRule := &svcsdk.ProfilerRuleConfiguration{}
