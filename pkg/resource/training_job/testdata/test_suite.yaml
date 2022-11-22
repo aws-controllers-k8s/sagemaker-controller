@@ -299,7 +299,7 @@ tests:
           latest_state: "v1alpha1/update/latest/profilerStarting.yaml"
         invoke: Update
         expect:
-          error: Controller cannot update while secondary status is in Starting state.
+          error: controller cannot update while secondary status is in Starting state.
       - name: "Update=ProfilerTerminal"
         description: "Tests if profiler returns a terminal error when TJ is updated in Completed."
         given:
@@ -326,7 +326,7 @@ tests:
           latest_state: "v1alpha1/update/latest/WPDownloading.yaml"
         invoke: Update
         expect:
-          error: Warm pool cannot be updated in InProgress state, requeuing until TrainingJob reaches completed state.
+          error: warm pool cannot be updated in InProgress state, requeuing until TrainingJob reaches completed state.
       - name: "Update=WarmPoolTerminal"
         description: "Check if controller behaves correctly when WarmPool cannot be updated."
         given:
