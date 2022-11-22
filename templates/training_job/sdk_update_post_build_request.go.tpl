@@ -1,17 +1,17 @@
 warmpool_diff := delta.DifferentAt("Spec.ResourceConfig.KeepAlivePeriodInSeconds")
 profiler_diff := delta.DifferentAt("Spec.ProfilerConfig") || delta.DifferentAt("Spec.ProfilerRuleConfigurations")
 if warmpool_diff && profiler_diff {
-	return latest, errors.New("[ACK_SM] Cannot update Warm pool and Profiler at the same time.")
+	return latest, ackerr.NewTerminalError(errors.New("cannot update Warm pool and Profiler at the same time"))
 }
 if !warmpool_diff && !profiler_diff {
-	return latest, errors.New("[ACK_SM] Only Warm Pool or Profiler can be updated")
+	return latest, ackerr.NewTerminalError(errors.New("only Warm Pool or Profiler can be updated"))
 }
 if warmpool_diff {
 	input.SetProfilerConfig(nil)
 	input.SetProfilerRuleConfigurations(nil)
 	warmpool_terminal := warmPoolTerminalCheck(latest)
 	if warmpool_terminal {
-		return latest, errors.New("[ACK_SM] Warm pool either does not exist or has reached a non updatable state.")
+		return latest, ackerr.NewTerminalError(errors.New("warm pool either does not exist or has reached a non updatable state"))
 	}
 	//Requeue if TrainingJob is in InProgress state
 	if err := customSetOutputUpdateWarmpool(latest); err != nil {

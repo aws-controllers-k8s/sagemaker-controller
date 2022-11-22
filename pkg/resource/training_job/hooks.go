@@ -17,6 +17,7 @@ import (
 	"errors"
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
@@ -51,11 +52,11 @@ var (
 	)
 
 	requeueBeforeUpdate = ackrequeue.NeededAfter(
-		errors.New("Warm pool cannot be updated in InProgress state, requeuing until TrainingJob reaches completed state."),
+		errors.New("warm pool cannot be updated in InProgress state, requeuing until TrainingJob reaches completed state."),
 		ackrequeue.DefaultRequeueAfterDuration,
 	)
 	requeueBeforeUpdateStarting = ackrequeue.NeededAfter(
-		errors.New("Controller cannot update while secondary status is in Starting state."),
+		errors.New("controller cannot update while secondary status is in Starting state."),
 		ackrequeue.DefaultRequeueAfterDuration,
 	)
 )
@@ -112,7 +113,7 @@ func (rm *resourceManager) customSetOutput(r *resource) {
 
 }
 
-// This function makes the controller requeue if there is an update and
+// customSetOutputUpdateWarmpool makes the controller requeue if there is an update and
 // the training job is still in InProgress
 func customSetOutputUpdateWarmpool(r *resource) error {
 	trainingJobStatus := r.ko.Status.TrainingJobStatus
@@ -122,7 +123,7 @@ func customSetOutputUpdateWarmpool(r *resource) error {
 	return nil
 }
 
-// Check if warm pool has reached a state where it is not updateable
+// warmPoolTerminalCheck checks if warm pool has reached a state where it is not updateable
 func warmPoolTerminalCheck(latest *resource) bool {
 	trainingJobStatus := latest.ko.Status.TrainingJobStatus
 	if ackcompare.IsNotNil(latest.ko.Spec.ResourceConfig) {
@@ -154,7 +155,8 @@ func warmPoolTerminalCheck(latest *resource) bool {
 	return true
 }
 
-// Profiler cannot be updated at certain statuses.
+// customSetOutputUpdateProfiler decides whether the training job is ready/eligible for update
+// depending on the status.
 func customSetOutputUpdateProfiler(r *resource) error {
 	trainingSecondaryStatus := r.ko.Status.SecondaryStatus
 	trainingJobStatus := r.ko.Status.TrainingJobStatus
@@ -164,14 +166,14 @@ func customSetOutputUpdateProfiler(r *resource) error {
 	if ackcompare.IsNotNil(trainingJobStatus) {
 		for _, terminalStatus := range TrainingJobTerminalProfiler {
 			if terminalStatus == *trainingJobStatus {
-				return errors.New("[ACK_SM] Profiler can only be updated when Training Job is in InProgress state")
+				return ackerr.NewTerminalError(errors.New("profiler can only be updated when Training Job is in InProgress state"))
 			}
 		}
 	}
 	return nil
 }
 
-// Checks if the profiler was removed.
+// profilerRemovalCheck checks if the profiler was removed.
 func profilerRemovalCheck(desired *resource, latest *resource) bool {
 	if ackcompare.IsNotNil(desired.ko.Spec) && ackcompare.IsNotNil(latest.ko.Spec) {
 		if ackcompare.IsNil(desired.ko.Spec.ProfilerRuleConfigurations) && ackcompare.IsNotNil(latest.ko.Spec.ProfilerRuleConfigurations) {
@@ -184,7 +186,7 @@ func profilerRemovalCheck(desired *resource, latest *resource) bool {
 	return false
 }
 
-// The statuses in ko object in the end of update are empty, using customSetOutput wont work.
+// customSetOutputPostUpdate sets the synced condition at the end of the update.
 func customSetOutputPostUpdate(ko *svcapitypes.TrainingJob, delta *ackcompare.Delta) {
 	warmpool_diff := delta.DifferentAt("Spec.ResourceConfig.KeepAlivePeriodInSeconds")
 	profiler_diff := delta.DifferentAt("Spec.ProfilerConfig") || delta.DifferentAt("Spec.ProfilerRuleConfigurations")
