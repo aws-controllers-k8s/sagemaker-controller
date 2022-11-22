@@ -1060,6 +1060,9 @@ func (rm *resourceManager) sdkUpdate(
 	if warmpool_diff && profiler_diff {
 		return latest, errors.New("[ACK_SM] Cannot update Warm pool and Profiler at the same time.")
 	}
+	if !warmpool_diff && !profiler_diff {
+		return latest, errors.New("[ACK_SM] Only Warm Pool or Profiler can be updated")
+	}
 	if warmpool_diff {
 		input.SetProfilerConfig(nil)
 		input.SetProfilerRuleConfigurations(nil)
