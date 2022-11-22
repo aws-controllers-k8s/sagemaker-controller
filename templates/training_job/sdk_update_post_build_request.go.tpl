@@ -1,7 +1,10 @@
 warmpool_diff := delta.DifferentAt("Spec.ResourceConfig.KeepAlivePeriodInSeconds")
 profiler_diff := delta.DifferentAt("Spec.ProfilerConfig") || delta.DifferentAt("Spec.ProfilerRuleConfigurations")
-if warmpool_diff && profiler_diff{
+if warmpool_diff && profiler_diff {
 	return latest, errors.New("[ACK_SM] Cannot update Warm pool and Profiler at the same time.")
+}
+if !warmpool_diff && !profiler_diff {
+	return latest, errors.New("[ACK_SM] Only Warm Pool or Profiler can be updated")
 }
 if warmpool_diff {
 	input.SetProfilerConfig(nil)
