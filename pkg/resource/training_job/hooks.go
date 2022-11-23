@@ -70,12 +70,22 @@ func (rm *resourceManager) customSetOutput(r *resource) {
 
 	svccommon.SetSyncedCondition(r, trainingJobStatus, &resourceName, &trainingJobModifyingStatuses)
 
-	if ackcompare.IsNil(r.ko.Status.WarmPoolStatus) || ackcompare.IsNil(r.ko.Status.WarmPoolStatus.Status) {
-		return
-	}
-	// Set synced condition to False if Warm Pool is in Inuse or Available state
-	if svccommon.IsModifyingStatus(r.ko.Status.WarmPoolStatus.Status, &WarmPoolModifyingStatuses) {
-		svccommon.SetSyncedCondition(r, r.ko.Status.WarmPoolStatus.Status, aws.String("Warm Pool Infrastructure"), &WarmPoolModifyingStatuses)
+	warmpoolUsed := ackcompare.IsNotNil(r.ko.Spec.ResourceConfig) && ackcompare.IsNotNil(r.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds)
+
+	// Only requeue when warm pool is being used and when training job is in the completed state.
+	// WP will always have terminated status on error(Training Job or Warmpool).
+	if ackcompare.IsNotNil(trainingJobStatus) && *trainingJobStatus == svcsdk.TrainingJobStatusCompleted &&
+		warmpoolUsed {
+
+		// Sometimes DescribeTrainingJob does not contain the warm pool status
+		// In this condition the only possible status is Available or Terminated.
+		if ackcompare.IsNotNil(trainingJobStatus) && ackcompare.IsNil(r.ko.Status.WarmPoolStatus) {
+			svccommon.SetSyncedCondition(r, aws.String("Available"), aws.String("Warm Pool Infrastructure"), &WarmPoolModifyingStatuses)
+		}
+
+		if svccommon.IsModifyingStatus(r.ko.Status.WarmPoolStatus.Status, &WarmPoolModifyingStatuses) {
+			svccommon.SetSyncedCondition(r, r.ko.Status.WarmPoolStatus.Status, aws.String("Warm Pool Infrastructure"), &WarmPoolModifyingStatuses)
+		}
 	}
 
 }

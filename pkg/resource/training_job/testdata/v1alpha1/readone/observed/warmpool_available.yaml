@@ -83,7 +83,7 @@ spec:
     instanceCount: 1
     instanceType: ml.m4.xlarge
     volumeSizeInGB: 5
-    keepAliveInSeconds: 70
+    keepAlivePeriodInSeconds: 70
   roleARN: arn:aws:iam::123456789012:role/service-role/AmazonSageMaker
   stoppingCondition:
     maxRuntimeInSeconds: 86400

@@ -129,7 +129,8 @@
     "ResourceConfig": {
         "InstanceCount": 1,
         "InstanceType": "ml.m4.xlarge",
-        "VolumeSizeInGB": 5
+        "VolumeSizeInGB": 5,
+        "KeepAlivePeriodInSeconds": 70
     },
     "RoleArn": "arn:aws:iam::123456789012:role/service-role/AmazonSageMaker",
     "SecondaryStatus": "Starting",
