@@ -107,3 +107,4 @@ status:
     type: ACK.ResourceSynced
   secondaryStatus: Completed
   trainingJobStatus: Completed
+  profilingStatus: Disabled
