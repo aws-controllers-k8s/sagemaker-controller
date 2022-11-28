@@ -182,6 +182,17 @@ tests:
         invoke: ReadOne
         expect:
           latest_state: "v1alpha1/readone/observed/warmpool_inuse.yaml"
+      - name: "ReadOne=WarmPoolNoStatus"
+        description: "Test Warmpool when the training job is complete but has no status"
+        given:
+          desired_state: "v1alpha1/readone/desired/warmpool.yaml"
+          svc_api:
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/describe/warmpool_describe_no_status.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/warmpool_nostatus.yaml"
+      
   - name: "Training job delete tests"
     description: "Testing the delete operation"
     scenarios:
