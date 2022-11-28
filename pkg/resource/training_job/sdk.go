@@ -1337,9 +1337,7 @@ func (rm *resourceManager) updateConditions(
 	}
 	// Required to avoid the "declared but not used" error in the default case
 	_ = syncCondition
-	// custom update conditions
-	customUpdate := rm.CustomUpdateConditions(ko, r, err)
-	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil || customUpdate {
+	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil {
 		return &resource{ko}, true // updated
 	}
 	return nil, false // not updated
