@@ -175,13 +175,11 @@ func customSetOutputUpdateProfiler(r *resource) error {
 
 // profilerRemovalCheck checks if the profiler was removed.
 func profilerRemovalCheck(desired *resource, latest *resource) bool {
-	if ackcompare.IsNotNil(desired.ko.Spec) && ackcompare.IsNotNil(latest.ko.Spec) {
-		if ackcompare.IsNil(desired.ko.Spec.ProfilerRuleConfigurations) && ackcompare.IsNotNil(latest.ko.Spec.ProfilerRuleConfigurations) {
-			return true
-		}
-		if ackcompare.IsNil(desired.ko.Spec.ProfilerConfig) && ackcompare.IsNotNil(latest.ko.Spec.ProfilerConfig) {
-			return true
-		}
+	if ackcompare.IsNil(desired.ko.Spec.ProfilerRuleConfigurations) && ackcompare.IsNotNil(latest.ko.Spec.ProfilerRuleConfigurations) {
+		return true
+	}
+	if ackcompare.IsNil(desired.ko.Spec.ProfilerConfig) && ackcompare.IsNotNil(latest.ko.Spec.ProfilerConfig) {
+		return true
 	}
 	return false
 }
