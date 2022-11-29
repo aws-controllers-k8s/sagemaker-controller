@@ -374,6 +374,27 @@ tests:
         invoke: Update
         expect:
           error: "resource is in terminal condition"
+      - name: "Update=Invalid update"
+        description: "Attempt to update something else"
+        given:
+          desired_state: "v1alpha1/update/desired/invalidupdate.yaml"
+          latest_state: "v1alpha1/update/latest/WPHappy.yaml"
+        invoke: Update
+        expect:
+          error: "resource is in terminal condition"
+      - name: "Update=Update Profiler Rule"
+        description: "Attempt to update something else"
+        given:
+          desired_state: "v1alpha1/update/desired/updateProfilerRule.yaml"
+          latest_state: "v1alpha1/update/latest/profilerHappyBase.yaml"
+          svc_api: 
+            - operation: UpdateTrainingJobWithContext
+              output_fixture: "sdkapi/update/update_sucess.json"
+        invoke: Update
+        expect:
+          latest_state: "v1alpha1/update/observed/updateProfilerRule.yaml"
+          error: nil
+      
 
 
       

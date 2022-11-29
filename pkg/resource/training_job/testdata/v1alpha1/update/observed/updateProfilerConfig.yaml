@@ -38,9 +38,10 @@ spec:
     s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/profiler/
   profilerRuleConfigurations:
   - ruleConfigurationName: ProfilerReport
-    ruleEvaluatorImage: 895741380848.dkr.ecr.us-west-2.amazonaws.com/sagemaker-debugger-rules:latest
+    ruleEvaluatorImage: 895741380848.dkr.ecr.us-west-2.amazonaws.com/sagemaker-debugger-rules:1
     ruleParameters:
       rule_to_invoke: ProfilerReport
+    volumeSizeInGB: 0
 status:
   ackResourceMetadata:
     arn: arn:aws:sagemaker:us-west-2:123456789012:training-job/training-test
