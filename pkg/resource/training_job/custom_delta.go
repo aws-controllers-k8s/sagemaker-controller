@@ -66,7 +66,7 @@ func customSetDefaults(
 }
 
 // SM returns profiler related objects even if the user disables the profiler
-// this function detects if there is a diff
+// customPostCompare detects if there is a diff
 func customPostCompare(latest *resource, desired *resource, delta *ackcompare.Delta) {
 	profilerConfigDiff := delta.DifferentAt("Spec.ProfilerConfig")
 	profilerRuleDiff := delta.DifferentAt("Spec.ProfilerRuleConfigurations")
@@ -95,13 +95,14 @@ func customPostCompare(latest *resource, desired *resource, delta *ackcompare.De
 	}
 }
 
+// userInitiatesProfilerCheck checks if the user enabled/re enabled the profiler.
 func userInitiatesProfilerCheck(desired *resource) bool {
 	profilerConfigPresent := ackcompare.IsNotNil(desired.ko.Spec.ProfilerConfig)
 	profilerRuleConfigPresent := ackcompare.IsNotNil(desired.ko.Spec.ProfilerRuleConfigurations)
 	return profilerConfigPresent && profilerRuleConfigPresent
 }
 
-// Removes fieldName from the delta slice.
+// removeDelta Removes fieldName from the delta slice.
 // TODO: Replace when ack runtime can do this.
 func removeDelta(delta *ackcompare.Delta, fieldName string) {
 	differences := delta.Differences
