@@ -90,7 +90,7 @@ func customPostCompare(latest *resource, desired *resource, delta *ackcompare.De
 	if profilerConfigDiff && profilerDisabled {
 		removeDelta(delta, "Spec.ProfilerConfig")
 	}
-	if profilerRuleDiff {
+	if profilerRuleDiff && profilerDisabled {
 		removeDelta(delta, "Spec.ProfilerRuleConfigurations")
 	}
 }
