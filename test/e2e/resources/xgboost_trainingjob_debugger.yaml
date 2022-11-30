@@ -23,6 +23,8 @@ spec:
     instanceCount: 1
     instanceType: $TRAINING_JOB_INSTANCE_TYPE
     volumeSizeInGB: 5
+  retryStrategy:
+    maximumRetryAttempts: 2
   stoppingCondition:
     maxRuntimeInSeconds: 86400
   inputDataConfig:
