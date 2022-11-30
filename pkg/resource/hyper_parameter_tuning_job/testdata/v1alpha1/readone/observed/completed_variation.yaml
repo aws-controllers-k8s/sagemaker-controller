@@ -109,7 +109,6 @@ spec:
       volumeSizeInGB: 25
     roleARN: arn:aws:iam::123456789012:role/service-role/AmazonSageMaker-ExecutionRole-20210920T111639
     staticHyperParameters:
-      _tuning_objective_metric: validation:error
       base_score: "0.5"
     stoppingCondition:
       maxRuntimeInSeconds: 3600
