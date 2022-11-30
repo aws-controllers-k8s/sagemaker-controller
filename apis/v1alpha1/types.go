@@ -2686,9 +2686,9 @@ type RepositoryAuthConfig struct {
 // to use for model training.
 type ResourceConfig struct {
 	InstanceCount            *int64           `json:"instanceCount,omitempty"`
-	InstanceGroups []*InstanceGroup `json:"instanceGroups,omitempty"`
+	InstanceGroups           []*InstanceGroup `json:"instanceGroups,omitempty"`
 	InstanceType             *string          `json:"instanceType,omitempty"`
-	KeepAlivePeriodInSeconds *int64  `json:"keepAlivePeriodInSeconds,omitempty"`
+	KeepAlivePeriodInSeconds *int64           `json:"keepAlivePeriodInSeconds,omitempty"`
 	VolumeKMSKeyID           *string          `json:"volumeKMSKeyID,omitempty"`
 	VolumeSizeInGB           *int64           `json:"volumeSizeInGB,omitempty"`
 }

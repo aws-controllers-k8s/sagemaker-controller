@@ -601,17 +601,17 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.VPCConfig = nil
 	}
 	if resp.WarmPoolStatus != nil {
-		f39 := &svcapitypes.WarmPoolStatus{}
+		f40 := &svcapitypes.WarmPoolStatus{}
 		if resp.WarmPoolStatus.ResourceRetainedBillableTimeInSeconds != nil {
-			f39.ResourceRetainedBillableTimeInSeconds = resp.WarmPoolStatus.ResourceRetainedBillableTimeInSeconds
+			f40.ResourceRetainedBillableTimeInSeconds = resp.WarmPoolStatus.ResourceRetainedBillableTimeInSeconds
 		}
 		if resp.WarmPoolStatus.ReusedByJob != nil {
-			f39.ReusedByJob = resp.WarmPoolStatus.ReusedByJob
+			f40.ReusedByJob = resp.WarmPoolStatus.ReusedByJob
 		}
 		if resp.WarmPoolStatus.Status != nil {
-			f39.Status = resp.WarmPoolStatus.Status
+			f40.Status = resp.WarmPoolStatus.Status
 		}
-		ko.Status.WarmPoolStatus = f39
+		ko.Status.WarmPoolStatus = f40
 	} else {
 		ko.Status.WarmPoolStatus = nil
 	}
