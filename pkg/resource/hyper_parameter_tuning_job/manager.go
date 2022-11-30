@@ -51,7 +51,7 @@ var (
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=hyperparametertuningjobs,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=hyperparametertuningjobs/status,verbs=get;update;patch
 
-var lateInitializeFieldNames = []string{"TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions", "TrainingJobDefinition.EnableInterContainerTrafficEncryption", "TrainingJobDefinition.EnableManagedSpotTraining", "TrainingJobDefinition.EnableNetworkIsolation"}
+var lateInitializeFieldNames = []string{"TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions", "TrainingJobDefinition.EnableInterContainerTrafficEncryption", "TrainingJobDefinition.EnableManagedSpotTraining", "TrainingJobDefinition.EnableNetworkIsolation", "TrainingJobDefinition.ResourceConfig.InstanceCount"}
 
 // resourceManager is responsible for providing a consistent way to perform
 // CRUD operations in a backend AWS service API for Book custom resources.
@@ -271,6 +271,13 @@ func (rm *resourceManager) incompleteLateInitialization(
 			return true
 		}
 	}
+	if ko.Spec.TrainingJobDefinition != nil {
+		if ko.Spec.TrainingJobDefinition.ResourceConfig != nil {
+			if ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceCount == nil {
+				return true
+			}
+		}
+	}
 	return false
 }
 
@@ -302,6 +309,13 @@ func (rm *resourceManager) lateInitializeFromReadOneOutput(
 	if observedKo.Spec.TrainingJobDefinition != nil && latestKo.Spec.TrainingJobDefinition != nil {
 		if observedKo.Spec.TrainingJobDefinition.EnableNetworkIsolation != nil && latestKo.Spec.TrainingJobDefinition.EnableNetworkIsolation == nil {
 			latestKo.Spec.TrainingJobDefinition.EnableNetworkIsolation = observedKo.Spec.TrainingJobDefinition.EnableNetworkIsolation
+		}
+	}
+	if observedKo.Spec.TrainingJobDefinition != nil && latestKo.Spec.TrainingJobDefinition != nil {
+		if observedKo.Spec.TrainingJobDefinition.ResourceConfig != nil && latestKo.Spec.TrainingJobDefinition.ResourceConfig != nil {
+			if observedKo.Spec.TrainingJobDefinition.ResourceConfig.InstanceCount != nil && latestKo.Spec.TrainingJobDefinition.ResourceConfig.InstanceCount == nil {
+				latestKo.Spec.TrainingJobDefinition.ResourceConfig.InstanceCount = observedKo.Spec.TrainingJobDefinition.ResourceConfig.InstanceCount
+			}
 		}
 	}
 	return &resource{latestKo}

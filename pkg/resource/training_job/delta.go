@@ -242,6 +242,9 @@ func newResourceDelta(
 				delta.Add("Spec.ResourceConfig.InstanceCount", a.ko.Spec.ResourceConfig.InstanceCount, b.ko.Spec.ResourceConfig.InstanceCount)
 			}
 		}
+		if !reflect.DeepEqual(a.ko.Spec.ResourceConfig.InstanceGroups, b.ko.Spec.ResourceConfig.InstanceGroups) {
+			delta.Add("Spec.ResourceConfig.InstanceGroups", a.ko.Spec.ResourceConfig.InstanceGroups, b.ko.Spec.ResourceConfig.InstanceGroups)
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.ResourceConfig.InstanceType, b.ko.Spec.ResourceConfig.InstanceType) {
 			delta.Add("Spec.ResourceConfig.InstanceType", a.ko.Spec.ResourceConfig.InstanceType, b.ko.Spec.ResourceConfig.InstanceType)
 		} else if a.ko.Spec.ResourceConfig.InstanceType != nil && b.ko.Spec.ResourceConfig.InstanceType != nil {
@@ -268,6 +271,17 @@ func newResourceDelta(
 		} else if a.ko.Spec.ResourceConfig.VolumeSizeInGB != nil && b.ko.Spec.ResourceConfig.VolumeSizeInGB != nil {
 			if *a.ko.Spec.ResourceConfig.VolumeSizeInGB != *b.ko.Spec.ResourceConfig.VolumeSizeInGB {
 				delta.Add("Spec.ResourceConfig.VolumeSizeInGB", a.ko.Spec.ResourceConfig.VolumeSizeInGB, b.ko.Spec.ResourceConfig.VolumeSizeInGB)
+			}
+		}
+	}
+	if ackcompare.HasNilDifference(a.ko.Spec.RetryStrategy, b.ko.Spec.RetryStrategy) {
+		delta.Add("Spec.RetryStrategy", a.ko.Spec.RetryStrategy, b.ko.Spec.RetryStrategy)
+	} else if a.ko.Spec.RetryStrategy != nil && b.ko.Spec.RetryStrategy != nil {
+		if ackcompare.HasNilDifference(a.ko.Spec.RetryStrategy.MaximumRetryAttempts, b.ko.Spec.RetryStrategy.MaximumRetryAttempts) {
+			delta.Add("Spec.RetryStrategy.MaximumRetryAttempts", a.ko.Spec.RetryStrategy.MaximumRetryAttempts, b.ko.Spec.RetryStrategy.MaximumRetryAttempts)
+		} else if a.ko.Spec.RetryStrategy.MaximumRetryAttempts != nil && b.ko.Spec.RetryStrategy.MaximumRetryAttempts != nil {
+			if *a.ko.Spec.RetryStrategy.MaximumRetryAttempts != *b.ko.Spec.RetryStrategy.MaximumRetryAttempts {
+				delta.Add("Spec.RetryStrategy.MaximumRetryAttempts", a.ko.Spec.RetryStrategy.MaximumRetryAttempts, b.ko.Spec.RetryStrategy.MaximumRetryAttempts)
 			}
 		}
 	}

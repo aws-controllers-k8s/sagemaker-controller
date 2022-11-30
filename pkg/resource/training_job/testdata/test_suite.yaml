@@ -142,6 +142,16 @@ tests:
         invoke: ReadOne
         expect:
           latest_state: "v1alpha1/readone/observed/stopping_debugger_variation.yaml"
+      - name: "ReadOne=AfterCreateInstanceGroups"
+        description: "Testing readOne right after delete, the status should be in Stopping"
+        given:
+          desired_state: "v1alpha1/readone/desired/after_create_inprogress_instancegroups.yaml"
+          svc_api:
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/describe/inprogress_describe_instance_group.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/created_instance_groups.yaml"
       - name: "ReadOne=WarmPool"
         description: "Test readOne after training job finishes when user specifies a warm pool"
         given:
