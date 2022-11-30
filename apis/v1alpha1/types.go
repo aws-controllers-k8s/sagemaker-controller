@@ -1157,7 +1157,12 @@ type HyperParameterTrainingJobDefinition struct {
 	OutputDataConfig *OutputDataConfig `json:"outputDataConfig,omitempty"`
 	// Describes the resources, including ML compute instances and ML storage volumes,
 	// to use for model training.
-	ResourceConfig        *ResourceConfig    `json:"resourceConfig,omitempty"`
+	ResourceConfig *ResourceConfig `json:"resourceConfig,omitempty"`
+	// The retry strategy to use when a training job fails due to an InternalServerError.
+	// RetryStrategy is specified as part of the CreateTrainingJob and CreateHyperParameterTuningJob
+	// requests. You can add the StoppingCondition parameter to the request to limit
+	// the training time for the complete job.
+	RetryStrategy         *RetryStrategy     `json:"retryStrategy,omitempty"`
 	RoleARN               *string            `json:"roleARN,omitempty"`
 	StaticHyperParameters map[string]*string `json:"staticHyperParameters,omitempty"`
 	// Specifies a limit to how long a model training job or model compilation job
@@ -1422,8 +1427,9 @@ type InputConfig struct {
 // a training job using the CreateTrainingJob (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingJob.html)
 // API, you can configure multiple instance groups .
 type InstanceGroup struct {
-	InstanceCount *int64  `json:"instanceCount,omitempty"`
-	InstanceType  *string `json:"instanceType,omitempty"`
+	InstanceCount     *int64  `json:"instanceCount,omitempty"`
+	InstanceGroupName *string `json:"instanceGroupName,omitempty"`
+	InstanceType      *string `json:"instanceType,omitempty"`
 }
 
 // For a hyperparameter of the integer type, specifies the range that a hyperparameter
@@ -2665,10 +2671,11 @@ type RepositoryAuthConfig struct {
 // Describes the resources, including ML compute instances and ML storage volumes,
 // to use for model training.
 type ResourceConfig struct {
-	InstanceCount  *int64  `json:"instanceCount,omitempty"`
-	InstanceType   *string `json:"instanceType,omitempty"`
-	VolumeKMSKeyID *string `json:"volumeKMSKeyID,omitempty"`
-	VolumeSizeInGB *int64  `json:"volumeSizeInGB,omitempty"`
+	InstanceCount  *int64           `json:"instanceCount,omitempty"`
+	InstanceGroups []*InstanceGroup `json:"instanceGroups,omitempty"`
+	InstanceType   *string          `json:"instanceType,omitempty"`
+	VolumeKMSKeyID *string          `json:"volumeKMSKeyID,omitempty"`
+	VolumeSizeInGB *int64           `json:"volumeSizeInGB,omitempty"`
 }
 
 // Specifies the maximum number of training jobs and parallel training jobs
@@ -2693,9 +2700,18 @@ type RetentionPolicy struct {
 	HomeEFSFileSystem *string `json:"homeEFSFileSystem,omitempty"`
 }
 
+// The retry strategy to use when a training job fails due to an InternalServerError.
+// RetryStrategy is specified as part of the CreateTrainingJob and CreateHyperParameterTuningJob
+// requests. You can add the StoppingCondition parameter to the request to limit
+// the training time for the complete job.
+type RetryStrategy struct {
+	MaximumRetryAttempts *int64 `json:"maximumRetryAttempts,omitempty"`
+}
+
 // Describes the S3 data source.
 type S3DataSource struct {
 	AttributeNames         []*string `json:"attributeNames,omitempty"`
+	InstanceGroupNames     []*string `json:"instanceGroupNames,omitempty"`
 	S3DataDistributionType *string   `json:"s3DataDistributionType,omitempty"`
 	S3DataType             *string   `json:"s3DataType,omitempty"`
 	S3URI                  *string   `json:"s3URI,omitempty"`
@@ -2982,7 +2998,12 @@ type TrainingJob_SDK struct {
 	OutputDataConfig *OutputDataConfig `json:"outputDataConfig,omitempty"`
 	// Describes the resources, including ML compute instances and ML storage volumes,
 	// to use for model training.
-	ResourceConfig             *ResourceConfig              `json:"resourceConfig,omitempty"`
+	ResourceConfig *ResourceConfig `json:"resourceConfig,omitempty"`
+	// The retry strategy to use when a training job fails due to an InternalServerError.
+	// RetryStrategy is specified as part of the CreateTrainingJob and CreateHyperParameterTuningJob
+	// requests. You can add the StoppingCondition parameter to the request to limit
+	// the training time for the complete job.
+	RetryStrategy              *RetryStrategy               `json:"retryStrategy,omitempty"`
 	RoleARN                    *string                      `json:"roleARN,omitempty"`
 	SecondaryStatus            *string                      `json:"secondaryStatus,omitempty"`
 	SecondaryStatusTransitions []*SecondaryStatusTransition `json:"secondaryStatusTransitions,omitempty"`

@@ -59,6 +59,11 @@ func customSetDefaults(
 				if ackcompare.IsNil(a.ko.Spec.TrainingJobDefinitions[index].EnableNetworkIsolation) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions[index].EnableNetworkIsolation) {
 					a.ko.Spec.TrainingJobDefinitions[index].EnableNetworkIsolation = b.ko.Spec.TrainingJobDefinitions[index].EnableNetworkIsolation
 				}
+				if ackcompare.IsNotNil(a.ko.Spec.TrainingJobDefinitions[index].ResourceConfig) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions[index].ResourceConfig) {
+					if ackcompare.IsNil(a.ko.Spec.TrainingJobDefinitions[index].ResourceConfig.InstanceCount) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinitions[index].ResourceConfig.InstanceCount) {
+						a.ko.Spec.TrainingJobDefinitions[index].ResourceConfig.InstanceCount = b.ko.Spec.TrainingJobDefinitions[index].ResourceConfig.InstanceCount
+					}
+				}
 			}
 		}
 	}
