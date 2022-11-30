@@ -193,6 +193,9 @@ resources:
       OutputDataConfig.KMSKeyID:
         late_initialize:
           min_backoff_seconds: 5
+      ResourceConfig.InstanceCount:
+        late_initialize:
+          min_backoff_seconds: 5
       Tags:
         compare:
           is_ignored: true
@@ -338,6 +341,9 @@ resources:
         late_initialize:
           min_backoff_seconds: 5
       TrainingJobDefinition.EnableNetworkIsolation:
+        late_initialize:
+          min_backoff_seconds: 5
+      TrainingJobDefinition.ResourceConfig.InstanceCount:
         late_initialize:
           min_backoff_seconds: 5
       Tags:
@@ -884,14 +890,11 @@ ignore:
     shape_names:
       # RSessionAppSettings is an empty struct that causes generation errors
       - RSessionAppSettings
-      - RetryStrategy
       - DeploymentConfig
       - ProductionVariantServerlessConfig
       - ExecutionRoleIdentityConfig
       - HyperParameterTuningResourceConfig
       - InstanceMetadataServiceConfiguration
-      - InstanceGroups
-      - InstanceGroupNames
       - CanvasAppSettings
       - ExplainerConfig
       - HyperParameterTuningJobStrategyConfig

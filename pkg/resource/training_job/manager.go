@@ -51,7 +51,7 @@ var (
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=trainingjobs,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=trainingjobs/status,verbs=get;update;patch
 
-var lateInitializeFieldNames = []string{"AlgorithmSpecification.EnableSageMakerMetricsTimeSeries", "EnableInterContainerTrafficEncryption", "EnableManagedSpotTraining", "EnableNetworkIsolation", "OutputDataConfig.KMSKeyID"}
+var lateInitializeFieldNames = []string{"AlgorithmSpecification.EnableSageMakerMetricsTimeSeries", "EnableInterContainerTrafficEncryption", "EnableManagedSpotTraining", "EnableNetworkIsolation", "OutputDataConfig.KMSKeyID", "ResourceConfig.InstanceCount"}
 
 // resourceManager is responsible for providing a consistent way to perform
 // CRUD operations in a backend AWS service API for Book custom resources.
@@ -268,6 +268,11 @@ func (rm *resourceManager) incompleteLateInitialization(
 			return true
 		}
 	}
+	if ko.Spec.ResourceConfig != nil {
+		if ko.Spec.ResourceConfig.InstanceCount == nil {
+			return true
+		}
+	}
 	return false
 }
 
@@ -296,6 +301,11 @@ func (rm *resourceManager) lateInitializeFromReadOneOutput(
 	if observedKo.Spec.OutputDataConfig != nil && latestKo.Spec.OutputDataConfig != nil {
 		if observedKo.Spec.OutputDataConfig.KMSKeyID != nil && latestKo.Spec.OutputDataConfig.KMSKeyID == nil {
 			latestKo.Spec.OutputDataConfig.KMSKeyID = observedKo.Spec.OutputDataConfig.KMSKeyID
+		}
+	}
+	if observedKo.Spec.ResourceConfig != nil && latestKo.Spec.ResourceConfig != nil {
+		if observedKo.Spec.ResourceConfig.InstanceCount != nil && latestKo.Spec.ResourceConfig.InstanceCount == nil {
+			latestKo.Spec.ResourceConfig.InstanceCount = observedKo.Spec.ResourceConfig.InstanceCount
 		}
 	}
 	return &resource{latestKo}
