@@ -333,6 +333,15 @@ func (rm *resourceManager) sdkFind(
 						}
 						f16elemf3f1.AttributeNames = f16elemf3f1f0
 					}
+					if f16iter.DataSource.S3DataSource.InstanceGroupNames != nil {
+						f16elemf3f1f1 := []*string{}
+						for _, f16elemf3f1f1iter := range f16iter.DataSource.S3DataSource.InstanceGroupNames {
+							var f16elemf3f1f1elem string
+							f16elemf3f1f1elem = *f16elemf3f1f1iter
+							f16elemf3f1f1 = append(f16elemf3f1f1, &f16elemf3f1f1elem)
+						}
+						f16elemf3f1.InstanceGroupNames = f16elemf3f1f1
+					}
 					if f16iter.DataSource.S3DataSource.S3DataDistributionType != nil {
 						f16elemf3f1.S3DataDistributionType = f16iter.DataSource.S3DataSource.S3DataDistributionType
 					}
@@ -474,6 +483,23 @@ func (rm *resourceManager) sdkFind(
 		if resp.ResourceConfig.InstanceCount != nil {
 			f25.InstanceCount = resp.ResourceConfig.InstanceCount
 		}
+		if resp.ResourceConfig.InstanceGroups != nil {
+			f25f1 := []*svcapitypes.InstanceGroup{}
+			for _, f25f1iter := range resp.ResourceConfig.InstanceGroups {
+				f25f1elem := &svcapitypes.InstanceGroup{}
+				if f25f1iter.InstanceCount != nil {
+					f25f1elem.InstanceCount = f25f1iter.InstanceCount
+				}
+				if f25f1iter.InstanceGroupName != nil {
+					f25f1elem.InstanceGroupName = f25f1iter.InstanceGroupName
+				}
+				if f25f1iter.InstanceType != nil {
+					f25f1elem.InstanceType = f25f1iter.InstanceType
+				}
+				f25f1 = append(f25f1, f25f1elem)
+			}
+			f25.InstanceGroups = f25f1
+		}
 		if resp.ResourceConfig.InstanceType != nil {
 			f25.InstanceType = resp.ResourceConfig.InstanceType
 		}
@@ -487,6 +513,15 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.ResourceConfig = nil
 	}
+	if resp.RetryStrategy != nil {
+		f26 := &svcapitypes.RetryStrategy{}
+		if resp.RetryStrategy.MaximumRetryAttempts != nil {
+			f26.MaximumRetryAttempts = resp.RetryStrategy.MaximumRetryAttempts
+		}
+		ko.Spec.RetryStrategy = f26
+	} else {
+		ko.Spec.RetryStrategy = nil
+	}
 	if resp.RoleArn != nil {
 		ko.Spec.RoleARN = resp.RoleArn
 	} else {
@@ -498,26 +533,26 @@ func (rm *resourceManager) sdkFind(
 		ko.Status.SecondaryStatus = nil
 	}
 	if resp.StoppingCondition != nil {
-		f29 := &svcapitypes.StoppingCondition{}
+		f30 := &svcapitypes.StoppingCondition{}
 		if resp.StoppingCondition.MaxRuntimeInSeconds != nil {
-			f29.MaxRuntimeInSeconds = resp.StoppingCondition.MaxRuntimeInSeconds
+			f30.MaxRuntimeInSeconds = resp.StoppingCondition.MaxRuntimeInSeconds
 		}
 		if resp.StoppingCondition.MaxWaitTimeInSeconds != nil {
-			f29.MaxWaitTimeInSeconds = resp.StoppingCondition.MaxWaitTimeInSeconds
+			f30.MaxWaitTimeInSeconds = resp.StoppingCondition.MaxWaitTimeInSeconds
 		}
-		ko.Spec.StoppingCondition = f29
+		ko.Spec.StoppingCondition = f30
 	} else {
 		ko.Spec.StoppingCondition = nil
 	}
 	if resp.TensorBoardOutputConfig != nil {
-		f30 := &svcapitypes.TensorBoardOutputConfig{}
+		f31 := &svcapitypes.TensorBoardOutputConfig{}
 		if resp.TensorBoardOutputConfig.LocalPath != nil {
-			f30.LocalPath = resp.TensorBoardOutputConfig.LocalPath
+			f31.LocalPath = resp.TensorBoardOutputConfig.LocalPath
 		}
 		if resp.TensorBoardOutputConfig.S3OutputPath != nil {
-			f30.S3OutputPath = resp.TensorBoardOutputConfig.S3OutputPath
+			f31.S3OutputPath = resp.TensorBoardOutputConfig.S3OutputPath
 		}
-		ko.Spec.TensorBoardOutputConfig = f30
+		ko.Spec.TensorBoardOutputConfig = f31
 	} else {
 		ko.Spec.TensorBoardOutputConfig = nil
 	}
@@ -539,26 +574,26 @@ func (rm *resourceManager) sdkFind(
 		ko.Status.TrainingJobStatus = nil
 	}
 	if resp.VpcConfig != nil {
-		f38 := &svcapitypes.VPCConfig{}
+		f39 := &svcapitypes.VPCConfig{}
 		if resp.VpcConfig.SecurityGroupIds != nil {
-			f38f0 := []*string{}
-			for _, f38f0iter := range resp.VpcConfig.SecurityGroupIds {
-				var f38f0elem string
-				f38f0elem = *f38f0iter
-				f38f0 = append(f38f0, &f38f0elem)
+			f39f0 := []*string{}
+			for _, f39f0iter := range resp.VpcConfig.SecurityGroupIds {
+				var f39f0elem string
+				f39f0elem = *f39f0iter
+				f39f0 = append(f39f0, &f39f0elem)
 			}
-			f38.SecurityGroupIDs = f38f0
+			f39.SecurityGroupIDs = f39f0
 		}
 		if resp.VpcConfig.Subnets != nil {
-			f38f1 := []*string{}
-			for _, f38f1iter := range resp.VpcConfig.Subnets {
-				var f38f1elem string
-				f38f1elem = *f38f1iter
-				f38f1 = append(f38f1, &f38f1elem)
+			f39f1 := []*string{}
+			for _, f39f1iter := range resp.VpcConfig.Subnets {
+				var f39f1elem string
+				f39f1elem = *f39f1iter
+				f39f1 = append(f39f1, &f39f1elem)
 			}
-			f38.Subnets = f38f1
+			f39.Subnets = f39f1
 		}
-		ko.Spec.VPCConfig = f38
+		ko.Spec.VPCConfig = f39
 	} else {
 		ko.Spec.VPCConfig = nil
 	}
@@ -836,6 +871,15 @@ func (rm *resourceManager) newCreateRequestPayload(
 						}
 						f10elemf3f1.SetAttributeNames(f10elemf3f1f0)
 					}
+					if f10iter.DataSource.S3DataSource.InstanceGroupNames != nil {
+						f10elemf3f1f1 := []*string{}
+						for _, f10elemf3f1f1iter := range f10iter.DataSource.S3DataSource.InstanceGroupNames {
+							var f10elemf3f1f1elem string
+							f10elemf3f1f1elem = *f10elemf3f1f1iter
+							f10elemf3f1f1 = append(f10elemf3f1f1, &f10elemf3f1f1elem)
+						}
+						f10elemf3f1.SetInstanceGroupNames(f10elemf3f1f1)
+					}
 					if f10iter.DataSource.S3DataSource.S3DataDistributionType != nil {
 						f10elemf3f1.SetS3DataDistributionType(*f10iter.DataSource.S3DataSource.S3DataDistributionType)
 					}
@@ -935,6 +979,23 @@ func (rm *resourceManager) newCreateRequestPayload(
 		if r.ko.Spec.ResourceConfig.InstanceCount != nil {
 			f14.SetInstanceCount(*r.ko.Spec.ResourceConfig.InstanceCount)
 		}
+		if r.ko.Spec.ResourceConfig.InstanceGroups != nil {
+			f14f1 := []*svcsdk.InstanceGroup{}
+			for _, f14f1iter := range r.ko.Spec.ResourceConfig.InstanceGroups {
+				f14f1elem := &svcsdk.InstanceGroup{}
+				if f14f1iter.InstanceCount != nil {
+					f14f1elem.SetInstanceCount(*f14f1iter.InstanceCount)
+				}
+				if f14f1iter.InstanceGroupName != nil {
+					f14f1elem.SetInstanceGroupName(*f14f1iter.InstanceGroupName)
+				}
+				if f14f1iter.InstanceType != nil {
+					f14f1elem.SetInstanceType(*f14f1iter.InstanceType)
+				}
+				f14f1 = append(f14f1, f14f1elem)
+			}
+			f14.SetInstanceGroups(f14f1)
+		}
 		if r.ko.Spec.ResourceConfig.InstanceType != nil {
 			f14.SetInstanceType(*r.ko.Spec.ResourceConfig.InstanceType)
 		}
@@ -946,67 +1007,74 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.SetResourceConfig(f14)
 	}
+	if r.ko.Spec.RetryStrategy != nil {
+		f15 := &svcsdk.RetryStrategy{}
+		if r.ko.Spec.RetryStrategy.MaximumRetryAttempts != nil {
+			f15.SetMaximumRetryAttempts(*r.ko.Spec.RetryStrategy.MaximumRetryAttempts)
+		}
+		res.SetRetryStrategy(f15)
+	}
 	if r.ko.Spec.RoleARN != nil {
 		res.SetRoleArn(*r.ko.Spec.RoleARN)
 	}
 	if r.ko.Spec.StoppingCondition != nil {
-		f16 := &svcsdk.StoppingCondition{}
+		f17 := &svcsdk.StoppingCondition{}
 		if r.ko.Spec.StoppingCondition.MaxRuntimeInSeconds != nil {
-			f16.SetMaxRuntimeInSeconds(*r.ko.Spec.StoppingCondition.MaxRuntimeInSeconds)
+			f17.SetMaxRuntimeInSeconds(*r.ko.Spec.StoppingCondition.MaxRuntimeInSeconds)
 		}
 		if r.ko.Spec.StoppingCondition.MaxWaitTimeInSeconds != nil {
-			f16.SetMaxWaitTimeInSeconds(*r.ko.Spec.StoppingCondition.MaxWaitTimeInSeconds)
+			f17.SetMaxWaitTimeInSeconds(*r.ko.Spec.StoppingCondition.MaxWaitTimeInSeconds)
 		}
-		res.SetStoppingCondition(f16)
+		res.SetStoppingCondition(f17)
 	}
 	if r.ko.Spec.Tags != nil {
-		f17 := []*svcsdk.Tag{}
-		for _, f17iter := range r.ko.Spec.Tags {
-			f17elem := &svcsdk.Tag{}
-			if f17iter.Key != nil {
-				f17elem.SetKey(*f17iter.Key)
+		f18 := []*svcsdk.Tag{}
+		for _, f18iter := range r.ko.Spec.Tags {
+			f18elem := &svcsdk.Tag{}
+			if f18iter.Key != nil {
+				f18elem.SetKey(*f18iter.Key)
 			}
-			if f17iter.Value != nil {
-				f17elem.SetValue(*f17iter.Value)
+			if f18iter.Value != nil {
+				f18elem.SetValue(*f18iter.Value)
 			}
-			f17 = append(f17, f17elem)
+			f18 = append(f18, f18elem)
 		}
-		res.SetTags(f17)
+		res.SetTags(f18)
 	}
 	if r.ko.Spec.TensorBoardOutputConfig != nil {
-		f18 := &svcsdk.TensorBoardOutputConfig{}
+		f19 := &svcsdk.TensorBoardOutputConfig{}
 		if r.ko.Spec.TensorBoardOutputConfig.LocalPath != nil {
-			f18.SetLocalPath(*r.ko.Spec.TensorBoardOutputConfig.LocalPath)
+			f19.SetLocalPath(*r.ko.Spec.TensorBoardOutputConfig.LocalPath)
 		}
 		if r.ko.Spec.TensorBoardOutputConfig.S3OutputPath != nil {
-			f18.SetS3OutputPath(*r.ko.Spec.TensorBoardOutputConfig.S3OutputPath)
+			f19.SetS3OutputPath(*r.ko.Spec.TensorBoardOutputConfig.S3OutputPath)
 		}
-		res.SetTensorBoardOutputConfig(f18)
+		res.SetTensorBoardOutputConfig(f19)
 	}
 	if r.ko.Spec.TrainingJobName != nil {
 		res.SetTrainingJobName(*r.ko.Spec.TrainingJobName)
 	}
 	if r.ko.Spec.VPCConfig != nil {
-		f20 := &svcsdk.VpcConfig{}
+		f21 := &svcsdk.VpcConfig{}
 		if r.ko.Spec.VPCConfig.SecurityGroupIDs != nil {
-			f20f0 := []*string{}
-			for _, f20f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
-				var f20f0elem string
-				f20f0elem = *f20f0iter
-				f20f0 = append(f20f0, &f20f0elem)
+			f21f0 := []*string{}
+			for _, f21f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
+				var f21f0elem string
+				f21f0elem = *f21f0iter
+				f21f0 = append(f21f0, &f21f0elem)
 			}
-			f20.SetSecurityGroupIds(f20f0)
+			f21.SetSecurityGroupIds(f21f0)
 		}
 		if r.ko.Spec.VPCConfig.Subnets != nil {
-			f20f1 := []*string{}
-			for _, f20f1iter := range r.ko.Spec.VPCConfig.Subnets {
-				var f20f1elem string
-				f20f1elem = *f20f1iter
-				f20f1 = append(f20f1, &f20f1elem)
+			f21f1 := []*string{}
+			for _, f21f1iter := range r.ko.Spec.VPCConfig.Subnets {
+				var f21f1elem string
+				f21f1elem = *f21f1iter
+				f21f1 = append(f21f1, &f21f1elem)
 			}
-			f20.SetSubnets(f20f1)
+			f21.SetSubnets(f21f1)
 		}
-		res.SetVpcConfig(f20)
+		res.SetVpcConfig(f21)
 	}
 
 	return res, nil
