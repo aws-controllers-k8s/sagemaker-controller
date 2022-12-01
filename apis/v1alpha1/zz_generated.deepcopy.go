@@ -10340,11 +10340,6 @@ func (in *PipelineSpec) DeepCopyInto(out *PipelineSpec) {
 		*out = new(string)
 		**out = **in
 	}
-	if in.PipelineDefinitionS3Location != nil {
-		in, out := &in.PipelineDefinitionS3Location, &out.PipelineDefinitionS3Location
-		*out = new(PipelineDefinitionS3Location)
-		(*in).DeepCopyInto(*out)
-	}
 	if in.PipelineDescription != nil {
 		in, out := &in.PipelineDescription, &out.PipelineDescription
 		*out = new(string)

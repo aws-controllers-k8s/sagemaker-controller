@@ -29,9 +29,6 @@ type PipelineSpec struct {
 	ParallelismConfiguration *ParallelismConfiguration `json:"parallelismConfiguration,omitempty"`
 	// The JSON pipeline definition of the pipeline.
 	PipelineDefinition *string `json:"pipelineDefinition,omitempty"`
-	// The location of the pipeline definition stored in Amazon S3. If specified,
-	// SageMaker will retrieve the pipeline definition from this location.
-	PipelineDefinitionS3Location *PipelineDefinitionS3Location `json:"pipelineDefinitionS3Location,omitempty"`
 	// A description of the pipeline.
 	PipelineDescription *string `json:"pipelineDescription,omitempty"`
 	// The display name of the pipeline.

@@ -921,3 +921,4 @@ ignore:
       - InstanceGroupNames
     field_paths:
       - CreatePipelineInput.ClientRequestToken
+      - CreatePipelineInput.PipelineDefinitionS3Location

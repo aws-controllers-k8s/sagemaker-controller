@@ -59,31 +59,6 @@ func newResourceDelta(
 			delta.Add("Spec.PipelineDefinition", a.ko.Spec.PipelineDefinition, b.ko.Spec.PipelineDefinition)
 		}
 	}
-	if ackcompare.HasNilDifference(a.ko.Spec.PipelineDefinitionS3Location, b.ko.Spec.PipelineDefinitionS3Location) {
-		delta.Add("Spec.PipelineDefinitionS3Location", a.ko.Spec.PipelineDefinitionS3Location, b.ko.Spec.PipelineDefinitionS3Location)
-	} else if a.ko.Spec.PipelineDefinitionS3Location != nil && b.ko.Spec.PipelineDefinitionS3Location != nil {
-		if ackcompare.HasNilDifference(a.ko.Spec.PipelineDefinitionS3Location.Bucket, b.ko.Spec.PipelineDefinitionS3Location.Bucket) {
-			delta.Add("Spec.PipelineDefinitionS3Location.Bucket", a.ko.Spec.PipelineDefinitionS3Location.Bucket, b.ko.Spec.PipelineDefinitionS3Location.Bucket)
-		} else if a.ko.Spec.PipelineDefinitionS3Location.Bucket != nil && b.ko.Spec.PipelineDefinitionS3Location.Bucket != nil {
-			if *a.ko.Spec.PipelineDefinitionS3Location.Bucket != *b.ko.Spec.PipelineDefinitionS3Location.Bucket {
-				delta.Add("Spec.PipelineDefinitionS3Location.Bucket", a.ko.Spec.PipelineDefinitionS3Location.Bucket, b.ko.Spec.PipelineDefinitionS3Location.Bucket)
-			}
-		}
-		if ackcompare.HasNilDifference(a.ko.Spec.PipelineDefinitionS3Location.ObjectKey, b.ko.Spec.PipelineDefinitionS3Location.ObjectKey) {
-			delta.Add("Spec.PipelineDefinitionS3Location.ObjectKey", a.ko.Spec.PipelineDefinitionS3Location.ObjectKey, b.ko.Spec.PipelineDefinitionS3Location.ObjectKey)
-		} else if a.ko.Spec.PipelineDefinitionS3Location.ObjectKey != nil && b.ko.Spec.PipelineDefinitionS3Location.ObjectKey != nil {
-			if *a.ko.Spec.PipelineDefinitionS3Location.ObjectKey != *b.ko.Spec.PipelineDefinitionS3Location.ObjectKey {
-				delta.Add("Spec.PipelineDefinitionS3Location.ObjectKey", a.ko.Spec.PipelineDefinitionS3Location.ObjectKey, b.ko.Spec.PipelineDefinitionS3Location.ObjectKey)
-			}
-		}
-		if ackcompare.HasNilDifference(a.ko.Spec.PipelineDefinitionS3Location.VersionID, b.ko.Spec.PipelineDefinitionS3Location.VersionID) {
-			delta.Add("Spec.PipelineDefinitionS3Location.VersionID", a.ko.Spec.PipelineDefinitionS3Location.VersionID, b.ko.Spec.PipelineDefinitionS3Location.VersionID)
-		} else if a.ko.Spec.PipelineDefinitionS3Location.VersionID != nil && b.ko.Spec.PipelineDefinitionS3Location.VersionID != nil {
-			if *a.ko.Spec.PipelineDefinitionS3Location.VersionID != *b.ko.Spec.PipelineDefinitionS3Location.VersionID {
-				delta.Add("Spec.PipelineDefinitionS3Location.VersionID", a.ko.Spec.PipelineDefinitionS3Location.VersionID, b.ko.Spec.PipelineDefinitionS3Location.VersionID)
-			}
-		}
-	}
 	if ackcompare.HasNilDifference(a.ko.Spec.PipelineDescription, b.ko.Spec.PipelineDescription) {
 		delta.Add("Spec.PipelineDescription", a.ko.Spec.PipelineDescription, b.ko.Spec.PipelineDescription)
 	} else if a.ko.Spec.PipelineDescription != nil && b.ko.Spec.PipelineDescription != nil {

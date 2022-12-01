@@ -230,19 +230,6 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.PipelineDefinition != nil {
 		res.SetPipelineDefinition(*r.ko.Spec.PipelineDefinition)
 	}
-	if r.ko.Spec.PipelineDefinitionS3Location != nil {
-		f2 := &svcsdk.PipelineDefinitionS3Location{}
-		if r.ko.Spec.PipelineDefinitionS3Location.Bucket != nil {
-			f2.SetBucket(*r.ko.Spec.PipelineDefinitionS3Location.Bucket)
-		}
-		if r.ko.Spec.PipelineDefinitionS3Location.ObjectKey != nil {
-			f2.SetObjectKey(*r.ko.Spec.PipelineDefinitionS3Location.ObjectKey)
-		}
-		if r.ko.Spec.PipelineDefinitionS3Location.VersionID != nil {
-			f2.SetVersionId(*r.ko.Spec.PipelineDefinitionS3Location.VersionID)
-		}
-		res.SetPipelineDefinitionS3Location(f2)
-	}
 	if r.ko.Spec.PipelineDescription != nil {
 		res.SetPipelineDescription(*r.ko.Spec.PipelineDescription)
 	}
@@ -256,18 +243,18 @@ func (rm *resourceManager) newCreateRequestPayload(
 		res.SetRoleArn(*r.ko.Spec.RoleARN)
 	}
 	if r.ko.Spec.Tags != nil {
-		f7 := []*svcsdk.Tag{}
-		for _, f7iter := range r.ko.Spec.Tags {
-			f7elem := &svcsdk.Tag{}
-			if f7iter.Key != nil {
-				f7elem.SetKey(*f7iter.Key)
+		f6 := []*svcsdk.Tag{}
+		for _, f6iter := range r.ko.Spec.Tags {
+			f6elem := &svcsdk.Tag{}
+			if f6iter.Key != nil {
+				f6elem.SetKey(*f6iter.Key)
 			}
-			if f7iter.Value != nil {
-				f7elem.SetValue(*f7iter.Value)
+			if f6iter.Value != nil {
+				f6elem.SetValue(*f6iter.Value)
 			}
-			f7 = append(f7, f7elem)
+			f6 = append(f6, f6elem)
 		}
-		res.SetTags(f7)
+		res.SetTags(f6)
 	}
 
 	return res, nil
@@ -331,19 +318,6 @@ func (rm *resourceManager) newUpdateRequestPayload(
 	}
 	if r.ko.Spec.PipelineDefinition != nil {
 		res.SetPipelineDefinition(*r.ko.Spec.PipelineDefinition)
-	}
-	if r.ko.Spec.PipelineDefinitionS3Location != nil {
-		f2 := &svcsdk.PipelineDefinitionS3Location{}
-		if r.ko.Spec.PipelineDefinitionS3Location.Bucket != nil {
-			f2.SetBucket(*r.ko.Spec.PipelineDefinitionS3Location.Bucket)
-		}
-		if r.ko.Spec.PipelineDefinitionS3Location.ObjectKey != nil {
-			f2.SetObjectKey(*r.ko.Spec.PipelineDefinitionS3Location.ObjectKey)
-		}
-		if r.ko.Spec.PipelineDefinitionS3Location.VersionID != nil {
-			f2.SetVersionId(*r.ko.Spec.PipelineDefinitionS3Location.VersionID)
-		}
-		res.SetPipelineDefinitionS3Location(f2)
 	}
 	if r.ko.Spec.PipelineDescription != nil {
 		res.SetPipelineDescription(*r.ko.Spec.PipelineDescription)
