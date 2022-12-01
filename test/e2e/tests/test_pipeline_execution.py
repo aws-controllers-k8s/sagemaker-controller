@@ -35,10 +35,45 @@ DELETE_WAIT_LENGTH = 30
 
 
 @pytest.fixture(scope="function")
-def pipeline_execution():
+def pipeline():
+    resource_name = random_suffix_name("pipeline", 28)
+    replacements = REPLACEMENT_VALUES.copy()
+    replacements["PIPELINE_NAME"] = resource_name
+    (pipeline_reference, pipeline_spec, pipeline_resource,) = create_sagemaker_resource(
+        resource_plural=RESOURCE_PLURAL,
+        resource_name=resource_name,
+        spec_file="pipeline",
+        replacements=replacements,
+    )
+    assert pipeline_resource is not None
+    if k8s.get_resource_arn(pipeline_resource) is None:
+        logging.error(
+            f"ARN for this resource is None, resource status is: {pipeline_resource['status']}"
+        )
+    assert k8s.get_resource_arn(pipeline_resource) is not None
+
+    yield (
+        pipeline_reference,
+        pipeline_spec,
+        pipeline_resource,
+    )
+
+    # Delete the k8s resource if not already deleted by tests
+    if k8s.get_resource_exists(pipeline_reference):
+        _, deleted = k8s.delete_custom_resource(
+            pipeline_reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
+        )
+        assert deleted
+
+
+@pytest.fixture(scope="function")
+def pipeline_execution(pipeline):
     resource_name = random_suffix_name("pipeline-execution", 28)
+    (_, pipeline_resource) = pipeline
+    pipeline_resource_name = pipeline_resource["spec"].get("pipelineName", None)
     replacements = REPLACEMENT_VALUES.copy()
     replacements["PIPELINE_EXECUTION_RESOURCE_NAME"] = resource_name
+    replacements["PIPELINE_RESOURCE_NAME"] = pipeline_resource_name
     (
         pipeline_execution_reference,
         pipeline_execution_spec,

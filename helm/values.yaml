@@ -1,10 +1,9 @@
-# Default values for ack-sagemaker-controller.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 image:
-  repository: 105083556692.dkr.ecr.us-east-1.amazonaws.com/sagemaker-controller
-  tag: v0.5.0-rc.0
+  repository: public.ecr.aws/g0g3n5n9/sagemaker
+  tag: adoptd
   pullPolicy: IfNotPresent
   pullSecrets: []
 
@@ -52,7 +51,7 @@ resources:
 
 aws:
   # If specified, use the AWS region for AWS API calls
-  region: ""
+  region: "us-east-2"
   endpoint_url: ""
   credentials:
     # If specified, Secret with shared credentials file to use.
@@ -64,8 +63,8 @@ aws:
 
 # log level for the controller
 log:
-  enable_development_logging: false
-  level: info
+  enable_development_logging: true
+  level: debug
 
 # Set to "namespace" to install the controller in a namespaced scope, will only
 # watch for object creation in the namespace. By default installScope is
@@ -83,5 +82,5 @@ serviceAccount:
   create: true
   # The name of the service account to use.
   name: ack-sagemaker-controller
-  annotations: {}
-    # eks.amazonaws.com/role-arn: arn:aws:iam::AWS_ACCOUNT_ID:role/IAM_ROLE_NAME
+  annotations: 
+     eks.amazonaws.com/role-arn: arn:aws:iam::024825446905:role/ack-controller-role-adopt-test

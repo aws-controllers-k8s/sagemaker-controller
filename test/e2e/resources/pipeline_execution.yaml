@@ -4,7 +4,7 @@ metadata:
   name: $PIPELINE_EXECUTION_RESOURCE_NAME
 spec:
   pipelineExecutionDisplayName: $PIPELINE_EXECUTION_RESOURCE_NAME
-  pipelineName: serial-inference-pipeline
+  pipelineName: $PIPELINE_RESOURCE_NAME
   pipelineParameters:
     - name: AccuracyMseThreshold
       value: "1.0"
