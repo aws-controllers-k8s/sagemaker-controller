@@ -1,0 +1,15 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: Pipeline
+metadata:
+  name: test-pipeline
+spec:
+  pipelineDisplayName: test-pipeline
+  # Missing Pipeline Name
+  pipelineDefinition: '{"Version": "2020-12-01", "Metadata": {}, "Parameters": [{"Name": "ProcessingInstanceType", "Type": "String", "DefaultValue": "ml.m5.xlarge"}, {"Name": "ProcessingInstanceCount", "Type": "Integer", "DefaultValue": 1}, {"Name": "InputData", "Type": "String", "DefaultValue": "s3://sagemaker-us-west-2-123456789/pipeline-model-example/data/raw"}], "PipelineExperimentConfig": {"ExperimentName": {"Get": "Execution.PipelineName"}, "TrialName": {"Get": "Execution.PipelineExecutionId"}}, "Steps": [{"Name": "PreprocessData", "Type": "Processing", "Arguments": {"ProcessingResources": {"ClusterConfig": {"InstanceType": "ml.m5.large", "InstanceCount": {"Get": "Parameters.ProcessingInstanceCount"}, "VolumeSizeInGB": 30}}, "AppSpecification": {"ImageUri": "246618743249.dkr.ecr.us-west-2.amazonaws.com/sagemaker-scikit-learn:0.23-1-cpu-py3", "ContainerEntrypoint": ["python3", "/opt/ml/processing/input/code/preprocess.py"]}, 
+  "RoleArn": "arn:aws:iam::123456789:role/ack-sagemaker-execution-role-123456789", "ProcessingInputs": [{"InputName": "input-1", "AppManaged": false, "S3Input": {"S3Uri": {"Get": "Parameters.InputData"}, "LocalPath": "/opt/ml/processing/input", "S3DataType": "S3Prefix", "S3InputMode": "File", "S3DataDistributionType": "FullyReplicated", "S3CompressionType": "None"}}, {"InputName": "code", "AppManaged": false, "S3Input": {"S3Uri": "s3://sagemaker-us-west-2-123456789/sklearn-housing-data-process-2022-11-03-17-38-12-974/input/code/preprocess.py", "LocalPath": "/opt/ml/processing/input/code", "S3DataType": "S3Prefix", "S3InputMode": "File", "S3DataDistributionType": "FullyReplicated", "S3CompressionType": "None"}}], "ProcessingOutputConfig": {"Outputs": [{"OutputName": "scaler_model", "AppManaged": false, "S3Output": {"S3Uri": "s3://sagemaker-us-west-2-123456789/sklearn-housing-data-process-2022-11-03-17-38-12-974/output/scaler_model", "LocalPath": "/opt/ml/processing/scaler_model", "S3UploadMode": "EndOfJob"}}, {"OutputName": "train", "AppManaged": false, "S3Output": {"S3Uri": "s3://sagemaker-us-west-2-123456789/sklearn-housing-data-process-2022-11-03-17-38-12-974/output/train", "LocalPath": "/opt/ml/processing/train", "S3UploadMode": "EndOfJob"}}, {"OutputName": "test", "AppManaged": false, "S3Output": {"S3Uri": "s3://sagemaker-us-west-2-123456789/sklearn-housing-data-process-2022-11-03-17-38-12-974/output/test", "LocalPath": "/opt/ml/processing/test", "S3UploadMode": "EndOfJob"}}]}}}]}'
+  roleARN: arn:aws:iam::123456789:role/ack-sagemaker-execution-role-123456789
+  parallelismConfiguration:
+    maxParallelExecutionSteps: 2
+  tags:
+    - key: environment
+      value: testing
