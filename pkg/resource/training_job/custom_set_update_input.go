@@ -30,7 +30,7 @@ import (
 // Update training job is post operation wrt to the profiler parameters.
 // Because of this only NEW rules can be specified.
 // In this function we check to see if any new profiler configurstions have been added.
-func buildProfilerRuleConfigUpdateInput(desired *resource, latest *resource, input *svcsdk.UpdateTrainingJobInput) error {
+func (rm *resourceManager) buildProfilerRuleConfigUpdateInput(desired *resource, latest *resource, input *svcsdk.UpdateTrainingJobInput) error {
 	profilerRuleDesired := desired.ko.Spec.ProfilerRuleConfigurations
 	profilerRuleLatest := latest.ko.Spec.ProfilerRuleConfigurations
 
@@ -52,7 +52,7 @@ func buildProfilerRuleConfigUpdateInput(desired *resource, latest *resource, inp
 		if ackcompare.IsNotNil(rule) && ackcompare.IsNotNil(rule.RuleConfigurationName) {
 			_, present := ruleMap[*rule.RuleConfigurationName]
 			if !present {
-				profilerRuleInput = append(profilerRuleInput, convertProfileRuleType(rule))
+				profilerRuleInput = append(profilerRuleInput, rm.convertProfileRuleType(rule))
 			}
 		}
 	}
@@ -71,34 +71,34 @@ func (rm *resourceManager) handleProfilerRemoval(input *svcsdk.UpdateTrainingJob
 // convertProfileRuleType converts the kubernetes object ProfilerRuleConfiguration into
 // a type that is compatible with the AWS API.
 // Sagemaker and kubernetes types are not the same so the input has to be reconstructed.
-func convertProfileRuleType(rule *svcapitypes.ProfilerRuleConfiguration) *svcsdk.ProfilerRuleConfiguration {
-	smRule := &svcsdk.ProfilerRuleConfiguration{}
-	if rule.InstanceType != nil {
-		smRule.SetInstanceType(*rule.InstanceType)
+func (rm *resourceManager) convertProfileRuleType(kubernetesObjectRule *svcapitypes.ProfilerRuleConfiguration) *svcsdk.ProfilerRuleConfiguration {
+	sagemakerAPIRule := &svcsdk.ProfilerRuleConfiguration{}
+	if kubernetesObjectRule.InstanceType != nil {
+		sagemakerAPIRule.SetInstanceType(*kubernetesObjectRule.InstanceType)
 	}
-	if rule.LocalPath != nil {
-		smRule.SetLocalPath(*rule.LocalPath)
+	if kubernetesObjectRule.LocalPath != nil {
+		sagemakerAPIRule.SetLocalPath(*kubernetesObjectRule.LocalPath)
 	}
-	if rule.RuleConfigurationName != nil {
-		smRule.SetRuleConfigurationName(*rule.RuleConfigurationName)
+	if kubernetesObjectRule.RuleConfigurationName != nil {
+		sagemakerAPIRule.SetRuleConfigurationName(*kubernetesObjectRule.RuleConfigurationName)
 	}
-	if rule.RuleEvaluatorImage != nil {
-		smRule.SetRuleEvaluatorImage(*rule.RuleEvaluatorImage)
+	if kubernetesObjectRule.RuleEvaluatorImage != nil {
+		sagemakerAPIRule.SetRuleEvaluatorImage(*kubernetesObjectRule.RuleEvaluatorImage)
 	}
-	if rule.RuleParameters != nil {
+	if kubernetesObjectRule.RuleParameters != nil {
 		f1elemf4 := map[string]*string{}
-		for f1elemf4key, f1elemf4valiter := range rule.RuleParameters {
+		for f1elemf4key, f1elemf4valiter := range kubernetesObjectRule.RuleParameters {
 			var f1elemf4val string
 			f1elemf4val = *f1elemf4valiter
 			f1elemf4[f1elemf4key] = &f1elemf4val
 		}
-		smRule.SetRuleParameters(f1elemf4)
+		sagemakerAPIRule.SetRuleParameters(f1elemf4)
 	}
-	if rule.S3OutputPath != nil {
-		smRule.SetS3OutputPath(*rule.S3OutputPath)
+	if kubernetesObjectRule.S3OutputPath != nil {
+		sagemakerAPIRule.SetS3OutputPath(*kubernetesObjectRule.S3OutputPath)
 	}
-	if rule.VolumeSizeInGB != nil {
-		smRule.SetVolumeSizeInGB(*rule.VolumeSizeInGB)
+	if kubernetesObjectRule.VolumeSizeInGB != nil {
+		sagemakerAPIRule.SetVolumeSizeInGB(*kubernetesObjectRule.VolumeSizeInGB)
 	}
-	return smRule
+	return sagemakerAPIRule
 }

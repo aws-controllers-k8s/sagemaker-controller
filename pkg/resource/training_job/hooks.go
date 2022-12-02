@@ -177,7 +177,7 @@ func (rm *resourceManager) customSetUpdateInput(desired *resource, latest *resou
 	if !delta.DifferentAt("Spec.ProfilerRuleConfigurations") {
 		input.SetProfilerRuleConfigurations(nil)
 	} else {
-		err := buildProfilerRuleConfigUpdateInput(desired, latest, input)
+		err := rm.buildProfilerRuleConfigUpdateInput(desired, latest, input)
 		return err
 	}
 
