@@ -95,7 +95,7 @@ func (rm *resourceManager) customSetOutput(r *resource) {
 
 		// Sometimes DescribeTrainingJob does not contain the warm pool status
 		// In this condition the only possible status is Available or Terminated.
-		if ackcompare.IsNotNil(trainingJobStatus) && ackcompare.IsNil(r.ko.Status.WarmPoolStatus) {
+		if ackcompare.IsNil(r.ko.Status.WarmPoolStatus) {
 			svccommon.SetSyncedCondition(r, aws.String("Available"), aws.String("Warm Pool Infrastructure"), &WarmPoolModifyingStatuses)
 		}
 
