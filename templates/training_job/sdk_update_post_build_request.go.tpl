@@ -9,24 +9,19 @@ if !warmpool_diff && !profiler_diff {
 if warmpool_diff {
 	input.SetProfilerConfig(nil)
 	input.SetProfilerRuleConfigurations(nil)
-	warmpool_terminal := warmPoolTerminalCheck(latest)
-	if warmpool_terminal {
-		return latest, ackerr.NewTerminalError(errors.New("warm pool either does not exist or has reached a non updatable state"))
-	}
-	//Requeue if TrainingJob is in InProgress state
-	if err := customSetOutputUpdateWarmpool(latest); err != nil {
-		return nil,err
+	if err := rm.isWarmPoolUpdatable(latest); err != nil {
+		return nil, err
 	}
 }
 if profiler_diff {
-	if up_err := customSetOutputUpdateProfiler(latest); up_err != nil {
+	if up_err := rm.customSetOutputUpdateProfiler(latest); up_err != nil {
 		return nil, up_err
 	}
 	input.SetResourceConfig(nil)
-	if profilerRemovalCheck(desired, latest) {
-		handleProfilerRemoval(input)
+	if rm.isProfilerRemoved(desired, latest) {
+		rm.handleProfilerRemoval(input)
 	} else{
-		inp_err := customSetUpdateInput(desired, latest, delta, input)
+		inp_err := rm.customSetUpdateInput(desired, latest, delta, input)
 		if inp_err != nil {
 			return nil, err	
 		} 

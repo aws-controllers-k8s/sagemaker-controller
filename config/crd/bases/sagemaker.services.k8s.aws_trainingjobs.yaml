@@ -620,6 +620,11 @@ spec:
               failureReason:
                 description: If the training job failed, the reason it failed.
                 type: string
+              lastModifiedTime:
+                description: A timestamp that indicates when the status of the training
+                  job was last modified.
+                format: date-time
+                type: string
               modelArtifacts:
                 description: Information about the Amazon S3 location that is configured
                   for storing model artifacts.
