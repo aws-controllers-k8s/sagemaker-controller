@@ -111,3 +111,5 @@ status:
   secondaryStatus: Downloading
   trainingJobStatus: InProgress
   profilingStatus: Disabled
+  creationTime: "2021-10-12T05:49:40.493Z"
+  lastModifiedTime: "2021-10-12T05:52:46.108Z"

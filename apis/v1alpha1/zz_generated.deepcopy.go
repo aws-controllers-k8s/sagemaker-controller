@@ -12773,6 +12773,10 @@ func (in *TrainingJobStatus) DeepCopyInto(out *TrainingJobStatus) {
 			}
 		}
 	}
+	if in.CreationTime != nil {
+		in, out := &in.CreationTime, &out.CreationTime
+		*out = (*in).DeepCopy()
+	}
 	if in.DebugRuleEvaluationStatuses != nil {
 		in, out := &in.DebugRuleEvaluationStatuses, &out.DebugRuleEvaluationStatuses
 		*out = make([]*DebugRuleEvaluationStatus, len(*in))

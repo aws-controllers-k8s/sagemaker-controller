@@ -61,7 +61,7 @@ func buildProfilerRuleConfigUpdateInput(desired *resource, latest *resource, inp
 }
 
 // handleProfilerRemoval sets the input parameters to disable the profiler.
-func handleProfilerRemoval(input *svcsdk.UpdateTrainingJobInput) {
+func (rm *resourceManager) handleProfilerRemoval(input *svcsdk.UpdateTrainingJobInput) {
 	input.SetProfilerRuleConfigurations(nil)
 	profilerConfig := svcsdk.ProfilerConfigForUpdate{}
 	profilerConfig.SetDisableProfiler(true)
@@ -72,18 +72,18 @@ func handleProfilerRemoval(input *svcsdk.UpdateTrainingJobInput) {
 // a type that is compatible with the AWS API.
 // Sagemaker and kubernetes types are not the same so the input has to be reconstructed.
 func convertProfileRuleType(rule *svcapitypes.ProfilerRuleConfiguration) *svcsdk.ProfilerRuleConfiguration {
-	rule := &svcsdk.ProfilerRuleConfiguration{}
+	smRule := &svcsdk.ProfilerRuleConfiguration{}
 	if rule.InstanceType != nil {
-		rule.SetInstanceType(*rule.InstanceType)
+		smRule.SetInstanceType(*rule.InstanceType)
 	}
 	if rule.LocalPath != nil {
-		rule.SetLocalPath(*rule.LocalPath)
+		smRule.SetLocalPath(*rule.LocalPath)
 	}
 	if rule.RuleConfigurationName != nil {
-		rule.SetRuleConfigurationName(*rule.RuleConfigurationName)
+		smRule.SetRuleConfigurationName(*rule.RuleConfigurationName)
 	}
 	if rule.RuleEvaluatorImage != nil {
-		rule.SetRuleEvaluatorImage(*rule.RuleEvaluatorImage)
+		smRule.SetRuleEvaluatorImage(*rule.RuleEvaluatorImage)
 	}
 	if rule.RuleParameters != nil {
 		f1elemf4 := map[string]*string{}
@@ -92,13 +92,13 @@ func convertProfileRuleType(rule *svcapitypes.ProfilerRuleConfiguration) *svcsdk
 			f1elemf4val = *f1elemf4valiter
 			f1elemf4[f1elemf4key] = &f1elemf4val
 		}
-		rule.SetRuleParameters(f1elemf4)
+		smRule.SetRuleParameters(f1elemf4)
 	}
 	if rule.S3OutputPath != nil {
-		rule.SetS3OutputPath(*rule.S3OutputPath)
+		smRule.SetS3OutputPath(*rule.S3OutputPath)
 	}
 	if rule.VolumeSizeInGB != nil {
-		rule.SetVolumeSizeInGB(*rule.VolumeSizeInGB)
+		smRule.SetVolumeSizeInGB(*rule.VolumeSizeInGB)
 	}
-	return rule
+	return smRule
 }

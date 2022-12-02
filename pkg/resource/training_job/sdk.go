@@ -131,6 +131,11 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.CheckpointConfig = nil
 	}
+	if resp.CreationTime != nil {
+		ko.Status.CreationTime = &metav1.Time{*resp.CreationTime}
+	} else {
+		ko.Status.CreationTime = nil
+	}
 	if resp.DebugHookConfig != nil {
 		f5 := &svcapitypes.DebugHookConfig{}
 		if resp.DebugHookConfig.CollectionConfigurations != nil {

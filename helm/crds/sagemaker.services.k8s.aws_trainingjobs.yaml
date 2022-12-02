@@ -598,6 +598,11 @@ spec:
                   - type
                   type: object
                 type: array
+              creationTime:
+                description: A timestamp that indicates when the training job was
+                  created.
+                format: date-time
+                type: string
               debugRuleEvaluationStatuses:
                 description: Evaluation status of Debugger rules for debugging on
                   a training job.

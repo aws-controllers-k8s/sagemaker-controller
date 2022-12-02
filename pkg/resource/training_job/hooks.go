@@ -114,7 +114,7 @@ func (rm *resourceManager) customSetOutput(r *resource) {
 func (rm *resourceManager) isWarmPoolUpdatable(latest *resource) error {
 	trainingJobStatus := latest.ko.Status.TrainingJobStatus
 	if ackcompare.IsNil(latest.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds) {
-		return ackerr.TerminalError("warm pool does not exist")
+		return ackerr.NewTerminalError(errors.New("warm pool does not exist"))
 	}
 	if ackcompare.IsNotNil(trainingJobStatus) {
 		if *trainingJobStatus == svcsdk.TrainingJobStatusInProgress {
@@ -126,14 +126,16 @@ func (rm *resourceManager) isWarmPoolUpdatable(latest *resource) error {
 				if wp_modifying {
 					return nil
 				} else {
-					return ackerr.TerminalError("warm pool is in a non updateable state")
+					return ackerr.NewTerminalError(errors.New("warm pool is in a non updateable state"))
 				}
 			} else {
-				return nil // Sometimes the API (briefly) does not return the WP status even if it completes.
+				// Sometimes the API (briefly) does not return the WP status even if it completes.
+				// This only occurs for a short time after training job has reached Completed state.
+				return requeueBeforeUpdate
 			}
 		} else {
 			// Training Job is in 'Failed'|'Stopping'|'Stopped' (Terminal)
-			return ackerr.TerminalError("warm pool is in a non updateable state")
+			return ackerr.NewTerminalError(errors.New("warm pool is in a non updateable state"))
 		}
 
 	}
@@ -176,7 +178,7 @@ func (rm *resourceManager) isProfilerRemoved(desired *resource, latest *resource
 // 2. Customer only updates Profiler Config: Set the profiler rule configuration to nil to avoid validation error.
 // 3. Customer only updates Rule Configurations: Recreate the input for profiler Rule and set Profiler config to nil.
 //	  safer to do this because the "only add" behavior might reappear.
-func customSetUpdateInput(desired *resource, latest *resource, delta *ackcompare.Delta, input *svcsdk.UpdateTrainingJobInput) error {
+func (rm *resourceManager) customSetUpdateInput(desired *resource, latest *resource, delta *ackcompare.Delta, input *svcsdk.UpdateTrainingJobInput) error {
 	if !delta.DifferentAt("Spec.ProfilerConfig") {
 		input.SetProfilerConfig(nil)
 	}

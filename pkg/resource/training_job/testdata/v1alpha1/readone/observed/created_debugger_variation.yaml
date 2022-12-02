@@ -151,3 +151,5 @@ status:
   secondaryStatus: Starting
   trainingJobStatus: InProgress
   profilingStatus: Enabled
+  creationTime: "2021-10-13T03:49:20.337Z"
+  lastModifiedTime: "2021-10-13T03:49:20.576Z"
