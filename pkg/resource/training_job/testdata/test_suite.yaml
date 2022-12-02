@@ -261,6 +261,8 @@ tests:
           svc_api: 
             - operation: UpdateTrainingJobWithContext
               output_fixture: "sdkapi/update/update_sucess.json"
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/update/describe/profiler_removal.json"
         invoke: Update
         expect:
           latest_state: "v1alpha1/update/observed/removeProfilerBoth.yaml"
@@ -273,6 +275,8 @@ tests:
           svc_api: 
             - operation: UpdateTrainingJobWithContext
               output_fixture: "sdkapi/update/update_sucess.json"
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/update/describe/profiler_removal.json"
         invoke: Update
         expect:
           latest_state: "v1alpha1/update/observed/removeProfilerRule.yaml"
@@ -285,6 +289,8 @@ tests:
           svc_api: 
             - operation: UpdateTrainingJobWithContext
               output_fixture: "sdkapi/update/update_sucess.json"
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/update/describe/profiler_removal.json"
         invoke: Update
         expect:
           latest_state: "v1alpha1/update/observed/removeProfilerConfig.yaml"
@@ -297,6 +303,8 @@ tests:
           svc_api: 
             - operation: UpdateTrainingJobWithContext
               output_fixture: "sdkapi/update/update_sucess.json"
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/update/describe/bothprofiler_update.json"
         invoke: Update
         expect:
           latest_state: "v1alpha1/update/observed/updateProfilerBoth.yaml"
@@ -309,6 +317,8 @@ tests:
           svc_api: 
             - operation: UpdateTrainingJobWithContext
               output_fixture: "sdkapi/update/update_sucess.json"
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/update/describe/profiler_config_update.json"
         invoke: Update
         expect:
           latest_state: "v1alpha1/update/observed/updateProfilerConfig.yaml"
@@ -320,7 +330,7 @@ tests:
           latest_state: "v1alpha1/update/latest/profilerStarting.yaml"
         invoke: Update
         expect:
-          error: controller cannot update while secondary status is in Starting state.
+          error: training job cannot be updated while secondary status is in Starting state.
       - name: "Update=ProfilerTerminal"
         description: "Tests if profiler returns a terminal error when TJ is updated in Completed."
         given:
@@ -337,6 +347,8 @@ tests:
           svc_api: 
             - operation: UpdateTrainingJobWithContext
               output_fixture: "sdkapi/update/update_sucess.json"
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/update/describe/warmpool.json"
         invoke: Update
         expect:
           latest_state: "v1alpha1/update/observed/updateWP.yaml"
@@ -364,6 +376,8 @@ tests:
           svc_api: 
             - operation: UpdateTrainingJobWithContext
               output_fixture: "sdkapi/update/update_sucess.json"
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/update/describe/profiler_config_update.json"
         invoke: Update
         expect:
           latest_state: "v1alpha1/update/observed/updateProfilerConfig.yaml"
@@ -400,6 +414,8 @@ tests:
           svc_api: 
             - operation: UpdateTrainingJobWithContext
               output_fixture: "sdkapi/update/update_sucess.json"
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/update/describe/profilerrule_update.json"
         invoke: Update
         expect:
           latest_state: "v1alpha1/update/observed/updateProfilerRule.yaml"

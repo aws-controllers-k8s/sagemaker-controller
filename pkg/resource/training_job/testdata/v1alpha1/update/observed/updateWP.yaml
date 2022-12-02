@@ -44,3 +44,10 @@ status:
     message: Warm Pool Infrastructure is in Available status.
     status: "False"
     type: ACK.ResourceSynced
+  warmPoolStatus:
+    status: Available
+  secondaryStatus: Completed
+  trainingJobStatus: Completed
+  profilingStatus: Disabled
+  creationTime: "2021-10-12T05:49:40.493Z"
+  lastModifiedTime: "2021-10-12T05:52:46.108Z"
