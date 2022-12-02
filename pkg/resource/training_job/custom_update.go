@@ -20,7 +20,6 @@ import (
 	"errors"
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
-	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 )
@@ -30,6 +29,11 @@ import (
 // Update training job is post operation wrt to the profiler parameters.
 // Because of this only NEW rules can be specified.
 // In this function we check to see if any new profiler configurstions have been added.
+// Four cases:
+// 1. Rule gets added (handled normally)
+// 2. Rule gets removed (error is returned)
+// 3. Rule gets removed but others get added (error is returned)
+// 4. Rule gets changed (error gets returned)
 func (rm *resourceManager) buildProfilerRuleConfigUpdateInput(desired *resource, latest *resource, input *svcsdk.UpdateTrainingJobInput) error {
 	profilerRuleDesired := desired.ko.Spec.ProfilerRuleConfigurations
 	profilerRuleLatest := latest.ko.Spec.ProfilerRuleConfigurations
@@ -37,17 +41,16 @@ func (rm *resourceManager) buildProfilerRuleConfigUpdateInput(desired *resource,
 	if ackcompare.IsNil(profilerRuleLatest) {
 		return nil
 	}
-	if len(profilerRuleDesired) < len(profilerRuleLatest) {
-		return ackerr.NewTerminalError(errors.New("cannot remove a profiler rule."))
+	if len(profilerRuleDesired) <= len(profilerRuleLatest) {
+		return errors.New("cannot remove/modify a profiler rule.")
 	}
 
-	ruleMap := map[string]int{}
-	profilerRuleInput := []*svcsdk.ProfilerRuleConfiguration{}
-	for _, rule := range profilerRuleLatest {
-		if ackcompare.IsNotNil(rule.RuleConfigurationName) {
-			ruleMap[*rule.RuleConfigurationName] = 1
-		}
+	ruleMap, err := markNonUpdatableRules(profilerRuleDesired, profilerRuleLatest)
+	if err != nil {
+		return err
 	}
+	profilerRuleInput := []*svcsdk.ProfilerRuleConfiguration{}
+
 	for _, rule := range profilerRuleDesired {
 		if ackcompare.IsNotNil(rule) && ackcompare.IsNotNil(rule.RuleConfigurationName) {
 			_, present := ruleMap[*rule.RuleConfigurationName]
@@ -56,8 +59,39 @@ func (rm *resourceManager) buildProfilerRuleConfigUpdateInput(desired *resource,
 			}
 		}
 	}
+	// If the length of this slice is zero that only the contents of the profile rule have changed
+	if len(profilerRuleInput) == 0 {
+		return errors.New("cannot modify a profiler rule.")
+	}
 	input.SetProfilerRuleConfigurations(profilerRuleInput)
 	return nil
+}
+
+// markNonUpdatableRules returns a map containing the rules that are not eligible for update.
+// In addition it returns an error if a rule gets removed.
+func markNonUpdatableRules(profilerRuleDesired []*svcapitypes.ProfilerRuleConfiguration, profilerRuleLatest []*svcapitypes.ProfilerRuleConfiguration) (map[string]int, error) {
+	commonRulesMap := map[string]int{}
+	latestRulesMap := map[string]int{}
+	for _, rule := range profilerRuleLatest {
+		if ackcompare.IsNotNil(rule.RuleConfigurationName) {
+			commonRulesMap[*rule.RuleConfigurationName] = 0
+			latestRulesMap[*rule.RuleConfigurationName] = 0
+		}
+	}
+	for _, rule := range profilerRuleDesired {
+		if ackcompare.IsNotNil(rule.RuleConfigurationName) {
+			commonRulesMap[*rule.RuleConfigurationName] = 1
+		}
+	}
+	for _, val := range commonRulesMap {
+		// This means that there exists a rule in latest that is not present in desired
+		// which means that the input is invalid.
+		if val == 0 {
+			return nil, errors.New("cannot remove a profiler rule.")
+		}
+	}
+
+	return latestRulesMap, nil
 }
 
 // handleProfilerRemoval sets the input parameters to disable the profiler.
