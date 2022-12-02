@@ -25,6 +25,7 @@ rules:
   - monitoringschedules
   - notebookinstances
   - notebookinstancelifecycleconfigs
+  - pipelines
   - processingjobs
   - trainingjobs
   - transformjobs
@@ -56,6 +57,7 @@ rules:
   - monitoringschedules
   - notebookinstances
   - notebookinstancelifecycleconfigs
+  - pipelines
   - processingjobs
   - trainingjobs
   - transformjobs

@@ -1173,10 +1173,10 @@ const (
 	PipelineExecutionStatus_Succeeded PipelineExecutionStatus = "Succeeded"
 )
 
-type PipelineStatus string
+type PipelineStatus_SDK string
 
 const (
-	PipelineStatus_Active PipelineStatus = "Active"
+	PipelineStatus_SDK_Active PipelineStatus_SDK = "Active"
 )
 
 type ProblemType string
