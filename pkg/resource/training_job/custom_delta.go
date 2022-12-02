@@ -27,7 +27,8 @@ func customSetDefaults(
 	// Default value of VolumeSizeInGB is 0
 	defaultVolumeSizeInGB := aws.Int64(0)
 
-	if ackcompare.IsNotNil(a.ko.Spec.ProfilerRuleConfigurations) && ackcompare.IsNotNil(b.ko.Spec.ProfilerRuleConfigurations) {
+	if ackcompare.IsNotNil(a.ko.Spec.ProfilerRuleConfigurations) && ackcompare.IsNotNil(b.ko.Spec.ProfilerRuleConfigurations) &&
+		len(a.ko.Spec.ProfilerRuleConfigurations) == len(b.ko.Spec.ProfilerRuleConfigurations) {
 		for index := range a.ko.Spec.ProfilerRuleConfigurations {
 			// Prevent out of bounds panics.
 			if index == len(a.ko.Spec.ProfilerRuleConfigurations) || index == len(b.ko.Spec.ProfilerRuleConfigurations) {

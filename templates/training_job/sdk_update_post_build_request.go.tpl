@@ -27,7 +27,7 @@ if profiler_diff {
 	input.SetResourceConfig(nil)
 	if rm.isProfilerRemoved(desired, latest) {
 		rm.handleProfilerRemoval(input)
-	} else{
+	} else {
 		inp_err := rm.customSetUpdateInput(desired, latest, delta, input)
 		if inp_err != nil {
 			return nil, err	
