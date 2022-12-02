@@ -191,6 +191,11 @@ resources:
         from:
           operation: DescribeTrainingJob
           path: LastModifiedTime
+      CreationTime:
+        is_read_only: true
+        from:
+          operation: DescribeTrainingJob
+          path: CreationTime
       AlgorithmSpecification.MetricDefinitions:
         compare:
           is_ignored: true

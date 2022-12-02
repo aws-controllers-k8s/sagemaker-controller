@@ -173,6 +173,9 @@ type TrainingJobStatus struct {
 	// resource
 	// +kubebuilder:validation:Optional
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	// A timestamp that indicates when the training job was created.
+	// +kubebuilder:validation:Optional
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	// Evaluation status of Debugger rules for debugging on a training job.
 	// +kubebuilder:validation:Optional
 	DebugRuleEvaluationStatuses []*DebugRuleEvaluationStatus `json:"debugRuleEvaluationStatuses,omitempty"`
