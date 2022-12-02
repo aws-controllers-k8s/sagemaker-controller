@@ -54,10 +54,6 @@ var (
 		errors.New("warm pool cannot be updated in InProgress state, requeuing until TrainingJob reaches completed state."),
 		ackrequeue.DefaultRequeueAfterDuration,
 	)
-	requeueBeforeUpdateStarting = ackrequeue.NeededAfter(
-		errors.New("training job cannot be updated while secondary status is in Starting state."),
-		ackrequeue.DefaultRequeueAfterDuration,
-	)
 )
 
 // customSetOutput sets the resource ResourceSynced condition to False if
@@ -146,11 +142,7 @@ func (rm *resourceManager) isWarmPoolUpdatable(latest *resource) error {
 // customSetOutputUpdateProfiler decides whether the training job is ready/eligible for update
 // depending on the status.
 func (rm *resourceManager) customSetOutputUpdateProfiler(r *resource) error {
-	trainingSecondaryStatus := r.ko.Status.SecondaryStatus
 	trainingJobStatus := r.ko.Status.TrainingJobStatus
-	if ackcompare.IsNotNil(trainingSecondaryStatus) && *trainingSecondaryStatus == svcsdk.SecondaryStatusStarting {
-		return requeueBeforeUpdateStarting
-	}
 	if ackcompare.IsNotNil(trainingJobStatus) {
 		for _, terminalStatus := range TrainingJobTerminalProfiler {
 			if terminalStatus == *trainingJobStatus {

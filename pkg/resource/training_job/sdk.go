@@ -1141,6 +1141,13 @@ func (rm *resourceManager) sdkUpdate(
 	if !warmpool_diff && !profiler_diff {
 		return latest, ackerr.NewTerminalError(errors.New("only Warm Pool or Profiler can be updated"))
 	}
+	trainingSecondaryStatus := latest.ko.Status.SecondaryStatus
+	if ackcompare.IsNotNil(trainingSecondaryStatus) && *trainingSecondaryStatus == svcsdk.SecondaryStatusStarting {
+		return nil, ackrequeue.NeededAfter(
+			errors.New("training job cannot be updated while secondary status is in Starting state."),
+			ackrequeue.DefaultRequeueAfterDuration,
+		)
+	}
 	if warmpool_diff {
 		input.SetProfilerConfig(nil)
 		input.SetProfilerRuleConfigurations(nil)

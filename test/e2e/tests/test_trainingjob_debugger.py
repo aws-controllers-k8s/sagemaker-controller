@@ -219,6 +219,9 @@ class TestTrainingDebuggerJob:
             == NEW_PROFILER_INTERVAL
         )
 
+        assert resource["status"]["lastModifiedTime"] != resource["status"]["creationTime"]
+        assert training_job_desc["LastModifiedTime"] != training_job_desc["CreationTime"]
+
         # Check that you can delete a completed resource from k8s
         _, deleted = k8s.delete_custom_resource(
             reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
