@@ -12789,6 +12789,10 @@ func (in *TrainingJobStatus) DeepCopyInto(out *TrainingJobStatus) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.LastModifiedTime != nil {
+		in, out := &in.LastModifiedTime, &out.LastModifiedTime
+		*out = (*in).DeepCopy()
+	}
 	if in.ModelArtifacts != nil {
 		in, out := &in.ModelArtifacts, &out.ModelArtifacts
 		*out = new(ModelArtifacts)

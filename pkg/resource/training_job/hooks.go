@@ -19,7 +19,6 @@ import (
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
-	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
 	"github.com/aws/aws-sdk-go/aws"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
@@ -56,7 +55,7 @@ var (
 		ackrequeue.DefaultRequeueAfterDuration,
 	)
 	requeueBeforeUpdateStarting = ackrequeue.NeededAfter(
-		errors.New("controller cannot update while secondary status is in Starting state."),
+		errors.New("training job cannot be updated while secondary status is in Starting state."),
 		ackrequeue.DefaultRequeueAfterDuration,
 	)
 )
@@ -79,11 +78,9 @@ func (rm *resourceManager) customSetOutput(r *resource) {
 	}
 
 	for _, rule := range r.ko.Status.ProfilerRuleEvaluationStatuses {
-		if ackcompare.IsNotNil(r.ko.Status.ProfilingStatus) {
+		if ackcompare.IsNotNil(r.ko.Status.ProfilingStatus) && *r.ko.Status.ProfilingStatus == "Disabled" {
 			// Sometimes rule evaluation status will stay in InProgress state.
-			if *r.ko.Status.ProfilingStatus == "Disabled" {
-				break
-			}
+			break
 		}
 		if rule.RuleEvaluationStatus != nil && svccommon.IsModifyingStatus(rule.RuleEvaluationStatus, &ruleModifyingStatuses) {
 			svccommon.SetSyncedCondition(r, rule.RuleEvaluationStatus, aws.String("ProfilerRule"), &ruleModifyingStatuses)
@@ -113,51 +110,40 @@ func (rm *resourceManager) customSetOutput(r *resource) {
 
 }
 
-// customSetOutputUpdateWarmpool makes the controller requeue if there is an update and
-// the training job is still in InProgress
-func customSetOutputUpdateWarmpool(r *resource) error {
-	trainingJobStatus := r.ko.Status.TrainingJobStatus
-	if ackcompare.IsNotNil(trainingJobStatus) && *trainingJobStatus == svcsdk.TrainingJobStatusInProgress {
-		return requeueBeforeUpdate
-	}
-	return nil
-}
-
-// warmPoolTerminalCheck checks if warm pool has reached a state where it is not updateable
-func warmPoolTerminalCheck(latest *resource) bool {
+// isWarmPoolUpdateable returns a requeue or terminal error depending on the warmpool/training job state
+func (rm *resourceManager) isWarmPoolUpdatable(latest *resource) error {
 	trainingJobStatus := latest.ko.Status.TrainingJobStatus
-	if ackcompare.IsNotNil(latest.ko.Spec.ResourceConfig) {
-		if ackcompare.IsNil(latest.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds) {
-			return true // Warm pool can only be updated iff there is a provisioned cluster.
-		}
-	} else {
-		return false
+	if ackcompare.IsNil(latest.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds) {
+		return ackerr.TerminalError("warm pool does not exist")
 	}
-
 	if ackcompare.IsNotNil(trainingJobStatus) {
 		if *trainingJobStatus == svcsdk.TrainingJobStatusInProgress {
-			return false
+			return requeueBeforeUpdate
 		}
 		if *trainingJobStatus == svcsdk.TrainingJobStatusCompleted {
 			if ackcompare.IsNotNil(latest.ko.Status.WarmPoolStatus) {
 				wp_modifying := svccommon.IsModifyingStatus(latest.ko.Status.WarmPoolStatus.Status, &WarmPoolModifyingStatuses)
-				return !wp_modifying
+				if wp_modifying {
+					return nil
+				} else {
+					return ackerr.TerminalError("warm pool is in a non updateable state")
+				}
 			} else {
-				return false // Sometimes the API (briefly) does not return the WP status even if it completes.
+				return nil // Sometimes the API (briefly) does not return the WP status even if it completes.
 			}
 		} else {
 			// Training Job is in 'Failed'|'Stopping'|'Stopped' (Terminal)
-			return true
+			return ackerr.TerminalError("warm pool is in a non updateable state")
 		}
-	}
 
-	// ACK OIDC is misconfigured (Terminal)
-	return true
+	}
+	return nil
+
 }
 
 // customSetOutputUpdateProfiler decides whether the training job is ready/eligible for update
 // depending on the status.
-func customSetOutputUpdateProfiler(r *resource) error {
+func (rm *resourceManager) customSetOutputUpdateProfiler(r *resource) error {
 	trainingSecondaryStatus := r.ko.Status.SecondaryStatus
 	trainingJobStatus := r.ko.Status.TrainingJobStatus
 	if ackcompare.IsNotNil(trainingSecondaryStatus) && *trainingSecondaryStatus == svcsdk.SecondaryStatusStarting {
@@ -173,8 +159,8 @@ func customSetOutputUpdateProfiler(r *resource) error {
 	return nil
 }
 
-// profilerRemovalCheck checks if the profiler was removed.
-func profilerRemovalCheck(desired *resource, latest *resource) bool {
+// isProfilerRemoved checks if the profiler was removed.
+func (rm *resourceManager) isProfilerRemoved(desired *resource, latest *resource) bool {
 	if ackcompare.IsNil(desired.ko.Spec.ProfilerRuleConfigurations) && ackcompare.IsNotNil(latest.ko.Spec.ProfilerRuleConfigurations) {
 		return true
 	}
@@ -184,15 +170,22 @@ func profilerRemovalCheck(desired *resource, latest *resource) bool {
 	return false
 }
 
-// customSetOutputPostUpdate sets the synced condition at the end of the update.
-func customSetOutputPostUpdate(ko *svcapitypes.TrainingJob, delta *ackcompare.Delta) {
-	warmpool_diff := delta.DifferentAt("Spec.ResourceConfig.KeepAlivePeriodInSeconds")
-	profiler_diff := delta.DifferentAt("Spec.ProfilerConfig") || delta.DifferentAt("Spec.ProfilerRuleConfigurations")
-	if profiler_diff {
-		svccommon.SetSyncedCondition(&resource{ko}, aws.String("InProgress"), &resourceName, &trainingJobModifyingStatuses)
+// customSetUpdateInput modifies the input of UpdateTrainingJob.
+// Three conditions:
+// 1. Customer updates both profiler parameters: Recreate the input for profiler Rule.
+// 2. Customer only updates Profiler Config: Set the profiler rule configuration to nil to avoid validation error.
+// 3. Customer only updates Rule Configurations: Recreate the input for profiler Rule and set Profiler config to nil.
+//	  safer to do this because the "only add" behavior might reappear.
+func customSetUpdateInput(desired *resource, latest *resource, delta *ackcompare.Delta, input *svcsdk.UpdateTrainingJobInput) error {
+	if !delta.DifferentAt("Spec.ProfilerConfig") {
+		input.SetProfilerConfig(nil)
 	}
-	if warmpool_diff {
-		svccommon.SetSyncedCondition(&resource{ko}, aws.String("Available"), aws.String("Warm Pool Infrastructure"), &WarmPoolModifyingStatuses)
+	if !delta.DifferentAt("Spec.ProfilerRuleConfigurations") {
+		input.SetProfilerRuleConfigurations(nil)
+	} else {
+		err := buildProfilerRuleConfigUpdateInput(desired, latest, input)
+		return err
 	}
 
+	return nil
 }

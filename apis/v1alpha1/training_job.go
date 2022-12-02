@@ -179,6 +179,9 @@ type TrainingJobStatus struct {
 	// If the training job failed, the reason it failed.
 	// +kubebuilder:validation:Optional
 	FailureReason *string `json:"failureReason,omitempty"`
+	// A timestamp that indicates when the status of the training job was last modified.
+	// +kubebuilder:validation:Optional
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	// Information about the Amazon S3 location that is configured for storing model
 	// artifacts.
 	// +kubebuilder:validation:Optional

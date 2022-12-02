@@ -374,6 +374,11 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.InputDataConfig = nil
 	}
+	if resp.LastModifiedTime != nil {
+		ko.Status.LastModifiedTime = &metav1.Time{*resp.LastModifiedTime}
+	} else {
+		ko.Status.LastModifiedTime = nil
+	}
 	if resp.ModelArtifacts != nil {
 		f19 := &svcapitypes.ModelArtifacts{}
 		if resp.ModelArtifacts.S3ModelArtifacts != nil {
@@ -1134,24 +1139,19 @@ func (rm *resourceManager) sdkUpdate(
 	if warmpool_diff {
 		input.SetProfilerConfig(nil)
 		input.SetProfilerRuleConfigurations(nil)
-		warmpool_terminal := warmPoolTerminalCheck(latest)
-		if warmpool_terminal {
-			return latest, ackerr.NewTerminalError(errors.New("warm pool either does not exist or has reached a non updatable state"))
-		}
-		//Requeue if TrainingJob is in InProgress state
-		if err := customSetOutputUpdateWarmpool(latest); err != nil {
+		if err := rm.isWarmPoolUpdatable(latest); err != nil {
 			return nil, err
 		}
 	}
 	if profiler_diff {
-		if up_err := customSetOutputUpdateProfiler(latest); up_err != nil {
+		if up_err := rm.customSetOutputUpdateProfiler(latest); up_err != nil {
 			return nil, up_err
 		}
 		input.SetResourceConfig(nil)
-		if profilerRemovalCheck(desired, latest) {
-			handleProfilerRemoval(input)
+		if rm.isProfilerRemoved(desired, latest) {
+			rm.handleProfilerRemoval(input)
 		} else {
-			inp_err := customSetUpdateInput(desired, latest, delta, input)
+			inp_err := rm.customSetUpdateInput(desired, latest, delta, input)
 			if inp_err != nil {
 				return nil, err
 			}
@@ -1178,7 +1178,13 @@ func (rm *resourceManager) sdkUpdate(
 	}
 
 	rm.setStatusDefaults(ko)
-	customSetOutputPostUpdate(ko, delta)
+	observed, err := rm.sdkFind(ctx, latest)
+	if err != nil {
+		return observed, err
+	}
+	tmp_resource := &resource{ko}
+	tmp_resource.SetStatus(observed)
+
 	return &resource{ko}, nil
 }
 

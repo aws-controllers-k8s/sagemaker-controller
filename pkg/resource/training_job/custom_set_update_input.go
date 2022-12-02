@@ -21,45 +21,19 @@ import (
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
-	smv1alpha "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
+	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 )
 
-// customSetUpdateInput modifies the input of UpdateTrainingJob.
-// Three conditions:
-// 1. Customer updates both profiler parameters: Recreate the input for profiler Rule.
-// 2. Customer only updates Profiler Config: Set the profiler rule configuration to nil to avoid validation error.
-// 3. Customer only updates Rule Configurations: Recreate the input for profiler Rule and set Profiler config to nil.
-//	  safer to do this because the "only add" behavior might reappear.
-func customSetUpdateInput(desired *resource, latest *resource, delta *ackcompare.Delta, input *svcsdk.UpdateTrainingJobInput) error {
-	if delta.DifferentAt("Spec.ProfilerConfig") && delta.DifferentAt("Spec.ProfilerRuleConfigurations") {
-		err := handleProfilerRuleConfig(desired, latest, input)
-		return err
-	}
-	if delta.DifferentAt("Spec.ProfilerConfig") && !delta.DifferentAt("Spec.ProfilerRuleConfigurations") {
-		input.SetProfilerRuleConfigurations(nil)
-		return nil
-	}
-	if delta.DifferentAt("Spec.ProfilerRuleConfigurations") && !delta.DifferentAt("Spec.ProfilerConfig") {
-		err := handleProfilerRuleConfig(desired, latest, input)
-		input.SetProfilerConfig(nil) // SM still assumes the profiler config is the same.
-		return err
-	}
-	return nil
-}
-
-// handleProfilerRuleConfig sets the input of the ProfilerRuleConfiguration so that
+// buildProfilerRuleConfigUpdateInput sets the input of the ProfilerRuleConfiguration so that
 // it is compatible with the sagemaker API.
 // Update training job is post operation wrt to the profiler parameters.
 // Because of this only NEW rules can be specified.
 // In this function we check to see if any new profiler configurstions have been added.
-func handleProfilerRuleConfig(desired *resource, latest *resource, input *svcsdk.UpdateTrainingJobInput) error {
+func buildProfilerRuleConfigUpdateInput(desired *resource, latest *resource, input *svcsdk.UpdateTrainingJobInput) error {
 	profilerRuleDesired := desired.ko.Spec.ProfilerRuleConfigurations
 	profilerRuleLatest := latest.ko.Spec.ProfilerRuleConfigurations
 
-	if ackcompare.IsNil(profilerRuleDesired) {
-		return ackerr.NewTerminalError(errors.New("cannot remove a profiler rule."))
-	}
 	if ackcompare.IsNil(profilerRuleLatest) {
 		return nil
 	}
@@ -70,7 +44,7 @@ func handleProfilerRuleConfig(desired *resource, latest *resource, input *svcsdk
 	ruleMap := map[string]int{}
 	profilerRuleInput := []*svcsdk.ProfilerRuleConfiguration{}
 	for _, rule := range profilerRuleLatest {
-		if ackcompare.IsNotNil(rule) && ackcompare.IsNotNil(rule.RuleConfigurationName) {
+		if ackcompare.IsNotNil(rule.RuleConfigurationName) {
 			ruleMap[*rule.RuleConfigurationName] = 1
 		}
 	}
@@ -97,19 +71,19 @@ func handleProfilerRemoval(input *svcsdk.UpdateTrainingJobInput) {
 // convertProfileRuleType converts the kubernetes object ProfilerRuleConfiguration into
 // a type that is compatible with the AWS API.
 // Sagemaker and kubernetes types are not the same so the input has to be reconstructed.
-func convertProfileRuleType(rule *smv1alpha.ProfilerRuleConfiguration) *svcsdk.ProfilerRuleConfiguration {
-	smRule := &svcsdk.ProfilerRuleConfiguration{}
+func convertProfileRuleType(rule *svcapitypes.ProfilerRuleConfiguration) *svcsdk.ProfilerRuleConfiguration {
+	rule := &svcsdk.ProfilerRuleConfiguration{}
 	if rule.InstanceType != nil {
-		smRule.SetInstanceType(*rule.InstanceType)
+		rule.SetInstanceType(*rule.InstanceType)
 	}
 	if rule.LocalPath != nil {
-		smRule.SetLocalPath(*rule.LocalPath)
+		rule.SetLocalPath(*rule.LocalPath)
 	}
 	if rule.RuleConfigurationName != nil {
-		smRule.SetRuleConfigurationName(*rule.RuleConfigurationName)
+		rule.SetRuleConfigurationName(*rule.RuleConfigurationName)
 	}
 	if rule.RuleEvaluatorImage != nil {
-		smRule.SetRuleEvaluatorImage(*rule.RuleEvaluatorImage)
+		rule.SetRuleEvaluatorImage(*rule.RuleEvaluatorImage)
 	}
 	if rule.RuleParameters != nil {
 		f1elemf4 := map[string]*string{}
@@ -118,13 +92,13 @@ func convertProfileRuleType(rule *smv1alpha.ProfilerRuleConfiguration) *svcsdk.P
 			f1elemf4val = *f1elemf4valiter
 			f1elemf4[f1elemf4key] = &f1elemf4val
 		}
-		smRule.SetRuleParameters(f1elemf4)
+		rule.SetRuleParameters(f1elemf4)
 	}
 	if rule.S3OutputPath != nil {
-		smRule.SetS3OutputPath(*rule.S3OutputPath)
+		rule.SetS3OutputPath(*rule.S3OutputPath)
 	}
 	if rule.VolumeSizeInGB != nil {
-		smRule.SetVolumeSizeInGB(*rule.VolumeSizeInGB)
+		rule.SetVolumeSizeInGB(*rule.VolumeSizeInGB)
 	}
-	return smRule
+	return rule
 }
