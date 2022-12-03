@@ -28,9 +28,8 @@ if profiler_diff {
 	if rm.isProfilerRemoved(desired, latest) {
 		rm.handleProfilerRemoval(input)
 	} else {
-		inp_err := rm.customSetUpdateInput(desired, latest, delta, input)
-		if inp_err != nil {
-			return nil, err	
+		if inp_err := rm.customSetUpdateInput(desired, latest, delta, input); inp_err != nil {
+			return nil, inp_err
 		} 
 	} 
 }
