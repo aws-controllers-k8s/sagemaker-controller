@@ -407,7 +407,7 @@ tests:
         expect:
           error: "resource is in terminal condition"
       - name: "Update=Update Profiler Rule"
-        description: "Attempt to update something else"
+        description: "Updating a profiler rule"
         given:
           desired_state: "v1alpha1/update/desired/updateProfilerRule.yaml"
           latest_state: "v1alpha1/update/latest/profilerHappyBase.yaml"
@@ -420,6 +420,22 @@ tests:
         expect:
           latest_state: "v1alpha1/update/observed/updateProfilerRule.yaml"
           error: nil
+      - name: "Update=RemoveOneProfilerRule"
+        description: "Removing one profiler rule"
+        given:
+          desired_state: "v1alpha1/update/desired/removeOneProfilerRule.yaml"
+          latest_state: "v1alpha1/update/latest/profilerMultipleRules.yaml"
+        invoke: Update
+        expect:
+          error: "cannot remove/modify a profiler rule."
+      - name: "Update=RemoveAddProfilerRule"
+        description: "Removing one profiler rule"
+        given:
+          desired_state: "v1alpha1/update/desired/removeAddProfilerRule.yaml"
+          latest_state: "v1alpha1/update/latest/profilerMultipleRules.yaml"
+        invoke: Update
+        expect:
+          error: "cannot remove/modify a profiler rule."
       
 
 
