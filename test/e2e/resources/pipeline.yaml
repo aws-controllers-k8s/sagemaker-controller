@@ -1,0 +1,14 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: Pipeline
+metadata:
+  name: $PIPELINE_NAME
+spec:
+  pipelineDisplayName: $PIPELINE_NAME
+  pipelineName: $PIPELINE_NAME
+  pipelineDefinition: '{"Version": "2020-12-01","Metadata": {},"Parameters": [],"PipelineExperimentConfig": {"ExperimentName": {"Get": "Execution.PipelineName"},"TrialName": {"Get": "Execution.PipelineExecutionId"}},"Steps": [{"Name": "MyModelCreationStep-CreateModel","Type": "Model","Arguments": {"ExecutionRoleArn": "$SAGEMAKER_EXECUTION_ROLE_ARN","PrimaryContainer": {"Image": "$XGBOOST_V1_IMAGE_URI","Environment": {},"ModelDataUrl": "s3://$SAGEMAKER_DATA_BUCKET/sagemaker/model/xgboost-mnist-model.tar.gz"}}}]}'
+  roleARN: $SAGEMAKER_EXECUTION_ROLE_ARN
+  parallelismConfiguration:
+    maxParallelExecutionSteps: 2
+  tags:
+    - key: environment
+      value: testing

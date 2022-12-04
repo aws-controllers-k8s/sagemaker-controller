@@ -1437,9 +1437,8 @@ type InputConfig struct {
 // a training job using the CreateTrainingJob (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingJob.html)
 // API, you can configure multiple instance groups .
 type InstanceGroup struct {
-	InstanceCount     *int64  `json:"instanceCount,omitempty"`
-	InstanceGroupName *string `json:"instanceGroupName,omitempty"`
-	InstanceType      *string `json:"instanceType,omitempty"`
+	InstanceCount *int64  `json:"instanceCount,omitempty"`
+	InstanceType  *string `json:"instanceType,omitempty"`
 }
 
 // For a hyperparameter of the integer type, specifies the range that a hyperparameter
@@ -2256,26 +2255,11 @@ type PendingProductionVariantSummary struct {
 	VariantStatus        []*ProductionVariantStatus `json:"variantStatus,omitempty"`
 }
 
-// A SageMaker Model Building Pipeline instance.
-type Pipeline struct {
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, or project.
-	CreatedBy    *UserContext `json:"createdBy,omitempty"`
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, or project.
-	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
-	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
-	LastRunTime      *metav1.Time `json:"lastRunTime,omitempty"`
-	// Configuration that controls the parallelism of the pipeline. By default,
-	// the parallelism configuration specified applies to all executions of the
-	// pipeline unless overridden.
-	ParallelismConfiguration *ParallelismConfiguration `json:"parallelismConfiguration,omitempty"`
-	PipelineARN              *string                   `json:"pipelineARN,omitempty"`
-	PipelineDisplayName      *string                   `json:"pipelineDisplayName,omitempty"`
-	PipelineName             *string                   `json:"pipelineName,omitempty"`
-	RoleARN                  *string                   `json:"roleARN,omitempty"`
-	Tags                     []*Tag                    `json:"tags,omitempty"`
+// The location of the pipeline definition stored in Amazon S3.
+type PipelineDefinitionS3Location struct {
+	Bucket    *string `json:"bucket,omitempty"`
+	ObjectKey *string `json:"objectKey,omitempty"`
+	VersionID *string `json:"versionID,omitempty"`
 }
 
 // An execution of a step in a pipeline.
@@ -2332,9 +2316,34 @@ type PipelineSummary struct {
 	LastExecutionTime   *metav1.Time `json:"lastExecutionTime,omitempty"`
 	LastModifiedTime    *metav1.Time `json:"lastModifiedTime,omitempty"`
 	PipelineARN         *string      `json:"pipelineARN,omitempty"`
+	PipelineDescription *string      `json:"pipelineDescription,omitempty"`
 	PipelineDisplayName *string      `json:"pipelineDisplayName,omitempty"`
 	PipelineName        *string      `json:"pipelineName,omitempty"`
 	RoleARN             *string      `json:"roleARN,omitempty"`
+}
+
+// A SageMaker Model Building Pipeline instance.
+type Pipeline_SDK struct {
+	// Information about the user who created or modified an experiment, trial,
+	// trial component, lineage group, or project.
+	CreatedBy    *UserContext `json:"createdBy,omitempty"`
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	// Information about the user who created or modified an experiment, trial,
+	// trial component, lineage group, or project.
+	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	LastRunTime      *metav1.Time `json:"lastRunTime,omitempty"`
+	// Configuration that controls the parallelism of the pipeline. By default,
+	// the parallelism configuration specified applies to all executions of the
+	// pipeline unless overridden.
+	ParallelismConfiguration *ParallelismConfiguration `json:"parallelismConfiguration,omitempty"`
+	PipelineARN              *string                   `json:"pipelineARN,omitempty"`
+	PipelineDescription      *string                   `json:"pipelineDescription,omitempty"`
+	PipelineDisplayName      *string                   `json:"pipelineDisplayName,omitempty"`
+	PipelineName             *string                   `json:"pipelineName,omitempty"`
+	PipelineStatus           *string                   `json:"pipelineStatus,omitempty"`
+	RoleARN                  *string                   `json:"roleARN,omitempty"`
+	Tags                     []*Tag                    `json:"tags,omitempty"`
 }
 
 // Configuration for the cluster used to run a processing job.
@@ -2717,11 +2726,10 @@ type RepositoryAuthConfig struct {
 // Describes the resources, including ML compute instances and ML storage volumes,
 // to use for model training.
 type ResourceConfig struct {
-	InstanceCount  *int64           `json:"instanceCount,omitempty"`
-	InstanceGroups []*InstanceGroup `json:"instanceGroups,omitempty"`
-	InstanceType   *string          `json:"instanceType,omitempty"`
-	VolumeKMSKeyID *string          `json:"volumeKMSKeyID,omitempty"`
-	VolumeSizeInGB *int64           `json:"volumeSizeInGB,omitempty"`
+	InstanceCount  *int64  `json:"instanceCount,omitempty"`
+	InstanceType   *string `json:"instanceType,omitempty"`
+	VolumeKMSKeyID *string `json:"volumeKMSKeyID,omitempty"`
+	VolumeSizeInGB *int64  `json:"volumeSizeInGB,omitempty"`
 }
 
 // Specifies the maximum number of training jobs and parallel training jobs
@@ -2757,7 +2765,6 @@ type RetryStrategy struct {
 // Describes the S3 data source.
 type S3DataSource struct {
 	AttributeNames         []*string `json:"attributeNames,omitempty"`
-	InstanceGroupNames     []*string `json:"instanceGroupNames,omitempty"`
 	S3DataDistributionType *string   `json:"s3DataDistributionType,omitempty"`
 	S3DataType             *string   `json:"s3DataType,omitempty"`
 	S3URI                  *string   `json:"s3URI,omitempty"`

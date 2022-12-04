@@ -485,15 +485,6 @@ func (rm *resourceManager) sdkFind(
 							}
 							f11f7elemf3f1.AttributeNames = f11f7elemf3f1f0
 						}
-						if f11f7iter.DataSource.S3DataSource.InstanceGroupNames != nil {
-							f11f7elemf3f1f1 := []*string{}
-							for _, f11f7elemf3f1f1iter := range f11f7iter.DataSource.S3DataSource.InstanceGroupNames {
-								var f11f7elemf3f1f1elem string
-								f11f7elemf3f1f1elem = *f11f7elemf3f1f1iter
-								f11f7elemf3f1f1 = append(f11f7elemf3f1f1, &f11f7elemf3f1f1elem)
-							}
-							f11f7elemf3f1.InstanceGroupNames = f11f7elemf3f1f1
-						}
 						if f11f7iter.DataSource.S3DataSource.S3DataDistributionType != nil {
 							f11f7elemf3f1.S3DataDistributionType = f11f7iter.DataSource.S3DataSource.S3DataDistributionType
 						}
@@ -538,23 +529,6 @@ func (rm *resourceManager) sdkFind(
 			f11f9 := &svcapitypes.ResourceConfig{}
 			if resp.TrainingJobDefinition.ResourceConfig.InstanceCount != nil {
 				f11f9.InstanceCount = resp.TrainingJobDefinition.ResourceConfig.InstanceCount
-			}
-			if resp.TrainingJobDefinition.ResourceConfig.InstanceGroups != nil {
-				f11f9f1 := []*svcapitypes.InstanceGroup{}
-				for _, f11f9f1iter := range resp.TrainingJobDefinition.ResourceConfig.InstanceGroups {
-					f11f9f1elem := &svcapitypes.InstanceGroup{}
-					if f11f9f1iter.InstanceCount != nil {
-						f11f9f1elem.InstanceCount = f11f9f1iter.InstanceCount
-					}
-					if f11f9f1iter.InstanceGroupName != nil {
-						f11f9f1elem.InstanceGroupName = f11f9f1iter.InstanceGroupName
-					}
-					if f11f9f1iter.InstanceType != nil {
-						f11f9f1elem.InstanceType = f11f9f1iter.InstanceType
-					}
-					f11f9f1 = append(f11f9f1, f11f9f1elem)
-				}
-				f11f9.InstanceGroups = f11f9f1
 			}
 			if resp.TrainingJobDefinition.ResourceConfig.InstanceType != nil {
 				f11f9.InstanceType = resp.TrainingJobDefinition.ResourceConfig.InstanceType
@@ -791,15 +765,6 @@ func (rm *resourceManager) sdkFind(
 								}
 								f12elemf7elemf3f1.AttributeNames = f12elemf7elemf3f1f0
 							}
-							if f12elemf7iter.DataSource.S3DataSource.InstanceGroupNames != nil {
-								f12elemf7elemf3f1f1 := []*string{}
-								for _, f12elemf7elemf3f1f1iter := range f12elemf7iter.DataSource.S3DataSource.InstanceGroupNames {
-									var f12elemf7elemf3f1f1elem string
-									f12elemf7elemf3f1f1elem = *f12elemf7elemf3f1f1iter
-									f12elemf7elemf3f1f1 = append(f12elemf7elemf3f1f1, &f12elemf7elemf3f1f1elem)
-								}
-								f12elemf7elemf3f1.InstanceGroupNames = f12elemf7elemf3f1f1
-							}
 							if f12elemf7iter.DataSource.S3DataSource.S3DataDistributionType != nil {
 								f12elemf7elemf3f1.S3DataDistributionType = f12elemf7iter.DataSource.S3DataSource.S3DataDistributionType
 							}
@@ -844,23 +809,6 @@ func (rm *resourceManager) sdkFind(
 				f12elemf9 := &svcapitypes.ResourceConfig{}
 				if f12iter.ResourceConfig.InstanceCount != nil {
 					f12elemf9.InstanceCount = f12iter.ResourceConfig.InstanceCount
-				}
-				if f12iter.ResourceConfig.InstanceGroups != nil {
-					f12elemf9f1 := []*svcapitypes.InstanceGroup{}
-					for _, f12elemf9f1iter := range f12iter.ResourceConfig.InstanceGroups {
-						f12elemf9f1elem := &svcapitypes.InstanceGroup{}
-						if f12elemf9f1iter.InstanceCount != nil {
-							f12elemf9f1elem.InstanceCount = f12elemf9f1iter.InstanceCount
-						}
-						if f12elemf9f1iter.InstanceGroupName != nil {
-							f12elemf9f1elem.InstanceGroupName = f12elemf9f1iter.InstanceGroupName
-						}
-						if f12elemf9f1iter.InstanceType != nil {
-							f12elemf9f1elem.InstanceType = f12elemf9f1iter.InstanceType
-						}
-						f12elemf9f1 = append(f12elemf9f1, f12elemf9f1elem)
-					}
-					f12elemf9.InstanceGroups = f12elemf9f1
 				}
 				if f12iter.ResourceConfig.InstanceType != nil {
 					f12elemf9.InstanceType = f12iter.ResourceConfig.InstanceType
@@ -1313,15 +1261,6 @@ func (rm *resourceManager) newCreateRequestPayload(
 							}
 							f3f7elemf3f1.SetAttributeNames(f3f7elemf3f1f0)
 						}
-						if f3f7iter.DataSource.S3DataSource.InstanceGroupNames != nil {
-							f3f7elemf3f1f1 := []*string{}
-							for _, f3f7elemf3f1f1iter := range f3f7iter.DataSource.S3DataSource.InstanceGroupNames {
-								var f3f7elemf3f1f1elem string
-								f3f7elemf3f1f1elem = *f3f7elemf3f1f1iter
-								f3f7elemf3f1f1 = append(f3f7elemf3f1f1, &f3f7elemf3f1f1elem)
-							}
-							f3f7elemf3f1.SetInstanceGroupNames(f3f7elemf3f1f1)
-						}
 						if f3f7iter.DataSource.S3DataSource.S3DataDistributionType != nil {
 							f3f7elemf3f1.SetS3DataDistributionType(*f3f7iter.DataSource.S3DataSource.S3DataDistributionType)
 						}
@@ -1366,23 +1305,6 @@ func (rm *resourceManager) newCreateRequestPayload(
 			f3f9 := &svcsdk.ResourceConfig{}
 			if r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceCount != nil {
 				f3f9.SetInstanceCount(*r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceCount)
-			}
-			if r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceGroups != nil {
-				f3f9f1 := []*svcsdk.InstanceGroup{}
-				for _, f3f9f1iter := range r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceGroups {
-					f3f9f1elem := &svcsdk.InstanceGroup{}
-					if f3f9f1iter.InstanceCount != nil {
-						f3f9f1elem.SetInstanceCount(*f3f9f1iter.InstanceCount)
-					}
-					if f3f9f1iter.InstanceGroupName != nil {
-						f3f9f1elem.SetInstanceGroupName(*f3f9f1iter.InstanceGroupName)
-					}
-					if f3f9f1iter.InstanceType != nil {
-						f3f9f1elem.SetInstanceType(*f3f9f1iter.InstanceType)
-					}
-					f3f9f1 = append(f3f9f1, f3f9f1elem)
-				}
-				f3f9.SetInstanceGroups(f3f9f1)
 			}
 			if r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType != nil {
 				f3f9.SetInstanceType(*r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType)
@@ -1617,15 +1539,6 @@ func (rm *resourceManager) newCreateRequestPayload(
 								}
 								f4elemf7elemf3f1.SetAttributeNames(f4elemf7elemf3f1f0)
 							}
-							if f4elemf7iter.DataSource.S3DataSource.InstanceGroupNames != nil {
-								f4elemf7elemf3f1f1 := []*string{}
-								for _, f4elemf7elemf3f1f1iter := range f4elemf7iter.DataSource.S3DataSource.InstanceGroupNames {
-									var f4elemf7elemf3f1f1elem string
-									f4elemf7elemf3f1f1elem = *f4elemf7elemf3f1f1iter
-									f4elemf7elemf3f1f1 = append(f4elemf7elemf3f1f1, &f4elemf7elemf3f1f1elem)
-								}
-								f4elemf7elemf3f1.SetInstanceGroupNames(f4elemf7elemf3f1f1)
-							}
 							if f4elemf7iter.DataSource.S3DataSource.S3DataDistributionType != nil {
 								f4elemf7elemf3f1.SetS3DataDistributionType(*f4elemf7iter.DataSource.S3DataSource.S3DataDistributionType)
 							}
@@ -1670,23 +1583,6 @@ func (rm *resourceManager) newCreateRequestPayload(
 				f4elemf9 := &svcsdk.ResourceConfig{}
 				if f4iter.ResourceConfig.InstanceCount != nil {
 					f4elemf9.SetInstanceCount(*f4iter.ResourceConfig.InstanceCount)
-				}
-				if f4iter.ResourceConfig.InstanceGroups != nil {
-					f4elemf9f1 := []*svcsdk.InstanceGroup{}
-					for _, f4elemf9f1iter := range f4iter.ResourceConfig.InstanceGroups {
-						f4elemf9f1elem := &svcsdk.InstanceGroup{}
-						if f4elemf9f1iter.InstanceCount != nil {
-							f4elemf9f1elem.SetInstanceCount(*f4elemf9f1iter.InstanceCount)
-						}
-						if f4elemf9f1iter.InstanceGroupName != nil {
-							f4elemf9f1elem.SetInstanceGroupName(*f4elemf9f1iter.InstanceGroupName)
-						}
-						if f4elemf9f1iter.InstanceType != nil {
-							f4elemf9f1elem.SetInstanceType(*f4elemf9f1iter.InstanceType)
-						}
-						f4elemf9f1 = append(f4elemf9f1, f4elemf9f1elem)
-					}
-					f4elemf9.SetInstanceGroups(f4elemf9f1)
 				}
 				if f4iter.ResourceConfig.InstanceType != nil {
 					f4elemf9.SetInstanceType(*f4iter.ResourceConfig.InstanceType)
