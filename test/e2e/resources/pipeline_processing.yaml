@@ -1,0 +1,30 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: Pipeline
+metadata:
+  name: $PIPELINE_NAME
+spec:
+  pipelineDisplayName: $PIPELINE_NAME
+  pipelineName: $PIPELINE_NAME
+  pipelineDefinition: '{"Version": "2020-12-01", "Metadata": {}, "Parameters": [{"Name": "ProcessingInstanceType", 
+  "Type": "String", "DefaultValue": "ml.m5.xlarge"}, {"Name": "ProcessingInstanceCount", "Type": "Integer", "DefaultValue": 1}, 
+  {"Name": "InputData", "Type": "String", "DefaultValue": "s3://sagemaker-sample-data-$AWS_REGION/algorithms/kmeans/mnist/mnist.pkl.gz"}], 
+  "PipelineExperimentConfig": {"ExperimentName": {"Get": "Execution.PipelineName"}, "TrialName": {"Get": "Execution.PipelineExecutionId"}}, 
+  "Steps": [{"Name": "PreprocessData", "Type": "Processing", "Arguments": {"ProcessingResources": 
+  {"ClusterConfig": {"InstanceType": "ml.m5.large", "InstanceCount": {"Get": "Parameters.ProcessingInstanceCount"}, "VolumeSizeInGB": 20}}, 
+  "AppSpecification": {"ImageUri": "$PYTORCH_TRAIN_IMAGE_URI", 
+  "ContainerEntrypoint": ["python", "/opt/ml/processing/code/kmeans_preprocessing.py"]}, "RoleArn": "$SAGEMAKER_EXECUTION_ROLE_ARN", 
+  "ProcessingInputs": [{"InputName": "input-1", "AppManaged": false, "S3Input": {"S3Uri": {"Get": "Parameters.InputData"}, 
+  "LocalPath": "/opt/ml/processing/input", "S3DataType": "S3Prefix", "S3InputMode": "File", "S3DataDistributionType": "FullyReplicated", "S3CompressionType": "None"}}, 
+  {"InputName": "code", "AppManaged": false, "S3Input": {"S3Uri": "s3://$SAGEMAKER_DATA_BUCKET/sagemaker/processing/kmeans_preprocessing.py",
+  "LocalPath": "/opt/ml/processing/code", "S3DataType": "S3Prefix", "S3InputMode": "File", "S3DataDistributionType": "FullyReplicated", "S3CompressionType": "None"}}], 
+  "ProcessingOutputConfig": {"Outputs": [{"OutputName": "valid", "AppManaged": false, 
+  "S3Output": {"S3Uri": "s3://$SAGEMAKER_DATA_BUCKET/sagemaker/processing/", 
+  "LocalPath": "/opt/ml/processing/output_valid", "S3UploadMode": "EndOfJob"}}, {"OutputName": "train", "AppManaged": false, 
+  "S3Output": {"S3Uri": "s3://$SAGEMAKER_DATA_BUCKET/sagemaker/processing/output", "LocalPath": "/opt/ml/processing/output_train", "S3UploadMode": "EndOfJob"}}, {"OutputName": "test", "AppManaged": false, 
+  "S3Output": {"S3Uri": "s3://$SAGEMAKER_DATA_BUCKET/sagemaker/processing/output", "LocalPath": "/opt/ml/processing/output_test", "S3UploadMode": "EndOfJob"}}]}}}]}'
+  roleARN: $SAGEMAKER_EXECUTION_ROLE_ARN
+  parallelismConfiguration:
+    maxParallelExecutionSteps: 2
+  tags:
+    - key: environment
+      value: testing

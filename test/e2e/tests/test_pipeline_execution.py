@@ -40,9 +40,9 @@ def pipeline():
     replacements = REPLACEMENT_VALUES.copy()
     replacements["PIPELINE_NAME"] = resource_name
     (pipeline_reference, pipeline_spec, pipeline_resource,) = create_sagemaker_resource(
-        resource_plural=RESOURCE_PLURAL,
+        resource_plural="pipelines",
         resource_name=resource_name,
-        spec_file="pipeline",
+        spec_file="pipeline_processing",
         replacements=replacements,
     )
     assert pipeline_resource is not None
@@ -52,11 +52,7 @@ def pipeline():
         )
     assert k8s.get_resource_arn(pipeline_resource) is not None
 
-    yield (
-        pipeline_reference,
-        pipeline_spec,
-        pipeline_resource,
-    )
+    yield pipeline_resource
 
     # Delete the k8s resource if not already deleted by tests
     if k8s.get_resource_exists(pipeline_reference):
@@ -69,7 +65,7 @@ def pipeline():
 @pytest.fixture(scope="function")
 def pipeline_execution(pipeline):
     resource_name = random_suffix_name("pipeline-execution", 28)
-    (_, pipeline_resource) = pipeline
+    pipeline_resource = pipeline
     pipeline_resource_name = pipeline_resource["spec"].get("pipelineName", None)
     replacements = REPLACEMENT_VALUES.copy()
     replacements["PIPELINE_EXECUTION_RESOURCE_NAME"] = resource_name
