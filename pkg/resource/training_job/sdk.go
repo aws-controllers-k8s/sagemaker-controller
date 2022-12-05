@@ -1189,13 +1189,10 @@ func (rm *resourceManager) sdkUpdate(
 	}
 
 	rm.setStatusDefaults(ko)
-	observed, err := rm.sdkFind(ctx, latest)
-	if err != nil {
-		return observed, err
-	}
-	tmp_resource := &resource{ko}
-	tmp_resource.SetStatus(observed)
-
+	return desired, ackrequeue.NeededAfter(
+		errors.New("training job is updating"),
+		ackrequeue.DefaultRequeueAfterDuration,
+	)
 	return &resource{ko}, nil
 }
 
@@ -1420,8 +1417,13 @@ func (rm *resourceManager) updateConditions(
 			recoverableCondition.Message = nil
 		}
 	}
-	// Required to avoid the "declared but not used" error in the default case
-	_ = syncCondition
+	if syncCondition == nil && onSuccess {
+		syncCondition = &ackv1alpha1.Condition{
+			Type:   ackv1alpha1.ConditionTypeResourceSynced,
+			Status: corev1.ConditionTrue,
+		}
+		ko.Status.Conditions = append(ko.Status.Conditions, syncCondition)
+	}
 	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil {
 		return &resource{ko}, true // updated
 	}
