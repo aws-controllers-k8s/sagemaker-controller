@@ -45,7 +45,7 @@ func (rm *resourceManager) buildProfilerRuleConfigUpdateInput(desired *resource,
 		return errors.New("cannot remove/modify a profiler rule.")
 	}
 
-	ruleMap, err := markNonUpdatableRules(profilerRuleDesired, profilerRuleLatest)
+	ruleMap, err := rm.markNonUpdatableRules(profilerRuleDesired, profilerRuleLatest)
 	if err != nil {
 		return err
 	}
@@ -69,7 +69,7 @@ func (rm *resourceManager) buildProfilerRuleConfigUpdateInput(desired *resource,
 
 // markNonUpdatableRules returns a map containing the rules that are not eligible for update.
 // In addition it returns an error if a rule gets removed.
-func markNonUpdatableRules(profilerRuleDesired []*svcapitypes.ProfilerRuleConfiguration, profilerRuleLatest []*svcapitypes.ProfilerRuleConfiguration) (map[string]int, error) {
+func (rm *resourceManager) markNonUpdatableRules(profilerRuleDesired []*svcapitypes.ProfilerRuleConfiguration, profilerRuleLatest []*svcapitypes.ProfilerRuleConfiguration) (map[string]int, error) {
 	commonRulesMap := map[string]int{}
 	latestRulesMap := map[string]int{}
 	for _, rule := range profilerRuleLatest {
