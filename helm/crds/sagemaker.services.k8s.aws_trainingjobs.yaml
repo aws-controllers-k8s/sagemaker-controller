@@ -276,6 +276,10 @@ spec:
                               items:
                                 type: string
                               type: array
+                            instanceGroupNames:
+                              items:
+                                type: string
+                              type: array
                             s3DataDistributionType:
                               type: string
                             s3DataType:
@@ -400,6 +404,22 @@ spec:
                   instanceCount:
                     format: int64
                     type: integer
+                  instanceGroups:
+                    items:
+                      description: Defines an instance group for heterogeneous cluster
+                        training. When requesting a training job using the CreateTrainingJob
+                        (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingJob.html)
+                        API, you can configure multiple instance groups .
+                      properties:
+                        instanceCount:
+                          format: int64
+                          type: integer
+                        instanceGroupName:
+                          type: string
+                        instanceType:
+                          type: string
+                      type: object
+                    type: array
                   instanceType:
                     type: string
                   volumeKMSKeyID:

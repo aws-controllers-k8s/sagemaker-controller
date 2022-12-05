@@ -248,6 +248,9 @@ func newResourceDelta(
 					delta.Add("Spec.TrainingJobDefinition.ResourceConfig.InstanceCount", a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceCount, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceCount)
 				}
 			}
+			if !reflect.DeepEqual(a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceGroups, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceGroups) {
+				delta.Add("Spec.TrainingJobDefinition.ResourceConfig.InstanceGroups", a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceGroups, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceGroups)
+			}
 			if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType) {
 				delta.Add("Spec.TrainingJobDefinition.ResourceConfig.InstanceType", a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType)
 			} else if a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType != nil && b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType != nil {

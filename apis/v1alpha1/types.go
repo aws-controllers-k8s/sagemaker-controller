@@ -1437,8 +1437,9 @@ type InputConfig struct {
 // a training job using the CreateTrainingJob (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingJob.html)
 // API, you can configure multiple instance groups .
 type InstanceGroup struct {
-	InstanceCount *int64  `json:"instanceCount,omitempty"`
-	InstanceType  *string `json:"instanceType,omitempty"`
+	InstanceCount     *int64  `json:"instanceCount,omitempty"`
+	InstanceGroupName *string `json:"instanceGroupName,omitempty"`
+	InstanceType      *string `json:"instanceType,omitempty"`
 }
 
 // For a hyperparameter of the integer type, specifies the range that a hyperparameter
@@ -2726,10 +2727,11 @@ type RepositoryAuthConfig struct {
 // Describes the resources, including ML compute instances and ML storage volumes,
 // to use for model training.
 type ResourceConfig struct {
-	InstanceCount  *int64  `json:"instanceCount,omitempty"`
-	InstanceType   *string `json:"instanceType,omitempty"`
-	VolumeKMSKeyID *string `json:"volumeKMSKeyID,omitempty"`
-	VolumeSizeInGB *int64  `json:"volumeSizeInGB,omitempty"`
+	InstanceCount  *int64           `json:"instanceCount,omitempty"`
+	InstanceGroups []*InstanceGroup `json:"instanceGroups,omitempty"`
+	InstanceType   *string          `json:"instanceType,omitempty"`
+	VolumeKMSKeyID *string          `json:"volumeKMSKeyID,omitempty"`
+	VolumeSizeInGB *int64           `json:"volumeSizeInGB,omitempty"`
 }
 
 // Specifies the maximum number of training jobs and parallel training jobs
@@ -2765,6 +2767,7 @@ type RetryStrategy struct {
 // Describes the S3 data source.
 type S3DataSource struct {
 	AttributeNames         []*string `json:"attributeNames,omitempty"`
+	InstanceGroupNames     []*string `json:"instanceGroupNames,omitempty"`
 	S3DataDistributionType *string   `json:"s3DataDistributionType,omitempty"`
 	S3DataType             *string   `json:"s3DataType,omitempty"`
 	S3URI                  *string   `json:"s3URI,omitempty"`

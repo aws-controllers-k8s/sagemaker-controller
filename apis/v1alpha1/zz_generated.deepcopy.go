@@ -5659,6 +5659,11 @@ func (in *InstanceGroup) DeepCopyInto(out *InstanceGroup) {
 		*out = new(int64)
 		**out = **in
 	}
+	if in.InstanceGroupName != nil {
+		in, out := &in.InstanceGroupName, &out.InstanceGroupName
+		*out = new(string)
+		**out = **in
+	}
 	if in.InstanceType != nil {
 		in, out := &in.InstanceType, &out.InstanceType
 		*out = new(string)
@@ -12407,6 +12412,17 @@ func (in *ResourceConfig) DeepCopyInto(out *ResourceConfig) {
 		*out = new(int64)
 		**out = **in
 	}
+	if in.InstanceGroups != nil {
+		in, out := &in.InstanceGroups, &out.InstanceGroups
+		*out = make([]*InstanceGroup, len(*in))
+		for i := range *in {
+			if (*in)[i] != nil {
+				in, out := &(*in)[i], &(*out)[i]
+				*out = new(InstanceGroup)
+				(*in).DeepCopyInto(*out)
+			}
+		}
+	}
 	if in.InstanceType != nil {
 		in, out := &in.InstanceType, &out.InstanceType
 		*out = new(string)
@@ -12539,6 +12555,17 @@ func (in *S3DataSource) DeepCopyInto(out *S3DataSource) {
 	*out = *in
 	if in.AttributeNames != nil {
 		in, out := &in.AttributeNames, &out.AttributeNames
+		*out = make([]*string, len(*in))
+		for i := range *in {
+			if (*in)[i] != nil {
+				in, out := &(*in)[i], &(*out)[i]
+				*out = new(string)
+				**out = **in
+			}
+		}
+	}
+	if in.InstanceGroupNames != nil {
+		in, out := &in.InstanceGroupNames, &out.InstanceGroupNames
 		*out = make([]*string, len(*in))
 		for i := range *in {
 			if (*in)[i] != nil {
