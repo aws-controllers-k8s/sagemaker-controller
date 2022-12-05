@@ -1,6 +1,4 @@
-observed, err := rm.sdkFind(ctx, latest)
-if err != nil {
-    return observed, err
-}
-tmp_resource := &resource{ko}
-tmp_resource.SetStatus(observed)
+return desired, ackrequeue.NeededAfter(
+	errors.New("training job is updating"),
+	ackrequeue.DefaultRequeueAfterDuration,
+)

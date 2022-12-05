@@ -102,8 +102,8 @@ status:
     region: ""
   conditions:
   - lastTransitionTime: "0001-01-01T00:00:00Z"
-    message: Warm Pool Infrastructure is in Available status.
-    status: "False"
+    message: TrainingJob is in Completed status.
+    status: "True"
     type: ACK.ResourceSynced
   warmPoolStatus:
     status: Available

@@ -112,6 +112,8 @@ resources:
         compare:
           is_ignored: true
   TrainingJob:
+    reconcile: 
+      requeue_on_success_seconds: 300
     exceptions:
       errors:
           404:
