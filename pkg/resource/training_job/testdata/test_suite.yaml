@@ -266,7 +266,7 @@ tests:
         invoke: Update
         expect:
           latest_state: "v1alpha1/update/observed/removeProfilerBoth.yaml"
-          error: nil
+          error: training job is updating
       - name: "Update=RemoveProfilerRule"
         desciption: "This test checks if the Controller can remove the profiler properly"
         given:
@@ -280,7 +280,7 @@ tests:
         invoke: Update
         expect:
           latest_state: "v1alpha1/update/observed/removeProfilerRule.yaml"
-          error: nil
+          error: training job is updating
       - name: "Update=RemoveProfilerConfig"
         desciption: "This test checks if the Controller can remove the profiler properly"
         given:
@@ -294,7 +294,7 @@ tests:
         invoke: Update
         expect:
           latest_state: "v1alpha1/update/observed/removeProfilerConfig.yaml"
-          error: nil
+          error: training job is updating
       - name: "Update=BothProfiler"
         description: "Update Both Profiler parameters"
         given:
@@ -308,7 +308,7 @@ tests:
         invoke: Update
         expect:
           latest_state: "v1alpha1/update/observed/updateProfilerBoth.yaml"
-          error: nil
+          error: training job is updating
       - name: "Update=ProfilerConfig"
         description: "Update just the profiler config"
         given:
@@ -322,7 +322,7 @@ tests:
         invoke: Update
         expect:
           latest_state: "v1alpha1/update/observed/updateProfilerConfig.yaml"
-          error: nil
+          error: training job is updating
       - name: "Update=ProfilerStarting"
         description: "Tests if profiler returns a requeue error when TJ is updated in Starting."
         given:
@@ -381,7 +381,7 @@ tests:
         invoke: Update
         expect:
           latest_state: "v1alpha1/update/observed/updateProfilerConfig.yaml"
-          error: nil
+          error: training job is updating
       - name: "Update=AddWarmPool"
         description: "Attempt to add Warm Pool when a previous one does not exist."
         given:
@@ -419,7 +419,7 @@ tests:
         invoke: Update
         expect:
           latest_state: "v1alpha1/update/observed/updateProfilerRule.yaml"
-          error: nil
+          error: "training job is updating"
       - name: "Update=RemoveOneProfilerRule"
         description: "Removing one profiler rule"
         given:
