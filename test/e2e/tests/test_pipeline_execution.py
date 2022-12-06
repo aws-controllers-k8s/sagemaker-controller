@@ -176,11 +176,14 @@ class TestPipelineExecution:
                 f"ARN for this resource is None, resource status is: {resource['status']}"
             )
 
+        old_pipeline_last_modified_time = pipeline_execution_desc["LastModifiedTime"]
+
         assert k8s.get_resource_arn(resource) == pipeline_execution_arn
 
         self._assert_pipeline_execution_status_in_sync(
             pipeline_execution_arn, reference, cfg.JOB_STATUS_EXECUTING
         )
+
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
         # Update the resource
@@ -210,6 +213,15 @@ class TestPipelineExecution:
         assert (
             resource["spec"].get("pipelineExecutionDisplayName", None)
             == new_pipeline_execution_display_name
+        )
+
+        assert (
+            old_pipeline_last_modified_time
+            != pipeline_execution_desc["LastModifiedTime"]
+        )
+        assert (
+            resource["spec"].get("lastModifiedTime", None)
+            != old_pipeline_last_modified_time
         )
 
         self._assert_pipeline_execution_status_in_sync(
