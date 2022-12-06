@@ -1,0 +1,7 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: PipelineExecution
+metadata:
+  name: $PIPELINE_EXECUTION_RESOURCE_NAME
+spec:
+  pipelineExecutionDisplayName: $PIPELINE_EXECUTION_RESOURCE_NAME
+  pipelineName: $PIPELINE_RESOURCE_NAME

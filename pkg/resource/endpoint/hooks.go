@@ -79,6 +79,7 @@ func (rm *resourceManager) customUpdateEndpointSetOutput(ko *svcapitypes.Endpoin
 //  1. while EndpointStatus != InService (handled by requeueUntilCanModify method)
 //  2. EndpointStatus == Failed
 //  3. A previous update to the Endpoint with same endpointConfigName failed
+//
 // Method returns nil if endpoint can be updated, otherwise error depending on above cases
 func (rm *resourceManager) customUpdateEndpointPreChecks(
 	ctx context.Context,

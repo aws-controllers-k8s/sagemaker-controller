@@ -330,6 +330,11 @@ type Bias struct {
 	Report *MetricsSource `json:"report,omitempty"`
 }
 
+// Details on the cache hit of a pipeline execution step.
+type CacheHitResult struct {
+	SourcePipelineExecutionARN *string `json:"sourcePipelineExecutionARN,omitempty"`
+}
+
 // Metadata about a callback step.
 type CallbackStepMetadata struct {
 	SQSQueueURL *string `json:"sqsQueueURL,omitempty"`
@@ -976,6 +981,11 @@ type ExperimentSummary struct {
 type Explainability struct {
 	// Details about the metrics source.
 	Report *MetricsSource `json:"report,omitempty"`
+}
+
+// The container for the metadata for Fail step.
+type FailStepMetadata struct {
+	ErrorMessage *string `json:"errorMessage,omitempty"`
 }
 
 // A list of features. You must include FeatureName and FeatureType. Valid feature
@@ -2192,8 +2202,16 @@ type OutputParameter struct {
 	Value *string `json:"value,omitempty"`
 }
 
+// Configuration that controls the parallelism of the pipeline. By default,
+// the parallelism configuration specified applies to all executions of the
+// pipeline unless overridden.
+type ParallelismConfiguration struct {
+	MaxParallelExecutionSteps *int64 `json:"maxParallelExecutionSteps,omitempty"`
+}
+
 // Assigns a value to a named Pipeline parameter.
 type Parameter struct {
+	Name  *string `json:"name,omitempty"`
 	Value *string `json:"value,omitempty"`
 }
 
@@ -2252,31 +2270,11 @@ type PendingProductionVariantSummary struct {
 	VariantStatus        []*ProductionVariantStatus `json:"variantStatus,omitempty"`
 }
 
-// A SageMaker Model Building Pipeline instance.
-type Pipeline struct {
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, or project.
-	CreatedBy    *UserContext `json:"createdBy,omitempty"`
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, or project.
-	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
-	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
-	LastRunTime      *metav1.Time `json:"lastRunTime,omitempty"`
-	RoleARN          *string      `json:"roleARN,omitempty"`
-	Tags             []*Tag       `json:"tags,omitempty"`
-}
-
-// An execution of a pipeline.
-type PipelineExecution struct {
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, or project.
-	CreatedBy    *UserContext `json:"createdBy,omitempty"`
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, or project.
-	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
-	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+// The location of the pipeline definition stored in Amazon S3.
+type PipelineDefinitionS3Location struct {
+	Bucket    *string `json:"bucket,omitempty"`
+	ObjectKey *string `json:"objectKey,omitempty"`
+	VersionID *string `json:"versionID,omitempty"`
 }
 
 // An execution of a step in a pipeline.
@@ -2288,7 +2286,37 @@ type PipelineExecutionStep struct {
 
 // A pipeline execution summary.
 type PipelineExecutionSummary struct {
-	StartTime *metav1.Time `json:"startTime,omitempty"`
+	PipelineExecutionARN           *string      `json:"pipelineExecutionARN,omitempty"`
+	PipelineExecutionDescription   *string      `json:"pipelineExecutionDescription,omitempty"`
+	PipelineExecutionDisplayName   *string      `json:"pipelineExecutionDisplayName,omitempty"`
+	PipelineExecutionFailureReason *string      `json:"pipelineExecutionFailureReason,omitempty"`
+	PipelineExecutionStatus        *string      `json:"pipelineExecutionStatus,omitempty"`
+	StartTime                      *metav1.Time `json:"startTime,omitempty"`
+}
+
+// An execution of a pipeline.
+type PipelineExecution_SDK struct {
+	// Information about the user who created or modified an experiment, trial,
+	// trial component, lineage group, or project.
+	CreatedBy     *UserContext `json:"createdBy,omitempty"`
+	CreationTime  *metav1.Time `json:"creationTime,omitempty"`
+	FailureReason *string      `json:"failureReason,omitempty"`
+	// Information about the user who created or modified an experiment, trial,
+	// trial component, lineage group, or project.
+	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	// Configuration that controls the parallelism of the pipeline. By default,
+	// the parallelism configuration specified applies to all executions of the
+	// pipeline unless overridden.
+	ParallelismConfiguration     *ParallelismConfiguration `json:"parallelismConfiguration,omitempty"`
+	PipelineARN                  *string                   `json:"pipelineARN,omitempty"`
+	PipelineExecutionARN         *string                   `json:"pipelineExecutionARN,omitempty"`
+	PipelineExecutionDescription *string                   `json:"pipelineExecutionDescription,omitempty"`
+	PipelineExecutionDisplayName *string                   `json:"pipelineExecutionDisplayName,omitempty"`
+	PipelineExecutionStatus      *string                   `json:"pipelineExecutionStatus,omitempty"`
+	// Specifies the names of the experiment and trial created by a pipeline.
+	PipelineExperimentConfig *PipelineExperimentConfig `json:"pipelineExperimentConfig,omitempty"`
+	PipelineParameters       []*Parameter              `json:"pipelineParameters,omitempty"`
 }
 
 // Specifies the names of the experiment and trial created by a pipeline.
@@ -2299,10 +2327,38 @@ type PipelineExperimentConfig struct {
 
 // A summary of a pipeline.
 type PipelineSummary struct {
-	CreationTime      *metav1.Time `json:"creationTime,omitempty"`
-	LastExecutionTime *metav1.Time `json:"lastExecutionTime,omitempty"`
-	LastModifiedTime  *metav1.Time `json:"lastModifiedTime,omitempty"`
-	RoleARN           *string      `json:"roleARN,omitempty"`
+	CreationTime        *metav1.Time `json:"creationTime,omitempty"`
+	LastExecutionTime   *metav1.Time `json:"lastExecutionTime,omitempty"`
+	LastModifiedTime    *metav1.Time `json:"lastModifiedTime,omitempty"`
+	PipelineARN         *string      `json:"pipelineARN,omitempty"`
+	PipelineDescription *string      `json:"pipelineDescription,omitempty"`
+	PipelineDisplayName *string      `json:"pipelineDisplayName,omitempty"`
+	PipelineName        *string      `json:"pipelineName,omitempty"`
+	RoleARN             *string      `json:"roleARN,omitempty"`
+}
+
+// A SageMaker Model Building Pipeline instance.
+type Pipeline_SDK struct {
+	// Information about the user who created or modified an experiment, trial,
+	// trial component, lineage group, or project.
+	CreatedBy    *UserContext `json:"createdBy,omitempty"`
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	// Information about the user who created or modified an experiment, trial,
+	// trial component, lineage group, or project.
+	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	LastRunTime      *metav1.Time `json:"lastRunTime,omitempty"`
+	// Configuration that controls the parallelism of the pipeline. By default,
+	// the parallelism configuration specified applies to all executions of the
+	// pipeline unless overridden.
+	ParallelismConfiguration *ParallelismConfiguration `json:"parallelismConfiguration,omitempty"`
+	PipelineARN              *string                   `json:"pipelineARN,omitempty"`
+	PipelineDescription      *string                   `json:"pipelineDescription,omitempty"`
+	PipelineDisplayName      *string                   `json:"pipelineDisplayName,omitempty"`
+	PipelineName             *string                   `json:"pipelineName,omitempty"`
+	PipelineStatus           *string                   `json:"pipelineStatus,omitempty"`
+	RoleARN                  *string                   `json:"roleARN,omitempty"`
+	Tags                     []*Tag                    `json:"tags,omitempty"`
 }
 
 // Configuration for the cluster used to run a processing job.
