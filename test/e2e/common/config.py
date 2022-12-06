@@ -24,6 +24,8 @@ MODEL_PACKAGE_RESOURCE_PLURAL = "modelpackages"
 LIST_JOB_STATUS_STOPPED = ("Stopped", "Stopping", "Completed")
 JOB_STATUS_INPROGRESS: str = "InProgress"
 JOB_STATUS_COMPLETED: str = "Completed"
+JOB_STATUS_EXECUTING: str = "Executing"
+JOB_STATUS_SUCCEEDED: str = "Succeeded"
 RULE_STATUS_COMPLETED: str = "NoIssuesFound"
 
 ENDPOINT_STATUS_INSERVICE = "InService"

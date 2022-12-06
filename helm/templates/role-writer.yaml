@@ -43,6 +43,8 @@ rules:
 
   - pipelines
 
+  - pipelineexecutions
+
   - processingjobs
 
   - trainingjobs
@@ -79,6 +81,7 @@ rules:
   - notebookinstances
   - notebookinstancelifecycleconfigs
   - pipelines
+  - pipelineexecutions
   - processingjobs
   - trainingjobs
   - transformjobs

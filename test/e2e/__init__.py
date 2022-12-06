@@ -351,6 +351,19 @@ def get_sagemaker_endpoint_config(config_name: str):
         return None
 
 
+def get_sagemaker_pipeline_execution(pipeline_execution_arn: str):
+    try:
+        pipeline_execution = sagemaker_client().describe_pipeline_execution(
+            PipelineExecutionArn=pipeline_execution_arn
+        )
+        return pipeline_execution
+    except botocore.exceptions.ClientError as error:
+        logging.error(
+            f"SageMaker could not find a pipeline execution with the arn {pipeline_execution_arn}. Error {error}"
+        )
+        return None
+
+
 def get_sagemaker_pipeline(pipeline_name: str):
     try:
         return sagemaker_client().describe_pipeline(PipelineName=pipeline_name)

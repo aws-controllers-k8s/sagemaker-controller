@@ -43,7 +43,7 @@ type fixtureContext struct {
 	resourceManager acktypes.AWSResourceManager
 }
 
-//TODO: remove if no longer used
+// TODO: remove if no longer used
 // expectContext is runtime context for test scenario expectation fixture.
 type expectContext struct {
 	latest acktypes.AWSResource
