@@ -15,8 +15,10 @@ package pipeline_execution
 
 import (
 	"errors"
+	"strings"
 
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
+	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 )
@@ -39,4 +41,11 @@ var (
 func (rm *resourceManager) customSetOutput(r *resource) {
 	latestStatus := r.ko.Status.PipelineExecutionStatus
 	svccommon.SetSyncedCondition(r, latestStatus, &resourceName, &modifyingStatuses)
+}
+
+func (rm *resourceManager) customSetSpec(ko *svcapitypes.PipelineExecution, resp *svcsdk.DescribePipelineExecutionOutput) {
+	if ko.Spec.PipelineName == nil {
+		var name = strings.SplitAfter(*resp.PipelineArn, "/")
+		ko.Spec.PipelineName = &name[0]
+	}
 }

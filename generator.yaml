@@ -29,6 +29,8 @@ resources:
     reconcile: 
       requeue_on_success_seconds: 60
     hooks:
+      sdk_read_one_pre_set_output:
+        code: rm.customSetSpec(ko,resp)
       sdk_read_one_post_set_output:
         code: rm.customSetOutput(&resource{ko})
       sdk_delete_pre_build_request:
