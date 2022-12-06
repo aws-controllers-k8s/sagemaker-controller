@@ -1009,11 +1009,12 @@ ignore:
       - ExecutionRoleIdentityConfig
       - HyperParameterTuningResourceConfig
       - InstanceMetadataServiceConfiguration
-    field_paths:
-      - StartPipelineExecutionInput.ClientRequestToken
-      - CreatePipelineInput.ClientRequestToken
-      - CreatePipelineInput.PipelineDefinitionS3Location
       - CanvasAppSettings
       - ExplainerConfig
       - HyperParameterTuningJobStrategyConfig
       - DisableProfiler
+    field_paths:
+      - StartPipelineExecutionInput.ClientRequestToken
+      - CreatePipelineInput.ClientRequestToken
+      - CreatePipelineInput.PipelineDefinitionS3Location
+      

@@ -957,11 +957,11 @@ type Experiment struct {
 // Associates a SageMaker job as a trial component with an experiment and trial.
 // Specified when you call the following APIs:
 //
-//   - CreateProcessingJob
+//    * CreateProcessingJob
 //
-//   - CreateTrainingJob
+//    * CreateTrainingJob
 //
-//   - CreateTransformJob
+//    * CreateTransformJob
 type ExperimentConfig struct {
 	ExperimentName            *string `json:"experimentName,omitempty"`
 	TrialComponentDisplayName *string `json:"trialComponentDisplayName,omitempty"`
