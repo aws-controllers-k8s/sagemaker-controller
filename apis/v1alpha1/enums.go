@@ -1260,20 +1260,20 @@ const (
 	ParameterType_FreeText    ParameterType = "FreeText"
 )
 
-type PipelineExecutionStatus string
+type PipelineExecutionStatus_SDK string
 
 const (
-	PipelineExecutionStatus_Executing PipelineExecutionStatus = "Executing"
-	PipelineExecutionStatus_Stopping  PipelineExecutionStatus = "Stopping"
-	PipelineExecutionStatus_Stopped   PipelineExecutionStatus = "Stopped"
-	PipelineExecutionStatus_Failed    PipelineExecutionStatus = "Failed"
-	PipelineExecutionStatus_Succeeded PipelineExecutionStatus = "Succeeded"
+	PipelineExecutionStatus_SDK_Executing PipelineExecutionStatus_SDK = "Executing"
+	PipelineExecutionStatus_SDK_Stopping  PipelineExecutionStatus_SDK = "Stopping"
+	PipelineExecutionStatus_SDK_Stopped   PipelineExecutionStatus_SDK = "Stopped"
+	PipelineExecutionStatus_SDK_Failed    PipelineExecutionStatus_SDK = "Failed"
+	PipelineExecutionStatus_SDK_Succeeded PipelineExecutionStatus_SDK = "Succeeded"
 )
 
-type PipelineStatus string
+type PipelineStatus_SDK string
 
 const (
-	PipelineStatus_Active PipelineStatus = "Active"
+	PipelineStatus_SDK_Active PipelineStatus_SDK = "Active"
 )
 
 type ProblemType string

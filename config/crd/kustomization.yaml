@@ -19,6 +19,8 @@ resources:
   - bases/sagemaker.services.k8s.aws_monitoringschedules.yaml
   - bases/sagemaker.services.k8s.aws_notebookinstances.yaml
   - bases/sagemaker.services.k8s.aws_notebookinstancelifecycleconfigs.yaml
+  - bases/sagemaker.services.k8s.aws_pipelines.yaml
+  - bases/sagemaker.services.k8s.aws_pipelineexecutions.yaml
   - bases/sagemaker.services.k8s.aws_processingjobs.yaml
   - bases/sagemaker.services.k8s.aws_trainingjobs.yaml
   - bases/sagemaker.services.k8s.aws_transformjobs.yaml

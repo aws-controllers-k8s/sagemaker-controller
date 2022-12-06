@@ -70,7 +70,7 @@ spec:
               experimentConfig:
                 description: "Associates a SageMaker job as a trial component with
                   an experiment and trial. Specified when you call the following APIs:
-                  \n * CreateProcessingJob \n * CreateTrainingJob \n * CreateTransformJob"
+                  \n - CreateProcessingJob \n - CreateTrainingJob \n - CreateTransformJob"
                 properties:
                   experimentName:
                     type: string
