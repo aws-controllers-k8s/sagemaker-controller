@@ -52,6 +52,22 @@ status:
     region: ""
   conditions:
   - lastTransitionTime: "0001-01-01T00:00:00Z"
+    message: TrainingJob is in InProgress status.
+    status: "False"
+    type: ACK.ResourceSynced
+  - lastTransitionTime: "0001-01-01T00:00:00Z"
     message: training job is updating
     status: "True"
     type: ACK.Recoverable
+  profilerRuleEvaluationStatuses:
+  - lastModifiedTime: "0001-01-01T00:00:00Z"
+    ruleConfigurationName: ProfilerReport
+    ruleEvaluationStatus: InProgress
+  - lastModifiedTime: "0001-01-01T00:00:00Z"
+    ruleConfigurationName: CPUBottleneck
+    ruleEvaluationStatus: InProgress
+  secondaryStatus: Downloading
+  trainingJobStatus: InProgress
+  profilingStatus: Enabled
+  creationTime: "2021-10-13T03:49:20.337Z"
+  lastModifiedTime: "2021-10-13T03:49:20.576Z"

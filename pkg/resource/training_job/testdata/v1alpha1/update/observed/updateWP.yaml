@@ -41,7 +41,17 @@ status:
     region: ""
   conditions:
   - lastTransitionTime: "0001-01-01T00:00:00Z"
+    message: TrainingJob is in Completed status.
+    status: "True"
+    type: ACK.ResourceSynced
+  - lastTransitionTime: "0001-01-01T00:00:00Z"
     message: training job is updating
     status: "True"
     type: ACK.Recoverable
-  
+  warmPoolStatus:
+    status: Available
+  secondaryStatus: Completed
+  trainingJobStatus: Completed
+  profilingStatus: Disabled
+  creationTime: "2021-10-12T05:49:40.493Z"
+  lastModifiedTime: "2021-10-12T05:52:46.108Z"
