@@ -156,7 +156,6 @@ class TestTrainingDebuggerJob:
         assert_training_status_in_sync(
             training_job_name, reference, cfg.JOB_STATUS_COMPLETED
         )
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
         # Assert debugger rule evaluation completed
         self._assert_training_rule_eval_status_in_sync(
