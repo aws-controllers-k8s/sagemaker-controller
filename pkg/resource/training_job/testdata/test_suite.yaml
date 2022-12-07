@@ -260,7 +260,7 @@ tests:
           latest_state: "v1alpha1/update/latest/profilerHappyBase.yaml"
           svc_api: 
             - operation: UpdateTrainingJobWithContext
-              output_fixture: "sdkapi/update/update_sucess.json"
+              output_fixture: "sdkapi/update/update_success.json"
             - operation: DescribeTrainingJobWithContext
               output_fixture: "sdkapi/update/describe/profiler_removal.json"
         invoke: Update
@@ -274,7 +274,7 @@ tests:
           latest_state: "v1alpha1/update/latest/profilerHappyBase.yaml"
           svc_api: 
             - operation: UpdateTrainingJobWithContext
-              output_fixture: "sdkapi/update/update_sucess.json"
+              output_fixture: "sdkapi/update/update_success.json"
             - operation: DescribeTrainingJobWithContext
               output_fixture: "sdkapi/update/describe/profiler_removal.json"
         invoke: Update
@@ -288,7 +288,7 @@ tests:
           latest_state: "v1alpha1/update/latest/profilerHappyBase.yaml"
           svc_api: 
             - operation: UpdateTrainingJobWithContext
-              output_fixture: "sdkapi/update/update_sucess.json"
+              output_fixture: "sdkapi/update/update_success.json"
             - operation: DescribeTrainingJobWithContext
               output_fixture: "sdkapi/update/describe/profiler_removal.json"
         invoke: Update
@@ -302,7 +302,7 @@ tests:
           latest_state: "v1alpha1/update/latest/profilerHappyBase.yaml"
           svc_api: 
             - operation: UpdateTrainingJobWithContext
-              output_fixture: "sdkapi/update/update_sucess.json"
+              output_fixture: "sdkapi/update/update_success.json"
             - operation: DescribeTrainingJobWithContext
               output_fixture: "sdkapi/update/describe/bothprofiler_update.json"
         invoke: Update
@@ -316,7 +316,7 @@ tests:
           latest_state: "v1alpha1/update/latest/profilerHappyBase.yaml"
           svc_api: 
             - operation: UpdateTrainingJobWithContext
-              output_fixture: "sdkapi/update/update_sucess.json"
+              output_fixture: "sdkapi/update/update_success.json"
             - operation: DescribeTrainingJobWithContext
               output_fixture: "sdkapi/update/describe/profiler_config_update.json"
         invoke: Update
@@ -346,7 +346,7 @@ tests:
           latest_state: "v1alpha1/update/latest/WPHappy.yaml"
           svc_api: 
             - operation: UpdateTrainingJobWithContext
-              output_fixture: "sdkapi/update/update_sucess.json"
+              output_fixture: "sdkapi/update/update_success.json"
             - operation: DescribeTrainingJobWithContext
               output_fixture: "sdkapi/update/describe/warmpool.json"
         invoke: Update
@@ -375,7 +375,7 @@ tests:
           latest_state: "v1alpha1/update/latest/vanilla.yaml"
           svc_api: 
             - operation: UpdateTrainingJobWithContext
-              output_fixture: "sdkapi/update/update_sucess.json"
+              output_fixture: "sdkapi/update/update_success.json"
             - operation: DescribeTrainingJobWithContext
               output_fixture: "sdkapi/update/describe/profiler_config_update.json"
         invoke: Update
@@ -413,7 +413,7 @@ tests:
           latest_state: "v1alpha1/update/latest/profilerHappyBase.yaml"
           svc_api: 
             - operation: UpdateTrainingJobWithContext
-              output_fixture: "sdkapi/update/update_sucess.json"
+              output_fixture: "sdkapi/update/update_success.json"
             - operation: DescribeTrainingJobWithContext
               output_fixture: "sdkapi/update/describe/profilerrule_update.json"
         invoke: Update
