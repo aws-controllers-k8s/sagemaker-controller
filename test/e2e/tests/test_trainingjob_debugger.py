@@ -185,7 +185,7 @@ class TestTrainingDebuggerJob:
             resource["status"]["lastModifiedTime"] != resource["status"]["creationTime"]
         )
         assert (
-            training_job_desc["LastModifiedTime"] != training_job_desc["CreationTime"]
+            training_sm_desc["LastModifiedTime"] != training_sm_desc["CreationTime"]
         )
 
     def delete_debugger_trainingjob(self, xgboost_training_job_debugger):
