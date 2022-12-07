@@ -42,7 +42,7 @@ func (rm *resourceManager) buildProfilerRuleConfigUpdateInput(desired *resource,
 		return nil
 	}
 	if len(profilerRuleDesired) <= len(profilerRuleLatest) {
-		return errors.New("cannot remove/modify a profiler rule.")
+		return errors.New("cannot remove/modify existing profiler rules.")
 	}
 
 	ruleMap, err := rm.markNonUpdatableRules(profilerRuleDesired, profilerRuleLatest)
