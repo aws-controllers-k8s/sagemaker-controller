@@ -177,7 +177,7 @@ class TestPipelineExecution:
             )
 
         old_pipeline_last_modified_time = pipeline_execution_desc["LastModifiedTime"]
-
+    
         assert k8s.get_resource_arn(resource) == pipeline_execution_arn
 
         self._assert_pipeline_execution_status_in_sync(
@@ -220,7 +220,7 @@ class TestPipelineExecution:
             != pipeline_execution_desc["LastModifiedTime"]
         )
         assert (
-            resource["spec"].get("lastModifiedTime", None)
+            resource["status"].get("lastModifiedTime")
             != old_pipeline_last_modified_time
         )
 

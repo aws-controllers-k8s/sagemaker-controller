@@ -156,7 +156,7 @@ class TestPipeline:
         )
         assert old_pipeline_last_modified_time != pipeline_desc["LastModifiedTime"]
         assert (
-            resource["spec"].get("lastModifiedTime", None)
+            resource["status"].get("lastModifiedTime")
             != old_pipeline_last_modified_time
         )
 
