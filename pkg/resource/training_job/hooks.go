@@ -51,7 +51,7 @@ var (
 	)
 
 	requeueBeforeUpdate = ackrequeue.NeededAfter(
-		errors.New("warm pool cannot be updated in InProgress state, requeuing until TrainingJob reaches completed state."),
+		errors.New("warm pool cannot be updated while TrainingJob status is InProgress, requeuing until TrainingJob completes."),
 		ackrequeue.DefaultRequeueAfterDuration,
 	)
 )
@@ -92,7 +92,7 @@ func (rm *resourceManager) customSetOutput(r *resource) {
 func (rm *resourceManager) isWarmPoolUpdatable(latest *resource) error {
 	trainingJobStatus := latest.ko.Status.TrainingJobStatus
 	if ackcompare.IsNil(latest.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds) {
-		return ackerr.NewTerminalError(errors.New("warm pool does not exist"))
+		return ackerr.NewTerminalError(errors.New("warm pool does not exist and can only be configured at creation time"))
 	}
 	if ackcompare.IsNotNil(trainingJobStatus) {
 		if *trainingJobStatus == svcsdk.TrainingJobStatusInProgress {
@@ -104,7 +104,7 @@ func (rm *resourceManager) isWarmPoolUpdatable(latest *resource) error {
 				if wp_modifying {
 					return nil
 				} else {
-					return ackerr.NewTerminalError(errors.New("warm pool is in a non updateable state"))
+					return ackerr.NewTerminalError(errors.New("warm pool cannot be updated if has been terminated or reused"))
 				}
 			} else {
 				// Sometimes the API (briefly) does not return the WP status even if it completes.
@@ -113,7 +113,7 @@ func (rm *resourceManager) isWarmPoolUpdatable(latest *resource) error {
 			}
 		} else {
 			// Training Job is in 'Failed'|'Stopping'|'Stopped' (Terminal)
-			return ackerr.NewTerminalError(errors.New("warm pool is in a non updateable state"))
+			return ackerr.NewTerminalError(errors.New("warm pool can only be updated if TrainingJob status is Completed. Warm pool will be terminated automatically if trainingjob has not completed successfully"))
 		}
 
 	}
