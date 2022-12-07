@@ -254,7 +254,7 @@ tests:
     description: "Tests for update operation"
     scenarios:
       - name: "Update=RemoveProfilerBothParams"
-        desciption: "This test checks if the Controller can remove the profiler properly"
+        description: "This test checks if the Controller can remove the profiler properly, if both profile parameters are removed in the spec."
         given:
           desired_state: "v1alpha1/update/desired/removeProfilerboth.yaml"
           latest_state: "v1alpha1/update/latest/profilerHappyBase.yaml"
@@ -268,7 +268,7 @@ tests:
           latest_state: "v1alpha1/update/observed/removeProfilerBoth.yaml"
           error: training job is updating
       - name: "Update=RemoveProfilerRule"
-        desciption: "This test checks if the Controller can remove the profiler properly"
+        description: "This test checks if the Controller can remove the profiler properly, if the Profiler rule is removed in the spec."
         given:
           desired_state: "v1alpha1/update/desired/removeProfilerRule.yaml"
           latest_state: "v1alpha1/update/latest/profilerHappyBase.yaml"
@@ -282,7 +282,7 @@ tests:
           latest_state: "v1alpha1/update/observed/removeProfilerRule.yaml"
           error: training job is updating
       - name: "Update=RemoveProfilerConfig"
-        desciption: "This test checks if the Controller can remove the profiler properly"
+        description: "This test checks if the Controller can remove the profiler properly, if the Profiler config is removed in the spec."
         given:
           desired_state: "v1alpha1/update/desired/removeProfilerConfig.yaml"
           latest_state: "v1alpha1/update/latest/profilerHappyBase.yaml"
@@ -324,7 +324,7 @@ tests:
           latest_state: "v1alpha1/update/observed/updateProfilerConfig.yaml"
           error: training job is updating
       - name: "Update=ProfilerStarting"
-        description: "Tests if profiler returns a requeue error when TJ is updated in Starting."
+        description: "Tests if profiler returns a requeue error when Training Job is updated in Starting."
         given:
           desired_state: "v1alpha1/update/desired/updateProfileConfig.yaml"
           latest_state: "v1alpha1/update/latest/profilerStarting.yaml"
@@ -332,7 +332,7 @@ tests:
         expect:
           error: training job cannot be updated while secondary status is in Starting state.
       - name: "Update=ProfilerTerminal"
-        description: "Tests if profiler returns a terminal error when TJ is updated in Completed."
+        description: "Tests if profiler returns a terminal error when Training Job is updated in Completed."
         given:
           desired_state: "v1alpha1/update/desired/updateProfileConfig.yaml"
           latest_state: "v1alpha1/update/latest/profilerTerminal.yaml"
@@ -340,7 +340,7 @@ tests:
         expect:
           error: "resource is in terminal condition"
       - name: "Update=WarmPool"
-        description: "Update a warm pool"
+        description: "Update a warm pool successfully."
         given:
           desired_state: "v1alpha1/update/desired/updateWarmPool.yaml"
           latest_state: "v1alpha1/update/latest/WPHappy.yaml"
@@ -353,7 +353,7 @@ tests:
         expect:
           latest_state: "v1alpha1/update/observed/updateWP.yaml"
       - name: "Update=WarmPoolInProgress"
-        description: "Return a requeue error if trainingjob is in InProgress state when a warm pool is being updated."
+        description: "Return a requeue error if trainingjob is in InProgress state."
         given:
           desired_state: "v1alpha1/update/desired/updateWarmPool.yaml"
           latest_state: "v1alpha1/update/latest/WPDownloading.yaml"
@@ -399,7 +399,7 @@ tests:
         expect:
           error: "resource is in terminal condition"
       - name: "Update=Invalid update"
-        description: "Attempt to update something else"
+        description: "Attempt to update a parameter that is not allowed to be updated."
         given:
           desired_state: "v1alpha1/update/desired/invalidupdate.yaml"
           latest_state: "v1alpha1/update/latest/WPHappy.yaml"
@@ -429,7 +429,7 @@ tests:
         expect:
           error: "cannot remove/modify a profiler rule."
       - name: "Update=RemoveAddProfilerRule"
-        description: "Removing one profiler rule"
+        description: "Removing a profiler rule but adding another."
         given:
           desired_state: "v1alpha1/update/desired/removeAddProfilerRule.yaml"
           latest_state: "v1alpha1/update/latest/profilerMultipleRules.yaml"
