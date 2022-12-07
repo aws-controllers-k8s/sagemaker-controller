@@ -427,7 +427,7 @@ tests:
           latest_state: "v1alpha1/update/latest/profilerMultipleRules.yaml"
         invoke: Update
         expect:
-          error: "cannot remove/modify existing profiler rules."
+          error: "resource is in terminal condition"
       - name: "Update=RemoveAddProfilerRule"
         description: "Removing a profiler rule but adding another."
         given:
@@ -435,7 +435,7 @@ tests:
           latest_state: "v1alpha1/update/latest/profilerMultipleRules.yaml"
         invoke: Update
         expect:
-          error: "cannot remove/modify existing profiler rules."
+          error: "resource is in terminal condition"
       
 
 
