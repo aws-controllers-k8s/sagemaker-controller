@@ -98,6 +98,9 @@ func removeDelta(delta *ackcompare.Delta, fieldName string) {
 	differences := delta.Differences
 	for index, diff := range differences {
 		if diff.Path.Contains(fieldName) {
+			// differences[index+1:]... is a legal statement in go even if the slice is of length 1.
+			// The minimum index in the left part of [index+1:] is allowed to be equal to capacity.
+			// The left index will never be greater than the capacity.
 			differences = append(differences[:index], differences[index+1:]...)
 			delta.Differences = differences
 			return
