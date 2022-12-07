@@ -1,0 +1,25 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: PipelineExecution
+metadata:
+  creationTimestamp: null
+  name: test-pipeline-execution
+spec:
+  pipelineExecutionDescription: test
+  pipelineExecutionDisplayName: test-pipeline-execution
+  pipelineName: test-pipeline
+  pipelineParameters:
+  - name: AccuracyMseThreshold
+    value: "1.0"
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789:pipeline/test-pipeline/execution/tufkd9rv07w2
+    ownerAccountID: ""
+    region: ""
+  conditions:
+  - lastTransitionTime: "2022-12-07T04:14:19Z"
+    message: PipelineExecution is in Stopping status.
+    status: "False"
+    type: ACK.ResourceSynced
+  creationTime: "2022-10-07T06:39:45Z"
+  lastModifiedTime: "2022-10-07T06:54:11Z"
+  pipelineExecutionStatus: Stopping

@@ -1,0 +1,24 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: PipelineExecution
+metadata:
+  creationTimestamp: null
+  name: test-pipeline-execution
+spec:
+  parallelismConfiguration:
+    maxParallelExecutionSteps: 2
+  pipelineExecutionDescription: test
+  pipelineExecutionDisplayName: test-pipeline-execution
+  pipelineName: test-pipeline
+  pipelineParameters:
+  - name: AccuracyMseThreshold
+    value: "1.0"
+status:
+  ackResourceMetadata:
+    ownerAccountID: ""
+    region: ""
+  conditions:
+  - status: "False"
+    type: ACK.Terminal
+  - message: resource not found
+    status: "True"
+    type: ACK.Recoverable

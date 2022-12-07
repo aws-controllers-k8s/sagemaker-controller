@@ -1,0 +1,178 @@
+tests:
+  - name: "PipelineExecution create tests"
+    description: "Part of PipelineExecution CRD tests."
+    scenarios:
+      - name: "Create=InvalidInput"
+        description: "Given one of the parameters is invalid, Status shows a terminal condition"
+        given:
+          desired_state: "v1alpha1/create/desired/invalid_before_create.yaml"
+          svc_api:
+            - operation: StartPipelineExecutionWithContext
+              error:
+                code: InvalidParameterValue
+                message: "The Pipeline name must not include a special character."
+        invoke: Create
+        expect:
+          latest_state: "v1alpha1/create/observed/invalid_create_attempted.yaml"
+          error: resource is in terminal condition
+      - name: "Create=Valid"
+        description: "Create a new PipelineExecution successfully (ARN in status)."
+        given:
+          desired_state: "v1alpha1/create/desired/success_before_create.yaml"
+          svc_api:
+            - operation: StartPipelineExecutionWithContext
+              output_fixture: "sdkapi/create/create_success.json"
+        invoke: Create
+        expect:
+          latest_state: "v1alpha1/create/observed/success_after_create.yaml"
+          error: nil
+  - name: "PipelineExecution readOne tests"
+    description: "Testing the readOne operation"
+    scenarios:
+      - name: "ReadOne=MissingRequiredField"
+        description: "Testing readOne when required field is missing. No API call is made and returns error."
+        given: 
+          desired_state: "v1alpha1/readone/desired/missing_required_field.yaml"
+        invoke: ReadOne
+        expect:
+          error: "resource not found"
+      - name: "ReadOne=NotFound"
+        description: "Testing readOne when Describe fails to find the resource on SageMaker"
+        given: 
+          desired_state: "v1alpha1/create/observed/success_after_create.yaml"
+          svc_api:
+            - operation: DescribePipelineExecutionWithContext
+              error:
+                code: ResourceNotFound
+                message: "does not exist"
+        invoke: ReadOne
+        expect:
+          error: "resource not found"
+      - name: "ReadOne=Fail"
+        description: "This test checks if the condition is updated if describe fails and readOne returns error"
+        given: 
+          desired_state: "v1alpha1/create/observed/success_after_create.yaml"
+          svc_api:
+            - operation: DescribePipelineExecutionWithContext
+              error:
+                code: ServiceUnavailable
+                message: "Server is down"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/error_on_describe.yaml"
+          error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
+      - name: "ReadOne=AfterCreate"
+        description: "Testing readOne after create, the status should have ARN."
+        given:
+          desired_state: "v1alpha1/create/observed/success_after_create.yaml"
+          svc_api:
+            - operation: DescribePipelineExecutionWithContext
+              output_fixture: "sdkapi/describe/describe_executing.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/created.yaml"
+      - name: "ReadOne=SuccessClearsConditions"
+        description: "Testing a successful reconciliation clears conditions if terminal/recoverable condition were already set to true"
+        given:
+          desired_state: "v1alpha1/readone/desired/error_conditions_true.yaml"
+          svc_api:
+            - operation: DescribePipelineExecutionWithContext
+              output_fixture: "sdkapi/describe/describe_executing.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/conditions_clear_on_success.yaml"
+      - name: "ReadOne=LateInitialize"
+        description: "Testing late initialize after created, should expect no diff since there is nothing to late initialize"
+        given:
+          desired_state: "v1alpha1/readone/observed/created.yaml"
+          svc_api:
+            - operation: DescribePipelineExecutionWithContext
+              output_fixture: "sdkapi/describe/describe_executing.json"
+        invoke: LateInitialize
+        expect:
+          latest_state: "v1alpha1/readone/observed/created.yaml"
+      - name: "ReadOne=AfterCompletion"
+        description: "Testing readOne after pipeline execution succeeded, the status should have ARN."
+        given:
+          desired_state: "v1alpha1/readone/observed/created.yaml"
+          svc_api:
+            - operation: DescribePipelineExecutionWithContext
+              output_fixture: "sdkapi/describe/describe_succeeded.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/succeeded.yaml"
+      - name: "ReadOne=Stopping"
+        description: "Testing readOne right after delete, the status should be in Stopping"
+        given:
+          desired_state: "v1alpha1/readone/desired/stopping.yaml"
+          svc_api:
+            - operation: DescribePipelineExecutionWithContext
+              output_fixture: "sdkapi/describe/describe_stopping.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/stopping.yaml"
+  - name: "PipelineExecution update tests"
+    description: "Testing the Update operation"
+    scenarios:
+      - name: "Update=Success"
+        description: "This test checks if the PipelineExecution is updated sucessfully"
+        given:
+          desired_state: "v1alpha1/update/desired/update_pipeline_execution.yaml" 
+          latest_state: "v1alpha1/readone/observed/created.yaml"
+          svc_api:
+            - operation: UpdatePipelineExecutionWithContext
+              output_fixture: "sdkapi/create/create_success.json"
+        invoke: Update
+        expect:
+          latest_state: "v1alpha1/update/observed/updated_pipeline_execution.yaml"
+          error: nil
+  - name: "PipelineExecution delete tests"
+    description: "Testing the delete operation"
+    scenarios:
+      - name: "Delete=Fail"
+        description: "This test checks if the condition is updated if delete fails and returns error"
+        given:
+          desired_state: "v1alpha1/create/observed/success_after_create.yaml"
+          svc_api:
+            - operation: StopPipelineExecutionWithContext
+              error:
+                code: ServiceUnavailable
+                message: "Server is down"
+        invoke: Delete
+        expect:
+          latest_state: "v1alpha1/delete/observed/error_on_delete.yaml"
+          error: "ServiceUnavailable: Server is down\n\tstatus code: 0, request id: "
+      - name: "Delete=FailNotFound"
+        description: "This test checks if delete fails and returns error not found"
+        given:
+          desired_state: "v1alpha1/readone/desired/error_conditions_true.yaml"
+          svc_api:
+            - operation: StopPipelineExecutionWithContext
+              error:
+                  code: ResourceNotFound
+                  message: "does not exist"
+        invoke: Delete
+        expect:
+          latest_state: "v1alpha1/delete/observed/not_found_on_delete.yaml"
+      - name: "Delete=MarkUnmanaged"
+        description: "This test checks if the Pipeline Execution returns nil to mark the resource Unmanaged"
+        given:
+          desired_state: "v1alpha1/readone/observed/succeeded.yaml"
+          svc_api:
+            - operation: StopPipelineExecutionWithContext
+        invoke: Delete
+        expect:
+          error: nil
+      - name: "Delete=Successful"
+        description: "This test checks if the Training job is deleted successfully"
+        given:
+          desired_state: "v1alpha1/readone/observed/created.yaml"
+          svc_api:
+            - operation: StopPipelineExecutionWithContext
+            - operation: DescribePipelineExecutionWithContext
+              error:
+                code: ResourceNotFound
+                message: "does not exist"
+        invoke: Delete
+        expect:
+          error: nil     
