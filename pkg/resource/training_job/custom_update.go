@@ -89,7 +89,7 @@ func (rm *resourceManager) markNonUpdatableRules(profilerRuleDesired []*svcapity
 		// This means that there exists a rule in latest that is not present in desired
 		// which means that the input is invalid.
 		if val == 0 {
-			return nil, ackerr.NewTerminalError(errors.New("cannot remove a profiler rule."))
+			return nil, ackerr.NewTerminalError(errors.New("cannot remove an existing profiler rule."))
 		}
 	}
 
