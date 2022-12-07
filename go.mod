@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/aws-controllers-k8s/runtime v0.20.1
-	github.com/aws/aws-sdk-go v1.44.93
+	github.com/aws/aws-sdk-go v1.44.117
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-logr/logr v1.2.0
 	github.com/google/go-cmp v0.5.5

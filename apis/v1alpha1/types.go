@@ -454,6 +454,20 @@ type ClarifyCheckStepMetadata struct {
 	ViolationReport                      *string `json:"violationReport,omitempty"`
 }
 
+// The configuration for the SHAP baseline (https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-feature-attribute-shap-baselines.html)
+// (also called the background or reference dataset) of the Kernal SHAP algorithm.
+//
+//    * The number of records in the baseline data determines the size of the
+//    synthetic dataset, which has an impact on latency of explainability requests.
+//    For more information, see the Synthetic data of Configure and create an
+//    endpoint (https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-online-explainability-create-endpoint.html).
+//
+//    * ShapBaseline and ShapBaselineUri are mutually exclusive parameters.
+//    One or the either is required to configure a SHAP baseline.
+type ClarifyShapBaselineConfig struct {
+	ShapBaselineURI *string `json:"shapBaselineURI,omitempty"`
+}
+
 // Specifies summary information about a Git repository.
 type CodeRepositorySummary struct {
 	CodeRepositoryName *string      `json:"codeRepositoryName,omitempty"`
@@ -943,11 +957,11 @@ type Experiment struct {
 // Associates a SageMaker job as a trial component with an experiment and trial.
 // Specified when you call the following APIs:
 //
-//   - CreateProcessingJob
+//    * CreateProcessingJob
 //
-//   - CreateTrainingJob
+//    * CreateTrainingJob
 //
-//   - CreateTransformJob
+//    * CreateTransformJob
 type ExperimentConfig struct {
 	ExperimentName            *string `json:"experimentName,omitempty"`
 	TrialComponentDisplayName *string `json:"trialComponentDisplayName,omitempty"`
@@ -1276,8 +1290,8 @@ type HyperParameterTuningJobObjective struct {
 	Type       *string `json:"type_,omitempty"`
 }
 
-// An entity having characteristics over which a user can search for a hyperparameter
-// tuning job.
+// An entity returned by the SearchRecord (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_SearchRecord.html)
+// API containing the properties of a hyperparameter tuning job.
 type HyperParameterTuningJobSearchEntity struct {
 	// The container for the summary information about a training job.
 	BestTrainingJob             *HyperParameterTrainingJobSummary `json:"bestTrainingJob,omitempty"`
@@ -2727,11 +2741,18 @@ type RepositoryAuthConfig struct {
 // Describes the resources, including ML compute instances and ML storage volumes,
 // to use for model training.
 type ResourceConfig struct {
-	InstanceCount  *int64           `json:"instanceCount,omitempty"`
-	InstanceGroups []*InstanceGroup `json:"instanceGroups,omitempty"`
-	InstanceType   *string          `json:"instanceType,omitempty"`
-	VolumeKMSKeyID *string          `json:"volumeKMSKeyID,omitempty"`
-	VolumeSizeInGB *int64           `json:"volumeSizeInGB,omitempty"`
+	InstanceCount            *int64           `json:"instanceCount,omitempty"`
+	InstanceGroups           []*InstanceGroup `json:"instanceGroups,omitempty"`
+	InstanceType             *string          `json:"instanceType,omitempty"`
+	KeepAlivePeriodInSeconds *int64           `json:"keepAlivePeriodInSeconds,omitempty"`
+	VolumeKMSKeyID           *string          `json:"volumeKMSKeyID,omitempty"`
+	VolumeSizeInGB           *int64           `json:"volumeSizeInGB,omitempty"`
+}
+
+// The ResourceConfig to update KeepAlivePeriodInSeconds. Other fields in the
+// ResourceConfig cannot be updated.
+type ResourceConfigForUpdate struct {
+	KeepAlivePeriodInSeconds *int64 `json:"keepAlivePeriodInSeconds,omitempty"`
 }
 
 // Specifies the maximum number of training jobs and parallel training jobs
@@ -2909,6 +2930,11 @@ type TensorBoardOutputConfig struct {
 	S3OutputPath *string `json:"s3OutputPath,omitempty"`
 }
 
+// Time series forecast settings for the SageMaker Canvas app.
+type TimeSeriesForecastingSettings struct {
+	AmazonForecastRoleARN *string `json:"amazonForecastRoleARN,omitempty"`
+}
+
 // Defines the input needed to run a training job using the algorithm.
 type TrainingJobDefinition struct {
 	HyperParameters map[string]*string `json:"hyperParameters,omitempty"`
@@ -3000,6 +3026,8 @@ type TrainingJobSummary struct {
 	TrainingJobARN    *string      `json:"trainingJobARN,omitempty"`
 	TrainingJobName   *string      `json:"trainingJobName,omitempty"`
 	TrainingJobStatus *string      `json:"trainingJobStatus,omitempty"`
+	// Status and billing information about the warm pool.
+	WarmPoolStatus *WarmPoolStatus `json:"warmPoolStatus,omitempty"`
 }
 
 // Contains information about a training job.
@@ -3391,6 +3419,13 @@ type VPCConfig struct {
 // override the existing variant properties of the endpoint.
 type VariantProperty struct {
 	VariantPropertyType *string `json:"variantPropertyType,omitempty"`
+}
+
+// Status and billing information about the warm pool.
+type WarmPoolStatus struct {
+	ResourceRetainedBillableTimeInSeconds *int64  `json:"resourceRetainedBillableTimeInSeconds,omitempty"`
+	ReusedByJob                           *string `json:"reusedByJob,omitempty"`
+	Status                                *string `json:"status,omitempty"`
 }
 
 // A single private workforce, which is automatically created when you create

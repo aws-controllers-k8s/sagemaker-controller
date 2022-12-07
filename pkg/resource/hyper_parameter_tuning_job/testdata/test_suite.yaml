@@ -153,6 +153,16 @@
         invoke: ReadOne
         expect:
           latest_state: "v1alpha1/readone/observed/stopping.yaml"
+      - name: "ReadOne=Warmpool"
+        description: "Testing warm pool custom code"
+        given:
+          desired_state: "v1alpha1/readone/desired/warmpool_attempt_single.yaml"
+          svc_api:
+            - operation: DescribeHyperParameterTuningJobWithContext
+              output_fixture: "sdkapi/describe/inprogress_describe.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/inprogress.yaml"
   - name: "HyperParameter tuning job update tests"
     description: "Testing the Update operation"
     scenarios:

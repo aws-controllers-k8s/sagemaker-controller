@@ -43,7 +43,7 @@ spec:
       regex: .*\[[0-9]+\].*#011train-map:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
     - name: validation:map
       regex: .*\[[0-9]+\].*#011validation-map:([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?).*
-    trainingImage: 433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:1
+    trainingImage: 246618743249.dkr.ecr.us-west-2.amazonaws.com/xgboost:1
     trainingInputMode: File
   enableInterContainerTrafficEncryption: false
   enableManagedSpotTraining: false
@@ -83,6 +83,7 @@ spec:
     instanceCount: 1
     instanceType: ml.m4.xlarge
     volumeSizeInGB: 5
+    keepAlivePeriodInSeconds: 70
   roleARN: arn:aws:iam::123456789012:role/service-role/AmazonSageMaker
   stoppingCondition:
     maxRuntimeInSeconds: 86400
@@ -104,10 +105,10 @@ status:
     message: TrainingJob is in Completed status.
     status: "True"
     type: ACK.ResourceSynced
-  modelArtifacts:
-    s3ModelArtifacts: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/output/model.tar.gz
+  warmPoolStatus:
+    status: Available
   secondaryStatus: Completed
   trainingJobStatus: Completed
   profilingStatus: Disabled
   creationTime: "2021-10-12T05:49:40.493Z"
-  lastModifiedTime: "2021-10-12T05:55:25.548Z"
+  lastModifiedTime: "2021-10-12T05:52:46.108Z"

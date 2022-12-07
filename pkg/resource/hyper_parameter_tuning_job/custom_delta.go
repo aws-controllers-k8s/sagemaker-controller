@@ -31,6 +31,7 @@ func customSetDefaults(
 				}
 			}
 		}
+
 	}
 
 	// TODO: Use late initialize instead once code generator supports late initializing slices.
