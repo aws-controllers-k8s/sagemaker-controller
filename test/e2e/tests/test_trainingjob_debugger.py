@@ -192,13 +192,10 @@ class TestTrainingDebuggerJob:
         # Check that you can delete a completed resource from k8s
         (reference, resource, _) = xgboost_training_job_debugger
 
-        training_job_name = resource["spec"].get("trainingJobName", None)
-
-        training_job_desc = get_sagemaker_training_job(training_job_name)
-        training_job_arn = training_job_desc["TrainingJobArn"]
+        resource_arn = k8s.get_resource_arn(resource)
 
         resource_tags = resource["spec"].get("tags", None)
-        assert_tags_in_sync(training_job_arn, resource_tags)
+        assert_tags_in_sync(resource_arn, resource_tags)
 
         _, deleted = k8s.delete_custom_resource(
             reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
