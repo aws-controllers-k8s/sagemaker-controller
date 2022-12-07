@@ -20,6 +20,7 @@ import (
 	"errors"
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
+	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 )
@@ -43,7 +44,7 @@ func (rm *resourceManager) buildProfilerRuleConfigUpdateInput(desired *resource,
 		return nil
 	}
 	if len(profilerRuleDesired) <= len(profilerRuleLatest) {
-		return errors.New("cannot remove/modify existing profiler rules.")
+		return ackerr.NewTerminalError(errors.New("cannot remove/modify existing profiler rules."))
 	}
 
 	latestRules, err := rm.markNonUpdatableRules(profilerRuleDesired, profilerRuleLatest)
@@ -62,7 +63,7 @@ func (rm *resourceManager) buildProfilerRuleConfigUpdateInput(desired *resource,
 	}
 	// If the length of this slice is zero that only the contents of the profile rule have changed
 	if len(profilerRuleInput) == 0 {
-		return errors.New("cannot modify a profiler rule.")
+		return ackerr.NewTerminalError(errors.New("cannot modify an existing profiler rule."))
 	}
 	input.SetProfilerRuleConfigurations(profilerRuleInput)
 	return nil
@@ -88,7 +89,7 @@ func (rm *resourceManager) markNonUpdatableRules(profilerRuleDesired []*svcapity
 		// This means that there exists a rule in latest that is not present in desired
 		// which means that the input is invalid.
 		if val == 0 {
-			return nil, errors.New("cannot remove a profiler rule.")
+			return nil, ackerr.NewTerminalError(errors.New("cannot remove a profiler rule."))
 		}
 	}
 
