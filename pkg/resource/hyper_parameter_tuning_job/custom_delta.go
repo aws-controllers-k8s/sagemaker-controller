@@ -31,30 +31,6 @@ func customSetDefaults(
 				}
 			}
 		}
-		// TODO: Remove the block below.
-		// The server side default of KeepAlivePeriodInSeconds is nil, when launching a HPO job.
-		// The code generator currently cannot ignore the field path for resourceConfig.KeepAlivePeriodInSeconds
-		// without also ignoring Trainingjob. This block below should be removed once the code generator supports
-		// removing fields like resourceConfig.KeepAlivePeriodInSeconds
-		// HPO will always return nil on the server side.
-		if ackcompare.IsNotNil(a.ko.Spec.TrainingJobDefinition) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinition) {
-			if ackcompare.IsNotNil(a.ko.Spec.TrainingJobDefinition.ResourceConfig) && ackcompare.IsNotNil(b.ko.Spec.TrainingJobDefinition.ResourceConfig) {
-				if ackcompare.IsNotNil(a.ko.Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds) {
-					a.ko.Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds = nil
-				}
-			}
-		}
-		// HPO does not support custom warm pool durations and the Server side default will
-		// always be nil.
-		if ackcompare.IsNotNil(a.ko.Spec.TrainingJobDefinitions) {
-			for i, trainDefinition := range a.ko.Spec.TrainingJobDefinitions {
-				if ackcompare.IsNotNil(trainDefinition) {
-					if ackcompare.IsNotNil(trainDefinition.ResourceConfig) && ackcompare.IsNotNil(trainDefinition.ResourceConfig.KeepAlivePeriodInSeconds) {
-						a.ko.Spec.TrainingJobDefinitions[i].ResourceConfig.KeepAlivePeriodInSeconds = nil
-					}
-				}
-			}
-		}
 
 	}
 
