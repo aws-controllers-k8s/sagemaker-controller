@@ -33,7 +33,7 @@ RESOURCE_PLURAL = "trainingjobs"
 NEW_PROFILER_INTERVAL = 200
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="class")
 def xgboost_training_job_debugger():
     resource_name = random_suffix_name("xgboost-trainingjob-debugger", 50)
     replacements = REPLACEMENT_VALUES.copy()
@@ -111,9 +111,7 @@ class TestTrainingDebuggerJob:
         resource_rule_type = sagemaker_rule_type[0].lower() + sagemaker_rule_type[1:]
         assert (
             self._wait_sagemaker_training_rule_eval_status(
-                training_job_name,
-                sagemaker_rule_type,
-                expected_status,
+                training_job_name, sagemaker_rule_type, expected_status,
             )
             == self._wait_resource_training_rule_eval_status(
                 reference, resource_rule_type, expected_status
@@ -121,7 +119,7 @@ class TestTrainingDebuggerJob:
             == expected_status
         )
 
-    def test_completed(self, xgboost_training_job_debugger):
+    def create_debugger_training(self, xgboost_training_job_debugger):
         (reference, resource, _) = xgboost_training_job_debugger
         assert k8s.get_resource_exists(reference)
 
@@ -138,35 +136,7 @@ class TestTrainingDebuggerJob:
             )
         assert resource_arn == training_job_arn
 
-        assert training_job_desc["TrainingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
-
-        assert_training_status_in_sync(
-            training_job_name, reference, cfg.JOB_STATUS_COMPLETED
-        )
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
-
-        # Assert debugger rule evaluation completed
-        self._assert_training_rule_eval_status_in_sync(
-            training_job_name, "DebugRule", reference, cfg.RULE_STATUS_COMPLETED
-        )
-
-        # Assert profiler rule evaluation completed
-        self._assert_training_rule_eval_status_in_sync(
-            training_job_name, "ProfilerRule", reference, cfg.RULE_STATUS_COMPLETED
-        )
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
-
-        resource_tags = resource["spec"].get("tags", None)
-        assert_tags_in_sync(training_job_arn, resource_tags)
-
-        # Check that you can delete a completed resource from k8s
-        _, deleted = k8s.delete_custom_resource(
-            reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
-        )
-        assert deleted is True
-
-    def test_update(self, xgboost_training_job_debugger):
+    def update_debugger_trainingjob(self, xgboost_training_job_debugger):
         (reference, resource, spec) = xgboost_training_job_debugger
         assert k8s.get_resource_exists(reference)
 
@@ -174,14 +144,6 @@ class TestTrainingDebuggerJob:
         assert training_job_name is not None
 
         training_job_desc = get_sagemaker_training_job(training_job_name)
-        training_job_arn = training_job_desc["TrainingJobArn"]
-
-        resource_arn = k8s.get_resource_arn(resource)
-        if resource_arn is None:
-            logging.error(
-                f"ARN for this resource is None, resource status is: {resource['status']}"
-            )
-        assert resource_arn == training_job_arn
 
         assert training_job_desc["TrainingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
@@ -219,11 +181,31 @@ class TestTrainingDebuggerJob:
             == NEW_PROFILER_INTERVAL
         )
 
-        assert resource["status"]["lastModifiedTime"] != resource["status"]["creationTime"]
-        assert training_job_desc["LastModifiedTime"] != training_job_desc["CreationTime"]
+        assert (
+            resource["status"]["lastModifiedTime"] != resource["status"]["creationTime"]
+        )
+        assert (
+            training_job_desc["LastModifiedTime"] != training_job_desc["CreationTime"]
+        )
 
+    def delete_debugger_trainingjob(self, xgboost_training_job_debugger):
         # Check that you can delete a completed resource from k8s
+        (reference, resource, _) = xgboost_training_job_debugger
+
+        training_job_name = resource["spec"].get("trainingJobName", None)
+
+        training_job_desc = get_sagemaker_training_job(training_job_name)
+        training_job_arn = training_job_desc["TrainingJobArn"]
+
+        resource_tags = resource["spec"].get("tags", None)
+        assert_tags_in_sync(training_job_arn, resource_tags)
+
         _, deleted = k8s.delete_custom_resource(
             reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
         )
         assert deleted is True
+
+    def test_driver(self, xgboost_training_job_debugger):
+        self.create_debugger_training(xgboost_training_job_debugger)
+        self.update_debugger_trainingjob(xgboost_training_job_debugger)
+        self.delete_debugger_trainingjob(xgboost_training_job_debugger)
