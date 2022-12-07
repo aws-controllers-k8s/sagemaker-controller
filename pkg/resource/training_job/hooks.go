@@ -134,6 +134,7 @@ func (rm *resourceManager) isProfilerUpdatable(r *resource) error {
 }
 
 // isProfilerRemoved checks if the profiler was removed.
+// The profiler gets removed when ProfilerConfig or ProfilerRuleConfig (or both) are not present in the spec but were present before.
 func (rm *resourceManager) isProfilerRemoved(desired *resource, latest *resource) bool {
 	if ackcompare.IsNil(desired.ko.Spec.ProfilerRuleConfigurations) && ackcompare.IsNotNil(latest.ko.Spec.ProfilerRuleConfigurations) {
 		return true

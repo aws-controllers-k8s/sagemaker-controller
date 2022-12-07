@@ -46,7 +46,7 @@ func (rm *resourceManager) buildProfilerRuleConfigUpdateInput(desired *resource,
 		return errors.New("cannot remove/modify existing profiler rules.")
 	}
 
-	ruleMap, err := rm.markNonUpdatableRules(profilerRuleDesired, profilerRuleLatest)
+	latestRules, err := rm.markNonUpdatableRules(profilerRuleDesired, profilerRuleLatest)
 	if err != nil {
 		return err
 	}
@@ -54,7 +54,7 @@ func (rm *resourceManager) buildProfilerRuleConfigUpdateInput(desired *resource,
 
 	for _, rule := range profilerRuleDesired {
 		if ackcompare.IsNotNil(rule) && ackcompare.IsNotNil(rule.RuleConfigurationName) {
-			_, present := ruleMap[*rule.RuleConfigurationName]
+			_, present := latestRules[*rule.RuleConfigurationName]
 			if !present {
 				profilerRuleInput = append(profilerRuleInput, rm.convertProfileRuleType(rule))
 			}
@@ -71,16 +71,20 @@ func (rm *resourceManager) buildProfilerRuleConfigUpdateInput(desired *resource,
 // markNonUpdatableRules returns a map containing the rules that are not eligible for update.
 // In addition it returns an error if a rule gets removed.
 func (rm *resourceManager) markNonUpdatableRules(profilerRuleDesired []*svcapitypes.ProfilerRuleConfiguration, profilerRuleLatest []*svcapitypes.ProfilerRuleConfiguration) (map[string]int, error) {
-	commonRulesMap := map[string]int{}
-	latestRulesMap := map[string]int{}
+	latestRules := map[string]int{}
 	for _, rule := range profilerRuleLatest {
-		commonRulesMap[*rule.RuleConfigurationName] = 0
-		latestRulesMap[*rule.RuleConfigurationName] = 0
+		latestRules[*rule.RuleConfigurationName] = 0
 	}
+	// If a Rule Configuration is present in both latest and desired, set it to one.
 	for _, rule := range profilerRuleDesired {
-		commonRulesMap[*rule.RuleConfigurationName] = 1
+		_, present := latestRules[*rule.RuleConfigurationName]
+		if present {
+			latestRules[*rule.RuleConfigurationName] = 1
+		}
 	}
-	for _, val := range commonRulesMap {
+	// If a value in the map is equal to 0, the user must have removed the rule because
+	// added rules would not be present in the map.
+	for _, val := range latestRules {
 		// This means that there exists a rule in latest that is not present in desired
 		// which means that the input is invalid.
 		if val == 0 {
@@ -88,7 +92,7 @@ func (rm *resourceManager) markNonUpdatableRules(profilerRuleDesired []*svcapity
 		}
 	}
 
-	return latestRulesMap, nil
+	return latestRules, nil
 }
 
 // handleProfilerRemoval sets the input parameters to disable the profiler.
