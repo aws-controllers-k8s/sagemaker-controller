@@ -73,14 +73,13 @@ func (rm *resourceManager) customSetOutput(r *resource) {
 		}
 	}
 
-	for _, rule := range r.ko.Status.ProfilerRuleEvaluationStatuses {
-		if ackcompare.IsNotNil(r.ko.Status.ProfilingStatus) && *r.ko.Status.ProfilingStatus == "Disabled" {
-			// Sometimes rule evaluation status will stay in InProgress state.
-			break
-		}
-		if rule.RuleEvaluationStatus != nil && svccommon.IsModifyingStatus(rule.RuleEvaluationStatus, &ruleModifyingStatuses) {
-			svccommon.SetSyncedCondition(r, rule.RuleEvaluationStatus, aws.String("ProfilerRule"), &ruleModifyingStatuses)
-			return
+	// Sometimes rule evaluation status will stay in InProgress state.
+	if ackcompare.IsNotNil(r.ko.Status.ProfilingStatus) && *r.ko.Status.ProfilingStatus != "Disabled" {
+		for _, rule := range r.ko.Status.ProfilerRuleEvaluationStatuses {
+			if rule.RuleEvaluationStatus != nil && svccommon.IsModifyingStatus(rule.RuleEvaluationStatus, &ruleModifyingStatuses) {
+				svccommon.SetSyncedCondition(r, rule.RuleEvaluationStatus, aws.String("ProfilerRule"), &ruleModifyingStatuses)
+				return
+			}
 		}
 	}
 
@@ -100,8 +99,7 @@ func (rm *resourceManager) isWarmPoolUpdatable(latest *resource) error {
 		}
 		if *trainingJobStatus == svcsdk.TrainingJobStatusCompleted {
 			if ackcompare.IsNotNil(latest.ko.Status.WarmPoolStatus) {
-				wp_modifying := svccommon.IsModifyingStatus(latest.ko.Status.WarmPoolStatus.Status, &WarmPoolModifyingStatuses)
-				if wp_modifying {
+				if svccommon.IsModifyingStatus(latest.ko.Status.WarmPoolStatus.Status, &WarmPoolModifyingStatuses) {
 					return nil
 				} else {
 					return ackerr.NewTerminalError(errors.New("warm pool cannot be updated if has been terminated or reused"))
@@ -121,9 +119,9 @@ func (rm *resourceManager) isWarmPoolUpdatable(latest *resource) error {
 
 }
 
-// customSetOutputUpdateProfiler decides whether the training job is ready/eligible for update
+// isProfilerUpdatable decides whether the training job is ready/eligible for update
 // depending on the status.
-func (rm *resourceManager) customSetOutputUpdateProfiler(r *resource) error {
+func (rm *resourceManager) isProfilerUpdatable(r *resource) error {
 	trainingJobStatus := r.ko.Status.TrainingJobStatus
 	if ackcompare.IsNotNil(trainingJobStatus) {
 		for _, terminalStatus := range TrainingJobTerminalProfiler {

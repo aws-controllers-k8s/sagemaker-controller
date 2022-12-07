@@ -34,6 +34,7 @@ import (
 // 2. Rule gets removed (error is returned)
 // 3. Rule gets removed but others get added (error is returned)
 // 4. Rule gets changed (error gets returned)
+// 5. One/more rule gets changed and one/more rules get added : successful update and error in the next reconcilation loop
 func (rm *resourceManager) buildProfilerRuleConfigUpdateInput(desired *resource, latest *resource, input *svcsdk.UpdateTrainingJobInput) error {
 	profilerRuleDesired := desired.ko.Spec.ProfilerRuleConfigurations
 	profilerRuleLatest := latest.ko.Spec.ProfilerRuleConfigurations
@@ -73,15 +74,11 @@ func (rm *resourceManager) markNonUpdatableRules(profilerRuleDesired []*svcapity
 	commonRulesMap := map[string]int{}
 	latestRulesMap := map[string]int{}
 	for _, rule := range profilerRuleLatest {
-		if ackcompare.IsNotNil(rule.RuleConfigurationName) {
-			commonRulesMap[*rule.RuleConfigurationName] = 0
-			latestRulesMap[*rule.RuleConfigurationName] = 0
-		}
+		commonRulesMap[*rule.RuleConfigurationName] = 0
+		latestRulesMap[*rule.RuleConfigurationName] = 0
 	}
 	for _, rule := range profilerRuleDesired {
-		if ackcompare.IsNotNil(rule.RuleConfigurationName) {
-			commonRulesMap[*rule.RuleConfigurationName] = 1
-		}
+		commonRulesMap[*rule.RuleConfigurationName] = 1
 	}
 	for _, val := range commonRulesMap {
 		// This means that there exists a rule in latest that is not present in desired
