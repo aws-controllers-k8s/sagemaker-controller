@@ -1156,15 +1156,15 @@ func (rm *resourceManager) sdkUpdate(
 		}
 	}
 	if profiler_diff {
-		if up_err := rm.customSetOutputUpdateProfiler(latest); up_err != nil {
-			return nil, up_err
+		if err := rm.isProfilerUpdatable(latest); err != nil {
+			return nil, err
 		}
 		input.SetResourceConfig(nil)
 		if rm.isProfilerRemoved(desired, latest) {
 			rm.handleProfilerRemoval(input)
 		} else {
-			if inp_err := rm.customSetUpdateInput(desired, latest, delta, input); inp_err != nil {
-				return nil, inp_err
+			if err := rm.customSetUpdateInput(desired, latest, delta, input); err != nil {
+				return nil, err
 			}
 		}
 	}
