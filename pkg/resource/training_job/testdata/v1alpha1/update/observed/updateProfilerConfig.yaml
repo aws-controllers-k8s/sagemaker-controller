@@ -1,0 +1,67 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: TrainingJob
+metadata:
+  name: training-test
+spec:
+  trainingJobName: training-test
+  hyperParameters: 
+    max_depth: "5"
+    gamma: "4"
+    eta: "0.2"
+    min_child_weight: "6"
+    objective: "reg:squarederror"
+    subsample: "0.7"
+    num_round: "51"
+  algorithmSpecification:
+    trainingImage: 246618743249.dkr.ecr.us-west-2.amazonaws.com/sagemaker-xgboost:1.2-1
+    trainingInputMode: File
+  roleARN: arn:aws:iam::123456789012:role/service-role/AmazonSageMaker
+  outputDataConfig:
+    s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/output
+  resourceConfig:
+    instanceCount: 1
+    instanceType: ml.m4.xlarge
+    volumeSizeInGB: 5
+  stoppingCondition:
+    maxRuntimeInSeconds: 86400
+  inputDataConfig:
+    - channelName: train
+      dataSource:
+        s3DataSource:
+          s3DataType: S3Prefix
+          s3URI: s3://ack-sagemaker-bucket-592697580195/sagemaker/xgboost/train/
+          s3DataDistributionType: FullyReplicated
+      contentType: text/libsvm
+      compressionType: None
+  profilerConfig:
+    profilingIntervalInMilliseconds: 200
+    s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/profiler/
+  profilerRuleConfigurations:
+  - ruleConfigurationName: ProfilerReport
+    ruleEvaluatorImage: 895741380848.dkr.ecr.us-west-2.amazonaws.com/sagemaker-debugger-rules:1
+    ruleParameters:
+      rule_to_invoke: ProfilerReport
+    volumeSizeInGB: 0
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:training-job/training-test
+    ownerAccountID: ""
+    region: ""
+  conditions:
+  - lastTransitionTime: "0001-01-01T00:00:00Z"
+    message: TrainingJob is in InProgress status.
+    status: "False"
+    type: ACK.ResourceSynced
+  - lastTransitionTime: "0001-01-01T00:00:00Z"
+    message: training job is updating
+    status: "True"
+    type: ACK.Recoverable
+  profilerRuleEvaluationStatuses:
+  - lastModifiedTime: "0001-01-01T00:00:00Z"
+    ruleConfigurationName: ProfilerReport
+    ruleEvaluationStatus: InProgress
+  secondaryStatus: Downloading
+  trainingJobStatus: InProgress
+  profilingStatus: Enabled
+  creationTime: "2021-10-13T03:49:20.337Z"
+  lastModifiedTime: "2021-10-13T03:49:20.576Z"

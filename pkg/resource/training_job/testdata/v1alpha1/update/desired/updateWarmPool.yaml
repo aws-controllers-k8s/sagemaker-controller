@@ -1,0 +1,42 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: TrainingJob
+metadata:
+  name: training-test
+spec:
+  trainingJobName: training-test
+  hyperParameters: 
+    max_depth: "5"
+    gamma: "4"
+    eta: "0.2"
+    min_child_weight: "6"
+    objective: "reg:squarederror"
+    subsample: "0.7"
+    num_round: "51"
+  algorithmSpecification:
+    trainingImage: 246618743249.dkr.ecr.us-west-2.amazonaws.com/sagemaker-xgboost:1.2-1
+    trainingInputMode: File
+  roleARN: arn:aws:iam::123456789012:role/service-role/AmazonSageMaker
+  outputDataConfig:
+    s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/output
+  resourceConfig:
+    instanceCount: 1
+    instanceType: ml.m4.xlarge
+    volumeSizeInGB: 5
+    keepAlivePeriodInSeconds: 69
+  stoppingCondition:
+    maxRuntimeInSeconds: 86400
+  inputDataConfig:
+    - channelName: train
+      dataSource:
+        s3DataSource:
+          s3DataType: S3Prefix
+          s3URI: s3://ack-sagemaker-bucket-592697580195/sagemaker/xgboost/train/
+          s3DataDistributionType: FullyReplicated
+      contentType: text/libsvm
+      compressionType: None
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:training-job/training-test
+    ownerAccountID: ""
+    region: ""
+  conditions: []
