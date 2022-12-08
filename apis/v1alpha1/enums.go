@@ -285,6 +285,14 @@ const (
 	AutoMLMetricExtendedEnum_LogLoss          AutoMLMetricExtendedEnum = "LogLoss"
 )
 
+type AutoMLMode string
+
+const (
+	AutoMLMode_AUTO                  AutoMLMode = "AUTO"
+	AutoMLMode_ENSEMBLING            AutoMLMode = "ENSEMBLING"
+	AutoMLMode_HYPERPARAMETER_TUNING AutoMLMode = "HYPERPARAMETER_TUNING"
+)
+
 type AutoMLS3DataType string
 
 const (
@@ -366,6 +374,87 @@ type CaptureStatus string
 const (
 	CaptureStatus_Started CaptureStatus = "Started"
 	CaptureStatus_Stopped CaptureStatus = "Stopped"
+)
+
+type ClarifyFeatureType string
+
+const (
+	ClarifyFeatureType_numerical   ClarifyFeatureType = "numerical"
+	ClarifyFeatureType_categorical ClarifyFeatureType = "categorical"
+	ClarifyFeatureType_text        ClarifyFeatureType = "text"
+)
+
+type ClarifyTextGranularity string
+
+const (
+	ClarifyTextGranularity_token     ClarifyTextGranularity = "token"
+	ClarifyTextGranularity_sentence  ClarifyTextGranularity = "sentence"
+	ClarifyTextGranularity_paragraph ClarifyTextGranularity = "paragraph"
+)
+
+type ClarifyTextLanguage string
+
+const (
+	ClarifyTextLanguage_af  ClarifyTextLanguage = "af"
+	ClarifyTextLanguage_sq  ClarifyTextLanguage = "sq"
+	ClarifyTextLanguage_ar  ClarifyTextLanguage = "ar"
+	ClarifyTextLanguage_hy  ClarifyTextLanguage = "hy"
+	ClarifyTextLanguage_eu  ClarifyTextLanguage = "eu"
+	ClarifyTextLanguage_bn  ClarifyTextLanguage = "bn"
+	ClarifyTextLanguage_bg  ClarifyTextLanguage = "bg"
+	ClarifyTextLanguage_ca  ClarifyTextLanguage = "ca"
+	ClarifyTextLanguage_zh  ClarifyTextLanguage = "zh"
+	ClarifyTextLanguage_hr  ClarifyTextLanguage = "hr"
+	ClarifyTextLanguage_cs  ClarifyTextLanguage = "cs"
+	ClarifyTextLanguage_da  ClarifyTextLanguage = "da"
+	ClarifyTextLanguage_nl  ClarifyTextLanguage = "nl"
+	ClarifyTextLanguage_en  ClarifyTextLanguage = "en"
+	ClarifyTextLanguage_et  ClarifyTextLanguage = "et"
+	ClarifyTextLanguage_fi  ClarifyTextLanguage = "fi"
+	ClarifyTextLanguage_fr  ClarifyTextLanguage = "fr"
+	ClarifyTextLanguage_de  ClarifyTextLanguage = "de"
+	ClarifyTextLanguage_el  ClarifyTextLanguage = "el"
+	ClarifyTextLanguage_gu  ClarifyTextLanguage = "gu"
+	ClarifyTextLanguage_he  ClarifyTextLanguage = "he"
+	ClarifyTextLanguage_hi  ClarifyTextLanguage = "hi"
+	ClarifyTextLanguage_hu  ClarifyTextLanguage = "hu"
+	ClarifyTextLanguage_is  ClarifyTextLanguage = "is"
+	ClarifyTextLanguage_id  ClarifyTextLanguage = "id"
+	ClarifyTextLanguage_ga  ClarifyTextLanguage = "ga"
+	ClarifyTextLanguage_it  ClarifyTextLanguage = "it"
+	ClarifyTextLanguage_kn  ClarifyTextLanguage = "kn"
+	ClarifyTextLanguage_ky  ClarifyTextLanguage = "ky"
+	ClarifyTextLanguage_lv  ClarifyTextLanguage = "lv"
+	ClarifyTextLanguage_lt  ClarifyTextLanguage = "lt"
+	ClarifyTextLanguage_lb  ClarifyTextLanguage = "lb"
+	ClarifyTextLanguage_mk  ClarifyTextLanguage = "mk"
+	ClarifyTextLanguage_ml  ClarifyTextLanguage = "ml"
+	ClarifyTextLanguage_mr  ClarifyTextLanguage = "mr"
+	ClarifyTextLanguage_ne  ClarifyTextLanguage = "ne"
+	ClarifyTextLanguage_nb  ClarifyTextLanguage = "nb"
+	ClarifyTextLanguage_fa  ClarifyTextLanguage = "fa"
+	ClarifyTextLanguage_pl  ClarifyTextLanguage = "pl"
+	ClarifyTextLanguage_pt  ClarifyTextLanguage = "pt"
+	ClarifyTextLanguage_ro  ClarifyTextLanguage = "ro"
+	ClarifyTextLanguage_ru  ClarifyTextLanguage = "ru"
+	ClarifyTextLanguage_sa  ClarifyTextLanguage = "sa"
+	ClarifyTextLanguage_sr  ClarifyTextLanguage = "sr"
+	ClarifyTextLanguage_tn  ClarifyTextLanguage = "tn"
+	ClarifyTextLanguage_si  ClarifyTextLanguage = "si"
+	ClarifyTextLanguage_sk  ClarifyTextLanguage = "sk"
+	ClarifyTextLanguage_sl  ClarifyTextLanguage = "sl"
+	ClarifyTextLanguage_es  ClarifyTextLanguage = "es"
+	ClarifyTextLanguage_sv  ClarifyTextLanguage = "sv"
+	ClarifyTextLanguage_tl  ClarifyTextLanguage = "tl"
+	ClarifyTextLanguage_ta  ClarifyTextLanguage = "ta"
+	ClarifyTextLanguage_tt  ClarifyTextLanguage = "tt"
+	ClarifyTextLanguage_te  ClarifyTextLanguage = "te"
+	ClarifyTextLanguage_tr  ClarifyTextLanguage = "tr"
+	ClarifyTextLanguage_uk  ClarifyTextLanguage = "uk"
+	ClarifyTextLanguage_ur  ClarifyTextLanguage = "ur"
+	ClarifyTextLanguage_yo  ClarifyTextLanguage = "yo"
+	ClarifyTextLanguage_lij ClarifyTextLanguage = "lij"
+	ClarifyTextLanguage_xx  ClarifyTextLanguage = "xx"
 )
 
 type CodeRepositorySortBy string
@@ -590,6 +679,13 @@ const (
 	FeatureGroupStatus_SDK_DeleteFailed FeatureGroupStatus_SDK = "DeleteFailed"
 )
 
+type FeatureStatus string
+
+const (
+	FeatureStatus_ENABLED  FeatureStatus = "ENABLED"
+	FeatureStatus_DISABLED FeatureStatus = "DISABLED"
+)
+
 type FeatureType string
 
 const (
@@ -685,8 +781,9 @@ const (
 type HyperParameterTuningJobStrategyType string
 
 const (
-	HyperParameterTuningJobStrategyType_Bayesian HyperParameterTuningJobStrategyType = "Bayesian"
-	HyperParameterTuningJobStrategyType_Random   HyperParameterTuningJobStrategyType = "Random"
+	HyperParameterTuningJobStrategyType_Bayesian  HyperParameterTuningJobStrategyType = "Bayesian"
+	HyperParameterTuningJobStrategyType_Random    HyperParameterTuningJobStrategyType = "Random"
+	HyperParameterTuningJobStrategyType_Hyperband HyperParameterTuningJobStrategyType = "Hyperband"
 )
 
 type HyperParameterTuningJobWarmStartType string
@@ -1379,6 +1476,62 @@ const (
 	ProductionVariantInstanceType_ml_g5_24xlarge   ProductionVariantInstanceType = "ml.g5.24xlarge"
 	ProductionVariantInstanceType_ml_g5_48xlarge   ProductionVariantInstanceType = "ml.g5.48xlarge"
 	ProductionVariantInstanceType_ml_p4d_24xlarge  ProductionVariantInstanceType = "ml.p4d.24xlarge"
+	ProductionVariantInstanceType_ml_c7g_large     ProductionVariantInstanceType = "ml.c7g.large"
+	ProductionVariantInstanceType_ml_c7g_xlarge    ProductionVariantInstanceType = "ml.c7g.xlarge"
+	ProductionVariantInstanceType_ml_c7g_2xlarge   ProductionVariantInstanceType = "ml.c7g.2xlarge"
+	ProductionVariantInstanceType_ml_c7g_4xlarge   ProductionVariantInstanceType = "ml.c7g.4xlarge"
+	ProductionVariantInstanceType_ml_c7g_8xlarge   ProductionVariantInstanceType = "ml.c7g.8xlarge"
+	ProductionVariantInstanceType_ml_c7g_12xlarge  ProductionVariantInstanceType = "ml.c7g.12xlarge"
+	ProductionVariantInstanceType_ml_c7g_16xlarge  ProductionVariantInstanceType = "ml.c7g.16xlarge"
+	ProductionVariantInstanceType_ml_m6g_large     ProductionVariantInstanceType = "ml.m6g.large"
+	ProductionVariantInstanceType_ml_m6g_xlarge    ProductionVariantInstanceType = "ml.m6g.xlarge"
+	ProductionVariantInstanceType_ml_m6g_2xlarge   ProductionVariantInstanceType = "ml.m6g.2xlarge"
+	ProductionVariantInstanceType_ml_m6g_4xlarge   ProductionVariantInstanceType = "ml.m6g.4xlarge"
+	ProductionVariantInstanceType_ml_m6g_8xlarge   ProductionVariantInstanceType = "ml.m6g.8xlarge"
+	ProductionVariantInstanceType_ml_m6g_12xlarge  ProductionVariantInstanceType = "ml.m6g.12xlarge"
+	ProductionVariantInstanceType_ml_m6g_16xlarge  ProductionVariantInstanceType = "ml.m6g.16xlarge"
+	ProductionVariantInstanceType_ml_m6gd_large    ProductionVariantInstanceType = "ml.m6gd.large"
+	ProductionVariantInstanceType_ml_m6gd_xlarge   ProductionVariantInstanceType = "ml.m6gd.xlarge"
+	ProductionVariantInstanceType_ml_m6gd_2xlarge  ProductionVariantInstanceType = "ml.m6gd.2xlarge"
+	ProductionVariantInstanceType_ml_m6gd_4xlarge  ProductionVariantInstanceType = "ml.m6gd.4xlarge"
+	ProductionVariantInstanceType_ml_m6gd_8xlarge  ProductionVariantInstanceType = "ml.m6gd.8xlarge"
+	ProductionVariantInstanceType_ml_m6gd_12xlarge ProductionVariantInstanceType = "ml.m6gd.12xlarge"
+	ProductionVariantInstanceType_ml_m6gd_16xlarge ProductionVariantInstanceType = "ml.m6gd.16xlarge"
+	ProductionVariantInstanceType_ml_c6g_large     ProductionVariantInstanceType = "ml.c6g.large"
+	ProductionVariantInstanceType_ml_c6g_xlarge    ProductionVariantInstanceType = "ml.c6g.xlarge"
+	ProductionVariantInstanceType_ml_c6g_2xlarge   ProductionVariantInstanceType = "ml.c6g.2xlarge"
+	ProductionVariantInstanceType_ml_c6g_4xlarge   ProductionVariantInstanceType = "ml.c6g.4xlarge"
+	ProductionVariantInstanceType_ml_c6g_8xlarge   ProductionVariantInstanceType = "ml.c6g.8xlarge"
+	ProductionVariantInstanceType_ml_c6g_12xlarge  ProductionVariantInstanceType = "ml.c6g.12xlarge"
+	ProductionVariantInstanceType_ml_c6g_16xlarge  ProductionVariantInstanceType = "ml.c6g.16xlarge"
+	ProductionVariantInstanceType_ml_c6gd_large    ProductionVariantInstanceType = "ml.c6gd.large"
+	ProductionVariantInstanceType_ml_c6gd_xlarge   ProductionVariantInstanceType = "ml.c6gd.xlarge"
+	ProductionVariantInstanceType_ml_c6gd_2xlarge  ProductionVariantInstanceType = "ml.c6gd.2xlarge"
+	ProductionVariantInstanceType_ml_c6gd_4xlarge  ProductionVariantInstanceType = "ml.c6gd.4xlarge"
+	ProductionVariantInstanceType_ml_c6gd_8xlarge  ProductionVariantInstanceType = "ml.c6gd.8xlarge"
+	ProductionVariantInstanceType_ml_c6gd_12xlarge ProductionVariantInstanceType = "ml.c6gd.12xlarge"
+	ProductionVariantInstanceType_ml_c6gd_16xlarge ProductionVariantInstanceType = "ml.c6gd.16xlarge"
+	ProductionVariantInstanceType_ml_c6gn_large    ProductionVariantInstanceType = "ml.c6gn.large"
+	ProductionVariantInstanceType_ml_c6gn_xlarge   ProductionVariantInstanceType = "ml.c6gn.xlarge"
+	ProductionVariantInstanceType_ml_c6gn_2xlarge  ProductionVariantInstanceType = "ml.c6gn.2xlarge"
+	ProductionVariantInstanceType_ml_c6gn_4xlarge  ProductionVariantInstanceType = "ml.c6gn.4xlarge"
+	ProductionVariantInstanceType_ml_c6gn_8xlarge  ProductionVariantInstanceType = "ml.c6gn.8xlarge"
+	ProductionVariantInstanceType_ml_c6gn_12xlarge ProductionVariantInstanceType = "ml.c6gn.12xlarge"
+	ProductionVariantInstanceType_ml_c6gn_16xlarge ProductionVariantInstanceType = "ml.c6gn.16xlarge"
+	ProductionVariantInstanceType_ml_r6g_large     ProductionVariantInstanceType = "ml.r6g.large"
+	ProductionVariantInstanceType_ml_r6g_xlarge    ProductionVariantInstanceType = "ml.r6g.xlarge"
+	ProductionVariantInstanceType_ml_r6g_2xlarge   ProductionVariantInstanceType = "ml.r6g.2xlarge"
+	ProductionVariantInstanceType_ml_r6g_4xlarge   ProductionVariantInstanceType = "ml.r6g.4xlarge"
+	ProductionVariantInstanceType_ml_r6g_8xlarge   ProductionVariantInstanceType = "ml.r6g.8xlarge"
+	ProductionVariantInstanceType_ml_r6g_12xlarge  ProductionVariantInstanceType = "ml.r6g.12xlarge"
+	ProductionVariantInstanceType_ml_r6g_16xlarge  ProductionVariantInstanceType = "ml.r6g.16xlarge"
+	ProductionVariantInstanceType_ml_r6gd_large    ProductionVariantInstanceType = "ml.r6gd.large"
+	ProductionVariantInstanceType_ml_r6gd_xlarge   ProductionVariantInstanceType = "ml.r6gd.xlarge"
+	ProductionVariantInstanceType_ml_r6gd_2xlarge  ProductionVariantInstanceType = "ml.r6gd.2xlarge"
+	ProductionVariantInstanceType_ml_r6gd_4xlarge  ProductionVariantInstanceType = "ml.r6gd.4xlarge"
+	ProductionVariantInstanceType_ml_r6gd_8xlarge  ProductionVariantInstanceType = "ml.r6gd.8xlarge"
+	ProductionVariantInstanceType_ml_r6gd_12xlarge ProductionVariantInstanceType = "ml.r6gd.12xlarge"
+	ProductionVariantInstanceType_ml_r6gd_16xlarge ProductionVariantInstanceType = "ml.r6gd.16xlarge"
 )
 
 type ProfilingStatus string
@@ -1972,6 +2125,15 @@ const (
 	VariantStatus_Deleting          VariantStatus = "Deleting"
 	VariantStatus_ActivatingTraffic VariantStatus = "ActivatingTraffic"
 	VariantStatus_Baking            VariantStatus = "Baking"
+)
+
+type WarmPoolResourceStatus string
+
+const (
+	WarmPoolResourceStatus_Available  WarmPoolResourceStatus = "Available"
+	WarmPoolResourceStatus_Terminated WarmPoolResourceStatus = "Terminated"
+	WarmPoolResourceStatus_Reused     WarmPoolResourceStatus = "Reused"
+	WarmPoolResourceStatus_InUse      WarmPoolResourceStatus = "InUse"
 )
 
 type WorkforceStatus string

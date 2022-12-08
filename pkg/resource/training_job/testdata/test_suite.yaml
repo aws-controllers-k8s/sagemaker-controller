@@ -152,18 +152,57 @@ tests:
         invoke: ReadOne
         expect:
           latest_state: "v1alpha1/readone/observed/created_instance_groups.yaml"
-  - name: "Training job update tests"
-    description: "Testing the Update operation"
-    scenarios:
-      - name: "Update=NotSupported"
-        description: "This test checks if the controller throws error for update"
+      - name: "ReadOne=WarmPool"
+        description: "Test readOne after training job finishes when user specifies a warm pool"
         given:
-          desired_state: "v1alpha1/update/desired/updated_base.yaml"
-          latest_state: "v1alpha1/create/observed/success_after_create.yaml"
-        invoke: Update
+          desired_state: "v1alpha1/readone/desired/warmpool.yaml"
+          svc_api:
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/describe/warmpool_describe_available.json"
+        invoke: ReadOne
         expect:
-          latest_state: "v1alpha1/update/observed/error_on_update.yaml"
-          error: "not implemented"
+          latest_state: "v1alpha1/readone/observed/warmpool_available.yaml"
+      - name: "ReadOne=WarmPoolTerminated"
+        description: "Test readOne after training job and warm pool complete/terminate."
+        given:
+          desired_state: "v1alpha1/readone/desired/warmpool.yaml"
+          svc_api:
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/describe/warmpool_describe_terminated.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/warmpool_terminated.yaml"
+      - name: "ReadOne=WarmPoolReused"
+        description: "Test Warmpool reused state"
+        given:
+          desired_state: "v1alpha1/readone/desired/warmpool.yaml"
+          svc_api:
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/describe/warmpool_describe_reused.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/warmpool_reused.yaml"
+      - name: "ReadOne=WarmPoolInUse"
+        description: "Test Warmpool inuse state"
+        given:
+          desired_state: "v1alpha1/readone/desired/warmpool.yaml"
+          svc_api:
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/describe/warmpool_describe_inuse.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/warmpool_inuse.yaml"
+      - name: "ReadOne=WarmPoolNoStatus"
+        description: "Test Warmpool when the training job is complete but has no status"
+        given:
+          desired_state: "v1alpha1/readone/desired/warmpool.yaml"
+          svc_api:
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/describe/warmpool_describe_no_status.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/warmpool_nostatus.yaml"
+      
   - name: "Training job delete tests"
     description: "Testing the delete operation"
     scenarios:
@@ -211,3 +250,195 @@ tests:
         invoke: Delete
         expect:
           error: nil
+  - name: "Training job Update tests"
+    description: "Tests for update operation"
+    scenarios:
+      - name: "Update=RemoveProfilerBothParams"
+        description: "This test checks if the Controller can remove the profiler properly, if both profile parameters are removed in the spec."
+        given:
+          desired_state: "v1alpha1/update/desired/removeProfilerboth.yaml"
+          latest_state: "v1alpha1/update/latest/profilerHappyBase.yaml"
+          svc_api: 
+            - operation: UpdateTrainingJobWithContext
+              output_fixture: "sdkapi/update/update_success.json"
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/update/describe/profiler_removal.json"
+        invoke: Update
+        expect:
+          latest_state: "v1alpha1/update/observed/removeProfilerBoth.yaml"
+          error: training job is updating
+      - name: "Update=RemoveProfilerRule"
+        description: "This test checks if the Controller can remove the profiler properly, if the Profiler rule is removed in the spec."
+        given:
+          desired_state: "v1alpha1/update/desired/removeProfilerRule.yaml"
+          latest_state: "v1alpha1/update/latest/profilerHappyBase.yaml"
+          svc_api: 
+            - operation: UpdateTrainingJobWithContext
+              output_fixture: "sdkapi/update/update_success.json"
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/update/describe/profiler_removal.json"
+        invoke: Update
+        expect:
+          latest_state: "v1alpha1/update/observed/removeProfilerRule.yaml"
+          error: training job is updating
+      - name: "Update=RemoveProfilerConfig"
+        description: "This test checks if the Controller can remove the profiler properly, if the Profiler config is removed in the spec."
+        given:
+          desired_state: "v1alpha1/update/desired/removeProfilerConfig.yaml"
+          latest_state: "v1alpha1/update/latest/profilerHappyBase.yaml"
+          svc_api: 
+            - operation: UpdateTrainingJobWithContext
+              output_fixture: "sdkapi/update/update_success.json"
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/update/describe/profiler_removal.json"
+        invoke: Update
+        expect:
+          latest_state: "v1alpha1/update/observed/removeProfilerConfig.yaml"
+          error: training job is updating
+      - name: "Update=BothProfiler"
+        description: "Update Both Profiler parameters"
+        given:
+          desired_state: "v1alpha1/update/desired/updateBothProfileParams.yaml"
+          latest_state: "v1alpha1/update/latest/profilerHappyBase.yaml"
+          svc_api: 
+            - operation: UpdateTrainingJobWithContext
+              output_fixture: "sdkapi/update/update_success.json"
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/update/describe/bothprofiler_update.json"
+        invoke: Update
+        expect:
+          latest_state: "v1alpha1/update/observed/updateProfilerBoth.yaml"
+          error: training job is updating
+      - name: "Update=ProfilerConfig"
+        description: "Update just the profiler config"
+        given:
+          desired_state: "v1alpha1/update/desired/updateProfileConfig.yaml"
+          latest_state: "v1alpha1/update/latest/profilerHappyBase.yaml"
+          svc_api: 
+            - operation: UpdateTrainingJobWithContext
+              output_fixture: "sdkapi/update/update_success.json"
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/update/describe/profiler_config_update.json"
+        invoke: Update
+        expect:
+          latest_state: "v1alpha1/update/observed/updateProfilerConfig.yaml"
+          error: training job is updating
+      - name: "Update=ProfilerStarting"
+        description: "Tests if profiler returns a requeue error when Training Job is updated in Starting."
+        given:
+          desired_state: "v1alpha1/update/desired/updateProfileConfig.yaml"
+          latest_state: "v1alpha1/update/latest/profilerStarting.yaml"
+        invoke: Update
+        expect:
+          error: training job cannot be updated while secondary status is in Starting state.
+      - name: "Update=ProfilerTerminal"
+        description: "Tests if profiler returns a terminal error when Training Job is updated in Completed."
+        given:
+          desired_state: "v1alpha1/update/desired/updateProfileConfig.yaml"
+          latest_state: "v1alpha1/update/latest/profilerTerminal.yaml"
+        invoke: Update
+        expect:
+          error: "resource is in terminal condition"
+      - name: "Update=WarmPool"
+        description: "Update a warm pool successfully."
+        given:
+          desired_state: "v1alpha1/update/desired/updateWarmPool.yaml"
+          latest_state: "v1alpha1/update/latest/WPHappy.yaml"
+          svc_api: 
+            - operation: UpdateTrainingJobWithContext
+              output_fixture: "sdkapi/update/update_success.json"
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/update/describe/warmpool.json"
+        invoke: Update
+        expect:
+          latest_state: "v1alpha1/update/observed/updateWP.yaml"
+      - name: "Update=WarmPoolInProgress"
+        description: "Return a requeue error if trainingjob is in InProgress state."
+        given:
+          desired_state: "v1alpha1/update/desired/updateWarmPool.yaml"
+          latest_state: "v1alpha1/update/latest/WPDownloading.yaml"
+        invoke: Update
+        expect:
+          error: "warm pool cannot be updated while TrainingJob status is InProgress, requeuing until TrainingJob completes."
+      - name: "Update=WarmPoolTerminal"
+        description: "Check if controller behaves correctly when WarmPool cannot be updated."
+        given:
+          desired_state: "v1alpha1/update/desired/updateWarmPool.yaml"
+          latest_state: "v1alpha1/update/latest/WPTerminal.yaml"
+        invoke: Update
+        expect:
+          error: "resource is in terminal condition"
+      - name: "Update=AddProfiler"
+        description: "Add a Profiler when a previous one does not exist."
+        given:
+          desired_state: "v1alpha1/update/desired/updateProfileConfig.yaml"
+          latest_state: "v1alpha1/update/latest/vanilla.yaml"
+          svc_api: 
+            - operation: UpdateTrainingJobWithContext
+              output_fixture: "sdkapi/update/update_success.json"
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/update/describe/profiler_config_update.json"
+        invoke: Update
+        expect:
+          latest_state: "v1alpha1/update/observed/updateProfilerConfig.yaml"
+          error: training job is updating
+      - name: "Update=AddWarmPool"
+        description: "Attempt to add Warm Pool when a previous one does not exist."
+        given:
+          desired_state: "v1alpha1/update/desired/updateWarmPool.yaml"
+          latest_state: "v1alpha1/update/latest/vanilla.yaml"
+        invoke: Update
+        expect:
+          error: "resource is in terminal condition"
+      - name: "Update=WarmPoolAndProfiler"
+        description: "Attempt to add Warm Pool and Profiler at the same time."
+        given:
+          desired_state: "v1alpha1/update/desired/updateProfilerWP.yaml"
+          latest_state: "v1alpha1/update/latest/WPDownloading.yaml"
+        invoke: Update
+        expect:
+          error: "resource is in terminal condition"
+      - name: "Update=Invalid update"
+        description: "Attempt to update a parameter that is not allowed to be updated."
+        given:
+          desired_state: "v1alpha1/update/desired/invalidupdate.yaml"
+          latest_state: "v1alpha1/update/latest/WPHappy.yaml"
+        invoke: Update
+        expect:
+          error: "resource is in terminal condition"
+      - name: "Update=Update Profiler Rule"
+        description: "Updating a profiler rule"
+        given:
+          desired_state: "v1alpha1/update/desired/updateProfilerRule.yaml"
+          latest_state: "v1alpha1/update/latest/profilerHappyBase.yaml"
+          svc_api: 
+            - operation: UpdateTrainingJobWithContext
+              output_fixture: "sdkapi/update/update_success.json"
+            - operation: DescribeTrainingJobWithContext
+              output_fixture: "sdkapi/update/describe/profilerrule_update.json"
+        invoke: Update
+        expect:
+          latest_state: "v1alpha1/update/observed/updateProfilerRule.yaml"
+          error: "training job is updating"
+      - name: "Update=RemoveOneProfilerRule"
+        description: "Removing one profiler rule"
+        given:
+          desired_state: "v1alpha1/update/desired/removeOneProfilerRule.yaml"
+          latest_state: "v1alpha1/update/latest/profilerMultipleRules.yaml"
+        invoke: Update
+        expect:
+          error: "resource is in terminal condition"
+      - name: "Update=RemoveAddProfilerRule"
+        description: "Removing a profiler rule but adding another."
+        given:
+          desired_state: "v1alpha1/update/desired/removeAddProfilerRule.yaml"
+          latest_state: "v1alpha1/update/latest/profilerMultipleRules.yaml"
+        invoke: Update
+        expect:
+          error: "resource is in terminal condition"
+      
+
+
+      
+      
+      

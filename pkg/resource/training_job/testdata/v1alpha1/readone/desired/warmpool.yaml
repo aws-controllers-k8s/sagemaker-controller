@@ -5,7 +5,7 @@ metadata:
   name: unit-testing-training-job
 spec:
   algorithmSpecification:
-    trainingImage: 246618743249.dkr.ecr.us-west-2.amazonaws.com
+    trainingImage: 246618743249.dkr.ecr.us-west-2.amazonaws.com/xgboost:1
     trainingInputMode: File
   hyperParameters:
     eta: "0.2"
@@ -39,6 +39,7 @@ spec:
     instanceCount: 1
     instanceType: ml.m4.xlarge
     volumeSizeInGB: 5
+    keepAlivePeriodInSeconds: 70
   roleARN: arn:aws:iam::123456789012:role/ack-sagemaker-execution-role
   stoppingCondition:
     maxRuntimeInSeconds: 86400
@@ -55,7 +56,4 @@ status:
     arn: arn:aws:sagemaker:us-west-2:123456789012:training-job/xgboost-training-job
     ownerAccountID: ""
     region: ""
-  conditions:
-  - message: not implemented
-    status: "True"
-    type: ACK.Recoverable
+  conditions: []

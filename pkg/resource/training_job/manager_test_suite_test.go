@@ -94,6 +94,9 @@ func (d *testRunnerDelegate) EmptyServiceAPIOutput(apiName string) (interface{},
 	case "StopTrainingJobWithContext":
 		var output svcsdk.StopTrainingJobOutput
 		return &output, nil
+	case "UpdateTrainingJobWithContext":
+		var output svcsdk.UpdateTrainingJobOutput
+		return &output, nil
 	}
 	return nil, errors.New(fmt.Sprintf("no matching API name found for: %s", apiName))
 }

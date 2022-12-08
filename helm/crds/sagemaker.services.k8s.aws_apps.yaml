@@ -43,8 +43,7 @@ spec:
                 description: The name of the app.
                 type: string
               appType:
-                description: The type of app. Supported apps are JupyterServer and
-                  KernelGateway. TensorBoard is not supported.
+                description: The type of app.
                 type: string
               domainID:
                 description: The domain ID.

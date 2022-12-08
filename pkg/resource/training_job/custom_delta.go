@@ -27,7 +27,8 @@ func customSetDefaults(
 	// Default value of VolumeSizeInGB is 0
 	defaultVolumeSizeInGB := aws.Int64(0)
 
-	if ackcompare.IsNotNil(a.ko.Spec.ProfilerRuleConfigurations) && ackcompare.IsNotNil(b.ko.Spec.ProfilerRuleConfigurations) {
+	if ackcompare.IsNotNil(a.ko.Spec.ProfilerRuleConfigurations) && ackcompare.IsNotNil(b.ko.Spec.ProfilerRuleConfigurations) &&
+		len(a.ko.Spec.ProfilerRuleConfigurations) == len(b.ko.Spec.ProfilerRuleConfigurations) {
 		for index := range a.ko.Spec.ProfilerRuleConfigurations {
 			if ackcompare.IsNil(a.ko.Spec.ProfilerRuleConfigurations[index].VolumeSizeInGB) && ackcompare.IsNotNil(b.ko.Spec.ProfilerRuleConfigurations[index].VolumeSizeInGB) {
 				a.ko.Spec.ProfilerRuleConfigurations[index].VolumeSizeInGB = defaultVolumeSizeInGB
@@ -57,6 +58,52 @@ func customSetDefaults(
 			if ackcompare.IsNil(a.ko.Spec.InputDataConfig[index].RecordWrapperType) && ackcompare.IsNotNil(b.ko.Spec.InputDataConfig[index].RecordWrapperType) {
 				a.ko.Spec.InputDataConfig[index].RecordWrapperType = defaultRecordWrapperType
 			}
+		}
+	}
+}
+
+// SM returns profiler related objects even if the user disables the profiler
+// customPostCompare detects if there is a diff
+func customPostCompare(latest *resource, desired *resource, delta *ackcompare.Delta) {
+	profilerConfigDiff := delta.DifferentAt("Spec.ProfilerConfig")
+	profilerRuleDiff := delta.DifferentAt("Spec.ProfilerRuleConfigurations")
+	if !profilerConfigDiff && !profilerRuleDiff {
+		return
+	}
+	profilerStatus := latest.ko.Status.ProfilingStatus
+
+	if ackcompare.IsNotNil(profilerStatus) {
+		//Do not remove profiler if user wants to enable it
+		if *profilerStatus == "Disabled" && !userInitiatesProfilerCheck(desired) {
+			// TODO: Replace remove delta with an ack version when its natively supported
+			if profilerConfigDiff {
+				removeDelta(delta, "Spec.ProfilerConfig")
+			}
+			if profilerRuleDiff {
+				removeDelta(delta, "Spec.ProfilerRuleConfigurations")
+			}
+		}
+	}
+
+}
+
+// userInitiatesProfilerCheck checks if the user enabled/re enabled the profiler.
+func userInitiatesProfilerCheck(desired *resource) bool {
+	return ackcompare.IsNotNil(desired.ko.Spec.ProfilerConfig) && ackcompare.IsNotNil(desired.ko.Spec.ProfilerRuleConfigurations)
+}
+
+// removeDelta Removes fieldName from the delta slice.
+// TODO: Replace when ack runtime can do this.
+func removeDelta(delta *ackcompare.Delta, fieldName string) {
+	differences := delta.Differences
+	for index, diff := range differences {
+		if diff.Path.Contains(fieldName) {
+			// differences[index+1:]... is a legal statement in go even if the slice is of length 1.
+			// The minimum index in the left part of [index+1:] is allowed to be equal to capacity.
+			// The left index will never be greater than the capacity.
+			differences = append(differences[:index], differences[index+1:]...)
+			delta.Differences = differences
+			return
 		}
 	}
 }

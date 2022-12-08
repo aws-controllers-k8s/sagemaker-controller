@@ -76,6 +76,11 @@ type TrainingJobSpec struct {
 	// You can specify a maximum of 100 hyperparameters. Each hyperparameter is
 	// a key-value pair. Each key and value is limited to 256 characters, as specified
 	// by the Length Constraint.
+	//
+	// Do not include any security-sensitive information including account access
+	// IDs, secrets or tokens in any hyperparameter field. If the use of security-sensitive
+	// credentials are detected, SageMaker will reject your training job request
+	// and return an exception error.
 	HyperParameters map[string]*string `json:"hyperParameters,omitempty"`
 	// An array of Channel objects. Each channel is a named input source. InputDataConfig
 	// describes the input data and its location.
@@ -168,12 +173,18 @@ type TrainingJobStatus struct {
 	// resource
 	// +kubebuilder:validation:Optional
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	// A timestamp that indicates when the training job was created.
+	// +kubebuilder:validation:Optional
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	// Evaluation status of Debugger rules for debugging on a training job.
 	// +kubebuilder:validation:Optional
 	DebugRuleEvaluationStatuses []*DebugRuleEvaluationStatus `json:"debugRuleEvaluationStatuses,omitempty"`
 	// If the training job failed, the reason it failed.
 	// +kubebuilder:validation:Optional
 	FailureReason *string `json:"failureReason,omitempty"`
+	// A timestamp that indicates when the status of the training job was last modified.
+	// +kubebuilder:validation:Optional
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	// Information about the Amazon S3 location that is configured for storing model
 	// artifacts.
 	// +kubebuilder:validation:Optional
@@ -181,6 +192,9 @@ type TrainingJobStatus struct {
 	// Evaluation status of Debugger rules for profiling on a training job.
 	// +kubebuilder:validation:Optional
 	ProfilerRuleEvaluationStatuses []*ProfilerRuleEvaluationStatus `json:"profilerRuleEvaluationStatuses,omitempty"`
+	// Profiling status of a training job.
+	// +kubebuilder:validation:Optional
+	ProfilingStatus *string `json:"profilingStatus,omitempty"`
 	// Provides detailed information about the state of the training job. For detailed
 	// information on the secondary status of the training job, see StatusMessage
 	// under SecondaryStatusTransition.
@@ -257,6 +271,9 @@ type TrainingJobStatus struct {
 	// For more detailed information, see SecondaryStatus.
 	// +kubebuilder:validation:Optional
 	TrainingJobStatus *string `json:"trainingJobStatus,omitempty"`
+	// The status of the warm pool associated with the training job.
+	// +kubebuilder:validation:Optional
+	WarmPoolStatus *WarmPoolStatus `json:"warmPoolStatus,omitempty"`
 }
 
 // TrainingJob is the Schema for the TrainingJobs API

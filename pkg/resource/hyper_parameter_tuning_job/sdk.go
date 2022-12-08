@@ -559,6 +559,9 @@ func (rm *resourceManager) sdkFind(
 			if resp.TrainingJobDefinition.ResourceConfig.InstanceType != nil {
 				f11f9.InstanceType = resp.TrainingJobDefinition.ResourceConfig.InstanceType
 			}
+			if resp.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds != nil {
+				f11f9.KeepAlivePeriodInSeconds = resp.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds
+			}
 			if resp.TrainingJobDefinition.ResourceConfig.VolumeKmsKeyId != nil {
 				f11f9.VolumeKMSKeyID = resp.TrainingJobDefinition.ResourceConfig.VolumeKmsKeyId
 			}
@@ -864,6 +867,9 @@ func (rm *resourceManager) sdkFind(
 				}
 				if f12iter.ResourceConfig.InstanceType != nil {
 					f12elemf9.InstanceType = f12iter.ResourceConfig.InstanceType
+				}
+				if f12iter.ResourceConfig.KeepAlivePeriodInSeconds != nil {
+					f12elemf9.KeepAlivePeriodInSeconds = f12iter.ResourceConfig.KeepAlivePeriodInSeconds
 				}
 				if f12iter.ResourceConfig.VolumeKmsKeyId != nil {
 					f12elemf9.VolumeKMSKeyID = f12iter.ResourceConfig.VolumeKmsKeyId
@@ -1387,6 +1393,9 @@ func (rm *resourceManager) newCreateRequestPayload(
 			if r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType != nil {
 				f3f9.SetInstanceType(*r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType)
 			}
+			if r.ko.Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds != nil {
+				f3f9.SetKeepAlivePeriodInSeconds(*r.ko.Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds)
+			}
 			if r.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID != nil {
 				f3f9.SetVolumeKmsKeyId(*r.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID)
 			}
@@ -1690,6 +1699,9 @@ func (rm *resourceManager) newCreateRequestPayload(
 				}
 				if f4iter.ResourceConfig.InstanceType != nil {
 					f4elemf9.SetInstanceType(*f4iter.ResourceConfig.InstanceType)
+				}
+				if f4iter.ResourceConfig.KeepAlivePeriodInSeconds != nil {
+					f4elemf9.SetKeepAlivePeriodInSeconds(*f4iter.ResourceConfig.KeepAlivePeriodInSeconds)
 				}
 				if f4iter.ResourceConfig.VolumeKMSKeyID != nil {
 					f4elemf9.SetVolumeKmsKeyId(*f4iter.ResourceConfig.VolumeKMSKeyID)
