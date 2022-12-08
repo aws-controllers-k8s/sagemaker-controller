@@ -1,0 +1,15 @@
+{
+    "PipelineArn": "arn:aws:sagemaker:us-west-2:123456789:pipeline/test-pipeline",
+    "PipelineExecutionArn": "arn:aws:sagemaker:us-west-2:123456789:pipeline/test-pipeline/execution/tufkd9rv07w2",
+    "PipelineExecutionDisplayName": "test-pipeline-execution",
+    "PipelineExecutionStatus": "Executing",
+    "PipelineExecutionDescription": "test",
+    "PipelineExperimentConfig": {
+        "ExperimentName": "test-pipeline",
+        "TrialName": "mf7dqcqqsnlp"
+    },
+    "CreationTime": "2022-10-06T23:39:45.629000-07:00",
+    "LastModifiedTime": "2022-10-06T23:54:11.086000-07:00",
+    "CreatedBy": {},
+    "LastModifiedBy": {}
+}

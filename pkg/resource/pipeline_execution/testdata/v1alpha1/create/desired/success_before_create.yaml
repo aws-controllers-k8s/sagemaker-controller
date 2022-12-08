@@ -1,0 +1,13 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: PipelineExecution
+metadata:
+  name: test-pipeline-execution
+spec:
+  pipelineExecutionDisplayName: test-pipeline-execution
+  pipelineExecutionDescription: test
+  pipelineName: test-pipeline
+  pipelineParameters:
+    - name: AccuracyMseThreshold
+      value: "1.0"
+  parallelismConfiguration:
+    maxParallelExecutionSteps: 2

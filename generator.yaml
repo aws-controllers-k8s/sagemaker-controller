@@ -23,60 +23,6 @@ operations:
     operation_type: Delete
     resource_name: PipelineExecution
 resources:
-  PipelineExecution:
-    # Resource state/status can have automatic retry-policy
-    # Need to reconcile to catch these state/status changes
-    reconcile: 
-      requeue_on_success_seconds: 60
-    hooks:
-      sdk_read_one_pre_set_output:
-        code: rm.customSetSpec(ko,resp)
-      sdk_read_one_post_set_output:
-        code: rm.customSetOutput(&resource{ko})
-      sdk_delete_pre_build_request:
-        template_path: pipeline_execution/sdk_delete_pre_build_request.go.tpl
-      sdk_delete_post_request:
-        template_path: common/sdk_delete_post_request.go.tpl
-      sdk_update_post_set_output:
-        code: rm.customSetOutput(&resource{ko})
-    fields:
-      PipelineExecutionStatus:
-        is_read_only: true
-        print:
-          name: STATUS
-        from:
-          operation: DescribePipelineExecution
-          path: PipelineExecutionStatus
-      FailureReason:
-        is_read_only: true
-        print:
-          name: FAILURE-REASON
-          priority: 1
-        from:
-          operation: DescribePipelineExecution
-          path: FailureReason
-      CreationTime:
-        is_read_only: true
-        from:
-          operation: DescribePipelineExecution
-          path: CreationTime
-      LastModifiedTime:
-        is_read_only: true
-        from:
-          operation: DescribePipelineExecution
-          path: LastModifiedTime
-    exceptions:
-      errors:
-        404:
-          code: ResourceNotFound
-          message_suffix: does not exist
-      terminal_codes:
-        - InvalidParameterCombination
-        - InvalidParameterValue
-        - MissingParameter
-        - ResourceNotFound
-    tags:
-      ignore: true
   Model:
     hooks:
       delta_pre_compare:
@@ -949,6 +895,60 @@ resources:
         - InvalidParameterValue
         - MissingParameter
         - ResourceNotFound
+  PipelineExecution:
+    # Resource state/status can have automatic retry-policy
+    # Need to reconcile to catch these state/status changes
+    reconcile: 
+      requeue_on_success_seconds: 60
+    hooks:
+      sdk_read_one_pre_set_output:
+        code: rm.customSetSpec(ko,resp)
+      sdk_read_one_post_set_output:
+        code: rm.customSetOutput(&resource{ko})
+      sdk_delete_pre_build_request:
+        template_path: pipeline_execution/sdk_delete_pre_build_request.go.tpl
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
+      sdk_update_post_set_output:
+        code: rm.customSetOutput(&resource{ko})
+    fields:
+      PipelineExecutionStatus:
+        is_read_only: true
+        print:
+          name: STATUS
+        from:
+          operation: DescribePipelineExecution
+          path: PipelineExecutionStatus
+      FailureReason:
+        is_read_only: true
+        print:
+          name: FAILURE-REASON
+          priority: 1
+        from:
+          operation: DescribePipelineExecution
+          path: FailureReason
+      CreationTime:
+        is_read_only: true
+        from:
+          operation: DescribePipelineExecution
+          path: CreationTime
+      LastModifiedTime:
+        is_read_only: true
+        from:
+          operation: DescribePipelineExecution
+          path: LastModifiedTime
+    exceptions:
+      errors:
+        404:
+          code: ResourceNotFound
+          message_suffix: does not exist
+        terminal_codes:
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+        - ResourceNotFound
+    tags:
+      ignore: true
 ignore:
     resource_names:
       - Algorithm
