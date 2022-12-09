@@ -942,7 +942,7 @@ resources:
         404:
           code: ResourceNotFound
           message_suffix: does not exist
-        terminal_codes:
+      terminal_codes:
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
