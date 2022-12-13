@@ -10,7 +10,7 @@ aliases:
     - vijtrip2
   # TODO: Add your team members to your team controller alias
   service-team:
-    - akartsky
-    - mbaijal
+    - ananth102
+    - jsitu777
     - surajkota
     - ryansteakley
