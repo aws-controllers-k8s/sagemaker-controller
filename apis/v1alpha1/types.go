@@ -56,6 +56,11 @@ type AdditionalInferenceSpecificationDefinition struct {
 	SupportedTransformInstanceTypes         []*string                          `json:"supportedTransformInstanceTypes,omitempty"`
 }
 
+// An Amazon CloudWatch alarm configured to monitor metrics on an endpoint.
+type Alarm struct {
+	AlarmName *string `json:"alarmName,omitempty"`
+}
+
 // Specifies the training algorithm to use in a CreateTrainingJob request.
 //
 // For more information about algorithms provided by SageMaker, see Algorithms
@@ -301,6 +306,12 @@ type AutoMLSecurityConfig struct {
 	VPCConfig *VPCConfig `json:"vpcConfig,omitempty"`
 }
 
+// Automatic rollback configuration for handling endpoint deployment failures
+// and recovery.
+type AutoRollbackConfig struct {
+	Alarms []*Alarm `json:"alarms,omitempty"`
+}
+
 // The error code and error description associated with the resource.
 type BatchDescribeModelPackageError struct {
 	ErrorCode     *string `json:"errorCode,omitempty"`
@@ -330,6 +341,20 @@ type Bias struct {
 	Report *MetricsSource `json:"report,omitempty"`
 }
 
+// Update policy for a blue/green deployment. If this update policy is specified,
+// SageMaker creates a new fleet during the deployment while maintaining the
+// old fleet. SageMaker flips traffic to the new fleet according to the specified
+// traffic routing configuration. Only one update policy should be used in the
+// deployment configuration. If no update policy is specified, SageMaker uses
+// a blue/green deployment strategy with all at once traffic shifting by default.
+type BlueGreenUpdatePolicy struct {
+	MaximumExecutionTimeoutInSeconds *int64 `json:"maximumExecutionTimeoutInSeconds,omitempty"`
+	TerminationWaitInSeconds         *int64 `json:"terminationWaitInSeconds,omitempty"`
+	// Defines the traffic routing strategy during an endpoint deployment to shift
+	// traffic from the old fleet to the new fleet.
+	TrafficRoutingConfiguration *TrafficRoutingConfig `json:"trafficRoutingConfiguration,omitempty"`
+}
+
 // Details on the cache hit of a pipeline execution step.
 type CacheHitResult struct {
 	SourcePipelineExecutionARN *string `json:"sourcePipelineExecutionARN,omitempty"`
@@ -338,6 +363,12 @@ type CacheHitResult struct {
 // Metadata about a callback step.
 type CallbackStepMetadata struct {
 	SQSQueueURL *string `json:"sqsQueueURL,omitempty"`
+}
+
+// Specifies the endpoint capacity to activate for production.
+type CapacitySize struct {
+	Type  *string `json:"type_,omitempty"`
+	Value *int64  `json:"value,omitempty"`
 }
 
 // Configuration specifying how to treat different headers. If no headers are
@@ -680,6 +711,21 @@ type DeployedImage struct {
 	ResolutionTime *metav1.Time `json:"resolutionTime,omitempty"`
 	ResolvedImage  *string      `json:"resolvedImage,omitempty"`
 	SpecifiedImage *string      `json:"specifiedImage,omitempty"`
+}
+
+// The deployment configuration for an endpoint, which contains the desired
+// deployment strategy and rollback configurations.
+type DeploymentConfig struct {
+	// Automatic rollback configuration for handling endpoint deployment failures
+	// and recovery.
+	AutoRollbackConfiguration *AutoRollbackConfig `json:"autoRollbackConfiguration,omitempty"`
+	// Update policy for a blue/green deployment. If this update policy is specified,
+	// SageMaker creates a new fleet during the deployment while maintaining the
+	// old fleet. SageMaker flips traffic to the new fleet according to the specified
+	// traffic routing configuration. Only one update policy should be used in the
+	// deployment configuration. If no update policy is specified, SageMaker uses
+	// a blue/green deployment strategy with all at once traffic shifting by default.
+	BlueGreenUpdatePolicy *BlueGreenUpdatePolicy `json:"blueGreenUpdatePolicy,omitempty"`
 }
 
 // Contains information about a stage in an edge deployment plan.
@@ -2933,6 +2979,17 @@ type TensorBoardOutputConfig struct {
 // Time series forecast settings for the SageMaker Canvas app.
 type TimeSeriesForecastingSettings struct {
 	AmazonForecastRoleARN *string `json:"amazonForecastRoleARN,omitempty"`
+}
+
+// Defines the traffic routing strategy during an endpoint deployment to shift
+// traffic from the old fleet to the new fleet.
+type TrafficRoutingConfig struct {
+	// Specifies the endpoint capacity to activate for production.
+	CanarySize *CapacitySize `json:"canarySize,omitempty"`
+	// Specifies the endpoint capacity to activate for production.
+	LinearStepSize        *CapacitySize `json:"linearStepSize,omitempty"`
+	Type                  *string       `json:"type_,omitempty"`
+	WaitIntervalInSeconds *int64        `json:"waitIntervalInSeconds,omitempty"`
 }
 
 // Defines the input needed to run a training job using the algorithm.
