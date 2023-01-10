@@ -22,6 +22,7 @@ import (
 
 // NotebookInstanceLifecycleConfigSpec defines the desired state of NotebookInstanceLifecycleConfig.
 type NotebookInstanceLifecycleConfigSpec struct {
+
 	// The name of the lifecycle configuration.
 	// +kubebuilder:validation:Required
 	NotebookInstanceLifecycleConfigName *string `json:"notebookInstanceLifecycleConfigName"`

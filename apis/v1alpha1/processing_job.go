@@ -25,14 +25,14 @@ import (
 // An Amazon SageMaker processing job that is used to analyze data and evaluate
 // models. For more information, see Process Data and Evaluate Models (https://docs.aws.amazon.com/sagemaker/latest/dg/processing-job.html).
 type ProcessingJobSpec struct {
+
 	// Configures the processing job to run a specified Docker container image.
 	// +kubebuilder:validation:Required
 	AppSpecification *AppSpecification `json:"appSpecification"`
 	// The environment variables to set in the Docker container. Up to 100 key and
 	// values entries in the map are supported.
-	Environment map[string]*string `json:"environment,omitempty"`
-
-	ExperimentConfig *ExperimentConfig `json:"experimentConfig,omitempty"`
+	Environment      map[string]*string `json:"environment,omitempty"`
+	ExperimentConfig *ExperimentConfig  `json:"experimentConfig,omitempty"`
 	// Networking options for a processing job, such as whether to allow inbound
 	// and outbound network calls to and from processing containers, and the VPC
 	// subnets and security groups to use for VPC-enabled processing jobs.

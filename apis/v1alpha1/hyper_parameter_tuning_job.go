@@ -22,6 +22,7 @@ import (
 
 // HyperParameterTuningJobSpec defines the desired state of HyperParameterTuningJob.
 type HyperParameterTuningJobSpec struct {
+
 	// The HyperParameterTuningJobConfig object that describes the tuning job, including
 	// the search strategy, the objective metric used to evaluate training jobs,
 	// ranges of parameters to search, and resource limits for the tuning job. For

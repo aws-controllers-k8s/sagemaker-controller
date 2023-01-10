@@ -24,6 +24,7 @@ import (
 //
 // A versioned model that can be deployed for SageMaker inference.
 type ModelPackageSpec struct {
+
 	// An array of additional Inference Specification objects. Each additional Inference
 	// Specification specifies artifacts based on this model package that can be
 	// used on inference endpoints. Generally used with SageMaker Neo to store the
@@ -60,8 +61,7 @@ type ModelPackageSpec struct {
 	//    * The input and output content formats that the model package supports
 	//    for inference.
 	InferenceSpecification *InferenceSpecification `json:"inferenceSpecification,omitempty"`
-
-	MetadataProperties *MetadataProperties `json:"metadataProperties,omitempty"`
+	MetadataProperties     *MetadataProperties     `json:"metadataProperties,omitempty"`
 	// Whether the model is approved for deployment.
 	//
 	// This parameter is optional for versioned models, and does not apply to unversioned

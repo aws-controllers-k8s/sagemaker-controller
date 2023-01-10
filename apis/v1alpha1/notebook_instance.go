@@ -22,6 +22,7 @@ import (
 
 // NotebookInstanceSpec defines the desired state of NotebookInstance.
 type NotebookInstanceSpec struct {
+
 	// A list of Elastic Inference (EI) instance types to associate with this notebook
 	// instance. Currently, only one instance type can be associated with a notebook
 	// instance. For more information, see Using Elastic Inference in Amazon SageMaker

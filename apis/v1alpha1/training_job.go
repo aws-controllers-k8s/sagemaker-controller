@@ -24,6 +24,7 @@ import (
 //
 // Contains information about a training job.
 type TrainingJobSpec struct {
+
 	// The registry path of the Docker image that contains the training algorithm
 	// and algorithm-specific metadata, including the input mode. For more information
 	// about algorithms provided by SageMaker, see Algorithms (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html).
@@ -34,8 +35,7 @@ type TrainingJobSpec struct {
 	// Contains information about the output location for managed spot training
 	// checkpoint data.
 	CheckpointConfig *CheckpointConfig `json:"checkpointConfig,omitempty"`
-
-	DebugHookConfig *DebugHookConfig `json:"debugHookConfig,omitempty"`
+	DebugHookConfig  *DebugHookConfig  `json:"debugHookConfig,omitempty"`
 	// Configuration information for Debugger rules for debugging output tensors.
 	DebugRuleConfigurations []*DebugRuleConfiguration `json:"debugRuleConfigurations,omitempty"`
 	// To encrypt all communications between ML compute instances in distributed
@@ -65,9 +65,8 @@ type TrainingJobSpec struct {
 	// access.
 	EnableNetworkIsolation *bool `json:"enableNetworkIsolation,omitempty"`
 	// The environment variables to set in the Docker container.
-	Environment map[string]*string `json:"environment,omitempty"`
-
-	ExperimentConfig *ExperimentConfig `json:"experimentConfig,omitempty"`
+	Environment      map[string]*string `json:"environment,omitempty"`
+	ExperimentConfig *ExperimentConfig  `json:"experimentConfig,omitempty"`
 	// Algorithm-specific parameters that influence the quality of the model. You
 	// set hyperparameters before you start the learning process. For a list of
 	// hyperparameters for each training algorithm provided by SageMaker, see Algorithms
@@ -102,8 +101,7 @@ type TrainingJobSpec struct {
 	// SageMaker creates subfolders for the artifacts.
 	// +kubebuilder:validation:Required
 	OutputDataConfig *OutputDataConfig `json:"outputDataConfig"`
-
-	ProfilerConfig *ProfilerConfig `json:"profilerConfig,omitempty"`
+	ProfilerConfig   *ProfilerConfig   `json:"profilerConfig,omitempty"`
 	// Configuration information for Debugger rules for profiling system and framework
 	// metrics.
 	ProfilerRuleConfigurations []*ProfilerRuleConfiguration `json:"profilerRuleConfigurations,omitempty"`
@@ -146,8 +144,7 @@ type TrainingJobSpec struct {
 	// Services resources in different ways, for example, by purpose, owner, or
 	// environment. For more information, see Tagging Amazon Web Services Resources
 	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
-	Tags []*Tag `json:"tags,omitempty"`
-
+	Tags                    []*Tag                   `json:"tags,omitempty"`
 	TensorBoardOutputConfig *TensorBoardOutputConfig `json:"tensorBoardOutputConfig,omitempty"`
 	// The name of the training job. The name must be unique within an Amazon Web
 	// Services Region in an Amazon Web Services account.
