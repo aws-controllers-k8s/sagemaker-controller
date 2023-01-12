@@ -6,6 +6,7 @@ metadata:
 spec:
   selector:
     control-plane: controller
+    name: ack-sagemaker-controller
   ports:
     - name: metricsport
       port: 8080

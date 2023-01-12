@@ -16,11 +16,13 @@ spec:
   selector:
     matchLabels:
       control-plane: controller
+      name: ack-sagemaker-controller
   replicas: 1
   template:
     metadata:
       labels:
         control-plane: controller
+        name: ack-sagemaker-controller
     spec:
       containers:
       - command:
