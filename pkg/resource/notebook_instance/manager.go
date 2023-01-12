@@ -51,7 +51,7 @@ var (
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=notebookinstances,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=notebookinstances/status,verbs=get;update;patch
 
-var lateInitializeFieldNames = []string{"PlatformIdentifier"}
+var lateInitializeFieldNames = []string{"PlatformIdentifier", "VolumeSizeInGB"}
 
 // resourceManager is responsible for providing a consistent way to perform
 // CRUD operations in a backend AWS service API for Book custom resources.
@@ -252,6 +252,9 @@ func (rm *resourceManager) incompleteLateInitialization(
 	if ko.Spec.PlatformIdentifier == nil {
 		return true
 	}
+	if ko.Spec.VolumeSizeInGB == nil {
+		return true
+	}
 	return false
 }
 
@@ -265,6 +268,9 @@ func (rm *resourceManager) lateInitializeFromReadOneOutput(
 	latestKo := rm.concreteResource(latest).ko.DeepCopy()
 	if observedKo.Spec.PlatformIdentifier != nil && latestKo.Spec.PlatformIdentifier == nil {
 		latestKo.Spec.PlatformIdentifier = observedKo.Spec.PlatformIdentifier
+	}
+	if observedKo.Spec.VolumeSizeInGB != nil && latestKo.Spec.VolumeSizeInGB == nil {
+		latestKo.Spec.VolumeSizeInGB = observedKo.Spec.VolumeSizeInGB
 	}
 	return &resource{latestKo}
 }
