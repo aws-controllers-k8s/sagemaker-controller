@@ -24,6 +24,7 @@ import (
 //
 // A group of versioned models in the model registry.
 type ModelPackageGroupSpec struct {
+
 	// A description for the model group.
 	ModelPackageGroupDescription *string `json:"modelPackageGroupDescription,omitempty"`
 	// The name of the model group.

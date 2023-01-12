@@ -24,6 +24,7 @@ import (
 //
 // A SageMaker Model Building Pipeline instance.
 type PipelineSpec struct {
+
 	// This is the configuration that controls the parallelism of the pipeline.
 	// If specified, it applies to all runs of this pipeline by default.
 	ParallelismConfiguration *ParallelismConfiguration `json:"parallelismConfiguration,omitempty"`

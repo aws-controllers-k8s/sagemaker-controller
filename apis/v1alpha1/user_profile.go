@@ -22,6 +22,7 @@ import (
 
 // UserProfileSpec defines the desired state of UserProfile.
 type UserProfileSpec struct {
+
 	// The ID of the associated Domain.
 	// +kubebuilder:validation:Required
 	DomainID *string `json:"domainID"`

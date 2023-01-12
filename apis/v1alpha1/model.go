@@ -22,6 +22,7 @@ import (
 
 // ModelSpec defines the desired state of Model.
 type ModelSpec struct {
+
 	// Specifies the containers in the inference pipeline.
 	Containers []*ContainerDefinition `json:"containers,omitempty"`
 	// Isolates the model container. No inbound or outbound network calls can be

@@ -22,6 +22,7 @@ import (
 
 // AppSpec defines the desired state of App.
 type AppSpec struct {
+
 	// The name of the app.
 	// +kubebuilder:validation:Required
 	AppName *string `json:"appName"`

@@ -22,12 +22,12 @@ import (
 
 // EndpointConfigSpec defines the desired state of EndpointConfig.
 type EndpointConfigSpec struct {
+
 	// Specifies configuration for how an endpoint performs asynchronous inference.
 	// This is a required field in order for your Endpoint to be invoked using InvokeEndpointAsync
 	// (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpointAsync.html).
 	AsyncInferenceConfig *AsyncInferenceConfig `json:"asyncInferenceConfig,omitempty"`
-
-	DataCaptureConfig *DataCaptureConfig `json:"dataCaptureConfig,omitempty"`
+	DataCaptureConfig    *DataCaptureConfig    `json:"dataCaptureConfig,omitempty"`
 	// The name of the endpoint configuration. You specify this name in a CreateEndpoint
 	// request.
 	// +kubebuilder:validation:Required

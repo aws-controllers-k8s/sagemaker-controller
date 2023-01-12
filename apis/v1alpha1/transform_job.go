@@ -25,6 +25,7 @@ import (
 // A batch transform job. For information about SageMaker batch transform, see
 // Use Batch Transform (https://docs.aws.amazon.com/sagemaker/latest/dg/batch-transform.html).
 type TransformJobSpec struct {
+
 	// Specifies the number of records to include in a mini-batch for an HTTP inference
 	// request. A record is a single unit of input data that inference can be made
 	// on. For example, a single line in a CSV file is a record.
@@ -48,9 +49,8 @@ type TransformJobSpec struct {
 	DataProcessing *DataProcessing `json:"dataProcessing,omitempty"`
 	// The environment variables to set in the Docker container. We support up to
 	// 16 key and values entries in the map.
-	Environment map[string]*string `json:"environment,omitempty"`
-
-	ExperimentConfig *ExperimentConfig `json:"experimentConfig,omitempty"`
+	Environment      map[string]*string `json:"environment,omitempty"`
+	ExperimentConfig *ExperimentConfig  `json:"experimentConfig,omitempty"`
 	// The maximum number of parallel requests that can be sent to each instance
 	// in a transform job. If MaxConcurrentTransforms is set to 0 or left unset,
 	// Amazon SageMaker checks the optional execution-parameters to determine the

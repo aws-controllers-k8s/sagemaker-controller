@@ -22,10 +22,10 @@ import (
 
 // ModelQualityJobDefinitionSpec defines the desired state of ModelQualityJobDefinition.
 type ModelQualityJobDefinitionSpec struct {
+
 	// The name of the monitoring job definition.
 	// +kubebuilder:validation:Required
 	JobDefinitionName *string `json:"jobDefinitionName"`
-
 	// +kubebuilder:validation:Required
 	JobResources *MonitoringResources `json:"jobResources"`
 	// The container that runs the monitoring job.
@@ -36,7 +36,6 @@ type ModelQualityJobDefinitionSpec struct {
 	// A list of the inputs that are monitored. Currently endpoints are supported.
 	// +kubebuilder:validation:Required
 	ModelQualityJobInput *ModelQualityJobInput `json:"modelQualityJobInput"`
-
 	// +kubebuilder:validation:Required
 	ModelQualityJobOutputConfig *MonitoringOutputConfig `json:"modelQualityJobOutputConfig"`
 	// Specifies the network configuration for the monitoring job.
@@ -44,8 +43,7 @@ type ModelQualityJobDefinitionSpec struct {
 	// The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
 	// to perform tasks on your behalf.
 	// +kubebuilder:validation:Required
-	RoleARN *string `json:"roleARN"`
-
+	RoleARN           *string                      `json:"roleARN"`
 	StoppingCondition *MonitoringStoppingCondition `json:"stoppingCondition,omitempty"`
 	// (Optional) An array of key-value pairs. For more information, see Using Cost
 	// Allocation Tags (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html#allocation-whatURL)

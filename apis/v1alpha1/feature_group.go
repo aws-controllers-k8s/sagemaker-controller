@@ -27,6 +27,7 @@ import (
 // a unique identifier for each row where each column in the table is a feature.
 // In principle, a Feature Group is composed of features and values per features.
 type FeatureGroupSpec struct {
+
 	// A free-form description of a FeatureGroup.
 	Description *string `json:"description,omitempty"`
 	// The name of the feature that stores the EventTime of a Record in a FeatureGroup.

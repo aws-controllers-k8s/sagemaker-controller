@@ -24,6 +24,7 @@ import (
 //
 // An execution of a pipeline.
 type PipelineExecutionSpec struct {
+
 	// This configuration, if specified, overrides the parallelism configuration
 	// of the parent pipeline for this specific run.
 	ParallelismConfiguration *ParallelismConfiguration `json:"parallelismConfiguration,omitempty"`

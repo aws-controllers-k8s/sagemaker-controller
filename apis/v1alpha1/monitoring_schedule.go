@@ -25,6 +25,7 @@ import (
 // A schedule for a model monitoring job. For information about model monitor,
 // see Amazon SageMaker Model Monitor (https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor.html).
 type MonitoringScheduleSpec struct {
+
 	// The configuration object that specifies the monitoring schedule and defines
 	// the monitoring job.
 	// +kubebuilder:validation:Required

@@ -22,6 +22,7 @@ import (
 
 // DomainSpec defines the desired state of Domain.
 type DomainSpec struct {
+
 	// Specifies the VPC used for non-EFS traffic. The default value is PublicInternetOnly.
 	//
 	//    * PublicInternetOnly - Non-EFS traffic is through a VPC managed by Amazon
