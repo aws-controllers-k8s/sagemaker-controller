@@ -688,7 +688,10 @@ resources:
           path: FailureReason
       Tags:
         compare:
-          is_ignored: true        
+          is_ignored: true
+      VolumeSizeInGB:
+        late_initialize:
+          min_backoff_seconds: 5        
   ModelPackageGroup:
       exceptions:
         errors:
