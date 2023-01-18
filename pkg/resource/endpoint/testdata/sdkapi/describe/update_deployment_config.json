@@ -1,0 +1,84 @@
+{
+    "AsyncInferenceConfig": null,
+    "CreationTime": "0001-01-01T00:00:00.109Z",
+    "DataCaptureConfig": null,
+    "EndpointArn": "arn:aws:sagemaker:us-west-2:123456789012:endpoint/xgboost-endpoint",
+    "EndpointConfigName": "xgboost-endpoint-single-variant-config-updated",
+    "EndpointName": "xgboost-endpoint",
+    "EndpointStatus": "Updating",
+    "ExplainerConfig": null,
+    "FailureReason": null,
+    "LastDeploymentConfig": {
+     "AutoRollbackConfiguration": {
+      "Alarms": [
+       {
+        "AlarmName": "5xalarm-endpointtest"
+       }
+      ]
+     },
+     "BlueGreenUpdatePolicy": {
+      "MaximumExecutionTimeoutInSeconds": 600,
+      "TerminationWaitInSeconds": 100,
+      "TrafficRoutingConfiguration": {
+       "CanarySize": null,
+       "LinearStepSize": {
+        "Type": "INSTANCE_COUNT",
+        "Value": 1
+       },
+       "Type": "LINEAR",
+       "WaitIntervalInSeconds": 100
+      }
+     }
+    },
+    "LastModifiedTime": "0001-01-01T00:00:00Z",
+    "PendingDeploymentSummary": {
+     "EndpointConfigName": "xgboost-endpoint-single-variant-config-updated",
+     "ProductionVariants": [
+      {
+       "AcceleratorType": null,
+       "CurrentInstanceCount": 0,
+       "CurrentServerlessConfig": null,
+       "CurrentWeight": 0,
+       "DeployedImages": [
+        {
+         "ResolutionTime": "0001-01-01T00:00:00Z",
+         "ResolvedImage": "246618743249.dkr.ecr.us-west-2.amazonaws.com/sagemaker-xgboost@sha256:06c3143c16d671f07bac53da87f4f7464168ccb427a7b04966ab08ec9b0637b2",
+         "SpecifiedImage": "246618743249.dkr.ecr.us-west-2.amazonaws.com/sagemaker-xgboost:1.2-1"
+        }
+       ],
+       "DesiredInstanceCount": 3,
+       "DesiredServerlessConfig": null,
+       "DesiredWeight": 1,
+       "InstanceType": "m5.xlarge",
+       "VariantName": "variant-1",
+       "VariantStatus": [
+        {
+         "StartTime": "0001-01-01T00:00:00Z",
+         "Status": "Creating",
+         "StatusMessage": "Launching 3 instance(s)."
+        }
+       ]
+      }
+     ],
+     "StartTime": "0001-01-01T00:00:00.109Z"
+    },
+    "ProductionVariants": [
+     {
+      "CurrentInstanceCount": 3,
+      "CurrentServerlessConfig": null,
+      "CurrentWeight": 1,
+      "DeployedImages": [
+        {
+          "ResolutionTime": "0001-01-01T00:00:00Z",
+          "ResolvedImage": "433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost@sha256:54004f910467ebf7cfa71b5523b81695d103abf21a37d38dc84d63ab8d510c35",
+          "SpecifiedImage": "433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:latest"
+        }
+      ],
+      "DesiredInstanceCount": 3,
+      "DesiredServerlessConfig": null,
+      "DesiredWeight": 1,
+      "VariantName": "variant-1",
+      "VariantStatus": null
+     }
+    ]
+   }

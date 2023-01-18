@@ -111,6 +111,16 @@ tests:
         invoke: ReadOne
         expect:
           latest_state: "v1alpha1/readone/observed/failed_status_on_describe.yaml"
+      - name: "ReadOne=UpdateDeploymentConfig"
+        description: "Testing how readOne handles the Update with the deployment Config."
+        given: 
+          desired_state: "v1alpha1/readone/desired/updating_deployment.yaml"
+          svc_api:
+            - operation: DescribeEndpointWithContext
+              output_fixture: "sdkapi/describe/update_deployment_config.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/updating_deployment.yaml"
   - name: "Endpoint update tests"
     description: "Testing the Update operation"
     scenarios:
