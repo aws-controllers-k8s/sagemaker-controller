@@ -41,6 +41,89 @@ func newResourceDelta(
 		return delta
 	}
 
+	if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig, b.ko.Spec.DeploymentConfig) {
+		delta.Add("Spec.DeploymentConfig", a.ko.Spec.DeploymentConfig, b.ko.Spec.DeploymentConfig)
+	} else if a.ko.Spec.DeploymentConfig != nil && b.ko.Spec.DeploymentConfig != nil {
+		if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.AutoRollbackConfiguration, b.ko.Spec.DeploymentConfig.AutoRollbackConfiguration) {
+			delta.Add("Spec.DeploymentConfig.AutoRollbackConfiguration", a.ko.Spec.DeploymentConfig.AutoRollbackConfiguration, b.ko.Spec.DeploymentConfig.AutoRollbackConfiguration)
+		} else if a.ko.Spec.DeploymentConfig.AutoRollbackConfiguration != nil && b.ko.Spec.DeploymentConfig.AutoRollbackConfiguration != nil {
+			if !reflect.DeepEqual(a.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms, b.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms) {
+				delta.Add("Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms", a.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms, b.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms)
+			}
+		}
+		if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy) {
+			delta.Add("Spec.DeploymentConfig.BlueGreenUpdatePolicy", a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy)
+		} else if a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy != nil && b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds) {
+				delta.Add("Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds", a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds)
+			} else if a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds != nil && b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds != nil {
+				if *a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds != *b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds {
+					delta.Add("Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds", a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds)
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds) {
+				delta.Add("Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds", a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds)
+			} else if a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds != nil && b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds != nil {
+				if *a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds != *b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds {
+					delta.Add("Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds", a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds)
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration) {
+				delta.Add("Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration", a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration)
+			} else if a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration != nil && b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize) {
+					delta.Add("Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize", a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize)
+				} else if a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize != nil && b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize != nil {
+					if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type) {
+						delta.Add("Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type", a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type)
+					} else if a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type != nil && b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type != nil {
+						if *a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type != *b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type {
+							delta.Add("Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type", a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type)
+						}
+					}
+					if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value) {
+						delta.Add("Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value", a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value)
+					} else if a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value != nil && b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value != nil {
+						if *a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value != *b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value {
+							delta.Add("Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value", a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value)
+						}
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize) {
+					delta.Add("Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize", a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize)
+				} else if a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize != nil && b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize != nil {
+					if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type) {
+						delta.Add("Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type", a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type)
+					} else if a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type != nil && b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type != nil {
+						if *a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type != *b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type {
+							delta.Add("Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type", a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type)
+						}
+					}
+					if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value) {
+						delta.Add("Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value", a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value)
+					} else if a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value != nil && b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value != nil {
+						if *a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value != *b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value {
+							delta.Add("Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value", a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value)
+						}
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type) {
+					delta.Add("Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type", a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type)
+				} else if a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type != nil && b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type != nil {
+					if *a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type != *b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type {
+						delta.Add("Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type", a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds) {
+					delta.Add("Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds", a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds)
+				} else if a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds != nil && b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds != nil {
+					if *a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds != *b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds {
+						delta.Add("Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds", a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds)
+					}
+				}
+			}
+		}
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.EndpointConfigName, b.ko.Spec.EndpointConfigName) {
 		delta.Add("Spec.EndpointConfigName", a.ko.Spec.EndpointConfigName, b.ko.Spec.EndpointConfigName)
 	} else if a.ko.Spec.EndpointConfigName != nil && b.ko.Spec.EndpointConfigName != nil {

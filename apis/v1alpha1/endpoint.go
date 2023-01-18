@@ -24,7 +24,7 @@ import (
 //
 // A hosted endpoint for real-time inference.
 type EndpointSpec struct {
-
+	DeploymentConfig *DeploymentConfig `json:"deploymentConfig,omitempty"`
 	// The name of an endpoint configuration. For more information, see CreateEndpointConfig.
 	// +kubebuilder:validation:Required
 	EndpointConfigName *string `json:"endpointConfigName"`
@@ -92,6 +92,10 @@ type EndpointStatus struct {
 	// A timestamp that shows when the endpoint was last modified.
 	// +kubebuilder:validation:Optional
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	// Returns the summary of an in-progress deployment. This field is only returned
+	// when the endpoint is creating or updating with a new endpoint configuration.
+	// +kubebuilder:validation:Optional
+	PendingDeploymentSummary *PendingDeploymentSummary `json:"pendingDeploymentSummary,omitempty"`
 	// An array of ProductionVariantSummary objects, one for each model hosted behind
 	// this endpoint.
 	// +kubebuilder:validation:Optional
