@@ -1,0 +1,17 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: NotebookInstanceLifecycleConfig
+metadata:
+  name: $NOTEBOOK_INSTANCE_LFC_NAME
+  annotations:
+    services.k8s.aws/deletion-policy: retain
+spec:
+  notebookInstanceLifecycleConfigName: $NOTEBOOK_INSTANCE_LFC_NAME
+  onStart:
+    # base64 decoded string: 
+    # echo "Entering onStart"
+    - content: ZWNobyAiRW50ZXJpbmcgb25TdGFydCI=
+  onCreate:
+    # base 64 decoded string:
+    # echo "Entering onCreate"
+    - content: ZWNobyAiRW50ZXJpbmcgb25DcmVhdGUi
+    
