@@ -30,7 +30,7 @@ from e2e.replacement_values import REPLACEMENT_VALUES
 
 
 @pytest.fixture(scope="module")
-def notebook_instance_lifecycleConfig():
+def notebook_instance_lifecycle_config():
     notebook_instance_lfc_name = random_suffix_name("notebookinstancelfc", 40)
     replacements = REPLACEMENT_VALUES.copy()
     replacements["NOTEBOOK_INSTANCE_LFC_NAME"] = notebook_instance_lfc_name
@@ -61,21 +61,19 @@ def get_notebook_instance_lifecycle_config(notebook_instance_lfc_name: str):
 
 def delete_notebook_instance_lifecycle_config(notebook_instance_lfc_name: str):
     try:
-        resp = sagemaker_client().delete_notebook_instance_lifecycle_config(
+        sagemaker_client().delete_notebook_instance_lifecycle_config(
             NotebookInstanceLifecycleConfigName=notebook_instance_lfc_name
         )
-        return resp
     except botocore.exceptions.ClientError as error:
         logging.error(
             f"SageMaker could not find a Notebook Instance Lifecycle Configuration with the name {notebook_instance_lfc_name}. Error {error}"
         )
-        return None
 
 
 @service_marker
 class TestNotebookInstanceLifecycleConfig:
-    def test_retain_resource(self, notebook_instance_lifecycleConfig):
-        (reference, resource, spec) = notebook_instance_lifecycleConfig
+    def test_retain_resource(self, notebook_instance_lifecycle_config):
+        (reference, resource, _) = notebook_instance_lifecycle_config
         assert k8s.get_resource_exists(reference)
 
         # Getting the resource name
@@ -91,13 +89,12 @@ class TestNotebookInstanceLifecycleConfig:
             == notebook_instance_lfc_desc["NotebookInstanceLifecycleConfigArn"]
         )
 
-        # Delete the resource
+        # Delete the CR in Kubernetes
         _, deleted = k8s.delete_custom_resource(reference)
 
         assert deleted
 
         # Verify that the resource was not deleted on SageMaker
-
         assert (
             get_notebook_instance_lifecycle_config(notebook_instance_lfc_name)
             is not None
