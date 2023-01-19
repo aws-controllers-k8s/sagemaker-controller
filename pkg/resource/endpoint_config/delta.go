@@ -40,6 +40,7 @@ func newResourceDelta(
 		delta.Add("", a, b)
 		return delta
 	}
+	customSetDefaults(a, b)
 
 	if ackcompare.HasNilDifference(a.ko.Spec.AsyncInferenceConfig, b.ko.Spec.AsyncInferenceConfig) {
 		delta.Add("Spec.AsyncInferenceConfig", a.ko.Spec.AsyncInferenceConfig, b.ko.Spec.AsyncInferenceConfig)

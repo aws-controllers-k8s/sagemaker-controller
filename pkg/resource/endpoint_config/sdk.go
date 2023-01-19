@@ -223,6 +223,16 @@ func (rm *resourceManager) sdkFind(
 			if f6iter.ModelName != nil {
 				f6elem.ModelName = f6iter.ModelName
 			}
+			if f6iter.ServerlessConfig != nil {
+				f6elemf8 := &svcapitypes.ProductionVariantServerlessConfig{}
+				if f6iter.ServerlessConfig.MaxConcurrency != nil {
+					f6elemf8.MaxConcurrency = f6iter.ServerlessConfig.MaxConcurrency
+				}
+				if f6iter.ServerlessConfig.MemorySizeInMB != nil {
+					f6elemf8.MemorySizeInMB = f6iter.ServerlessConfig.MemorySizeInMB
+				}
+				f6elem.ServerlessConfig = f6elemf8
+			}
 			if f6iter.VariantName != nil {
 				f6elem.VariantName = f6iter.VariantName
 			}
@@ -432,6 +442,16 @@ func (rm *resourceManager) newCreateRequestPayload(
 			}
 			if f4iter.ModelName != nil {
 				f4elem.SetModelName(*f4iter.ModelName)
+			}
+			if f4iter.ServerlessConfig != nil {
+				f4elemf8 := &svcsdk.ProductionVariantServerlessConfig{}
+				if f4iter.ServerlessConfig.MaxConcurrency != nil {
+					f4elemf8.SetMaxConcurrency(*f4iter.ServerlessConfig.MaxConcurrency)
+				}
+				if f4iter.ServerlessConfig.MemorySizeInMB != nil {
+					f4elemf8.SetMemorySizeInMB(*f4iter.ServerlessConfig.MemorySizeInMB)
+				}
+				f4elem.SetServerlessConfig(f4elemf8)
 			}
 			if f4iter.VariantName != nil {
 				f4elem.SetVariantName(*f4iter.VariantName)

@@ -268,6 +268,17 @@ spec:
                         currentInstanceCount:
                           format: int64
                           type: integer
+                        currentServerlessConfig:
+                          description: Specifies the serverless configuration for
+                            an endpoint variant.
+                          properties:
+                            maxConcurrency:
+                              format: int64
+                              type: integer
+                            memorySizeInMB:
+                              format: int64
+                              type: integer
+                          type: object
                         currentWeight:
                           type: number
                         deployedImages:
@@ -295,6 +306,17 @@ spec:
                         desiredInstanceCount:
                           format: int64
                           type: integer
+                        desiredServerlessConfig:
+                          description: Specifies the serverless configuration for
+                            an endpoint variant.
+                          properties:
+                            maxConcurrency:
+                              format: int64
+                              type: integer
+                            memorySizeInMB:
+                              format: int64
+                              type: integer
+                          type: object
                         desiredWeight:
                           type: number
                         instanceType:
@@ -332,6 +354,17 @@ spec:
                     currentInstanceCount:
                       format: int64
                       type: integer
+                    currentServerlessConfig:
+                      description: Specifies the serverless configuration for an endpoint
+                        variant.
+                      properties:
+                        maxConcurrency:
+                          format: int64
+                          type: integer
+                        memorySizeInMB:
+                          format: int64
+                          type: integer
+                      type: object
                     currentWeight:
                       type: number
                     deployedImages:
@@ -359,6 +392,17 @@ spec:
                     desiredInstanceCount:
                       format: int64
                       type: integer
+                    desiredServerlessConfig:
+                      description: Specifies the serverless configuration for an endpoint
+                        variant.
+                      properties:
+                        maxConcurrency:
+                          format: int64
+                          type: integer
+                        memorySizeInMB:
+                          format: int64
+                          type: integer
+                      type: object
                     desiredWeight:
                       type: number
                     variantName:

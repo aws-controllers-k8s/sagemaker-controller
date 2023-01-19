@@ -90,6 +90,17 @@
         invoke: ReadOne
         expect:
           latest_state: "v1alpha1/readone/observed/conditions_clear_on_success.yaml"
+      - name: "ReadOne=SuccessServerless"
+        description: "Testing a successful reconciliation of a Serverless Endpoint"
+        given:
+          desired_state: "v1alpha1/readone/desired/serverless_endpoint_create.yaml"
+          svc_api:
+            - operation: DescribeEndpointConfigWithContext
+              output_fixture: "sdkapi/describe/sucess_serverless.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/serverless_endpoint_on_success.yaml"
+      
   - name: "Endpoint config update tests"
     description: "Testing the update operation"
     scenarios:
