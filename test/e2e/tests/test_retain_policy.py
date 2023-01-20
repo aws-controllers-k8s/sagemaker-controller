@@ -27,8 +27,9 @@ from e2e import (
 
 
 from e2e.replacement_values import REPLACEMENT_VALUES
+from e2e.common import config as cfg
 
-RESOURCE_PLURAL = "notebookinstancelifecycleconfigs"
+RESOURCE_PLURAL = cfg.NOTEBOOK_INSTANCE_LIFECYCLE_RESOURCE_PLURAL
 RESOURCE_SPEC_FILE = "notebook_instance_lifecycle_retain"
 
 @pytest.fixture(scope="module")
