@@ -1,0 +1,27 @@
+{
+    "AsyncInferenceConfig": null,
+    "CreationTime": "0001-01-01T00:00:00Z",
+    "DataCaptureConfig": null,
+    "EndpointConfigArn": "arn:aws:sagemaker:us-west-2:123456789012:endpoint-config/single-variant-config",
+    "EndpointConfigName": "single-variant-config",
+    "ExplainerConfig": null,
+    "KmsKeyId": null,
+    "ProductionVariants": [
+     {
+      "AcceleratorType": null,
+      "ContainerStartupHealthCheckTimeoutInSeconds": null,
+      "CoreDumpConfig": null,
+      "InitialInstanceCount": null,
+      "InitialVariantWeight": 1,
+      "InstanceType": null,
+      "ModelDataDownloadTimeoutInSeconds": null,
+      "ModelName": "single-variant-config-model",
+      "ServerlessConfig": {
+       "MaxConcurrency": 20,
+       "MemorySizeInMB": 1024
+      },
+      "VariantName": "AllTraffic",
+      "VolumeSizeInGB": 5
+     }
+    ]
+   }

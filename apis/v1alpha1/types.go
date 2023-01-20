@@ -2305,15 +2305,19 @@ type PendingDeploymentSummary struct {
 // the VariantStatus , weight and capacity for a production variant associated
 // with an endpoint.
 type PendingProductionVariantSummary struct {
-	AcceleratorType      *string                    `json:"acceleratorType,omitempty"`
-	CurrentInstanceCount *int64                     `json:"currentInstanceCount,omitempty"`
-	CurrentWeight        *float64                   `json:"currentWeight,omitempty"`
-	DeployedImages       []*DeployedImage           `json:"deployedImages,omitempty"`
-	DesiredInstanceCount *int64                     `json:"desiredInstanceCount,omitempty"`
-	DesiredWeight        *float64                   `json:"desiredWeight,omitempty"`
-	InstanceType         *string                    `json:"instanceType,omitempty"`
-	VariantName          *string                    `json:"variantName,omitempty"`
-	VariantStatus        []*ProductionVariantStatus `json:"variantStatus,omitempty"`
+	AcceleratorType      *string `json:"acceleratorType,omitempty"`
+	CurrentInstanceCount *int64  `json:"currentInstanceCount,omitempty"`
+	// Specifies the serverless configuration for an endpoint variant.
+	CurrentServerlessConfig *ProductionVariantServerlessConfig `json:"currentServerlessConfig,omitempty"`
+	CurrentWeight           *float64                           `json:"currentWeight,omitempty"`
+	DeployedImages          []*DeployedImage                   `json:"deployedImages,omitempty"`
+	DesiredInstanceCount    *int64                             `json:"desiredInstanceCount,omitempty"`
+	// Specifies the serverless configuration for an endpoint variant.
+	DesiredServerlessConfig *ProductionVariantServerlessConfig `json:"desiredServerlessConfig,omitempty"`
+	DesiredWeight           *float64                           `json:"desiredWeight,omitempty"`
+	InstanceType            *string                            `json:"instanceType,omitempty"`
+	VariantName             *string                            `json:"variantName,omitempty"`
+	VariantStatus           []*ProductionVariantStatus         `json:"variantStatus,omitempty"`
 }
 
 // The location of the pipeline definition stored in Amazon S3.
@@ -2564,8 +2568,10 @@ type ProductionVariant struct {
 	InstanceType                      *string                          `json:"instanceType,omitempty"`
 	ModelDataDownloadTimeoutInSeconds *int64                           `json:"modelDataDownloadTimeoutInSeconds,omitempty"`
 	ModelName                         *string                          `json:"modelName,omitempty"`
-	VariantName                       *string                          `json:"variantName,omitempty"`
-	VolumeSizeInGB                    *int64                           `json:"volumeSizeInGB,omitempty"`
+	// Specifies the serverless configuration for an endpoint variant.
+	ServerlessConfig *ProductionVariantServerlessConfig `json:"serverlessConfig,omitempty"`
+	VariantName      *string                            `json:"variantName,omitempty"`
+	VolumeSizeInGB   *int64                             `json:"volumeSizeInGB,omitempty"`
 }
 
 // Specifies configuration for a core dump from the model container when the
@@ -2573,6 +2579,12 @@ type ProductionVariant struct {
 type ProductionVariantCoreDumpConfig struct {
 	DestinationS3URI *string `json:"destinationS3URI,omitempty"`
 	KMSKeyID         *string `json:"kmsKeyID,omitempty"`
+}
+
+// Specifies the serverless configuration for an endpoint variant.
+type ProductionVariantServerlessConfig struct {
+	MaxConcurrency *int64 `json:"maxConcurrency,omitempty"`
+	MemorySizeInMB *int64 `json:"memorySizeInMB,omitempty"`
 }
 
 // Describes the status of the production variant.
@@ -2587,13 +2599,17 @@ type ProductionVariantStatus struct {
 // API and the endpoint status is Updating, you get different desired and current
 // values.
 type ProductionVariantSummary struct {
-	CurrentInstanceCount *int64                     `json:"currentInstanceCount,omitempty"`
-	CurrentWeight        *float64                   `json:"currentWeight,omitempty"`
-	DeployedImages       []*DeployedImage           `json:"deployedImages,omitempty"`
-	DesiredInstanceCount *int64                     `json:"desiredInstanceCount,omitempty"`
-	DesiredWeight        *float64                   `json:"desiredWeight,omitempty"`
-	VariantName          *string                    `json:"variantName,omitempty"`
-	VariantStatus        []*ProductionVariantStatus `json:"variantStatus,omitempty"`
+	CurrentInstanceCount *int64 `json:"currentInstanceCount,omitempty"`
+	// Specifies the serverless configuration for an endpoint variant.
+	CurrentServerlessConfig *ProductionVariantServerlessConfig `json:"currentServerlessConfig,omitempty"`
+	CurrentWeight           *float64                           `json:"currentWeight,omitempty"`
+	DeployedImages          []*DeployedImage                   `json:"deployedImages,omitempty"`
+	DesiredInstanceCount    *int64                             `json:"desiredInstanceCount,omitempty"`
+	// Specifies the serverless configuration for an endpoint variant.
+	DesiredServerlessConfig *ProductionVariantServerlessConfig `json:"desiredServerlessConfig,omitempty"`
+	DesiredWeight           *float64                           `json:"desiredWeight,omitempty"`
+	VariantName             *string                            `json:"variantName,omitempty"`
+	VariantStatus           []*ProductionVariantStatus         `json:"variantStatus,omitempty"`
 }
 
 // Configuration information for Debugger system monitoring, framework profiling,

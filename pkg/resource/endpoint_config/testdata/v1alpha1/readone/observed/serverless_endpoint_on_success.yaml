@@ -1,0 +1,20 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: EndpointConfig
+metadata:
+  creationTimestamp: null
+  name: single-variant-config
+spec:
+  endpointConfigName: single-variant-config
+  productionVariants:
+  - initialVariantWeight: 1
+    modelName: single-variant-config-model
+    variantName: AllTraffic
+    serverlessConfig:
+      maxConcurrency: 20
+      memorySizeInMB: 1024
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:endpoint-config/single-variant-config
+    ownerAccountID: ""
+    region: ""
+  conditions: []

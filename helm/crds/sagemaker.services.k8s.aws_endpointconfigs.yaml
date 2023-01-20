@@ -167,6 +167,17 @@ spec:
                       type: integer
                     modelName:
                       type: string
+                    serverlessConfig:
+                      description: Specifies the serverless configuration for an endpoint
+                        variant.
+                      properties:
+                        maxConcurrency:
+                          format: int64
+                          type: integer
+                        memorySizeInMB:
+                          format: int64
+                          type: integer
+                      type: object
                     variantName:
                       type: string
                     volumeSizeInGB:

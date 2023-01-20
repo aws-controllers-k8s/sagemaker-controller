@@ -200,28 +200,48 @@ func (rm *resourceManager) sdkFind(
 				if f10f1iter.CurrentInstanceCount != nil {
 					f10f1elem.CurrentInstanceCount = f10f1iter.CurrentInstanceCount
 				}
+				if f10f1iter.CurrentServerlessConfig != nil {
+					f10f1elemf2 := &svcapitypes.ProductionVariantServerlessConfig{}
+					if f10f1iter.CurrentServerlessConfig.MaxConcurrency != nil {
+						f10f1elemf2.MaxConcurrency = f10f1iter.CurrentServerlessConfig.MaxConcurrency
+					}
+					if f10f1iter.CurrentServerlessConfig.MemorySizeInMB != nil {
+						f10f1elemf2.MemorySizeInMB = f10f1iter.CurrentServerlessConfig.MemorySizeInMB
+					}
+					f10f1elem.CurrentServerlessConfig = f10f1elemf2
+				}
 				if f10f1iter.CurrentWeight != nil {
 					f10f1elem.CurrentWeight = f10f1iter.CurrentWeight
 				}
 				if f10f1iter.DeployedImages != nil {
-					f10f1elemf3 := []*svcapitypes.DeployedImage{}
-					for _, f10f1elemf3iter := range f10f1iter.DeployedImages {
-						f10f1elemf3elem := &svcapitypes.DeployedImage{}
-						if f10f1elemf3iter.ResolutionTime != nil {
-							f10f1elemf3elem.ResolutionTime = &metav1.Time{*f10f1elemf3iter.ResolutionTime}
+					f10f1elemf4 := []*svcapitypes.DeployedImage{}
+					for _, f10f1elemf4iter := range f10f1iter.DeployedImages {
+						f10f1elemf4elem := &svcapitypes.DeployedImage{}
+						if f10f1elemf4iter.ResolutionTime != nil {
+							f10f1elemf4elem.ResolutionTime = &metav1.Time{*f10f1elemf4iter.ResolutionTime}
 						}
-						if f10f1elemf3iter.ResolvedImage != nil {
-							f10f1elemf3elem.ResolvedImage = f10f1elemf3iter.ResolvedImage
+						if f10f1elemf4iter.ResolvedImage != nil {
+							f10f1elemf4elem.ResolvedImage = f10f1elemf4iter.ResolvedImage
 						}
-						if f10f1elemf3iter.SpecifiedImage != nil {
-							f10f1elemf3elem.SpecifiedImage = f10f1elemf3iter.SpecifiedImage
+						if f10f1elemf4iter.SpecifiedImage != nil {
+							f10f1elemf4elem.SpecifiedImage = f10f1elemf4iter.SpecifiedImage
 						}
-						f10f1elemf3 = append(f10f1elemf3, f10f1elemf3elem)
+						f10f1elemf4 = append(f10f1elemf4, f10f1elemf4elem)
 					}
-					f10f1elem.DeployedImages = f10f1elemf3
+					f10f1elem.DeployedImages = f10f1elemf4
 				}
 				if f10f1iter.DesiredInstanceCount != nil {
 					f10f1elem.DesiredInstanceCount = f10f1iter.DesiredInstanceCount
+				}
+				if f10f1iter.DesiredServerlessConfig != nil {
+					f10f1elemf6 := &svcapitypes.ProductionVariantServerlessConfig{}
+					if f10f1iter.DesiredServerlessConfig.MaxConcurrency != nil {
+						f10f1elemf6.MaxConcurrency = f10f1iter.DesiredServerlessConfig.MaxConcurrency
+					}
+					if f10f1iter.DesiredServerlessConfig.MemorySizeInMB != nil {
+						f10f1elemf6.MemorySizeInMB = f10f1iter.DesiredServerlessConfig.MemorySizeInMB
+					}
+					f10f1elem.DesiredServerlessConfig = f10f1elemf6
 				}
 				if f10f1iter.DesiredWeight != nil {
 					f10f1elem.DesiredWeight = f10f1iter.DesiredWeight
@@ -233,21 +253,21 @@ func (rm *resourceManager) sdkFind(
 					f10f1elem.VariantName = f10f1iter.VariantName
 				}
 				if f10f1iter.VariantStatus != nil {
-					f10f1elemf8 := []*svcapitypes.ProductionVariantStatus{}
-					for _, f10f1elemf8iter := range f10f1iter.VariantStatus {
-						f10f1elemf8elem := &svcapitypes.ProductionVariantStatus{}
-						if f10f1elemf8iter.StartTime != nil {
-							f10f1elemf8elem.StartTime = &metav1.Time{*f10f1elemf8iter.StartTime}
+					f10f1elemf10 := []*svcapitypes.ProductionVariantStatus{}
+					for _, f10f1elemf10iter := range f10f1iter.VariantStatus {
+						f10f1elemf10elem := &svcapitypes.ProductionVariantStatus{}
+						if f10f1elemf10iter.StartTime != nil {
+							f10f1elemf10elem.StartTime = &metav1.Time{*f10f1elemf10iter.StartTime}
 						}
-						if f10f1elemf8iter.Status != nil {
-							f10f1elemf8elem.Status = f10f1elemf8iter.Status
+						if f10f1elemf10iter.Status != nil {
+							f10f1elemf10elem.Status = f10f1elemf10iter.Status
 						}
-						if f10f1elemf8iter.StatusMessage != nil {
-							f10f1elemf8elem.StatusMessage = f10f1elemf8iter.StatusMessage
+						if f10f1elemf10iter.StatusMessage != nil {
+							f10f1elemf10elem.StatusMessage = f10f1elemf10iter.StatusMessage
 						}
-						f10f1elemf8 = append(f10f1elemf8, f10f1elemf8elem)
+						f10f1elemf10 = append(f10f1elemf10, f10f1elemf10elem)
 					}
-					f10f1elem.VariantStatus = f10f1elemf8
+					f10f1elem.VariantStatus = f10f1elemf10
 				}
 				f10f1 = append(f10f1, f10f1elem)
 			}
@@ -267,28 +287,48 @@ func (rm *resourceManager) sdkFind(
 			if f11iter.CurrentInstanceCount != nil {
 				f11elem.CurrentInstanceCount = f11iter.CurrentInstanceCount
 			}
+			if f11iter.CurrentServerlessConfig != nil {
+				f11elemf1 := &svcapitypes.ProductionVariantServerlessConfig{}
+				if f11iter.CurrentServerlessConfig.MaxConcurrency != nil {
+					f11elemf1.MaxConcurrency = f11iter.CurrentServerlessConfig.MaxConcurrency
+				}
+				if f11iter.CurrentServerlessConfig.MemorySizeInMB != nil {
+					f11elemf1.MemorySizeInMB = f11iter.CurrentServerlessConfig.MemorySizeInMB
+				}
+				f11elem.CurrentServerlessConfig = f11elemf1
+			}
 			if f11iter.CurrentWeight != nil {
 				f11elem.CurrentWeight = f11iter.CurrentWeight
 			}
 			if f11iter.DeployedImages != nil {
-				f11elemf2 := []*svcapitypes.DeployedImage{}
-				for _, f11elemf2iter := range f11iter.DeployedImages {
-					f11elemf2elem := &svcapitypes.DeployedImage{}
-					if f11elemf2iter.ResolutionTime != nil {
-						f11elemf2elem.ResolutionTime = &metav1.Time{*f11elemf2iter.ResolutionTime}
+				f11elemf3 := []*svcapitypes.DeployedImage{}
+				for _, f11elemf3iter := range f11iter.DeployedImages {
+					f11elemf3elem := &svcapitypes.DeployedImage{}
+					if f11elemf3iter.ResolutionTime != nil {
+						f11elemf3elem.ResolutionTime = &metav1.Time{*f11elemf3iter.ResolutionTime}
 					}
-					if f11elemf2iter.ResolvedImage != nil {
-						f11elemf2elem.ResolvedImage = f11elemf2iter.ResolvedImage
+					if f11elemf3iter.ResolvedImage != nil {
+						f11elemf3elem.ResolvedImage = f11elemf3iter.ResolvedImage
 					}
-					if f11elemf2iter.SpecifiedImage != nil {
-						f11elemf2elem.SpecifiedImage = f11elemf2iter.SpecifiedImage
+					if f11elemf3iter.SpecifiedImage != nil {
+						f11elemf3elem.SpecifiedImage = f11elemf3iter.SpecifiedImage
 					}
-					f11elemf2 = append(f11elemf2, f11elemf2elem)
+					f11elemf3 = append(f11elemf3, f11elemf3elem)
 				}
-				f11elem.DeployedImages = f11elemf2
+				f11elem.DeployedImages = f11elemf3
 			}
 			if f11iter.DesiredInstanceCount != nil {
 				f11elem.DesiredInstanceCount = f11iter.DesiredInstanceCount
+			}
+			if f11iter.DesiredServerlessConfig != nil {
+				f11elemf5 := &svcapitypes.ProductionVariantServerlessConfig{}
+				if f11iter.DesiredServerlessConfig.MaxConcurrency != nil {
+					f11elemf5.MaxConcurrency = f11iter.DesiredServerlessConfig.MaxConcurrency
+				}
+				if f11iter.DesiredServerlessConfig.MemorySizeInMB != nil {
+					f11elemf5.MemorySizeInMB = f11iter.DesiredServerlessConfig.MemorySizeInMB
+				}
+				f11elem.DesiredServerlessConfig = f11elemf5
 			}
 			if f11iter.DesiredWeight != nil {
 				f11elem.DesiredWeight = f11iter.DesiredWeight
@@ -297,21 +337,21 @@ func (rm *resourceManager) sdkFind(
 				f11elem.VariantName = f11iter.VariantName
 			}
 			if f11iter.VariantStatus != nil {
-				f11elemf6 := []*svcapitypes.ProductionVariantStatus{}
-				for _, f11elemf6iter := range f11iter.VariantStatus {
-					f11elemf6elem := &svcapitypes.ProductionVariantStatus{}
-					if f11elemf6iter.StartTime != nil {
-						f11elemf6elem.StartTime = &metav1.Time{*f11elemf6iter.StartTime}
+				f11elemf8 := []*svcapitypes.ProductionVariantStatus{}
+				for _, f11elemf8iter := range f11iter.VariantStatus {
+					f11elemf8elem := &svcapitypes.ProductionVariantStatus{}
+					if f11elemf8iter.StartTime != nil {
+						f11elemf8elem.StartTime = &metav1.Time{*f11elemf8iter.StartTime}
 					}
-					if f11elemf6iter.Status != nil {
-						f11elemf6elem.Status = f11elemf6iter.Status
+					if f11elemf8iter.Status != nil {
+						f11elemf8elem.Status = f11elemf8iter.Status
 					}
-					if f11elemf6iter.StatusMessage != nil {
-						f11elemf6elem.StatusMessage = f11elemf6iter.StatusMessage
+					if f11elemf8iter.StatusMessage != nil {
+						f11elemf8elem.StatusMessage = f11elemf8iter.StatusMessage
 					}
-					f11elemf6 = append(f11elemf6, f11elemf6elem)
+					f11elemf8 = append(f11elemf8, f11elemf8elem)
 				}
-				f11elem.VariantStatus = f11elemf6
+				f11elem.VariantStatus = f11elemf8
 			}
 			f11 = append(f11, f11elem)
 		}

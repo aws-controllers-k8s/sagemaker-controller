@@ -57,6 +57,9 @@ resources:
       Tags:
         compare:
           is_ignored: true
+    hooks:
+      delta_pre_compare:
+        code: customSetDefaults(a, b)
   Endpoint:
     reconcile: 
       requeue_on_success_seconds: 30
@@ -1017,7 +1020,6 @@ ignore:
     shape_names:
       # RSessionAppSettings is an empty struct that causes generation errors
       - RSessionAppSettings
-      - ProductionVariantServerlessConfig
       - ExecutionRoleIdentityConfig
       - HyperParameterTuningResourceConfig
       - InstanceMetadataServiceConfiguration
