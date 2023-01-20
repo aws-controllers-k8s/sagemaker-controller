@@ -28,14 +28,11 @@ func customSetDefaults(
 	if ackcompare.IsNotNil(a.ko.Spec.ProductionVariants) && ackcompare.IsNotNil(a.ko.Spec.ProductionVariants) {
 		if len(a.ko.Spec.ProductionVariants) == len(b.ko.Spec.ProductionVariants) {
 			for i, _ := range a.ko.Spec.ProductionVariants {
-				if a.ko.Spec.ProductionVariants[i].ServerlessConfig != nil {
-					if a.ko.Spec.ProductionVariants[i].VolumeSizeInGB == nil && b.ko.Spec.ProductionVariants[i].VolumeSizeInGB != nil {
-						a.ko.Spec.ProductionVariants[i].VolumeSizeInGB = b.ko.Spec.ProductionVariants[i].VolumeSizeInGB
-					}
+				if a.ko.Spec.ProductionVariants[i].ServerlessConfig != nil && a.ko.Spec.ProductionVariants[i].VolumeSizeInGB == nil &&
+					b.ko.Spec.ProductionVariants[i].VolumeSizeInGB != nil {
+					a.ko.Spec.ProductionVariants[i].VolumeSizeInGB = b.ko.Spec.ProductionVariants[i].VolumeSizeInGB
 				}
-
 			}
 		}
-
 	}
 }
