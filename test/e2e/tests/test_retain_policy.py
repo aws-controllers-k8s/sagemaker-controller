@@ -28,16 +28,18 @@ from e2e import (
 
 from e2e.replacement_values import REPLACEMENT_VALUES
 
+RESOURCE_PLURAL = "notebookinstancelifecycleconfigs"
+RESOURCE_SPEC_FILE = "notebook_instance_lifecycle_retain"
 
 @pytest.fixture(scope="module")
-def notebook_instance_lifecycle_config():
+def retained_notebook_instance_lifecycle_config():
     notebook_instance_lfc_name = random_suffix_name("notebookinstancelfc", 40)
     replacements = REPLACEMENT_VALUES.copy()
     replacements["NOTEBOOK_INSTANCE_LFC_NAME"] = notebook_instance_lfc_name
     reference, spec, resource = create_sagemaker_resource(
-        resource_plural="notebookinstancelifecycleconfigs",
+        resource_plural=RESOURCE_PLURAL,
         resource_name=notebook_instance_lfc_name,
-        spec_file="notebook_instance_lifecycle_retain",
+        spec_file=RESOURCE_SPEC_FILE,
         replacements=replacements,
     )
     assert resource is not None
@@ -71,9 +73,11 @@ def delete_notebook_instance_lifecycle_config(notebook_instance_lfc_name: str):
 
 
 @service_marker
-class TestNotebookInstanceLifecycleConfig:
-    def test_retain_resource(self, notebook_instance_lifecycle_config):
-        (reference, resource, _) = notebook_instance_lifecycle_config
+class TestRetainPolicy:
+    def test_retain_notebook_instance_lifecycle(
+        self, retained_notebook_instance_lifecycle_config
+    ):
+        (reference, resource, _) = retained_notebook_instance_lifecycle_config
         assert k8s.get_resource_exists(reference)
 
         # Getting the resource name
