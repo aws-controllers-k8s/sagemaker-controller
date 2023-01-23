@@ -45,6 +45,7 @@ def notebook_instance_lifecycleConfig():
     notebook_instance_lfc_name = random_suffix_name("notebookinstancelfc", 50)
     replacements = REPLACEMENT_VALUES.copy()
     replacements["NOTEBOOK_INSTANCE_LFC_NAME"] = notebook_instance_lfc_name
+    replacements["DELETION_POLICY"] = "delete"
     reference, spec, resource = create_sagemaker_resource(
         resource_plural=RESOURCE_PLURAL,
         resource_name=notebook_instance_lfc_name,

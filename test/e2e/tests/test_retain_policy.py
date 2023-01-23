@@ -30,13 +30,14 @@ from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
 
 RESOURCE_PLURAL = cfg.NOTEBOOK_INSTANCE_LIFECYCLE_RESOURCE_PLURAL
-RESOURCE_SPEC_FILE = "notebook_instance_lifecycle_retain"
+RESOURCE_SPEC_FILE = "notebook_instance_lifecycle_config"
 
 @pytest.fixture(scope="module")
 def retained_notebook_instance_lifecycle_config():
     notebook_instance_lfc_name = random_suffix_name("notebookinstancelfc", 40)
     replacements = REPLACEMENT_VALUES.copy()
     replacements["NOTEBOOK_INSTANCE_LFC_NAME"] = notebook_instance_lfc_name
+    replacements["DELETION_POLICY"] = "retain"
     reference, spec, resource = create_sagemaker_resource(
         resource_plural=RESOURCE_PLURAL,
         resource_name=notebook_instance_lfc_name,

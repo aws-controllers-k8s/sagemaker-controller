@@ -2,6 +2,8 @@ apiVersion: sagemaker.services.k8s.aws/v1alpha1
 kind: NotebookInstanceLifecycleConfig
 metadata:
   name: $NOTEBOOK_INSTANCE_LFC_NAME
+  annotations:
+    services.k8s.aws/deletion-policy: $DELETION_POLICY
 spec:
   notebookInstanceLifecycleConfigName: $NOTEBOOK_INSTANCE_LFC_NAME
   onStart:
