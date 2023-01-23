@@ -32,6 +32,7 @@ from e2e.common import config as cfg
 RESOURCE_PLURAL = cfg.NOTEBOOK_INSTANCE_LIFECYCLE_RESOURCE_PLURAL
 RESOURCE_SPEC_FILE = "notebook_instance_lifecycle_config"
 
+
 @pytest.fixture(scope="module")
 def retained_notebook_instance_lifecycle_config():
     notebook_instance_lfc_name = random_suffix_name("notebookinstancelfc", 40)
@@ -47,7 +48,10 @@ def retained_notebook_instance_lifecycle_config():
     assert resource is not None
     yield (reference, resource, spec)
 
-    delete_notebook_instance_lifecycle_config(notebook_instance_lfc_name)
+    deletion_resp = delete_notebook_instance_lifecycle_config(
+        notebook_instance_lfc_name
+    )
+    assert deletion_resp is not None
 
 
 def get_notebook_instance_lifecycle_config(notebook_instance_lfc_name: str):
@@ -65,13 +69,15 @@ def get_notebook_instance_lifecycle_config(notebook_instance_lfc_name: str):
 
 def delete_notebook_instance_lifecycle_config(notebook_instance_lfc_name: str):
     try:
-        sagemaker_client().delete_notebook_instance_lifecycle_config(
+        resp = sagemaker_client().delete_notebook_instance_lifecycle_config(
             NotebookInstanceLifecycleConfigName=notebook_instance_lfc_name
         )
+        return resp
     except botocore.exceptions.ClientError as error:
         logging.error(
             f"SageMaker could not find a Notebook Instance Lifecycle Configuration with the name {notebook_instance_lfc_name}. Error {error}"
         )
+        return None
 
 
 @service_marker
