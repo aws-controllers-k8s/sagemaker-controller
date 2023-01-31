@@ -57,8 +57,8 @@ spec:
                   a new event occurs that corresponds to the creation or update of
                   a Record in a FeatureGroup. All Records in the FeatureGroup must
                   have a corresponding EventTime. \n An EventTime can be a String
-                  or Fractional. \n * Fractional: EventTime feature values must be
-                  a Unix timestamp in seconds. \n * String: EventTime feature values
+                  or Fractional. \n - Fractional: EventTime feature values must be
+                  a Unix timestamp in seconds. \n - String: EventTime feature values
                   must be an ISO-8601 string in the format. The following formats
                   are supported yyyy-MM-dd'T'HH:mm:ssZ and yyyy-MM-dd'T'HH:mm:ss.SSSZ
                   where yyyy, MM, and dd represent the year, month, and day respectively
@@ -85,15 +85,15 @@ spec:
               featureGroupName:
                 description: "The name of the FeatureGroup. The name must be unique
                   within an Amazon Web Services Region in an Amazon Web Services account.
-                  The name: \n * Must start and end with an alphanumeric character.
-                  \n * Can only contain alphanumeric character and hyphens. Spaces
+                  The name: \n - Must start and end with an alphanumeric character.
+                  \n - Can only contain alphanumeric character and hyphens. Spaces
                   are not allowed."
                 type: string
               offlineStoreConfig:
                 description: "Use this to configure an OfflineFeatureStore. This parameter
-                  allows you to specify: \n * The Amazon Simple Storage Service (Amazon
-                  S3) location of an OfflineStore. \n * A configuration for an Amazon
-                  Web Services Glue or Amazon Web Services Hive data catalog. \n *
+                  allows you to specify: \n - The Amazon Simple Storage Service (Amazon
+                  S3) location of an OfflineStore. \n - A configuration for an Amazon
+                  Web Services Glue or Amazon Web Services Hive data catalog. \n -
                   An KMS encryption key to encrypt the Amazon S3 location used for
                   OfflineStore. If KMS encryption key is not specified, by default
                   we encrypt all data at rest using Amazon Web Services KMS key. By
@@ -146,8 +146,8 @@ spec:
                   a Record defined in the FeatureStore. Only the latest record per
                   identifier value will be stored in the OnlineStore. RecordIdentifierFeatureName
                   must be one of feature definitions' names. \n You use the RecordIdentifierFeatureName
-                  to access data in a FeatureStore. \n This name: \n * Must start
-                  and end with an alphanumeric character. \n * Can only contains alphanumeric
+                  to access data in a FeatureStore. \n This name: \n - Must start
+                  and end with an alphanumeric character. \n - Can only contains alphanumeric
                   characters, hyphens, underscores. Spaces are not allowed."
                 type: string
               roleARN:

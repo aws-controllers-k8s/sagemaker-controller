@@ -252,10 +252,10 @@ spec:
               inferenceSpecification:
                 description: "Specifies details about inference jobs that can be run
                   with models based on this model package, including the following:
-                  \n * The Amazon ECR paths of containers that contain the inference
-                  code and model artifacts. \n * The instance types that the model
+                  \n - The Amazon ECR paths of containers that contain the inference
+                  code and model artifacts. \n - The instance types that the model
                   package supports for transform jobs and real-time endpoints used
-                  for inference. \n * The input and output content formats that the
+                  for inference. \n - The input and output content formats that the
                   model package supports for inference."
                 properties:
                   containers:

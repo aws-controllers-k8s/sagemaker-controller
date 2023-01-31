@@ -25,10 +25,10 @@ type DomainSpec struct {
 
 	// Specifies the VPC used for non-EFS traffic. The default value is PublicInternetOnly.
 	//
-	//    * PublicInternetOnly - Non-EFS traffic is through a VPC managed by Amazon
-	//    SageMaker, which allows direct internet access
+	//   - PublicInternetOnly - Non-EFS traffic is through a VPC managed by Amazon
+	//     SageMaker, which allows direct internet access
 	//
-	//    * VpcOnly - All Studio traffic is through the specified VPC and subnets
+	//   - VpcOnly - All Studio traffic is through the specified VPC and subnets
 	AppNetworkAccessType *string `json:"appNetworkAccessType,omitempty"`
 	// The entity that creates and manages the required security groups for inter-app
 	// communication in VPCOnly mode. Required when CreateDomain.AppNetworkAccessType

@@ -38,13 +38,13 @@ type EndpointConfigSpec struct {
 	//
 	// The KmsKeyId can be any of the following formats:
 	//
-	//    * Key ID: 1234abcd-12ab-34cd-56ef-1234567890ab
+	//   - Key ID: 1234abcd-12ab-34cd-56ef-1234567890ab
 	//
-	//    * Key ARN: arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
+	//   - Key ARN: arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
 	//
-	//    * Alias name: alias/ExampleAlias
+	//   - Alias name: alias/ExampleAlias
 	//
-	//    * Alias name ARN: arn:aws:kms:us-west-2:111122223333:alias/ExampleAlias
+	//   - Alias name ARN: arn:aws:kms:us-west-2:111122223333:alias/ExampleAlias
 	//
 	// The KMS key policy must grant permission to the IAM role that you specify
 	// in your CreateEndpoint, UpdateEndpoint requests. For more information, refer

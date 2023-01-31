@@ -44,9 +44,9 @@ spec:
             properties:
               appNetworkAccessType:
                 description: "Specifies the VPC used for non-EFS traffic. The default
-                  value is PublicInternetOnly. \n * PublicInternetOnly - Non-EFS traffic
+                  value is PublicInternetOnly. \n - PublicInternetOnly - Non-EFS traffic
                   is through a VPC managed by Amazon SageMaker, which allows direct
-                  internet access \n * VpcOnly - All Studio traffic is through the
+                  internet access \n - VpcOnly - All Studio traffic is through the
                   specified VPC and subnets"
                 type: string
               appSecurityGroupManagement:
