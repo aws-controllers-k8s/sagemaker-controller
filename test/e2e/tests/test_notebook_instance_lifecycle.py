@@ -32,9 +32,12 @@ import random
 
 from e2e.replacement_values import REPLACEMENT_VALUES
 from time import sleep
+from e2e.common import config as cfg
 
 DELETE_WAIT_PERIOD = 16
 DELETE_PERIOD_LENGTH = 30
+UPDATE_WAIT_PERIOD_IN_SECONDS = 5
+RESOURCE_PLURAL = cfg.NOTEBOOK_INSTANCE_LIFECYCLE_RESOURCE_PLURAL
 
 
 @pytest.fixture(scope="module")
@@ -42,8 +45,9 @@ def notebook_instance_lifecycleConfig():
     notebook_instance_lfc_name = random_suffix_name("notebookinstancelfc", 50)
     replacements = REPLACEMENT_VALUES.copy()
     replacements["NOTEBOOK_INSTANCE_LFC_NAME"] = notebook_instance_lfc_name
+    replacements["DELETION_POLICY"] = "delete"
     reference, spec, resource = create_sagemaker_resource(
-        resource_plural="notebookinstancelifecycleconfigs",
+        resource_plural=RESOURCE_PLURAL,
         resource_name=notebook_instance_lfc_name,
         spec_file="notebook_instance_lifecycle_config",
         replacements=replacements,
@@ -110,6 +114,10 @@ class TestNotebookInstanceLifecycleConfig:
         # We need to keep track of the current time so its best to just do
         # the update test with the create test.
         # update content is pip install six
+
+        # Sometimes creation can happen in under a second.
+        sleep(UPDATE_WAIT_PERIOD_IN_SECONDS)
+
         assert "lastModifiedTime" in resource["status"]
         last_modified_time = resource["status"]["lastModifiedTime"]
         update_content = "cGlwIGluc3RhbGwgc2l4"
