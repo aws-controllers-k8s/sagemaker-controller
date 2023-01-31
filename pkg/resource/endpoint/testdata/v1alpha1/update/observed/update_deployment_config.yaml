@@ -1,0 +1,46 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: Endpoint
+metadata:
+  annotations:
+    sagemaker.services.k8s.aws/last-endpoint-config-for-update: xgboost-endpoint-single-variant-config-updated
+  creationTimestamp: null
+  name: xgboost-endpoint
+spec:
+  endpointConfigName: xgboost-endpoint-single-variant-config-updated
+  endpointName: xgboost-endpoint
+  deploymentConfig:
+    autoRollbackConfiguration:
+      alarms:
+      - alarmName: 5xalarm-endpointtest
+    blueGreenUpdatePolicy:
+      maximumExecutionTimeoutInSeconds: 600
+      terminationWaitInSeconds: 100
+      trafficRoutingConfiguration:
+        linearStepSize:
+          type_: INSTANCE_COUNT
+          value: 1
+        type_: LINEAR
+        waitIntervalInSeconds: 100
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:endpoint/xgboost-endpoint
+    ownerAccountID: ""
+    region: ""
+  conditions:
+  - lastTransitionTime: "0001-01-01T00:00:00Z"
+    message: Endpoint is in Updating status.
+    status: "False"
+    type: ACK.ResourceSynced
+  creationTime: "0001-01-01T00:00:00Z"
+  endpointStatus: Updating
+  lastModifiedTime: "0001-01-01T00:00:00Z"
+  productionVariants:
+  - currentInstanceCount: 2
+    currentWeight: 1
+    deployedImages:
+    - resolutionTime: "0001-01-01T00:00:00Z"
+      resolvedImage: 433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost@sha256:54004f910467ebf7cfa71b5523b81695d103abf21a37d38dc84d63ab8d510c35
+      specifiedImage: 433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost:latest
+    desiredInstanceCount: 2
+    desiredWeight: 1
+    variantName: variant-1

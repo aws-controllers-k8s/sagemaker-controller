@@ -26,6 +26,17 @@ tests:
         expect:
           latest_state: "v1alpha1/create/observed/success_after_create.yaml"
           error: nil
+      - name: "Create=DeploymentConfig"
+        description: "Create a new endpoint successfully with a Deployment Config"
+        given:
+          desired_state: "v1alpha1/create/desired/success_before_create_deployment_config.yaml"
+          svc_api:
+            - operation: CreateEndpointWithContext
+              output_fixture: "sdkapi/create/create_success.json"
+        invoke: Create
+        expect:
+          latest_state: "v1alpha1/create/observed/success_after_create_deployment_config.yaml"
+          error: nil
   - name: "Endpoint readOne tests"
     description: "Testing the readOne operation"
     scenarios:
@@ -111,6 +122,16 @@ tests:
         invoke: ReadOne
         expect:
           latest_state: "v1alpha1/readone/observed/failed_status_on_describe.yaml"
+      - name: "ReadOne=UpdateDeploymentConfig"
+        description: "Testing how readOne handles the Update with the deployment Config."
+        given: 
+          desired_state: "v1alpha1/readone/desired/updating_deployment.yaml"
+          svc_api:
+            - operation: DescribeEndpointWithContext
+              output_fixture: "sdkapi/describe/update_deployment_config.json"
+        invoke: ReadOne
+        expect:
+          latest_state: "v1alpha1/readone/observed/updating_deployment.yaml"
   - name: "Endpoint update tests"
     description: "Testing the Update operation"
     scenarios:
@@ -165,6 +186,17 @@ tests:
         invoke: Update
         expect:
           latest_state: "v1alpha1/update/observed/update_attempted_success.yaml"
+      - name: "Update=DeploymentConfig"
+        description: "This test checks if update Endpoint is called and lastEndpointConfigNameForUpdate annotation is set"
+        given:
+          desired_state: "v1alpha1/update/desired/update_deployment_config.yaml"
+          latest_state: "v1alpha1/update/desired/latest_inservice_pre_update.yaml"
+          svc_api:
+            - operation: UpdateEndpointWithContext
+              output_fixture: "sdkapi/update/update_success.json"
+        invoke: Update
+        expect:
+          latest_state: "v1alpha1/update/observed/update_deployment_config.yaml"
   - name: "Endpoint delete tests"
     description: "Testing the delete operation"
     scenarios:

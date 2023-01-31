@@ -1,0 +1,20 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: Endpoint
+metadata:
+  name: xgboost-endpoint
+spec:
+  endpointConfigName: xgboost-endpoint-single-variant-config
+  endpointName: xgboost-endpoint
+  deploymentConfig:
+    autoRollbackConfiguration:
+      alarms:
+      - alarmName: 5xalarm-endpointtest
+    blueGreenUpdatePolicy:
+      maximumExecutionTimeoutInSeconds: 600
+      terminationWaitInSeconds: 100
+      trafficRoutingConfiguration:
+        linearStepSize:
+          type_: INSTANCE_COUNT
+          value: 1
+        type_: LINEAR
+        waitIntervalInSeconds: 100
