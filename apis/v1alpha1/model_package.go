@@ -52,14 +52,14 @@ type ModelPackageSpec struct {
 	// Specifies details about inference jobs that can be run with models based
 	// on this model package, including the following:
 	//
-	//    * The Amazon ECR paths of containers that contain the inference code and
-	//    model artifacts.
+	//   - The Amazon ECR paths of containers that contain the inference code and
+	//     model artifacts.
 	//
-	//    * The instance types that the model package supports for transform jobs
-	//    and real-time endpoints used for inference.
+	//   - The instance types that the model package supports for transform jobs
+	//     and real-time endpoints used for inference.
 	//
-	//    * The input and output content formats that the model package supports
-	//    for inference.
+	//   - The input and output content formats that the model package supports
+	//     for inference.
 	InferenceSpecification *InferenceSpecification `json:"inferenceSpecification,omitempty"`
 	MetadataProperties     *MetadataProperties     `json:"metadataProperties,omitempty"`
 	// Whether the model is approved for deployment.

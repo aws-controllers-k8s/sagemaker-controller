@@ -82,4 +82,4 @@ status:
   conditions:
   - message: not implemented
     status: "True"
-    type: ACK.Recoverable
+    type: ACK.Terminal

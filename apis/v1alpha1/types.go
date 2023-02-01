@@ -488,13 +488,13 @@ type ClarifyCheckStepMetadata struct {
 // The configuration for the SHAP baseline (https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-feature-attribute-shap-baselines.html)
 // (also called the background or reference dataset) of the Kernal SHAP algorithm.
 //
-//    * The number of records in the baseline data determines the size of the
-//    synthetic dataset, which has an impact on latency of explainability requests.
-//    For more information, see the Synthetic data of Configure and create an
-//    endpoint (https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-online-explainability-create-endpoint.html).
+//   - The number of records in the baseline data determines the size of the
+//     synthetic dataset, which has an impact on latency of explainability requests.
+//     For more information, see the Synthetic data of Configure and create an
+//     endpoint (https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-online-explainability-create-endpoint.html).
 //
-//    * ShapBaseline and ShapBaselineUri are mutually exclusive parameters.
-//    One or the either is required to configure a SHAP baseline.
+//   - ShapBaseline and ShapBaselineUri are mutually exclusive parameters.
+//     One or the either is required to configure a SHAP baseline.
 type ClarifyShapBaselineConfig struct {
 	ShapBaselineURI *string `json:"shapBaselineURI,omitempty"`
 }
@@ -1003,11 +1003,11 @@ type Experiment struct {
 // Associates a SageMaker job as a trial component with an experiment and trial.
 // Specified when you call the following APIs:
 //
-//    * CreateProcessingJob
+//   - CreateProcessingJob
 //
-//    * CreateTrainingJob
+//   - CreateTrainingJob
 //
-//    * CreateTransformJob
+//   - CreateTransformJob
 type ExperimentConfig struct {
 	ExperimentName            *string `json:"experimentName,omitempty"`
 	TrialComponentDisplayName *string `json:"trialComponentDisplayName,omitempty"`

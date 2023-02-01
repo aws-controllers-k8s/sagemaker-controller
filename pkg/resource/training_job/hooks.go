@@ -147,10 +147,10 @@ func (rm *resourceManager) isProfilerRemoved(desired *resource, latest *resource
 
 // customSetUpdateInput modifies the input of UpdateTrainingJob.
 // Three conditions:
-// 1. Customer updates both profiler parameters: Recreate the input for profiler Rule.
-// 2. Customer only updates Profiler Config: Set the profiler rule configuration to nil to avoid validation error.
-// 3. Customer only updates Rule Configurations: Recreate the input for profiler Rule and set Profiler config to nil.
-//	  safer to do this because the "only add" behavior might reappear.
+//  1. Customer updates both profiler parameters: Recreate the input for profiler Rule.
+//  2. Customer only updates Profiler Config: Set the profiler rule configuration to nil to avoid validation error.
+//  3. Customer only updates Rule Configurations: Recreate the input for profiler Rule and set Profiler config to nil.
+//     safer to do this because the "only add" behavior might reappear.
 func (rm *resourceManager) customSetUpdateInput(desired *resource, latest *resource, delta *ackcompare.Delta, input *svcsdk.UpdateTrainingJobInput) error {
 	if !delta.DifferentAt("Spec.ProfilerConfig") {
 		input.SetProfilerConfig(nil)

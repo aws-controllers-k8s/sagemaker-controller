@@ -271,7 +271,7 @@ func (rm *resourceManager) sdkUpdate(
 	ko := desired.ko.DeepCopy()
 
 	rm.setStatusDefaults(ko)
-	//Done because controller finishes reconciling after update.
+	// Done because controller finishes reconciling after update.
 	return nil, requeueWaitWhileUpdating
 	return &resource{ko}, nil
 }
