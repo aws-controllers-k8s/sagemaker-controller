@@ -112,7 +112,7 @@
         invoke: Update
         expect:
           latest_state: "v1alpha1/update/observed/error_on_update.yaml"
-          error: "not implemented"
+          error: "resource is in terminal condition"
   - name: "Endpoint config delete tests"
     description: "Testing the delete operation"
     scenarios:
