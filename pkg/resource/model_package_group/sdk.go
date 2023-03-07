@@ -77,6 +77,9 @@ func (rm *resourceManager) sdkFind(
 	resp, err = rm.sdkapi.DescribeModelPackageGroupWithContext(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeModelPackageGroup", err)
 	if err != nil {
+		if reqErr, ok := ackerr.AWSRequestFailure(err); ok && reqErr.StatusCode() == 404 {
+			return nil, ackerr.NotFound
+		}
 		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ValidationException" && strings.HasSuffix(awsErr.Message(), "does not exist.") {
 			return nil, ackerr.NotFound
 		}
