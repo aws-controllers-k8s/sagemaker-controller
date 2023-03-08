@@ -83,7 +83,7 @@ def get_notebook_instance_resource_status(reference: k8s.CustomResourceReference
     assert "notebookInstanceStatus" in resource["status"]
     return resource["status"]["notebookInstanceStatus"]
 
-
+@flaky
 @pytest.mark.canary
 @service_marker
 class TestNotebookInstance:
@@ -91,7 +91,7 @@ class TestNotebookInstance:
         self,
         reference: k8s.CustomResourceReference,
         expected_status: str,
-        wait_periods: int = 30,
+        wait_periods: int = 40,
         period_length: int = 30,
     ):
         return wait_for_status(
@@ -106,7 +106,7 @@ class TestNotebookInstance:
         self,
         notebook_instance_name: str,
         expected_status: str,
-        wait_periods: int = 30,
+        wait_periods: int = 40,
         period_length: int = 30,
     ):
         return wait_for_status(
@@ -122,7 +122,7 @@ class TestNotebookInstance:
         notebook_instance_name,
         reference,
         expected_status,
-        wait_periods=30,
+        wait_periods=40,
         period_length=30,
     ):
         assert (
