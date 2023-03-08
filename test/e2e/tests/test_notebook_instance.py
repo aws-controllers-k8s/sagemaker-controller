@@ -83,7 +83,7 @@ def get_notebook_instance_resource_status(reference: k8s.CustomResourceReference
     assert "notebookInstanceStatus" in resource["status"]
     return resource["status"]["notebookInstanceStatus"]
 
-@flaky
+@flaky(max_runs=2, min_passes=1)
 @pytest.mark.canary
 @service_marker
 class TestNotebookInstance:
