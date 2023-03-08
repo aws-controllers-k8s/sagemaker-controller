@@ -28,6 +28,8 @@ from e2e import (
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 import random
+from flaky import flaky
+
 
 DELETE_WAIT_PERIOD = 16
 DELETE_WAIT_LENGTH = 30
