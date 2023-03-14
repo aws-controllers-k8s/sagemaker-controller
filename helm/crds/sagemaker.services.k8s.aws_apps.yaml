@@ -90,13 +90,13 @@ spec:
                   type: object
                 type: array
               userProfileName:
-                description: The user profile name.
+                description: The user profile name. If this value is not set, then
+                  SpaceName must be set.
                 type: string
             required:
             - appName
             - appType
             - domainID
-            - userProfileName
             type: object
           status:
             description: AppStatus defines the observed state of App

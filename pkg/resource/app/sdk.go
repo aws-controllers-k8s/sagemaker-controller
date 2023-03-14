@@ -152,7 +152,7 @@ func (rm *resourceManager) sdkFind(
 func (rm *resourceManager) requiredFieldsMissingFromReadOneInput(
 	r *resource,
 ) bool {
-	return r.ko.Spec.DomainID == nil || r.ko.Spec.UserProfileName == nil || r.ko.Spec.AppType == nil || r.ko.Spec.AppName == nil
+	return r.ko.Spec.DomainID == nil || r.ko.Spec.AppType == nil || r.ko.Spec.AppName == nil
 
 }
 

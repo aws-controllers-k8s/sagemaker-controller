@@ -44,9 +44,8 @@ type AppSpec struct {
 	// Each tag consists of a key and an optional value. Tag keys must be unique
 	// per resource.
 	Tags []*Tag `json:"tags,omitempty"`
-	// The user profile name.
-	// +kubebuilder:validation:Required
-	UserProfileName *string `json:"userProfileName"`
+	// The user profile name. If this value is not set, then SpaceName must be set.
+	UserProfileName *string `json:"userProfileName,omitempty"`
 }
 
 // AppStatus defines the observed state of App

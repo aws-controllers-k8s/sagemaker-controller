@@ -133,8 +133,7 @@ spec:
                     type: object
                   strategy:
                     description: The strategy hyperparameter tuning uses to find the
-                      best combination of hyperparameters for your model. Currently,
-                      the only supported value is Bayesian.
+                      best combination of hyperparameters for your model.
                     type: string
                   trainingJobEarlyStoppingType:
                     type: string
@@ -427,8 +426,9 @@ spec:
                         type: string
                     type: object
                   resourceConfig:
-                    description: Describes the resources, including ML compute instances
-                      and ML storage volumes, to use for model training.
+                    description: Describes the resources, including machine learning
+                      (ML) compute instances and ML storage volumes, to use for model
+                      training.
                     properties:
                       instanceCount:
                         format: int64
@@ -790,8 +790,9 @@ spec:
                           type: string
                       type: object
                     resourceConfig:
-                      description: Describes the resources, including ML compute instances
-                        and ML storage volumes, to use for model training.
+                      description: Describes the resources, including machine learning
+                        (ML) compute instances and ML storage volumes, to use for
+                        model training.
                       properties:
                         instanceCount:
                           format: int64
@@ -977,9 +978,9 @@ spec:
                   failureReason:
                     type: string
                   finalHyperParameterTuningJobObjectiveMetric:
-                    description: Shows the final value for the objective metric for
-                      a training job that was launched by a hyperparameter tuning
-                      job. You define the objective metric in the HyperParameterTuningJobObjective
+                    description: Shows the latest objective metric emitted by a training
+                      job that was launched by a hyperparameter tuning job. You define
+                      the objective metric in the HyperParameterTuningJobObjective
                       parameter of HyperParameterTuningJobConfig.
                     properties:
                       metricName:
@@ -1065,9 +1066,9 @@ spec:
                   failureReason:
                     type: string
                   finalHyperParameterTuningJobObjectiveMetric:
-                    description: Shows the final value for the objective metric for
-                      a training job that was launched by a hyperparameter tuning
-                      job. You define the objective metric in the HyperParameterTuningJobObjective
+                    description: Shows the latest objective metric emitted by a training
+                      job that was launched by a hyperparameter tuning job. You define
+                      the objective metric in the HyperParameterTuningJobObjective
                       parameter of HyperParameterTuningJobConfig.
                     properties:
                       metricName:

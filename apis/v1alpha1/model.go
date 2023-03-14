@@ -21,6 +21,8 @@ import (
 )
 
 // ModelSpec defines the desired state of Model.
+//
+// The properties of a model as returned by the Search API.
 type ModelSpec struct {
 
 	// Specifies the containers in the inference pipeline.
