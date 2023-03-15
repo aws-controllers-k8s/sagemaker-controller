@@ -115,16 +115,16 @@ spec:
                     type: string
                 type: object
               debugHookConfig:
-                description: Configuration information for the Debugger hook parameters,
-                  metric and tensor collections, and storage paths. To learn more
-                  about how to configure the DebugHookConfig parameter, see Use the
-                  SageMaker and Debugger Configuration API Operations to Create, Update,
-                  and Debug Your Training Job (https://docs.aws.amazon.com/sagemaker/latest/dg/debugger-createtrainingjob-api.html).
+                description: Configuration information for the Amazon SageMaker Debugger
+                  hook parameters, metric and tensor collections, and storage paths.
+                  To learn more about how to configure the DebugHookConfig parameter,
+                  see Use the SageMaker and Debugger Configuration API Operations
+                  to Create, Update, and Debug Your Training Job (https://docs.aws.amazon.com/sagemaker/latest/dg/debugger-createtrainingjob-api.html).
                 properties:
                   collectionConfigurations:
                     items:
-                      description: Configuration information for the Debugger output
-                        tensor collections.
+                      description: Configuration information for the Amazon SageMaker
+                        Debugger output tensor collections.
                       properties:
                         collectionName:
                           type: string
@@ -144,8 +144,8 @@ spec:
                     type: string
                 type: object
               debugRuleConfigurations:
-                description: Configuration information for Debugger rules for debugging
-                  output tensors.
+                description: Configuration information for Amazon SageMaker Debugger
+                  rules for debugging output tensors.
                 items:
                   description: Configuration information for SageMaker Debugger rules
                     for debugging. To learn more about how to configure the DebugRuleConfiguration
@@ -357,8 +357,8 @@ spec:
                     type: string
                 type: object
               profilerConfig:
-                description: Configuration information for Debugger system monitoring,
-                  framework profiling, and storage paths.
+                description: Configuration information for Amazon SageMaker Debugger
+                  system monitoring, framework profiling, and storage paths.
                 properties:
                   profilingIntervalInMilliseconds:
                     format: int64
@@ -371,8 +371,8 @@ spec:
                     type: string
                 type: object
               profilerRuleConfigurations:
-                description: Configuration information for Debugger rules for profiling
-                  system and framework metrics.
+                description: Configuration information for Amazon SageMaker Debugger
+                  rules for profiling system and framework metrics.
                 items:
                   description: Configuration information for profiling rules.
                   properties:
@@ -498,8 +498,8 @@ spec:
                   type: object
                 type: array
               tensorBoardOutputConfig:
-                description: Configuration of storage locations for the Debugger TensorBoard
-                  output data.
+                description: Configuration of storage locations for the Amazon SageMaker
+                  Debugger TensorBoard output data.
                 properties:
                   localPath:
                     type: string
@@ -604,8 +604,8 @@ spec:
                 format: date-time
                 type: string
               debugRuleEvaluationStatuses:
-                description: Evaluation status of Debugger rules for debugging on
-                  a training job.
+                description: Evaluation status of Amazon SageMaker Debugger rules
+                  for debugging on a training job.
                 items:
                   description: Information about the status of the rule evaluation.
                   properties:
@@ -638,8 +638,8 @@ spec:
                     type: string
                 type: object
               profilerRuleEvaluationStatuses:
-                description: Evaluation status of Debugger rules for profiling on
-                  a training job.
+                description: Evaluation status of Amazon SageMaker Debugger rules
+                  for profiling on a training job.
                 items:
                   description: Information about the status of the rule evaluation.
                   properties:

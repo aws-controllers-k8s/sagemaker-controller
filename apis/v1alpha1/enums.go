@@ -210,6 +210,20 @@ const (
 	AuthMode_IAM AuthMode = "IAM"
 )
 
+type AutoMLAlgorithm string
+
+const (
+	AutoMLAlgorithm_xgboost        AutoMLAlgorithm = "xgboost"
+	AutoMLAlgorithm_linear_learner AutoMLAlgorithm = "linear-learner"
+	AutoMLAlgorithm_mlp            AutoMLAlgorithm = "mlp"
+	AutoMLAlgorithm_lightgbm       AutoMLAlgorithm = "lightgbm"
+	AutoMLAlgorithm_catboost       AutoMLAlgorithm = "catboost"
+	AutoMLAlgorithm_randomforest   AutoMLAlgorithm = "randomforest"
+	AutoMLAlgorithm_extra_trees    AutoMLAlgorithm = "extra-trees"
+	AutoMLAlgorithm_nn_torch       AutoMLAlgorithm = "nn-torch"
+	AutoMLAlgorithm_fastai         AutoMLAlgorithm = "fastai"
+)
+
 type AutoMLChannelType string
 
 const (
@@ -259,11 +273,19 @@ const (
 type AutoMLMetricEnum string
 
 const (
-	AutoMLMetricEnum_Accuracy AutoMLMetricEnum = "Accuracy"
-	AutoMLMetricEnum_MSE      AutoMLMetricEnum = "MSE"
-	AutoMLMetricEnum_F1       AutoMLMetricEnum = "F1"
-	AutoMLMetricEnum_F1macro  AutoMLMetricEnum = "F1macro"
-	AutoMLMetricEnum_AUC      AutoMLMetricEnum = "AUC"
+	AutoMLMetricEnum_Accuracy         AutoMLMetricEnum = "Accuracy"
+	AutoMLMetricEnum_MSE              AutoMLMetricEnum = "MSE"
+	AutoMLMetricEnum_F1               AutoMLMetricEnum = "F1"
+	AutoMLMetricEnum_F1macro          AutoMLMetricEnum = "F1macro"
+	AutoMLMetricEnum_AUC              AutoMLMetricEnum = "AUC"
+	AutoMLMetricEnum_RMSE             AutoMLMetricEnum = "RMSE"
+	AutoMLMetricEnum_MAE              AutoMLMetricEnum = "MAE"
+	AutoMLMetricEnum_R2               AutoMLMetricEnum = "R2"
+	AutoMLMetricEnum_BalancedAccuracy AutoMLMetricEnum = "BalancedAccuracy"
+	AutoMLMetricEnum_Precision        AutoMLMetricEnum = "Precision"
+	AutoMLMetricEnum_PrecisionMacro   AutoMLMetricEnum = "PrecisionMacro"
+	AutoMLMetricEnum_Recall           AutoMLMetricEnum = "Recall"
+	AutoMLMetricEnum_RecallMacro      AutoMLMetricEnum = "RecallMacro"
 )
 
 type AutoMLMetricExtendedEnum string
@@ -283,6 +305,7 @@ const (
 	AutoMLMetricExtendedEnum_Recall           AutoMLMetricExtendedEnum = "Recall"
 	AutoMLMetricExtendedEnum_RecallMacro      AutoMLMetricExtendedEnum = "RecallMacro"
 	AutoMLMetricExtendedEnum_LogLoss          AutoMLMetricExtendedEnum = "LogLoss"
+	AutoMLMetricExtendedEnum_InferenceLatency AutoMLMetricExtendedEnum = "InferenceLatency"
 )
 
 type AutoMLMode string
@@ -481,6 +504,13 @@ const (
 	CompilationJobStatus_STARTING   CompilationJobStatus = "STARTING"
 	CompilationJobStatus_STOPPING   CompilationJobStatus = "STOPPING"
 	CompilationJobStatus_STOPPED    CompilationJobStatus = "STOPPED"
+)
+
+type CompleteOnConvergence string
+
+const (
+	CompleteOnConvergence_Disabled CompleteOnConvergence = "Disabled"
+	CompleteOnConvergence_Enabled  CompleteOnConvergence = "Enabled"
 )
 
 type CompressionType string
@@ -731,6 +761,52 @@ const (
 	Framework_SKLEARN    Framework = "SKLEARN"
 )
 
+type HubContentSortBy string
+
+const (
+	HubContentSortBy_HubContentName   HubContentSortBy = "HubContentName"
+	HubContentSortBy_CreationTime     HubContentSortBy = "CreationTime"
+	HubContentSortBy_HubContentStatus HubContentSortBy = "HubContentStatus"
+)
+
+type HubContentStatus string
+
+const (
+	HubContentStatus_Available    HubContentStatus = "Available"
+	HubContentStatus_Importing    HubContentStatus = "Importing"
+	HubContentStatus_Deleting     HubContentStatus = "Deleting"
+	HubContentStatus_ImportFailed HubContentStatus = "ImportFailed"
+	HubContentStatus_DeleteFailed HubContentStatus = "DeleteFailed"
+)
+
+type HubContentType string
+
+const (
+	HubContentType_Model    HubContentType = "Model"
+	HubContentType_Notebook HubContentType = "Notebook"
+)
+
+type HubSortBy string
+
+const (
+	HubSortBy_HubName        HubSortBy = "HubName"
+	HubSortBy_CreationTime   HubSortBy = "CreationTime"
+	HubSortBy_HubStatus      HubSortBy = "HubStatus"
+	HubSortBy_AccountIdOwner HubSortBy = "AccountIdOwner"
+)
+
+type HubStatus string
+
+const (
+	HubStatus_InService    HubStatus = "InService"
+	HubStatus_Creating     HubStatus = "Creating"
+	HubStatus_Updating     HubStatus = "Updating"
+	HubStatus_Deleting     HubStatus = "Deleting"
+	HubStatus_CreateFailed HubStatus = "CreateFailed"
+	HubStatus_UpdateFailed HubStatus = "UpdateFailed"
+	HubStatus_DeleteFailed HubStatus = "DeleteFailed"
+)
+
 type HumanTaskUiStatus string
 
 const (
@@ -784,6 +860,7 @@ const (
 	HyperParameterTuningJobStrategyType_Bayesian  HyperParameterTuningJobStrategyType = "Bayesian"
 	HyperParameterTuningJobStrategyType_Random    HyperParameterTuningJobStrategyType = "Random"
 	HyperParameterTuningJobStrategyType_Hyperband HyperParameterTuningJobStrategyType = "Hyperband"
+	HyperParameterTuningJobStrategyType_Grid      HyperParameterTuningJobStrategyType = "Grid"
 )
 
 type HyperParameterTuningJobWarmStartType string
@@ -850,6 +927,32 @@ type InferenceExecutionMode string
 const (
 	InferenceExecutionMode_Serial InferenceExecutionMode = "Serial"
 	InferenceExecutionMode_Direct InferenceExecutionMode = "Direct"
+)
+
+type InferenceExperimentStatus string
+
+const (
+	InferenceExperimentStatus_Creating  InferenceExperimentStatus = "Creating"
+	InferenceExperimentStatus_Created   InferenceExperimentStatus = "Created"
+	InferenceExperimentStatus_Updating  InferenceExperimentStatus = "Updating"
+	InferenceExperimentStatus_Running   InferenceExperimentStatus = "Running"
+	InferenceExperimentStatus_Starting  InferenceExperimentStatus = "Starting"
+	InferenceExperimentStatus_Stopping  InferenceExperimentStatus = "Stopping"
+	InferenceExperimentStatus_Completed InferenceExperimentStatus = "Completed"
+	InferenceExperimentStatus_Cancelled InferenceExperimentStatus = "Cancelled"
+)
+
+type InferenceExperimentStopDesiredState string
+
+const (
+	InferenceExperimentStopDesiredState_Completed InferenceExperimentStopDesiredState = "Completed"
+	InferenceExperimentStopDesiredState_Cancelled InferenceExperimentStopDesiredState = "Cancelled"
+)
+
+type InferenceExperimentType string
+
+const (
+	InferenceExperimentType_ShadowMode InferenceExperimentType = "ShadowMode"
 )
 
 type InputMode string
@@ -931,6 +1034,14 @@ const (
 	InstanceType_ml_g5_12xlarge   InstanceType = "ml.g5.12xlarge"
 	InstanceType_ml_g5_24xlarge   InstanceType = "ml.g5.24xlarge"
 	InstanceType_ml_g5_48xlarge   InstanceType = "ml.g5.48xlarge"
+)
+
+type JobType string
+
+const (
+	JobType_TRAINING        JobType = "TRAINING"
+	JobType_INFERENCE       JobType = "INFERENCE"
+	JobType_NOTEBOOK_KERNEL JobType = "NOTEBOOK_KERNEL"
 )
 
 type JoinSource string
@@ -1054,6 +1165,75 @@ const (
 	ModelCacheSetting_Disabled ModelCacheSetting = "Disabled"
 )
 
+type ModelCardExportJobSortBy string
+
+const (
+	ModelCardExportJobSortBy_Name         ModelCardExportJobSortBy = "Name"
+	ModelCardExportJobSortBy_CreationTime ModelCardExportJobSortBy = "CreationTime"
+	ModelCardExportJobSortBy_Status       ModelCardExportJobSortBy = "Status"
+)
+
+type ModelCardExportJobSortOrder string
+
+const (
+	ModelCardExportJobSortOrder_Ascending  ModelCardExportJobSortOrder = "Ascending"
+	ModelCardExportJobSortOrder_Descending ModelCardExportJobSortOrder = "Descending"
+)
+
+type ModelCardExportJobStatus string
+
+const (
+	ModelCardExportJobStatus_InProgress ModelCardExportJobStatus = "InProgress"
+	ModelCardExportJobStatus_Completed  ModelCardExportJobStatus = "Completed"
+	ModelCardExportJobStatus_Failed     ModelCardExportJobStatus = "Failed"
+)
+
+type ModelCardProcessingStatus string
+
+const (
+	ModelCardProcessingStatus_DeleteInProgress  ModelCardProcessingStatus = "DeleteInProgress"
+	ModelCardProcessingStatus_DeletePending     ModelCardProcessingStatus = "DeletePending"
+	ModelCardProcessingStatus_ContentDeleted    ModelCardProcessingStatus = "ContentDeleted"
+	ModelCardProcessingStatus_ExportJobsDeleted ModelCardProcessingStatus = "ExportJobsDeleted"
+	ModelCardProcessingStatus_DeleteCompleted   ModelCardProcessingStatus = "DeleteCompleted"
+	ModelCardProcessingStatus_DeleteFailed      ModelCardProcessingStatus = "DeleteFailed"
+)
+
+type ModelCardSortBy string
+
+const (
+	ModelCardSortBy_Name         ModelCardSortBy = "Name"
+	ModelCardSortBy_CreationTime ModelCardSortBy = "CreationTime"
+)
+
+type ModelCardSortOrder string
+
+const (
+	ModelCardSortOrder_Ascending  ModelCardSortOrder = "Ascending"
+	ModelCardSortOrder_Descending ModelCardSortOrder = "Descending"
+)
+
+type ModelCardStatus string
+
+const (
+	ModelCardStatus_Draft         ModelCardStatus = "Draft"
+	ModelCardStatus_PendingReview ModelCardStatus = "PendingReview"
+	ModelCardStatus_Approved      ModelCardStatus = "Approved"
+	ModelCardStatus_Archived      ModelCardStatus = "Archived"
+)
+
+type ModelCardVersionSortBy string
+
+const (
+	ModelCardVersionSortBy_Version ModelCardVersionSortBy = "Version"
+)
+
+type ModelInfrastructureType string
+
+const (
+	ModelInfrastructureType_RealTimeInference ModelInfrastructureType = "RealTimeInference"
+)
+
 type ModelMetadataFilterType string
 
 const (
@@ -1111,6 +1291,38 @@ type ModelSortKey string
 const (
 	ModelSortKey_Name         ModelSortKey = "Name"
 	ModelSortKey_CreationTime ModelSortKey = "CreationTime"
+)
+
+type ModelVariantAction string
+
+const (
+	ModelVariantAction_Retain  ModelVariantAction = "Retain"
+	ModelVariantAction_Remove  ModelVariantAction = "Remove"
+	ModelVariantAction_Promote ModelVariantAction = "Promote"
+)
+
+type ModelVariantStatus string
+
+const (
+	ModelVariantStatus_Creating  ModelVariantStatus = "Creating"
+	ModelVariantStatus_Updating  ModelVariantStatus = "Updating"
+	ModelVariantStatus_InService ModelVariantStatus = "InService"
+	ModelVariantStatus_Deleting  ModelVariantStatus = "Deleting"
+	ModelVariantStatus_Deleted   ModelVariantStatus = "Deleted"
+)
+
+type MonitoringAlertHistorySortKey string
+
+const (
+	MonitoringAlertHistorySortKey_CreationTime MonitoringAlertHistorySortKey = "CreationTime"
+	MonitoringAlertHistorySortKey_Status       MonitoringAlertHistorySortKey = "Status"
+)
+
+type MonitoringAlertStatus string
+
+const (
+	MonitoringAlertStatus_InAlert MonitoringAlertStatus = "InAlert"
+	MonitoringAlertStatus_OK      MonitoringAlertStatus = "OK"
 )
 
 type MonitoringExecutionSortKey string
@@ -1378,6 +1590,13 @@ const (
 	ProcessingS3UploadMode_EndOfJob   ProcessingS3UploadMode = "EndOfJob"
 )
 
+type Processor string
+
+const (
+	Processor_CPU Processor = "CPU"
+	Processor_GPU Processor = "GPU"
+)
+
 type ProductionVariantAcceleratorType string
 
 const (
@@ -1532,6 +1751,7 @@ const (
 	ProductionVariantInstanceType_ml_r6gd_8xlarge  ProductionVariantInstanceType = "ml.r6gd.8xlarge"
 	ProductionVariantInstanceType_ml_r6gd_12xlarge ProductionVariantInstanceType = "ml.r6gd.12xlarge"
 	ProductionVariantInstanceType_ml_r6gd_16xlarge ProductionVariantInstanceType = "ml.r6gd.16xlarge"
+	ProductionVariantInstanceType_ml_p4de_24xlarge ProductionVariantInstanceType = "ml.p4de.24xlarge"
 )
 
 type ProfilingStatus string
@@ -1602,6 +1822,12 @@ const (
 	RecommendationJobType_Advanced RecommendationJobType = "Advanced"
 )
 
+type RecommendationStepType string
+
+const (
+	RecommendationStepType_BENCHMARK RecommendationStepType = "BENCHMARK"
+)
+
 type RecordWrapper string
 
 const (
@@ -1649,6 +1875,8 @@ const (
 	ResourceType_Project                  ResourceType = "Project"
 	ResourceType_FeatureMetadata          ResourceType = "FeatureMetadata"
 	ResourceType_HyperParameterTuningJob  ResourceType = "HyperParameterTuningJob"
+	ResourceType_ModelCard                ResourceType = "ModelCard"
+	ResourceType_Model                    ResourceType = "Model"
 )
 
 type RetentionType string
@@ -1780,6 +2008,14 @@ const (
 	SortExperimentsBy_CreationTime SortExperimentsBy = "CreationTime"
 )
 
+type SortInferenceExperimentsBy string
+
+const (
+	SortInferenceExperimentsBy_Name         SortInferenceExperimentsBy = "Name"
+	SortInferenceExperimentsBy_CreationTime SortInferenceExperimentsBy = "CreationTime"
+	SortInferenceExperimentsBy_Status       SortInferenceExperimentsBy = "Status"
+)
+
 type SortLineageGroupsBy string
 
 const (
@@ -1820,6 +2056,25 @@ type SortTrialsBy string
 const (
 	SortTrialsBy_Name         SortTrialsBy = "Name"
 	SortTrialsBy_CreationTime SortTrialsBy = "CreationTime"
+)
+
+type SpaceSortKey string
+
+const (
+	SpaceSortKey_CreationTime     SpaceSortKey = "CreationTime"
+	SpaceSortKey_LastModifiedTime SpaceSortKey = "LastModifiedTime"
+)
+
+type SpaceStatus string
+
+const (
+	SpaceStatus_Deleting      SpaceStatus = "Deleting"
+	SpaceStatus_Failed        SpaceStatus = "Failed"
+	SpaceStatus_InService     SpaceStatus = "InService"
+	SpaceStatus_Pending       SpaceStatus = "Pending"
+	SpaceStatus_Updating      SpaceStatus = "Updating"
+	SpaceStatus_Update_Failed SpaceStatus = "Update_Failed"
+	SpaceStatus_Delete_Failed SpaceStatus = "Delete_Failed"
 )
 
 type SplitType string
@@ -2005,6 +2260,8 @@ const (
 	TrainingInstanceType_ml_g5_12xlarge   TrainingInstanceType = "ml.g5.12xlarge"
 	TrainingInstanceType_ml_g5_24xlarge   TrainingInstanceType = "ml.g5.24xlarge"
 	TrainingInstanceType_ml_g5_48xlarge   TrainingInstanceType = "ml.g5.48xlarge"
+	TrainingInstanceType_ml_trn1_2xlarge  TrainingInstanceType = "ml.trn1.2xlarge"
+	TrainingInstanceType_ml_trn1_32xlarge TrainingInstanceType = "ml.trn1.32xlarge"
 )
 
 type TrainingJobEarlyStoppingType string
@@ -2031,6 +2288,13 @@ const (
 	TrainingJobStatus_SDK_Failed     TrainingJobStatus_SDK = "Failed"
 	TrainingJobStatus_SDK_Stopping   TrainingJobStatus_SDK = "Stopping"
 	TrainingJobStatus_SDK_Stopped    TrainingJobStatus_SDK = "Stopped"
+)
+
+type TrainingRepositoryAccessMode string
+
+const (
+	TrainingRepositoryAccessMode_Platform TrainingRepositoryAccessMode = "Platform"
+	TrainingRepositoryAccessMode_Vpc      TrainingRepositoryAccessMode = "Vpc"
 )
 
 type TransformInstanceType string
@@ -2125,6 +2389,15 @@ const (
 	VariantStatus_Deleting          VariantStatus = "Deleting"
 	VariantStatus_ActivatingTraffic VariantStatus = "ActivatingTraffic"
 	VariantStatus_Baking            VariantStatus = "Baking"
+)
+
+type VendorGuidance string
+
+const (
+	VendorGuidance_NOT_PROVIDED   VendorGuidance = "NOT_PROVIDED"
+	VendorGuidance_STABLE         VendorGuidance = "STABLE"
+	VendorGuidance_TO_BE_ARCHIVED VendorGuidance = "TO_BE_ARCHIVED"
+	VendorGuidance_ARCHIVED       VendorGuidance = "ARCHIVED"
 )
 
 type WarmPoolResourceStatus string

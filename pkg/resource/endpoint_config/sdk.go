@@ -211,6 +211,9 @@ func (rm *resourceManager) sdkFind(
 				}
 				f6elem.CoreDumpConfig = f6elemf2
 			}
+			if f6iter.EnableSSMAccess != nil {
+				f6elem.EnableSSMAccess = f6iter.EnableSSMAccess
+			}
 			if f6iter.InitialInstanceCount != nil {
 				f6elem.InitialInstanceCount = f6iter.InitialInstanceCount
 			}
@@ -227,14 +230,14 @@ func (rm *resourceManager) sdkFind(
 				f6elem.ModelName = f6iter.ModelName
 			}
 			if f6iter.ServerlessConfig != nil {
-				f6elemf8 := &svcapitypes.ProductionVariantServerlessConfig{}
+				f6elemf9 := &svcapitypes.ProductionVariantServerlessConfig{}
 				if f6iter.ServerlessConfig.MaxConcurrency != nil {
-					f6elemf8.MaxConcurrency = f6iter.ServerlessConfig.MaxConcurrency
+					f6elemf9.MaxConcurrency = f6iter.ServerlessConfig.MaxConcurrency
 				}
 				if f6iter.ServerlessConfig.MemorySizeInMB != nil {
-					f6elemf8.MemorySizeInMB = f6iter.ServerlessConfig.MemorySizeInMB
+					f6elemf9.MemorySizeInMB = f6iter.ServerlessConfig.MemorySizeInMB
 				}
-				f6elem.ServerlessConfig = f6elemf8
+				f6elem.ServerlessConfig = f6elemf9
 			}
 			if f6iter.VariantName != nil {
 				f6elem.VariantName = f6iter.VariantName
@@ -431,6 +434,9 @@ func (rm *resourceManager) newCreateRequestPayload(
 				}
 				f4elem.SetCoreDumpConfig(f4elemf2)
 			}
+			if f4iter.EnableSSMAccess != nil {
+				f4elem.SetEnableSSMAccess(*f4iter.EnableSSMAccess)
+			}
 			if f4iter.InitialInstanceCount != nil {
 				f4elem.SetInitialInstanceCount(*f4iter.InitialInstanceCount)
 			}
@@ -447,14 +453,14 @@ func (rm *resourceManager) newCreateRequestPayload(
 				f4elem.SetModelName(*f4iter.ModelName)
 			}
 			if f4iter.ServerlessConfig != nil {
-				f4elemf8 := &svcsdk.ProductionVariantServerlessConfig{}
+				f4elemf9 := &svcsdk.ProductionVariantServerlessConfig{}
 				if f4iter.ServerlessConfig.MaxConcurrency != nil {
-					f4elemf8.SetMaxConcurrency(*f4iter.ServerlessConfig.MaxConcurrency)
+					f4elemf9.SetMaxConcurrency(*f4iter.ServerlessConfig.MaxConcurrency)
 				}
 				if f4iter.ServerlessConfig.MemorySizeInMB != nil {
-					f4elemf8.SetMemorySizeInMB(*f4iter.ServerlessConfig.MemorySizeInMB)
+					f4elemf9.SetMemorySizeInMB(*f4iter.ServerlessConfig.MemorySizeInMB)
 				}
-				f4elem.SetServerlessConfig(f4elemf8)
+				f4elem.SetServerlessConfig(f4elemf9)
 			}
 			if f4iter.VariantName != nil {
 				f4elem.SetVariantName(*f4iter.VariantName)

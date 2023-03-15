@@ -36,7 +36,8 @@ type TrainingJobSpec struct {
 	// checkpoint data.
 	CheckpointConfig *CheckpointConfig `json:"checkpointConfig,omitempty"`
 	DebugHookConfig  *DebugHookConfig  `json:"debugHookConfig,omitempty"`
-	// Configuration information for Debugger rules for debugging output tensors.
+	// Configuration information for Amazon SageMaker Debugger rules for debugging
+	// output tensors.
 	DebugRuleConfigurations []*DebugRuleConfiguration `json:"debugRuleConfigurations,omitempty"`
 	// To encrypt all communications between ML compute instances in distributed
 	// training, choose True. Encryption provides greater security for distributed
@@ -102,8 +103,8 @@ type TrainingJobSpec struct {
 	// +kubebuilder:validation:Required
 	OutputDataConfig *OutputDataConfig `json:"outputDataConfig"`
 	ProfilerConfig   *ProfilerConfig   `json:"profilerConfig,omitempty"`
-	// Configuration information for Debugger rules for profiling system and framework
-	// metrics.
+	// Configuration information for Amazon SageMaker Debugger rules for profiling
+	// system and framework metrics.
 	ProfilerRuleConfigurations []*ProfilerRuleConfiguration `json:"profilerRuleConfigurations,omitempty"`
 	// The resources, including the ML compute instances and ML storage volumes,
 	// to use for model training.
@@ -173,7 +174,8 @@ type TrainingJobStatus struct {
 	// A timestamp that indicates when the training job was created.
 	// +kubebuilder:validation:Optional
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
-	// Evaluation status of Debugger rules for debugging on a training job.
+	// Evaluation status of Amazon SageMaker Debugger rules for debugging on a training
+	// job.
 	// +kubebuilder:validation:Optional
 	DebugRuleEvaluationStatuses []*DebugRuleEvaluationStatus `json:"debugRuleEvaluationStatuses,omitempty"`
 	// If the training job failed, the reason it failed.
@@ -186,7 +188,8 @@ type TrainingJobStatus struct {
 	// artifacts.
 	// +kubebuilder:validation:Optional
 	ModelArtifacts *ModelArtifacts `json:"modelArtifacts,omitempty"`
-	// Evaluation status of Debugger rules for profiling on a training job.
+	// Evaluation status of Amazon SageMaker Debugger rules for profiling on a training
+	// job.
 	// +kubebuilder:validation:Optional
 	ProfilerRuleEvaluationStatuses []*ProfilerRuleEvaluationStatus `json:"profilerRuleEvaluationStatuses,omitempty"`
 	// Profiling status of a training job.

@@ -23,7 +23,6 @@ spec:
     instanceType: ml.c5.large
     modelName: single-variant-config-model
     variantName: AllTraffic
-    enableSSMAccess: true
   tags:
   - key: confidentiality
     value: public
@@ -36,7 +35,4 @@ status:
     arn: arn:aws:sagemaker:us-west-2:123456789012:endpoint-config/single-variant-config
     ownerAccountID: ""
     region: ""
-  conditions:
-  - message: not implemented
-    status: "True"
-    type: ACK.Terminal
+  conditions: []

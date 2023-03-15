@@ -33,8 +33,7 @@
       "InitialVariantWeight": 1,
       "InstanceType": "ml.c5.large",
       "ModelName": "single-variant-config-model",
-      "VariantName": "AllTraffic",
-      "EnableSSMAccess": true
+      "VariantName": "AllTraffic"
      }
     ]
 }

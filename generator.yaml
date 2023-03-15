@@ -987,13 +987,17 @@ ignore:
       - Experiment
       # - FeatureGroup
       - FlowDefinition
+      - Hub
       - HumanTaskUi
       # - HyperParameterTuningJob
       - InferenceRecommendationsJob
       - Image
       - ImageVersion
+      - InferenceExperiment
       - LabelingJob
       # - Model
+      - ModelCard
+      - ModelCardExportJob
       # - ModelBiasJobDefinition
       # - ModelExplainabilityJobDefinition
       # ModelPackage
@@ -1007,6 +1011,7 @@ ignore:
       - PresignedNotebookInstanceUrl
       # - ProcessingJob
       - Project
+      - Space
       - StudioLifecycleConfig
       # - TrainingJob
       # - TransformJob
@@ -1027,8 +1032,29 @@ ignore:
       - ExplainerConfig
       - HyperParameterTuningJobStrategyConfig
       - DisableProfiler
+      - BatchTransformInput_
+      - MonitoringParquetDatasetFormat
+      - SpaceName
+      - DefaultSpaceSettings
+      - BatchDataCaptureConfig
+      - CodeRepositories
+      - TableFormat
+      - RandomSeed
+      - TrainingImageConfig
+      - ShadowProductionVariants
     field_paths:
       - StartPipelineExecutionInput.ClientRequestToken
       - CreatePipelineInput.ClientRequestToken
       - CreatePipelineInput.PipelineDefinitionS3Location
+      - CreateEndpointConfigInput.ShadowProductionVariants
+      - DescribeEndpointOutput.PendingDeploymentSummary.ShadowProductionVariants
+      - CreateTrainingJobInput.AlgorithmSpecification.ContainerArguments
+      - CreateTrainingJobInput.AlgorithmSpecification.ContainerEntrypoint
+      - CreateTrainingJobInput.ExperimentConfig.RunName
+      - CreateTransformJobInput.ExperimentConfig.RunName
+      - CreateHyperParameterTuningJobInput.TrainingJobDefinition.Environment
+      - CreateHyperParameterTuningJobInput.TrainingJobDefinitions.Environment
+      - CreateHyperParameterTuningJobInput.HyperParameterTuningJobConfig.ResourceLimits.MaxRuntimeInSeconds
+      - CreateHyperParameterTuningJobInput.HyperParameterTuningJobConfig.TuningJobCompletionCriteria.BestObjectiveNotImproving
+      - CreateHyperParameterTuningJobInput.HyperParameterTuningJobConfig.TuningJobCompletionCriteria.ConvergenceDetected
       

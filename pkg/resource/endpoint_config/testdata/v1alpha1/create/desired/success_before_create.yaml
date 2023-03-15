@@ -22,6 +22,7 @@ spec:
     instanceType: ml.c5.large
     modelName: single-variant-config-model
     variantName: AllTraffic
+    enableSSMAccess: true
   tags:
   - key: confidentiality
     value: public

@@ -87,8 +87,11 @@ type ModelPackageSpec struct {
 	// versioned models.
 	ModelPackageName *string `json:"modelPackageName,omitempty"`
 	// The Amazon Simple Storage Service (Amazon S3) path where the sample payload
-	// are stored. This path must point to a single gzip compressed tar archive
-	// (.tar.gz suffix).
+	// is stored. This path must point to a single gzip compressed tar archive (.tar.gz
+	// suffix). This archive can hold multiple files that are all equally used in
+	// the load test. Each file in the archive must satisfy the size constraints
+	// of the InvokeEndpoint (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpoint.html#API_runtime_InvokeEndpoint_RequestSyntax)
+	// call.
 	SamplePayloadURL *string `json:"samplePayloadURL,omitempty"`
 	// Details about the algorithm that was used to create the model package.
 	SourceAlgorithmSpecification *SourceAlgorithmSpecification `json:"sourceAlgorithmSpecification,omitempty"`

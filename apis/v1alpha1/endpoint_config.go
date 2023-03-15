@@ -66,7 +66,7 @@ type EndpointConfigSpec struct {
 	// For more information about local instance storage encryption, see SSD Instance
 	// Store Volumes (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ssd-instance-store.html).
 	KMSKeyID *string `json:"kmsKeyID,omitempty"`
-	// An list of ProductionVariant objects, one for each model that you want to
+	// An array of ProductionVariant objects, one for each model that you want to
 	// host at this endpoint.
 	// +kubebuilder:validation:Required
 	ProductionVariants []*ProductionVariant `json:"productionVariants"`
