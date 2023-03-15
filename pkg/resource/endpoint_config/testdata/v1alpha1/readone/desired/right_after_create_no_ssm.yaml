@@ -32,13 +32,7 @@ spec:
     value: test-user
 status:
   ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:endpoint-config/single-variant-config
     ownerAccountID: ""
     region: ""
-  conditions:
-  - message: "InvalidParameterValue: The endpoint config name must not include a special
-      character.\n\tstatus code: 0, request id: "
-    status: "True"
-    type: ACK.Terminal
-  - message: "some dummy message"
-    status: "True"
-    type: ACK.Recoverable
+  conditions: []
