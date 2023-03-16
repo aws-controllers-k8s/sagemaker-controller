@@ -85,9 +85,9 @@ pushd $E2E_DIR
 
   # run tests
   echo "Run Tests"
-   if [[ $SERVICE_REGION =~ ^(sa-east-1|us-west-2|eu-north-1|eu-west-3)$  ]]; then
+   if [[ $SERVICE_REGION =~ ^(sa-east-1|eu-north-1|eu-west-3)$  ]]; then
     pytest -n 15 --dist loadfile --log-cli-level INFO -m "canary or small_region"
   else
-    echo "SERVICE_REGION is not in the list of allowed regions for small-region tests. Skipping pytest."
+    pytest -n 15 --dist loadfile --log-cli-level INFO -m "canary"
   fi
 popd
