@@ -85,7 +85,7 @@ pushd $E2E_DIR
 
   # run tests
   echo "Run Tests"
-   if [[ $SERVICE_REGION =~ ^(sa-east-1|eu-north-1|eu-west-3)$  ]]; then
+  if [[ $SERVICE_REGION =~ ^(sa-east-1|eu-north-1|eu-west-3)$  ]]; then
     pytest -n 15 --dist loadfile --log-cli-level INFO -m "canary or small_region"
   else
     pytest -n 15 --dist loadfile --log-cli-level INFO -m "canary"
