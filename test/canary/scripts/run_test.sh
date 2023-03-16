@@ -48,6 +48,8 @@ function cleanup {
   kubectl delete modelpackagegroups --all
   kubectl delete notebookinstances --all
   kubectl delete notebookinstancelifecycleconfig --all
+  kubectl delete pipelineexecutions --all
+  kubectl delete pipelines --all
 
   print_controller_logs
 
