@@ -85,5 +85,9 @@ pushd $E2E_DIR
 
   # run tests
   echo "Run Tests"
-  pytest -n 15 --dist loadfile --log-cli-level INFO -m canary
+   if [[ $SERVICE_REGION =~ ^(us-west-2)$ ]]; then
+    pytest -n 15 --dist loadfile --log-cli-level INFO -m "small_region"
+  else
+    echo "SERVICE_REGION is not in the list of allowed regions for small-region tests. Skipping pytest."
+  fi
 popd
