@@ -24,6 +24,7 @@ from e2e import (
     service_marker,
     wait_for_status,
     create_sagemaker_resource,
+    try_delete_custom_resource,
     sagemaker_client,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
@@ -53,11 +54,9 @@ def notebook_instance():
     yield (reference, resource, spec)
 
     # Delete the k8s resource if not already deleted by tests
-    if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(
-            reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
-        )
-        assert deleted
+    assert try_delete_custom_resource(
+        reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
+    )
 
 
 def get_notebook_instance(notebook_instance_name: str):
@@ -84,6 +83,7 @@ def get_notebook_instance_resource_status(reference: k8s.CustomResourceReference
     assert resource is not None
     assert "notebookInstanceStatus" in resource["status"]
     return resource["status"]["notebookInstanceStatus"]
+
 
 @flaky(max_runs=2, min_passes=1)
 @pytest.mark.select_regions_1
@@ -181,7 +181,10 @@ class TestNotebookInstance:
         # Test is flakey as this field can get changed before we get resource
         # UpdateTriggered can only be in the status if beforehand it was UpdatePending
         # TODO: See if update code can be restructured to avoid this
-        assert resource["status"]["stoppedByControllerMetadata"] in ("UpdatePending", "UpdateTriggered")
+        assert resource["status"]["stoppedByControllerMetadata"] in (
+            "UpdatePending",
+            "UpdateTriggered",
+        )
 
         # wait for the resource to go to the InService state and make sure the operator is synced with sagemaker.
         self._assert_notebook_status_in_sync(
@@ -198,8 +201,13 @@ class TestNotebookInstance:
         assert "DefaultCodeRepository" not in notebook_instance_desc
         assert "defaultCodeRepository" not in resource["spec"]
 
-        assert resource["spec"]["additionalCodeRepositories"] == additionalCodeRepositories
-        assert notebook_instance_desc["AdditionalCodeRepositories"] == additionalCodeRepositories
+        assert (
+            resource["spec"]["additionalCodeRepositories"] == additionalCodeRepositories
+        )
+        assert (
+            notebook_instance_desc["AdditionalCodeRepositories"]
+            == additionalCodeRepositories
+        )
 
         assert "stoppedByControllerMetadata" not in resource["status"]
 

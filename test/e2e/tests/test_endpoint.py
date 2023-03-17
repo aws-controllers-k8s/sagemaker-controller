@@ -25,6 +25,7 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
+    try_delete_custom_resource,
     assert_endpoint_status_in_sync,
     assert_tags_in_sync,
     get_sagemaker_endpoint,
@@ -149,11 +150,7 @@ def xgboost_endpoint(name_suffix, single_variant_config):
     yield (reference, resource, spec)
 
     # Delete the k8s resource if not already deleted by tests
-    if k8s.get_resource_exists(reference):
-        # longer wait incase endpoint is in creating/updating status
-        _, deleted = k8s.delete_custom_resource(reference, 40, cfg.DELETE_WAIT_LENGTH)
-        assert deleted
-
+    assert try_delete_custom_resource(reference, 40, cfg.DELETE_WAIT_LENGTH)
 
 @pytest.fixture(scope="module")
 def faulty_config(name_suffix, single_container_model):
@@ -255,7 +252,9 @@ class TestEndpoint:
 
         # endpoint transitions Updating -> InService state
         assert_endpoint_status_in_sync(
-            endpoint_reference.name, endpoint_reference, cfg.ENDPOINT_STATUS_UPDATING,
+            endpoint_reference.name,
+            endpoint_reference,
+            cfg.ENDPOINT_STATUS_UPDATING,
         )
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "False")
         endpoint_resource = k8s.get_resource(endpoint_reference)
@@ -264,7 +263,9 @@ class TestEndpoint:
         assert annotations[LAST_ENDPOINTCONFIG_UPDATE_ANNOTATION] == faulty_config_name
 
         assert_endpoint_status_in_sync(
-            endpoint_reference.name, endpoint_reference, cfg.ENDPOINT_STATUS_INSERVICE,
+            endpoint_reference.name,
+            endpoint_reference,
+            cfg.ENDPOINT_STATUS_INSERVICE,
         )
 
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "False")
@@ -302,7 +303,9 @@ class TestEndpoint:
 
         # endpoint transitions Updating -> InService state
         assert_endpoint_status_in_sync(
-            endpoint_reference.name, endpoint_reference, cfg.ENDPOINT_STATUS_UPDATING,
+            endpoint_reference.name,
+            endpoint_reference,
+            cfg.ENDPOINT_STATUS_UPDATING,
         )
 
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "False")
@@ -313,7 +316,9 @@ class TestEndpoint:
         assert annotations[LAST_ENDPOINTCONFIG_UPDATE_ANNOTATION] == new_config_name
 
         assert_endpoint_status_in_sync(
-            endpoint_reference.name, endpoint_reference, cfg.ENDPOINT_STATUS_INSERVICE,
+            endpoint_reference.name,
+            endpoint_reference,
+            cfg.ENDPOINT_STATUS_INSERVICE,
         )
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "True")
         assert k8s.get_resource_condition(endpoint_reference, "ACK.Terminal") is None

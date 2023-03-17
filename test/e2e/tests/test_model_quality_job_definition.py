@@ -18,7 +18,12 @@ import pytest
 import logging
 import time
 
-from e2e import service_marker, create_sagemaker_resource, assert_tags_in_sync
+from e2e import (
+    service_marker,
+    create_sagemaker_resource,
+    try_delete_custom_resource,
+    assert_tags_in_sync,
+)
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common.fixtures import xgboost_churn_endpoint
 from e2e.common import config as cfg
@@ -51,9 +56,7 @@ def xgboost_churn_model_quality_job_definition(xgboost_churn_endpoint):
 
     yield (reference, resource)
 
-    if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
-        assert deleted
+    assert try_delete_custom_resource(reference, 3, 10)
 
 
 def get_sagemaker_model_quality_job_definition(sagemaker_client, job_definition_name):

@@ -22,6 +22,7 @@ from e2e import (
     service_marker,
     wait_for_status,
     create_sagemaker_resource,
+    try_delete_custom_resource,
     get_sagemaker_pipeline_execution,
     sagemaker_client,
 )
@@ -55,12 +56,7 @@ def pipeline():
     yield pipeline_resource
 
     # Delete the k8s resource if not already deleted by tests
-    if k8s.get_resource_exists(pipeline_reference):
-        _, deleted = k8s.delete_custom_resource(
-            pipeline_reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
-        )
-        assert deleted
-
+    assert try_delete_custom_resource(pipeline_reference,DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
 
 @pytest.fixture(scope="function")
 def pipeline_execution(pipeline):
@@ -94,12 +90,7 @@ def pipeline_execution(pipeline):
     )
 
     # Delete the k8s resource if not already deleted by tests
-    if k8s.get_resource_exists(pipeline_execution_reference):
-        _, deleted = k8s.delete_custom_resource(
-            pipeline_execution_reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
-        )
-        assert deleted
-
+    assert try_delete_custom_resource(pipeline_execution_reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
 
 def get_sagemaker_pipeline_execution_status(pipeline_execution_arn: str):
     sm_pipeline_execution_desc = get_sagemaker_pipeline_execution(
@@ -177,7 +168,7 @@ class TestPipelineExecution:
             )
 
         old_pipeline_last_modified_time = pipeline_execution_desc["LastModifiedTime"]
-    
+
         assert k8s.get_resource_arn(resource) == pipeline_execution_arn
 
         self._assert_pipeline_execution_status_in_sync(
