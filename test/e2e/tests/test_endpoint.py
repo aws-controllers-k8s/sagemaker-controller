@@ -25,7 +25,7 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    try_delete_custom_resource,
+    delete_custom_resource,
     assert_endpoint_status_in_sync,
     assert_tags_in_sync,
     get_sagemaker_endpoint,
@@ -150,7 +150,8 @@ def xgboost_endpoint(name_suffix, single_variant_config):
     yield (reference, resource, spec)
 
     # Delete the k8s resource if not already deleted by tests
-    assert try_delete_custom_resource(reference, 40, cfg.DELETE_WAIT_LENGTH)
+    assert delete_custom_resource(reference, 40, cfg.DELETE_WAIT_LENGTH)
+
 
 @pytest.fixture(scope="module")
 def faulty_config(name_suffix, single_container_model):

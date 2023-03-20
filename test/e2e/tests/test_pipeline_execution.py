@@ -22,7 +22,7 @@ from e2e import (
     service_marker,
     wait_for_status,
     create_sagemaker_resource,
-    try_delete_custom_resource,
+    delete_custom_resource,
     get_sagemaker_pipeline_execution,
     sagemaker_client,
 )
@@ -56,7 +56,10 @@ def pipeline():
     yield pipeline_resource
 
     # Delete the k8s resource if not already deleted by tests
-    assert try_delete_custom_resource(pipeline_reference,DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
+    assert delete_custom_resource(
+        pipeline_reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
+    )
+
 
 @pytest.fixture(scope="function")
 def pipeline_execution(pipeline):
@@ -90,7 +93,10 @@ def pipeline_execution(pipeline):
     )
 
     # Delete the k8s resource if not already deleted by tests
-    assert try_delete_custom_resource(pipeline_execution_reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
+    assert delete_custom_resource(
+        pipeline_execution_reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
+    )
+
 
 def get_sagemaker_pipeline_execution_status(pipeline_execution_arn: str):
     sm_pipeline_execution_desc = get_sagemaker_pipeline_execution(

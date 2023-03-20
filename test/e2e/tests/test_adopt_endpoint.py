@@ -25,7 +25,7 @@ from e2e import (
     CRD_VERSION,
     create_adopted_resource,
     wait_sagemaker_endpoint_status,
-    try_delete_custom_resource,
+    delete_custom_resource,
     assert_endpoint_status_in_sync,
     sagemaker_client,
     get_sagemaker_endpoint,
@@ -170,7 +170,7 @@ def adopted_endpoint(sdk_endpoint):
     yield (adopt_model_reference, adopt_config_reference, adopt_endpoint_reference)
 
     for cr in (adopt_model_reference, adopt_config_reference, adopt_endpoint_reference):
-        assert try_delete_custom_resource(cr, 3, 10)
+        assert delete_custom_resource(cr, 3, 10)
 
 
 @service_marker

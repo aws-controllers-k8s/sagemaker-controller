@@ -23,7 +23,7 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    try_delete_custom_resource,
+    delete_custom_resource,
     wait_for_status,
     sagemaker_client,
     get_sagemaker_model_package_group,
@@ -53,7 +53,9 @@ def xgboost_model_package_group():
     yield (reference, resource)
 
     # Delete the k8s resource if not already deleted by tests
-    assert try_delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
+    assert delete_custom_resource(
+        reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+    )
 
 
 def get_model_package_group_sagemaker_status(model_package_group_name: str):

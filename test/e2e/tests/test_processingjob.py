@@ -23,7 +23,7 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    try_delete_custom_resource,
+    delete_custom_resource,
     wait_for_status,
     sagemaker_client,
     assert_tags_in_sync,
@@ -56,7 +56,7 @@ def kmeans_processing_job():
 
     yield (reference, resource)
 
-    assert try_delete_custom_resource(
+    assert delete_custom_resource(
         reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
     )
 

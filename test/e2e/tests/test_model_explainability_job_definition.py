@@ -21,7 +21,7 @@ import time
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    try_delete_custom_resource,
+    delete_custom_resource,
     assert_tags_in_sync,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
@@ -56,7 +56,7 @@ def xgboost_churn_model_explainability_job_definition(xgboost_churn_endpoint):
 
     yield (reference, resource)
 
-    assert try_delete_custom_resource(reference, 3, 10)
+    assert delete_custom_resource(reference, 3, 10)
 
 
 def get_sagemaker_model_explainability_job_definition(

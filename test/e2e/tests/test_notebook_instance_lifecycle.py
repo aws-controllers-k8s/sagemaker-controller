@@ -24,7 +24,7 @@ from e2e import (
     service_marker,
     wait_for_status,
     create_sagemaker_resource,
-    try_delete_custom_resource,
+    delete_custom_resource,
     sagemaker_client,
 )
 
@@ -56,7 +56,8 @@ def notebook_instance_lifecycleConfig():
     assert resource is not None
     yield (reference, resource, spec)
 
-    assert try_delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_PERIOD_LENGTH)
+    assert delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_PERIOD_LENGTH)
+
 
 def get_notebook_instance_lifecycle_config(notebook_instance_lfc_name: str):
     try:

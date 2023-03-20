@@ -22,7 +22,7 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    try_delete_custom_resource,
+    delete_custom_resource,
     assert_tags_in_sync,
     get_sagemaker_model,
 )
@@ -48,7 +48,7 @@ def xgboost_model():
     yield (reference, resource)
 
     # Delete the k8s resource if not already deleted by tests
-    assert try_delete_custom_resource(reference, 3, 10)
+    assert delete_custom_resource(reference, 3, 10)
 
 
 @service_marker

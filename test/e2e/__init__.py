@@ -376,18 +376,13 @@ def get_sagemaker_pipeline(pipeline_name: str):
         return None
 
 
-def try_delete_custom_resource(
+def delete_custom_resource(
     reference,
     wait_period=cfg.JOB_DELETE_WAIT_PERIODS,
     wait_length=cfg.JOB_DELETE_WAIT_LENGTH,
 ):
-    max_retries = 2
-    deleted = False
+    deleted = True
 
-    if not k8s.get_resource_exists(reference):
-        return True
-
-    while k8s.get_resource_exists(reference) and max_retries > 0:
-        _, deleted = k8s.delete_custom_resource(reference, wait_period, wait_length)
-        max_retries -= 1
+    if k8s.get_resource_exists(reference): 
+        _, deleted = k8s.delete_custom_resource(reference, wait_period*2, wait_length)
     return deleted

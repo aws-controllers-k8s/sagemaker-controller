@@ -24,7 +24,7 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    try_delete_custom_resource,
+    delete_custom_resource,
     get_sagemaker_model,
     sagemaker_client,
 )
@@ -55,7 +55,7 @@ def cross_region_model():
     yield (reference, resource)
 
     # Delete the k8s resource if not already deleted by tests
-    assert try_delete_custom_resource(reference, 3, 10)
+    assert delete_custom_resource(reference, 3, 10)
 
 
 def get_cross_region():

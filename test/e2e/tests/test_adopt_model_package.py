@@ -25,7 +25,7 @@ from e2e import (
     create_adopted_resource,
     wait_sagemaker_model_package_status,
     assert_model_package_status_in_sync,
-    try_delete_custom_resource,
+    delete_custom_resource,
     get_sagemaker_model_package_group,
     get_sagemaker_model_package,
     sagemaker_client,
@@ -159,7 +159,8 @@ def adopted_model_package(sdk_model_package):
     yield (adopt_model_package_group_reference, adopt_model_package_reference)
 
     for cr in (adopt_model_package_group_reference, adopt_model_package_reference):
-        assert try_delete_custom_resource(cr,3, 10)
+        assert delete_custom_resource(cr, 3, 10)
+
 
 @service_marker
 class TestAdoptedModelPackage:

@@ -21,7 +21,7 @@ import logging
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    try_delete_custom_resource,
+    delete_custom_resource,
     wait_for_status,
     assert_tags_in_sync,
 )
@@ -65,7 +65,10 @@ def xgboost_churn_data_quality_monitoring_schedule(
 
     yield (reference, resource, spec)
 
-    assert try_delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
+    assert delete_custom_resource(
+        reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+    )
+
 
 def get_sagemaker_monitoring_schedule(sagemaker_client, monitoring_schedule_name):
     try:

@@ -24,7 +24,7 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    try_delete_custom_resource,
+    delete_custom_resource,
     wait_for_status,
     sagemaker_client,
     assert_tags_in_sync,
@@ -211,7 +211,7 @@ def domain_fixture():
 
     yield (reference, resource, spec)
 
-    assert try_delete_custom_resource(
+    assert delete_custom_resource(
         reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
     )
 
@@ -255,7 +255,7 @@ def user_profile_fixture(domain_fixture):
         user_profile_spec,
     )
 
-    assert try_delete_custom_resource(
+    assert delete_custom_resource(
         user_profile_reference,
         cfg.JOB_DELETE_WAIT_PERIODS,
         cfg.JOB_DELETE_WAIT_LENGTH,
@@ -319,7 +319,7 @@ def app_fixture(user_profile_fixture):
         app_spec,
     )
 
-    assert try_delete_custom_resource(
+    assert delete_custom_resource(
         app_reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
     )
 

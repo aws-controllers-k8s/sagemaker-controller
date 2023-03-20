@@ -25,7 +25,7 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    try_delete_custom_resource,
+    delete_custom_resource,
     wait_for_status,
     sagemaker_client,
     assert_tags_in_sync,
@@ -60,7 +60,8 @@ def feature_group():
     yield (reference, resource)
 
     # Delete the k8s resource if not already deleted by tests
-    assert try_delete_custom_resource(reference, WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH)
+    assert delete_custom_resource(reference, WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH)
+
 
 def get_sagemaker_feature_group(feature_group_name: str):
     """Used to check if there is an existing feature group with a given feature_group_name."""

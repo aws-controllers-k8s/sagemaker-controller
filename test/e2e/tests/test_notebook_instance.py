@@ -24,7 +24,7 @@ from e2e import (
     service_marker,
     wait_for_status,
     create_sagemaker_resource,
-    try_delete_custom_resource,
+    delete_custom_resource,
     sagemaker_client,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
@@ -54,9 +54,7 @@ def notebook_instance():
     yield (reference, resource, spec)
 
     # Delete the k8s resource if not already deleted by tests
-    assert try_delete_custom_resource(
-        reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
-    )
+    assert delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
 
 
 def get_notebook_instance(notebook_instance_name: str):
