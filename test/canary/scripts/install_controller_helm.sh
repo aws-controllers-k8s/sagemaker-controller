@@ -11,6 +11,9 @@ function install_helm_chart() {
     yq w -i helm/values.yaml "serviceAccount.annotations" ""
     yq w -i helm/values.yaml 'serviceAccount.annotations."eks.amazonaws.com/role-arn"' "$oidc_role_arn"
     yq w -i helm/values.yaml "aws.region" $region
+    yq w -i helm/values.yaml "log.level" "debug"
+    yq w -i helm/values.yaml "log.enable_development_logging" "true"
+
 
     kubectl apply -f helm/crds
     helm install -n $namespace --create-namespace ack-$service-controller --skip-crds helm
