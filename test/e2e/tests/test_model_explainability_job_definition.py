@@ -56,7 +56,9 @@ def xgboost_churn_model_explainability_job_definition(xgboost_churn_endpoint):
 
     yield (reference, resource)
 
-    assert delete_custom_resource(reference, 3, 10)
+    assert delete_custom_resource(
+        reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+    )
 
 
 def get_sagemaker_model_explainability_job_definition(
@@ -94,7 +96,9 @@ class TestModelExplainabilityJobDefinition:
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(job_definition_arn, resource_tags)
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        _, deleted = k8s.delete_custom_resource(
+            reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+        )
         assert deleted
         assert (
             get_sagemaker_model_explainability_job_definition(

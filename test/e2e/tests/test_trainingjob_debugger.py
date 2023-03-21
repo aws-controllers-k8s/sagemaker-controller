@@ -49,7 +49,9 @@ def xgboost_training_job_debugger():
 
     yield (reference, resource, spec)
 
-    assert delete_custom_resource(reference, 3, 10)
+    assert delete_custom_resource(
+        reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+    )
 
 
 def get_training_rule_eval_sagemaker_status(training_job_name: str, rule_type: str):

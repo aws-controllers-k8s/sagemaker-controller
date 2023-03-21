@@ -170,7 +170,9 @@ def adopted_endpoint(sdk_endpoint):
     yield (adopt_model_reference, adopt_config_reference, adopt_endpoint_reference)
 
     for cr in (adopt_model_reference, adopt_config_reference, adopt_endpoint_reference):
-        assert delete_custom_resource(cr, 3, 10)
+        assert delete_custom_resource(
+            cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+        )
 
 
 @service_marker

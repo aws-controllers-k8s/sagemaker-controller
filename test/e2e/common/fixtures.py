@@ -121,4 +121,6 @@ def xgboost_churn_data_quality_job_definition(xgboost_churn_endpoint):
 
     yield (job_definition_reference, resource)
 
-    assert delete_custom_resource(job_definition_reference, 3, 10)
+    assert delete_custom_resource(
+        job_definition_reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+    )

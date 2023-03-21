@@ -159,7 +159,9 @@ def adopted_model_package(sdk_model_package):
     yield (adopt_model_package_group_reference, adopt_model_package_reference)
 
     for cr in (adopt_model_package_group_reference, adopt_model_package_reference):
-        assert delete_custom_resource(cr, 3, 10)
+        assert delete_custom_resource(
+            cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+        )
 
 
 @service_marker

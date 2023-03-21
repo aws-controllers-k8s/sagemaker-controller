@@ -384,5 +384,5 @@ def delete_custom_resource(
     deleted = True
 
     if k8s.get_resource_exists(reference): 
-        _, deleted = k8s.delete_custom_resource(reference, wait_period*2, wait_length)
+        _, deleted = k8s.delete_custom_resource(reference, wait_period, wait_length)
     return deleted

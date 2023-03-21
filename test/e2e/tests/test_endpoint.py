@@ -66,7 +66,9 @@ def single_container_model(name_suffix):
 
     yield (model_reference, model_resource)
 
-    _, deleted = k8s.delete_custom_resource(model_reference, 3, 10)
+    _, deleted = k8s.delete_custom_resource(
+        model_reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+    )
     assert deleted
 
 
@@ -95,7 +97,9 @@ def multi_variant_config(name_suffix, single_container_model):
 
     yield (config_reference, config_resource)
 
-    _, deleted = k8s.delete_custom_resource(config_reference, 3, 10)
+    _, deleted = k8s.delete_custom_resource(
+        config_reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+    )
     assert deleted
 
 
@@ -124,7 +128,9 @@ def single_variant_config(name_suffix, single_container_model):
 
     yield (config_reference, config_resource)
 
-    _, deleted = k8s.delete_custom_resource(config_reference, 3, 10)
+    _, deleted = k8s.delete_custom_resource(
+        config_reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+    )
     assert deleted
 
 
@@ -205,7 +211,9 @@ def faulty_config(name_suffix, single_container_model):
     yield (config_reference, config_resource)
 
     for cr in (model_reference, config_reference):
-        _, deleted = k8s.delete_custom_resource(cr, 3, 10)
+        _, deleted = k8s.delete_custom_resource(
+            cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+        )
         assert deleted
 
 
