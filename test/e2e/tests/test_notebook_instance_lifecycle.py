@@ -24,6 +24,7 @@ from e2e import (
     service_marker,
     wait_for_status,
     create_sagemaker_resource,
+    delete_custom_resource,
     sagemaker_client,
 )
 
@@ -55,11 +56,7 @@ def notebook_instance_lifecycleConfig():
     assert resource is not None
     yield (reference, resource, spec)
 
-    if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(
-            reference, DELETE_WAIT_PERIOD, DELETE_PERIOD_LENGTH
-        )
-        assert deleted
+    assert delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_PERIOD_LENGTH)
 
 
 def get_notebook_instance_lifecycle_config(notebook_instance_lfc_name: str):

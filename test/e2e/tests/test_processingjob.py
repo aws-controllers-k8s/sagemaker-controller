@@ -23,6 +23,7 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
+    delete_custom_resource,
     wait_for_status,
     sagemaker_client,
     assert_tags_in_sync,
@@ -55,9 +56,9 @@ def kmeans_processing_job():
 
     yield (reference, resource)
 
-    if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
-        assert deleted
+    assert delete_custom_resource(
+        reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
+    )
 
 
 def get_sagemaker_processing_job(processing_job_name: str):
@@ -144,8 +145,9 @@ class TestProcessingJob:
         )
 
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
-        assert deleted is True
+        assert delete_custom_resource(
+            reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
+        )
 
         processing_job_desc = get_sagemaker_processing_job(processing_job_name)
         assert processing_job_desc["ProcessingJobStatus"] in cfg.LIST_JOB_STATUS_STOPPED
@@ -173,5 +175,6 @@ class TestProcessingJob:
         assert_tags_in_sync(processing_job_arn, resource_tags)
 
         # Check that you can delete a completed resource from k8s
-        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
-        assert deleted is True
+        assert delete_custom_resource(
+            reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
+        )

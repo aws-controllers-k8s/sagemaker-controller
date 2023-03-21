@@ -23,6 +23,8 @@ from unittest import TestCase
 import random
 
 from acktest.k8s import resource as k8s
+from common import config as cfg
+
 
 SERVICE_NAME = "sagemaker"
 CRD_GROUP = "sagemaker.services.k8s.aws"
@@ -372,3 +374,15 @@ def get_sagemaker_pipeline(pipeline_name: str):
             f"SageMaker could not find a pipeline with the name {pipeline_name}. Error {error}"
         )
         return None
+
+
+def delete_custom_resource(
+    reference,
+    wait_period=cfg.JOB_DELETE_WAIT_PERIODS,
+    wait_length=cfg.JOB_DELETE_WAIT_LENGTH,
+):
+    deleted = True
+
+    if k8s.get_resource_exists(reference): 
+        _, deleted = k8s.delete_custom_resource(reference, wait_period, wait_length)
+    return deleted
