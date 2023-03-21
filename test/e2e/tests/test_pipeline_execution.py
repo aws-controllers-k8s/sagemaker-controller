@@ -227,7 +227,4 @@ class TestPipelineExecution:
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
         # Check that you can delete a completed resource from k8s
-        _, deleted = k8s.delete_custom_resource(
-            reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
-        )
-        assert deleted is True
+        assert delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)

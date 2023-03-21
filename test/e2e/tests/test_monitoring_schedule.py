@@ -212,10 +212,9 @@ class TestMonitoringSchedule:
         )
 
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(
+        assert delete_custom_resource(
             reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
         )
-        assert deleted
         assert (
             get_sagemaker_monitoring_schedule(
                 sagemaker_client, monitoring_schedule_name

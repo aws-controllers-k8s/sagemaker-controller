@@ -198,10 +198,9 @@ class TestTrainingDebuggerJob:
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(resource_arn, resource_tags)
 
-        _, deleted = k8s.delete_custom_resource(
+        assert delete_custom_resource(
             reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
         )
-        assert deleted is True
 
     def test_driver(self, xgboost_training_job_debugger):
         self.create_debugger_training(xgboost_training_job_debugger)

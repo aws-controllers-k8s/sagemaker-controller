@@ -80,9 +80,8 @@ class TestCrossRegionModel:
         assert k8s.get_resource_arn(resource) == cross_region_model_arn
 
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(
+        assert delete_custom_resource(
             reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
         )
-        assert deleted
 
         assert get_sagemaker_model(model_name, sm_client) is None

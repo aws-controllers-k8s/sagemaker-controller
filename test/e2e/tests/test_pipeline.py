@@ -163,7 +163,4 @@ class TestPipeline:
         assert_tags_in_sync(pipeline_arn, resource_tags)
 
         # Check that you can delete a completed resource from k8s
-        _, deleted = k8s.delete_custom_resource(
-            reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
-        )
-        assert deleted is True
+        assert delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)

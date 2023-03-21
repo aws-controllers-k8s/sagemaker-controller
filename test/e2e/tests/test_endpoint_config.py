@@ -90,9 +90,8 @@ class TestEndpointConfig:
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(endpoint_arn, resource_tags)
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(
+        assert delete_custom_resource(
             reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
         )
-        assert deleted
 
         assert get_sagemaker_endpoint_config(config_name) is None

@@ -79,10 +79,9 @@ class TestTrainingJob:
         )
 
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(
+        assert delete_custom_resource(
             reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
         )
-        assert deleted is True
 
         training_job_desc = get_sagemaker_training_job(training_job_name)
         assert training_job_desc["TrainingJobStatus"] in cfg.LIST_JOB_STATUS_STOPPED
@@ -114,7 +113,6 @@ class TestTrainingJob:
         assert_tags_in_sync(training_job_arn, resource_tags)
 
         # Check that you can delete a completed resource from k8s
-        _, deleted = k8s.delete_custom_resource(
+        assert delete_custom_resource(
             reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
         )
-        assert deleted is True

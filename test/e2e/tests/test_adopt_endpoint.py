@@ -271,7 +271,6 @@ class TestAdoptedEndpoint:
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "True")
 
         for cr in (model_reference, config_reference, endpoint_reference):
-            _, deleted = k8s.delete_custom_resource(
+            assert delete_custom_resource(
                 cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
             )
-            assert deleted

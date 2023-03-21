@@ -160,9 +160,6 @@ class TestFeatureGroup:
         assert_tags_in_sync(feature_group_arn, resource_tags)
 
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(
-            reference, WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH
-        )
-        assert deleted
+        assert delete_custom_resource(reference, WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH)
 
         assert get_sagemaker_feature_group(feature_group_name) is None

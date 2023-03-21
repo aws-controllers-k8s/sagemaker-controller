@@ -139,9 +139,8 @@ class TestModelPackageGroup:
         assert_tags_in_sync(model_package_group_arn, resource_tags)
 
         # Check that you can delete a completed resource from k8s
-        _, deleted = k8s.delete_custom_resource(
+        assert delete_custom_resource(
             reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
         )
-        assert deleted is True
 
         assert get_sagemaker_model_package_group(model_package_group_name) is None

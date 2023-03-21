@@ -253,7 +253,6 @@ class TestAdoptedModelPackage:
         )
 
         for cr in (model_package_reference, model_package_group_reference):
-            _, deleted = k8s.delete_custom_resource(
-                cr, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
+            assert delete_custom_resource(
+                cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
             )
-            assert deleted
