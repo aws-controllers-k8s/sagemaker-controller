@@ -22,6 +22,7 @@ from e2e import (
     service_marker,
     wait_for_status,
     create_sagemaker_resource,
+    delete_custom_resource,
     get_sagemaker_pipeline,
     assert_tags_in_sync,
 )
@@ -59,11 +60,9 @@ def pipeline():
     )
 
     # Delete the k8s resource if not already deleted by tests
-    if k8s.get_resource_exists(pipeline_reference):
-        _, deleted = k8s.delete_custom_resource(
-            pipeline_reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
-        )
-        assert deleted
+    assert delete_custom_resource(
+        pipeline_reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
+    )
 
 
 def get_sagemaker_pipeline_status(pipeline_arn: str):
@@ -164,7 +163,4 @@ class TestPipeline:
         assert_tags_in_sync(pipeline_arn, resource_tags)
 
         # Check that you can delete a completed resource from k8s
-        _, deleted = k8s.delete_custom_resource(
-            reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
-        )
-        assert deleted is True
+        assert delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
