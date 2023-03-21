@@ -54,9 +54,7 @@ def notebook_instance():
     yield (reference, resource, spec)
 
     # Delete the k8s resource if not already deleted by tests
-
-
-assert delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
+    assert delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
 
 
 def get_notebook_instance(notebook_instance_name: str):

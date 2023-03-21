@@ -25,6 +25,7 @@ from e2e.common.fixtures import (
 )
 from e2e.common import config as cfg
 from acktest.k8s import resource as k8s
+from e2e import delete_custom_resource
 
 # Access variable so it is loaded as a fixture
 _accessed = xgboost_churn_data_quality_job_definition, xgboost_churn_endpoint

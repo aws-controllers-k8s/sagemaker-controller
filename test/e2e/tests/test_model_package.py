@@ -92,9 +92,7 @@ def xgboost_versioned_model_package(xgboost_model_package_group):
 
     yield (reference, spec, resource)
     # Delete the k8s resource if not already deleted by tests
-
-
-assert delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
+    assert delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
 
 
 @pytest.fixture(scope="function")
@@ -113,8 +111,7 @@ def xgboost_unversioned_model_package():
 
     yield (reference, resource)
 
-
-assert delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
+    assert delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
 
 
 def get_model_package_sagemaker_status(model_package_name: str):
