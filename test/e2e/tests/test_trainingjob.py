@@ -21,6 +21,7 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
+    delete_custom_resource,
     get_sagemaker_training_job,
     assert_training_status_in_sync,
     assert_tags_in_sync,
@@ -29,6 +30,7 @@ from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
 
 RESOURCE_PLURAL = "trainingjobs"
+
 
 @pytest.fixture(scope="function")
 def xgboost_training_job():
@@ -51,9 +53,10 @@ def xgboost_training_job():
 
     yield (reference, resource)
 
-    if k8s.get_resource_exists(reference):
-        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
-        assert deleted
+    assert delete_custom_resource(
+        reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
+    )
+
 
 @pytest.mark.canary
 @service_marker
@@ -76,8 +79,9 @@ class TestTrainingJob:
         )
 
         # Delete the k8s resource.
-        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
-        assert deleted is True
+        assert delete_custom_resource(
+            reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
+        )
 
         training_job_desc = get_sagemaker_training_job(training_job_name)
         assert training_job_desc["TrainingJobStatus"] in cfg.LIST_JOB_STATUS_STOPPED
@@ -109,5 +113,6 @@ class TestTrainingJob:
         assert_tags_in_sync(training_job_arn, resource_tags)
 
         # Check that you can delete a completed resource from k8s
-        _, deleted = k8s.delete_custom_resource(reference, cfg. JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
-        assert deleted is True
+        assert delete_custom_resource(
+            reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
+        )

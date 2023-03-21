@@ -17,6 +17,7 @@ import pytest
 import logging
 from e2e import (
     create_sagemaker_resource,
+    delete_custom_resource,
     wait_sagemaker_endpoint_status,
 )
 
@@ -91,8 +92,9 @@ def xgboost_churn_endpoint(sagemaker_client):
     yield endpoint_spec
 
     for cr in (model_reference, endpoint_config_reference, endpoint_reference):
-        _, deleted = k8s.delete_custom_resource(cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
-        assert deleted
+        assert delete_custom_resource(
+            cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+        )
 
 
 @pytest.fixture(scope="module")
@@ -118,6 +120,6 @@ def xgboost_churn_data_quality_job_definition(xgboost_churn_endpoint):
 
     yield (job_definition_reference, resource)
 
-    if k8s.get_resource_exists(job_definition_reference):
-        _, deleted = k8s.delete_custom_resource(job_definition_reference, 3, 10)
-        assert deleted
+    assert delete_custom_resource(
+        job_definition_reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+    )
