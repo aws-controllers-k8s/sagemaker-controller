@@ -25,6 +25,7 @@ from e2e import (
     create_adopted_resource,
     wait_sagemaker_model_package_status,
     assert_model_package_status_in_sync,
+    delete_custom_resource,
     get_sagemaker_model_package_group,
     get_sagemaker_model_package,
     sagemaker_client,
@@ -62,8 +63,12 @@ def sdk_make_model_package(model_package_group_name):
                     "ModelDataUrl": f"s3://{data_bucket}/sagemaker/model/xgboost-mnist-model.tar.gz",
                 }
             ],
-            "SupportedContentTypes": ["text/csv",],
-            "SupportedResponseMIMETypes": ["text/csv",],
+            "SupportedContentTypes": [
+                "text/csv",
+            ],
+            "SupportedResponseMIMETypes": [
+                "text/csv",
+            ],
         },
     }
 
@@ -126,7 +131,9 @@ def adopted_model_package(sdk_model_package):
         adopt_model_package_group_reference,
         _,
         adopt_model_package_group_resource,
-    ) = create_adopted_resource(replacements=replacements,)
+    ) = create_adopted_resource(
+        replacements=replacements,
+    )
     assert adopt_model_package_group_resource is not None
 
     # adopt model package
@@ -144,16 +151,17 @@ def adopted_model_package(sdk_model_package):
         _,
         adopt_model_package_resource,
     ) = create_adopted_resource(
-        replacements=replacements, spec_file="adopted_resource_base_arn",
+        replacements=replacements,
+        spec_file="adopted_resource_base_arn",
     )
     assert adopt_model_package_resource is not None
 
     yield (adopt_model_package_group_reference, adopt_model_package_reference)
 
     for cr in (adopt_model_package_group_reference, adopt_model_package_reference):
-        if k8s.get_resource_exists(cr):
-            _, deleted = k8s.delete_custom_resource(cr, 3, 10)
-            assert deleted
+        assert delete_custom_resource(
+            cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+        )
 
 
 @service_marker
@@ -236,14 +244,15 @@ class TestAdoptedModelPackage:
         ) == model_package_response.get("ModelPackageArn", None)
 
         assert_model_package_status_in_sync(
-            model_package_arn, model_package_reference, cfg.JOB_STATUS_COMPLETED,
+            model_package_arn,
+            model_package_reference,
+            cfg.JOB_STATUS_COMPLETED,
         )
         assert k8s.wait_on_condition(
             model_package_reference, "ACK.ResourceSynced", "True"
         )
 
         for cr in (model_package_reference, model_package_group_reference):
-            _, deleted = k8s.delete_custom_resource(
-                cr, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
+            assert delete_custom_resource(
+                cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
             )
-            assert deleted

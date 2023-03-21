@@ -25,6 +25,7 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
+    delete_custom_resource,
     assert_endpoint_status_in_sync,
     assert_tags_in_sync,
     get_sagemaker_endpoint,
@@ -65,7 +66,9 @@ def single_container_model(name_suffix):
 
     yield (model_reference, model_resource)
 
-    _, deleted = k8s.delete_custom_resource(model_reference, 3, 10)
+    _, deleted = k8s.delete_custom_resource(
+        model_reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+    )
     assert deleted
 
 
@@ -94,7 +97,9 @@ def multi_variant_config(name_suffix, single_container_model):
 
     yield (config_reference, config_resource)
 
-    _, deleted = k8s.delete_custom_resource(config_reference, 3, 10)
+    _, deleted = k8s.delete_custom_resource(
+        config_reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+    )
     assert deleted
 
 
@@ -123,7 +128,9 @@ def single_variant_config(name_suffix, single_container_model):
 
     yield (config_reference, config_resource)
 
-    _, deleted = k8s.delete_custom_resource(config_reference, 3, 10)
+    _, deleted = k8s.delete_custom_resource(
+        config_reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+    )
     assert deleted
 
 
@@ -149,10 +156,7 @@ def xgboost_endpoint(name_suffix, single_variant_config):
     yield (reference, resource, spec)
 
     # Delete the k8s resource if not already deleted by tests
-    if k8s.get_resource_exists(reference):
-        # longer wait incase endpoint is in creating/updating status
-        _, deleted = k8s.delete_custom_resource(reference, 40, cfg.DELETE_WAIT_LENGTH)
-        assert deleted
+    assert delete_custom_resource(reference, 40, cfg.DELETE_WAIT_LENGTH)
 
 
 @pytest.fixture(scope="module")
@@ -207,7 +211,9 @@ def faulty_config(name_suffix, single_container_model):
     yield (config_reference, config_resource)
 
     for cr in (model_reference, config_reference):
-        _, deleted = k8s.delete_custom_resource(cr, 3, 10)
+        _, deleted = k8s.delete_custom_resource(
+            cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+        )
         assert deleted
 
 
@@ -255,7 +261,9 @@ class TestEndpoint:
 
         # endpoint transitions Updating -> InService state
         assert_endpoint_status_in_sync(
-            endpoint_reference.name, endpoint_reference, cfg.ENDPOINT_STATUS_UPDATING,
+            endpoint_reference.name,
+            endpoint_reference,
+            cfg.ENDPOINT_STATUS_UPDATING,
         )
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "False")
         endpoint_resource = k8s.get_resource(endpoint_reference)
@@ -264,7 +272,9 @@ class TestEndpoint:
         assert annotations[LAST_ENDPOINTCONFIG_UPDATE_ANNOTATION] == faulty_config_name
 
         assert_endpoint_status_in_sync(
-            endpoint_reference.name, endpoint_reference, cfg.ENDPOINT_STATUS_INSERVICE,
+            endpoint_reference.name,
+            endpoint_reference,
+            cfg.ENDPOINT_STATUS_INSERVICE,
         )
 
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "False")
@@ -302,7 +312,9 @@ class TestEndpoint:
 
         # endpoint transitions Updating -> InService state
         assert_endpoint_status_in_sync(
-            endpoint_reference.name, endpoint_reference, cfg.ENDPOINT_STATUS_UPDATING,
+            endpoint_reference.name,
+            endpoint_reference,
+            cfg.ENDPOINT_STATUS_UPDATING,
         )
 
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "False")
@@ -313,7 +325,9 @@ class TestEndpoint:
         assert annotations[LAST_ENDPOINTCONFIG_UPDATE_ANNOTATION] == new_config_name
 
         assert_endpoint_status_in_sync(
-            endpoint_reference.name, endpoint_reference, cfg.ENDPOINT_STATUS_INSERVICE,
+            endpoint_reference.name,
+            endpoint_reference,
+            cfg.ENDPOINT_STATUS_INSERVICE,
         )
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "True")
         assert k8s.get_resource_condition(endpoint_reference, "ACK.Terminal") is None
@@ -336,10 +350,9 @@ class TestEndpoint:
         (reference, resource, _) = xgboost_endpoint
         endpoint_name = resource["spec"].get("endpointName", None)
 
-        _, deleted = k8s.delete_custom_resource(
+        assert delete_custom_resource(
             reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
         )
-        assert deleted
 
         assert get_sagemaker_endpoint(endpoint_name) is None
 
