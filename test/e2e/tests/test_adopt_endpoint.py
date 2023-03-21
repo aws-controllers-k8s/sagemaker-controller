@@ -25,6 +25,7 @@ from e2e import (
     CRD_VERSION,
     create_adopted_resource,
     wait_sagemaker_endpoint_status,
+    delete_custom_resource,
     assert_endpoint_status_in_sync,
     sagemaker_client,
     get_sagemaker_endpoint,
@@ -169,13 +170,12 @@ def adopted_endpoint(sdk_endpoint):
     yield (adopt_model_reference, adopt_config_reference, adopt_endpoint_reference)
 
     for cr in (adopt_model_reference, adopt_config_reference, adopt_endpoint_reference):
-        if k8s.get_resource_exists(cr):
-            _, deleted = k8s.delete_custom_resource(cr, 3, 10)
-            assert deleted
+        assert delete_custom_resource(
+            cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+        )
 
 
 @service_marker
-@pytest.mark.canary
 class TestAdoptedEndpoint:
     def test_smoke(self, sdk_endpoint, adopted_endpoint):
         (
@@ -264,12 +264,13 @@ class TestAdoptedEndpoint:
         )
 
         assert_endpoint_status_in_sync(
-            endpoint_name, endpoint_reference, cfg.ENDPOINT_STATUS_INSERVICE,
+            endpoint_name,
+            endpoint_reference,
+            cfg.ENDPOINT_STATUS_INSERVICE,
         )
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "True")
 
         for cr in (model_reference, config_reference, endpoint_reference):
-            _, deleted = k8s.delete_custom_resource(
+            assert delete_custom_resource(
                 cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
             )
-            assert deleted
