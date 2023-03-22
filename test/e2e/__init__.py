@@ -23,7 +23,7 @@ from unittest import TestCase
 import random
 
 from acktest.k8s import resource as k8s
-from common import config as cfg
+from e2e.common import config as cfg
 
 
 SERVICE_NAME = "sagemaker"
