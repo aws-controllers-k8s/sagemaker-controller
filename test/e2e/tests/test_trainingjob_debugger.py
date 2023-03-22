@@ -21,7 +21,6 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    delete_custom_resource,
     wait_for_status,
     get_sagemaker_training_job,
     assert_training_status_in_sync,
@@ -49,9 +48,9 @@ def xgboost_training_job_debugger():
 
     yield (reference, resource, spec)
 
-    assert delete_custom_resource(
-        reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
-    )
+    if k8s.get_resource_exists(reference):
+        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        assert deleted
 
 
 def get_training_rule_eval_sagemaker_status(training_job_name: str, rule_type: str):
@@ -112,9 +111,7 @@ class TestTrainingDebuggerJob:
         resource_rule_type = sagemaker_rule_type[0].lower() + sagemaker_rule_type[1:]
         assert (
             self._wait_sagemaker_training_rule_eval_status(
-                training_job_name,
-                sagemaker_rule_type,
-                expected_status,
+                training_job_name, sagemaker_rule_type, expected_status,
             )
             == self._wait_resource_training_rule_eval_status(
                 reference, resource_rule_type, expected_status
@@ -187,7 +184,9 @@ class TestTrainingDebuggerJob:
         assert (
             resource["status"]["lastModifiedTime"] != resource["status"]["creationTime"]
         )
-        assert training_sm_desc["LastModifiedTime"] != training_sm_desc["CreationTime"]
+        assert (
+            training_sm_desc["LastModifiedTime"] != training_sm_desc["CreationTime"]
+        )
 
     def delete_debugger_trainingjob(self, xgboost_training_job_debugger):
         # Check that you can delete a completed resource from k8s
@@ -198,9 +197,10 @@ class TestTrainingDebuggerJob:
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(resource_arn, resource_tags)
 
-        assert delete_custom_resource(
+        _, deleted = k8s.delete_custom_resource(
             reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
         )
+        assert deleted is True
 
     def test_driver(self, xgboost_training_job_debugger):
         self.create_debugger_training(xgboost_training_job_debugger)

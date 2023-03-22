@@ -25,7 +25,6 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    delete_custom_resource,
     wait_for_status,
     sagemaker_client,
     assert_tags_in_sync,
@@ -60,7 +59,11 @@ def feature_group():
     yield (reference, resource)
 
     # Delete the k8s resource if not already deleted by tests
-    assert delete_custom_resource(reference, WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH)
+    if k8s.get_resource_exists(reference):
+        _, deleted = k8s.delete_custom_resource(
+            reference, WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH
+        )
+        assert deleted
 
 
 def get_sagemaker_feature_group(feature_group_name: str):
@@ -80,12 +83,10 @@ def get_feature_group_status(feature_group_name: str):
     feature_group_describe_response = get_sagemaker_feature_group(feature_group_name)
     return feature_group_describe_response["FeatureGroupStatus"]
 
-
 def get_resource_feature_group_status(reference: k8s.CustomResourceReference):
     resource = k8s.get_resource(reference)
     assert RESOURCE_STATUS in resource[STATUS]
     return resource[STATUS][RESOURCE_STATUS]
-
 
 @service_marker
 @pytest.mark.canary
@@ -106,11 +107,11 @@ class TestFeatureGroup:
         )
 
     def _wait_resource_feature_group_status(
-        self,
-        reference: k8s.CustomResourceReference,
-        expected_status: str,
-        wait_periods: int = WAIT_PERIOD_COUNT,
-        period_length: int = WAIT_PERIOD_LENGTH,
+            self,
+            reference: k8s.CustomResourceReference,
+            expected_status: str,
+            wait_periods: int = WAIT_PERIOD_COUNT,
+            period_length: int = WAIT_PERIOD_LENGTH,
     ):
         return wait_for_status(
             expected_status,
@@ -121,14 +122,14 @@ class TestFeatureGroup:
         )
 
     def _assert_feature_group_status_in_sync(
-        self, feature_group_name, reference, expected_status
+            self, feature_group_name, reference, expected_status
     ):
         assert (
             self._wait_feature_group_status(feature_group_name, expected_status)
             == self._wait_resource_feature_group_status(reference, expected_status)
             == expected_status
         )
-
+    
     def test_create_feature_group(self, feature_group):
         """Tests that a feature group can be created and deleted
         using the Feature Group Controller.
@@ -144,9 +145,7 @@ class TestFeatureGroup:
 
         assert k8s.get_resource_arn(resource) == feature_group_arn
 
-        assert (
-            feature_group_sm_desc["FeatureGroupStatus"] == FEATURE_GROUP_STATUS_CREATING
-        )
+        assert feature_group_sm_desc["FeatureGroupStatus"] == FEATURE_GROUP_STATUS_CREATING
 
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
@@ -160,6 +159,9 @@ class TestFeatureGroup:
         assert_tags_in_sync(feature_group_arn, resource_tags)
 
         # Delete the k8s resource.
-        assert delete_custom_resource(reference, WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH)
-
+        _, deleted = k8s.delete_custom_resource(
+            reference, WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH
+        )
+        assert deleted
+        
         assert get_sagemaker_feature_group(feature_group_name) is None

@@ -25,7 +25,6 @@ from e2e.common.fixtures import (
 )
 from e2e.common import config as cfg
 from acktest.k8s import resource as k8s
-from e2e import delete_custom_resource
 
 # Access variable so it is loaded as a fixture
 _accessed = xgboost_churn_data_quality_job_definition, xgboost_churn_endpoint
@@ -64,9 +63,8 @@ class TestDataQualityJobDefinition:
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(job_definition_arn, resource_tags)
         # Delete the k8s resource.
-        assert delete_custom_resource(
-            reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
-        )
+        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        assert deleted
         assert (
             describe_sagemaker_data_quality_job_definition(
                 sagemaker_client, job_definition_name

@@ -18,12 +18,7 @@ import pytest
 import logging
 import time
 
-from e2e import (
-    service_marker,
-    create_sagemaker_resource,
-    delete_custom_resource,
-    assert_tags_in_sync,
-)
+from e2e import service_marker, create_sagemaker_resource, assert_tags_in_sync
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common.fixtures import xgboost_churn_endpoint
 from e2e.common import config as cfg
@@ -56,9 +51,9 @@ def xgboost_churn_model_explainability_job_definition(xgboost_churn_endpoint):
 
     yield (reference, resource)
 
-    assert delete_custom_resource(
-        reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
-    )
+    if k8s.get_resource_exists(reference):
+        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        assert deleted
 
 
 def get_sagemaker_model_explainability_job_definition(
@@ -96,9 +91,8 @@ class TestModelExplainabilityJobDefinition:
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(job_definition_arn, resource_tags)
         # Delete the k8s resource.
-        assert delete_custom_resource(
-            reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
-        )
+        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        assert deleted
         assert (
             get_sagemaker_model_explainability_job_definition(
                 sagemaker_client, job_definition_name

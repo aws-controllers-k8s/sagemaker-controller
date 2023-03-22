@@ -24,7 +24,6 @@ from e2e import (
     service_marker,
     wait_for_status,
     create_sagemaker_resource,
-    delete_custom_resource,
     get_sagemaker_model_package,
     sagemaker_client,
     assert_tags_in_sync,
@@ -66,9 +65,11 @@ def xgboost_model_package_group():
     yield (model_package_group_reference, model_package_group_resource)
 
     # Delete the k8s resource if not already deleted by tests
-    assert delete_custom_resource(
-        model_package_group_reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
-    )
+    if k8s.get_resource_exists(model_package_group_reference):
+        _, deleted = k8s.delete_custom_resource(
+            model_package_group_reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
+        )
+        assert deleted
 
 
 @pytest.fixture(scope="function")
@@ -92,7 +93,11 @@ def xgboost_versioned_model_package(xgboost_model_package_group):
 
     yield (reference, spec, resource)
     # Delete the k8s resource if not already deleted by tests
-    assert delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
+    if k8s.get_resource_exists(reference):
+        _, deleted = k8s.delete_custom_resource(
+            reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
+        )
+        assert deleted
 
 
 @pytest.fixture(scope="function")
@@ -111,7 +116,11 @@ def xgboost_unversioned_model_package():
 
     yield (reference, resource)
 
-    assert delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
+    if k8s.get_resource_exists(reference):
+        _, deleted = k8s.delete_custom_resource(
+            reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
+        )
+        assert deleted
 
 
 def get_model_package_sagemaker_status(model_package_name: str):
@@ -202,8 +211,10 @@ class TestmodelPackage:
         assert_tags_in_sync(model_package_arn, resource_tags)
 
         # Check that you can delete a completed resource from k8s
-        assert delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
-
+        _, deleted = k8s.delete_custom_resource(
+            reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
+        )
+        assert deleted is True
         assert get_sagemaker_model_package(model_package_name) is None
 
     def test_versioned_model_package_completed(self, xgboost_versioned_model_package):
@@ -258,6 +269,8 @@ class TestmodelPackage:
         )
         assert resource["spec"].get("approvalDescription", None) == approval_description
         # Check that you can delete a completed resource from k8s
-        assert delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
-
+        _, deleted = k8s.delete_custom_resource(
+            reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
+        )
+        assert deleted is True
         assert get_sagemaker_model_package(model_package_name) is None

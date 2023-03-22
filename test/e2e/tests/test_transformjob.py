@@ -23,7 +23,6 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    delete_custom_resource,
     wait_for_status,
     sagemaker_client,
     assert_tags_in_sync,
@@ -64,9 +63,9 @@ def xgboost_model_for_transform(generate_job_names):
 
     yield (transform_resource_name, model_resource_name)
 
-    assert delete_custom_resource(
-        reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
-    )
+    if k8s.get_resource_exists(reference):
+        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
+        assert deleted
 
 
 # TODO: This method can also move to a common file.
@@ -93,9 +92,9 @@ def xgboost_transformjob(xgboost_model_for_transform):
 
     yield (reference, resource)
 
-    assert delete_custom_resource(
-        reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
-    )
+    if k8s.get_resource_exists(reference):
+        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
+        assert deleted
 
 
 def get_sagemaker_transform_job(transform_job_name: str):
@@ -181,9 +180,8 @@ class TestTransformJob:
         )
 
         # Delete the k8s resource.
-        assert delete_custom_resource(
-            reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
-        )
+        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
+        assert deleted is True
 
         transform_sm_desc = get_sagemaker_transform_job(transform_job_name)
         assert transform_sm_desc["TransformJobStatus"] in cfg.LIST_JOB_STATUS_STOPPED
@@ -211,6 +209,5 @@ class TestTransformJob:
         assert_tags_in_sync(transform_arn, resource_tags)
 
         # Check that you can delete a completed resource from k8s
-        assert delete_custom_resource(
-            reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
-        )
+        _, deleted = k8s.delete_custom_resource(reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH)
+        assert deleted is True

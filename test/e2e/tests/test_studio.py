@@ -24,7 +24,6 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    delete_custom_resource,
     wait_for_status,
     sagemaker_client,
     assert_tags_in_sync,
@@ -211,9 +210,11 @@ def domain_fixture():
 
     yield (reference, resource, spec)
 
-    assert delete_custom_resource(
-        reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
-    )
+    if k8s.get_resource_exists(reference):
+        _, deleted = k8s.delete_custom_resource(
+            reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
+        )
+        assert deleted
 
 
 @pytest.fixture(scope="function")
@@ -255,11 +256,13 @@ def user_profile_fixture(domain_fixture):
         user_profile_spec,
     )
 
-    assert delete_custom_resource(
-        user_profile_reference,
-        cfg.JOB_DELETE_WAIT_PERIODS,
-        cfg.JOB_DELETE_WAIT_LENGTH,
-    )
+    if k8s.get_resource_exists(user_profile_reference):
+        _, deleted = k8s.delete_custom_resource(
+            user_profile_reference,
+            cfg.JOB_DELETE_WAIT_PERIODS,
+            cfg.JOB_DELETE_WAIT_LENGTH,
+        )
+    assert deleted
 
 
 @pytest.fixture(scope="function")
@@ -319,9 +322,13 @@ def app_fixture(user_profile_fixture):
         app_spec,
     )
 
-    assert delete_custom_resource(
-        app_reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
-    )
+    if k8s.get_resource_exists(app_reference):
+        _, deleted = k8s.delete_custom_resource(
+            app_reference,
+            cfg.JOB_DELETE_WAIT_PERIODS,
+            cfg.JOB_DELETE_WAIT_LENGTH,
+        )
+    assert deleted
 
 
 class TestDomain:

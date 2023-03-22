@@ -24,7 +24,6 @@ from acktest.k8s import resource as k8s
 from e2e import (
     service_marker,
     create_sagemaker_resource,
-    delete_custom_resource,
     assert_tags_in_sync,
     get_sagemaker_endpoint_config,
 )
@@ -64,13 +63,11 @@ def single_variant_config():
 
     yield (config_reference, config_resource)
 
-    k8s.delete_custom_resource(
-        model_reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
-    )
+    k8s.delete_custom_resource(model_reference, 3, 10)
     # Delete the k8s resource if not already deleted by tests
-    assert delete_custom_resource(
-        config_reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
-    )
+    if k8s.get_resource_exists(config_reference):
+        _, deleted = k8s.delete_custom_resource(config_reference, 3, 10)
+        assert deleted
 
 
 @service_marker
@@ -90,8 +87,7 @@ class TestEndpointConfig:
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(endpoint_arn, resource_tags)
         # Delete the k8s resource.
-        assert delete_custom_resource(
-            reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
-        )
+        _, deleted = k8s.delete_custom_resource(reference, 3, 10)
+        assert deleted
 
         assert get_sagemaker_endpoint_config(config_name) is None
