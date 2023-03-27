@@ -19,8 +19,16 @@ phases:
     commands:
       # Run tests
       - docker run --name ack-canary $(env | cut -f1 -d= | sed 's/^/-e /') --mount type=bind,source="$(pwd)/",target="/${SERVICE}-controller/" ${ECR_CACHE_URI}:latest
-      
-      # Push test image to cache ECR repo
+  
+  post_build:
+    commands:
+      - docker cp ack-canary:/sagemaker-controller/test/canary/integration_tests.log /tmp/results.xml
+        # Push test image to cache ECR repo
       - docker push ${ECR_CACHE_URI}:latest || true
-      
+
+reports:
+  IntegrationTestReport:
+    files:
+      - "results.xml"
+    base-directory: "/tmp"  
       

@@ -87,7 +87,7 @@ pushd $E2E_DIR
 
   # run tests
   echo "Run Tests"
-  pytest_args=( -n 15 --dist loadfile --log-cli-level INFO )
+  pytest_args=( -n 15 --dist loadfile --log-cli-level INFO --junitxml=report.xml )
   if [[ $SERVICE_REGION =~ ^(eu-north-1|eu-west-3)$  ]]; then
     # If select_regions_1 true we run the notebook_instance test
     pytest_args+=(-m "canary or select_regions_1")
