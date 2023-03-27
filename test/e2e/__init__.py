@@ -49,7 +49,7 @@ def create_sagemaker_resource(
     spec_file,
     replacements,
     namespace="default",
-    wait_period=3,
+    wait_period=6,
     period_length=10,
 ):
     """
