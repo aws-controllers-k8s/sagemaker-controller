@@ -87,12 +87,14 @@ pushd $E2E_DIR
 
   # run tests
   echo "Run Tests"
-  pytest_args=( -n 15 --dist loadfile --log-cli-level INFO --junitxml ../canary/integration_tests.log )
+  pytest_args=( -n 15 --dist loadfile --log-cli-level INFO --junitxml ../canary/integration_tests.xml )
   if [[ $SERVICE_REGION =~ ^(eu-north-1|eu-west-3)$  ]]; then
     # If select_regions_1 true we run the notebook_instance test
     pytest_args+=(-m "canary or select_regions_1")
   else
     pytest_args+=(-m "canary")
   pytest "${pytest_args[@]}"
+  trap 'python ../canary/scripts/push_stats_to_cloudwatch.py' EXIT
+
   fi
 popd
