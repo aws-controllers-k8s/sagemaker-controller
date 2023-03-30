@@ -22,6 +22,7 @@ def readXML_and_publish_metrics_to_cw():
 
     print(f"Failures: {failures}")
     print(f"Total tests: {tests}")
+    print(f"Success: {successes}")
 
     # push to cloudwatch
     cw_client = boto3.client("cloudwatch")
