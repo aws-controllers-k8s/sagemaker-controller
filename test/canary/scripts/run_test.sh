@@ -63,15 +63,13 @@ function cleanup {
   export PYTHONPATH=.. 
   python service_cleanup.py
 
-}
-trap cleanup EXIT
-
-function push_to_cloudwatch {
+  #push to metrics to cloudwatch
   echo "Pushing Codebuild stats to Cloudwatch."
   cd $SCRIPTS_DIR
   python push_stats_to_cloudwatch.py
 }
-trap push_to_cloudwatch EXIT
+trap cleanup EXIT
+
 
 # Update kubeconfig
 aws --region $CLUSTER_REGION eks update-kubeconfig --name $CLUSTER_NAME
