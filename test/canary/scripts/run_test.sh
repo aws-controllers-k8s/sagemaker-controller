@@ -98,6 +98,6 @@ pushd $E2E_DIR
     pytest_args+=(-m "canary or select_regions_1")
   else
     pytest_args+=(-m "canary")
-  pytest "${pytest_args[@]}"
   fi
+  pytest "${pytest_args[@]}"
 popd
