@@ -29,6 +29,7 @@ def pytest_configure(config):
         "markers", "service(arg): mark test associated with a given service"
     )
     config.addinivalue_line("markers", "slow: mark test as slow to run")
+    config.addinivalue_line("markers", "select_regions_1: mark test to only run if in select region")
 
 
 def pytest_collection_modifyitems(config, items):
