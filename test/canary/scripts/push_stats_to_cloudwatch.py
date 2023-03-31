@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 import os
 
 
-xml_path = "../canary/integration_tests.xml"
+xml_path = "../integration_tests.xml"
 
 def readXML_and_publish_metrics_to_cw():
     if os.path.isfile(xml_path):
@@ -14,6 +14,8 @@ def readXML_and_publish_metrics_to_cw():
         tests = testsuite.attrib["tests"]
         successes = int(tests) - int(failures)
     else:
+        print("f{xml_path} does not exists.")
+        print(os.getcwd())
         failures = 0
         successes = 0
         tests = 1
