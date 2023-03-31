@@ -68,7 +68,8 @@ trap cleanup EXIT
 
 function push_to_cloudwatch {
   echo "Pushing Codebuild stats to Cloudwatch."
-  python ../canary/scripts/push_stats_to_cloudwatch.py
+  pushd $SCRIPTS_DIR
+  python push_stats_to_cloudwatch.py
 }
 trap push_to_cloudwatch EXIT
 
