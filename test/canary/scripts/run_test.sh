@@ -28,6 +28,11 @@ function print_controller_logs() {
 }
 
 function cleanup {
+  #push to metrics to cloudwatch
+  echo "Pushing Codebuild stats to Cloudwatch."
+  cd $SCRIPTS_DIR
+  python push_stats_to_cloudwatch.py
+
   echo "Cleaning up resources"
   set +e
   kubectl delete monitoringschedules --all
@@ -63,10 +68,6 @@ function cleanup {
   export PYTHONPATH=.. 
   python service_cleanup.py
 
-  #push to metrics to cloudwatch
-  echo "Pushing Codebuild stats to Cloudwatch."
-  cd $SCRIPTS_DIR
-  python push_stats_to_cloudwatch.py
 }
 trap cleanup EXIT
 
