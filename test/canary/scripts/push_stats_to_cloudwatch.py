@@ -18,7 +18,7 @@ def readXML_and_publish_metrics_to_cw():
         print(os.getcwd())
         failures = 0
         successes = 0
-        tests = 1
+        tests = 23
 
     timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
 
