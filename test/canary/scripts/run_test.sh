@@ -28,6 +28,11 @@ function print_controller_logs() {
 }
 
 function cleanup {
+  #push to metrics to cloudwatch
+  echo "Pushing Codebuild stats to Cloudwatch."
+  cd $SCRIPTS_DIR
+  python push_stats_to_cloudwatch.py
+
   echo "Cleaning up resources"
   set +e
   kubectl delete monitoringschedules --all
@@ -66,6 +71,7 @@ function cleanup {
 }
 trap cleanup EXIT
 
+
 # Update kubeconfig
 aws --region $CLUSTER_REGION eks update-kubeconfig --name $CLUSTER_NAME
 
@@ -87,7 +93,7 @@ pushd $E2E_DIR
 
   # run tests
   echo "Run Tests"
-  pytest_args=( -n 15 --dist loadfile --log-cli-level INFO )
+  pytest_args=( -n 15 --dist loadfile --log-cli-level INFO --junitxml ../canary/integration_tests.xml)
   if [[ $SERVICE_REGION =~ ^(eu-north-1|eu-west-3)$  ]]; then
     # If select_regions_1 true we run the notebook_instance test
     pytest_args+=(-m "canary or select_regions_1")
