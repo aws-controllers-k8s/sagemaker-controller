@@ -13,7 +13,7 @@ def readXML_and_publish_metrics_to_cw():
         failures = testsuite.attrib["failures"]
         tests = testsuite.attrib["tests"]
         successes = int(tests) - int(failures)
-        success_rate = successes/int(tests)*100
+        success_rate = (successes/int(tests))*100
     else:
         print("f{xml_path} does not exists.")
         print(os.getcwd())
