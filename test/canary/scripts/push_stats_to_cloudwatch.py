@@ -13,12 +13,14 @@ def readXML_and_publish_metrics_to_cw():
         failures = testsuite.attrib["failures"]
         tests = testsuite.attrib["tests"]
         successes = int(tests) - int(failures)
+        success_rate = (successes/int(tests))*100
     else:
         print("f{xml_path} does not exists.")
         print(os.getcwd())
         failures = 0
         successes = 0
-        tests = 23
+        tests = 0
+        success_rate = 0
 
     timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
 
@@ -58,6 +60,15 @@ def readXML_and_publish_metrics_to_cw():
             ],
             "Value": int(successes),
             "Unit": "Count",
+        },
+        {
+            "MetricName": "success_rate",
+            "Timestamp": timestamp,
+            "Dimensions": [
+                {"Name": "CodeBuild Project Name", "Value": project_name},
+            ],
+            "Value": int(success_rate),
+            "Unit": "Percent",
         },
     ]
 
