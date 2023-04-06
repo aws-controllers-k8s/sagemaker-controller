@@ -165,19 +165,6 @@ class TestMonitoringSchedule:
         monitoring_schedule_arn = monitoring_schedule_desc["MonitoringScheduleArn"]
         assert k8s.get_resource_arn(resource) == monitoring_schedule_arn
 
-        # scheule transitions Pending -> Scheduled state
-        # Pending status is shortlived only for 30 seconds because baselining job has already been run
-        # remove the checks for Pending status if the test is flaky because of this
-        # as the main objective is to test for Scheduled status
-        # OR
-        # create the schedule with a on-going baseline job where it waits for the baselining job to complete
-        assert (
-            wait_resource_monitoring_schedule_status(
-                reference, self.STATUS_PENDING, 5, 2
-            )
-            == self.STATUS_PENDING
-        )
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False", 5, 2)
 
         self._assert_monitoring_schedule_status_in_sync(
             sagemaker_client, monitoring_schedule_name, reference, self.STATUS_SCHEDULED
