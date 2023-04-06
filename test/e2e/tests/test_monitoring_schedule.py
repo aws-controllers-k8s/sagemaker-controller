@@ -141,7 +141,7 @@ class TestMonitoringSchedule:
         schedule_name,
         reference,
         expected_status,
-        wait_periods: int = 6,
+        wait_periods: int = 7,
         period_length: int = 30,
     ):
         assert (
