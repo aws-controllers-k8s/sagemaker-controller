@@ -58,7 +58,6 @@ def xgboost_training_job():
     )
 
 
-@pytest.mark.canary
 @service_marker
 class TestTrainingJob:
     def test_stopped(self, xgboost_training_job):
@@ -86,6 +85,7 @@ class TestTrainingJob:
         training_job_desc = get_sagemaker_training_job(training_job_name)
         assert training_job_desc["TrainingJobStatus"] in cfg.LIST_JOB_STATUS_STOPPED
 
+    @pytest.mark.canary
     def test_completed(self, xgboost_training_job):
         (reference, resource) = xgboost_training_job
         assert k8s.get_resource_exists(reference)
