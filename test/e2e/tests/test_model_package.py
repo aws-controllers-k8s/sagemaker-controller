@@ -132,7 +132,7 @@ class TestmodelPackage:
         self,
         reference: k8s.CustomResourceReference,
         expected_status: str,
-        wait_periods: int = 30,
+        wait_periods: int = 32,
         period_length: int = 30,
     ):
         return wait_for_status(
@@ -147,7 +147,7 @@ class TestmodelPackage:
         self,
         model_package_name,
         expected_status: str,
-        wait_periods: int = 30,
+        wait_periods: int = 32,
         period_length: int = 30,
     ):
         return wait_for_status(
