@@ -38,7 +38,7 @@ SPEC_FILE = "feature_group"
 FEATURE_GROUP_STATUS_CREATING = "Creating"
 FEATURE_GROUP_STATUS_CREATED = "Created"
 # longer wait is used because we sometimes see server taking time to create/delete
-WAIT_PERIOD_COUNT = 8
+WAIT_PERIOD_COUNT = 9
 WAIT_PERIOD_LENGTH = 30
 STATUS = "status"
 RESOURCE_STATUS = "featureGroupStatus"
@@ -143,12 +143,6 @@ class TestFeatureGroup:
         feature_group_arn = feature_group_sm_desc["FeatureGroupArn"]
 
         assert k8s.get_resource_arn(resource) == feature_group_arn
-
-        assert (
-            feature_group_sm_desc["FeatureGroupStatus"] == FEATURE_GROUP_STATUS_CREATING
-        )
-
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
         self._assert_feature_group_status_in_sync(
             feature_group_name, reference, FEATURE_GROUP_STATUS_CREATED

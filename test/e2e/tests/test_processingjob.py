@@ -86,7 +86,6 @@ def get_processing_resource_status(reference: k8s.CustomResourceReference):
 
 
 @service_marker
-@pytest.mark.canary
 class TestProcessingJob:
     def _wait_resource_processing_status(
         self,
@@ -152,6 +151,7 @@ class TestProcessingJob:
         processing_job_desc = get_sagemaker_processing_job(processing_job_name)
         assert processing_job_desc["ProcessingJobStatus"] in cfg.LIST_JOB_STATUS_STOPPED
 
+    @pytest.mark.canary
     def test_completed(self, kmeans_processing_job):
         (reference, resource) = kmeans_processing_job
         assert k8s.get_resource_exists(reference)
