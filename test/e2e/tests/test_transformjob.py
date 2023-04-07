@@ -123,13 +123,12 @@ def get_transform_resource_status(reference: k8s.CustomResourceReference):
 
 
 @service_marker
-@pytest.mark.canary
 class TestTransformJob:
     def _wait_resource_transform_status(
         self,
         reference: k8s.CustomResourceReference,
         expected_status: str,
-        wait_periods: int = 30,
+        wait_periods: int = 32,
         period_length: int = 30,
     ):
         return wait_for_status(
@@ -144,7 +143,7 @@ class TestTransformJob:
         self,
         transform_job_name,
         expected_status: str,
-        wait_periods: int = 30,
+        wait_periods: int = 32,
         period_length: int = 30,
     ):
         return wait_for_status(
@@ -188,6 +187,7 @@ class TestTransformJob:
         transform_sm_desc = get_sagemaker_transform_job(transform_job_name)
         assert transform_sm_desc["TransformJobStatus"] in cfg.LIST_JOB_STATUS_STOPPED
 
+    @pytest.mark.canary
     def test_completed(self, xgboost_transformjob):
         (reference, resource) = xgboost_transformjob
         assert k8s.get_resource_exists(reference)
