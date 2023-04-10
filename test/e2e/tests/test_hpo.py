@@ -86,7 +86,6 @@ def get_hpo_resource_status(reference: k8s.CustomResourceReference):
 
 
 @service_marker
-@pytest.mark.canary
 class TestHPO:
     def _wait_resource_hpo_status(
         self,
@@ -153,6 +152,7 @@ class TestHPO:
             hpo_sm_desc["HyperParameterTuningJobStatus"] in cfg.LIST_JOB_STATUS_STOPPED
         )
 
+    @pytest.mark.canary
     def test_completed(self, xgboost_hpojob):
         (reference, resource) = xgboost_hpojob
         assert k8s.get_resource_exists(reference)
