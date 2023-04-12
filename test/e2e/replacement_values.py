@@ -199,6 +199,7 @@ ENDPOINT_INSTANCE_TYPES = {
 TRAINING_JOB_INSTANCE_TYPES = {
     "eu-west-3": "ml.m5.xlarge",
     "eu-north-1": "ml.m5.xlarge",
+    "me-south-1": "ml.m5.xlarge",
 }
 
 NOTEBOOK_INSTANCE_INSTANCE_TYPES = {
