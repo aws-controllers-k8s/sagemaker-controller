@@ -18,6 +18,7 @@ from acktest.aws.identity import get_region
 from e2e.bootstrap_resources import get_bootstrap_resources
 
 # Taken from the SageMaker Python SDK
+# https://github.com/aws/sagemaker-python-sdk/blob/master/src/sagemaker/image_uri_config/xgboost.json
 # Rather than including the entire SDK
 XGBOOST_IMAGE_URIS = {
     "us-west-1": "746614075791.dkr.ecr.us-west-1.amazonaws.com",
@@ -40,8 +41,15 @@ XGBOOST_IMAGE_URIS = {
     "eu-west-3": "659782779980.dkr.ecr.eu-west-3.amazonaws.com",
     "me-south-1": "801668240914.dkr.ecr.me-south-1.amazonaws.com",
     "sa-east-1": "737474898029.dkr.ecr.sa-east-1.amazonaws.com",
+    "eu-south-1": "978288397137.dkr.ecr.eu-south-1.amazonaws.com",
+    "ap-northeast-3": "867004704886.dkr.ecr.ap-northeast-3.amazonaws.com",
+    "eu-south-2": "104374241257.dkr.ecr.eu-south-2.amazonaws.com",
+    "ap-southeast-3": "951798379941.dkr.ecr.ap-southeast-3.amazonaws.com",
+    "me-central-1": "272398656194.dkr.ecr.me-central-1.amazonaws.com",
+    "eu-central-2": "680994064768.dkr.ecr.eu-central-2.amazonaws.com",
 }
 
+# https://github.com/aws/sagemaker-python-sdk/blob/master/src/sagemaker/image_uri_config/debugger.json
 DEBUGGER_IMAGE_URIS = {
     "us-west-1": "685455198987.dkr.ecr.us-west-1.amazonaws.com",
     "us-west-2": "895741380848.dkr.ecr.us-west-2.amazonaws.com",
@@ -63,6 +71,8 @@ DEBUGGER_IMAGE_URIS = {
     "eu-west-3": "447278800020.dkr.ecr.eu-west-3.amazonaws.com",
     "me-south-1": "986000313247.dkr.ecr.me-south-1.amazonaws.com",
     "sa-east-1": "818342061345.dkr.ecr.sa-east-1.amazonaws.com",
+    "eu-south-1": "563282790590.dkr.ecr.eu-south-1.amazonaws.com",
+    "ap-northeast-3": "479947661362.dkr.ecr.ap-northeast-3.amazonaws.com",
 }
 
 # https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-algo-docker-registry-paths.html
@@ -87,6 +97,12 @@ XGBOOST_V1_IMAGE_URIS = {
     "eu-west-3": "749696950732.dkr.ecr.eu-west-3.amazonaws.com",
     "me-south-1": "249704162688.dkr.ecr.me-south-1.amazonaws.com",
     "sa-east-1": "855470959533.dkr.ecr.sa-east-1.amazonaws.com",
+    "eu-south-1": "257386234256.dkr.ecr.eu-south-1.amazonaws.com", 
+    "ap-northeast-3": "867004704886.dkr.ecr.ap-northeast-3.amazonaws.com",
+    "eu-south-2": "104374241257.dkr.ecr.eu-south-2.amazonaws.com",
+    "ap-southeast-3": "951798379941.dkr.ecr.ap-southeast-3.amazonaws.com",
+    "me-central-1": "272398656194.dkr.ecr.me-central-1.amazonaws.com",
+    "eu-central-2": "680994064768.dkr.ecr.eu-central-2.amazonaws.com",
 }
 
 
@@ -113,6 +129,11 @@ PYTORCH_TRAIN_IMAGE_URIS = {
     "sa-east-1": "763104351884.dkr.ecr.sa-east-1.amazonaws.com",
     "cn-north-1": "727897471807.dkr.ecr.cn-north-1.amazonaws.com.cn",
     "cn-northwest-1": "727897471807.dkr.ecr.cn-northwest-1.amazonaws.com.cn",
+    "ap-northeast-3": "364406365360.dkr.ecr.ap-northeast-3.amazonaws.com",    
+    "eu-south-2": "503227376785.dkr.ecr.eu-south-2.amazonaws.com",
+    "ap-southeast-3": "907027046896.dkr.ecr.ap-southeast-3.amazonaws.com",
+    "me-central-1": "914824155844.dkr.ecr.me-central-1.amazonaws.com",
+    "eu-central-2": "380420809688.dkr.ecr.eu-central-2.amazonaws.com",
 }
 
 # https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-pre-built-container.html
@@ -140,6 +161,8 @@ MODEL_MONITOR_IMAGE_URIS = {
     "me-south-1": "607024016150.dkr.ecr.me-south-1.amazonaws.com",
     "sa-east-1": "539772159869.dkr.ecr.sa-east-1.amazonaws.com",
     "us-gov-west-1": "362178532790.dkr.ecr.us-gov-west-1.amazonaws.com",
+    "ap-northeast-3": "990339680094.dkr.ecr.ap-northeast-3.amazonaws.com",
+    "ap-southeast-3": "669540362728.dkr.ecr.ap-southeast-3.amazonaws.com",
 }
 
 # https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-configure-processing-jobs.html#clarify-processing-job-configure-container
@@ -164,6 +187,8 @@ CLARIFY_IMAGE_URIS = {
     "sa-east-1": "520018980103.dkr.ecr.sa-east-1.amazonaws.com",
     "af-south-1": "811711786498.dkr.ecr.af-south-1.amazonaws.com",
     "eu-south-1": "638885417683.dkr.ecr.eu-south-1.amazonaws.com",
+    "ap-northeast-3": "912233562940.dkr.ecr.ap-northeast-3.amazonaws.com",
+    "ap-southeast-3": "705930551576.dkr.ecr.ap-southeast-3.amazonaws.com",
 }
 
 ENDPOINT_INSTANCE_TYPES = {
@@ -174,6 +199,7 @@ ENDPOINT_INSTANCE_TYPES = {
 TRAINING_JOB_INSTANCE_TYPES = {
     "eu-west-3": "ml.m5.xlarge",
     "eu-north-1": "ml.m5.xlarge",
+    "me-south-1": "ml.m5.xlarge",
 }
 
 NOTEBOOK_INSTANCE_INSTANCE_TYPES = {
