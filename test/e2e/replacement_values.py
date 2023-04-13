@@ -40,6 +40,13 @@ XGBOOST_IMAGE_URIS = {
     "eu-west-3": "659782779980.dkr.ecr.eu-west-3.amazonaws.com",
     "me-south-1": "801668240914.dkr.ecr.me-south-1.amazonaws.com",
     "sa-east-1": "737474898029.dkr.ecr.sa-east-1.amazonaws.com",
+    "eu-south-1": "978288397137.dkr.ecr.eu-south-1.amazonaws.com",
+    "ap-northeast-3": "867004704886.dkr.ecr.ap-northeast-3.amazonaws.com",
+    "eu-south-2": "104374241257.dkr.ecr.eu-south-2.amazonaws.com",
+    "ap-southeast-3": "951798379941.dkr.ecr.ap-southeast-3.amazonaws.com",
+    "me-central-1": "272398656194.dkr.ecr.me-central-1.amazonaws.com",
+    "eu-central-2": "680994064768.dkr.ecr.eu-central-2.amazonaws.com",
+    "af-south-1": "510948584623.dkr.ecr.af-south-1.amazonaws.com",
 }
 
 DEBUGGER_IMAGE_URIS = {
@@ -63,6 +70,13 @@ DEBUGGER_IMAGE_URIS = {
     "eu-west-3": "447278800020.dkr.ecr.eu-west-3.amazonaws.com",
     "me-south-1": "986000313247.dkr.ecr.me-south-1.amazonaws.com",
     "sa-east-1": "818342061345.dkr.ecr.sa-east-1.amazonaws.com",
+    "eu-south-1": "563282790590.dkr.ecr.eu-south-1.amazonaws.com",
+    "ap-northeast-3": "479947661362.dkr.ecr.ap-northeast-3.amazonaws.com",
+    "af-south-1": "314341159256.dkr.ecr.af-south-1.amazonaws.com",
+    "eu-south-2": "",
+    "ap-southeast-3": "",
+    "me-central-1": "",
+    "eu-central-2": "",
 }
 
 # https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-algo-docker-registry-paths.html
@@ -87,6 +101,13 @@ XGBOOST_V1_IMAGE_URIS = {
     "eu-west-3": "749696950732.dkr.ecr.eu-west-3.amazonaws.com",
     "me-south-1": "249704162688.dkr.ecr.me-south-1.amazonaws.com",
     "sa-east-1": "855470959533.dkr.ecr.sa-east-1.amazonaws.com",
+    "eu-south-1": "257386234256.dkr.ecr.eu-south-1.amazonaws.com", 
+    "ap-northeast-3": "867004704886.dkr.ecr.ap-northeast-3.amazonaws.com",
+    "eu-south-2": "104374241257.dkr.ecr.eu-south-2.amazonaws.com",
+    "ap-southeast-3": "951798379941.dkr.ecr.ap-southeast-3.amazonaws.com",
+    "me-central-1": "272398656194.dkr.ecr.me-central-1.amazonaws.com",
+    "eu-central-2": "680994064768.dkr.ecr.eu-central-2.amazonaws.com",
+    "af-south-1": "455444449433.dkr.ecr.af-south-1.amazonaws.com",
 }
 
 
@@ -140,6 +161,11 @@ MODEL_MONITOR_IMAGE_URIS = {
     "me-south-1": "607024016150.dkr.ecr.me-south-1.amazonaws.com",
     "sa-east-1": "539772159869.dkr.ecr.sa-east-1.amazonaws.com",
     "us-gov-west-1": "362178532790.dkr.ecr.us-gov-west-1.amazonaws.com",
+    "ap-northeast-3": "990339680094.dkr.ecr.ap-northeast-3.amazonaws.com",
+    "ap-southeast-3": "669540362728.dkr.ecr.ap-southeast-3.amazonaws.com",
+    "eu-south-2": "",
+    "me-central-1": "",
+    "eu-central-2": "",
 }
 
 # https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-configure-processing-jobs.html#clarify-processing-job-configure-container
@@ -164,6 +190,11 @@ CLARIFY_IMAGE_URIS = {
     "sa-east-1": "520018980103.dkr.ecr.sa-east-1.amazonaws.com",
     "af-south-1": "811711786498.dkr.ecr.af-south-1.amazonaws.com",
     "eu-south-1": "638885417683.dkr.ecr.eu-south-1.amazonaws.com",
+    "ap-northeast-3": "912233562940.dkr.ecr.ap-northeast-3.amazonaws.com",
+    "ap-southeast-3": "705930551576.dkr.ecr.ap-southeast-3.amazonaws.com",
+    "eu-south-2": "",
+    "me-central-1": "",
+    "eu-central-2": "",
 }
 
 ENDPOINT_INSTANCE_TYPES = {
