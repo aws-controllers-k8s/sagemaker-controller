@@ -97,6 +97,8 @@ pushd $E2E_DIR
   if [[ $SERVICE_REGION =~ ^(eu-north-1|eu-west-3)$  ]]; then
     # If select_regions_1 true we run the notebook_instance test
     pytest_args+=(-m "canary or select_regions_1")
+  elif [[ $SERVICE_REGION =~ ^(eu-south-2|ap-southeast-3|me-central-1|eu-central-2)$  ]]; then
+    pytest_args+=(-m "shallow_canary")
   else
     pytest_args+=(-m "canary")
   fi

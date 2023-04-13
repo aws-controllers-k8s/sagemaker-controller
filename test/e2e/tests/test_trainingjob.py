@@ -85,6 +85,7 @@ class TestTrainingJob:
         training_job_desc = get_sagemaker_training_job(training_job_name)
         assert training_job_desc["TrainingJobStatus"] in cfg.LIST_JOB_STATUS_STOPPED
 
+    @pytest.mark.shallow_canary
     @pytest.mark.canary
     def test_completed(self, xgboost_training_job):
         (reference, resource) = xgboost_training_job

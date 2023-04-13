@@ -74,6 +74,7 @@ def single_variant_config():
 
 
 @service_marker
+@pytest.mark.shallow_canary
 @pytest.mark.canary
 class TestEndpointConfig:
     def test_create_endpoint_config(self, single_variant_config):
