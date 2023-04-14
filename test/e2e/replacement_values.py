@@ -134,6 +134,11 @@ PYTORCH_TRAIN_IMAGE_URIS = {
     "sa-east-1": "763104351884.dkr.ecr.sa-east-1.amazonaws.com",
     "cn-north-1": "727897471807.dkr.ecr.cn-north-1.amazonaws.com.cn",
     "cn-northwest-1": "727897471807.dkr.ecr.cn-northwest-1.amazonaws.com.cn",
+    "ap-northeast-3": "364406365360.dkr.ecr.ap-northeast-3.amazonaws.com",
+    "eu-south-2": "503227376785.dkr.ecr.eu-south-2.amazonaws.com",
+    "ap-southeast-3": "907027046896.dkr.ecr.ap-southeast-3.amazonaws.com",
+    "me-central-1": "914824155844.dkr.ecr.me-central-1.amazonaws.com",
+    "eu-central-2": "380420809688.dkr.ecr.eu-central-2.amazonaws.com",
 }
 
 # https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-pre-built-container.html
@@ -205,10 +210,28 @@ ENDPOINT_INSTANCE_TYPES = {
 TRAINING_JOB_INSTANCE_TYPES = {
     "eu-west-3": "ml.m5.xlarge",
     "eu-north-1": "ml.m5.xlarge",
+    "ap-northeast-3": "ml.m5.xlarge",
+    "ap-east-1": "ml.m5.xlarge",
+    "me-south-1": "ml.m5.xlarge", 
+    "eu-south-1": "ml.m5.xlarge", 
+    "af-south-1": "ml.m5.xlarge", 
+    "eu-south-2": "ml.m5.xlarge", 
+    "ap-southeast-3": "ml.m5.xlarge", 
+    "me-central-1": "ml.m5.xlarge", 
+    "eu-central-2": "ml.m5.xlarge", 
 }
 
 NOTEBOOK_INSTANCE_INSTANCE_TYPES = {
     "eu-north-1": "ml.t3.medium",
+    "ap-northeast-3": "ml.t3.medium",
+    "ap-east-1": "ml.t3.medium",
+    "me-south-1": "ml.t3.medium", 
+    "eu-south-1": "ml.t3.medium", 
+    "af-south-1": "ml.t3.medium", 
+    "eu-south-2": "ml.t3.medium", 
+    "ap-southeast-3": "ml.t3.medium", 
+    "me-central-1": "ml.t3.medium", 
+    "eu-central-2": "ml.t3.medium", 
 }
 
 REPLACEMENT_VALUES = {
