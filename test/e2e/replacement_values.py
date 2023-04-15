@@ -18,6 +18,7 @@ from acktest.aws.identity import get_region
 from e2e.bootstrap_resources import get_bootstrap_resources
 
 # Taken from the SageMaker Python SDK
+# https://github.com/aws/sagemaker-python-sdk/blob/master/src/sagemaker/image_uri_config/xgboost.json
 # Rather than including the entire SDK
 XGBOOST_IMAGE_URIS = {
     "us-west-1": "746614075791.dkr.ecr.us-west-1.amazonaws.com",
@@ -49,6 +50,7 @@ XGBOOST_IMAGE_URIS = {
     "af-south-1": "510948584623.dkr.ecr.af-south-1.amazonaws.com",
 }
 
+# https://github.com/aws/sagemaker-python-sdk/blob/master/src/sagemaker/image_uri_config/debugger.json
 DEBUGGER_IMAGE_URIS = {
     "us-west-1": "685455198987.dkr.ecr.us-west-1.amazonaws.com",
     "us-west-2": "895741380848.dkr.ecr.us-west-2.amazonaws.com",
