@@ -56,7 +56,7 @@ def sync_data_bucket(bucket) -> str:
                 f"s3://{SAGEMAKER_SOURCE_DATA_BUCKET}",
                 f"./{temp_dir}/",
                 "--region",
-                "us-west-2"
+                "us-west-2",
                 "--quiet",
             ]
         )
