@@ -75,10 +75,6 @@ DEBUGGER_IMAGE_URIS = {
     "eu-south-1": "563282790590.dkr.ecr.eu-south-1.amazonaws.com",
     "ap-northeast-3": "479947661362.dkr.ecr.ap-northeast-3.amazonaws.com",
     "af-south-1": "314341159256.dkr.ecr.af-south-1.amazonaws.com",
-    "eu-south-2": "",
-    "ap-southeast-3": "",
-    "me-central-1": "",
-    "eu-central-2": "",
 }
 
 # https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-algo-docker-registry-paths.html
@@ -136,7 +132,7 @@ PYTORCH_TRAIN_IMAGE_URIS = {
     "sa-east-1": "763104351884.dkr.ecr.sa-east-1.amazonaws.com",
     "cn-north-1": "727897471807.dkr.ecr.cn-north-1.amazonaws.com.cn",
     "cn-northwest-1": "727897471807.dkr.ecr.cn-northwest-1.amazonaws.com.cn",
-    "ap-northeast-3": "364406365360.dkr.ecr.ap-northeast-3.amazonaws.com",    
+    "ap-northeast-3": "364406365360.dkr.ecr.ap-northeast-3.amazonaws.com",
     "eu-south-2": "503227376785.dkr.ecr.eu-south-2.amazonaws.com",
     "ap-southeast-3": "907027046896.dkr.ecr.ap-southeast-3.amazonaws.com",
     "me-central-1": "914824155844.dkr.ecr.me-central-1.amazonaws.com",
@@ -170,9 +166,6 @@ MODEL_MONITOR_IMAGE_URIS = {
     "us-gov-west-1": "362178532790.dkr.ecr.us-gov-west-1.amazonaws.com",
     "ap-northeast-3": "990339680094.dkr.ecr.ap-northeast-3.amazonaws.com",
     "ap-southeast-3": "669540362728.dkr.ecr.ap-southeast-3.amazonaws.com",
-    "eu-south-2": "",
-    "me-central-1": "",
-    "eu-central-2": "",
 }
 
 # https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-configure-processing-jobs.html#clarify-processing-job-configure-container
@@ -199,9 +192,6 @@ CLARIFY_IMAGE_URIS = {
     "eu-south-1": "638885417683.dkr.ecr.eu-south-1.amazonaws.com",
     "ap-northeast-3": "912233562940.dkr.ecr.ap-northeast-3.amazonaws.com",
     "ap-southeast-3": "705930551576.dkr.ecr.ap-southeast-3.amazonaws.com",
-    "eu-south-2": "",
-    "me-central-1": "",
-    "eu-central-2": "",
 }
 
 ENDPOINT_INSTANCE_TYPES = {
@@ -212,11 +202,28 @@ ENDPOINT_INSTANCE_TYPES = {
 TRAINING_JOB_INSTANCE_TYPES = {
     "eu-west-3": "ml.m5.xlarge",
     "eu-north-1": "ml.m5.xlarge",
-    "me-south-1": "ml.m5.xlarge",
+    "ap-northeast-3": "ml.m5.xlarge",
+    "ap-east-1": "ml.m5.xlarge",
+    "me-south-1": "ml.m5.xlarge", 
+    "eu-south-1": "ml.m5.xlarge", 
+    "af-south-1": "ml.m5.xlarge", 
+    "eu-south-2": "ml.m5.xlarge", 
+    "ap-southeast-3": "ml.m5.xlarge", 
+    "me-central-1": "ml.m5.xlarge", 
+    "eu-central-2": "ml.m5.xlarge", 
 }
 
 NOTEBOOK_INSTANCE_INSTANCE_TYPES = {
     "eu-north-1": "ml.t3.medium",
+    "ap-northeast-3": "ml.t3.medium",
+    "ap-east-1": "ml.t3.medium",
+    "me-south-1": "ml.t3.medium", 
+    "eu-south-1": "ml.t3.medium", 
+    "af-south-1": "ml.t3.medium", 
+    "eu-south-2": "ml.t3.medium", 
+    "ap-southeast-3": "ml.t3.medium", 
+    "me-central-1": "ml.t3.medium", 
+    "eu-central-2": "ml.t3.medium", 
 }
 
 REPLACEMENT_VALUES = {
