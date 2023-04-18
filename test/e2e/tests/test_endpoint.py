@@ -218,6 +218,7 @@ def faulty_config(name_suffix, single_container_model):
 
 
 @service_marker
+@pytest.mark.shallow_canary
 @pytest.mark.canary
 class TestEndpoint:
     def create_endpoint_test(self, xgboost_endpoint):
