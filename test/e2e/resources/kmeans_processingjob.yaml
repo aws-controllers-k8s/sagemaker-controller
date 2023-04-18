@@ -21,7 +21,7 @@ spec:
   processingInputs:
     - inputName: mnist_tar
       s3Input:
-        s3URI: s3://$SAGEMAKER_DATA_BUCKET/algorithms/kmeans/mnist/mnist.pkl.gz
+        s3URI: s3://$SAGEMAKER_DATA_BUCKET/sagemaker/processing/algorithms/kmeans/mnist/mnist.pkl.gz
         localPath: /opt/ml/processing/input
         s3DataType: S3Prefix
         s3InputMode: File

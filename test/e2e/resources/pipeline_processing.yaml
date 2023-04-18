@@ -7,7 +7,7 @@ spec:
   pipelineName: $PIPELINE_NAME
   pipelineDefinition: '{"Version": "2020-12-01", "Metadata": {}, "Parameters": [{"Name": "ProcessingInstanceType", 
   "Type": "String", "DefaultValue": "ml.m5.xlarge"}, {"Name": "ProcessingInstanceCount", "Type": "Integer", "DefaultValue": 1}, 
-  {"Name": "InputData", "Type": "String", "DefaultValue": "s3://$SAGEMAKER_DATA_BUCKET/algorithms/kmeans/mnist/mnist.pkl.gz"}], 
+  {"Name": "InputData", "Type": "String", "DefaultValue": "s3://$SAGEMAKER_DATA_BUCKET/sagemaker/processing/algorithms/kmeans/mnist/mnist.pkl.gz"}], 
   "PipelineExperimentConfig": {"ExperimentName": {"Get": "Execution.PipelineName"}, "TrialName": {"Get": "Execution.PipelineExecutionId"}}, 
   "Steps": [{"Name": "PreprocessData", "Type": "Processing", "Arguments": {"ProcessingResources": 
   {"ClusterConfig": {"InstanceType": "ml.m5.large", "InstanceCount": {"Get": "Parameters.ProcessingInstanceCount"}, "VolumeSizeInGB": 20}}, 
