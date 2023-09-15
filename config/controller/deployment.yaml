@@ -85,5 +85,6 @@ spec:
       terminationGracePeriodSeconds: 10
       serviceAccountName: ack-sagemaker-controller
       hostIPC: false
-      hostNetwork: false
       hostPID: false
+      hostNetwork: false
+      dnsPolicy: ClusterFirst
