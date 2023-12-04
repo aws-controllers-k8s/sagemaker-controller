@@ -250,6 +250,6 @@ REPLACEMENT_VALUES = {
         get_region(), "ml.m4.xlarge"
     ),
     "NOTEBOOK_INSTANCE_INSTANCE_TYPES": NOTEBOOK_INSTANCE_INSTANCE_TYPES.get(
-        get_region(), "ml.t2.medium"
+        get_region(), "ml.t3.medium"
     ),
 }
