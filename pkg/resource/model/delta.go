@@ -44,8 +44,12 @@ func newResourceDelta(
 	}
 	customSetDefaults(a, b)
 
-	if !reflect.DeepEqual(a.ko.Spec.Containers, b.ko.Spec.Containers) {
+	if len(a.ko.Spec.Containers) != len(b.ko.Spec.Containers) {
 		delta.Add("Spec.Containers", a.ko.Spec.Containers, b.ko.Spec.Containers)
+	} else if len(a.ko.Spec.Containers) > 0 {
+		if !reflect.DeepEqual(a.ko.Spec.Containers, b.ko.Spec.Containers) {
+			delta.Add("Spec.Containers", a.ko.Spec.Containers, b.ko.Spec.Containers)
+		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.EnableNetworkIsolation, b.ko.Spec.EnableNetworkIsolation) {
 		delta.Add("Spec.EnableNetworkIsolation", a.ko.Spec.EnableNetworkIsolation, b.ko.Spec.EnableNetworkIsolation)
@@ -89,9 +93,9 @@ func newResourceDelta(
 				delta.Add("Spec.PrimaryContainer.ContainerHostname", a.ko.Spec.PrimaryContainer.ContainerHostname, b.ko.Spec.PrimaryContainer.ContainerHostname)
 			}
 		}
-		if ackcompare.HasNilDifference(a.ko.Spec.PrimaryContainer.Environment, b.ko.Spec.PrimaryContainer.Environment) {
+		if len(a.ko.Spec.PrimaryContainer.Environment) != len(b.ko.Spec.PrimaryContainer.Environment) {
 			delta.Add("Spec.PrimaryContainer.Environment", a.ko.Spec.PrimaryContainer.Environment, b.ko.Spec.PrimaryContainer.Environment)
-		} else if a.ko.Spec.PrimaryContainer.Environment != nil && b.ko.Spec.PrimaryContainer.Environment != nil {
+		} else if len(a.ko.Spec.PrimaryContainer.Environment) > 0 {
 			if !ackcompare.MapStringStringPEqual(a.ko.Spec.PrimaryContainer.Environment, b.ko.Spec.PrimaryContainer.Environment) {
 				delta.Add("Spec.PrimaryContainer.Environment", a.ko.Spec.PrimaryContainer.Environment, b.ko.Spec.PrimaryContainer.Environment)
 			}
@@ -168,11 +172,19 @@ func newResourceDelta(
 	if ackcompare.HasNilDifference(a.ko.Spec.VPCConfig, b.ko.Spec.VPCConfig) {
 		delta.Add("Spec.VPCConfig", a.ko.Spec.VPCConfig, b.ko.Spec.VPCConfig)
 	} else if a.ko.Spec.VPCConfig != nil && b.ko.Spec.VPCConfig != nil {
-		if !ackcompare.SliceStringPEqual(a.ko.Spec.VPCConfig.SecurityGroupIDs, b.ko.Spec.VPCConfig.SecurityGroupIDs) {
+		if len(a.ko.Spec.VPCConfig.SecurityGroupIDs) != len(b.ko.Spec.VPCConfig.SecurityGroupIDs) {
 			delta.Add("Spec.VPCConfig.SecurityGroupIDs", a.ko.Spec.VPCConfig.SecurityGroupIDs, b.ko.Spec.VPCConfig.SecurityGroupIDs)
+		} else if len(a.ko.Spec.VPCConfig.SecurityGroupIDs) > 0 {
+			if !ackcompare.SliceStringPEqual(a.ko.Spec.VPCConfig.SecurityGroupIDs, b.ko.Spec.VPCConfig.SecurityGroupIDs) {
+				delta.Add("Spec.VPCConfig.SecurityGroupIDs", a.ko.Spec.VPCConfig.SecurityGroupIDs, b.ko.Spec.VPCConfig.SecurityGroupIDs)
+			}
 		}
-		if !ackcompare.SliceStringPEqual(a.ko.Spec.VPCConfig.Subnets, b.ko.Spec.VPCConfig.Subnets) {
+		if len(a.ko.Spec.VPCConfig.Subnets) != len(b.ko.Spec.VPCConfig.Subnets) {
 			delta.Add("Spec.VPCConfig.Subnets", a.ko.Spec.VPCConfig.Subnets, b.ko.Spec.VPCConfig.Subnets)
+		} else if len(a.ko.Spec.VPCConfig.Subnets) > 0 {
+			if !ackcompare.SliceStringPEqual(a.ko.Spec.VPCConfig.Subnets, b.ko.Spec.VPCConfig.Subnets) {
+				delta.Add("Spec.VPCConfig.Subnets", a.ko.Spec.VPCConfig.Subnets, b.ko.Spec.VPCConfig.Subnets)
+			}
 		}
 	}
 

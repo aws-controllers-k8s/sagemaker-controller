@@ -47,11 +47,19 @@ func newResourceDelta(
 	if ackcompare.HasNilDifference(a.ko.Spec.AppSpecification, b.ko.Spec.AppSpecification) {
 		delta.Add("Spec.AppSpecification", a.ko.Spec.AppSpecification, b.ko.Spec.AppSpecification)
 	} else if a.ko.Spec.AppSpecification != nil && b.ko.Spec.AppSpecification != nil {
-		if !ackcompare.SliceStringPEqual(a.ko.Spec.AppSpecification.ContainerArguments, b.ko.Spec.AppSpecification.ContainerArguments) {
+		if len(a.ko.Spec.AppSpecification.ContainerArguments) != len(b.ko.Spec.AppSpecification.ContainerArguments) {
 			delta.Add("Spec.AppSpecification.ContainerArguments", a.ko.Spec.AppSpecification.ContainerArguments, b.ko.Spec.AppSpecification.ContainerArguments)
+		} else if len(a.ko.Spec.AppSpecification.ContainerArguments) > 0 {
+			if !ackcompare.SliceStringPEqual(a.ko.Spec.AppSpecification.ContainerArguments, b.ko.Spec.AppSpecification.ContainerArguments) {
+				delta.Add("Spec.AppSpecification.ContainerArguments", a.ko.Spec.AppSpecification.ContainerArguments, b.ko.Spec.AppSpecification.ContainerArguments)
+			}
 		}
-		if !ackcompare.SliceStringPEqual(a.ko.Spec.AppSpecification.ContainerEntrypoint, b.ko.Spec.AppSpecification.ContainerEntrypoint) {
+		if len(a.ko.Spec.AppSpecification.ContainerEntrypoint) != len(b.ko.Spec.AppSpecification.ContainerEntrypoint) {
 			delta.Add("Spec.AppSpecification.ContainerEntrypoint", a.ko.Spec.AppSpecification.ContainerEntrypoint, b.ko.Spec.AppSpecification.ContainerEntrypoint)
+		} else if len(a.ko.Spec.AppSpecification.ContainerEntrypoint) > 0 {
+			if !ackcompare.SliceStringPEqual(a.ko.Spec.AppSpecification.ContainerEntrypoint, b.ko.Spec.AppSpecification.ContainerEntrypoint) {
+				delta.Add("Spec.AppSpecification.ContainerEntrypoint", a.ko.Spec.AppSpecification.ContainerEntrypoint, b.ko.Spec.AppSpecification.ContainerEntrypoint)
+			}
 		}
 		if ackcompare.HasNilDifference(a.ko.Spec.AppSpecification.ImageURI, b.ko.Spec.AppSpecification.ImageURI) {
 			delta.Add("Spec.AppSpecification.ImageURI", a.ko.Spec.AppSpecification.ImageURI, b.ko.Spec.AppSpecification.ImageURI)
@@ -61,9 +69,9 @@ func newResourceDelta(
 			}
 		}
 	}
-	if ackcompare.HasNilDifference(a.ko.Spec.Environment, b.ko.Spec.Environment) {
+	if len(a.ko.Spec.Environment) != len(b.ko.Spec.Environment) {
 		delta.Add("Spec.Environment", a.ko.Spec.Environment, b.ko.Spec.Environment)
-	} else if a.ko.Spec.Environment != nil && b.ko.Spec.Environment != nil {
+	} else if len(a.ko.Spec.Environment) > 0 {
 		if !ackcompare.MapStringStringPEqual(a.ko.Spec.Environment, b.ko.Spec.Environment) {
 			delta.Add("Spec.Environment", a.ko.Spec.Environment, b.ko.Spec.Environment)
 		}
@@ -113,16 +121,28 @@ func newResourceDelta(
 		if ackcompare.HasNilDifference(a.ko.Spec.NetworkConfig.VPCConfig, b.ko.Spec.NetworkConfig.VPCConfig) {
 			delta.Add("Spec.NetworkConfig.VPCConfig", a.ko.Spec.NetworkConfig.VPCConfig, b.ko.Spec.NetworkConfig.VPCConfig)
 		} else if a.ko.Spec.NetworkConfig.VPCConfig != nil && b.ko.Spec.NetworkConfig.VPCConfig != nil {
-			if !ackcompare.SliceStringPEqual(a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs) {
+			if len(a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs) != len(b.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs) {
 				delta.Add("Spec.NetworkConfig.VPCConfig.SecurityGroupIDs", a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs)
+			} else if len(a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs) > 0 {
+				if !ackcompare.SliceStringPEqual(a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs) {
+					delta.Add("Spec.NetworkConfig.VPCConfig.SecurityGroupIDs", a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs)
+				}
 			}
-			if !ackcompare.SliceStringPEqual(a.ko.Spec.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.NetworkConfig.VPCConfig.Subnets) {
+			if len(a.ko.Spec.NetworkConfig.VPCConfig.Subnets) != len(b.ko.Spec.NetworkConfig.VPCConfig.Subnets) {
 				delta.Add("Spec.NetworkConfig.VPCConfig.Subnets", a.ko.Spec.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.NetworkConfig.VPCConfig.Subnets)
+			} else if len(a.ko.Spec.NetworkConfig.VPCConfig.Subnets) > 0 {
+				if !ackcompare.SliceStringPEqual(a.ko.Spec.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.NetworkConfig.VPCConfig.Subnets) {
+					delta.Add("Spec.NetworkConfig.VPCConfig.Subnets", a.ko.Spec.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.NetworkConfig.VPCConfig.Subnets)
+				}
 			}
 		}
 	}
-	if !reflect.DeepEqual(a.ko.Spec.ProcessingInputs, b.ko.Spec.ProcessingInputs) {
+	if len(a.ko.Spec.ProcessingInputs) != len(b.ko.Spec.ProcessingInputs) {
 		delta.Add("Spec.ProcessingInputs", a.ko.Spec.ProcessingInputs, b.ko.Spec.ProcessingInputs)
+	} else if len(a.ko.Spec.ProcessingInputs) > 0 {
+		if !reflect.DeepEqual(a.ko.Spec.ProcessingInputs, b.ko.Spec.ProcessingInputs) {
+			delta.Add("Spec.ProcessingInputs", a.ko.Spec.ProcessingInputs, b.ko.Spec.ProcessingInputs)
+		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.ProcessingJobName, b.ko.Spec.ProcessingJobName) {
 		delta.Add("Spec.ProcessingJobName", a.ko.Spec.ProcessingJobName, b.ko.Spec.ProcessingJobName)
@@ -141,8 +161,12 @@ func newResourceDelta(
 				delta.Add("Spec.ProcessingOutputConfig.KMSKeyID", a.ko.Spec.ProcessingOutputConfig.KMSKeyID, b.ko.Spec.ProcessingOutputConfig.KMSKeyID)
 			}
 		}
-		if !reflect.DeepEqual(a.ko.Spec.ProcessingOutputConfig.Outputs, b.ko.Spec.ProcessingOutputConfig.Outputs) {
+		if len(a.ko.Spec.ProcessingOutputConfig.Outputs) != len(b.ko.Spec.ProcessingOutputConfig.Outputs) {
 			delta.Add("Spec.ProcessingOutputConfig.Outputs", a.ko.Spec.ProcessingOutputConfig.Outputs, b.ko.Spec.ProcessingOutputConfig.Outputs)
+		} else if len(a.ko.Spec.ProcessingOutputConfig.Outputs) > 0 {
+			if !reflect.DeepEqual(a.ko.Spec.ProcessingOutputConfig.Outputs, b.ko.Spec.ProcessingOutputConfig.Outputs) {
+				delta.Add("Spec.ProcessingOutputConfig.Outputs", a.ko.Spec.ProcessingOutputConfig.Outputs, b.ko.Spec.ProcessingOutputConfig.Outputs)
+			}
 		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.ProcessingResources, b.ko.Spec.ProcessingResources) {

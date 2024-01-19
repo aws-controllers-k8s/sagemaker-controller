@@ -58,8 +58,12 @@ func newResourceDelta(
 			delta.Add("Spec.EventTimeFeatureName", a.ko.Spec.EventTimeFeatureName, b.ko.Spec.EventTimeFeatureName)
 		}
 	}
-	if !reflect.DeepEqual(a.ko.Spec.FeatureDefinitions, b.ko.Spec.FeatureDefinitions) {
+	if len(a.ko.Spec.FeatureDefinitions) != len(b.ko.Spec.FeatureDefinitions) {
 		delta.Add("Spec.FeatureDefinitions", a.ko.Spec.FeatureDefinitions, b.ko.Spec.FeatureDefinitions)
+	} else if len(a.ko.Spec.FeatureDefinitions) > 0 {
+		if !reflect.DeepEqual(a.ko.Spec.FeatureDefinitions, b.ko.Spec.FeatureDefinitions) {
+			delta.Add("Spec.FeatureDefinitions", a.ko.Spec.FeatureDefinitions, b.ko.Spec.FeatureDefinitions)
+		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.FeatureGroupName, b.ko.Spec.FeatureGroupName) {
 		delta.Add("Spec.FeatureGroupName", a.ko.Spec.FeatureGroupName, b.ko.Spec.FeatureGroupName)

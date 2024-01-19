@@ -46,15 +46,23 @@ func newResourceDelta(
 	if ackcompare.HasNilDifference(a.ko.Spec.DataQualityAppSpecification, b.ko.Spec.DataQualityAppSpecification) {
 		delta.Add("Spec.DataQualityAppSpecification", a.ko.Spec.DataQualityAppSpecification, b.ko.Spec.DataQualityAppSpecification)
 	} else if a.ko.Spec.DataQualityAppSpecification != nil && b.ko.Spec.DataQualityAppSpecification != nil {
-		if !ackcompare.SliceStringPEqual(a.ko.Spec.DataQualityAppSpecification.ContainerArguments, b.ko.Spec.DataQualityAppSpecification.ContainerArguments) {
+		if len(a.ko.Spec.DataQualityAppSpecification.ContainerArguments) != len(b.ko.Spec.DataQualityAppSpecification.ContainerArguments) {
 			delta.Add("Spec.DataQualityAppSpecification.ContainerArguments", a.ko.Spec.DataQualityAppSpecification.ContainerArguments, b.ko.Spec.DataQualityAppSpecification.ContainerArguments)
+		} else if len(a.ko.Spec.DataQualityAppSpecification.ContainerArguments) > 0 {
+			if !ackcompare.SliceStringPEqual(a.ko.Spec.DataQualityAppSpecification.ContainerArguments, b.ko.Spec.DataQualityAppSpecification.ContainerArguments) {
+				delta.Add("Spec.DataQualityAppSpecification.ContainerArguments", a.ko.Spec.DataQualityAppSpecification.ContainerArguments, b.ko.Spec.DataQualityAppSpecification.ContainerArguments)
+			}
 		}
-		if !ackcompare.SliceStringPEqual(a.ko.Spec.DataQualityAppSpecification.ContainerEntrypoint, b.ko.Spec.DataQualityAppSpecification.ContainerEntrypoint) {
+		if len(a.ko.Spec.DataQualityAppSpecification.ContainerEntrypoint) != len(b.ko.Spec.DataQualityAppSpecification.ContainerEntrypoint) {
 			delta.Add("Spec.DataQualityAppSpecification.ContainerEntrypoint", a.ko.Spec.DataQualityAppSpecification.ContainerEntrypoint, b.ko.Spec.DataQualityAppSpecification.ContainerEntrypoint)
+		} else if len(a.ko.Spec.DataQualityAppSpecification.ContainerEntrypoint) > 0 {
+			if !ackcompare.SliceStringPEqual(a.ko.Spec.DataQualityAppSpecification.ContainerEntrypoint, b.ko.Spec.DataQualityAppSpecification.ContainerEntrypoint) {
+				delta.Add("Spec.DataQualityAppSpecification.ContainerEntrypoint", a.ko.Spec.DataQualityAppSpecification.ContainerEntrypoint, b.ko.Spec.DataQualityAppSpecification.ContainerEntrypoint)
+			}
 		}
-		if ackcompare.HasNilDifference(a.ko.Spec.DataQualityAppSpecification.Environment, b.ko.Spec.DataQualityAppSpecification.Environment) {
+		if len(a.ko.Spec.DataQualityAppSpecification.Environment) != len(b.ko.Spec.DataQualityAppSpecification.Environment) {
 			delta.Add("Spec.DataQualityAppSpecification.Environment", a.ko.Spec.DataQualityAppSpecification.Environment, b.ko.Spec.DataQualityAppSpecification.Environment)
-		} else if a.ko.Spec.DataQualityAppSpecification.Environment != nil && b.ko.Spec.DataQualityAppSpecification.Environment != nil {
+		} else if len(a.ko.Spec.DataQualityAppSpecification.Environment) > 0 {
 			if !ackcompare.MapStringStringPEqual(a.ko.Spec.DataQualityAppSpecification.Environment, b.ko.Spec.DataQualityAppSpecification.Environment) {
 				delta.Add("Spec.DataQualityAppSpecification.Environment", a.ko.Spec.DataQualityAppSpecification.Environment, b.ko.Spec.DataQualityAppSpecification.Environment)
 			}
@@ -202,8 +210,12 @@ func newResourceDelta(
 				delta.Add("Spec.DataQualityJobOutputConfig.KMSKeyID", a.ko.Spec.DataQualityJobOutputConfig.KMSKeyID, b.ko.Spec.DataQualityJobOutputConfig.KMSKeyID)
 			}
 		}
-		if !reflect.DeepEqual(a.ko.Spec.DataQualityJobOutputConfig.MonitoringOutputs, b.ko.Spec.DataQualityJobOutputConfig.MonitoringOutputs) {
+		if len(a.ko.Spec.DataQualityJobOutputConfig.MonitoringOutputs) != len(b.ko.Spec.DataQualityJobOutputConfig.MonitoringOutputs) {
 			delta.Add("Spec.DataQualityJobOutputConfig.MonitoringOutputs", a.ko.Spec.DataQualityJobOutputConfig.MonitoringOutputs, b.ko.Spec.DataQualityJobOutputConfig.MonitoringOutputs)
+		} else if len(a.ko.Spec.DataQualityJobOutputConfig.MonitoringOutputs) > 0 {
+			if !reflect.DeepEqual(a.ko.Spec.DataQualityJobOutputConfig.MonitoringOutputs, b.ko.Spec.DataQualityJobOutputConfig.MonitoringOutputs) {
+				delta.Add("Spec.DataQualityJobOutputConfig.MonitoringOutputs", a.ko.Spec.DataQualityJobOutputConfig.MonitoringOutputs, b.ko.Spec.DataQualityJobOutputConfig.MonitoringOutputs)
+			}
 		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.JobDefinitionName, b.ko.Spec.JobDefinitionName) {
@@ -269,11 +281,19 @@ func newResourceDelta(
 		if ackcompare.HasNilDifference(a.ko.Spec.NetworkConfig.VPCConfig, b.ko.Spec.NetworkConfig.VPCConfig) {
 			delta.Add("Spec.NetworkConfig.VPCConfig", a.ko.Spec.NetworkConfig.VPCConfig, b.ko.Spec.NetworkConfig.VPCConfig)
 		} else if a.ko.Spec.NetworkConfig.VPCConfig != nil && b.ko.Spec.NetworkConfig.VPCConfig != nil {
-			if !ackcompare.SliceStringPEqual(a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs) {
+			if len(a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs) != len(b.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs) {
 				delta.Add("Spec.NetworkConfig.VPCConfig.SecurityGroupIDs", a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs)
+			} else if len(a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs) > 0 {
+				if !ackcompare.SliceStringPEqual(a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs) {
+					delta.Add("Spec.NetworkConfig.VPCConfig.SecurityGroupIDs", a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs)
+				}
 			}
-			if !ackcompare.SliceStringPEqual(a.ko.Spec.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.NetworkConfig.VPCConfig.Subnets) {
+			if len(a.ko.Spec.NetworkConfig.VPCConfig.Subnets) != len(b.ko.Spec.NetworkConfig.VPCConfig.Subnets) {
 				delta.Add("Spec.NetworkConfig.VPCConfig.Subnets", a.ko.Spec.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.NetworkConfig.VPCConfig.Subnets)
+			} else if len(a.ko.Spec.NetworkConfig.VPCConfig.Subnets) > 0 {
+				if !ackcompare.SliceStringPEqual(a.ko.Spec.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.NetworkConfig.VPCConfig.Subnets) {
+					delta.Add("Spec.NetworkConfig.VPCConfig.Subnets", a.ko.Spec.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.NetworkConfig.VPCConfig.Subnets)
+				}
 			}
 		}
 	}

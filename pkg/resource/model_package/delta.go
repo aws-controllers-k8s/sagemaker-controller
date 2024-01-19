@@ -44,8 +44,12 @@ func newResourceDelta(
 	}
 	customSetDefaults(a, b)
 
-	if !reflect.DeepEqual(a.ko.Spec.AdditionalInferenceSpecifications, b.ko.Spec.AdditionalInferenceSpecifications) {
+	if len(a.ko.Spec.AdditionalInferenceSpecifications) != len(b.ko.Spec.AdditionalInferenceSpecifications) {
 		delta.Add("Spec.AdditionalInferenceSpecifications", a.ko.Spec.AdditionalInferenceSpecifications, b.ko.Spec.AdditionalInferenceSpecifications)
+	} else if len(a.ko.Spec.AdditionalInferenceSpecifications) > 0 {
+		if !reflect.DeepEqual(a.ko.Spec.AdditionalInferenceSpecifications, b.ko.Spec.AdditionalInferenceSpecifications) {
+			delta.Add("Spec.AdditionalInferenceSpecifications", a.ko.Spec.AdditionalInferenceSpecifications, b.ko.Spec.AdditionalInferenceSpecifications)
+		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.ApprovalDescription, b.ko.Spec.ApprovalDescription) {
 		delta.Add("Spec.ApprovalDescription", a.ko.Spec.ApprovalDescription, b.ko.Spec.ApprovalDescription)
@@ -68,9 +72,9 @@ func newResourceDelta(
 			delta.Add("Spec.ClientToken", a.ko.Spec.ClientToken, b.ko.Spec.ClientToken)
 		}
 	}
-	if ackcompare.HasNilDifference(a.ko.Spec.CustomerMetadataProperties, b.ko.Spec.CustomerMetadataProperties) {
+	if len(a.ko.Spec.CustomerMetadataProperties) != len(b.ko.Spec.CustomerMetadataProperties) {
 		delta.Add("Spec.CustomerMetadataProperties", a.ko.Spec.CustomerMetadataProperties, b.ko.Spec.CustomerMetadataProperties)
-	} else if a.ko.Spec.CustomerMetadataProperties != nil && b.ko.Spec.CustomerMetadataProperties != nil {
+	} else if len(a.ko.Spec.CustomerMetadataProperties) > 0 {
 		if !ackcompare.MapStringStringPEqual(a.ko.Spec.CustomerMetadataProperties, b.ko.Spec.CustomerMetadataProperties) {
 			delta.Add("Spec.CustomerMetadataProperties", a.ko.Spec.CustomerMetadataProperties, b.ko.Spec.CustomerMetadataProperties)
 		}
@@ -330,20 +334,40 @@ func newResourceDelta(
 	if ackcompare.HasNilDifference(a.ko.Spec.InferenceSpecification, b.ko.Spec.InferenceSpecification) {
 		delta.Add("Spec.InferenceSpecification", a.ko.Spec.InferenceSpecification, b.ko.Spec.InferenceSpecification)
 	} else if a.ko.Spec.InferenceSpecification != nil && b.ko.Spec.InferenceSpecification != nil {
-		if !reflect.DeepEqual(a.ko.Spec.InferenceSpecification.Containers, b.ko.Spec.InferenceSpecification.Containers) {
+		if len(a.ko.Spec.InferenceSpecification.Containers) != len(b.ko.Spec.InferenceSpecification.Containers) {
 			delta.Add("Spec.InferenceSpecification.Containers", a.ko.Spec.InferenceSpecification.Containers, b.ko.Spec.InferenceSpecification.Containers)
+		} else if len(a.ko.Spec.InferenceSpecification.Containers) > 0 {
+			if !reflect.DeepEqual(a.ko.Spec.InferenceSpecification.Containers, b.ko.Spec.InferenceSpecification.Containers) {
+				delta.Add("Spec.InferenceSpecification.Containers", a.ko.Spec.InferenceSpecification.Containers, b.ko.Spec.InferenceSpecification.Containers)
+			}
 		}
-		if !ackcompare.SliceStringPEqual(a.ko.Spec.InferenceSpecification.SupportedContentTypes, b.ko.Spec.InferenceSpecification.SupportedContentTypes) {
+		if len(a.ko.Spec.InferenceSpecification.SupportedContentTypes) != len(b.ko.Spec.InferenceSpecification.SupportedContentTypes) {
 			delta.Add("Spec.InferenceSpecification.SupportedContentTypes", a.ko.Spec.InferenceSpecification.SupportedContentTypes, b.ko.Spec.InferenceSpecification.SupportedContentTypes)
+		} else if len(a.ko.Spec.InferenceSpecification.SupportedContentTypes) > 0 {
+			if !ackcompare.SliceStringPEqual(a.ko.Spec.InferenceSpecification.SupportedContentTypes, b.ko.Spec.InferenceSpecification.SupportedContentTypes) {
+				delta.Add("Spec.InferenceSpecification.SupportedContentTypes", a.ko.Spec.InferenceSpecification.SupportedContentTypes, b.ko.Spec.InferenceSpecification.SupportedContentTypes)
+			}
 		}
-		if !ackcompare.SliceStringPEqual(a.ko.Spec.InferenceSpecification.SupportedRealtimeInferenceInstanceTypes, b.ko.Spec.InferenceSpecification.SupportedRealtimeInferenceInstanceTypes) {
+		if len(a.ko.Spec.InferenceSpecification.SupportedRealtimeInferenceInstanceTypes) != len(b.ko.Spec.InferenceSpecification.SupportedRealtimeInferenceInstanceTypes) {
 			delta.Add("Spec.InferenceSpecification.SupportedRealtimeInferenceInstanceTypes", a.ko.Spec.InferenceSpecification.SupportedRealtimeInferenceInstanceTypes, b.ko.Spec.InferenceSpecification.SupportedRealtimeInferenceInstanceTypes)
+		} else if len(a.ko.Spec.InferenceSpecification.SupportedRealtimeInferenceInstanceTypes) > 0 {
+			if !ackcompare.SliceStringPEqual(a.ko.Spec.InferenceSpecification.SupportedRealtimeInferenceInstanceTypes, b.ko.Spec.InferenceSpecification.SupportedRealtimeInferenceInstanceTypes) {
+				delta.Add("Spec.InferenceSpecification.SupportedRealtimeInferenceInstanceTypes", a.ko.Spec.InferenceSpecification.SupportedRealtimeInferenceInstanceTypes, b.ko.Spec.InferenceSpecification.SupportedRealtimeInferenceInstanceTypes)
+			}
 		}
-		if !ackcompare.SliceStringPEqual(a.ko.Spec.InferenceSpecification.SupportedResponseMIMETypes, b.ko.Spec.InferenceSpecification.SupportedResponseMIMETypes) {
+		if len(a.ko.Spec.InferenceSpecification.SupportedResponseMIMETypes) != len(b.ko.Spec.InferenceSpecification.SupportedResponseMIMETypes) {
 			delta.Add("Spec.InferenceSpecification.SupportedResponseMIMETypes", a.ko.Spec.InferenceSpecification.SupportedResponseMIMETypes, b.ko.Spec.InferenceSpecification.SupportedResponseMIMETypes)
+		} else if len(a.ko.Spec.InferenceSpecification.SupportedResponseMIMETypes) > 0 {
+			if !ackcompare.SliceStringPEqual(a.ko.Spec.InferenceSpecification.SupportedResponseMIMETypes, b.ko.Spec.InferenceSpecification.SupportedResponseMIMETypes) {
+				delta.Add("Spec.InferenceSpecification.SupportedResponseMIMETypes", a.ko.Spec.InferenceSpecification.SupportedResponseMIMETypes, b.ko.Spec.InferenceSpecification.SupportedResponseMIMETypes)
+			}
 		}
-		if !ackcompare.SliceStringPEqual(a.ko.Spec.InferenceSpecification.SupportedTransformInstanceTypes, b.ko.Spec.InferenceSpecification.SupportedTransformInstanceTypes) {
+		if len(a.ko.Spec.InferenceSpecification.SupportedTransformInstanceTypes) != len(b.ko.Spec.InferenceSpecification.SupportedTransformInstanceTypes) {
 			delta.Add("Spec.InferenceSpecification.SupportedTransformInstanceTypes", a.ko.Spec.InferenceSpecification.SupportedTransformInstanceTypes, b.ko.Spec.InferenceSpecification.SupportedTransformInstanceTypes)
+		} else if len(a.ko.Spec.InferenceSpecification.SupportedTransformInstanceTypes) > 0 {
+			if !ackcompare.SliceStringPEqual(a.ko.Spec.InferenceSpecification.SupportedTransformInstanceTypes, b.ko.Spec.InferenceSpecification.SupportedTransformInstanceTypes) {
+				delta.Add("Spec.InferenceSpecification.SupportedTransformInstanceTypes", a.ko.Spec.InferenceSpecification.SupportedTransformInstanceTypes, b.ko.Spec.InferenceSpecification.SupportedTransformInstanceTypes)
+			}
 		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.MetadataProperties, b.ko.Spec.MetadataProperties) {
@@ -636,8 +660,12 @@ func newResourceDelta(
 	if ackcompare.HasNilDifference(a.ko.Spec.SourceAlgorithmSpecification, b.ko.Spec.SourceAlgorithmSpecification) {
 		delta.Add("Spec.SourceAlgorithmSpecification", a.ko.Spec.SourceAlgorithmSpecification, b.ko.Spec.SourceAlgorithmSpecification)
 	} else if a.ko.Spec.SourceAlgorithmSpecification != nil && b.ko.Spec.SourceAlgorithmSpecification != nil {
-		if !reflect.DeepEqual(a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms, b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms) {
+		if len(a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms) != len(b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms) {
 			delta.Add("Spec.SourceAlgorithmSpecification.SourceAlgorithms", a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms, b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms)
+		} else if len(a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms) > 0 {
+			if !reflect.DeepEqual(a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms, b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms) {
+				delta.Add("Spec.SourceAlgorithmSpecification.SourceAlgorithms", a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms, b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms)
+			}
 		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.Task, b.ko.Spec.Task) {
@@ -650,8 +678,12 @@ func newResourceDelta(
 	if ackcompare.HasNilDifference(a.ko.Spec.ValidationSpecification, b.ko.Spec.ValidationSpecification) {
 		delta.Add("Spec.ValidationSpecification", a.ko.Spec.ValidationSpecification, b.ko.Spec.ValidationSpecification)
 	} else if a.ko.Spec.ValidationSpecification != nil && b.ko.Spec.ValidationSpecification != nil {
-		if !reflect.DeepEqual(a.ko.Spec.ValidationSpecification.ValidationProfiles, b.ko.Spec.ValidationSpecification.ValidationProfiles) {
+		if len(a.ko.Spec.ValidationSpecification.ValidationProfiles) != len(b.ko.Spec.ValidationSpecification.ValidationProfiles) {
 			delta.Add("Spec.ValidationSpecification.ValidationProfiles", a.ko.Spec.ValidationSpecification.ValidationProfiles, b.ko.Spec.ValidationSpecification.ValidationProfiles)
+		} else if len(a.ko.Spec.ValidationSpecification.ValidationProfiles) > 0 {
+			if !reflect.DeepEqual(a.ko.Spec.ValidationSpecification.ValidationProfiles, b.ko.Spec.ValidationSpecification.ValidationProfiles) {
+				delta.Add("Spec.ValidationSpecification.ValidationProfiles", a.ko.Spec.ValidationSpecification.ValidationProfiles, b.ko.Spec.ValidationSpecification.ValidationProfiles)
+			}
 		}
 		if ackcompare.HasNilDifference(a.ko.Spec.ValidationSpecification.ValidationRole, b.ko.Spec.ValidationSpecification.ValidationRole) {
 			delta.Add("Spec.ValidationSpecification.ValidationRole", a.ko.Spec.ValidationSpecification.ValidationRole, b.ko.Spec.ValidationSpecification.ValidationRole)

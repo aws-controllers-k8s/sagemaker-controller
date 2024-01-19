@@ -75,8 +75,12 @@ func newResourceDelta(
 			delta.Add("Spec.PipelineName", a.ko.Spec.PipelineName, b.ko.Spec.PipelineName)
 		}
 	}
-	if !reflect.DeepEqual(a.ko.Spec.PipelineParameters, b.ko.Spec.PipelineParameters) {
+	if len(a.ko.Spec.PipelineParameters) != len(b.ko.Spec.PipelineParameters) {
 		delta.Add("Spec.PipelineParameters", a.ko.Spec.PipelineParameters, b.ko.Spec.PipelineParameters)
+	} else if len(a.ko.Spec.PipelineParameters) > 0 {
+		if !reflect.DeepEqual(a.ko.Spec.PipelineParameters, b.ko.Spec.PipelineParameters) {
+			delta.Add("Spec.PipelineParameters", a.ko.Spec.PipelineParameters, b.ko.Spec.PipelineParameters)
+		}
 	}
 
 	return delta

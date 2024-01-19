@@ -49,8 +49,12 @@ func newResourceDelta(
 		if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.AutoRollbackConfiguration, b.ko.Spec.DeploymentConfig.AutoRollbackConfiguration) {
 			delta.Add("Spec.DeploymentConfig.AutoRollbackConfiguration", a.ko.Spec.DeploymentConfig.AutoRollbackConfiguration, b.ko.Spec.DeploymentConfig.AutoRollbackConfiguration)
 		} else if a.ko.Spec.DeploymentConfig.AutoRollbackConfiguration != nil && b.ko.Spec.DeploymentConfig.AutoRollbackConfiguration != nil {
-			if !reflect.DeepEqual(a.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms, b.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms) {
+			if len(a.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms) != len(b.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms) {
 				delta.Add("Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms", a.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms, b.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms)
+			} else if len(a.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms) > 0 {
+				if !reflect.DeepEqual(a.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms, b.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms) {
+					delta.Add("Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms", a.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms, b.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms)
+				}
 			}
 		}
 		if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy, b.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy) {
