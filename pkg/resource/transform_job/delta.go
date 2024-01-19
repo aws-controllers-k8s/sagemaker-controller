@@ -76,9 +76,9 @@ func newResourceDelta(
 			}
 		}
 	}
-	if ackcompare.HasNilDifference(a.ko.Spec.Environment, b.ko.Spec.Environment) {
+	if len(a.ko.Spec.Environment) != len(b.ko.Spec.Environment) {
 		delta.Add("Spec.Environment", a.ko.Spec.Environment, b.ko.Spec.Environment)
-	} else if a.ko.Spec.Environment != nil && b.ko.Spec.Environment != nil {
+	} else if len(a.ko.Spec.Environment) > 0 {
 		if !ackcompare.MapStringStringPEqual(a.ko.Spec.Environment, b.ko.Spec.Environment) {
 			delta.Add("Spec.Environment", a.ko.Spec.Environment, b.ko.Spec.Environment)
 		}

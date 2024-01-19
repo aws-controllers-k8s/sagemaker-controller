@@ -96,9 +96,9 @@ func newResourceDelta(
 				delta.Add("Spec.ModelBiasAppSpecification.ConfigURI", a.ko.Spec.ModelBiasAppSpecification.ConfigURI, b.ko.Spec.ModelBiasAppSpecification.ConfigURI)
 			}
 		}
-		if ackcompare.HasNilDifference(a.ko.Spec.ModelBiasAppSpecification.Environment, b.ko.Spec.ModelBiasAppSpecification.Environment) {
+		if len(a.ko.Spec.ModelBiasAppSpecification.Environment) != len(b.ko.Spec.ModelBiasAppSpecification.Environment) {
 			delta.Add("Spec.ModelBiasAppSpecification.Environment", a.ko.Spec.ModelBiasAppSpecification.Environment, b.ko.Spec.ModelBiasAppSpecification.Environment)
-		} else if a.ko.Spec.ModelBiasAppSpecification.Environment != nil && b.ko.Spec.ModelBiasAppSpecification.Environment != nil {
+		} else if len(a.ko.Spec.ModelBiasAppSpecification.Environment) > 0 {
 			if !ackcompare.MapStringStringPEqual(a.ko.Spec.ModelBiasAppSpecification.Environment, b.ko.Spec.ModelBiasAppSpecification.Environment) {
 				delta.Add("Spec.ModelBiasAppSpecification.Environment", a.ko.Spec.ModelBiasAppSpecification.Environment, b.ko.Spec.ModelBiasAppSpecification.Environment)
 			}
@@ -232,8 +232,12 @@ func newResourceDelta(
 				delta.Add("Spec.ModelBiasJobOutputConfig.KMSKeyID", a.ko.Spec.ModelBiasJobOutputConfig.KMSKeyID, b.ko.Spec.ModelBiasJobOutputConfig.KMSKeyID)
 			}
 		}
-		if !reflect.DeepEqual(a.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs, b.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs) {
+		if len(a.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs) != len(b.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs) {
 			delta.Add("Spec.ModelBiasJobOutputConfig.MonitoringOutputs", a.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs, b.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs)
+		} else if len(a.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs) > 0 {
+			if !reflect.DeepEqual(a.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs, b.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs) {
+				delta.Add("Spec.ModelBiasJobOutputConfig.MonitoringOutputs", a.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs, b.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs)
+			}
 		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.NetworkConfig, b.ko.Spec.NetworkConfig) {
@@ -256,11 +260,19 @@ func newResourceDelta(
 		if ackcompare.HasNilDifference(a.ko.Spec.NetworkConfig.VPCConfig, b.ko.Spec.NetworkConfig.VPCConfig) {
 			delta.Add("Spec.NetworkConfig.VPCConfig", a.ko.Spec.NetworkConfig.VPCConfig, b.ko.Spec.NetworkConfig.VPCConfig)
 		} else if a.ko.Spec.NetworkConfig.VPCConfig != nil && b.ko.Spec.NetworkConfig.VPCConfig != nil {
-			if !ackcompare.SliceStringPEqual(a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs) {
+			if len(a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs) != len(b.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs) {
 				delta.Add("Spec.NetworkConfig.VPCConfig.SecurityGroupIDs", a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs)
+			} else if len(a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs) > 0 {
+				if !ackcompare.SliceStringPEqual(a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs) {
+					delta.Add("Spec.NetworkConfig.VPCConfig.SecurityGroupIDs", a.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs)
+				}
 			}
-			if !ackcompare.SliceStringPEqual(a.ko.Spec.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.NetworkConfig.VPCConfig.Subnets) {
+			if len(a.ko.Spec.NetworkConfig.VPCConfig.Subnets) != len(b.ko.Spec.NetworkConfig.VPCConfig.Subnets) {
 				delta.Add("Spec.NetworkConfig.VPCConfig.Subnets", a.ko.Spec.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.NetworkConfig.VPCConfig.Subnets)
+			} else if len(a.ko.Spec.NetworkConfig.VPCConfig.Subnets) > 0 {
+				if !ackcompare.SliceStringPEqual(a.ko.Spec.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.NetworkConfig.VPCConfig.Subnets) {
+					delta.Add("Spec.NetworkConfig.VPCConfig.Subnets", a.ko.Spec.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.NetworkConfig.VPCConfig.Subnets)
+				}
 			}
 		}
 	}

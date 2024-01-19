@@ -44,11 +44,19 @@ func newResourceDelta(
 	}
 	customSetDefaults(a, b)
 
-	if !ackcompare.SliceStringPEqual(a.ko.Spec.AcceleratorTypes, b.ko.Spec.AcceleratorTypes) {
+	if len(a.ko.Spec.AcceleratorTypes) != len(b.ko.Spec.AcceleratorTypes) {
 		delta.Add("Spec.AcceleratorTypes", a.ko.Spec.AcceleratorTypes, b.ko.Spec.AcceleratorTypes)
+	} else if len(a.ko.Spec.AcceleratorTypes) > 0 {
+		if !ackcompare.SliceStringPEqual(a.ko.Spec.AcceleratorTypes, b.ko.Spec.AcceleratorTypes) {
+			delta.Add("Spec.AcceleratorTypes", a.ko.Spec.AcceleratorTypes, b.ko.Spec.AcceleratorTypes)
+		}
 	}
-	if !ackcompare.SliceStringPEqual(a.ko.Spec.AdditionalCodeRepositories, b.ko.Spec.AdditionalCodeRepositories) {
+	if len(a.ko.Spec.AdditionalCodeRepositories) != len(b.ko.Spec.AdditionalCodeRepositories) {
 		delta.Add("Spec.AdditionalCodeRepositories", a.ko.Spec.AdditionalCodeRepositories, b.ko.Spec.AdditionalCodeRepositories)
+	} else if len(a.ko.Spec.AdditionalCodeRepositories) > 0 {
+		if !ackcompare.SliceStringPEqual(a.ko.Spec.AdditionalCodeRepositories, b.ko.Spec.AdditionalCodeRepositories) {
+			delta.Add("Spec.AdditionalCodeRepositories", a.ko.Spec.AdditionalCodeRepositories, b.ko.Spec.AdditionalCodeRepositories)
+		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.DefaultCodeRepository, b.ko.Spec.DefaultCodeRepository) {
 		delta.Add("Spec.DefaultCodeRepository", a.ko.Spec.DefaultCodeRepository, b.ko.Spec.DefaultCodeRepository)
@@ -113,8 +121,12 @@ func newResourceDelta(
 			delta.Add("Spec.RootAccess", a.ko.Spec.RootAccess, b.ko.Spec.RootAccess)
 		}
 	}
-	if !ackcompare.SliceStringPEqual(a.ko.Spec.SecurityGroupIDs, b.ko.Spec.SecurityGroupIDs) {
+	if len(a.ko.Spec.SecurityGroupIDs) != len(b.ko.Spec.SecurityGroupIDs) {
 		delta.Add("Spec.SecurityGroupIDs", a.ko.Spec.SecurityGroupIDs, b.ko.Spec.SecurityGroupIDs)
+	} else if len(a.ko.Spec.SecurityGroupIDs) > 0 {
+		if !ackcompare.SliceStringPEqual(a.ko.Spec.SecurityGroupIDs, b.ko.Spec.SecurityGroupIDs) {
+			delta.Add("Spec.SecurityGroupIDs", a.ko.Spec.SecurityGroupIDs, b.ko.Spec.SecurityGroupIDs)
+		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.SubnetID, b.ko.Spec.SubnetID) {
 		delta.Add("Spec.SubnetID", a.ko.Spec.SubnetID, b.ko.Spec.SubnetID)

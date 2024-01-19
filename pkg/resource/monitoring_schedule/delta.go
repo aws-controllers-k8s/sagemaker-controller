@@ -82,9 +82,9 @@ func newResourceDelta(
 					}
 				}
 			}
-			if ackcompare.HasNilDifference(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment) {
+			if len(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment) != len(b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment) {
 				delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment)
-			} else if a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment != nil && b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment != nil {
+			} else if len(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment) > 0 {
 				if !ackcompare.MapStringStringPEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment) {
 					delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment)
 				}
@@ -92,11 +92,19 @@ func newResourceDelta(
 			if ackcompare.HasNilDifference(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification) {
 				delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification)
 			} else if a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification != nil && b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification != nil {
-				if !ackcompare.SliceStringPEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments) {
+				if len(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments) != len(b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments) {
 					delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments)
+				} else if len(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments) > 0 {
+					if !ackcompare.SliceStringPEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments) {
+						delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments)
+					}
 				}
-				if !ackcompare.SliceStringPEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint) {
+				if len(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint) != len(b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint) {
 					delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint)
+				} else if len(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint) > 0 {
+					if !ackcompare.SliceStringPEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint) {
+						delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint)
+					}
 				}
 				if ackcompare.HasNilDifference(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ImageURI, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ImageURI) {
 					delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ImageURI", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ImageURI, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ImageURI)
@@ -120,8 +128,12 @@ func newResourceDelta(
 					}
 				}
 			}
-			if !reflect.DeepEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs) {
+			if len(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs) != len(b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs) {
 				delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs)
+			} else if len(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs) > 0 {
+				if !reflect.DeepEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs) {
+					delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs)
+				}
 			}
 			if ackcompare.HasNilDifference(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig) {
 				delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig)
@@ -133,8 +145,12 @@ func newResourceDelta(
 						delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.KMSKeyID", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.KMSKeyID, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.KMSKeyID)
 					}
 				}
-				if !reflect.DeepEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs) {
+				if len(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs) != len(b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs) {
 					delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs)
+				} else if len(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs) > 0 {
+					if !reflect.DeepEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs) {
+						delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs)
+					}
 				}
 			}
 			if ackcompare.HasNilDifference(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources) {
@@ -193,11 +209,19 @@ func newResourceDelta(
 				if ackcompare.HasNilDifference(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig) {
 					delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig)
 				} else if a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig != nil && b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig != nil {
-					if !ackcompare.SliceStringPEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs) {
+					if len(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs) != len(b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs) {
 						delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs)
+					} else if len(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs) > 0 {
+						if !ackcompare.SliceStringPEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs) {
+							delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs)
+						}
 					}
-					if !ackcompare.SliceStringPEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets) {
+					if len(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets) != len(b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets) {
 						delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets)
+					} else if len(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets) > 0 {
+						if !ackcompare.SliceStringPEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets) {
+							delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets)
+						}
 					}
 				}
 			}

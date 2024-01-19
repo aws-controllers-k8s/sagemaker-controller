@@ -97,12 +97,16 @@ func newResourceDelta(
 	if ackcompare.HasNilDifference(a.ko.Spec.DebugHookConfig, b.ko.Spec.DebugHookConfig) {
 		delta.Add("Spec.DebugHookConfig", a.ko.Spec.DebugHookConfig, b.ko.Spec.DebugHookConfig)
 	} else if a.ko.Spec.DebugHookConfig != nil && b.ko.Spec.DebugHookConfig != nil {
-		if !reflect.DeepEqual(a.ko.Spec.DebugHookConfig.CollectionConfigurations, b.ko.Spec.DebugHookConfig.CollectionConfigurations) {
+		if len(a.ko.Spec.DebugHookConfig.CollectionConfigurations) != len(b.ko.Spec.DebugHookConfig.CollectionConfigurations) {
 			delta.Add("Spec.DebugHookConfig.CollectionConfigurations", a.ko.Spec.DebugHookConfig.CollectionConfigurations, b.ko.Spec.DebugHookConfig.CollectionConfigurations)
+		} else if len(a.ko.Spec.DebugHookConfig.CollectionConfigurations) > 0 {
+			if !reflect.DeepEqual(a.ko.Spec.DebugHookConfig.CollectionConfigurations, b.ko.Spec.DebugHookConfig.CollectionConfigurations) {
+				delta.Add("Spec.DebugHookConfig.CollectionConfigurations", a.ko.Spec.DebugHookConfig.CollectionConfigurations, b.ko.Spec.DebugHookConfig.CollectionConfigurations)
+			}
 		}
-		if ackcompare.HasNilDifference(a.ko.Spec.DebugHookConfig.HookParameters, b.ko.Spec.DebugHookConfig.HookParameters) {
+		if len(a.ko.Spec.DebugHookConfig.HookParameters) != len(b.ko.Spec.DebugHookConfig.HookParameters) {
 			delta.Add("Spec.DebugHookConfig.HookParameters", a.ko.Spec.DebugHookConfig.HookParameters, b.ko.Spec.DebugHookConfig.HookParameters)
-		} else if a.ko.Spec.DebugHookConfig.HookParameters != nil && b.ko.Spec.DebugHookConfig.HookParameters != nil {
+		} else if len(a.ko.Spec.DebugHookConfig.HookParameters) > 0 {
 			if !ackcompare.MapStringStringPEqual(a.ko.Spec.DebugHookConfig.HookParameters, b.ko.Spec.DebugHookConfig.HookParameters) {
 				delta.Add("Spec.DebugHookConfig.HookParameters", a.ko.Spec.DebugHookConfig.HookParameters, b.ko.Spec.DebugHookConfig.HookParameters)
 			}
@@ -122,8 +126,12 @@ func newResourceDelta(
 			}
 		}
 	}
-	if !reflect.DeepEqual(a.ko.Spec.DebugRuleConfigurations, b.ko.Spec.DebugRuleConfigurations) {
+	if len(a.ko.Spec.DebugRuleConfigurations) != len(b.ko.Spec.DebugRuleConfigurations) {
 		delta.Add("Spec.DebugRuleConfigurations", a.ko.Spec.DebugRuleConfigurations, b.ko.Spec.DebugRuleConfigurations)
+	} else if len(a.ko.Spec.DebugRuleConfigurations) > 0 {
+		if !reflect.DeepEqual(a.ko.Spec.DebugRuleConfigurations, b.ko.Spec.DebugRuleConfigurations) {
+			delta.Add("Spec.DebugRuleConfigurations", a.ko.Spec.DebugRuleConfigurations, b.ko.Spec.DebugRuleConfigurations)
+		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.EnableInterContainerTrafficEncryption, b.ko.Spec.EnableInterContainerTrafficEncryption) {
 		delta.Add("Spec.EnableInterContainerTrafficEncryption", a.ko.Spec.EnableInterContainerTrafficEncryption, b.ko.Spec.EnableInterContainerTrafficEncryption)
@@ -146,9 +154,9 @@ func newResourceDelta(
 			delta.Add("Spec.EnableNetworkIsolation", a.ko.Spec.EnableNetworkIsolation, b.ko.Spec.EnableNetworkIsolation)
 		}
 	}
-	if ackcompare.HasNilDifference(a.ko.Spec.Environment, b.ko.Spec.Environment) {
+	if len(a.ko.Spec.Environment) != len(b.ko.Spec.Environment) {
 		delta.Add("Spec.Environment", a.ko.Spec.Environment, b.ko.Spec.Environment)
-	} else if a.ko.Spec.Environment != nil && b.ko.Spec.Environment != nil {
+	} else if len(a.ko.Spec.Environment) > 0 {
 		if !ackcompare.MapStringStringPEqual(a.ko.Spec.Environment, b.ko.Spec.Environment) {
 			delta.Add("Spec.Environment", a.ko.Spec.Environment, b.ko.Spec.Environment)
 		}
@@ -178,15 +186,19 @@ func newResourceDelta(
 			}
 		}
 	}
-	if ackcompare.HasNilDifference(a.ko.Spec.HyperParameters, b.ko.Spec.HyperParameters) {
+	if len(a.ko.Spec.HyperParameters) != len(b.ko.Spec.HyperParameters) {
 		delta.Add("Spec.HyperParameters", a.ko.Spec.HyperParameters, b.ko.Spec.HyperParameters)
-	} else if a.ko.Spec.HyperParameters != nil && b.ko.Spec.HyperParameters != nil {
+	} else if len(a.ko.Spec.HyperParameters) > 0 {
 		if !ackcompare.MapStringStringPEqual(a.ko.Spec.HyperParameters, b.ko.Spec.HyperParameters) {
 			delta.Add("Spec.HyperParameters", a.ko.Spec.HyperParameters, b.ko.Spec.HyperParameters)
 		}
 	}
-	if !reflect.DeepEqual(a.ko.Spec.InputDataConfig, b.ko.Spec.InputDataConfig) {
+	if len(a.ko.Spec.InputDataConfig) != len(b.ko.Spec.InputDataConfig) {
 		delta.Add("Spec.InputDataConfig", a.ko.Spec.InputDataConfig, b.ko.Spec.InputDataConfig)
+	} else if len(a.ko.Spec.InputDataConfig) > 0 {
+		if !reflect.DeepEqual(a.ko.Spec.InputDataConfig, b.ko.Spec.InputDataConfig) {
+			delta.Add("Spec.InputDataConfig", a.ko.Spec.InputDataConfig, b.ko.Spec.InputDataConfig)
+		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.OutputDataConfig, b.ko.Spec.OutputDataConfig) {
 		delta.Add("Spec.OutputDataConfig", a.ko.Spec.OutputDataConfig, b.ko.Spec.OutputDataConfig)
@@ -216,9 +228,9 @@ func newResourceDelta(
 				delta.Add("Spec.ProfilerConfig.ProfilingIntervalInMilliseconds", a.ko.Spec.ProfilerConfig.ProfilingIntervalInMilliseconds, b.ko.Spec.ProfilerConfig.ProfilingIntervalInMilliseconds)
 			}
 		}
-		if ackcompare.HasNilDifference(a.ko.Spec.ProfilerConfig.ProfilingParameters, b.ko.Spec.ProfilerConfig.ProfilingParameters) {
+		if len(a.ko.Spec.ProfilerConfig.ProfilingParameters) != len(b.ko.Spec.ProfilerConfig.ProfilingParameters) {
 			delta.Add("Spec.ProfilerConfig.ProfilingParameters", a.ko.Spec.ProfilerConfig.ProfilingParameters, b.ko.Spec.ProfilerConfig.ProfilingParameters)
-		} else if a.ko.Spec.ProfilerConfig.ProfilingParameters != nil && b.ko.Spec.ProfilerConfig.ProfilingParameters != nil {
+		} else if len(a.ko.Spec.ProfilerConfig.ProfilingParameters) > 0 {
 			if !ackcompare.MapStringStringPEqual(a.ko.Spec.ProfilerConfig.ProfilingParameters, b.ko.Spec.ProfilerConfig.ProfilingParameters) {
 				delta.Add("Spec.ProfilerConfig.ProfilingParameters", a.ko.Spec.ProfilerConfig.ProfilingParameters, b.ko.Spec.ProfilerConfig.ProfilingParameters)
 			}
@@ -231,8 +243,12 @@ func newResourceDelta(
 			}
 		}
 	}
-	if !reflect.DeepEqual(a.ko.Spec.ProfilerRuleConfigurations, b.ko.Spec.ProfilerRuleConfigurations) {
+	if len(a.ko.Spec.ProfilerRuleConfigurations) != len(b.ko.Spec.ProfilerRuleConfigurations) {
 		delta.Add("Spec.ProfilerRuleConfigurations", a.ko.Spec.ProfilerRuleConfigurations, b.ko.Spec.ProfilerRuleConfigurations)
+	} else if len(a.ko.Spec.ProfilerRuleConfigurations) > 0 {
+		if !reflect.DeepEqual(a.ko.Spec.ProfilerRuleConfigurations, b.ko.Spec.ProfilerRuleConfigurations) {
+			delta.Add("Spec.ProfilerRuleConfigurations", a.ko.Spec.ProfilerRuleConfigurations, b.ko.Spec.ProfilerRuleConfigurations)
+		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.ResourceConfig, b.ko.Spec.ResourceConfig) {
 		delta.Add("Spec.ResourceConfig", a.ko.Spec.ResourceConfig, b.ko.Spec.ResourceConfig)
@@ -244,8 +260,12 @@ func newResourceDelta(
 				delta.Add("Spec.ResourceConfig.InstanceCount", a.ko.Spec.ResourceConfig.InstanceCount, b.ko.Spec.ResourceConfig.InstanceCount)
 			}
 		}
-		if !reflect.DeepEqual(a.ko.Spec.ResourceConfig.InstanceGroups, b.ko.Spec.ResourceConfig.InstanceGroups) {
+		if len(a.ko.Spec.ResourceConfig.InstanceGroups) != len(b.ko.Spec.ResourceConfig.InstanceGroups) {
 			delta.Add("Spec.ResourceConfig.InstanceGroups", a.ko.Spec.ResourceConfig.InstanceGroups, b.ko.Spec.ResourceConfig.InstanceGroups)
+		} else if len(a.ko.Spec.ResourceConfig.InstanceGroups) > 0 {
+			if !reflect.DeepEqual(a.ko.Spec.ResourceConfig.InstanceGroups, b.ko.Spec.ResourceConfig.InstanceGroups) {
+				delta.Add("Spec.ResourceConfig.InstanceGroups", a.ko.Spec.ResourceConfig.InstanceGroups, b.ko.Spec.ResourceConfig.InstanceGroups)
+			}
 		}
 		if ackcompare.HasNilDifference(a.ko.Spec.ResourceConfig.InstanceType, b.ko.Spec.ResourceConfig.InstanceType) {
 			delta.Add("Spec.ResourceConfig.InstanceType", a.ko.Spec.ResourceConfig.InstanceType, b.ko.Spec.ResourceConfig.InstanceType)
@@ -340,11 +360,19 @@ func newResourceDelta(
 	if ackcompare.HasNilDifference(a.ko.Spec.VPCConfig, b.ko.Spec.VPCConfig) {
 		delta.Add("Spec.VPCConfig", a.ko.Spec.VPCConfig, b.ko.Spec.VPCConfig)
 	} else if a.ko.Spec.VPCConfig != nil && b.ko.Spec.VPCConfig != nil {
-		if !ackcompare.SliceStringPEqual(a.ko.Spec.VPCConfig.SecurityGroupIDs, b.ko.Spec.VPCConfig.SecurityGroupIDs) {
+		if len(a.ko.Spec.VPCConfig.SecurityGroupIDs) != len(b.ko.Spec.VPCConfig.SecurityGroupIDs) {
 			delta.Add("Spec.VPCConfig.SecurityGroupIDs", a.ko.Spec.VPCConfig.SecurityGroupIDs, b.ko.Spec.VPCConfig.SecurityGroupIDs)
+		} else if len(a.ko.Spec.VPCConfig.SecurityGroupIDs) > 0 {
+			if !ackcompare.SliceStringPEqual(a.ko.Spec.VPCConfig.SecurityGroupIDs, b.ko.Spec.VPCConfig.SecurityGroupIDs) {
+				delta.Add("Spec.VPCConfig.SecurityGroupIDs", a.ko.Spec.VPCConfig.SecurityGroupIDs, b.ko.Spec.VPCConfig.SecurityGroupIDs)
+			}
 		}
-		if !ackcompare.SliceStringPEqual(a.ko.Spec.VPCConfig.Subnets, b.ko.Spec.VPCConfig.Subnets) {
+		if len(a.ko.Spec.VPCConfig.Subnets) != len(b.ko.Spec.VPCConfig.Subnets) {
 			delta.Add("Spec.VPCConfig.Subnets", a.ko.Spec.VPCConfig.Subnets, b.ko.Spec.VPCConfig.Subnets)
+		} else if len(a.ko.Spec.VPCConfig.Subnets) > 0 {
+			if !ackcompare.SliceStringPEqual(a.ko.Spec.VPCConfig.Subnets, b.ko.Spec.VPCConfig.Subnets) {
+				delta.Add("Spec.VPCConfig.Subnets", a.ko.Spec.VPCConfig.Subnets, b.ko.Spec.VPCConfig.Subnets)
+			}
 		}
 	}
 

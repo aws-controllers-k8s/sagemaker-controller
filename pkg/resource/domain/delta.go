@@ -109,15 +109,23 @@ func newResourceDelta(
 					}
 				}
 			}
-			if !ackcompare.SliceStringPEqual(a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs, b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs) {
+			if len(a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs) != len(b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs) {
 				delta.Add("Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs", a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs, b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs)
+			} else if len(a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs) > 0 {
+				if !ackcompare.SliceStringPEqual(a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs, b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs) {
+					delta.Add("Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs", a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs, b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs)
+				}
 			}
 		}
 		if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings) {
 			delta.Add("Spec.DefaultUserSettings.KernelGatewayAppSettings", a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings)
 		} else if a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings != nil && b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings != nil {
-			if !reflect.DeepEqual(a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.CustomImages, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.CustomImages) {
+			if len(a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.CustomImages) != len(b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.CustomImages) {
 				delta.Add("Spec.DefaultUserSettings.KernelGatewayAppSettings.CustomImages", a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.CustomImages, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.CustomImages)
+			} else if len(a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.CustomImages) > 0 {
+				if !reflect.DeepEqual(a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.CustomImages, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.CustomImages) {
+					delta.Add("Spec.DefaultUserSettings.KernelGatewayAppSettings.CustomImages", a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.CustomImages, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.CustomImages)
+				}
 			}
 			if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec) {
 				delta.Add("Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec", a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec)
@@ -151,8 +159,12 @@ func newResourceDelta(
 					}
 				}
 			}
-			if !ackcompare.SliceStringPEqual(a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs) {
+			if len(a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs) != len(b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs) {
 				delta.Add("Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs", a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs)
+			} else if len(a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs) > 0 {
+				if !ackcompare.SliceStringPEqual(a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs) {
+					delta.Add("Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs", a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs)
+				}
 			}
 		}
 		if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings, b.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings) {
@@ -173,8 +185,12 @@ func newResourceDelta(
 				}
 			}
 		}
-		if !ackcompare.SliceStringPEqual(a.ko.Spec.DefaultUserSettings.SecurityGroups, b.ko.Spec.DefaultUserSettings.SecurityGroups) {
+		if len(a.ko.Spec.DefaultUserSettings.SecurityGroups) != len(b.ko.Spec.DefaultUserSettings.SecurityGroups) {
 			delta.Add("Spec.DefaultUserSettings.SecurityGroups", a.ko.Spec.DefaultUserSettings.SecurityGroups, b.ko.Spec.DefaultUserSettings.SecurityGroups)
+		} else if len(a.ko.Spec.DefaultUserSettings.SecurityGroups) > 0 {
+			if !ackcompare.SliceStringPEqual(a.ko.Spec.DefaultUserSettings.SecurityGroups, b.ko.Spec.DefaultUserSettings.SecurityGroups) {
+				delta.Add("Spec.DefaultUserSettings.SecurityGroups", a.ko.Spec.DefaultUserSettings.SecurityGroups, b.ko.Spec.DefaultUserSettings.SecurityGroups)
+			}
 		}
 		if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.SharingSettings, b.ko.Spec.DefaultUserSettings.SharingSettings) {
 			delta.Add("Spec.DefaultUserSettings.SharingSettings", a.ko.Spec.DefaultUserSettings.SharingSettings, b.ko.Spec.DefaultUserSettings.SharingSettings)
@@ -305,8 +321,12 @@ func newResourceDelta(
 				}
 			}
 		}
-		if !ackcompare.SliceStringPEqual(a.ko.Spec.DomainSettings.SecurityGroupIDs, b.ko.Spec.DomainSettings.SecurityGroupIDs) {
+		if len(a.ko.Spec.DomainSettings.SecurityGroupIDs) != len(b.ko.Spec.DomainSettings.SecurityGroupIDs) {
 			delta.Add("Spec.DomainSettings.SecurityGroupIDs", a.ko.Spec.DomainSettings.SecurityGroupIDs, b.ko.Spec.DomainSettings.SecurityGroupIDs)
+		} else if len(a.ko.Spec.DomainSettings.SecurityGroupIDs) > 0 {
+			if !ackcompare.SliceStringPEqual(a.ko.Spec.DomainSettings.SecurityGroupIDs, b.ko.Spec.DomainSettings.SecurityGroupIDs) {
+				delta.Add("Spec.DomainSettings.SecurityGroupIDs", a.ko.Spec.DomainSettings.SecurityGroupIDs, b.ko.Spec.DomainSettings.SecurityGroupIDs)
+			}
 		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.HomeEFSFileSystemKMSKeyID, b.ko.Spec.HomeEFSFileSystemKMSKeyID) {
@@ -323,8 +343,12 @@ func newResourceDelta(
 			delta.Add("Spec.KMSKeyID", a.ko.Spec.KMSKeyID, b.ko.Spec.KMSKeyID)
 		}
 	}
-	if !ackcompare.SliceStringPEqual(a.ko.Spec.SubnetIDs, b.ko.Spec.SubnetIDs) {
+	if len(a.ko.Spec.SubnetIDs) != len(b.ko.Spec.SubnetIDs) {
 		delta.Add("Spec.SubnetIDs", a.ko.Spec.SubnetIDs, b.ko.Spec.SubnetIDs)
+	} else if len(a.ko.Spec.SubnetIDs) > 0 {
+		if !ackcompare.SliceStringPEqual(a.ko.Spec.SubnetIDs, b.ko.Spec.SubnetIDs) {
+			delta.Add("Spec.SubnetIDs", a.ko.Spec.SubnetIDs, b.ko.Spec.SubnetIDs)
+		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.VPCID, b.ko.Spec.VPCID) {
 		delta.Add("Spec.VPCID", a.ko.Spec.VPCID, b.ko.Spec.VPCID)

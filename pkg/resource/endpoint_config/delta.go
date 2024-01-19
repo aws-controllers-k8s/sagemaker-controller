@@ -101,15 +101,27 @@ func newResourceDelta(
 		if ackcompare.HasNilDifference(a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader, b.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader) {
 			delta.Add("Spec.DataCaptureConfig.CaptureContentTypeHeader", a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader, b.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader)
 		} else if a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader != nil && b.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader != nil {
-			if !ackcompare.SliceStringPEqual(a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes, b.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes) {
+			if len(a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes) != len(b.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes) {
 				delta.Add("Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes", a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes, b.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes)
+			} else if len(a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes) > 0 {
+				if !ackcompare.SliceStringPEqual(a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes, b.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes) {
+					delta.Add("Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes", a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes, b.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes)
+				}
 			}
-			if !ackcompare.SliceStringPEqual(a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes, b.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes) {
+			if len(a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes) != len(b.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes) {
 				delta.Add("Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes", a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes, b.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes)
+			} else if len(a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes) > 0 {
+				if !ackcompare.SliceStringPEqual(a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes, b.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes) {
+					delta.Add("Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes", a.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes, b.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes)
+				}
 			}
 		}
-		if !reflect.DeepEqual(a.ko.Spec.DataCaptureConfig.CaptureOptions, b.ko.Spec.DataCaptureConfig.CaptureOptions) {
+		if len(a.ko.Spec.DataCaptureConfig.CaptureOptions) != len(b.ko.Spec.DataCaptureConfig.CaptureOptions) {
 			delta.Add("Spec.DataCaptureConfig.CaptureOptions", a.ko.Spec.DataCaptureConfig.CaptureOptions, b.ko.Spec.DataCaptureConfig.CaptureOptions)
+		} else if len(a.ko.Spec.DataCaptureConfig.CaptureOptions) > 0 {
+			if !reflect.DeepEqual(a.ko.Spec.DataCaptureConfig.CaptureOptions, b.ko.Spec.DataCaptureConfig.CaptureOptions) {
+				delta.Add("Spec.DataCaptureConfig.CaptureOptions", a.ko.Spec.DataCaptureConfig.CaptureOptions, b.ko.Spec.DataCaptureConfig.CaptureOptions)
+			}
 		}
 		if ackcompare.HasNilDifference(a.ko.Spec.DataCaptureConfig.DestinationS3URI, b.ko.Spec.DataCaptureConfig.DestinationS3URI) {
 			delta.Add("Spec.DataCaptureConfig.DestinationS3URI", a.ko.Spec.DataCaptureConfig.DestinationS3URI, b.ko.Spec.DataCaptureConfig.DestinationS3URI)
@@ -154,8 +166,12 @@ func newResourceDelta(
 			delta.Add("Spec.KMSKeyID", a.ko.Spec.KMSKeyID, b.ko.Spec.KMSKeyID)
 		}
 	}
-	if !reflect.DeepEqual(a.ko.Spec.ProductionVariants, b.ko.Spec.ProductionVariants) {
+	if len(a.ko.Spec.ProductionVariants) != len(b.ko.Spec.ProductionVariants) {
 		delta.Add("Spec.ProductionVariants", a.ko.Spec.ProductionVariants, b.ko.Spec.ProductionVariants)
+	} else if len(a.ko.Spec.ProductionVariants) > 0 {
+		if !reflect.DeepEqual(a.ko.Spec.ProductionVariants, b.ko.Spec.ProductionVariants) {
+			delta.Add("Spec.ProductionVariants", a.ko.Spec.ProductionVariants, b.ko.Spec.ProductionVariants)
+		}
 	}
 
 	return delta
