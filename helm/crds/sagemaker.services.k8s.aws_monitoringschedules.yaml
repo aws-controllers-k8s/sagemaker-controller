@@ -3,8 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.2
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.14.0
   name: monitoringschedules.sagemaker.services.k8s.aws
 spec:
   group: sagemaker.services.k8s.aws
@@ -30,34 +29,43 @@ spec:
           API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
           spec:
-            description: "MonitoringScheduleSpec defines the desired state of MonitoringSchedule.
-              \n A schedule for a model monitoring job. For information about model
-              monitor, see Amazon SageMaker Model Monitor (https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor.html)."
+            description: |-
+              MonitoringScheduleSpec defines the desired state of MonitoringSchedule.
+
+
+              A schedule for a model monitoring job. For information about model monitor,
+              see Amazon SageMaker Model Monitor (https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor.html).
             properties:
               monitoringScheduleConfig:
-                description: The configuration object that specifies the monitoring
-                  schedule and defines the monitoring job.
+                description: |-
+                  The configuration object that specifies the monitoring schedule and defines
+                  the monitoring job.
                 properties:
                   monitoringJobDefinition:
                     description: Defines the monitoring job.
                     properties:
                       baselineConfig:
-                        description: Configuration for monitoring constraints and
-                          monitoring statistics. These baseline resources are compared
-                          against the results of the current job from the series of
-                          jobs scheduled to collect data periodically.
+                        description: |-
+                          Configuration for monitoring constraints and monitoring statistics. These
+                          baseline resources are compared against the results of the current job from
+                          the series of jobs scheduled to collect data periodically.
                         properties:
                           baseliningJobName:
                             type: string
@@ -139,8 +147,9 @@ spec:
                               description: The output object for a monitoring job.
                               properties:
                                 s3Output:
-                                  description: Information about where and how you
-                                    want to store the results of a monitoring job.
+                                  description: |-
+                                    Information about where and how you want to store the results of a monitoring
+                                    job.
                                   properties:
                                     localPath:
                                       type: string
@@ -173,10 +182,10 @@ spec:
                             type: object
                         type: object
                       networkConfig:
-                        description: Networking options for a job, such as network
-                          traffic encryption between containers, whether to allow
-                          inbound and outbound network calls to and from containers,
-                          and the VPC subnets and security groups to use for VPC-enabled
+                        description: |-
+                          Networking options for a job, such as network traffic encryption between
+                          containers, whether to allow inbound and outbound network calls to and from
+                          containers, and the VPC subnets and security groups to use for VPC-enabled
                           jobs.
                         properties:
                           enableInterContainerTrafficEncryption:
@@ -184,13 +193,12 @@ spec:
                           enableNetworkIsolation:
                             type: boolean
                           vpcConfig:
-                            description: Specifies a VPC that your training jobs and
-                              hosted models have access to. Control access to and
-                              from your training and model containers by configuring
-                              the VPC. For more information, see Protect Endpoints
-                              by Using an Amazon Virtual Private Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/host-vpc.html)
-                              and Protect Training Jobs by Using an Amazon Virtual
-                              Private Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/train-vpc.html).
+                            description: |-
+                              Specifies a VPC that your training jobs and hosted models have access to.
+                              Control access to and from your training and model containers by configuring
+                              the VPC. For more information, see Protect Endpoints by Using an Amazon Virtual
+                              Private Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/host-vpc.html)
+                              and Protect Training Jobs by Using an Amazon Virtual Private Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/train-vpc.html).
                             properties:
                               securityGroupIDs:
                                 items:
@@ -225,27 +233,32 @@ spec:
                     type: object
                 type: object
               monitoringScheduleName:
-                description: The name of the monitoring schedule. The name must be
-                  unique within an Amazon Web Services Region within an Amazon Web
-                  Services account.
+                description: |-
+                  The name of the monitoring schedule. The name must be unique within an Amazon
+                  Web Services Region within an Amazon Web Services account.
                 type: string
               tags:
-                description: (Optional) An array of key-value pairs. For more information,
-                  see Using Cost Allocation Tags (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html#allocation-whatURL)
+                description: |-
+                  (Optional) An array of key-value pairs. For more information, see Using Cost
+                  Allocation Tags (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html#allocation-whatURL)
                   in the Amazon Web Services Billing and Cost Management User Guide.
                 items:
-                  description: "A tag object that consists of a key and an optional
-                    value, used to manage metadata for SageMaker Amazon Web Services
-                    resources. \n You can add tags to notebook instances, training
-                    jobs, hyperparameter tuning jobs, batch transform jobs, models,
-                    labeling jobs, work teams, endpoint configurations, and endpoints.
-                    For more information on adding tags to SageMaker resources, see
-                    AddTags. \n For more information on adding metadata to your Amazon
-                    Web Services resources with tagging, see Tagging Amazon Web Services
-                    resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
-                    For advice on best practices for managing Amazon Web Services
-                    resources with tagging, see Tagging Best Practices: Implement
-                    an Effective Amazon Web Services Resource Tagging Strategy (https://d1.awsstatic.com/whitepapers/aws-tagging-best-practices.pdf)."
+                  description: |-
+                    A tag object that consists of a key and an optional value, used to manage
+                    metadata for SageMaker Amazon Web Services resources.
+
+
+                    You can add tags to notebook instances, training jobs, hyperparameter tuning
+                    jobs, batch transform jobs, models, labeling jobs, work teams, endpoint configurations,
+                    and endpoints. For more information on adding tags to SageMaker resources,
+                    see AddTags.
+
+
+                    For more information on adding metadata to your Amazon Web Services resources
+                    with tagging, see Tagging Amazon Web Services resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+                    For advice on best practices for managing Amazon Web Services resources with
+                    tagging, see Tagging Best Practices: Implement an Effective Amazon Web Services
+                    Resource Tagging Strategy (https://d1.awsstatic.com/whitepapers/aws-tagging-best-practices.pdf).
                   properties:
                     key:
                       type: string
@@ -261,24 +274,26 @@ spec:
             description: MonitoringScheduleStatus defines the observed state of MonitoringSchedule
             properties:
               ackResourceMetadata:
-                description: All CRs managed by ACK have a common `Status.ACKResourceMetadata`
-                  member that is used to contain resource sync state, account ownership,
+                description: |-
+                  All CRs managed by ACK have a common `Status.ACKResourceMetadata` member
+                  that is used to contain resource sync state, account ownership,
                   constructed ARN for the resource
                 properties:
                   arn:
-                    description: 'ARN is the Amazon Resource Name for the resource.
-                      This is a globally-unique identifier and is set only by the
-                      ACK service controller once the controller has orchestrated
-                      the creation of the resource OR when it has verified that an
-                      "adopted" resource (a resource where the ARN annotation was
-                      set by the Kubernetes user on the CR) exists and matches the
-                      supplied CR''s Spec field values. TODO(vijat@): Find a better
-                      strategy for resources that do not have ARN in CreateOutputResponse
-                      https://github.com/aws/aws-controllers-k8s/issues/270'
+                    description: |-
+                      ARN is the Amazon Resource Name for the resource. This is a
+                      globally-unique identifier and is set only by the ACK service controller
+                      once the controller has orchestrated the creation of the resource OR
+                      when it has verified that an "adopted" resource (a resource where the
+                      ARN annotation was set by the Kubernetes user on the CR) exists and
+                      matches the supplied CR's Spec field values.
+                      TODO(vijat@): Find a better strategy for resources that do not have ARN in CreateOutputResponse
+                      https://github.com/aws/aws-controllers-k8s/issues/270
                     type: string
                   ownerAccountID:
-                    description: OwnerAccountID is the AWS Account ID of the account
-                      that owns the backend AWS service API resource.
+                    description: |-
+                      OwnerAccountID is the AWS Account ID of the account that owns the
+                      backend AWS service API resource.
                     type: string
                   region:
                     description: Region is the AWS region in which the resource exists
@@ -289,14 +304,16 @@ spec:
                 - region
                 type: object
               conditions:
-                description: All CRS managed by ACK have a common `Status.Conditions`
-                  member that contains a collection of `ackv1alpha1.Condition` objects
-                  that describe the various terminal states of the CR and its backend
-                  AWS service API resource
+                description: |-
+                  All CRS managed by ACK have a common `Status.Conditions` member that
+                  contains a collection of `ackv1alpha1.Condition` objects that describe
+                  the various terminal states of the CR and its backend AWS service API
+                  resource
                 items:
-                  description: Condition is the common struct used by all CRDs managed
-                    by ACK service controllers to indicate terminal states  of the
-                    CR and its backend AWS service API resource
+                  description: |-
+                    Condition is the common struct used by all CRDs managed by ACK service
+                    controllers to indicate terminal states  of the CR and its backend AWS
+                    service API resource
                   properties:
                     lastTransitionTime:
                       description: Last time the condition transitioned from one status
@@ -326,8 +343,9 @@ spec:
                 format: date-time
                 type: string
               failureReason:
-                description: A string, up to one KB in size, that contains the reason
-                  a monitoring job failed, if it failed.
+                description: |-
+                  A string, up to one KB in size, that contains the reason a monitoring job
+                  failed, if it failed.
                 type: string
               lastModifiedTime:
                 description: The time at which the monitoring job was last modified.

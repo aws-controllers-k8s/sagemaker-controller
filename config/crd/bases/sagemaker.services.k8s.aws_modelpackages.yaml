@@ -3,8 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.2
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.14.0
   name: modelpackages.sagemaker.services.k8s.aws
 spec:
   group: sagemaker.services.k8s.aws
@@ -25,30 +24,40 @@ spec:
         description: ModelPackage is the Schema for the ModelPackages API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
           spec:
-            description: "ModelPackageSpec defines the desired state of ModelPackage.
-              \n A versioned model that can be deployed for SageMaker inference."
+            description: |-
+              ModelPackageSpec defines the desired state of ModelPackage.
+
+
+              A versioned model that can be deployed for SageMaker inference.
             properties:
               additionalInferenceSpecifications:
-                description: An array of additional Inference Specification objects.
-                  Each additional Inference Specification specifies artifacts based
-                  on this model package that can be used on inference endpoints. Generally
-                  used with SageMaker Neo to store the compiled artifacts.
+                description: |-
+                  An array of additional Inference Specification objects. Each additional Inference
+                  Specification specifies artifacts based on this model package that can be
+                  used on inference endpoints. Generally used with SageMaker Neo to store the
+                  compiled artifacts.
                 items:
-                  description: A structure of additional Inference Specification.
-                    Additional Inference Specification specifies details about inference
-                    jobs that can be run with models based on this model package
+                  description: |-
+                    A structure of additional Inference Specification. Additional Inference Specification
+                    specifies details about inference jobs that can be run with models based
+                    on this model package
                   properties:
                     containers:
                       items:
@@ -109,9 +118,12 @@ spec:
                 description: A description for the approval status of the model.
                 type: string
               certifyForMarketplace:
-                description: "Whether to certify the model package for listing on
-                  Amazon Web Services Marketplace. \n This parameter is optional for
-                  unversioned models, and does not apply to versioned models."
+                description: |-
+                  Whether to certify the model package for listing on Amazon Web Services Marketplace.
+
+
+                  This parameter is optional for unversioned models, and does not apply to
+                  versioned models.
                 type: boolean
               clientToken:
                 description: A unique token that guarantees that the call to this
@@ -124,20 +136,21 @@ spec:
                   versions.
                 type: object
               domain:
-                description: The machine learning domain of your model package and
-                  its components. Common machine learning domains include computer
-                  vision and natural language processing.
+                description: |-
+                  The machine learning domain of your model package and its components. Common
+                  machine learning domains include computer vision and natural language processing.
                 type: string
               driftCheckBaselines:
-                description: Represents the drift check baselines that can be used
-                  when the model monitor is set using the model package. For more
-                  information, see the topic on Drift Detection against Previous Baselines
-                  in SageMaker Pipelines (https://docs.aws.amazon.com/sagemaker/latest/dg/pipelines-quality-clarify-baseline-lifecycle.html#pipelines-quality-clarify-baseline-drift-detection)
+                description: |-
+                  Represents the drift check baselines that can be used when the model monitor
+                  is set using the model package. For more information, see the topic on Drift
+                  Detection against Previous Baselines in SageMaker Pipelines (https://docs.aws.amazon.com/sagemaker/latest/dg/pipelines-quality-clarify-baseline-lifecycle.html#pipelines-quality-clarify-baseline-drift-detection)
                   in the Amazon SageMaker Developer Guide.
                 properties:
                   bias:
-                    description: Represents the drift check bias baselines that can
-                      be used when the model monitor is set using the model package.
+                    description: |-
+                      Represents the drift check bias baselines that can be used when the model
+                      monitor is set using the model package.
                     properties:
                       configFile:
                         description: Contains details regarding the file source.
@@ -171,9 +184,9 @@ spec:
                         type: object
                     type: object
                   explainability:
-                    description: Represents the drift check explainability baselines
-                      that can be used when the model monitor is set using the model
-                      package.
+                    description: |-
+                      Represents the drift check explainability baselines that can be used when
+                      the model monitor is set using the model package.
                     properties:
                       configFile:
                         description: Contains details regarding the file source.
@@ -197,9 +210,9 @@ spec:
                         type: object
                     type: object
                   modelDataQuality:
-                    description: Represents the drift check data quality baselines
-                      that can be used when the model monitor is set using the model
-                      package.
+                    description: |-
+                      Represents the drift check data quality baselines that can be used when the
+                      model monitor is set using the model package.
                     properties:
                       constraints:
                         description: Details about the metrics source.
@@ -223,9 +236,9 @@ spec:
                         type: object
                     type: object
                   modelQuality:
-                    description: Represents the drift check model quality baselines
-                      that can be used when the model monitor is set using the model
-                      package.
+                    description: |-
+                      Represents the drift check model quality baselines that can be used when
+                      the model monitor is set using the model package.
                     properties:
                       constraints:
                         description: Details about the metrics source.
@@ -250,13 +263,21 @@ spec:
                     type: object
                 type: object
               inferenceSpecification:
-                description: "Specifies details about inference jobs that can be run
-                  with models based on this model package, including the following:
-                  \n * The Amazon ECR paths of containers that contain the inference
-                  code and model artifacts. \n * The instance types that the model
-                  package supports for transform jobs and real-time endpoints used
-                  for inference. \n * The input and output content formats that the
-                  model package supports for inference."
+                description: |-
+                  Specifies details about inference jobs that can be run with models based
+                  on this model package, including the following:
+
+
+                     * The Amazon ECR paths of containers that contain the inference code and
+                     model artifacts.
+
+
+                     * The instance types that the model package supports for transform jobs
+                     and real-time endpoints used for inference.
+
+
+                     * The input and output content formats that the model package supports
+                     for inference.
                 properties:
                   containers:
                     items:
@@ -321,10 +342,16 @@ spec:
                     type: string
                 type: object
               modelApprovalStatus:
-                description: "Whether the model is approved for deployment. \n This
-                  parameter is optional for versioned models, and does not apply to
-                  unversioned models. \n For versioned models, the value of this parameter
-                  must be set to Approved to deploy the model."
+                description: |-
+                  Whether the model is approved for deployment.
+
+
+                  This parameter is optional for versioned models, and does not apply to unversioned
+                  models.
+
+
+                  For versioned models, the value of this parameter must be set to Approved
+                  to deploy the model.
                 type: string
               modelMetrics:
                 description: A structure that contains model metrics reports.
@@ -430,24 +457,30 @@ spec:
                 description: A description of the model package.
                 type: string
               modelPackageGroupName:
-                description: "The name or Amazon Resource Name (ARN) of the model
-                  package group that this model version belongs to. \n This parameter
-                  is required for versioned models, and does not apply to unversioned
-                  models."
+                description: |-
+                  The name or Amazon Resource Name (ARN) of the model package group that this
+                  model version belongs to.
+
+
+                  This parameter is required for versioned models, and does not apply to unversioned
+                  models.
                 type: string
               modelPackageName:
-                description: "The name of the model package. The name must have 1
-                  to 63 characters. Valid characters are a-z, A-Z, 0-9, and - (hyphen).
-                  \n This parameter is required for unversioned models. It is not
-                  applicable to versioned models."
+                description: |-
+                  The name of the model package. The name must have 1 to 63 characters. Valid
+                  characters are a-z, A-Z, 0-9, and - (hyphen).
+
+
+                  This parameter is required for unversioned models. It is not applicable to
+                  versioned models.
                 type: string
               samplePayloadURL:
-                description: The Amazon Simple Storage Service (Amazon S3) path where
-                  the sample payload is stored. This path must point to a single gzip
-                  compressed tar archive (.tar.gz suffix). This archive can hold multiple
-                  files that are all equally used in the load test. Each file in the
-                  archive must satisfy the size constraints of the InvokeEndpoint
-                  (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpoint.html#API_runtime_InvokeEndpoint_RequestSyntax)
+                description: |-
+                  The Amazon Simple Storage Service (Amazon S3) path where the sample payload
+                  is stored. This path must point to a single gzip compressed tar archive (.tar.gz
+                  suffix). This archive can hold multiple files that are all equally used in
+                  the load test. Each file in the archive must satisfy the size constraints
+                  of the InvokeEndpoint (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpoint.html#API_runtime_InvokeEndpoint_RequestSyntax)
                   call.
                 type: string
               sourceAlgorithmSpecification:
@@ -456,10 +489,10 @@ spec:
                 properties:
                   sourceAlgorithms:
                     items:
-                      description: Specifies an algorithm that was used to create
-                        the model package. The algorithm must be either an algorithm
-                        resource in your SageMaker account or an algorithm in Amazon
-                        Web Services Marketplace that you are subscribed to.
+                      description: |-
+                        Specifies an algorithm that was used to create the model package. The algorithm
+                        must be either an algorithm resource in your SageMaker account or an algorithm
+                        in Amazon Web Services Marketplace that you are subscribed to.
                       properties:
                         algorithmName:
                           type: string
@@ -469,23 +502,27 @@ spec:
                     type: array
                 type: object
               tags:
-                description: A list of key value pairs associated with the model.
-                  For more information, see Tagging Amazon Web Services resources
-                  (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html)
+                description: |-
+                  A list of key value pairs associated with the model. For more information,
+                  see Tagging Amazon Web Services resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html)
                   in the Amazon Web Services General Reference Guide.
                 items:
-                  description: "A tag object that consists of a key and an optional
-                    value, used to manage metadata for SageMaker Amazon Web Services
-                    resources. \n You can add tags to notebook instances, training
-                    jobs, hyperparameter tuning jobs, batch transform jobs, models,
-                    labeling jobs, work teams, endpoint configurations, and endpoints.
-                    For more information on adding tags to SageMaker resources, see
-                    AddTags. \n For more information on adding metadata to your Amazon
-                    Web Services resources with tagging, see Tagging Amazon Web Services
-                    resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
-                    For advice on best practices for managing Amazon Web Services
-                    resources with tagging, see Tagging Best Practices: Implement
-                    an Effective Amazon Web Services Resource Tagging Strategy (https://d1.awsstatic.com/whitepapers/aws-tagging-best-practices.pdf)."
+                  description: |-
+                    A tag object that consists of a key and an optional value, used to manage
+                    metadata for SageMaker Amazon Web Services resources.
+
+
+                    You can add tags to notebook instances, training jobs, hyperparameter tuning
+                    jobs, batch transform jobs, models, labeling jobs, work teams, endpoint configurations,
+                    and endpoints. For more information on adding tags to SageMaker resources,
+                    see AddTags.
+
+
+                    For more information on adding metadata to your Amazon Web Services resources
+                    with tagging, see Tagging Amazon Web Services resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+                    For advice on best practices for managing Amazon Web Services resources with
+                    tagging, see Tagging Best Practices: Implement an Effective Amazon Web Services
+                    Resource Tagging Strategy (https://d1.awsstatic.com/whitepapers/aws-tagging-best-practices.pdf).
                   properties:
                     key:
                       type: string
@@ -494,32 +531,37 @@ spec:
                   type: object
                 type: array
               task:
-                description: "The machine learning task your model package accomplishes.
-                  Common machine learning tasks include object detection and image
-                  classification. The following tasks are supported by Inference Recommender:
-                  \"IMAGE_CLASSIFICATION\" | \"OBJECT_DETECTION\" | \"TEXT_GENERATION\"
-                  |\"IMAGE_SEGMENTATION\" | \"FILL_MASK\" | \"CLASSIFICATION\" | \"REGRESSION\"
-                  | \"OTHER\". \n Specify \"OTHER\" if none of the tasks listed fit
-                  your use case."
+                description: |-
+                  The machine learning task your model package accomplishes. Common machine
+                  learning tasks include object detection and image classification. The following
+                  tasks are supported by Inference Recommender: "IMAGE_CLASSIFICATION" | "OBJECT_DETECTION"
+                  | "TEXT_GENERATION" |"IMAGE_SEGMENTATION" | "FILL_MASK" | "CLASSIFICATION"
+                  | "REGRESSION" | "OTHER".
+
+
+                  Specify "OTHER" if none of the tasks listed fit your use case.
                 type: string
               validationSpecification:
-                description: Specifies configurations for one or more transform jobs
-                  that SageMaker runs to test the model package.
+                description: |-
+                  Specifies configurations for one or more transform jobs that SageMaker runs
+                  to test the model package.
                 properties:
                   validationProfiles:
                     items:
-                      description: "Contains data, such as the inputs and targeted
-                        instance types that are used in the process of validating
-                        the model package. \n The data provided in the validation
-                        profile is made available to your buyers on Amazon Web Services
-                        Marketplace."
+                      description: |-
+                        Contains data, such as the inputs and targeted instance types that are used
+                        in the process of validating the model package.
+
+
+                        The data provided in the validation profile is made available to your buyers
+                        on Amazon Web Services Marketplace.
                       properties:
                         profileName:
                           type: string
                         transformJobDefinition:
-                          description: Defines the input needed to run a transform
-                            job using the inference specification specified in the
-                            algorithm.
+                          description: |-
+                            Defines the input needed to run a transform job using the inference specification
+                            specified in the algorithm.
                           properties:
                             batchStrategy:
                               type: string
@@ -534,8 +576,9 @@ spec:
                               format: int64
                               type: integer
                             transformInput:
-                              description: Describes the input source of a transform
-                                job and the way the transform job consumes it.
+                              description: |-
+                                Describes the input source of a transform job and the way the transform job
+                                consumes it.
                               properties:
                                 compressionType:
                                   type: string
@@ -570,9 +613,9 @@ spec:
                                   type: string
                               type: object
                             transformResources:
-                              description: Describes the resources, including ML instance
-                                types and ML instance count, to use for transform
-                                job.
+                              description: |-
+                                Describes the resources, including ML instance types and ML instance count,
+                                to use for transform job.
                               properties:
                                 instanceCount:
                                   format: int64
@@ -593,24 +636,26 @@ spec:
             description: ModelPackageStatus defines the observed state of ModelPackage
             properties:
               ackResourceMetadata:
-                description: All CRs managed by ACK have a common `Status.ACKResourceMetadata`
-                  member that is used to contain resource sync state, account ownership,
+                description: |-
+                  All CRs managed by ACK have a common `Status.ACKResourceMetadata` member
+                  that is used to contain resource sync state, account ownership,
                   constructed ARN for the resource
                 properties:
                   arn:
-                    description: 'ARN is the Amazon Resource Name for the resource.
-                      This is a globally-unique identifier and is set only by the
-                      ACK service controller once the controller has orchestrated
-                      the creation of the resource OR when it has verified that an
-                      "adopted" resource (a resource where the ARN annotation was
-                      set by the Kubernetes user on the CR) exists and matches the
-                      supplied CR''s Spec field values. TODO(vijat@): Find a better
-                      strategy for resources that do not have ARN in CreateOutputResponse
-                      https://github.com/aws/aws-controllers-k8s/issues/270'
+                    description: |-
+                      ARN is the Amazon Resource Name for the resource. This is a
+                      globally-unique identifier and is set only by the ACK service controller
+                      once the controller has orchestrated the creation of the resource OR
+                      when it has verified that an "adopted" resource (a resource where the
+                      ARN annotation was set by the Kubernetes user on the CR) exists and
+                      matches the supplied CR's Spec field values.
+                      TODO(vijat@): Find a better strategy for resources that do not have ARN in CreateOutputResponse
+                      https://github.com/aws/aws-controllers-k8s/issues/270
                     type: string
                   ownerAccountID:
-                    description: OwnerAccountID is the AWS Account ID of the account
-                      that owns the backend AWS service API resource.
+                    description: |-
+                      OwnerAccountID is the AWS Account ID of the account that owns the
+                      backend AWS service API resource.
                     type: string
                   region:
                     description: Region is the AWS region in which the resource exists
@@ -621,14 +666,16 @@ spec:
                 - region
                 type: object
               conditions:
-                description: All CRS managed by ACK have a common `Status.Conditions`
-                  member that contains a collection of `ackv1alpha1.Condition` objects
-                  that describe the various terminal states of the CR and its backend
-                  AWS service API resource
+                description: |-
+                  All CRS managed by ACK have a common `Status.Conditions` member that
+                  contains a collection of `ackv1alpha1.Condition` objects that describe
+                  the various terminal states of the CR and its backend AWS service API
+                  resource
                 items:
-                  description: Condition is the common struct used by all CRDs managed
-                    by ACK service controllers to indicate terminal states  of the
-                    CR and its backend AWS service API resource
+                  description: |-
+                    Condition is the common struct used by all CRDs managed by ACK service
+                    controllers to indicate terminal states  of the CR and its backend AWS
+                    service API resource
                   properties:
                     lastTransitionTime:
                       description: Last time the condition transitioned from one status
