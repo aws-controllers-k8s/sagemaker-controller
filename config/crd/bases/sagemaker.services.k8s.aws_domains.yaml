@@ -3,8 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.2
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.14.0
   name: domains.sagemaker.services.k8s.aws
 spec:
   group: sagemaker.services.k8s.aws
@@ -28,14 +27,19 @@ spec:
         description: Domain is the Schema for the Domains API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -43,16 +47,21 @@ spec:
             description: DomainSpec defines the desired state of Domain.
             properties:
               appNetworkAccessType:
-                description: "Specifies the VPC used for non-EFS traffic. The default
-                  value is PublicInternetOnly. \n * PublicInternetOnly - Non-EFS traffic
-                  is through a VPC managed by Amazon SageMaker, which allows direct
-                  internet access \n * VpcOnly - All Studio traffic is through the
-                  specified VPC and subnets"
+                description: |-
+                  Specifies the VPC used for non-EFS traffic. The default value is PublicInternetOnly.
+
+
+                     * PublicInternetOnly - Non-EFS traffic is through a VPC managed by Amazon
+                     SageMaker, which allows direct internet access
+
+
+                     * VpcOnly - All Studio traffic is through the specified VPC and subnets
                 type: string
               appSecurityGroupManagement:
-                description: The entity that creates and manages the required security
-                  groups for inter-app communication in VPCOnly mode. Required when
-                  CreateDomain.AppNetworkAccessType is VPCOnly and DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleArn
+                description: |-
+                  The entity that creates and manages the required security groups for inter-app
+                  communication in VPCOnly mode. Required when CreateDomain.AppNetworkAccessType
+                  is VPCOnly and DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleArn
                   is provided.
                 type: string
               authMode:
@@ -60,11 +69,14 @@ spec:
                   the domain.
                 type: string
               defaultUserSettings:
-                description: "The default settings to use to create a user profile
-                  when UserSettings isn't specified in the call to the CreateUserProfile
-                  API. \n SecurityGroups is aggregated when specified in both calls.
-                  For all other settings in UserSettings, the values specified in
-                  CreateUserProfile take precedence over those specified in CreateDomain."
+                description: |-
+                  The default settings to use to create a user profile when UserSettings isn't
+                  specified in the call to the CreateUserProfile API.
+
+
+                  SecurityGroups is aggregated when specified in both calls. For all other
+                  settings in UserSettings, the values specified in CreateUserProfile take
+                  precedence over those specified in CreateDomain.
                 properties:
                   executionRole:
                     type: string
@@ -72,9 +84,9 @@ spec:
                     description: The JupyterServer app settings.
                     properties:
                       defaultResourceSpec:
-                        description: Specifies the ARN's of a SageMaker image and
-                          SageMaker image version, and the instance type that the
-                          version runs on.
+                        description: |-
+                          Specifies the ARN's of a SageMaker image and SageMaker image version, and
+                          the instance type that the version runs on.
                         properties:
                           instanceType:
                             type: string
@@ -95,8 +107,9 @@ spec:
                     properties:
                       customImages:
                         items:
-                          description: A custom SageMaker image. For more information,
-                            see Bring your own SageMaker image (https://docs.aws.amazon.com/sagemaker/latest/dg/studio-byoi.html).
+                          description: |-
+                            A custom SageMaker image. For more information, see Bring your own SageMaker
+                            image (https://docs.aws.amazon.com/sagemaker/latest/dg/studio-byoi.html).
                           properties:
                             appImageConfigName:
                               type: string
@@ -108,9 +121,9 @@ spec:
                           type: object
                         type: array
                       defaultResourceSpec:
-                        description: Specifies the ARN's of a SageMaker image and
-                          SageMaker image version, and the instance type that the
-                          version runs on.
+                        description: |-
+                          Specifies the ARN's of a SageMaker image and SageMaker image version, and
+                          the instance type that the version runs on.
                         properties:
                           instanceType:
                             type: string
@@ -127,10 +140,10 @@ spec:
                         type: array
                     type: object
                   rStudioServerProAppSettings:
-                    description: A collection of settings that configure user interaction
-                      with the RStudioServerPro app. RStudioServerProAppSettings cannot
-                      be updated. The RStudioServerPro app must be deleted and a new
-                      one created to make any changes.
+                    description: |-
+                      A collection of settings that configure user interaction with the RStudioServerPro
+                      app. RStudioServerProAppSettings cannot be updated. The RStudioServerPro
+                      app must be deleted and a new one created to make any changes.
                     properties:
                       accessStatus:
                         type: string
@@ -142,11 +155,11 @@ spec:
                       type: string
                     type: array
                   sharingSettings:
-                    description: Specifies options for sharing SageMaker Studio notebooks.
-                      These settings are specified as part of DefaultUserSettings
-                      when the CreateDomain API is called, and as part of UserSettings
-                      when the CreateUserProfile API is called. When SharingSettings
-                      is not specified, notebook sharing isn't allowed.
+                    description: |-
+                      Specifies options for sharing SageMaker Studio notebooks. These settings
+                      are specified as part of DefaultUserSettings when the CreateDomain API is
+                      called, and as part of UserSettings when the CreateUserProfile API is called.
+                      When SharingSettings is not specified, notebook sharing isn't allowed.
                     properties:
                       notebookOutputOption:
                         type: string
@@ -159,9 +172,9 @@ spec:
                     description: The TensorBoard app settings.
                     properties:
                       defaultResourceSpec:
-                        description: Specifies the ARN's of a SageMaker image and
-                          SageMaker image version, and the instance type that the
-                          version runs on.
+                        description: |-
+                          Specifies the ARN's of a SageMaker image and SageMaker image version, and
+                          the instance type that the version runs on.
                         properties:
                           instanceType:
                             type: string
@@ -181,13 +194,14 @@ spec:
                 description: A collection of Domain settings.
                 properties:
                   rStudioServerProDomainSettings:
-                    description: A collection of settings that configure the RStudioServerPro
-                      Domain-level app.
+                    description: |-
+                      A collection of settings that configure the RStudioServerPro Domain-level
+                      app.
                     properties:
                       defaultResourceSpec:
-                        description: Specifies the ARN's of a SageMaker image and
-                          SageMaker image version, and the instance type that the
-                          version runs on.
+                        description: |-
+                          Specifies the ARN's of a SageMaker image and SageMaker image version, and
+                          the instance type that the version runs on.
                         properties:
                           instanceType:
                             type: string
@@ -214,9 +228,10 @@ spec:
                 description: Use KmsKeyId.
                 type: string
               kmsKeyID:
-                description: SageMaker uses Amazon Web Services KMS to encrypt the
-                  EFS volume attached to the domain with an Amazon Web Services managed
-                  key by default. For more control, specify a customer managed key.
+                description: |-
+                  SageMaker uses Amazon Web Services KMS to encrypt the EFS volume attached
+                  to the domain with an Amazon Web Services managed key by default. For more
+                  control, specify a customer managed key.
                 type: string
               subnetIDs:
                 description: The VPC subnets that Studio uses for communication.
@@ -224,23 +239,31 @@ spec:
                   type: string
                 type: array
               tags:
-                description: "Tags to associated with the Domain. Each tag consists
-                  of a key and an optional value. Tag keys must be unique per resource.
-                  Tags are searchable using the Search API. \n Tags that you specify
-                  for the Domain are also added to all Apps that the Domain launches."
+                description: |-
+                  Tags to associated with the Domain. Each tag consists of a key and an optional
+                  value. Tag keys must be unique per resource. Tags are searchable using the
+                  Search API.
+
+
+                  Tags that you specify for the Domain are also added to all Apps that the
+                  Domain launches.
                 items:
-                  description: "A tag object that consists of a key and an optional
-                    value, used to manage metadata for SageMaker Amazon Web Services
-                    resources. \n You can add tags to notebook instances, training
-                    jobs, hyperparameter tuning jobs, batch transform jobs, models,
-                    labeling jobs, work teams, endpoint configurations, and endpoints.
-                    For more information on adding tags to SageMaker resources, see
-                    AddTags. \n For more information on adding metadata to your Amazon
-                    Web Services resources with tagging, see Tagging Amazon Web Services
-                    resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
-                    For advice on best practices for managing Amazon Web Services
-                    resources with tagging, see Tagging Best Practices: Implement
-                    an Effective Amazon Web Services Resource Tagging Strategy (https://d1.awsstatic.com/whitepapers/aws-tagging-best-practices.pdf)."
+                  description: |-
+                    A tag object that consists of a key and an optional value, used to manage
+                    metadata for SageMaker Amazon Web Services resources.
+
+
+                    You can add tags to notebook instances, training jobs, hyperparameter tuning
+                    jobs, batch transform jobs, models, labeling jobs, work teams, endpoint configurations,
+                    and endpoints. For more information on adding tags to SageMaker resources,
+                    see AddTags.
+
+
+                    For more information on adding metadata to your Amazon Web Services resources
+                    with tagging, see Tagging Amazon Web Services resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+                    For advice on best practices for managing Amazon Web Services resources with
+                    tagging, see Tagging Best Practices: Implement an Effective Amazon Web Services
+                    Resource Tagging Strategy (https://d1.awsstatic.com/whitepapers/aws-tagging-best-practices.pdf).
                   properties:
                     key:
                       type: string
@@ -263,24 +286,26 @@ spec:
             description: DomainStatus defines the observed state of Domain
             properties:
               ackResourceMetadata:
-                description: All CRs managed by ACK have a common `Status.ACKResourceMetadata`
-                  member that is used to contain resource sync state, account ownership,
+                description: |-
+                  All CRs managed by ACK have a common `Status.ACKResourceMetadata` member
+                  that is used to contain resource sync state, account ownership,
                   constructed ARN for the resource
                 properties:
                   arn:
-                    description: 'ARN is the Amazon Resource Name for the resource.
-                      This is a globally-unique identifier and is set only by the
-                      ACK service controller once the controller has orchestrated
-                      the creation of the resource OR when it has verified that an
-                      "adopted" resource (a resource where the ARN annotation was
-                      set by the Kubernetes user on the CR) exists and matches the
-                      supplied CR''s Spec field values. TODO(vijat@): Find a better
-                      strategy for resources that do not have ARN in CreateOutputResponse
-                      https://github.com/aws/aws-controllers-k8s/issues/270'
+                    description: |-
+                      ARN is the Amazon Resource Name for the resource. This is a
+                      globally-unique identifier and is set only by the ACK service controller
+                      once the controller has orchestrated the creation of the resource OR
+                      when it has verified that an "adopted" resource (a resource where the
+                      ARN annotation was set by the Kubernetes user on the CR) exists and
+                      matches the supplied CR's Spec field values.
+                      TODO(vijat@): Find a better strategy for resources that do not have ARN in CreateOutputResponse
+                      https://github.com/aws/aws-controllers-k8s/issues/270
                     type: string
                   ownerAccountID:
-                    description: OwnerAccountID is the AWS Account ID of the account
-                      that owns the backend AWS service API resource.
+                    description: |-
+                      OwnerAccountID is the AWS Account ID of the account that owns the
+                      backend AWS service API resource.
                     type: string
                   region:
                     description: Region is the AWS region in which the resource exists
@@ -291,14 +316,16 @@ spec:
                 - region
                 type: object
               conditions:
-                description: All CRS managed by ACK have a common `Status.Conditions`
-                  member that contains a collection of `ackv1alpha1.Condition` objects
-                  that describe the various terminal states of the CR and its backend
-                  AWS service API resource
+                description: |-
+                  All CRS managed by ACK have a common `Status.Conditions` member that
+                  contains a collection of `ackv1alpha1.Condition` objects that describe
+                  the various terminal states of the CR and its backend AWS service API
+                  resource
                 items:
-                  description: Condition is the common struct used by all CRDs managed
-                    by ACK service controllers to indicate terminal states  of the
-                    CR and its backend AWS service API resource
+                  description: |-
+                    Condition is the common struct used by all CRDs managed by ACK service
+                    controllers to indicate terminal states  of the CR and its backend AWS
+                    service API resource
                   properties:
                     lastTransitionTime:
                       description: Last time the condition transitioned from one status
