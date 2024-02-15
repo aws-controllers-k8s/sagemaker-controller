@@ -28,12 +28,13 @@ type DomainSpec struct {
 	//   - PublicInternetOnly - Non-EFS traffic is through a VPC managed by Amazon
 	//     SageMaker, which allows direct internet access
 	//
-	//   - VpcOnly - All Studio traffic is through the specified VPC and subnets
+	//   - VpcOnly - All traffic is through the specified VPC and subnets
 	AppNetworkAccessType *string `json:"appNetworkAccessType,omitempty"`
 	// The entity that creates and manages the required security groups for inter-app
 	// communication in VPCOnly mode. Required when CreateDomain.AppNetworkAccessType
 	// is VPCOnly and DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleArn
-	// is provided.
+	// is provided. If setting up the domain for use with RStudio, this value must
+	// be set to Service.
 	AppSecurityGroupManagement *string `json:"appSecurityGroupManagement,omitempty"`
 	// The mode of authentication that members use to access the domain.
 	// +kubebuilder:validation:Required
@@ -57,7 +58,7 @@ type DomainSpec struct {
 	// to the domain with an Amazon Web Services managed key by default. For more
 	// control, specify a customer managed key.
 	KMSKeyID *string `json:"kmsKeyID,omitempty"`
-	// The VPC subnets that Studio uses for communication.
+	// The VPC subnets that the domain uses for communication.
 	// +kubebuilder:validation:Required
 	SubnetIDs []*string `json:"subnetIDs"`
 	// Tags to associated with the Domain. Each tag consists of a key and an optional
@@ -67,7 +68,8 @@ type DomainSpec struct {
 	// Tags that you specify for the Domain are also added to all Apps that the
 	// Domain launches.
 	Tags []*Tag `json:"tags,omitempty"`
-	// The ID of the Amazon Virtual Private Cloud (VPC) that Studio uses for communication.
+	// The ID of the Amazon Virtual Private Cloud (VPC) that the domain uses for
+	// communication.
 	// +kubebuilder:validation:Required
 	VPCID *string `json:"vpcID"`
 }

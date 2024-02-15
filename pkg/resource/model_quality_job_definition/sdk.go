@@ -195,6 +195,9 @@ func (rm *resourceManager) sdkFind(
 			if resp.ModelQualityJobInput.EndpointInput.EndpointName != nil {
 				f6f0.EndpointName = resp.ModelQualityJobInput.EndpointInput.EndpointName
 			}
+			if resp.ModelQualityJobInput.EndpointInput.ExcludeFeaturesAttribute != nil {
+				f6f0.ExcludeFeaturesAttribute = resp.ModelQualityJobInput.EndpointInput.ExcludeFeaturesAttribute
+			}
 			if resp.ModelQualityJobInput.EndpointInput.FeaturesAttribute != nil {
 				f6f0.FeaturesAttribute = resp.ModelQualityJobInput.EndpointInput.FeaturesAttribute
 			}
@@ -476,6 +479,9 @@ func (rm *resourceManager) newCreateRequestPayload(
 			}
 			if r.ko.Spec.ModelQualityJobInput.EndpointInput.EndpointName != nil {
 				f4f0.SetEndpointName(*r.ko.Spec.ModelQualityJobInput.EndpointInput.EndpointName)
+			}
+			if r.ko.Spec.ModelQualityJobInput.EndpointInput.ExcludeFeaturesAttribute != nil {
+				f4f0.SetExcludeFeaturesAttribute(*r.ko.Spec.ModelQualityJobInput.EndpointInput.ExcludeFeaturesAttribute)
 			}
 			if r.ko.Spec.ModelQualityJobInput.EndpointInput.FeaturesAttribute != nil {
 				f4f0.SetFeaturesAttribute(*r.ko.Spec.ModelQualityJobInput.EndpointInput.FeaturesAttribute)

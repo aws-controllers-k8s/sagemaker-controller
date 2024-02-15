@@ -82,6 +82,9 @@ type TrainingJobSpec struct {
 	// credentials are detected, SageMaker will reject your training job request
 	// and return an exception error.
 	HyperParameters map[string]*string `json:"hyperParameters,omitempty"`
+	// Contains information about the infrastructure health check configuration
+	// for the training job.
+	InfraCheckConfig *InfraCheckConfig `json:"infraCheckConfig,omitempty"`
 	// An array of Channel objects. Each channel is a named input source. InputDataConfig
 	// describes the input data and its location.
 	//
@@ -97,6 +100,9 @@ type TrainingJobSpec struct {
 	// container, or makes it available as input streams. For example, if you specify
 	// an EFS location, input data files are available as input streams. They do
 	// not need to be downloaded.
+	//
+	// Your input must be in the same Amazon Web Services region as your training
+	// job.
 	InputDataConfig []*Channel `json:"inputDataConfig,omitempty"`
 	// Specifies the path to the S3 location where you want to store model artifacts.
 	// SageMaker creates subfolders for the artifacts.
@@ -106,6 +112,10 @@ type TrainingJobSpec struct {
 	// Configuration information for Amazon SageMaker Debugger rules for profiling
 	// system and framework metrics.
 	ProfilerRuleConfigurations []*ProfilerRuleConfiguration `json:"profilerRuleConfigurations,omitempty"`
+	// Configuration for remote debugging. To learn more about the remote debugging
+	// functionality of SageMaker, see Access a training container through Amazon
+	// Web Services Systems Manager (SSM) for remote debugging (https://docs.aws.amazon.com/sagemaker/latest/dg/train-remote-debugging.html).
+	RemoteDebugConfig *RemoteDebugConfig `json:"remoteDebugConfig,omitempty"`
 	// The resources, including the ML compute instances and ML storage volumes,
 	// to use for model training.
 	//
@@ -151,10 +161,11 @@ type TrainingJobSpec struct {
 	// Services Region in an Amazon Web Services account.
 	// +kubebuilder:validation:Required
 	TrainingJobName *string `json:"trainingJobName"`
-	// A VpcConfig object that specifies the VPC that you want your training job
-	// to connect to. Control access to and from your training container by configuring
-	// the VPC. For more information, see Protect Training Jobs by Using an Amazon
-	// Virtual Private Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/train-vpc.html).
+	// A VpcConfig (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_VpcConfig.html)
+	// object that specifies the VPC that you want your training job to connect
+	// to. Control access to and from your training container by configuring the
+	// VPC. For more information, see Protect Training Jobs by Using an Amazon Virtual
+	// Private Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/train-vpc.html).
 	VPCConfig *VPCConfig `json:"vpcConfig,omitempty"`
 }
 
@@ -197,7 +208,7 @@ type TrainingJobStatus struct {
 	ProfilingStatus *string `json:"profilingStatus,omitempty"`
 	// Provides detailed information about the state of the training job. For detailed
 	// information on the secondary status of the training job, see StatusMessage
-	// under SecondaryStatusTransition.
+	// under SecondaryStatusTransition (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_SecondaryStatusTransition.html).
 	//
 	// SageMaker provides primary statuses and secondary statuses that apply to
 	// each of them:

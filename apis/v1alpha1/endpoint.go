@@ -25,12 +25,14 @@ import (
 // A hosted endpoint for real-time inference.
 type EndpointSpec struct {
 	DeploymentConfig *DeploymentConfig `json:"deploymentConfig,omitempty"`
-	// The name of an endpoint configuration. For more information, see CreateEndpointConfig.
+	// The name of an endpoint configuration. For more information, see CreateEndpointConfig
+	// (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateEndpointConfig.html).
 	// +kubebuilder:validation:Required
 	EndpointConfigName *string `json:"endpointConfigName"`
 	// The name of the endpoint.The name must be unique within an Amazon Web Services
 	// Region in your Amazon Web Services account. The name is case-insensitive
-	// in CreateEndpoint, but the case is preserved and must be matched in .
+	// in CreateEndpoint, but the case is preserved and must be matched in InvokeEndpoint
+	// (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpoint.html).
 	// +kubebuilder:validation:Required
 	EndpointName *string `json:"endpointName"`
 	// An array of key-value pairs. You can use tags to categorize your Amazon Web
@@ -60,9 +62,12 @@ type EndpointStatus struct {
 	//
 	//    * OutOfService: Endpoint is not available to take incoming requests.
 	//
-	//    * Creating: CreateEndpoint is executing.
+	//    * Creating: CreateEndpoint (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateEndpoint.html)
+	//    is executing.
 	//
-	//    * Updating: UpdateEndpoint or UpdateEndpointWeightsAndCapacities is executing.
+	//    * Updating: UpdateEndpoint (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_UpdateEndpoint.html)
+	//    or UpdateEndpointWeightsAndCapacities (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_UpdateEndpointWeightsAndCapacities.html)
+	//    is executing.
 	//
 	//    * SystemUpdating: Endpoint is undergoing maintenance and cannot be updated
 	//    or deleted or re-scaled until it has completed. This maintenance operation
@@ -74,16 +79,24 @@ type EndpointStatus struct {
 	//    Once the rollback completes, endpoint returns to an InService status.
 	//    This transitional status only applies to an endpoint that has autoscaling
 	//    enabled and is undergoing variant weight or capacity changes as part of
-	//    an UpdateEndpointWeightsAndCapacities call or when the UpdateEndpointWeightsAndCapacities
+	//    an UpdateEndpointWeightsAndCapacities (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_UpdateEndpointWeightsAndCapacities.html)
+	//    call or when the UpdateEndpointWeightsAndCapacities (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_UpdateEndpointWeightsAndCapacities.html)
 	//    operation is called explicitly.
 	//
 	//    * InService: Endpoint is available to process incoming requests.
 	//
-	//    * Deleting: DeleteEndpoint is executing.
+	//    * Deleting: DeleteEndpoint (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_DeleteEndpoint.html)
+	//    is executing.
 	//
-	//    * Failed: Endpoint could not be created, updated, or re-scaled. Use DescribeEndpointOutput$FailureReason
-	//    for information about the failure. DeleteEndpoint is the only operation
-	//    that can be performed on a failed endpoint.
+	//    * Failed: Endpoint could not be created, updated, or re-scaled. Use the
+	//    FailureReason value returned by DescribeEndpoint (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_DescribeEndpoint.html)
+	//    for information about the failure. DeleteEndpoint (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_DeleteEndpoint.html)
+	//    is the only operation that can be performed on a failed endpoint.
+	//
+	//    * UpdateRollbackFailed: Both the rolling deployment and auto-rollback
+	//    failed. Your endpoint is in service with a mix of the old and new endpoint
+	//    configurations. For information about how to remedy this issue and restore
+	//    the endpoint's status to InService, see Rolling Deployments (https://docs.aws.amazon.com/sagemaker/latest/dg/deployment-guardrails-rolling.html).
 	// +kubebuilder:validation:Optional
 	EndpointStatus *string `json:"endpointStatus,omitempty"`
 	// If the status of the endpoint is Failed, the reason why it failed.
@@ -96,8 +109,8 @@ type EndpointStatus struct {
 	// when the endpoint is creating or updating with a new endpoint configuration.
 	// +kubebuilder:validation:Optional
 	PendingDeploymentSummary *PendingDeploymentSummary `json:"pendingDeploymentSummary,omitempty"`
-	// An array of ProductionVariantSummary objects, one for each model hosted behind
-	// this endpoint.
+	// An array of ProductionVariantSummary (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_ProductionVariantSummary.html)
+	// objects, one for each model hosted behind this endpoint.
 	// +kubebuilder:validation:Optional
 	ProductionVariants []*ProductionVariantSummary `json:"productionVariants,omitempty"`
 }

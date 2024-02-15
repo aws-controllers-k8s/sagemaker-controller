@@ -22,7 +22,8 @@ import (
 
 // ModelSpec defines the desired state of Model.
 //
-// The properties of a model as returned by the Search API.
+// The properties of a model as returned by the Search (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_Search.html)
+// API.
 type ModelSpec struct {
 
 	// Specifies the containers in the inference pipeline.
@@ -37,8 +38,7 @@ type ModelSpec struct {
 	//
 	// To be able to pass this role to SageMaker, the caller of this API must have
 	// the iam:PassRole permission.
-	// +kubebuilder:validation:Required
-	ExecutionRoleARN *string `json:"executionRoleARN"`
+	ExecutionRoleARN *string `json:"executionRoleARN,omitempty"`
 	// Specifies details of how containers in a multi-container endpoint are called.
 	InferenceExecutionConfig *InferenceExecutionConfig `json:"inferenceExecutionConfig,omitempty"`
 	// The name of the new model.
@@ -53,9 +53,10 @@ type ModelSpec struct {
 	// environment. For more information, see Tagging Amazon Web Services Resources
 	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
 	Tags []*Tag `json:"tags,omitempty"`
-	// A VpcConfig object that specifies the VPC that you want your model to connect
-	// to. Control access to and from your model container by configuring the VPC.
-	// VpcConfig is used in hosting services and in batch transform. For more information,
+	// A VpcConfig (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_VpcConfig.html)
+	// object that specifies the VPC that you want your model to connect to. Control
+	// access to and from your model container by configuring the VPC. VpcConfig
+	// is used in hosting services and in batch transform. For more information,
 	// see Protect Endpoints by Using an Amazon Virtual Private Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/host-vpc.html)
 	// and Protect Data in Batch Transform Jobs by Using an Amazon Virtual Private
 	// Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/batch-vpc.html).

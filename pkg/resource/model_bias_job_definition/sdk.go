@@ -171,6 +171,9 @@ func (rm *resourceManager) sdkFind(
 			if resp.ModelBiasJobInput.EndpointInput.EndpointName != nil {
 				f6f0.EndpointName = resp.ModelBiasJobInput.EndpointInput.EndpointName
 			}
+			if resp.ModelBiasJobInput.EndpointInput.ExcludeFeaturesAttribute != nil {
+				f6f0.ExcludeFeaturesAttribute = resp.ModelBiasJobInput.EndpointInput.ExcludeFeaturesAttribute
+			}
 			if resp.ModelBiasJobInput.EndpointInput.FeaturesAttribute != nil {
 				f6f0.FeaturesAttribute = resp.ModelBiasJobInput.EndpointInput.FeaturesAttribute
 			}
@@ -428,6 +431,9 @@ func (rm *resourceManager) newCreateRequestPayload(
 			}
 			if r.ko.Spec.ModelBiasJobInput.EndpointInput.EndpointName != nil {
 				f4f0.SetEndpointName(*r.ko.Spec.ModelBiasJobInput.EndpointInput.EndpointName)
+			}
+			if r.ko.Spec.ModelBiasJobInput.EndpointInput.ExcludeFeaturesAttribute != nil {
+				f4f0.SetExcludeFeaturesAttribute(*r.ko.Spec.ModelBiasJobInput.EndpointInput.ExcludeFeaturesAttribute)
 			}
 			if r.ko.Spec.ModelBiasJobInput.EndpointInput.FeaturesAttribute != nil {
 				f4f0.SetFeaturesAttribute(*r.ko.Spec.ModelBiasJobInput.EndpointInput.FeaturesAttribute)

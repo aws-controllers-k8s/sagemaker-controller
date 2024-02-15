@@ -142,6 +142,13 @@ func newResourceDelta(
 					delta.Add("Spec.DataQualityJobInput.EndpointInput.EndpointName", a.ko.Spec.DataQualityJobInput.EndpointInput.EndpointName, b.ko.Spec.DataQualityJobInput.EndpointInput.EndpointName)
 				}
 			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DataQualityJobInput.EndpointInput.ExcludeFeaturesAttribute, b.ko.Spec.DataQualityJobInput.EndpointInput.ExcludeFeaturesAttribute) {
+				delta.Add("Spec.DataQualityJobInput.EndpointInput.ExcludeFeaturesAttribute", a.ko.Spec.DataQualityJobInput.EndpointInput.ExcludeFeaturesAttribute, b.ko.Spec.DataQualityJobInput.EndpointInput.ExcludeFeaturesAttribute)
+			} else if a.ko.Spec.DataQualityJobInput.EndpointInput.ExcludeFeaturesAttribute != nil && b.ko.Spec.DataQualityJobInput.EndpointInput.ExcludeFeaturesAttribute != nil {
+				if *a.ko.Spec.DataQualityJobInput.EndpointInput.ExcludeFeaturesAttribute != *b.ko.Spec.DataQualityJobInput.EndpointInput.ExcludeFeaturesAttribute {
+					delta.Add("Spec.DataQualityJobInput.EndpointInput.ExcludeFeaturesAttribute", a.ko.Spec.DataQualityJobInput.EndpointInput.ExcludeFeaturesAttribute, b.ko.Spec.DataQualityJobInput.EndpointInput.ExcludeFeaturesAttribute)
+				}
+			}
 			if ackcompare.HasNilDifference(a.ko.Spec.DataQualityJobInput.EndpointInput.FeaturesAttribute, b.ko.Spec.DataQualityJobInput.EndpointInput.FeaturesAttribute) {
 				delta.Add("Spec.DataQualityJobInput.EndpointInput.FeaturesAttribute", a.ko.Spec.DataQualityJobInput.EndpointInput.FeaturesAttribute, b.ko.Spec.DataQualityJobInput.EndpointInput.FeaturesAttribute)
 			} else if a.ko.Spec.DataQualityJobInput.EndpointInput.FeaturesAttribute != nil && b.ko.Spec.DataQualityJobInput.EndpointInput.FeaturesAttribute != nil {

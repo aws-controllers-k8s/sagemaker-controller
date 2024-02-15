@@ -137,6 +137,26 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Status.PipelineExecutionStatus = nil
 	}
+	if resp.SelectiveExecutionConfig != nil {
+		f12 := &svcapitypes.SelectiveExecutionConfig{}
+		if resp.SelectiveExecutionConfig.SelectedSteps != nil {
+			f12f0 := []*svcapitypes.SelectedStep{}
+			for _, f12f0iter := range resp.SelectiveExecutionConfig.SelectedSteps {
+				f12f0elem := &svcapitypes.SelectedStep{}
+				if f12f0iter.StepName != nil {
+					f12f0elem.StepName = f12f0iter.StepName
+				}
+				f12f0 = append(f12f0, f12f0elem)
+			}
+			f12.SelectedSteps = f12f0
+		}
+		if resp.SelectiveExecutionConfig.SourcePipelineExecutionArn != nil {
+			f12.SourcePipelineExecutionARN = resp.SelectiveExecutionConfig.SourcePipelineExecutionArn
+		}
+		ko.Spec.SelectiveExecutionConfig = f12
+	} else {
+		ko.Spec.SelectiveExecutionConfig = nil
+	}
 
 	rm.setStatusDefaults(ko)
 	rm.customSetOutput(&resource{ko})
@@ -244,6 +264,24 @@ func (rm *resourceManager) newCreateRequestPayload(
 			f4 = append(f4, f4elem)
 		}
 		res.SetPipelineParameters(f4)
+	}
+	if r.ko.Spec.SelectiveExecutionConfig != nil {
+		f5 := &svcsdk.SelectiveExecutionConfig{}
+		if r.ko.Spec.SelectiveExecutionConfig.SelectedSteps != nil {
+			f5f0 := []*svcsdk.SelectedStep{}
+			for _, f5f0iter := range r.ko.Spec.SelectiveExecutionConfig.SelectedSteps {
+				f5f0elem := &svcsdk.SelectedStep{}
+				if f5f0iter.StepName != nil {
+					f5f0elem.SetStepName(*f5f0iter.StepName)
+				}
+				f5f0 = append(f5f0, f5f0elem)
+			}
+			f5.SetSelectedSteps(f5f0)
+		}
+		if r.ko.Spec.SelectiveExecutionConfig.SourcePipelineExecutionARN != nil {
+			f5.SetSourcePipelineExecutionArn(*r.ko.Spec.SelectiveExecutionConfig.SourcePipelineExecutionARN)
+		}
+		res.SetSelectiveExecutionConfig(f5)
 	}
 
 	return res, nil

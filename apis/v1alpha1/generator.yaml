@@ -970,9 +970,11 @@ ignore:
       - Algorithm
       # - App
       - AutoMLJob
+      - AutoMLJobV2
       - Action
       - AppImageConfig
       - Artifact
+      - Cluster
       - CodeRepository
       - CompilationJob
       - Context
@@ -990,6 +992,7 @@ ignore:
       - Hub
       - HumanTaskUi
       # - HyperParameterTuningJob
+      - InferenceComponent
       - InferenceRecommendationsJob
       - Image
       - ImageVersion
@@ -1000,8 +1003,8 @@ ignore:
       - ModelCardExportJob
       # - ModelBiasJobDefinition
       # - ModelExplainabilityJobDefinition
-      # ModelPackage
-      # ModelPackageGroup
+      # - ModelPackage
+      # - ModelPackageGroup
       # - ModelQualityJobDefinition
       # - MonitoringSchedule
       # - NotebookInstanceLifecycleConfig

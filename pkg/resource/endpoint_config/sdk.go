@@ -109,10 +109,22 @@ func (rm *resourceManager) sdkFind(
 				if resp.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic != nil {
 					f0f1f1.ErrorTopic = resp.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic
 				}
+				if resp.AsyncInferenceConfig.OutputConfig.NotificationConfig.IncludeInferenceResponseIn != nil {
+					f0f1f1f1 := []*string{}
+					for _, f0f1f1f1iter := range resp.AsyncInferenceConfig.OutputConfig.NotificationConfig.IncludeInferenceResponseIn {
+						var f0f1f1f1elem string
+						f0f1f1f1elem = *f0f1f1f1iter
+						f0f1f1f1 = append(f0f1f1f1, &f0f1f1f1elem)
+					}
+					f0f1f1.IncludeInferenceResponseIn = f0f1f1f1
+				}
 				if resp.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic != nil {
 					f0f1f1.SuccessTopic = resp.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic
 				}
 				f0f1.NotificationConfig = f0f1f1
+			}
+			if resp.AsyncInferenceConfig.OutputConfig.S3FailurePath != nil {
+				f0f1.S3FailurePath = resp.AsyncInferenceConfig.OutputConfig.S3FailurePath
 			}
 			if resp.AsyncInferenceConfig.OutputConfig.S3OutputPath != nil {
 				f0f1.S3OutputPath = resp.AsyncInferenceConfig.OutputConfig.S3OutputPath
@@ -174,6 +186,11 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.DataCaptureConfig = nil
 	}
+	if resp.EnableNetworkIsolation != nil {
+		ko.Spec.EnableNetworkIsolation = resp.EnableNetworkIsolation
+	} else {
+		ko.Spec.EnableNetworkIsolation = nil
+	}
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
 	}
@@ -186,70 +203,122 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.EndpointConfigName = nil
 	}
+	if resp.ExecutionRoleArn != nil {
+		ko.Spec.ExecutionRoleARN = resp.ExecutionRoleArn
+	} else {
+		ko.Spec.ExecutionRoleARN = nil
+	}
 	if resp.KmsKeyId != nil {
 		ko.Spec.KMSKeyID = resp.KmsKeyId
 	} else {
 		ko.Spec.KMSKeyID = nil
 	}
 	if resp.ProductionVariants != nil {
-		f6 := []*svcapitypes.ProductionVariant{}
-		for _, f6iter := range resp.ProductionVariants {
-			f6elem := &svcapitypes.ProductionVariant{}
-			if f6iter.AcceleratorType != nil {
-				f6elem.AcceleratorType = f6iter.AcceleratorType
+		f8 := []*svcapitypes.ProductionVariant{}
+		for _, f8iter := range resp.ProductionVariants {
+			f8elem := &svcapitypes.ProductionVariant{}
+			if f8iter.AcceleratorType != nil {
+				f8elem.AcceleratorType = f8iter.AcceleratorType
 			}
-			if f6iter.ContainerStartupHealthCheckTimeoutInSeconds != nil {
-				f6elem.ContainerStartupHealthCheckTimeoutInSeconds = f6iter.ContainerStartupHealthCheckTimeoutInSeconds
+			if f8iter.ContainerStartupHealthCheckTimeoutInSeconds != nil {
+				f8elem.ContainerStartupHealthCheckTimeoutInSeconds = f8iter.ContainerStartupHealthCheckTimeoutInSeconds
 			}
-			if f6iter.CoreDumpConfig != nil {
-				f6elemf2 := &svcapitypes.ProductionVariantCoreDumpConfig{}
-				if f6iter.CoreDumpConfig.DestinationS3Uri != nil {
-					f6elemf2.DestinationS3URI = f6iter.CoreDumpConfig.DestinationS3Uri
+			if f8iter.CoreDumpConfig != nil {
+				f8elemf2 := &svcapitypes.ProductionVariantCoreDumpConfig{}
+				if f8iter.CoreDumpConfig.DestinationS3Uri != nil {
+					f8elemf2.DestinationS3URI = f8iter.CoreDumpConfig.DestinationS3Uri
 				}
-				if f6iter.CoreDumpConfig.KmsKeyId != nil {
-					f6elemf2.KMSKeyID = f6iter.CoreDumpConfig.KmsKeyId
+				if f8iter.CoreDumpConfig.KmsKeyId != nil {
+					f8elemf2.KMSKeyID = f8iter.CoreDumpConfig.KmsKeyId
 				}
-				f6elem.CoreDumpConfig = f6elemf2
+				f8elem.CoreDumpConfig = f8elemf2
 			}
-			if f6iter.EnableSSMAccess != nil {
-				f6elem.EnableSSMAccess = f6iter.EnableSSMAccess
+			if f8iter.EnableSSMAccess != nil {
+				f8elem.EnableSSMAccess = f8iter.EnableSSMAccess
 			}
-			if f6iter.InitialInstanceCount != nil {
-				f6elem.InitialInstanceCount = f6iter.InitialInstanceCount
+			if f8iter.InitialInstanceCount != nil {
+				f8elem.InitialInstanceCount = f8iter.InitialInstanceCount
 			}
-			if f6iter.InitialVariantWeight != nil {
-				f6elem.InitialVariantWeight = f6iter.InitialVariantWeight
+			if f8iter.InitialVariantWeight != nil {
+				f8elem.InitialVariantWeight = f8iter.InitialVariantWeight
 			}
-			if f6iter.InstanceType != nil {
-				f6elem.InstanceType = f6iter.InstanceType
+			if f8iter.InstanceType != nil {
+				f8elem.InstanceType = f8iter.InstanceType
 			}
-			if f6iter.ModelDataDownloadTimeoutInSeconds != nil {
-				f6elem.ModelDataDownloadTimeoutInSeconds = f6iter.ModelDataDownloadTimeoutInSeconds
-			}
-			if f6iter.ModelName != nil {
-				f6elem.ModelName = f6iter.ModelName
-			}
-			if f6iter.ServerlessConfig != nil {
-				f6elemf9 := &svcapitypes.ProductionVariantServerlessConfig{}
-				if f6iter.ServerlessConfig.MaxConcurrency != nil {
-					f6elemf9.MaxConcurrency = f6iter.ServerlessConfig.MaxConcurrency
+			if f8iter.ManagedInstanceScaling != nil {
+				f8elemf7 := &svcapitypes.ProductionVariantManagedInstanceScaling{}
+				if f8iter.ManagedInstanceScaling.MaxInstanceCount != nil {
+					f8elemf7.MaxInstanceCount = f8iter.ManagedInstanceScaling.MaxInstanceCount
 				}
-				if f6iter.ServerlessConfig.MemorySizeInMB != nil {
-					f6elemf9.MemorySizeInMB = f6iter.ServerlessConfig.MemorySizeInMB
+				if f8iter.ManagedInstanceScaling.MinInstanceCount != nil {
+					f8elemf7.MinInstanceCount = f8iter.ManagedInstanceScaling.MinInstanceCount
 				}
-				f6elem.ServerlessConfig = f6elemf9
+				if f8iter.ManagedInstanceScaling.Status != nil {
+					f8elemf7.Status = f8iter.ManagedInstanceScaling.Status
+				}
+				f8elem.ManagedInstanceScaling = f8elemf7
 			}
-			if f6iter.VariantName != nil {
-				f6elem.VariantName = f6iter.VariantName
+			if f8iter.ModelDataDownloadTimeoutInSeconds != nil {
+				f8elem.ModelDataDownloadTimeoutInSeconds = f8iter.ModelDataDownloadTimeoutInSeconds
 			}
-			if f6iter.VolumeSizeInGB != nil {
-				f6elem.VolumeSizeInGB = f6iter.VolumeSizeInGB
+			if f8iter.ModelName != nil {
+				f8elem.ModelName = f8iter.ModelName
 			}
-			f6 = append(f6, f6elem)
+			if f8iter.RoutingConfig != nil {
+				f8elemf10 := &svcapitypes.ProductionVariantRoutingConfig{}
+				if f8iter.RoutingConfig.RoutingStrategy != nil {
+					f8elemf10.RoutingStrategy = f8iter.RoutingConfig.RoutingStrategy
+				}
+				f8elem.RoutingConfig = f8elemf10
+			}
+			if f8iter.ServerlessConfig != nil {
+				f8elemf11 := &svcapitypes.ProductionVariantServerlessConfig{}
+				if f8iter.ServerlessConfig.MaxConcurrency != nil {
+					f8elemf11.MaxConcurrency = f8iter.ServerlessConfig.MaxConcurrency
+				}
+				if f8iter.ServerlessConfig.MemorySizeInMB != nil {
+					f8elemf11.MemorySizeInMB = f8iter.ServerlessConfig.MemorySizeInMB
+				}
+				if f8iter.ServerlessConfig.ProvisionedConcurrency != nil {
+					f8elemf11.ProvisionedConcurrency = f8iter.ServerlessConfig.ProvisionedConcurrency
+				}
+				f8elem.ServerlessConfig = f8elemf11
+			}
+			if f8iter.VariantName != nil {
+				f8elem.VariantName = f8iter.VariantName
+			}
+			if f8iter.VolumeSizeInGB != nil {
+				f8elem.VolumeSizeInGB = f8iter.VolumeSizeInGB
+			}
+			f8 = append(f8, f8elem)
 		}
-		ko.Spec.ProductionVariants = f6
+		ko.Spec.ProductionVariants = f8
 	} else {
 		ko.Spec.ProductionVariants = nil
+	}
+	if resp.VpcConfig != nil {
+		f10 := &svcapitypes.VPCConfig{}
+		if resp.VpcConfig.SecurityGroupIds != nil {
+			f10f0 := []*string{}
+			for _, f10f0iter := range resp.VpcConfig.SecurityGroupIds {
+				var f10f0elem string
+				f10f0elem = *f10f0iter
+				f10f0 = append(f10f0, &f10f0elem)
+			}
+			f10.SecurityGroupIDs = f10f0
+		}
+		if resp.VpcConfig.Subnets != nil {
+			f10f1 := []*string{}
+			for _, f10f1iter := range resp.VpcConfig.Subnets {
+				var f10f1elem string
+				f10f1elem = *f10f1iter
+				f10f1 = append(f10f1, &f10f1elem)
+			}
+			f10.Subnets = f10f1
+		}
+		ko.Spec.VPCConfig = f10
+	} else {
+		ko.Spec.VPCConfig = nil
 	}
 
 	rm.setStatusDefaults(ko)
@@ -347,10 +416,22 @@ func (rm *resourceManager) newCreateRequestPayload(
 				if r.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic != nil {
 					f0f1f1.SetErrorTopic(*r.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic)
 				}
+				if r.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.IncludeInferenceResponseIn != nil {
+					f0f1f1f1 := []*string{}
+					for _, f0f1f1f1iter := range r.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.IncludeInferenceResponseIn {
+						var f0f1f1f1elem string
+						f0f1f1f1elem = *f0f1f1f1iter
+						f0f1f1f1 = append(f0f1f1f1, &f0f1f1f1elem)
+					}
+					f0f1f1.SetIncludeInferenceResponseIn(f0f1f1f1)
+				}
 				if r.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic != nil {
 					f0f1f1.SetSuccessTopic(*r.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic)
 				}
 				f0f1.SetNotificationConfig(f0f1f1)
+			}
+			if r.ko.Spec.AsyncInferenceConfig.OutputConfig.S3FailurePath != nil {
+				f0f1.SetS3FailurePath(*r.ko.Spec.AsyncInferenceConfig.OutputConfig.S3FailurePath)
 			}
 			if r.ko.Spec.AsyncInferenceConfig.OutputConfig.S3OutputPath != nil {
 				f0f1.SetS3OutputPath(*r.ko.Spec.AsyncInferenceConfig.OutputConfig.S3OutputPath)
@@ -408,83 +489,134 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.SetDataCaptureConfig(f1)
 	}
+	if r.ko.Spec.EnableNetworkIsolation != nil {
+		res.SetEnableNetworkIsolation(*r.ko.Spec.EnableNetworkIsolation)
+	}
 	if r.ko.Spec.EndpointConfigName != nil {
 		res.SetEndpointConfigName(*r.ko.Spec.EndpointConfigName)
+	}
+	if r.ko.Spec.ExecutionRoleARN != nil {
+		res.SetExecutionRoleArn(*r.ko.Spec.ExecutionRoleARN)
 	}
 	if r.ko.Spec.KMSKeyID != nil {
 		res.SetKmsKeyId(*r.ko.Spec.KMSKeyID)
 	}
 	if r.ko.Spec.ProductionVariants != nil {
-		f4 := []*svcsdk.ProductionVariant{}
-		for _, f4iter := range r.ko.Spec.ProductionVariants {
-			f4elem := &svcsdk.ProductionVariant{}
-			if f4iter.AcceleratorType != nil {
-				f4elem.SetAcceleratorType(*f4iter.AcceleratorType)
+		f6 := []*svcsdk.ProductionVariant{}
+		for _, f6iter := range r.ko.Spec.ProductionVariants {
+			f6elem := &svcsdk.ProductionVariant{}
+			if f6iter.AcceleratorType != nil {
+				f6elem.SetAcceleratorType(*f6iter.AcceleratorType)
 			}
-			if f4iter.ContainerStartupHealthCheckTimeoutInSeconds != nil {
-				f4elem.SetContainerStartupHealthCheckTimeoutInSeconds(*f4iter.ContainerStartupHealthCheckTimeoutInSeconds)
+			if f6iter.ContainerStartupHealthCheckTimeoutInSeconds != nil {
+				f6elem.SetContainerStartupHealthCheckTimeoutInSeconds(*f6iter.ContainerStartupHealthCheckTimeoutInSeconds)
 			}
-			if f4iter.CoreDumpConfig != nil {
-				f4elemf2 := &svcsdk.ProductionVariantCoreDumpConfig{}
-				if f4iter.CoreDumpConfig.DestinationS3URI != nil {
-					f4elemf2.SetDestinationS3Uri(*f4iter.CoreDumpConfig.DestinationS3URI)
+			if f6iter.CoreDumpConfig != nil {
+				f6elemf2 := &svcsdk.ProductionVariantCoreDumpConfig{}
+				if f6iter.CoreDumpConfig.DestinationS3URI != nil {
+					f6elemf2.SetDestinationS3Uri(*f6iter.CoreDumpConfig.DestinationS3URI)
 				}
-				if f4iter.CoreDumpConfig.KMSKeyID != nil {
-					f4elemf2.SetKmsKeyId(*f4iter.CoreDumpConfig.KMSKeyID)
+				if f6iter.CoreDumpConfig.KMSKeyID != nil {
+					f6elemf2.SetKmsKeyId(*f6iter.CoreDumpConfig.KMSKeyID)
 				}
-				f4elem.SetCoreDumpConfig(f4elemf2)
+				f6elem.SetCoreDumpConfig(f6elemf2)
 			}
-			if f4iter.EnableSSMAccess != nil {
-				f4elem.SetEnableSSMAccess(*f4iter.EnableSSMAccess)
+			if f6iter.EnableSSMAccess != nil {
+				f6elem.SetEnableSSMAccess(*f6iter.EnableSSMAccess)
 			}
-			if f4iter.InitialInstanceCount != nil {
-				f4elem.SetInitialInstanceCount(*f4iter.InitialInstanceCount)
+			if f6iter.InitialInstanceCount != nil {
+				f6elem.SetInitialInstanceCount(*f6iter.InitialInstanceCount)
 			}
-			if f4iter.InitialVariantWeight != nil {
-				f4elem.SetInitialVariantWeight(*f4iter.InitialVariantWeight)
+			if f6iter.InitialVariantWeight != nil {
+				f6elem.SetInitialVariantWeight(*f6iter.InitialVariantWeight)
 			}
-			if f4iter.InstanceType != nil {
-				f4elem.SetInstanceType(*f4iter.InstanceType)
+			if f6iter.InstanceType != nil {
+				f6elem.SetInstanceType(*f6iter.InstanceType)
 			}
-			if f4iter.ModelDataDownloadTimeoutInSeconds != nil {
-				f4elem.SetModelDataDownloadTimeoutInSeconds(*f4iter.ModelDataDownloadTimeoutInSeconds)
-			}
-			if f4iter.ModelName != nil {
-				f4elem.SetModelName(*f4iter.ModelName)
-			}
-			if f4iter.ServerlessConfig != nil {
-				f4elemf9 := &svcsdk.ProductionVariantServerlessConfig{}
-				if f4iter.ServerlessConfig.MaxConcurrency != nil {
-					f4elemf9.SetMaxConcurrency(*f4iter.ServerlessConfig.MaxConcurrency)
+			if f6iter.ManagedInstanceScaling != nil {
+				f6elemf7 := &svcsdk.ProductionVariantManagedInstanceScaling{}
+				if f6iter.ManagedInstanceScaling.MaxInstanceCount != nil {
+					f6elemf7.SetMaxInstanceCount(*f6iter.ManagedInstanceScaling.MaxInstanceCount)
 				}
-				if f4iter.ServerlessConfig.MemorySizeInMB != nil {
-					f4elemf9.SetMemorySizeInMB(*f4iter.ServerlessConfig.MemorySizeInMB)
+				if f6iter.ManagedInstanceScaling.MinInstanceCount != nil {
+					f6elemf7.SetMinInstanceCount(*f6iter.ManagedInstanceScaling.MinInstanceCount)
 				}
-				f4elem.SetServerlessConfig(f4elemf9)
+				if f6iter.ManagedInstanceScaling.Status != nil {
+					f6elemf7.SetStatus(*f6iter.ManagedInstanceScaling.Status)
+				}
+				f6elem.SetManagedInstanceScaling(f6elemf7)
 			}
-			if f4iter.VariantName != nil {
-				f4elem.SetVariantName(*f4iter.VariantName)
+			if f6iter.ModelDataDownloadTimeoutInSeconds != nil {
+				f6elem.SetModelDataDownloadTimeoutInSeconds(*f6iter.ModelDataDownloadTimeoutInSeconds)
 			}
-			if f4iter.VolumeSizeInGB != nil {
-				f4elem.SetVolumeSizeInGB(*f4iter.VolumeSizeInGB)
+			if f6iter.ModelName != nil {
+				f6elem.SetModelName(*f6iter.ModelName)
 			}
-			f4 = append(f4, f4elem)
+			if f6iter.RoutingConfig != nil {
+				f6elemf10 := &svcsdk.ProductionVariantRoutingConfig{}
+				if f6iter.RoutingConfig.RoutingStrategy != nil {
+					f6elemf10.SetRoutingStrategy(*f6iter.RoutingConfig.RoutingStrategy)
+				}
+				f6elem.SetRoutingConfig(f6elemf10)
+			}
+			if f6iter.ServerlessConfig != nil {
+				f6elemf11 := &svcsdk.ProductionVariantServerlessConfig{}
+				if f6iter.ServerlessConfig.MaxConcurrency != nil {
+					f6elemf11.SetMaxConcurrency(*f6iter.ServerlessConfig.MaxConcurrency)
+				}
+				if f6iter.ServerlessConfig.MemorySizeInMB != nil {
+					f6elemf11.SetMemorySizeInMB(*f6iter.ServerlessConfig.MemorySizeInMB)
+				}
+				if f6iter.ServerlessConfig.ProvisionedConcurrency != nil {
+					f6elemf11.SetProvisionedConcurrency(*f6iter.ServerlessConfig.ProvisionedConcurrency)
+				}
+				f6elem.SetServerlessConfig(f6elemf11)
+			}
+			if f6iter.VariantName != nil {
+				f6elem.SetVariantName(*f6iter.VariantName)
+			}
+			if f6iter.VolumeSizeInGB != nil {
+				f6elem.SetVolumeSizeInGB(*f6iter.VolumeSizeInGB)
+			}
+			f6 = append(f6, f6elem)
 		}
-		res.SetProductionVariants(f4)
+		res.SetProductionVariants(f6)
 	}
 	if r.ko.Spec.Tags != nil {
-		f5 := []*svcsdk.Tag{}
-		for _, f5iter := range r.ko.Spec.Tags {
-			f5elem := &svcsdk.Tag{}
-			if f5iter.Key != nil {
-				f5elem.SetKey(*f5iter.Key)
+		f7 := []*svcsdk.Tag{}
+		for _, f7iter := range r.ko.Spec.Tags {
+			f7elem := &svcsdk.Tag{}
+			if f7iter.Key != nil {
+				f7elem.SetKey(*f7iter.Key)
 			}
-			if f5iter.Value != nil {
-				f5elem.SetValue(*f5iter.Value)
+			if f7iter.Value != nil {
+				f7elem.SetValue(*f7iter.Value)
 			}
-			f5 = append(f5, f5elem)
+			f7 = append(f7, f7elem)
 		}
-		res.SetTags(f5)
+		res.SetTags(f7)
+	}
+	if r.ko.Spec.VPCConfig != nil {
+		f8 := &svcsdk.VpcConfig{}
+		if r.ko.Spec.VPCConfig.SecurityGroupIDs != nil {
+			f8f0 := []*string{}
+			for _, f8f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
+				var f8f0elem string
+				f8f0elem = *f8f0iter
+				f8f0 = append(f8f0, &f8f0elem)
+			}
+			f8.SetSecurityGroupIds(f8f0)
+		}
+		if r.ko.Spec.VPCConfig.Subnets != nil {
+			f8f1 := []*string{}
+			for _, f8f1iter := range r.ko.Spec.VPCConfig.Subnets {
+				var f8f1elem string
+				f8f1elem = *f8f1iter
+				f8f1 = append(f8f1, &f8f1elem)
+			}
+			f8.SetSubnets(f8f1)
+		}
+		res.SetVpcConfig(f8)
 	}
 
 	return res, nil

@@ -88,6 +88,13 @@ func newResourceDelta(
 				delta.Add("Spec.ResourceSpec.SageMakerImageARN", a.ko.Spec.ResourceSpec.SageMakerImageARN, b.ko.Spec.ResourceSpec.SageMakerImageARN)
 			}
 		}
+		if ackcompare.HasNilDifference(a.ko.Spec.ResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.ResourceSpec.SageMakerImageVersionAlias) {
+			delta.Add("Spec.ResourceSpec.SageMakerImageVersionAlias", a.ko.Spec.ResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.ResourceSpec.SageMakerImageVersionAlias)
+		} else if a.ko.Spec.ResourceSpec.SageMakerImageVersionAlias != nil && b.ko.Spec.ResourceSpec.SageMakerImageVersionAlias != nil {
+			if *a.ko.Spec.ResourceSpec.SageMakerImageVersionAlias != *b.ko.Spec.ResourceSpec.SageMakerImageVersionAlias {
+				delta.Add("Spec.ResourceSpec.SageMakerImageVersionAlias", a.ko.Spec.ResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.ResourceSpec.SageMakerImageVersionAlias)
+			}
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.ResourceSpec.SageMakerImageVersionARN, b.ko.Spec.ResourceSpec.SageMakerImageVersionARN) {
 			delta.Add("Spec.ResourceSpec.SageMakerImageVersionARN", a.ko.Spec.ResourceSpec.SageMakerImageVersionARN, b.ko.Spec.ResourceSpec.SageMakerImageVersionARN)
 		} else if a.ko.Spec.ResourceSpec.SageMakerImageVersionARN != nil && b.ko.Spec.ResourceSpec.SageMakerImageVersionARN != nil {

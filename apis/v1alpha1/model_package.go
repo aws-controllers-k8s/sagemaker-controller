@@ -93,11 +93,17 @@ type ModelPackageSpec struct {
 	// of the InvokeEndpoint (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpoint.html#API_runtime_InvokeEndpoint_RequestSyntax)
 	// call.
 	SamplePayloadURL *string `json:"samplePayloadURL,omitempty"`
+	// Indicates if you want to skip model validation.
+	SkipModelValidation *string `json:"skipModelValidation,omitempty"`
 	// Details about the algorithm that was used to create the model package.
 	SourceAlgorithmSpecification *SourceAlgorithmSpecification `json:"sourceAlgorithmSpecification,omitempty"`
 	// A list of key value pairs associated with the model. For more information,
 	// see Tagging Amazon Web Services resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html)
 	// in the Amazon Web Services General Reference Guide.
+	//
+	// If you supply ModelPackageGroupName, your model package belongs to the model
+	// group you specify and uses the tags associated with the model group. In this
+	// case, you cannot supply a tag argument.
 	Tags []*Tag `json:"tags,omitempty"`
 	// The machine learning task your model package accomplishes. Common machine
 	// learning tasks include object detection and image classification. The following

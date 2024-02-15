@@ -261,6 +261,20 @@ func newResourceDelta(
 		if ackcompare.HasNilDifference(a.ko.Spec.MonitoringScheduleConfig.ScheduleConfig, b.ko.Spec.MonitoringScheduleConfig.ScheduleConfig) {
 			delta.Add("Spec.MonitoringScheduleConfig.ScheduleConfig", a.ko.Spec.MonitoringScheduleConfig.ScheduleConfig, b.ko.Spec.MonitoringScheduleConfig.ScheduleConfig)
 		} else if a.ko.Spec.MonitoringScheduleConfig.ScheduleConfig != nil && b.ko.Spec.MonitoringScheduleConfig.ScheduleConfig != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime, b.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime) {
+				delta.Add("Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime", a.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime, b.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime)
+			} else if a.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime != nil && b.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime != nil {
+				if *a.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime != *b.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime {
+					delta.Add("Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime", a.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime, b.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime)
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime, b.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime) {
+				delta.Add("Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime", a.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime, b.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime)
+			} else if a.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime != nil && b.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime != nil {
+				if *a.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime != *b.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime {
+					delta.Add("Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime", a.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime, b.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime)
+				}
+			}
 			if ackcompare.HasNilDifference(a.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.ScheduleExpression, b.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.ScheduleExpression) {
 				delta.Add("Spec.MonitoringScheduleConfig.ScheduleConfig.ScheduleExpression", a.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.ScheduleExpression, b.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.ScheduleExpression)
 			} else if a.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.ScheduleExpression != nil && b.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.ScheduleExpression != nil {

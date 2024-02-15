@@ -20,6 +20,9 @@ type AWSManagedHumanLoopRequestSource string
 const (
 	AWSManagedHumanLoopRequestSource_AWS_Rekognition_DetectModerationLabels_Image_V3 AWSManagedHumanLoopRequestSource = "AWS/Rekognition/DetectModerationLabels/Image/V3"
 	AWSManagedHumanLoopRequestSource_AWS_Textract_AnalyzeDocument_Forms_V1           AWSManagedHumanLoopRequestSource = "AWS/Textract/AnalyzeDocument/Forms/V1"
+	AWSManagedHumanLoopRequestSource_AWS_Textract_AnalyzeExpense                     AWSManagedHumanLoopRequestSource = "AWS/Textract/AnalyzeExpense"
+	AWSManagedHumanLoopRequestSource_AWS_Handshake_VerifyIdentity                    AWSManagedHumanLoopRequestSource = "AWS/Handshake/VerifyIdentity"
+	AWSManagedHumanLoopRequestSource_AWS_Bedrock_ModelEvaluation                     AWSManagedHumanLoopRequestSource = "AWS/Bedrock/ModelEvaluation"
 )
 
 type ActionStatus string
@@ -31,6 +34,23 @@ const (
 	ActionStatus_Failed     ActionStatus = "Failed"
 	ActionStatus_Stopping   ActionStatus = "Stopping"
 	ActionStatus_Stopped    ActionStatus = "Stopped"
+)
+
+type AdditionalS3DataSourceDataType string
+
+const (
+	AdditionalS3DataSourceDataType_S3Object AdditionalS3DataSourceDataType = "S3Object"
+	AdditionalS3DataSourceDataType_S3Prefix AdditionalS3DataSourceDataType = "S3Prefix"
+)
+
+type AggregationTransformationValue string
+
+const (
+	AggregationTransformationValue_sum   AggregationTransformationValue = "sum"
+	AggregationTransformationValue_avg   AggregationTransformationValue = "avg"
+	AggregationTransformationValue_first AggregationTransformationValue = "first"
+	AggregationTransformationValue_min   AggregationTransformationValue = "min"
+	AggregationTransformationValue_max   AggregationTransformationValue = "max"
 )
 
 type AlgorithmSortBy string
@@ -61,63 +81,69 @@ const (
 type AppInstanceType string
 
 const (
-	AppInstanceType_system           AppInstanceType = "system"
-	AppInstanceType_ml_t3_micro      AppInstanceType = "ml.t3.micro"
-	AppInstanceType_ml_t3_small      AppInstanceType = "ml.t3.small"
-	AppInstanceType_ml_t3_medium     AppInstanceType = "ml.t3.medium"
-	AppInstanceType_ml_t3_large      AppInstanceType = "ml.t3.large"
-	AppInstanceType_ml_t3_xlarge     AppInstanceType = "ml.t3.xlarge"
-	AppInstanceType_ml_t3_2xlarge    AppInstanceType = "ml.t3.2xlarge"
-	AppInstanceType_ml_m5_large      AppInstanceType = "ml.m5.large"
-	AppInstanceType_ml_m5_xlarge     AppInstanceType = "ml.m5.xlarge"
-	AppInstanceType_ml_m5_2xlarge    AppInstanceType = "ml.m5.2xlarge"
-	AppInstanceType_ml_m5_4xlarge    AppInstanceType = "ml.m5.4xlarge"
-	AppInstanceType_ml_m5_8xlarge    AppInstanceType = "ml.m5.8xlarge"
-	AppInstanceType_ml_m5_12xlarge   AppInstanceType = "ml.m5.12xlarge"
-	AppInstanceType_ml_m5_16xlarge   AppInstanceType = "ml.m5.16xlarge"
-	AppInstanceType_ml_m5_24xlarge   AppInstanceType = "ml.m5.24xlarge"
-	AppInstanceType_ml_m5d_large     AppInstanceType = "ml.m5d.large"
-	AppInstanceType_ml_m5d_xlarge    AppInstanceType = "ml.m5d.xlarge"
-	AppInstanceType_ml_m5d_2xlarge   AppInstanceType = "ml.m5d.2xlarge"
-	AppInstanceType_ml_m5d_4xlarge   AppInstanceType = "ml.m5d.4xlarge"
-	AppInstanceType_ml_m5d_8xlarge   AppInstanceType = "ml.m5d.8xlarge"
-	AppInstanceType_ml_m5d_12xlarge  AppInstanceType = "ml.m5d.12xlarge"
-	AppInstanceType_ml_m5d_16xlarge  AppInstanceType = "ml.m5d.16xlarge"
-	AppInstanceType_ml_m5d_24xlarge  AppInstanceType = "ml.m5d.24xlarge"
-	AppInstanceType_ml_c5_large      AppInstanceType = "ml.c5.large"
-	AppInstanceType_ml_c5_xlarge     AppInstanceType = "ml.c5.xlarge"
-	AppInstanceType_ml_c5_2xlarge    AppInstanceType = "ml.c5.2xlarge"
-	AppInstanceType_ml_c5_4xlarge    AppInstanceType = "ml.c5.4xlarge"
-	AppInstanceType_ml_c5_9xlarge    AppInstanceType = "ml.c5.9xlarge"
-	AppInstanceType_ml_c5_12xlarge   AppInstanceType = "ml.c5.12xlarge"
-	AppInstanceType_ml_c5_18xlarge   AppInstanceType = "ml.c5.18xlarge"
-	AppInstanceType_ml_c5_24xlarge   AppInstanceType = "ml.c5.24xlarge"
-	AppInstanceType_ml_p3_2xlarge    AppInstanceType = "ml.p3.2xlarge"
-	AppInstanceType_ml_p3_8xlarge    AppInstanceType = "ml.p3.8xlarge"
-	AppInstanceType_ml_p3_16xlarge   AppInstanceType = "ml.p3.16xlarge"
-	AppInstanceType_ml_p3dn_24xlarge AppInstanceType = "ml.p3dn.24xlarge"
-	AppInstanceType_ml_g4dn_xlarge   AppInstanceType = "ml.g4dn.xlarge"
-	AppInstanceType_ml_g4dn_2xlarge  AppInstanceType = "ml.g4dn.2xlarge"
-	AppInstanceType_ml_g4dn_4xlarge  AppInstanceType = "ml.g4dn.4xlarge"
-	AppInstanceType_ml_g4dn_8xlarge  AppInstanceType = "ml.g4dn.8xlarge"
-	AppInstanceType_ml_g4dn_12xlarge AppInstanceType = "ml.g4dn.12xlarge"
-	AppInstanceType_ml_g4dn_16xlarge AppInstanceType = "ml.g4dn.16xlarge"
-	AppInstanceType_ml_r5_large      AppInstanceType = "ml.r5.large"
-	AppInstanceType_ml_r5_xlarge     AppInstanceType = "ml.r5.xlarge"
-	AppInstanceType_ml_r5_2xlarge    AppInstanceType = "ml.r5.2xlarge"
-	AppInstanceType_ml_r5_4xlarge    AppInstanceType = "ml.r5.4xlarge"
-	AppInstanceType_ml_r5_8xlarge    AppInstanceType = "ml.r5.8xlarge"
-	AppInstanceType_ml_r5_12xlarge   AppInstanceType = "ml.r5.12xlarge"
-	AppInstanceType_ml_r5_16xlarge   AppInstanceType = "ml.r5.16xlarge"
-	AppInstanceType_ml_r5_24xlarge   AppInstanceType = "ml.r5.24xlarge"
-	AppInstanceType_ml_g5_xlarge     AppInstanceType = "ml.g5.xlarge"
-	AppInstanceType_ml_g5_2xlarge    AppInstanceType = "ml.g5.2xlarge"
-	AppInstanceType_ml_g5_4xlarge    AppInstanceType = "ml.g5.4xlarge"
-	AppInstanceType_ml_g5_8xlarge    AppInstanceType = "ml.g5.8xlarge"
-	AppInstanceType_ml_g5_16xlarge   AppInstanceType = "ml.g5.16xlarge"
-	AppInstanceType_ml_g5_12xlarge   AppInstanceType = "ml.g5.12xlarge"
-	AppInstanceType_ml_g5_24xlarge   AppInstanceType = "ml.g5.24xlarge"
-	AppInstanceType_ml_g5_48xlarge   AppInstanceType = "ml.g5.48xlarge"
+	AppInstanceType_system                    AppInstanceType = "system"
+	AppInstanceType_ml_t3_micro               AppInstanceType = "ml.t3.micro"
+	AppInstanceType_ml_t3_small               AppInstanceType = "ml.t3.small"
+	AppInstanceType_ml_t3_medium              AppInstanceType = "ml.t3.medium"
+	AppInstanceType_ml_t3_large               AppInstanceType = "ml.t3.large"
+	AppInstanceType_ml_t3_xlarge              AppInstanceType = "ml.t3.xlarge"
+	AppInstanceType_ml_t3_2xlarge             AppInstanceType = "ml.t3.2xlarge"
+	AppInstanceType_ml_m5_large               AppInstanceType = "ml.m5.large"
+	AppInstanceType_ml_m5_xlarge              AppInstanceType = "ml.m5.xlarge"
+	AppInstanceType_ml_m5_2xlarge             AppInstanceType = "ml.m5.2xlarge"
+	AppInstanceType_ml_m5_4xlarge             AppInstanceType = "ml.m5.4xlarge"
+	AppInstanceType_ml_m5_8xlarge             AppInstanceType = "ml.m5.8xlarge"
+	AppInstanceType_ml_m5_12xlarge            AppInstanceType = "ml.m5.12xlarge"
+	AppInstanceType_ml_m5_16xlarge            AppInstanceType = "ml.m5.16xlarge"
+	AppInstanceType_ml_m5_24xlarge            AppInstanceType = "ml.m5.24xlarge"
+	AppInstanceType_ml_m5d_large              AppInstanceType = "ml.m5d.large"
+	AppInstanceType_ml_m5d_xlarge             AppInstanceType = "ml.m5d.xlarge"
+	AppInstanceType_ml_m5d_2xlarge            AppInstanceType = "ml.m5d.2xlarge"
+	AppInstanceType_ml_m5d_4xlarge            AppInstanceType = "ml.m5d.4xlarge"
+	AppInstanceType_ml_m5d_8xlarge            AppInstanceType = "ml.m5d.8xlarge"
+	AppInstanceType_ml_m5d_12xlarge           AppInstanceType = "ml.m5d.12xlarge"
+	AppInstanceType_ml_m5d_16xlarge           AppInstanceType = "ml.m5d.16xlarge"
+	AppInstanceType_ml_m5d_24xlarge           AppInstanceType = "ml.m5d.24xlarge"
+	AppInstanceType_ml_c5_large               AppInstanceType = "ml.c5.large"
+	AppInstanceType_ml_c5_xlarge              AppInstanceType = "ml.c5.xlarge"
+	AppInstanceType_ml_c5_2xlarge             AppInstanceType = "ml.c5.2xlarge"
+	AppInstanceType_ml_c5_4xlarge             AppInstanceType = "ml.c5.4xlarge"
+	AppInstanceType_ml_c5_9xlarge             AppInstanceType = "ml.c5.9xlarge"
+	AppInstanceType_ml_c5_12xlarge            AppInstanceType = "ml.c5.12xlarge"
+	AppInstanceType_ml_c5_18xlarge            AppInstanceType = "ml.c5.18xlarge"
+	AppInstanceType_ml_c5_24xlarge            AppInstanceType = "ml.c5.24xlarge"
+	AppInstanceType_ml_p3_2xlarge             AppInstanceType = "ml.p3.2xlarge"
+	AppInstanceType_ml_p3_8xlarge             AppInstanceType = "ml.p3.8xlarge"
+	AppInstanceType_ml_p3_16xlarge            AppInstanceType = "ml.p3.16xlarge"
+	AppInstanceType_ml_p3dn_24xlarge          AppInstanceType = "ml.p3dn.24xlarge"
+	AppInstanceType_ml_g4dn_xlarge            AppInstanceType = "ml.g4dn.xlarge"
+	AppInstanceType_ml_g4dn_2xlarge           AppInstanceType = "ml.g4dn.2xlarge"
+	AppInstanceType_ml_g4dn_4xlarge           AppInstanceType = "ml.g4dn.4xlarge"
+	AppInstanceType_ml_g4dn_8xlarge           AppInstanceType = "ml.g4dn.8xlarge"
+	AppInstanceType_ml_g4dn_12xlarge          AppInstanceType = "ml.g4dn.12xlarge"
+	AppInstanceType_ml_g4dn_16xlarge          AppInstanceType = "ml.g4dn.16xlarge"
+	AppInstanceType_ml_r5_large               AppInstanceType = "ml.r5.large"
+	AppInstanceType_ml_r5_xlarge              AppInstanceType = "ml.r5.xlarge"
+	AppInstanceType_ml_r5_2xlarge             AppInstanceType = "ml.r5.2xlarge"
+	AppInstanceType_ml_r5_4xlarge             AppInstanceType = "ml.r5.4xlarge"
+	AppInstanceType_ml_r5_8xlarge             AppInstanceType = "ml.r5.8xlarge"
+	AppInstanceType_ml_r5_12xlarge            AppInstanceType = "ml.r5.12xlarge"
+	AppInstanceType_ml_r5_16xlarge            AppInstanceType = "ml.r5.16xlarge"
+	AppInstanceType_ml_r5_24xlarge            AppInstanceType = "ml.r5.24xlarge"
+	AppInstanceType_ml_g5_xlarge              AppInstanceType = "ml.g5.xlarge"
+	AppInstanceType_ml_g5_2xlarge             AppInstanceType = "ml.g5.2xlarge"
+	AppInstanceType_ml_g5_4xlarge             AppInstanceType = "ml.g5.4xlarge"
+	AppInstanceType_ml_g5_8xlarge             AppInstanceType = "ml.g5.8xlarge"
+	AppInstanceType_ml_g5_16xlarge            AppInstanceType = "ml.g5.16xlarge"
+	AppInstanceType_ml_g5_12xlarge            AppInstanceType = "ml.g5.12xlarge"
+	AppInstanceType_ml_g5_24xlarge            AppInstanceType = "ml.g5.24xlarge"
+	AppInstanceType_ml_g5_48xlarge            AppInstanceType = "ml.g5.48xlarge"
+	AppInstanceType_ml_geospatial_interactive AppInstanceType = "ml.geospatial.interactive"
+	AppInstanceType_ml_p4d_24xlarge           AppInstanceType = "ml.p4d.24xlarge"
+	AppInstanceType_ml_p4de_24xlarge          AppInstanceType = "ml.p4de.24xlarge"
+	AppInstanceType_ml_trn1_2xlarge           AppInstanceType = "ml.trn1.2xlarge"
+	AppInstanceType_ml_trn1_32xlarge          AppInstanceType = "ml.trn1.32xlarge"
+	AppInstanceType_ml_trn1n_32xlarge         AppInstanceType = "ml.trn1n.32xlarge"
 )
 
 type AppNetworkAccessType string
@@ -155,9 +181,13 @@ type AppType string
 const (
 	AppType_JupyterServer    AppType = "JupyterServer"
 	AppType_KernelGateway    AppType = "KernelGateway"
+	AppType_DetailedProfiler AppType = "DetailedProfiler"
 	AppType_TensorBoard      AppType = "TensorBoard"
+	AppType_CodeEditor       AppType = "CodeEditor"
+	AppType_JupyterLab       AppType = "JupyterLab"
 	AppType_RStudioServerPro AppType = "RStudioServerPro"
 	AppType_RSessionGateway  AppType = "RSessionGateway"
+	AppType_Canvas           AppType = "Canvas"
 )
 
 type ArtifactSourceIDType string
@@ -183,6 +213,14 @@ const (
 	AssociationEdgeType_AssociatedWith AssociationEdgeType = "AssociatedWith"
 	AssociationEdgeType_DerivedFrom    AssociationEdgeType = "DerivedFrom"
 	AssociationEdgeType_Produced       AssociationEdgeType = "Produced"
+	AssociationEdgeType_SameAs         AssociationEdgeType = "SameAs"
+)
+
+type AsyncNotificationTopicTypes string
+
+const (
+	AsyncNotificationTopicTypes_SUCCESS_NOTIFICATION_TOPIC AsyncNotificationTopicTypes = "SUCCESS_NOTIFICATION_TOPIC"
+	AsyncNotificationTopicTypes_ERROR_NOTIFICATION_TOPIC   AsyncNotificationTopicTypes = "ERROR_NOTIFICATION_TOPIC"
 )
 
 type AthenaResultCompressionType string
@@ -242,22 +280,24 @@ type AutoMLJobSecondaryStatus string
 
 const (
 	AutoMLJobSecondaryStatus_Starting                       AutoMLJobSecondaryStatus = "Starting"
-	AutoMLJobSecondaryStatus_AnalyzingData                  AutoMLJobSecondaryStatus = "AnalyzingData"
-	AutoMLJobSecondaryStatus_FeatureEngineering             AutoMLJobSecondaryStatus = "FeatureEngineering"
-	AutoMLJobSecondaryStatus_ModelTuning                    AutoMLJobSecondaryStatus = "ModelTuning"
 	AutoMLJobSecondaryStatus_MaxCandidatesReached           AutoMLJobSecondaryStatus = "MaxCandidatesReached"
 	AutoMLJobSecondaryStatus_Failed                         AutoMLJobSecondaryStatus = "Failed"
 	AutoMLJobSecondaryStatus_Stopped                        AutoMLJobSecondaryStatus = "Stopped"
 	AutoMLJobSecondaryStatus_MaxAutoMLJobRuntimeReached     AutoMLJobSecondaryStatus = "MaxAutoMLJobRuntimeReached"
 	AutoMLJobSecondaryStatus_Stopping                       AutoMLJobSecondaryStatus = "Stopping"
 	AutoMLJobSecondaryStatus_CandidateDefinitionsGenerated  AutoMLJobSecondaryStatus = "CandidateDefinitionsGenerated"
-	AutoMLJobSecondaryStatus_GeneratingExplainabilityReport AutoMLJobSecondaryStatus = "GeneratingExplainabilityReport"
 	AutoMLJobSecondaryStatus_Completed                      AutoMLJobSecondaryStatus = "Completed"
 	AutoMLJobSecondaryStatus_ExplainabilityError            AutoMLJobSecondaryStatus = "ExplainabilityError"
 	AutoMLJobSecondaryStatus_DeployingModel                 AutoMLJobSecondaryStatus = "DeployingModel"
 	AutoMLJobSecondaryStatus_ModelDeploymentError           AutoMLJobSecondaryStatus = "ModelDeploymentError"
 	AutoMLJobSecondaryStatus_GeneratingModelInsightsReport  AutoMLJobSecondaryStatus = "GeneratingModelInsightsReport"
 	AutoMLJobSecondaryStatus_ModelInsightsError             AutoMLJobSecondaryStatus = "ModelInsightsError"
+	AutoMLJobSecondaryStatus_AnalyzingData                  AutoMLJobSecondaryStatus = "AnalyzingData"
+	AutoMLJobSecondaryStatus_FeatureEngineering             AutoMLJobSecondaryStatus = "FeatureEngineering"
+	AutoMLJobSecondaryStatus_ModelTuning                    AutoMLJobSecondaryStatus = "ModelTuning"
+	AutoMLJobSecondaryStatus_GeneratingExplainabilityReport AutoMLJobSecondaryStatus = "GeneratingExplainabilityReport"
+	AutoMLJobSecondaryStatus_TrainingModels                 AutoMLJobSecondaryStatus = "TrainingModels"
+	AutoMLJobSecondaryStatus_PreTraining                    AutoMLJobSecondaryStatus = "PreTraining"
 )
 
 type AutoMLJobStatus string
@@ -273,39 +313,54 @@ const (
 type AutoMLMetricEnum string
 
 const (
-	AutoMLMetricEnum_Accuracy         AutoMLMetricEnum = "Accuracy"
-	AutoMLMetricEnum_MSE              AutoMLMetricEnum = "MSE"
-	AutoMLMetricEnum_F1               AutoMLMetricEnum = "F1"
-	AutoMLMetricEnum_F1macro          AutoMLMetricEnum = "F1macro"
-	AutoMLMetricEnum_AUC              AutoMLMetricEnum = "AUC"
-	AutoMLMetricEnum_RMSE             AutoMLMetricEnum = "RMSE"
-	AutoMLMetricEnum_MAE              AutoMLMetricEnum = "MAE"
-	AutoMLMetricEnum_R2               AutoMLMetricEnum = "R2"
-	AutoMLMetricEnum_BalancedAccuracy AutoMLMetricEnum = "BalancedAccuracy"
-	AutoMLMetricEnum_Precision        AutoMLMetricEnum = "Precision"
-	AutoMLMetricEnum_PrecisionMacro   AutoMLMetricEnum = "PrecisionMacro"
-	AutoMLMetricEnum_Recall           AutoMLMetricEnum = "Recall"
-	AutoMLMetricEnum_RecallMacro      AutoMLMetricEnum = "RecallMacro"
+	AutoMLMetricEnum_Accuracy                    AutoMLMetricEnum = "Accuracy"
+	AutoMLMetricEnum_MSE                         AutoMLMetricEnum = "MSE"
+	AutoMLMetricEnum_F1                          AutoMLMetricEnum = "F1"
+	AutoMLMetricEnum_F1macro                     AutoMLMetricEnum = "F1macro"
+	AutoMLMetricEnum_AUC                         AutoMLMetricEnum = "AUC"
+	AutoMLMetricEnum_RMSE                        AutoMLMetricEnum = "RMSE"
+	AutoMLMetricEnum_BalancedAccuracy            AutoMLMetricEnum = "BalancedAccuracy"
+	AutoMLMetricEnum_R2                          AutoMLMetricEnum = "R2"
+	AutoMLMetricEnum_Recall                      AutoMLMetricEnum = "Recall"
+	AutoMLMetricEnum_RecallMacro                 AutoMLMetricEnum = "RecallMacro"
+	AutoMLMetricEnum_Precision                   AutoMLMetricEnum = "Precision"
+	AutoMLMetricEnum_PrecisionMacro              AutoMLMetricEnum = "PrecisionMacro"
+	AutoMLMetricEnum_MAE                         AutoMLMetricEnum = "MAE"
+	AutoMLMetricEnum_MAPE                        AutoMLMetricEnum = "MAPE"
+	AutoMLMetricEnum_MASE                        AutoMLMetricEnum = "MASE"
+	AutoMLMetricEnum_WAPE                        AutoMLMetricEnum = "WAPE"
+	AutoMLMetricEnum_AverageWeightedQuantileLoss AutoMLMetricEnum = "AverageWeightedQuantileLoss"
 )
 
 type AutoMLMetricExtendedEnum string
 
 const (
-	AutoMLMetricExtendedEnum_Accuracy         AutoMLMetricExtendedEnum = "Accuracy"
-	AutoMLMetricExtendedEnum_MSE              AutoMLMetricExtendedEnum = "MSE"
-	AutoMLMetricExtendedEnum_F1               AutoMLMetricExtendedEnum = "F1"
-	AutoMLMetricExtendedEnum_F1macro          AutoMLMetricExtendedEnum = "F1macro"
-	AutoMLMetricExtendedEnum_AUC              AutoMLMetricExtendedEnum = "AUC"
-	AutoMLMetricExtendedEnum_RMSE             AutoMLMetricExtendedEnum = "RMSE"
-	AutoMLMetricExtendedEnum_MAE              AutoMLMetricExtendedEnum = "MAE"
-	AutoMLMetricExtendedEnum_R2               AutoMLMetricExtendedEnum = "R2"
-	AutoMLMetricExtendedEnum_BalancedAccuracy AutoMLMetricExtendedEnum = "BalancedAccuracy"
-	AutoMLMetricExtendedEnum_Precision        AutoMLMetricExtendedEnum = "Precision"
-	AutoMLMetricExtendedEnum_PrecisionMacro   AutoMLMetricExtendedEnum = "PrecisionMacro"
-	AutoMLMetricExtendedEnum_Recall           AutoMLMetricExtendedEnum = "Recall"
-	AutoMLMetricExtendedEnum_RecallMacro      AutoMLMetricExtendedEnum = "RecallMacro"
-	AutoMLMetricExtendedEnum_LogLoss          AutoMLMetricExtendedEnum = "LogLoss"
-	AutoMLMetricExtendedEnum_InferenceLatency AutoMLMetricExtendedEnum = "InferenceLatency"
+	AutoMLMetricExtendedEnum_Accuracy                    AutoMLMetricExtendedEnum = "Accuracy"
+	AutoMLMetricExtendedEnum_MSE                         AutoMLMetricExtendedEnum = "MSE"
+	AutoMLMetricExtendedEnum_F1                          AutoMLMetricExtendedEnum = "F1"
+	AutoMLMetricExtendedEnum_F1macro                     AutoMLMetricExtendedEnum = "F1macro"
+	AutoMLMetricExtendedEnum_AUC                         AutoMLMetricExtendedEnum = "AUC"
+	AutoMLMetricExtendedEnum_RMSE                        AutoMLMetricExtendedEnum = "RMSE"
+	AutoMLMetricExtendedEnum_MAE                         AutoMLMetricExtendedEnum = "MAE"
+	AutoMLMetricExtendedEnum_R2                          AutoMLMetricExtendedEnum = "R2"
+	AutoMLMetricExtendedEnum_BalancedAccuracy            AutoMLMetricExtendedEnum = "BalancedAccuracy"
+	AutoMLMetricExtendedEnum_Precision                   AutoMLMetricExtendedEnum = "Precision"
+	AutoMLMetricExtendedEnum_PrecisionMacro              AutoMLMetricExtendedEnum = "PrecisionMacro"
+	AutoMLMetricExtendedEnum_Recall                      AutoMLMetricExtendedEnum = "Recall"
+	AutoMLMetricExtendedEnum_RecallMacro                 AutoMLMetricExtendedEnum = "RecallMacro"
+	AutoMLMetricExtendedEnum_LogLoss                     AutoMLMetricExtendedEnum = "LogLoss"
+	AutoMLMetricExtendedEnum_InferenceLatency            AutoMLMetricExtendedEnum = "InferenceLatency"
+	AutoMLMetricExtendedEnum_MAPE                        AutoMLMetricExtendedEnum = "MAPE"
+	AutoMLMetricExtendedEnum_MASE                        AutoMLMetricExtendedEnum = "MASE"
+	AutoMLMetricExtendedEnum_WAPE                        AutoMLMetricExtendedEnum = "WAPE"
+	AutoMLMetricExtendedEnum_AverageWeightedQuantileLoss AutoMLMetricExtendedEnum = "AverageWeightedQuantileLoss"
+	AutoMLMetricExtendedEnum_Rouge1                      AutoMLMetricExtendedEnum = "Rouge1"
+	AutoMLMetricExtendedEnum_Rouge2                      AutoMLMetricExtendedEnum = "Rouge2"
+	AutoMLMetricExtendedEnum_RougeL                      AutoMLMetricExtendedEnum = "RougeL"
+	AutoMLMetricExtendedEnum_RougeLSum                   AutoMLMetricExtendedEnum = "RougeLSum"
+	AutoMLMetricExtendedEnum_Perplexity                  AutoMLMetricExtendedEnum = "Perplexity"
+	AutoMLMetricExtendedEnum_ValidationLoss              AutoMLMetricExtendedEnum = "ValidationLoss"
+	AutoMLMetricExtendedEnum_TrainingLoss                AutoMLMetricExtendedEnum = "TrainingLoss"
 )
 
 type AutoMLMode string
@@ -316,11 +371,29 @@ const (
 	AutoMLMode_HYPERPARAMETER_TUNING AutoMLMode = "HYPERPARAMETER_TUNING"
 )
 
+type AutoMLProblemTypeConfigName string
+
+const (
+	AutoMLProblemTypeConfigName_ImageClassification   AutoMLProblemTypeConfigName = "ImageClassification"
+	AutoMLProblemTypeConfigName_TextClassification    AutoMLProblemTypeConfigName = "TextClassification"
+	AutoMLProblemTypeConfigName_TimeSeriesForecasting AutoMLProblemTypeConfigName = "TimeSeriesForecasting"
+	AutoMLProblemTypeConfigName_Tabular               AutoMLProblemTypeConfigName = "Tabular"
+	AutoMLProblemTypeConfigName_TextGeneration        AutoMLProblemTypeConfigName = "TextGeneration"
+)
+
+type AutoMLProcessingUnit string
+
+const (
+	AutoMLProcessingUnit_CPU AutoMLProcessingUnit = "CPU"
+	AutoMLProcessingUnit_GPU AutoMLProcessingUnit = "GPU"
+)
+
 type AutoMLS3DataType string
 
 const (
-	AutoMLS3DataType_ManifestFile AutoMLS3DataType = "ManifestFile"
-	AutoMLS3DataType_S3Prefix     AutoMLS3DataType = "S3Prefix"
+	AutoMLS3DataType_ManifestFile          AutoMLS3DataType = "ManifestFile"
+	AutoMLS3DataType_S3Prefix              AutoMLS3DataType = "S3Prefix"
+	AutoMLS3DataType_AugmentedManifestFile AutoMLS3DataType = "AugmentedManifestFile"
 )
 
 type AutoMLSortBy string
@@ -336,6 +409,12 @@ type AutoMLSortOrder string
 const (
 	AutoMLSortOrder_Ascending  AutoMLSortOrder = "Ascending"
 	AutoMLSortOrder_Descending AutoMLSortOrder = "Descending"
+)
+
+type AutotuneMode string
+
+const (
+	AutotuneMode_Enabled AutotuneMode = "Enabled"
 )
 
 type BatchStrategy string
@@ -388,8 +467,9 @@ const (
 type CaptureMode string
 
 const (
-	CaptureMode_Input  CaptureMode = "Input"
-	CaptureMode_Output CaptureMode = "Output"
+	CaptureMode_Input          CaptureMode = "Input"
+	CaptureMode_Output         CaptureMode = "Output"
+	CaptureMode_InputAndOutput CaptureMode = "InputAndOutput"
 )
 
 type CaptureStatus string
@@ -480,6 +560,78 @@ const (
 	ClarifyTextLanguage_xx  ClarifyTextLanguage = "xx"
 )
 
+type ClusterInstanceStatus string
+
+const (
+	ClusterInstanceStatus_Running        ClusterInstanceStatus = "Running"
+	ClusterInstanceStatus_Failure        ClusterInstanceStatus = "Failure"
+	ClusterInstanceStatus_Pending        ClusterInstanceStatus = "Pending"
+	ClusterInstanceStatus_ShuttingDown   ClusterInstanceStatus = "ShuttingDown"
+	ClusterInstanceStatus_SystemUpdating ClusterInstanceStatus = "SystemUpdating"
+)
+
+type ClusterInstanceType string
+
+const (
+	ClusterInstanceType_ml_p4d_24xlarge   ClusterInstanceType = "ml.p4d.24xlarge"
+	ClusterInstanceType_ml_p4de_24xlarge  ClusterInstanceType = "ml.p4de.24xlarge"
+	ClusterInstanceType_ml_p5_48xlarge    ClusterInstanceType = "ml.p5.48xlarge"
+	ClusterInstanceType_ml_trn1_32xlarge  ClusterInstanceType = "ml.trn1.32xlarge"
+	ClusterInstanceType_ml_trn1n_32xlarge ClusterInstanceType = "ml.trn1n.32xlarge"
+	ClusterInstanceType_ml_g5_xlarge      ClusterInstanceType = "ml.g5.xlarge"
+	ClusterInstanceType_ml_g5_2xlarge     ClusterInstanceType = "ml.g5.2xlarge"
+	ClusterInstanceType_ml_g5_4xlarge     ClusterInstanceType = "ml.g5.4xlarge"
+	ClusterInstanceType_ml_g5_8xlarge     ClusterInstanceType = "ml.g5.8xlarge"
+	ClusterInstanceType_ml_g5_12xlarge    ClusterInstanceType = "ml.g5.12xlarge"
+	ClusterInstanceType_ml_g5_16xlarge    ClusterInstanceType = "ml.g5.16xlarge"
+	ClusterInstanceType_ml_g5_24xlarge    ClusterInstanceType = "ml.g5.24xlarge"
+	ClusterInstanceType_ml_g5_48xlarge    ClusterInstanceType = "ml.g5.48xlarge"
+	ClusterInstanceType_ml_c5_large       ClusterInstanceType = "ml.c5.large"
+	ClusterInstanceType_ml_c5_xlarge      ClusterInstanceType = "ml.c5.xlarge"
+	ClusterInstanceType_ml_c5_2xlarge     ClusterInstanceType = "ml.c5.2xlarge"
+	ClusterInstanceType_ml_c5_4xlarge     ClusterInstanceType = "ml.c5.4xlarge"
+	ClusterInstanceType_ml_c5_9xlarge     ClusterInstanceType = "ml.c5.9xlarge"
+	ClusterInstanceType_ml_c5_12xlarge    ClusterInstanceType = "ml.c5.12xlarge"
+	ClusterInstanceType_ml_c5_18xlarge    ClusterInstanceType = "ml.c5.18xlarge"
+	ClusterInstanceType_ml_c5_24xlarge    ClusterInstanceType = "ml.c5.24xlarge"
+	ClusterInstanceType_ml_c5n_large      ClusterInstanceType = "ml.c5n.large"
+	ClusterInstanceType_ml_c5n_2xlarge    ClusterInstanceType = "ml.c5n.2xlarge"
+	ClusterInstanceType_ml_c5n_4xlarge    ClusterInstanceType = "ml.c5n.4xlarge"
+	ClusterInstanceType_ml_c5n_9xlarge    ClusterInstanceType = "ml.c5n.9xlarge"
+	ClusterInstanceType_ml_c5n_18xlarge   ClusterInstanceType = "ml.c5n.18xlarge"
+	ClusterInstanceType_ml_m5_large       ClusterInstanceType = "ml.m5.large"
+	ClusterInstanceType_ml_m5_xlarge      ClusterInstanceType = "ml.m5.xlarge"
+	ClusterInstanceType_ml_m5_2xlarge     ClusterInstanceType = "ml.m5.2xlarge"
+	ClusterInstanceType_ml_m5_4xlarge     ClusterInstanceType = "ml.m5.4xlarge"
+	ClusterInstanceType_ml_m5_8xlarge     ClusterInstanceType = "ml.m5.8xlarge"
+	ClusterInstanceType_ml_m5_12xlarge    ClusterInstanceType = "ml.m5.12xlarge"
+	ClusterInstanceType_ml_m5_16xlarge    ClusterInstanceType = "ml.m5.16xlarge"
+	ClusterInstanceType_ml_m5_24xlarge    ClusterInstanceType = "ml.m5.24xlarge"
+	ClusterInstanceType_ml_t3_medium      ClusterInstanceType = "ml.t3.medium"
+	ClusterInstanceType_ml_t3_large       ClusterInstanceType = "ml.t3.large"
+	ClusterInstanceType_ml_t3_xlarge      ClusterInstanceType = "ml.t3.xlarge"
+	ClusterInstanceType_ml_t3_2xlarge     ClusterInstanceType = "ml.t3.2xlarge"
+)
+
+type ClusterSortBy string
+
+const (
+	ClusterSortBy_CREATION_TIME ClusterSortBy = "CREATION_TIME"
+	ClusterSortBy_NAME          ClusterSortBy = "NAME"
+)
+
+type ClusterStatus string
+
+const (
+	ClusterStatus_Creating       ClusterStatus = "Creating"
+	ClusterStatus_Deleting       ClusterStatus = "Deleting"
+	ClusterStatus_Failed         ClusterStatus = "Failed"
+	ClusterStatus_InService      ClusterStatus = "InService"
+	ClusterStatus_RollingBack    ClusterStatus = "RollingBack"
+	ClusterStatus_SystemUpdating ClusterStatus = "SystemUpdating"
+	ClusterStatus_Updating       ClusterStatus = "Updating"
+)
+
 type CodeRepositorySortBy string
 
 const (
@@ -493,6 +645,14 @@ type CodeRepositorySortOrder string
 const (
 	CodeRepositorySortOrder_Ascending  CodeRepositorySortOrder = "Ascending"
 	CodeRepositorySortOrder_Descending CodeRepositorySortOrder = "Descending"
+)
+
+type CollectionType string
+
+const (
+	CollectionType_List   CollectionType = "List"
+	CollectionType_Set    CollectionType = "Set"
+	CollectionType_Vector CollectionType = "Vector"
 )
 
 type CompilationJobStatus string
@@ -541,11 +701,25 @@ const (
 	ContentClassifier_FreeOfAdultContent                      ContentClassifier = "FreeOfAdultContent"
 )
 
+type CrossAccountFilterOption string
+
+const (
+	CrossAccountFilterOption_SameAccount  CrossAccountFilterOption = "SameAccount"
+	CrossAccountFilterOption_CrossAccount CrossAccountFilterOption = "CrossAccount"
+)
+
 type DataDistributionType string
 
 const (
 	DataDistributionType_FullyReplicated DataDistributionType = "FullyReplicated"
 	DataDistributionType_ShardedByS3Key  DataDistributionType = "ShardedByS3Key"
+)
+
+type DataSourceName string
+
+const (
+	DataSourceName_SalesforceGenie DataSourceName = "SalesforceGenie"
+	DataSourceName_Snowflake       DataSourceName = "Snowflake"
 )
 
 type DetailedAlgorithmStatus string
@@ -654,14 +828,15 @@ const (
 type EndpointStatus_SDK string
 
 const (
-	EndpointStatus_SDK_OutOfService   EndpointStatus_SDK = "OutOfService"
-	EndpointStatus_SDK_Creating       EndpointStatus_SDK = "Creating"
-	EndpointStatus_SDK_Updating       EndpointStatus_SDK = "Updating"
-	EndpointStatus_SDK_SystemUpdating EndpointStatus_SDK = "SystemUpdating"
-	EndpointStatus_SDK_RollingBack    EndpointStatus_SDK = "RollingBack"
-	EndpointStatus_SDK_InService      EndpointStatus_SDK = "InService"
-	EndpointStatus_SDK_Deleting       EndpointStatus_SDK = "Deleting"
-	EndpointStatus_SDK_Failed         EndpointStatus_SDK = "Failed"
+	EndpointStatus_SDK_OutOfService         EndpointStatus_SDK = "OutOfService"
+	EndpointStatus_SDK_Creating             EndpointStatus_SDK = "Creating"
+	EndpointStatus_SDK_Updating             EndpointStatus_SDK = "Updating"
+	EndpointStatus_SDK_SystemUpdating       EndpointStatus_SDK = "SystemUpdating"
+	EndpointStatus_SDK_RollingBack          EndpointStatus_SDK = "RollingBack"
+	EndpointStatus_SDK_InService            EndpointStatus_SDK = "InService"
+	EndpointStatus_SDK_Deleting             EndpointStatus_SDK = "Deleting"
+	EndpointStatus_SDK_Failed               EndpointStatus_SDK = "Failed"
+	EndpointStatus_SDK_UpdateRollbackFailed EndpointStatus_SDK = "UpdateRollbackFailed"
 )
 
 type ExecutionStatus string
@@ -736,6 +911,26 @@ type FileSystemType string
 const (
 	FileSystemType_EFS       FileSystemType = "EFS"
 	FileSystemType_FSxLustre FileSystemType = "FSxLustre"
+)
+
+type FillingType string
+
+const (
+	FillingType_frontfill        FillingType = "frontfill"
+	FillingType_middlefill       FillingType = "middlefill"
+	FillingType_backfill         FillingType = "backfill"
+	FillingType_futurefill       FillingType = "futurefill"
+	FillingType_frontfill_value  FillingType = "frontfill_value"
+	FillingType_middlefill_value FillingType = "middlefill_value"
+	FillingType_backfill_value   FillingType = "backfill_value"
+	FillingType_futurefill_value FillingType = "futurefill_value"
+)
+
+type FlatInvocations string
+
+const (
+	FlatInvocations_Continue FlatInvocations = "Continue"
+	FlatInvocations_Stop     FlatInvocations = "Stop"
 )
 
 type FlowDefinitionStatus string
@@ -847,11 +1042,13 @@ const (
 type HyperParameterTuningJobStatus_SDK string
 
 const (
-	HyperParameterTuningJobStatus_SDK_Completed  HyperParameterTuningJobStatus_SDK = "Completed"
-	HyperParameterTuningJobStatus_SDK_InProgress HyperParameterTuningJobStatus_SDK = "InProgress"
-	HyperParameterTuningJobStatus_SDK_Failed     HyperParameterTuningJobStatus_SDK = "Failed"
-	HyperParameterTuningJobStatus_SDK_Stopped    HyperParameterTuningJobStatus_SDK = "Stopped"
-	HyperParameterTuningJobStatus_SDK_Stopping   HyperParameterTuningJobStatus_SDK = "Stopping"
+	HyperParameterTuningJobStatus_SDK_Completed    HyperParameterTuningJobStatus_SDK = "Completed"
+	HyperParameterTuningJobStatus_SDK_InProgress   HyperParameterTuningJobStatus_SDK = "InProgress"
+	HyperParameterTuningJobStatus_SDK_Failed       HyperParameterTuningJobStatus_SDK = "Failed"
+	HyperParameterTuningJobStatus_SDK_Stopped      HyperParameterTuningJobStatus_SDK = "Stopped"
+	HyperParameterTuningJobStatus_SDK_Stopping     HyperParameterTuningJobStatus_SDK = "Stopping"
+	HyperParameterTuningJobStatus_SDK_Deleting     HyperParameterTuningJobStatus_SDK = "Deleting"
+	HyperParameterTuningJobStatus_SDK_DeleteFailed HyperParameterTuningJobStatus_SDK = "DeleteFailed"
 )
 
 type HyperParameterTuningJobStrategyType string
@@ -920,6 +1117,24 @@ const (
 	ImageVersionStatus_CREATE_FAILED ImageVersionStatus = "CREATE_FAILED"
 	ImageVersionStatus_DELETING      ImageVersionStatus = "DELETING"
 	ImageVersionStatus_DELETE_FAILED ImageVersionStatus = "DELETE_FAILED"
+)
+
+type InferenceComponentSortKey string
+
+const (
+	InferenceComponentSortKey_Name         InferenceComponentSortKey = "Name"
+	InferenceComponentSortKey_CreationTime InferenceComponentSortKey = "CreationTime"
+	InferenceComponentSortKey_Status       InferenceComponentSortKey = "Status"
+)
+
+type InferenceComponentStatus string
+
+const (
+	InferenceComponentStatus_InService InferenceComponentStatus = "InService"
+	InferenceComponentStatus_Creating  InferenceComponentStatus = "Creating"
+	InferenceComponentStatus_Updating  InferenceComponentStatus = "Updating"
+	InferenceComponentStatus_Failed    InferenceComponentStatus = "Failed"
+	InferenceComponentStatus_Deleting  InferenceComponentStatus = "Deleting"
 )
 
 type InferenceExecutionMode string
@@ -1034,6 +1249,12 @@ const (
 	InstanceType_ml_g5_12xlarge   InstanceType = "ml.g5.12xlarge"
 	InstanceType_ml_g5_24xlarge   InstanceType = "ml.g5.24xlarge"
 	InstanceType_ml_g5_48xlarge   InstanceType = "ml.g5.48xlarge"
+	InstanceType_ml_inf1_xlarge   InstanceType = "ml.inf1.xlarge"
+	InstanceType_ml_inf1_2xlarge  InstanceType = "ml.inf1.2xlarge"
+	InstanceType_ml_inf1_6xlarge  InstanceType = "ml.inf1.6xlarge"
+	InstanceType_ml_inf1_24xlarge InstanceType = "ml.inf1.24xlarge"
+	InstanceType_ml_p4d_24xlarge  InstanceType = "ml.p4d.24xlarge"
+	InstanceType_ml_p4de_24xlarge InstanceType = "ml.p4de.24xlarge"
 )
 
 type JobType string
@@ -1142,6 +1363,13 @@ const (
 	ListWorkteamsSortByOptions_CreateDate ListWorkteamsSortByOptions = "CreateDate"
 )
 
+type ManagedInstanceScalingStatus string
+
+const (
+	ManagedInstanceScalingStatus_ENABLED  ManagedInstanceScalingStatus = "ENABLED"
+	ManagedInstanceScalingStatus_DISABLED ManagedInstanceScalingStatus = "DISABLED"
+)
+
 type MetricSetSource string
 
 const (
@@ -1226,6 +1454,13 @@ type ModelCardVersionSortBy string
 
 const (
 	ModelCardVersionSortBy_Version ModelCardVersionSortBy = "Version"
+)
+
+type ModelCompressionType string
+
+const (
+	ModelCompressionType_None ModelCompressionType = "None"
+	ModelCompressionType_Gzip ModelCompressionType = "Gzip"
 )
 
 type ModelInfrastructureType string
@@ -1463,6 +1698,13 @@ const (
 	OrderKey_Descending OrderKey = "Descending"
 )
 
+type OutputCompressionType string
+
+const (
+	OutputCompressionType_GZIP OutputCompressionType = "GZIP"
+	OutputCompressionType_NONE OutputCompressionType = "NONE"
+)
+
 type ParameterType string
 
 const (
@@ -1485,7 +1727,8 @@ const (
 type PipelineStatus_SDK string
 
 const (
-	PipelineStatus_SDK_Active PipelineStatus_SDK = "Active"
+	PipelineStatus_SDK_Active   PipelineStatus_SDK = "Active"
+	PipelineStatus_SDK_Deleting PipelineStatus_SDK = "Deleting"
 )
 
 type ProblemType string
@@ -1611,147 +1854,183 @@ const (
 type ProductionVariantInstanceType string
 
 const (
-	ProductionVariantInstanceType_ml_t2_medium     ProductionVariantInstanceType = "ml.t2.medium"
-	ProductionVariantInstanceType_ml_t2_large      ProductionVariantInstanceType = "ml.t2.large"
-	ProductionVariantInstanceType_ml_t2_xlarge     ProductionVariantInstanceType = "ml.t2.xlarge"
-	ProductionVariantInstanceType_ml_t2_2xlarge    ProductionVariantInstanceType = "ml.t2.2xlarge"
-	ProductionVariantInstanceType_ml_m4_xlarge     ProductionVariantInstanceType = "ml.m4.xlarge"
-	ProductionVariantInstanceType_ml_m4_2xlarge    ProductionVariantInstanceType = "ml.m4.2xlarge"
-	ProductionVariantInstanceType_ml_m4_4xlarge    ProductionVariantInstanceType = "ml.m4.4xlarge"
-	ProductionVariantInstanceType_ml_m4_10xlarge   ProductionVariantInstanceType = "ml.m4.10xlarge"
-	ProductionVariantInstanceType_ml_m4_16xlarge   ProductionVariantInstanceType = "ml.m4.16xlarge"
-	ProductionVariantInstanceType_ml_m5_large      ProductionVariantInstanceType = "ml.m5.large"
-	ProductionVariantInstanceType_ml_m5_xlarge     ProductionVariantInstanceType = "ml.m5.xlarge"
-	ProductionVariantInstanceType_ml_m5_2xlarge    ProductionVariantInstanceType = "ml.m5.2xlarge"
-	ProductionVariantInstanceType_ml_m5_4xlarge    ProductionVariantInstanceType = "ml.m5.4xlarge"
-	ProductionVariantInstanceType_ml_m5_12xlarge   ProductionVariantInstanceType = "ml.m5.12xlarge"
-	ProductionVariantInstanceType_ml_m5_24xlarge   ProductionVariantInstanceType = "ml.m5.24xlarge"
-	ProductionVariantInstanceType_ml_m5d_large     ProductionVariantInstanceType = "ml.m5d.large"
-	ProductionVariantInstanceType_ml_m5d_xlarge    ProductionVariantInstanceType = "ml.m5d.xlarge"
-	ProductionVariantInstanceType_ml_m5d_2xlarge   ProductionVariantInstanceType = "ml.m5d.2xlarge"
-	ProductionVariantInstanceType_ml_m5d_4xlarge   ProductionVariantInstanceType = "ml.m5d.4xlarge"
-	ProductionVariantInstanceType_ml_m5d_12xlarge  ProductionVariantInstanceType = "ml.m5d.12xlarge"
-	ProductionVariantInstanceType_ml_m5d_24xlarge  ProductionVariantInstanceType = "ml.m5d.24xlarge"
-	ProductionVariantInstanceType_ml_c4_large      ProductionVariantInstanceType = "ml.c4.large"
-	ProductionVariantInstanceType_ml_c4_xlarge     ProductionVariantInstanceType = "ml.c4.xlarge"
-	ProductionVariantInstanceType_ml_c4_2xlarge    ProductionVariantInstanceType = "ml.c4.2xlarge"
-	ProductionVariantInstanceType_ml_c4_4xlarge    ProductionVariantInstanceType = "ml.c4.4xlarge"
-	ProductionVariantInstanceType_ml_c4_8xlarge    ProductionVariantInstanceType = "ml.c4.8xlarge"
-	ProductionVariantInstanceType_ml_p2_xlarge     ProductionVariantInstanceType = "ml.p2.xlarge"
-	ProductionVariantInstanceType_ml_p2_8xlarge    ProductionVariantInstanceType = "ml.p2.8xlarge"
-	ProductionVariantInstanceType_ml_p2_16xlarge   ProductionVariantInstanceType = "ml.p2.16xlarge"
-	ProductionVariantInstanceType_ml_p3_2xlarge    ProductionVariantInstanceType = "ml.p3.2xlarge"
-	ProductionVariantInstanceType_ml_p3_8xlarge    ProductionVariantInstanceType = "ml.p3.8xlarge"
-	ProductionVariantInstanceType_ml_p3_16xlarge   ProductionVariantInstanceType = "ml.p3.16xlarge"
-	ProductionVariantInstanceType_ml_c5_large      ProductionVariantInstanceType = "ml.c5.large"
-	ProductionVariantInstanceType_ml_c5_xlarge     ProductionVariantInstanceType = "ml.c5.xlarge"
-	ProductionVariantInstanceType_ml_c5_2xlarge    ProductionVariantInstanceType = "ml.c5.2xlarge"
-	ProductionVariantInstanceType_ml_c5_4xlarge    ProductionVariantInstanceType = "ml.c5.4xlarge"
-	ProductionVariantInstanceType_ml_c5_9xlarge    ProductionVariantInstanceType = "ml.c5.9xlarge"
-	ProductionVariantInstanceType_ml_c5_18xlarge   ProductionVariantInstanceType = "ml.c5.18xlarge"
-	ProductionVariantInstanceType_ml_c5d_large     ProductionVariantInstanceType = "ml.c5d.large"
-	ProductionVariantInstanceType_ml_c5d_xlarge    ProductionVariantInstanceType = "ml.c5d.xlarge"
-	ProductionVariantInstanceType_ml_c5d_2xlarge   ProductionVariantInstanceType = "ml.c5d.2xlarge"
-	ProductionVariantInstanceType_ml_c5d_4xlarge   ProductionVariantInstanceType = "ml.c5d.4xlarge"
-	ProductionVariantInstanceType_ml_c5d_9xlarge   ProductionVariantInstanceType = "ml.c5d.9xlarge"
-	ProductionVariantInstanceType_ml_c5d_18xlarge  ProductionVariantInstanceType = "ml.c5d.18xlarge"
-	ProductionVariantInstanceType_ml_g4dn_xlarge   ProductionVariantInstanceType = "ml.g4dn.xlarge"
-	ProductionVariantInstanceType_ml_g4dn_2xlarge  ProductionVariantInstanceType = "ml.g4dn.2xlarge"
-	ProductionVariantInstanceType_ml_g4dn_4xlarge  ProductionVariantInstanceType = "ml.g4dn.4xlarge"
-	ProductionVariantInstanceType_ml_g4dn_8xlarge  ProductionVariantInstanceType = "ml.g4dn.8xlarge"
-	ProductionVariantInstanceType_ml_g4dn_12xlarge ProductionVariantInstanceType = "ml.g4dn.12xlarge"
-	ProductionVariantInstanceType_ml_g4dn_16xlarge ProductionVariantInstanceType = "ml.g4dn.16xlarge"
-	ProductionVariantInstanceType_ml_r5_large      ProductionVariantInstanceType = "ml.r5.large"
-	ProductionVariantInstanceType_ml_r5_xlarge     ProductionVariantInstanceType = "ml.r5.xlarge"
-	ProductionVariantInstanceType_ml_r5_2xlarge    ProductionVariantInstanceType = "ml.r5.2xlarge"
-	ProductionVariantInstanceType_ml_r5_4xlarge    ProductionVariantInstanceType = "ml.r5.4xlarge"
-	ProductionVariantInstanceType_ml_r5_12xlarge   ProductionVariantInstanceType = "ml.r5.12xlarge"
-	ProductionVariantInstanceType_ml_r5_24xlarge   ProductionVariantInstanceType = "ml.r5.24xlarge"
-	ProductionVariantInstanceType_ml_r5d_large     ProductionVariantInstanceType = "ml.r5d.large"
-	ProductionVariantInstanceType_ml_r5d_xlarge    ProductionVariantInstanceType = "ml.r5d.xlarge"
-	ProductionVariantInstanceType_ml_r5d_2xlarge   ProductionVariantInstanceType = "ml.r5d.2xlarge"
-	ProductionVariantInstanceType_ml_r5d_4xlarge   ProductionVariantInstanceType = "ml.r5d.4xlarge"
-	ProductionVariantInstanceType_ml_r5d_12xlarge  ProductionVariantInstanceType = "ml.r5d.12xlarge"
-	ProductionVariantInstanceType_ml_r5d_24xlarge  ProductionVariantInstanceType = "ml.r5d.24xlarge"
-	ProductionVariantInstanceType_ml_inf1_xlarge   ProductionVariantInstanceType = "ml.inf1.xlarge"
-	ProductionVariantInstanceType_ml_inf1_2xlarge  ProductionVariantInstanceType = "ml.inf1.2xlarge"
-	ProductionVariantInstanceType_ml_inf1_6xlarge  ProductionVariantInstanceType = "ml.inf1.6xlarge"
-	ProductionVariantInstanceType_ml_inf1_24xlarge ProductionVariantInstanceType = "ml.inf1.24xlarge"
-	ProductionVariantInstanceType_ml_c6i_large     ProductionVariantInstanceType = "ml.c6i.large"
-	ProductionVariantInstanceType_ml_c6i_xlarge    ProductionVariantInstanceType = "ml.c6i.xlarge"
-	ProductionVariantInstanceType_ml_c6i_2xlarge   ProductionVariantInstanceType = "ml.c6i.2xlarge"
-	ProductionVariantInstanceType_ml_c6i_4xlarge   ProductionVariantInstanceType = "ml.c6i.4xlarge"
-	ProductionVariantInstanceType_ml_c6i_8xlarge   ProductionVariantInstanceType = "ml.c6i.8xlarge"
-	ProductionVariantInstanceType_ml_c6i_12xlarge  ProductionVariantInstanceType = "ml.c6i.12xlarge"
-	ProductionVariantInstanceType_ml_c6i_16xlarge  ProductionVariantInstanceType = "ml.c6i.16xlarge"
-	ProductionVariantInstanceType_ml_c6i_24xlarge  ProductionVariantInstanceType = "ml.c6i.24xlarge"
-	ProductionVariantInstanceType_ml_c6i_32xlarge  ProductionVariantInstanceType = "ml.c6i.32xlarge"
-	ProductionVariantInstanceType_ml_g5_xlarge     ProductionVariantInstanceType = "ml.g5.xlarge"
-	ProductionVariantInstanceType_ml_g5_2xlarge    ProductionVariantInstanceType = "ml.g5.2xlarge"
-	ProductionVariantInstanceType_ml_g5_4xlarge    ProductionVariantInstanceType = "ml.g5.4xlarge"
-	ProductionVariantInstanceType_ml_g5_8xlarge    ProductionVariantInstanceType = "ml.g5.8xlarge"
-	ProductionVariantInstanceType_ml_g5_12xlarge   ProductionVariantInstanceType = "ml.g5.12xlarge"
-	ProductionVariantInstanceType_ml_g5_16xlarge   ProductionVariantInstanceType = "ml.g5.16xlarge"
-	ProductionVariantInstanceType_ml_g5_24xlarge   ProductionVariantInstanceType = "ml.g5.24xlarge"
-	ProductionVariantInstanceType_ml_g5_48xlarge   ProductionVariantInstanceType = "ml.g5.48xlarge"
-	ProductionVariantInstanceType_ml_p4d_24xlarge  ProductionVariantInstanceType = "ml.p4d.24xlarge"
-	ProductionVariantInstanceType_ml_c7g_large     ProductionVariantInstanceType = "ml.c7g.large"
-	ProductionVariantInstanceType_ml_c7g_xlarge    ProductionVariantInstanceType = "ml.c7g.xlarge"
-	ProductionVariantInstanceType_ml_c7g_2xlarge   ProductionVariantInstanceType = "ml.c7g.2xlarge"
-	ProductionVariantInstanceType_ml_c7g_4xlarge   ProductionVariantInstanceType = "ml.c7g.4xlarge"
-	ProductionVariantInstanceType_ml_c7g_8xlarge   ProductionVariantInstanceType = "ml.c7g.8xlarge"
-	ProductionVariantInstanceType_ml_c7g_12xlarge  ProductionVariantInstanceType = "ml.c7g.12xlarge"
-	ProductionVariantInstanceType_ml_c7g_16xlarge  ProductionVariantInstanceType = "ml.c7g.16xlarge"
-	ProductionVariantInstanceType_ml_m6g_large     ProductionVariantInstanceType = "ml.m6g.large"
-	ProductionVariantInstanceType_ml_m6g_xlarge    ProductionVariantInstanceType = "ml.m6g.xlarge"
-	ProductionVariantInstanceType_ml_m6g_2xlarge   ProductionVariantInstanceType = "ml.m6g.2xlarge"
-	ProductionVariantInstanceType_ml_m6g_4xlarge   ProductionVariantInstanceType = "ml.m6g.4xlarge"
-	ProductionVariantInstanceType_ml_m6g_8xlarge   ProductionVariantInstanceType = "ml.m6g.8xlarge"
-	ProductionVariantInstanceType_ml_m6g_12xlarge  ProductionVariantInstanceType = "ml.m6g.12xlarge"
-	ProductionVariantInstanceType_ml_m6g_16xlarge  ProductionVariantInstanceType = "ml.m6g.16xlarge"
-	ProductionVariantInstanceType_ml_m6gd_large    ProductionVariantInstanceType = "ml.m6gd.large"
-	ProductionVariantInstanceType_ml_m6gd_xlarge   ProductionVariantInstanceType = "ml.m6gd.xlarge"
-	ProductionVariantInstanceType_ml_m6gd_2xlarge  ProductionVariantInstanceType = "ml.m6gd.2xlarge"
-	ProductionVariantInstanceType_ml_m6gd_4xlarge  ProductionVariantInstanceType = "ml.m6gd.4xlarge"
-	ProductionVariantInstanceType_ml_m6gd_8xlarge  ProductionVariantInstanceType = "ml.m6gd.8xlarge"
-	ProductionVariantInstanceType_ml_m6gd_12xlarge ProductionVariantInstanceType = "ml.m6gd.12xlarge"
-	ProductionVariantInstanceType_ml_m6gd_16xlarge ProductionVariantInstanceType = "ml.m6gd.16xlarge"
-	ProductionVariantInstanceType_ml_c6g_large     ProductionVariantInstanceType = "ml.c6g.large"
-	ProductionVariantInstanceType_ml_c6g_xlarge    ProductionVariantInstanceType = "ml.c6g.xlarge"
-	ProductionVariantInstanceType_ml_c6g_2xlarge   ProductionVariantInstanceType = "ml.c6g.2xlarge"
-	ProductionVariantInstanceType_ml_c6g_4xlarge   ProductionVariantInstanceType = "ml.c6g.4xlarge"
-	ProductionVariantInstanceType_ml_c6g_8xlarge   ProductionVariantInstanceType = "ml.c6g.8xlarge"
-	ProductionVariantInstanceType_ml_c6g_12xlarge  ProductionVariantInstanceType = "ml.c6g.12xlarge"
-	ProductionVariantInstanceType_ml_c6g_16xlarge  ProductionVariantInstanceType = "ml.c6g.16xlarge"
-	ProductionVariantInstanceType_ml_c6gd_large    ProductionVariantInstanceType = "ml.c6gd.large"
-	ProductionVariantInstanceType_ml_c6gd_xlarge   ProductionVariantInstanceType = "ml.c6gd.xlarge"
-	ProductionVariantInstanceType_ml_c6gd_2xlarge  ProductionVariantInstanceType = "ml.c6gd.2xlarge"
-	ProductionVariantInstanceType_ml_c6gd_4xlarge  ProductionVariantInstanceType = "ml.c6gd.4xlarge"
-	ProductionVariantInstanceType_ml_c6gd_8xlarge  ProductionVariantInstanceType = "ml.c6gd.8xlarge"
-	ProductionVariantInstanceType_ml_c6gd_12xlarge ProductionVariantInstanceType = "ml.c6gd.12xlarge"
-	ProductionVariantInstanceType_ml_c6gd_16xlarge ProductionVariantInstanceType = "ml.c6gd.16xlarge"
-	ProductionVariantInstanceType_ml_c6gn_large    ProductionVariantInstanceType = "ml.c6gn.large"
-	ProductionVariantInstanceType_ml_c6gn_xlarge   ProductionVariantInstanceType = "ml.c6gn.xlarge"
-	ProductionVariantInstanceType_ml_c6gn_2xlarge  ProductionVariantInstanceType = "ml.c6gn.2xlarge"
-	ProductionVariantInstanceType_ml_c6gn_4xlarge  ProductionVariantInstanceType = "ml.c6gn.4xlarge"
-	ProductionVariantInstanceType_ml_c6gn_8xlarge  ProductionVariantInstanceType = "ml.c6gn.8xlarge"
-	ProductionVariantInstanceType_ml_c6gn_12xlarge ProductionVariantInstanceType = "ml.c6gn.12xlarge"
-	ProductionVariantInstanceType_ml_c6gn_16xlarge ProductionVariantInstanceType = "ml.c6gn.16xlarge"
-	ProductionVariantInstanceType_ml_r6g_large     ProductionVariantInstanceType = "ml.r6g.large"
-	ProductionVariantInstanceType_ml_r6g_xlarge    ProductionVariantInstanceType = "ml.r6g.xlarge"
-	ProductionVariantInstanceType_ml_r6g_2xlarge   ProductionVariantInstanceType = "ml.r6g.2xlarge"
-	ProductionVariantInstanceType_ml_r6g_4xlarge   ProductionVariantInstanceType = "ml.r6g.4xlarge"
-	ProductionVariantInstanceType_ml_r6g_8xlarge   ProductionVariantInstanceType = "ml.r6g.8xlarge"
-	ProductionVariantInstanceType_ml_r6g_12xlarge  ProductionVariantInstanceType = "ml.r6g.12xlarge"
-	ProductionVariantInstanceType_ml_r6g_16xlarge  ProductionVariantInstanceType = "ml.r6g.16xlarge"
-	ProductionVariantInstanceType_ml_r6gd_large    ProductionVariantInstanceType = "ml.r6gd.large"
-	ProductionVariantInstanceType_ml_r6gd_xlarge   ProductionVariantInstanceType = "ml.r6gd.xlarge"
-	ProductionVariantInstanceType_ml_r6gd_2xlarge  ProductionVariantInstanceType = "ml.r6gd.2xlarge"
-	ProductionVariantInstanceType_ml_r6gd_4xlarge  ProductionVariantInstanceType = "ml.r6gd.4xlarge"
-	ProductionVariantInstanceType_ml_r6gd_8xlarge  ProductionVariantInstanceType = "ml.r6gd.8xlarge"
-	ProductionVariantInstanceType_ml_r6gd_12xlarge ProductionVariantInstanceType = "ml.r6gd.12xlarge"
-	ProductionVariantInstanceType_ml_r6gd_16xlarge ProductionVariantInstanceType = "ml.r6gd.16xlarge"
-	ProductionVariantInstanceType_ml_p4de_24xlarge ProductionVariantInstanceType = "ml.p4de.24xlarge"
+	ProductionVariantInstanceType_ml_t2_medium      ProductionVariantInstanceType = "ml.t2.medium"
+	ProductionVariantInstanceType_ml_t2_large       ProductionVariantInstanceType = "ml.t2.large"
+	ProductionVariantInstanceType_ml_t2_xlarge      ProductionVariantInstanceType = "ml.t2.xlarge"
+	ProductionVariantInstanceType_ml_t2_2xlarge     ProductionVariantInstanceType = "ml.t2.2xlarge"
+	ProductionVariantInstanceType_ml_m4_xlarge      ProductionVariantInstanceType = "ml.m4.xlarge"
+	ProductionVariantInstanceType_ml_m4_2xlarge     ProductionVariantInstanceType = "ml.m4.2xlarge"
+	ProductionVariantInstanceType_ml_m4_4xlarge     ProductionVariantInstanceType = "ml.m4.4xlarge"
+	ProductionVariantInstanceType_ml_m4_10xlarge    ProductionVariantInstanceType = "ml.m4.10xlarge"
+	ProductionVariantInstanceType_ml_m4_16xlarge    ProductionVariantInstanceType = "ml.m4.16xlarge"
+	ProductionVariantInstanceType_ml_m5_large       ProductionVariantInstanceType = "ml.m5.large"
+	ProductionVariantInstanceType_ml_m5_xlarge      ProductionVariantInstanceType = "ml.m5.xlarge"
+	ProductionVariantInstanceType_ml_m5_2xlarge     ProductionVariantInstanceType = "ml.m5.2xlarge"
+	ProductionVariantInstanceType_ml_m5_4xlarge     ProductionVariantInstanceType = "ml.m5.4xlarge"
+	ProductionVariantInstanceType_ml_m5_12xlarge    ProductionVariantInstanceType = "ml.m5.12xlarge"
+	ProductionVariantInstanceType_ml_m5_24xlarge    ProductionVariantInstanceType = "ml.m5.24xlarge"
+	ProductionVariantInstanceType_ml_m5d_large      ProductionVariantInstanceType = "ml.m5d.large"
+	ProductionVariantInstanceType_ml_m5d_xlarge     ProductionVariantInstanceType = "ml.m5d.xlarge"
+	ProductionVariantInstanceType_ml_m5d_2xlarge    ProductionVariantInstanceType = "ml.m5d.2xlarge"
+	ProductionVariantInstanceType_ml_m5d_4xlarge    ProductionVariantInstanceType = "ml.m5d.4xlarge"
+	ProductionVariantInstanceType_ml_m5d_12xlarge   ProductionVariantInstanceType = "ml.m5d.12xlarge"
+	ProductionVariantInstanceType_ml_m5d_24xlarge   ProductionVariantInstanceType = "ml.m5d.24xlarge"
+	ProductionVariantInstanceType_ml_c4_large       ProductionVariantInstanceType = "ml.c4.large"
+	ProductionVariantInstanceType_ml_c4_xlarge      ProductionVariantInstanceType = "ml.c4.xlarge"
+	ProductionVariantInstanceType_ml_c4_2xlarge     ProductionVariantInstanceType = "ml.c4.2xlarge"
+	ProductionVariantInstanceType_ml_c4_4xlarge     ProductionVariantInstanceType = "ml.c4.4xlarge"
+	ProductionVariantInstanceType_ml_c4_8xlarge     ProductionVariantInstanceType = "ml.c4.8xlarge"
+	ProductionVariantInstanceType_ml_p2_xlarge      ProductionVariantInstanceType = "ml.p2.xlarge"
+	ProductionVariantInstanceType_ml_p2_8xlarge     ProductionVariantInstanceType = "ml.p2.8xlarge"
+	ProductionVariantInstanceType_ml_p2_16xlarge    ProductionVariantInstanceType = "ml.p2.16xlarge"
+	ProductionVariantInstanceType_ml_p3_2xlarge     ProductionVariantInstanceType = "ml.p3.2xlarge"
+	ProductionVariantInstanceType_ml_p3_8xlarge     ProductionVariantInstanceType = "ml.p3.8xlarge"
+	ProductionVariantInstanceType_ml_p3_16xlarge    ProductionVariantInstanceType = "ml.p3.16xlarge"
+	ProductionVariantInstanceType_ml_c5_large       ProductionVariantInstanceType = "ml.c5.large"
+	ProductionVariantInstanceType_ml_c5_xlarge      ProductionVariantInstanceType = "ml.c5.xlarge"
+	ProductionVariantInstanceType_ml_c5_2xlarge     ProductionVariantInstanceType = "ml.c5.2xlarge"
+	ProductionVariantInstanceType_ml_c5_4xlarge     ProductionVariantInstanceType = "ml.c5.4xlarge"
+	ProductionVariantInstanceType_ml_c5_9xlarge     ProductionVariantInstanceType = "ml.c5.9xlarge"
+	ProductionVariantInstanceType_ml_c5_18xlarge    ProductionVariantInstanceType = "ml.c5.18xlarge"
+	ProductionVariantInstanceType_ml_c5d_large      ProductionVariantInstanceType = "ml.c5d.large"
+	ProductionVariantInstanceType_ml_c5d_xlarge     ProductionVariantInstanceType = "ml.c5d.xlarge"
+	ProductionVariantInstanceType_ml_c5d_2xlarge    ProductionVariantInstanceType = "ml.c5d.2xlarge"
+	ProductionVariantInstanceType_ml_c5d_4xlarge    ProductionVariantInstanceType = "ml.c5d.4xlarge"
+	ProductionVariantInstanceType_ml_c5d_9xlarge    ProductionVariantInstanceType = "ml.c5d.9xlarge"
+	ProductionVariantInstanceType_ml_c5d_18xlarge   ProductionVariantInstanceType = "ml.c5d.18xlarge"
+	ProductionVariantInstanceType_ml_g4dn_xlarge    ProductionVariantInstanceType = "ml.g4dn.xlarge"
+	ProductionVariantInstanceType_ml_g4dn_2xlarge   ProductionVariantInstanceType = "ml.g4dn.2xlarge"
+	ProductionVariantInstanceType_ml_g4dn_4xlarge   ProductionVariantInstanceType = "ml.g4dn.4xlarge"
+	ProductionVariantInstanceType_ml_g4dn_8xlarge   ProductionVariantInstanceType = "ml.g4dn.8xlarge"
+	ProductionVariantInstanceType_ml_g4dn_12xlarge  ProductionVariantInstanceType = "ml.g4dn.12xlarge"
+	ProductionVariantInstanceType_ml_g4dn_16xlarge  ProductionVariantInstanceType = "ml.g4dn.16xlarge"
+	ProductionVariantInstanceType_ml_r5_large       ProductionVariantInstanceType = "ml.r5.large"
+	ProductionVariantInstanceType_ml_r5_xlarge      ProductionVariantInstanceType = "ml.r5.xlarge"
+	ProductionVariantInstanceType_ml_r5_2xlarge     ProductionVariantInstanceType = "ml.r5.2xlarge"
+	ProductionVariantInstanceType_ml_r5_4xlarge     ProductionVariantInstanceType = "ml.r5.4xlarge"
+	ProductionVariantInstanceType_ml_r5_12xlarge    ProductionVariantInstanceType = "ml.r5.12xlarge"
+	ProductionVariantInstanceType_ml_r5_24xlarge    ProductionVariantInstanceType = "ml.r5.24xlarge"
+	ProductionVariantInstanceType_ml_r5d_large      ProductionVariantInstanceType = "ml.r5d.large"
+	ProductionVariantInstanceType_ml_r5d_xlarge     ProductionVariantInstanceType = "ml.r5d.xlarge"
+	ProductionVariantInstanceType_ml_r5d_2xlarge    ProductionVariantInstanceType = "ml.r5d.2xlarge"
+	ProductionVariantInstanceType_ml_r5d_4xlarge    ProductionVariantInstanceType = "ml.r5d.4xlarge"
+	ProductionVariantInstanceType_ml_r5d_12xlarge   ProductionVariantInstanceType = "ml.r5d.12xlarge"
+	ProductionVariantInstanceType_ml_r5d_24xlarge   ProductionVariantInstanceType = "ml.r5d.24xlarge"
+	ProductionVariantInstanceType_ml_inf1_xlarge    ProductionVariantInstanceType = "ml.inf1.xlarge"
+	ProductionVariantInstanceType_ml_inf1_2xlarge   ProductionVariantInstanceType = "ml.inf1.2xlarge"
+	ProductionVariantInstanceType_ml_inf1_6xlarge   ProductionVariantInstanceType = "ml.inf1.6xlarge"
+	ProductionVariantInstanceType_ml_inf1_24xlarge  ProductionVariantInstanceType = "ml.inf1.24xlarge"
+	ProductionVariantInstanceType_ml_dl1_24xlarge   ProductionVariantInstanceType = "ml.dl1.24xlarge"
+	ProductionVariantInstanceType_ml_c6i_large      ProductionVariantInstanceType = "ml.c6i.large"
+	ProductionVariantInstanceType_ml_c6i_xlarge     ProductionVariantInstanceType = "ml.c6i.xlarge"
+	ProductionVariantInstanceType_ml_c6i_2xlarge    ProductionVariantInstanceType = "ml.c6i.2xlarge"
+	ProductionVariantInstanceType_ml_c6i_4xlarge    ProductionVariantInstanceType = "ml.c6i.4xlarge"
+	ProductionVariantInstanceType_ml_c6i_8xlarge    ProductionVariantInstanceType = "ml.c6i.8xlarge"
+	ProductionVariantInstanceType_ml_c6i_12xlarge   ProductionVariantInstanceType = "ml.c6i.12xlarge"
+	ProductionVariantInstanceType_ml_c6i_16xlarge   ProductionVariantInstanceType = "ml.c6i.16xlarge"
+	ProductionVariantInstanceType_ml_c6i_24xlarge   ProductionVariantInstanceType = "ml.c6i.24xlarge"
+	ProductionVariantInstanceType_ml_c6i_32xlarge   ProductionVariantInstanceType = "ml.c6i.32xlarge"
+	ProductionVariantInstanceType_ml_g5_xlarge      ProductionVariantInstanceType = "ml.g5.xlarge"
+	ProductionVariantInstanceType_ml_g5_2xlarge     ProductionVariantInstanceType = "ml.g5.2xlarge"
+	ProductionVariantInstanceType_ml_g5_4xlarge     ProductionVariantInstanceType = "ml.g5.4xlarge"
+	ProductionVariantInstanceType_ml_g5_8xlarge     ProductionVariantInstanceType = "ml.g5.8xlarge"
+	ProductionVariantInstanceType_ml_g5_12xlarge    ProductionVariantInstanceType = "ml.g5.12xlarge"
+	ProductionVariantInstanceType_ml_g5_16xlarge    ProductionVariantInstanceType = "ml.g5.16xlarge"
+	ProductionVariantInstanceType_ml_g5_24xlarge    ProductionVariantInstanceType = "ml.g5.24xlarge"
+	ProductionVariantInstanceType_ml_g5_48xlarge    ProductionVariantInstanceType = "ml.g5.48xlarge"
+	ProductionVariantInstanceType_ml_p4d_24xlarge   ProductionVariantInstanceType = "ml.p4d.24xlarge"
+	ProductionVariantInstanceType_ml_c7g_large      ProductionVariantInstanceType = "ml.c7g.large"
+	ProductionVariantInstanceType_ml_c7g_xlarge     ProductionVariantInstanceType = "ml.c7g.xlarge"
+	ProductionVariantInstanceType_ml_c7g_2xlarge    ProductionVariantInstanceType = "ml.c7g.2xlarge"
+	ProductionVariantInstanceType_ml_c7g_4xlarge    ProductionVariantInstanceType = "ml.c7g.4xlarge"
+	ProductionVariantInstanceType_ml_c7g_8xlarge    ProductionVariantInstanceType = "ml.c7g.8xlarge"
+	ProductionVariantInstanceType_ml_c7g_12xlarge   ProductionVariantInstanceType = "ml.c7g.12xlarge"
+	ProductionVariantInstanceType_ml_c7g_16xlarge   ProductionVariantInstanceType = "ml.c7g.16xlarge"
+	ProductionVariantInstanceType_ml_m6g_large      ProductionVariantInstanceType = "ml.m6g.large"
+	ProductionVariantInstanceType_ml_m6g_xlarge     ProductionVariantInstanceType = "ml.m6g.xlarge"
+	ProductionVariantInstanceType_ml_m6g_2xlarge    ProductionVariantInstanceType = "ml.m6g.2xlarge"
+	ProductionVariantInstanceType_ml_m6g_4xlarge    ProductionVariantInstanceType = "ml.m6g.4xlarge"
+	ProductionVariantInstanceType_ml_m6g_8xlarge    ProductionVariantInstanceType = "ml.m6g.8xlarge"
+	ProductionVariantInstanceType_ml_m6g_12xlarge   ProductionVariantInstanceType = "ml.m6g.12xlarge"
+	ProductionVariantInstanceType_ml_m6g_16xlarge   ProductionVariantInstanceType = "ml.m6g.16xlarge"
+	ProductionVariantInstanceType_ml_m6gd_large     ProductionVariantInstanceType = "ml.m6gd.large"
+	ProductionVariantInstanceType_ml_m6gd_xlarge    ProductionVariantInstanceType = "ml.m6gd.xlarge"
+	ProductionVariantInstanceType_ml_m6gd_2xlarge   ProductionVariantInstanceType = "ml.m6gd.2xlarge"
+	ProductionVariantInstanceType_ml_m6gd_4xlarge   ProductionVariantInstanceType = "ml.m6gd.4xlarge"
+	ProductionVariantInstanceType_ml_m6gd_8xlarge   ProductionVariantInstanceType = "ml.m6gd.8xlarge"
+	ProductionVariantInstanceType_ml_m6gd_12xlarge  ProductionVariantInstanceType = "ml.m6gd.12xlarge"
+	ProductionVariantInstanceType_ml_m6gd_16xlarge  ProductionVariantInstanceType = "ml.m6gd.16xlarge"
+	ProductionVariantInstanceType_ml_c6g_large      ProductionVariantInstanceType = "ml.c6g.large"
+	ProductionVariantInstanceType_ml_c6g_xlarge     ProductionVariantInstanceType = "ml.c6g.xlarge"
+	ProductionVariantInstanceType_ml_c6g_2xlarge    ProductionVariantInstanceType = "ml.c6g.2xlarge"
+	ProductionVariantInstanceType_ml_c6g_4xlarge    ProductionVariantInstanceType = "ml.c6g.4xlarge"
+	ProductionVariantInstanceType_ml_c6g_8xlarge    ProductionVariantInstanceType = "ml.c6g.8xlarge"
+	ProductionVariantInstanceType_ml_c6g_12xlarge   ProductionVariantInstanceType = "ml.c6g.12xlarge"
+	ProductionVariantInstanceType_ml_c6g_16xlarge   ProductionVariantInstanceType = "ml.c6g.16xlarge"
+	ProductionVariantInstanceType_ml_c6gd_large     ProductionVariantInstanceType = "ml.c6gd.large"
+	ProductionVariantInstanceType_ml_c6gd_xlarge    ProductionVariantInstanceType = "ml.c6gd.xlarge"
+	ProductionVariantInstanceType_ml_c6gd_2xlarge   ProductionVariantInstanceType = "ml.c6gd.2xlarge"
+	ProductionVariantInstanceType_ml_c6gd_4xlarge   ProductionVariantInstanceType = "ml.c6gd.4xlarge"
+	ProductionVariantInstanceType_ml_c6gd_8xlarge   ProductionVariantInstanceType = "ml.c6gd.8xlarge"
+	ProductionVariantInstanceType_ml_c6gd_12xlarge  ProductionVariantInstanceType = "ml.c6gd.12xlarge"
+	ProductionVariantInstanceType_ml_c6gd_16xlarge  ProductionVariantInstanceType = "ml.c6gd.16xlarge"
+	ProductionVariantInstanceType_ml_c6gn_large     ProductionVariantInstanceType = "ml.c6gn.large"
+	ProductionVariantInstanceType_ml_c6gn_xlarge    ProductionVariantInstanceType = "ml.c6gn.xlarge"
+	ProductionVariantInstanceType_ml_c6gn_2xlarge   ProductionVariantInstanceType = "ml.c6gn.2xlarge"
+	ProductionVariantInstanceType_ml_c6gn_4xlarge   ProductionVariantInstanceType = "ml.c6gn.4xlarge"
+	ProductionVariantInstanceType_ml_c6gn_8xlarge   ProductionVariantInstanceType = "ml.c6gn.8xlarge"
+	ProductionVariantInstanceType_ml_c6gn_12xlarge  ProductionVariantInstanceType = "ml.c6gn.12xlarge"
+	ProductionVariantInstanceType_ml_c6gn_16xlarge  ProductionVariantInstanceType = "ml.c6gn.16xlarge"
+	ProductionVariantInstanceType_ml_r6g_large      ProductionVariantInstanceType = "ml.r6g.large"
+	ProductionVariantInstanceType_ml_r6g_xlarge     ProductionVariantInstanceType = "ml.r6g.xlarge"
+	ProductionVariantInstanceType_ml_r6g_2xlarge    ProductionVariantInstanceType = "ml.r6g.2xlarge"
+	ProductionVariantInstanceType_ml_r6g_4xlarge    ProductionVariantInstanceType = "ml.r6g.4xlarge"
+	ProductionVariantInstanceType_ml_r6g_8xlarge    ProductionVariantInstanceType = "ml.r6g.8xlarge"
+	ProductionVariantInstanceType_ml_r6g_12xlarge   ProductionVariantInstanceType = "ml.r6g.12xlarge"
+	ProductionVariantInstanceType_ml_r6g_16xlarge   ProductionVariantInstanceType = "ml.r6g.16xlarge"
+	ProductionVariantInstanceType_ml_r6gd_large     ProductionVariantInstanceType = "ml.r6gd.large"
+	ProductionVariantInstanceType_ml_r6gd_xlarge    ProductionVariantInstanceType = "ml.r6gd.xlarge"
+	ProductionVariantInstanceType_ml_r6gd_2xlarge   ProductionVariantInstanceType = "ml.r6gd.2xlarge"
+	ProductionVariantInstanceType_ml_r6gd_4xlarge   ProductionVariantInstanceType = "ml.r6gd.4xlarge"
+	ProductionVariantInstanceType_ml_r6gd_8xlarge   ProductionVariantInstanceType = "ml.r6gd.8xlarge"
+	ProductionVariantInstanceType_ml_r6gd_12xlarge  ProductionVariantInstanceType = "ml.r6gd.12xlarge"
+	ProductionVariantInstanceType_ml_r6gd_16xlarge  ProductionVariantInstanceType = "ml.r6gd.16xlarge"
+	ProductionVariantInstanceType_ml_p4de_24xlarge  ProductionVariantInstanceType = "ml.p4de.24xlarge"
+	ProductionVariantInstanceType_ml_trn1_2xlarge   ProductionVariantInstanceType = "ml.trn1.2xlarge"
+	ProductionVariantInstanceType_ml_trn1_32xlarge  ProductionVariantInstanceType = "ml.trn1.32xlarge"
+	ProductionVariantInstanceType_ml_trn1n_32xlarge ProductionVariantInstanceType = "ml.trn1n.32xlarge"
+	ProductionVariantInstanceType_ml_inf2_xlarge    ProductionVariantInstanceType = "ml.inf2.xlarge"
+	ProductionVariantInstanceType_ml_inf2_8xlarge   ProductionVariantInstanceType = "ml.inf2.8xlarge"
+	ProductionVariantInstanceType_ml_inf2_24xlarge  ProductionVariantInstanceType = "ml.inf2.24xlarge"
+	ProductionVariantInstanceType_ml_inf2_48xlarge  ProductionVariantInstanceType = "ml.inf2.48xlarge"
+	ProductionVariantInstanceType_ml_p5_48xlarge    ProductionVariantInstanceType = "ml.p5.48xlarge"
+	ProductionVariantInstanceType_ml_m7i_large      ProductionVariantInstanceType = "ml.m7i.large"
+	ProductionVariantInstanceType_ml_m7i_xlarge     ProductionVariantInstanceType = "ml.m7i.xlarge"
+	ProductionVariantInstanceType_ml_m7i_2xlarge    ProductionVariantInstanceType = "ml.m7i.2xlarge"
+	ProductionVariantInstanceType_ml_m7i_4xlarge    ProductionVariantInstanceType = "ml.m7i.4xlarge"
+	ProductionVariantInstanceType_ml_m7i_8xlarge    ProductionVariantInstanceType = "ml.m7i.8xlarge"
+	ProductionVariantInstanceType_ml_m7i_12xlarge   ProductionVariantInstanceType = "ml.m7i.12xlarge"
+	ProductionVariantInstanceType_ml_m7i_16xlarge   ProductionVariantInstanceType = "ml.m7i.16xlarge"
+	ProductionVariantInstanceType_ml_m7i_24xlarge   ProductionVariantInstanceType = "ml.m7i.24xlarge"
+	ProductionVariantInstanceType_ml_m7i_48xlarge   ProductionVariantInstanceType = "ml.m7i.48xlarge"
+	ProductionVariantInstanceType_ml_c7i_large      ProductionVariantInstanceType = "ml.c7i.large"
+	ProductionVariantInstanceType_ml_c7i_xlarge     ProductionVariantInstanceType = "ml.c7i.xlarge"
+	ProductionVariantInstanceType_ml_c7i_2xlarge    ProductionVariantInstanceType = "ml.c7i.2xlarge"
+	ProductionVariantInstanceType_ml_c7i_4xlarge    ProductionVariantInstanceType = "ml.c7i.4xlarge"
+	ProductionVariantInstanceType_ml_c7i_8xlarge    ProductionVariantInstanceType = "ml.c7i.8xlarge"
+	ProductionVariantInstanceType_ml_c7i_12xlarge   ProductionVariantInstanceType = "ml.c7i.12xlarge"
+	ProductionVariantInstanceType_ml_c7i_16xlarge   ProductionVariantInstanceType = "ml.c7i.16xlarge"
+	ProductionVariantInstanceType_ml_c7i_24xlarge   ProductionVariantInstanceType = "ml.c7i.24xlarge"
+	ProductionVariantInstanceType_ml_c7i_48xlarge   ProductionVariantInstanceType = "ml.c7i.48xlarge"
+	ProductionVariantInstanceType_ml_r7i_large      ProductionVariantInstanceType = "ml.r7i.large"
+	ProductionVariantInstanceType_ml_r7i_xlarge     ProductionVariantInstanceType = "ml.r7i.xlarge"
+	ProductionVariantInstanceType_ml_r7i_2xlarge    ProductionVariantInstanceType = "ml.r7i.2xlarge"
+	ProductionVariantInstanceType_ml_r7i_4xlarge    ProductionVariantInstanceType = "ml.r7i.4xlarge"
+	ProductionVariantInstanceType_ml_r7i_8xlarge    ProductionVariantInstanceType = "ml.r7i.8xlarge"
+	ProductionVariantInstanceType_ml_r7i_12xlarge   ProductionVariantInstanceType = "ml.r7i.12xlarge"
+	ProductionVariantInstanceType_ml_r7i_16xlarge   ProductionVariantInstanceType = "ml.r7i.16xlarge"
+	ProductionVariantInstanceType_ml_r7i_24xlarge   ProductionVariantInstanceType = "ml.r7i.24xlarge"
+	ProductionVariantInstanceType_ml_r7i_48xlarge   ProductionVariantInstanceType = "ml.r7i.48xlarge"
 )
 
 type ProfilingStatus string
@@ -1813,6 +2092,15 @@ const (
 	RecommendationJobStatus_FAILED      RecommendationJobStatus = "FAILED"
 	RecommendationJobStatus_STOPPING    RecommendationJobStatus = "STOPPING"
 	RecommendationJobStatus_STOPPED     RecommendationJobStatus = "STOPPED"
+	RecommendationJobStatus_DELETING    RecommendationJobStatus = "DELETING"
+	RecommendationJobStatus_DELETED     RecommendationJobStatus = "DELETED"
+)
+
+type RecommendationJobSupportedEndpointType string
+
+const (
+	RecommendationJobSupportedEndpointType_RealTime   RecommendationJobSupportedEndpointType = "RealTime"
+	RecommendationJobSupportedEndpointType_Serverless RecommendationJobSupportedEndpointType = "Serverless"
 )
 
 type RecommendationJobType string
@@ -1820,6 +2108,15 @@ type RecommendationJobType string
 const (
 	RecommendationJobType_Default  RecommendationJobType = "Default"
 	RecommendationJobType_Advanced RecommendationJobType = "Advanced"
+)
+
+type RecommendationStatus string
+
+const (
+	RecommendationStatus_IN_PROGRESS    RecommendationStatus = "IN_PROGRESS"
+	RecommendationStatus_COMPLETED      RecommendationStatus = "COMPLETED"
+	RecommendationStatus_FAILED         RecommendationStatus = "FAILED"
+	RecommendationStatus_NOT_APPLICABLE RecommendationStatus = "NOT_APPLICABLE"
 )
 
 type RecommendationStepType string
@@ -1859,6 +2156,19 @@ const (
 	RepositoryAccessMode_Vpc      RepositoryAccessMode = "Vpc"
 )
 
+type ResourceCatalogSortBy string
+
+const (
+	ResourceCatalogSortBy_CreationTime ResourceCatalogSortBy = "CreationTime"
+)
+
+type ResourceCatalogSortOrder string
+
+const (
+	ResourceCatalogSortOrder_Ascending  ResourceCatalogSortOrder = "Ascending"
+	ResourceCatalogSortOrder_Descending ResourceCatalogSortOrder = "Descending"
+)
+
 type ResourceType string
 
 const (
@@ -1867,16 +2177,18 @@ const (
 	ResourceType_ExperimentTrial          ResourceType = "ExperimentTrial"
 	ResourceType_ExperimentTrialComponent ResourceType = "ExperimentTrialComponent"
 	ResourceType_Endpoint                 ResourceType = "Endpoint"
+	ResourceType_Model                    ResourceType = "Model"
 	ResourceType_ModelPackage             ResourceType = "ModelPackage"
 	ResourceType_ModelPackageGroup        ResourceType = "ModelPackageGroup"
 	ResourceType_Pipeline                 ResourceType = "Pipeline"
 	ResourceType_PipelineExecution        ResourceType = "PipelineExecution"
 	ResourceType_FeatureGroup             ResourceType = "FeatureGroup"
-	ResourceType_Project                  ResourceType = "Project"
 	ResourceType_FeatureMetadata          ResourceType = "FeatureMetadata"
+	ResourceType_Image                    ResourceType = "Image"
+	ResourceType_ImageVersion             ResourceType = "ImageVersion"
+	ResourceType_Project                  ResourceType = "Project"
 	ResourceType_HyperParameterTuningJob  ResourceType = "HyperParameterTuningJob"
 	ResourceType_ModelCard                ResourceType = "ModelCard"
-	ResourceType_Model                    ResourceType = "Model"
 )
 
 type RetentionType string
@@ -1891,6 +2203,13 @@ type RootAccess string
 const (
 	RootAccess_Enabled  RootAccess = "Enabled"
 	RootAccess_Disabled RootAccess = "Disabled"
+)
+
+type RoutingStrategy string
+
+const (
+	RoutingStrategy_LEAST_OUTSTANDING_REQUESTS RoutingStrategy = "LEAST_OUTSTANDING_REQUESTS"
+	RoutingStrategy_RANDOM                     RoutingStrategy = "RANDOM"
 )
 
 type RuleEvaluationStatus string
@@ -1917,6 +2236,13 @@ const (
 	S3DataType_ManifestFile          S3DataType = "ManifestFile"
 	S3DataType_S3Prefix              S3DataType = "S3Prefix"
 	S3DataType_AugmentedManifestFile S3DataType = "AugmentedManifestFile"
+)
+
+type S3ModelDataType string
+
+const (
+	S3ModelDataType_S3Prefix S3ModelDataType = "S3Prefix"
+	S3ModelDataType_S3Object S3ModelDataType = "S3Object"
 )
 
 type SagemakerServicecatalogStatus string
@@ -1961,6 +2287,21 @@ const (
 	SecondaryStatus_MaxWaitTimeExceeded      SecondaryStatus = "MaxWaitTimeExceeded"
 	SecondaryStatus_Updating                 SecondaryStatus = "Updating"
 	SecondaryStatus_Restarting               SecondaryStatus = "Restarting"
+	SecondaryStatus_Pending                  SecondaryStatus = "Pending"
+)
+
+type SharingType string
+
+const (
+	SharingType_Private SharingType = "Private"
+	SharingType_Shared  SharingType = "Shared"
+)
+
+type SkipModelValidation string
+
+const (
+	SkipModelValidation_All  SkipModelValidation = "All"
+	SkipModelValidation_None SkipModelValidation = "None"
 )
 
 type SortActionsBy string
@@ -2099,6 +2440,16 @@ const (
 	StageStatus_STOPPED       StageStatus = "STOPPED"
 )
 
+type Statistic string
+
+const (
+	Statistic_Average     Statistic = "Average"
+	Statistic_Minimum     Statistic = "Minimum"
+	Statistic_Maximum     Statistic = "Maximum"
+	Statistic_SampleCount Statistic = "SampleCount"
+	Statistic_Sum         Statistic = "Sum"
+)
+
 type StepStatus string
 
 const (
@@ -2110,11 +2461,20 @@ const (
 	StepStatus_Succeeded StepStatus = "Succeeded"
 )
 
+type StorageType string
+
+const (
+	StorageType_Standard StorageType = "Standard"
+	StorageType_InMemory StorageType = "InMemory"
+)
+
 type StudioLifecycleConfigAppType string
 
 const (
 	StudioLifecycleConfigAppType_JupyterServer StudioLifecycleConfigAppType = "JupyterServer"
 	StudioLifecycleConfigAppType_KernelGateway StudioLifecycleConfigAppType = "KernelGateway"
+	StudioLifecycleConfigAppType_CodeEditor    StudioLifecycleConfigAppType = "CodeEditor"
+	StudioLifecycleConfigAppType_JupyterLab    StudioLifecycleConfigAppType = "JupyterLab"
 )
 
 type StudioLifecycleConfigSortKey string
@@ -2125,24 +2485,46 @@ const (
 	StudioLifecycleConfigSortKey_Name             StudioLifecycleConfigSortKey = "Name"
 )
 
+type StudioWebPortal string
+
+const (
+	StudioWebPortal_ENABLED  StudioWebPortal = "ENABLED"
+	StudioWebPortal_DISABLED StudioWebPortal = "DISABLED"
+)
+
+type TTLDurationUnit string
+
+const (
+	TTLDurationUnit_Seconds TTLDurationUnit = "Seconds"
+	TTLDurationUnit_Minutes TTLDurationUnit = "Minutes"
+	TTLDurationUnit_Hours   TTLDurationUnit = "Hours"
+	TTLDurationUnit_Days    TTLDurationUnit = "Days"
+	TTLDurationUnit_Weeks   TTLDurationUnit = "Weeks"
+)
+
 type TargetDevice string
 
 const (
 	TargetDevice_lambda         TargetDevice = "lambda"
 	TargetDevice_ml_m4          TargetDevice = "ml_m4"
 	TargetDevice_ml_m5          TargetDevice = "ml_m5"
+	TargetDevice_ml_m6g         TargetDevice = "ml_m6g"
 	TargetDevice_ml_c4          TargetDevice = "ml_c4"
 	TargetDevice_ml_c5          TargetDevice = "ml_c5"
+	TargetDevice_ml_c6g         TargetDevice = "ml_c6g"
 	TargetDevice_ml_p2          TargetDevice = "ml_p2"
 	TargetDevice_ml_p3          TargetDevice = "ml_p3"
 	TargetDevice_ml_g4dn        TargetDevice = "ml_g4dn"
 	TargetDevice_ml_inf1        TargetDevice = "ml_inf1"
+	TargetDevice_ml_inf2        TargetDevice = "ml_inf2"
+	TargetDevice_ml_trn1        TargetDevice = "ml_trn1"
 	TargetDevice_ml_eia2        TargetDevice = "ml_eia2"
 	TargetDevice_jetson_tx1     TargetDevice = "jetson_tx1"
 	TargetDevice_jetson_tx2     TargetDevice = "jetson_tx2"
 	TargetDevice_jetson_nano    TargetDevice = "jetson_nano"
 	TargetDevice_jetson_xavier  TargetDevice = "jetson_xavier"
 	TargetDevice_rasp3b         TargetDevice = "rasp3b"
+	TargetDevice_rasp4b         TargetDevice = "rasp4b"
 	TargetDevice_imx8qm         TargetDevice = "imx8qm"
 	TargetDevice_deeplens       TargetDevice = "deeplens"
 	TargetDevice_rk3399         TargetDevice = "rk3399"
@@ -2188,6 +2570,13 @@ const (
 	TargetPlatformOs_LINUX   TargetPlatformOs = "LINUX"
 )
 
+type ThroughputMode string
+
+const (
+	ThroughputMode_OnDemand    ThroughputMode = "OnDemand"
+	ThroughputMode_Provisioned ThroughputMode = "Provisioned"
+)
+
 type TrafficRoutingConfigType string
 
 const (
@@ -2200,6 +2589,7 @@ type TrafficType string
 
 const (
 	TrafficType_PHASES TrafficType = "PHASES"
+	TrafficType_STAIRS TrafficType = "STAIRS"
 )
 
 type TrainingInputMode string
@@ -2213,55 +2603,75 @@ const (
 type TrainingInstanceType string
 
 const (
-	TrainingInstanceType_ml_m4_xlarge     TrainingInstanceType = "ml.m4.xlarge"
-	TrainingInstanceType_ml_m4_2xlarge    TrainingInstanceType = "ml.m4.2xlarge"
-	TrainingInstanceType_ml_m4_4xlarge    TrainingInstanceType = "ml.m4.4xlarge"
-	TrainingInstanceType_ml_m4_10xlarge   TrainingInstanceType = "ml.m4.10xlarge"
-	TrainingInstanceType_ml_m4_16xlarge   TrainingInstanceType = "ml.m4.16xlarge"
-	TrainingInstanceType_ml_g4dn_xlarge   TrainingInstanceType = "ml.g4dn.xlarge"
-	TrainingInstanceType_ml_g4dn_2xlarge  TrainingInstanceType = "ml.g4dn.2xlarge"
-	TrainingInstanceType_ml_g4dn_4xlarge  TrainingInstanceType = "ml.g4dn.4xlarge"
-	TrainingInstanceType_ml_g4dn_8xlarge  TrainingInstanceType = "ml.g4dn.8xlarge"
-	TrainingInstanceType_ml_g4dn_12xlarge TrainingInstanceType = "ml.g4dn.12xlarge"
-	TrainingInstanceType_ml_g4dn_16xlarge TrainingInstanceType = "ml.g4dn.16xlarge"
-	TrainingInstanceType_ml_m5_large      TrainingInstanceType = "ml.m5.large"
-	TrainingInstanceType_ml_m5_xlarge     TrainingInstanceType = "ml.m5.xlarge"
-	TrainingInstanceType_ml_m5_2xlarge    TrainingInstanceType = "ml.m5.2xlarge"
-	TrainingInstanceType_ml_m5_4xlarge    TrainingInstanceType = "ml.m5.4xlarge"
-	TrainingInstanceType_ml_m5_12xlarge   TrainingInstanceType = "ml.m5.12xlarge"
-	TrainingInstanceType_ml_m5_24xlarge   TrainingInstanceType = "ml.m5.24xlarge"
-	TrainingInstanceType_ml_c4_xlarge     TrainingInstanceType = "ml.c4.xlarge"
-	TrainingInstanceType_ml_c4_2xlarge    TrainingInstanceType = "ml.c4.2xlarge"
-	TrainingInstanceType_ml_c4_4xlarge    TrainingInstanceType = "ml.c4.4xlarge"
-	TrainingInstanceType_ml_c4_8xlarge    TrainingInstanceType = "ml.c4.8xlarge"
-	TrainingInstanceType_ml_p2_xlarge     TrainingInstanceType = "ml.p2.xlarge"
-	TrainingInstanceType_ml_p2_8xlarge    TrainingInstanceType = "ml.p2.8xlarge"
-	TrainingInstanceType_ml_p2_16xlarge   TrainingInstanceType = "ml.p2.16xlarge"
-	TrainingInstanceType_ml_p3_2xlarge    TrainingInstanceType = "ml.p3.2xlarge"
-	TrainingInstanceType_ml_p3_8xlarge    TrainingInstanceType = "ml.p3.8xlarge"
-	TrainingInstanceType_ml_p3_16xlarge   TrainingInstanceType = "ml.p3.16xlarge"
-	TrainingInstanceType_ml_p3dn_24xlarge TrainingInstanceType = "ml.p3dn.24xlarge"
-	TrainingInstanceType_ml_p4d_24xlarge  TrainingInstanceType = "ml.p4d.24xlarge"
-	TrainingInstanceType_ml_c5_xlarge     TrainingInstanceType = "ml.c5.xlarge"
-	TrainingInstanceType_ml_c5_2xlarge    TrainingInstanceType = "ml.c5.2xlarge"
-	TrainingInstanceType_ml_c5_4xlarge    TrainingInstanceType = "ml.c5.4xlarge"
-	TrainingInstanceType_ml_c5_9xlarge    TrainingInstanceType = "ml.c5.9xlarge"
-	TrainingInstanceType_ml_c5_18xlarge   TrainingInstanceType = "ml.c5.18xlarge"
-	TrainingInstanceType_ml_c5n_xlarge    TrainingInstanceType = "ml.c5n.xlarge"
-	TrainingInstanceType_ml_c5n_2xlarge   TrainingInstanceType = "ml.c5n.2xlarge"
-	TrainingInstanceType_ml_c5n_4xlarge   TrainingInstanceType = "ml.c5n.4xlarge"
-	TrainingInstanceType_ml_c5n_9xlarge   TrainingInstanceType = "ml.c5n.9xlarge"
-	TrainingInstanceType_ml_c5n_18xlarge  TrainingInstanceType = "ml.c5n.18xlarge"
-	TrainingInstanceType_ml_g5_xlarge     TrainingInstanceType = "ml.g5.xlarge"
-	TrainingInstanceType_ml_g5_2xlarge    TrainingInstanceType = "ml.g5.2xlarge"
-	TrainingInstanceType_ml_g5_4xlarge    TrainingInstanceType = "ml.g5.4xlarge"
-	TrainingInstanceType_ml_g5_8xlarge    TrainingInstanceType = "ml.g5.8xlarge"
-	TrainingInstanceType_ml_g5_16xlarge   TrainingInstanceType = "ml.g5.16xlarge"
-	TrainingInstanceType_ml_g5_12xlarge   TrainingInstanceType = "ml.g5.12xlarge"
-	TrainingInstanceType_ml_g5_24xlarge   TrainingInstanceType = "ml.g5.24xlarge"
-	TrainingInstanceType_ml_g5_48xlarge   TrainingInstanceType = "ml.g5.48xlarge"
-	TrainingInstanceType_ml_trn1_2xlarge  TrainingInstanceType = "ml.trn1.2xlarge"
-	TrainingInstanceType_ml_trn1_32xlarge TrainingInstanceType = "ml.trn1.32xlarge"
+	TrainingInstanceType_ml_m4_xlarge      TrainingInstanceType = "ml.m4.xlarge"
+	TrainingInstanceType_ml_m4_2xlarge     TrainingInstanceType = "ml.m4.2xlarge"
+	TrainingInstanceType_ml_m4_4xlarge     TrainingInstanceType = "ml.m4.4xlarge"
+	TrainingInstanceType_ml_m4_10xlarge    TrainingInstanceType = "ml.m4.10xlarge"
+	TrainingInstanceType_ml_m4_16xlarge    TrainingInstanceType = "ml.m4.16xlarge"
+	TrainingInstanceType_ml_g4dn_xlarge    TrainingInstanceType = "ml.g4dn.xlarge"
+	TrainingInstanceType_ml_g4dn_2xlarge   TrainingInstanceType = "ml.g4dn.2xlarge"
+	TrainingInstanceType_ml_g4dn_4xlarge   TrainingInstanceType = "ml.g4dn.4xlarge"
+	TrainingInstanceType_ml_g4dn_8xlarge   TrainingInstanceType = "ml.g4dn.8xlarge"
+	TrainingInstanceType_ml_g4dn_12xlarge  TrainingInstanceType = "ml.g4dn.12xlarge"
+	TrainingInstanceType_ml_g4dn_16xlarge  TrainingInstanceType = "ml.g4dn.16xlarge"
+	TrainingInstanceType_ml_m5_large       TrainingInstanceType = "ml.m5.large"
+	TrainingInstanceType_ml_m5_xlarge      TrainingInstanceType = "ml.m5.xlarge"
+	TrainingInstanceType_ml_m5_2xlarge     TrainingInstanceType = "ml.m5.2xlarge"
+	TrainingInstanceType_ml_m5_4xlarge     TrainingInstanceType = "ml.m5.4xlarge"
+	TrainingInstanceType_ml_m5_12xlarge    TrainingInstanceType = "ml.m5.12xlarge"
+	TrainingInstanceType_ml_m5_24xlarge    TrainingInstanceType = "ml.m5.24xlarge"
+	TrainingInstanceType_ml_c4_xlarge      TrainingInstanceType = "ml.c4.xlarge"
+	TrainingInstanceType_ml_c4_2xlarge     TrainingInstanceType = "ml.c4.2xlarge"
+	TrainingInstanceType_ml_c4_4xlarge     TrainingInstanceType = "ml.c4.4xlarge"
+	TrainingInstanceType_ml_c4_8xlarge     TrainingInstanceType = "ml.c4.8xlarge"
+	TrainingInstanceType_ml_p2_xlarge      TrainingInstanceType = "ml.p2.xlarge"
+	TrainingInstanceType_ml_p2_8xlarge     TrainingInstanceType = "ml.p2.8xlarge"
+	TrainingInstanceType_ml_p2_16xlarge    TrainingInstanceType = "ml.p2.16xlarge"
+	TrainingInstanceType_ml_p3_2xlarge     TrainingInstanceType = "ml.p3.2xlarge"
+	TrainingInstanceType_ml_p3_8xlarge     TrainingInstanceType = "ml.p3.8xlarge"
+	TrainingInstanceType_ml_p3_16xlarge    TrainingInstanceType = "ml.p3.16xlarge"
+	TrainingInstanceType_ml_p3dn_24xlarge  TrainingInstanceType = "ml.p3dn.24xlarge"
+	TrainingInstanceType_ml_p4d_24xlarge   TrainingInstanceType = "ml.p4d.24xlarge"
+	TrainingInstanceType_ml_p4de_24xlarge  TrainingInstanceType = "ml.p4de.24xlarge"
+	TrainingInstanceType_ml_p5_48xlarge    TrainingInstanceType = "ml.p5.48xlarge"
+	TrainingInstanceType_ml_c5_xlarge      TrainingInstanceType = "ml.c5.xlarge"
+	TrainingInstanceType_ml_c5_2xlarge     TrainingInstanceType = "ml.c5.2xlarge"
+	TrainingInstanceType_ml_c5_4xlarge     TrainingInstanceType = "ml.c5.4xlarge"
+	TrainingInstanceType_ml_c5_9xlarge     TrainingInstanceType = "ml.c5.9xlarge"
+	TrainingInstanceType_ml_c5_18xlarge    TrainingInstanceType = "ml.c5.18xlarge"
+	TrainingInstanceType_ml_c5n_xlarge     TrainingInstanceType = "ml.c5n.xlarge"
+	TrainingInstanceType_ml_c5n_2xlarge    TrainingInstanceType = "ml.c5n.2xlarge"
+	TrainingInstanceType_ml_c5n_4xlarge    TrainingInstanceType = "ml.c5n.4xlarge"
+	TrainingInstanceType_ml_c5n_9xlarge    TrainingInstanceType = "ml.c5n.9xlarge"
+	TrainingInstanceType_ml_c5n_18xlarge   TrainingInstanceType = "ml.c5n.18xlarge"
+	TrainingInstanceType_ml_g5_xlarge      TrainingInstanceType = "ml.g5.xlarge"
+	TrainingInstanceType_ml_g5_2xlarge     TrainingInstanceType = "ml.g5.2xlarge"
+	TrainingInstanceType_ml_g5_4xlarge     TrainingInstanceType = "ml.g5.4xlarge"
+	TrainingInstanceType_ml_g5_8xlarge     TrainingInstanceType = "ml.g5.8xlarge"
+	TrainingInstanceType_ml_g5_16xlarge    TrainingInstanceType = "ml.g5.16xlarge"
+	TrainingInstanceType_ml_g5_12xlarge    TrainingInstanceType = "ml.g5.12xlarge"
+	TrainingInstanceType_ml_g5_24xlarge    TrainingInstanceType = "ml.g5.24xlarge"
+	TrainingInstanceType_ml_g5_48xlarge    TrainingInstanceType = "ml.g5.48xlarge"
+	TrainingInstanceType_ml_trn1_2xlarge   TrainingInstanceType = "ml.trn1.2xlarge"
+	TrainingInstanceType_ml_trn1_32xlarge  TrainingInstanceType = "ml.trn1.32xlarge"
+	TrainingInstanceType_ml_trn1n_32xlarge TrainingInstanceType = "ml.trn1n.32xlarge"
+	TrainingInstanceType_ml_m6i_large      TrainingInstanceType = "ml.m6i.large"
+	TrainingInstanceType_ml_m6i_xlarge     TrainingInstanceType = "ml.m6i.xlarge"
+	TrainingInstanceType_ml_m6i_2xlarge    TrainingInstanceType = "ml.m6i.2xlarge"
+	TrainingInstanceType_ml_m6i_4xlarge    TrainingInstanceType = "ml.m6i.4xlarge"
+	TrainingInstanceType_ml_m6i_8xlarge    TrainingInstanceType = "ml.m6i.8xlarge"
+	TrainingInstanceType_ml_m6i_12xlarge   TrainingInstanceType = "ml.m6i.12xlarge"
+	TrainingInstanceType_ml_m6i_16xlarge   TrainingInstanceType = "ml.m6i.16xlarge"
+	TrainingInstanceType_ml_m6i_24xlarge   TrainingInstanceType = "ml.m6i.24xlarge"
+	TrainingInstanceType_ml_m6i_32xlarge   TrainingInstanceType = "ml.m6i.32xlarge"
+	TrainingInstanceType_ml_c6i_xlarge     TrainingInstanceType = "ml.c6i.xlarge"
+	TrainingInstanceType_ml_c6i_2xlarge    TrainingInstanceType = "ml.c6i.2xlarge"
+	TrainingInstanceType_ml_c6i_8xlarge    TrainingInstanceType = "ml.c6i.8xlarge"
+	TrainingInstanceType_ml_c6i_4xlarge    TrainingInstanceType = "ml.c6i.4xlarge"
+	TrainingInstanceType_ml_c6i_12xlarge   TrainingInstanceType = "ml.c6i.12xlarge"
+	TrainingInstanceType_ml_c6i_16xlarge   TrainingInstanceType = "ml.c6i.16xlarge"
+	TrainingInstanceType_ml_c6i_24xlarge   TrainingInstanceType = "ml.c6i.24xlarge"
+	TrainingInstanceType_ml_c6i_32xlarge   TrainingInstanceType = "ml.c6i.32xlarge"
 )
 
 type TrainingJobEarlyStoppingType string

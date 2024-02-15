@@ -70,9 +70,12 @@ spec:
                     items:
                       description: |-
                         Specifies a metric that the training algorithm writes to stderr or stdout.
-                        SageMakerhyperparameter tuning captures all defined metrics. You specify
-                        one metric that a hyperparameter tuning job uses as its objective metric
-                        to choose the best training job.
+                        You can view these logs to understand how your training job performs and
+                        check for any errors encountered during training. SageMaker hyperparameter
+                        tuning captures all defined metrics. Specify one of the defined metrics to
+                        use as an objective metric using the TuningObjective (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_HyperParameterTrainingJobDefinition.html#sagemaker-Type-HyperParameterTrainingJobDefinition-TuningObjective)
+                        parameter in the HyperParameterTrainingJobDefinition API to evaluate job
+                        performance during hyperparameter tuning.
                       properties:
                         name:
                           type: string
@@ -246,13 +249,13 @@ spec:
                   Specified when you call the following APIs:
 
 
-                    - CreateProcessingJob
+                    - CreateProcessingJob (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateProcessingJob.html)
 
 
-                    - CreateTrainingJob
+                    - CreateTrainingJob (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingJob.html)
 
 
-                    - CreateTransformJob
+                    - CreateTransformJob (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTransformJob.html)
                 properties:
                   experimentName:
                     type: string
@@ -281,6 +284,14 @@ spec:
                   credentials are detected, SageMaker will reject your training job request
                   and return an exception error.
                 type: object
+              infraCheckConfig:
+                description: |-
+                  Contains information about the infrastructure health check configuration
+                  for the training job.
+                properties:
+                  enableInfraCheck:
+                    type: boolean
+                type: object
               inputDataConfig:
                 description: |-
                   An array of Channel objects. Each channel is a named input source. InputDataConfig
@@ -300,6 +311,10 @@ spec:
                   container, or makes it available as input streams. For example, if you specify
                   an EFS location, input data files are available as input streams. They do
                   not need to be downloaded.
+
+
+                  Your input must be in the same Amazon Web Services region as your training
+                  job.
                 items:
                   description: A channel is a named input source that training algorithms
                     can consume.
@@ -326,7 +341,12 @@ spec:
                               type: string
                           type: object
                         s3DataSource:
-                          description: Describes the S3 data source.
+                          description: |-
+                            Describes the S3 data source.
+
+
+                            Your input bucket must be in the same Amazon Web Services region as your
+                            training job.
                           properties:
                             attributeNames:
                               items:
@@ -423,6 +443,8 @@ spec:
                   Specifies the path to the S3 location where you want to store model artifacts.
                   SageMaker creates subfolders for the artifacts.
                 properties:
+                  compressionType:
+                    type: string
                   kmsKeyID:
                     type: string
                   s3OutputPath:
@@ -469,6 +491,15 @@ spec:
                       type: integer
                   type: object
                 type: array
+              remoteDebugConfig:
+                description: |-
+                  Configuration for remote debugging. To learn more about the remote debugging
+                  functionality of SageMaker, see Access a training container through Amazon
+                  Web Services Systems Manager (SSM) for remote debugging (https://docs.aws.amazon.com/sagemaker/latest/dg/train-remote-debugging.html).
+                properties:
+                  enableRemoteDebug:
+                    type: boolean
+                type: object
               resourceConfig:
                 description: |-
                   The resources, including the ML compute instances and ML storage volumes,
@@ -503,6 +534,9 @@ spec:
                   instanceType:
                     type: string
                   keepAlivePeriodInSeconds:
+                    description: |-
+                      Optional. Customer requested period in seconds for which the Training cluster
+                      is kept alive after the job is finished.
                     format: int64
                     type: integer
                   volumeKMSKeyID:
@@ -547,6 +581,10 @@ spec:
                   job termination for 120 seconds. Algorithms can use this 120-second window
                   to save the model artifacts, so the results of training are not lost.
                 properties:
+                  maxPendingTimeInSeconds:
+                    description: Maximum job scheduler pending time in seconds.
+                    format: int64
+                    type: integer
                   maxRuntimeInSeconds:
                     format: int64
                     type: integer
@@ -569,7 +607,7 @@ spec:
                     You can add tags to notebook instances, training jobs, hyperparameter tuning
                     jobs, batch transform jobs, models, labeling jobs, work teams, endpoint configurations,
                     and endpoints. For more information on adding tags to SageMaker resources,
-                    see AddTags.
+                    see AddTags (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_AddTags.html).
 
 
                     For more information on adding metadata to your Amazon Web Services resources
@@ -601,10 +639,11 @@ spec:
                 type: string
               vpcConfig:
                 description: |-
-                  A VpcConfig object that specifies the VPC that you want your training job
-                  to connect to. Control access to and from your training container by configuring
-                  the VPC. For more information, see Protect Training Jobs by Using an Amazon
-                  Virtual Private Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/train-vpc.html).
+                  A VpcConfig (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_VpcConfig.html)
+                  object that specifies the VPC that you want your training job to connect
+                  to. Control access to and from your training container by configuring the
+                  VPC. For more information, see Protect Training Jobs by Using an Amazon Virtual
+                  Private Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/train-vpc.html).
                 properties:
                   securityGroupIDs:
                     items:
@@ -759,7 +798,7 @@ spec:
                 description: |-
                   Provides detailed information about the state of the training job. For detailed
                   information on the secondary status of the training job, see StatusMessage
-                  under SecondaryStatusTransition.
+                  under SecondaryStatusTransition (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_SecondaryStatusTransition.html).
 
 
                   SageMaker provides primary statuses and secondary statuses that apply to
@@ -867,6 +906,10 @@ spec:
                   job.
                 properties:
                   resourceRetainedBillableTimeInSeconds:
+                    description: |-
+                      Optional. Indicates how many seconds the resource stayed in ResourceRetained
+                      state. Populated only after resource reaches ResourceReused or ResourceReleased
+                      state.
                     format: int64
                     type: integer
                   reusedByJob:

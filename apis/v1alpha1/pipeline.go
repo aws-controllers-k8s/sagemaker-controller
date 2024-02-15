@@ -28,7 +28,8 @@ type PipelineSpec struct {
 	// This is the configuration that controls the parallelism of the pipeline.
 	// If specified, it applies to all runs of this pipeline by default.
 	ParallelismConfiguration *ParallelismConfiguration `json:"parallelismConfiguration,omitempty"`
-	// The JSON pipeline definition of the pipeline.
+	// The JSON pipeline definition (https://aws-sagemaker-mlops.github.io/sagemaker-model-building-pipeline-definition-JSON-schema/)
+	// of the pipeline.
 	PipelineDefinition *string `json:"pipelineDefinition,omitempty"`
 	// A description of the pipeline.
 	PipelineDescription *string `json:"pipelineDescription,omitempty"`

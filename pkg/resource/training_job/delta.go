@@ -193,6 +193,17 @@ func newResourceDelta(
 			delta.Add("Spec.HyperParameters", a.ko.Spec.HyperParameters, b.ko.Spec.HyperParameters)
 		}
 	}
+	if ackcompare.HasNilDifference(a.ko.Spec.InfraCheckConfig, b.ko.Spec.InfraCheckConfig) {
+		delta.Add("Spec.InfraCheckConfig", a.ko.Spec.InfraCheckConfig, b.ko.Spec.InfraCheckConfig)
+	} else if a.ko.Spec.InfraCheckConfig != nil && b.ko.Spec.InfraCheckConfig != nil {
+		if ackcompare.HasNilDifference(a.ko.Spec.InfraCheckConfig.EnableInfraCheck, b.ko.Spec.InfraCheckConfig.EnableInfraCheck) {
+			delta.Add("Spec.InfraCheckConfig.EnableInfraCheck", a.ko.Spec.InfraCheckConfig.EnableInfraCheck, b.ko.Spec.InfraCheckConfig.EnableInfraCheck)
+		} else if a.ko.Spec.InfraCheckConfig.EnableInfraCheck != nil && b.ko.Spec.InfraCheckConfig.EnableInfraCheck != nil {
+			if *a.ko.Spec.InfraCheckConfig.EnableInfraCheck != *b.ko.Spec.InfraCheckConfig.EnableInfraCheck {
+				delta.Add("Spec.InfraCheckConfig.EnableInfraCheck", a.ko.Spec.InfraCheckConfig.EnableInfraCheck, b.ko.Spec.InfraCheckConfig.EnableInfraCheck)
+			}
+		}
+	}
 	if len(a.ko.Spec.InputDataConfig) != len(b.ko.Spec.InputDataConfig) {
 		delta.Add("Spec.InputDataConfig", a.ko.Spec.InputDataConfig, b.ko.Spec.InputDataConfig)
 	} else if len(a.ko.Spec.InputDataConfig) > 0 {
@@ -203,6 +214,13 @@ func newResourceDelta(
 	if ackcompare.HasNilDifference(a.ko.Spec.OutputDataConfig, b.ko.Spec.OutputDataConfig) {
 		delta.Add("Spec.OutputDataConfig", a.ko.Spec.OutputDataConfig, b.ko.Spec.OutputDataConfig)
 	} else if a.ko.Spec.OutputDataConfig != nil && b.ko.Spec.OutputDataConfig != nil {
+		if ackcompare.HasNilDifference(a.ko.Spec.OutputDataConfig.CompressionType, b.ko.Spec.OutputDataConfig.CompressionType) {
+			delta.Add("Spec.OutputDataConfig.CompressionType", a.ko.Spec.OutputDataConfig.CompressionType, b.ko.Spec.OutputDataConfig.CompressionType)
+		} else if a.ko.Spec.OutputDataConfig.CompressionType != nil && b.ko.Spec.OutputDataConfig.CompressionType != nil {
+			if *a.ko.Spec.OutputDataConfig.CompressionType != *b.ko.Spec.OutputDataConfig.CompressionType {
+				delta.Add("Spec.OutputDataConfig.CompressionType", a.ko.Spec.OutputDataConfig.CompressionType, b.ko.Spec.OutputDataConfig.CompressionType)
+			}
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.OutputDataConfig.KMSKeyID, b.ko.Spec.OutputDataConfig.KMSKeyID) {
 			delta.Add("Spec.OutputDataConfig.KMSKeyID", a.ko.Spec.OutputDataConfig.KMSKeyID, b.ko.Spec.OutputDataConfig.KMSKeyID)
 		} else if a.ko.Spec.OutputDataConfig.KMSKeyID != nil && b.ko.Spec.OutputDataConfig.KMSKeyID != nil {
@@ -248,6 +266,17 @@ func newResourceDelta(
 	} else if len(a.ko.Spec.ProfilerRuleConfigurations) > 0 {
 		if !reflect.DeepEqual(a.ko.Spec.ProfilerRuleConfigurations, b.ko.Spec.ProfilerRuleConfigurations) {
 			delta.Add("Spec.ProfilerRuleConfigurations", a.ko.Spec.ProfilerRuleConfigurations, b.ko.Spec.ProfilerRuleConfigurations)
+		}
+	}
+	if ackcompare.HasNilDifference(a.ko.Spec.RemoteDebugConfig, b.ko.Spec.RemoteDebugConfig) {
+		delta.Add("Spec.RemoteDebugConfig", a.ko.Spec.RemoteDebugConfig, b.ko.Spec.RemoteDebugConfig)
+	} else if a.ko.Spec.RemoteDebugConfig != nil && b.ko.Spec.RemoteDebugConfig != nil {
+		if ackcompare.HasNilDifference(a.ko.Spec.RemoteDebugConfig.EnableRemoteDebug, b.ko.Spec.RemoteDebugConfig.EnableRemoteDebug) {
+			delta.Add("Spec.RemoteDebugConfig.EnableRemoteDebug", a.ko.Spec.RemoteDebugConfig.EnableRemoteDebug, b.ko.Spec.RemoteDebugConfig.EnableRemoteDebug)
+		} else if a.ko.Spec.RemoteDebugConfig.EnableRemoteDebug != nil && b.ko.Spec.RemoteDebugConfig.EnableRemoteDebug != nil {
+			if *a.ko.Spec.RemoteDebugConfig.EnableRemoteDebug != *b.ko.Spec.RemoteDebugConfig.EnableRemoteDebug {
+				delta.Add("Spec.RemoteDebugConfig.EnableRemoteDebug", a.ko.Spec.RemoteDebugConfig.EnableRemoteDebug, b.ko.Spec.RemoteDebugConfig.EnableRemoteDebug)
+			}
 		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.ResourceConfig, b.ko.Spec.ResourceConfig) {
@@ -317,6 +346,13 @@ func newResourceDelta(
 	if ackcompare.HasNilDifference(a.ko.Spec.StoppingCondition, b.ko.Spec.StoppingCondition) {
 		delta.Add("Spec.StoppingCondition", a.ko.Spec.StoppingCondition, b.ko.Spec.StoppingCondition)
 	} else if a.ko.Spec.StoppingCondition != nil && b.ko.Spec.StoppingCondition != nil {
+		if ackcompare.HasNilDifference(a.ko.Spec.StoppingCondition.MaxPendingTimeInSeconds, b.ko.Spec.StoppingCondition.MaxPendingTimeInSeconds) {
+			delta.Add("Spec.StoppingCondition.MaxPendingTimeInSeconds", a.ko.Spec.StoppingCondition.MaxPendingTimeInSeconds, b.ko.Spec.StoppingCondition.MaxPendingTimeInSeconds)
+		} else if a.ko.Spec.StoppingCondition.MaxPendingTimeInSeconds != nil && b.ko.Spec.StoppingCondition.MaxPendingTimeInSeconds != nil {
+			if *a.ko.Spec.StoppingCondition.MaxPendingTimeInSeconds != *b.ko.Spec.StoppingCondition.MaxPendingTimeInSeconds {
+				delta.Add("Spec.StoppingCondition.MaxPendingTimeInSeconds", a.ko.Spec.StoppingCondition.MaxPendingTimeInSeconds, b.ko.Spec.StoppingCondition.MaxPendingTimeInSeconds)
+			}
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.StoppingCondition.MaxRuntimeInSeconds, b.ko.Spec.StoppingCondition.MaxRuntimeInSeconds) {
 			delta.Add("Spec.StoppingCondition.MaxRuntimeInSeconds", a.ko.Spec.StoppingCondition.MaxRuntimeInSeconds, b.ko.Spec.StoppingCondition.MaxRuntimeInSeconds)
 		} else if a.ko.Spec.StoppingCondition.MaxRuntimeInSeconds != nil && b.ko.Spec.StoppingCondition.MaxRuntimeInSeconds != nil {

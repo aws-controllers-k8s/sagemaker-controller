@@ -107,17 +107,30 @@ func (rm *resourceManager) sdkFind(
 				f0elemf0 := []*svcapitypes.ModelPackageContainerDefinition{}
 				for _, f0elemf0iter := range f0iter.Containers {
 					f0elemf0elem := &svcapitypes.ModelPackageContainerDefinition{}
+					if f0elemf0iter.AdditionalS3DataSource != nil {
+						f0elemf0elemf0 := &svcapitypes.AdditionalS3DataSource{}
+						if f0elemf0iter.AdditionalS3DataSource.CompressionType != nil {
+							f0elemf0elemf0.CompressionType = f0elemf0iter.AdditionalS3DataSource.CompressionType
+						}
+						if f0elemf0iter.AdditionalS3DataSource.S3DataType != nil {
+							f0elemf0elemf0.S3DataType = f0elemf0iter.AdditionalS3DataSource.S3DataType
+						}
+						if f0elemf0iter.AdditionalS3DataSource.S3Uri != nil {
+							f0elemf0elemf0.S3URI = f0elemf0iter.AdditionalS3DataSource.S3Uri
+						}
+						f0elemf0elem.AdditionalS3DataSource = f0elemf0elemf0
+					}
 					if f0elemf0iter.ContainerHostname != nil {
 						f0elemf0elem.ContainerHostname = f0elemf0iter.ContainerHostname
 					}
 					if f0elemf0iter.Environment != nil {
-						f0elemf0elemf1 := map[string]*string{}
-						for f0elemf0elemf1key, f0elemf0elemf1valiter := range f0elemf0iter.Environment {
-							var f0elemf0elemf1val string
-							f0elemf0elemf1val = *f0elemf0elemf1valiter
-							f0elemf0elemf1[f0elemf0elemf1key] = &f0elemf0elemf1val
+						f0elemf0elemf2 := map[string]*string{}
+						for f0elemf0elemf2key, f0elemf0elemf2valiter := range f0elemf0iter.Environment {
+							var f0elemf0elemf2val string
+							f0elemf0elemf2val = *f0elemf0elemf2valiter
+							f0elemf0elemf2[f0elemf0elemf2key] = &f0elemf0elemf2val
 						}
-						f0elemf0elem.Environment = f0elemf0elemf1
+						f0elemf0elem.Environment = f0elemf0elemf2
 					}
 					if f0elemf0iter.Framework != nil {
 						f0elemf0elem.Framework = f0elemf0iter.Framework
@@ -135,11 +148,11 @@ func (rm *resourceManager) sdkFind(
 						f0elemf0elem.ModelDataURL = f0elemf0iter.ModelDataUrl
 					}
 					if f0elemf0iter.ModelInput != nil {
-						f0elemf0elemf7 := &svcapitypes.ModelInput{}
+						f0elemf0elemf8 := &svcapitypes.ModelInput{}
 						if f0elemf0iter.ModelInput.DataInputConfig != nil {
-							f0elemf0elemf7.DataInputConfig = f0elemf0iter.ModelInput.DataInputConfig
+							f0elemf0elemf8.DataInputConfig = f0elemf0iter.ModelInput.DataInputConfig
 						}
-						f0elemf0elem.ModelInput = f0elemf0elemf7
+						f0elemf0elem.ModelInput = f0elemf0elemf8
 					}
 					if f0elemf0iter.NearestModelName != nil {
 						f0elemf0elem.NearestModelName = f0elemf0iter.NearestModelName
@@ -375,17 +388,30 @@ func (rm *resourceManager) sdkFind(
 			f8f0 := []*svcapitypes.ModelPackageContainerDefinition{}
 			for _, f8f0iter := range resp.InferenceSpecification.Containers {
 				f8f0elem := &svcapitypes.ModelPackageContainerDefinition{}
+				if f8f0iter.AdditionalS3DataSource != nil {
+					f8f0elemf0 := &svcapitypes.AdditionalS3DataSource{}
+					if f8f0iter.AdditionalS3DataSource.CompressionType != nil {
+						f8f0elemf0.CompressionType = f8f0iter.AdditionalS3DataSource.CompressionType
+					}
+					if f8f0iter.AdditionalS3DataSource.S3DataType != nil {
+						f8f0elemf0.S3DataType = f8f0iter.AdditionalS3DataSource.S3DataType
+					}
+					if f8f0iter.AdditionalS3DataSource.S3Uri != nil {
+						f8f0elemf0.S3URI = f8f0iter.AdditionalS3DataSource.S3Uri
+					}
+					f8f0elem.AdditionalS3DataSource = f8f0elemf0
+				}
 				if f8f0iter.ContainerHostname != nil {
 					f8f0elem.ContainerHostname = f8f0iter.ContainerHostname
 				}
 				if f8f0iter.Environment != nil {
-					f8f0elemf1 := map[string]*string{}
-					for f8f0elemf1key, f8f0elemf1valiter := range f8f0iter.Environment {
-						var f8f0elemf1val string
-						f8f0elemf1val = *f8f0elemf1valiter
-						f8f0elemf1[f8f0elemf1key] = &f8f0elemf1val
+					f8f0elemf2 := map[string]*string{}
+					for f8f0elemf2key, f8f0elemf2valiter := range f8f0iter.Environment {
+						var f8f0elemf2val string
+						f8f0elemf2val = *f8f0elemf2valiter
+						f8f0elemf2[f8f0elemf2key] = &f8f0elemf2val
 					}
-					f8f0elem.Environment = f8f0elemf1
+					f8f0elem.Environment = f8f0elemf2
 				}
 				if f8f0iter.Framework != nil {
 					f8f0elem.Framework = f8f0iter.Framework
@@ -403,11 +429,11 @@ func (rm *resourceManager) sdkFind(
 					f8f0elem.ModelDataURL = f8f0iter.ModelDataUrl
 				}
 				if f8f0iter.ModelInput != nil {
-					f8f0elemf7 := &svcapitypes.ModelInput{}
+					f8f0elemf8 := &svcapitypes.ModelInput{}
 					if f8f0iter.ModelInput.DataInputConfig != nil {
-						f8f0elemf7.DataInputConfig = f8f0iter.ModelInput.DataInputConfig
+						f8f0elemf8.DataInputConfig = f8f0iter.ModelInput.DataInputConfig
 					}
-					f8f0elem.ModelInput = f8f0elemf7
+					f8f0elem.ModelInput = f8f0elemf8
 				}
 				if f8f0iter.NearestModelName != nil {
 					f8f0elem.NearestModelName = f8f0iter.NearestModelName
@@ -685,23 +711,28 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.SamplePayloadURL = nil
 	}
+	if resp.SkipModelValidation != nil {
+		ko.Spec.SkipModelValidation = resp.SkipModelValidation
+	} else {
+		ko.Spec.SkipModelValidation = nil
+	}
 	if resp.SourceAlgorithmSpecification != nil {
-		f22 := &svcapitypes.SourceAlgorithmSpecification{}
+		f23 := &svcapitypes.SourceAlgorithmSpecification{}
 		if resp.SourceAlgorithmSpecification.SourceAlgorithms != nil {
-			f22f0 := []*svcapitypes.SourceAlgorithm{}
-			for _, f22f0iter := range resp.SourceAlgorithmSpecification.SourceAlgorithms {
-				f22f0elem := &svcapitypes.SourceAlgorithm{}
-				if f22f0iter.AlgorithmName != nil {
-					f22f0elem.AlgorithmName = f22f0iter.AlgorithmName
+			f23f0 := []*svcapitypes.SourceAlgorithm{}
+			for _, f23f0iter := range resp.SourceAlgorithmSpecification.SourceAlgorithms {
+				f23f0elem := &svcapitypes.SourceAlgorithm{}
+				if f23f0iter.AlgorithmName != nil {
+					f23f0elem.AlgorithmName = f23f0iter.AlgorithmName
 				}
-				if f22f0iter.ModelDataUrl != nil {
-					f22f0elem.ModelDataURL = f22f0iter.ModelDataUrl
+				if f23f0iter.ModelDataUrl != nil {
+					f23f0elem.ModelDataURL = f23f0iter.ModelDataUrl
 				}
-				f22f0 = append(f22f0, f22f0elem)
+				f23f0 = append(f23f0, f23f0elem)
 			}
-			f22.SourceAlgorithms = f22f0
+			f23.SourceAlgorithms = f23f0
 		}
-		ko.Spec.SourceAlgorithmSpecification = f22
+		ko.Spec.SourceAlgorithmSpecification = f23
 	} else {
 		ko.Spec.SourceAlgorithmSpecification = nil
 	}
@@ -711,100 +742,100 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.Task = nil
 	}
 	if resp.ValidationSpecification != nil {
-		f24 := &svcapitypes.ModelPackageValidationSpecification{}
+		f25 := &svcapitypes.ModelPackageValidationSpecification{}
 		if resp.ValidationSpecification.ValidationProfiles != nil {
-			f24f0 := []*svcapitypes.ModelPackageValidationProfile{}
-			for _, f24f0iter := range resp.ValidationSpecification.ValidationProfiles {
-				f24f0elem := &svcapitypes.ModelPackageValidationProfile{}
-				if f24f0iter.ProfileName != nil {
-					f24f0elem.ProfileName = f24f0iter.ProfileName
+			f25f0 := []*svcapitypes.ModelPackageValidationProfile{}
+			for _, f25f0iter := range resp.ValidationSpecification.ValidationProfiles {
+				f25f0elem := &svcapitypes.ModelPackageValidationProfile{}
+				if f25f0iter.ProfileName != nil {
+					f25f0elem.ProfileName = f25f0iter.ProfileName
 				}
-				if f24f0iter.TransformJobDefinition != nil {
-					f24f0elemf1 := &svcapitypes.TransformJobDefinition{}
-					if f24f0iter.TransformJobDefinition.BatchStrategy != nil {
-						f24f0elemf1.BatchStrategy = f24f0iter.TransformJobDefinition.BatchStrategy
+				if f25f0iter.TransformJobDefinition != nil {
+					f25f0elemf1 := &svcapitypes.TransformJobDefinition{}
+					if f25f0iter.TransformJobDefinition.BatchStrategy != nil {
+						f25f0elemf1.BatchStrategy = f25f0iter.TransformJobDefinition.BatchStrategy
 					}
-					if f24f0iter.TransformJobDefinition.Environment != nil {
-						f24f0elemf1f1 := map[string]*string{}
-						for f24f0elemf1f1key, f24f0elemf1f1valiter := range f24f0iter.TransformJobDefinition.Environment {
-							var f24f0elemf1f1val string
-							f24f0elemf1f1val = *f24f0elemf1f1valiter
-							f24f0elemf1f1[f24f0elemf1f1key] = &f24f0elemf1f1val
+					if f25f0iter.TransformJobDefinition.Environment != nil {
+						f25f0elemf1f1 := map[string]*string{}
+						for f25f0elemf1f1key, f25f0elemf1f1valiter := range f25f0iter.TransformJobDefinition.Environment {
+							var f25f0elemf1f1val string
+							f25f0elemf1f1val = *f25f0elemf1f1valiter
+							f25f0elemf1f1[f25f0elemf1f1key] = &f25f0elemf1f1val
 						}
-						f24f0elemf1.Environment = f24f0elemf1f1
+						f25f0elemf1.Environment = f25f0elemf1f1
 					}
-					if f24f0iter.TransformJobDefinition.MaxConcurrentTransforms != nil {
-						f24f0elemf1.MaxConcurrentTransforms = f24f0iter.TransformJobDefinition.MaxConcurrentTransforms
+					if f25f0iter.TransformJobDefinition.MaxConcurrentTransforms != nil {
+						f25f0elemf1.MaxConcurrentTransforms = f25f0iter.TransformJobDefinition.MaxConcurrentTransforms
 					}
-					if f24f0iter.TransformJobDefinition.MaxPayloadInMB != nil {
-						f24f0elemf1.MaxPayloadInMB = f24f0iter.TransformJobDefinition.MaxPayloadInMB
+					if f25f0iter.TransformJobDefinition.MaxPayloadInMB != nil {
+						f25f0elemf1.MaxPayloadInMB = f25f0iter.TransformJobDefinition.MaxPayloadInMB
 					}
-					if f24f0iter.TransformJobDefinition.TransformInput != nil {
-						f24f0elemf1f4 := &svcapitypes.TransformInput{}
-						if f24f0iter.TransformJobDefinition.TransformInput.CompressionType != nil {
-							f24f0elemf1f4.CompressionType = f24f0iter.TransformJobDefinition.TransformInput.CompressionType
+					if f25f0iter.TransformJobDefinition.TransformInput != nil {
+						f25f0elemf1f4 := &svcapitypes.TransformInput{}
+						if f25f0iter.TransformJobDefinition.TransformInput.CompressionType != nil {
+							f25f0elemf1f4.CompressionType = f25f0iter.TransformJobDefinition.TransformInput.CompressionType
 						}
-						if f24f0iter.TransformJobDefinition.TransformInput.ContentType != nil {
-							f24f0elemf1f4.ContentType = f24f0iter.TransformJobDefinition.TransformInput.ContentType
+						if f25f0iter.TransformJobDefinition.TransformInput.ContentType != nil {
+							f25f0elemf1f4.ContentType = f25f0iter.TransformJobDefinition.TransformInput.ContentType
 						}
-						if f24f0iter.TransformJobDefinition.TransformInput.DataSource != nil {
-							f24f0elemf1f4f2 := &svcapitypes.TransformDataSource{}
-							if f24f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource != nil {
-								f24f0elemf1f4f2f0 := &svcapitypes.TransformS3DataSource{}
-								if f24f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3DataType != nil {
-									f24f0elemf1f4f2f0.S3DataType = f24f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3DataType
+						if f25f0iter.TransformJobDefinition.TransformInput.DataSource != nil {
+							f25f0elemf1f4f2 := &svcapitypes.TransformDataSource{}
+							if f25f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource != nil {
+								f25f0elemf1f4f2f0 := &svcapitypes.TransformS3DataSource{}
+								if f25f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3DataType != nil {
+									f25f0elemf1f4f2f0.S3DataType = f25f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3DataType
 								}
-								if f24f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3Uri != nil {
-									f24f0elemf1f4f2f0.S3URI = f24f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3Uri
+								if f25f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3Uri != nil {
+									f25f0elemf1f4f2f0.S3URI = f25f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3Uri
 								}
-								f24f0elemf1f4f2.S3DataSource = f24f0elemf1f4f2f0
+								f25f0elemf1f4f2.S3DataSource = f25f0elemf1f4f2f0
 							}
-							f24f0elemf1f4.DataSource = f24f0elemf1f4f2
+							f25f0elemf1f4.DataSource = f25f0elemf1f4f2
 						}
-						if f24f0iter.TransformJobDefinition.TransformInput.SplitType != nil {
-							f24f0elemf1f4.SplitType = f24f0iter.TransformJobDefinition.TransformInput.SplitType
+						if f25f0iter.TransformJobDefinition.TransformInput.SplitType != nil {
+							f25f0elemf1f4.SplitType = f25f0iter.TransformJobDefinition.TransformInput.SplitType
 						}
-						f24f0elemf1.TransformInput = f24f0elemf1f4
+						f25f0elemf1.TransformInput = f25f0elemf1f4
 					}
-					if f24f0iter.TransformJobDefinition.TransformOutput != nil {
-						f24f0elemf1f5 := &svcapitypes.TransformOutput{}
-						if f24f0iter.TransformJobDefinition.TransformOutput.Accept != nil {
-							f24f0elemf1f5.Accept = f24f0iter.TransformJobDefinition.TransformOutput.Accept
+					if f25f0iter.TransformJobDefinition.TransformOutput != nil {
+						f25f0elemf1f5 := &svcapitypes.TransformOutput{}
+						if f25f0iter.TransformJobDefinition.TransformOutput.Accept != nil {
+							f25f0elemf1f5.Accept = f25f0iter.TransformJobDefinition.TransformOutput.Accept
 						}
-						if f24f0iter.TransformJobDefinition.TransformOutput.AssembleWith != nil {
-							f24f0elemf1f5.AssembleWith = f24f0iter.TransformJobDefinition.TransformOutput.AssembleWith
+						if f25f0iter.TransformJobDefinition.TransformOutput.AssembleWith != nil {
+							f25f0elemf1f5.AssembleWith = f25f0iter.TransformJobDefinition.TransformOutput.AssembleWith
 						}
-						if f24f0iter.TransformJobDefinition.TransformOutput.KmsKeyId != nil {
-							f24f0elemf1f5.KMSKeyID = f24f0iter.TransformJobDefinition.TransformOutput.KmsKeyId
+						if f25f0iter.TransformJobDefinition.TransformOutput.KmsKeyId != nil {
+							f25f0elemf1f5.KMSKeyID = f25f0iter.TransformJobDefinition.TransformOutput.KmsKeyId
 						}
-						if f24f0iter.TransformJobDefinition.TransformOutput.S3OutputPath != nil {
-							f24f0elemf1f5.S3OutputPath = f24f0iter.TransformJobDefinition.TransformOutput.S3OutputPath
+						if f25f0iter.TransformJobDefinition.TransformOutput.S3OutputPath != nil {
+							f25f0elemf1f5.S3OutputPath = f25f0iter.TransformJobDefinition.TransformOutput.S3OutputPath
 						}
-						f24f0elemf1.TransformOutput = f24f0elemf1f5
+						f25f0elemf1.TransformOutput = f25f0elemf1f5
 					}
-					if f24f0iter.TransformJobDefinition.TransformResources != nil {
-						f24f0elemf1f6 := &svcapitypes.TransformResources{}
-						if f24f0iter.TransformJobDefinition.TransformResources.InstanceCount != nil {
-							f24f0elemf1f6.InstanceCount = f24f0iter.TransformJobDefinition.TransformResources.InstanceCount
+					if f25f0iter.TransformJobDefinition.TransformResources != nil {
+						f25f0elemf1f6 := &svcapitypes.TransformResources{}
+						if f25f0iter.TransformJobDefinition.TransformResources.InstanceCount != nil {
+							f25f0elemf1f6.InstanceCount = f25f0iter.TransformJobDefinition.TransformResources.InstanceCount
 						}
-						if f24f0iter.TransformJobDefinition.TransformResources.InstanceType != nil {
-							f24f0elemf1f6.InstanceType = f24f0iter.TransformJobDefinition.TransformResources.InstanceType
+						if f25f0iter.TransformJobDefinition.TransformResources.InstanceType != nil {
+							f25f0elemf1f6.InstanceType = f25f0iter.TransformJobDefinition.TransformResources.InstanceType
 						}
-						if f24f0iter.TransformJobDefinition.TransformResources.VolumeKmsKeyId != nil {
-							f24f0elemf1f6.VolumeKMSKeyID = f24f0iter.TransformJobDefinition.TransformResources.VolumeKmsKeyId
+						if f25f0iter.TransformJobDefinition.TransformResources.VolumeKmsKeyId != nil {
+							f25f0elemf1f6.VolumeKMSKeyID = f25f0iter.TransformJobDefinition.TransformResources.VolumeKmsKeyId
 						}
-						f24f0elemf1.TransformResources = f24f0elemf1f6
+						f25f0elemf1.TransformResources = f25f0elemf1f6
 					}
-					f24f0elem.TransformJobDefinition = f24f0elemf1
+					f25f0elem.TransformJobDefinition = f25f0elemf1
 				}
-				f24f0 = append(f24f0, f24f0elem)
+				f25f0 = append(f25f0, f25f0elem)
 			}
-			f24.ValidationProfiles = f24f0
+			f25.ValidationProfiles = f25f0
 		}
 		if resp.ValidationSpecification.ValidationRole != nil {
-			f24.ValidationRole = resp.ValidationSpecification.ValidationRole
+			f25.ValidationRole = resp.ValidationSpecification.ValidationRole
 		}
-		ko.Spec.ValidationSpecification = f24
+		ko.Spec.ValidationSpecification = f25
 	} else {
 		ko.Spec.ValidationSpecification = nil
 	}
@@ -893,17 +924,30 @@ func (rm *resourceManager) newCreateRequestPayload(
 				f0elemf0 := []*svcsdk.ModelPackageContainerDefinition{}
 				for _, f0elemf0iter := range f0iter.Containers {
 					f0elemf0elem := &svcsdk.ModelPackageContainerDefinition{}
+					if f0elemf0iter.AdditionalS3DataSource != nil {
+						f0elemf0elemf0 := &svcsdk.AdditionalS3DataSource{}
+						if f0elemf0iter.AdditionalS3DataSource.CompressionType != nil {
+							f0elemf0elemf0.SetCompressionType(*f0elemf0iter.AdditionalS3DataSource.CompressionType)
+						}
+						if f0elemf0iter.AdditionalS3DataSource.S3DataType != nil {
+							f0elemf0elemf0.SetS3DataType(*f0elemf0iter.AdditionalS3DataSource.S3DataType)
+						}
+						if f0elemf0iter.AdditionalS3DataSource.S3URI != nil {
+							f0elemf0elemf0.SetS3Uri(*f0elemf0iter.AdditionalS3DataSource.S3URI)
+						}
+						f0elemf0elem.SetAdditionalS3DataSource(f0elemf0elemf0)
+					}
 					if f0elemf0iter.ContainerHostname != nil {
 						f0elemf0elem.SetContainerHostname(*f0elemf0iter.ContainerHostname)
 					}
 					if f0elemf0iter.Environment != nil {
-						f0elemf0elemf1 := map[string]*string{}
-						for f0elemf0elemf1key, f0elemf0elemf1valiter := range f0elemf0iter.Environment {
-							var f0elemf0elemf1val string
-							f0elemf0elemf1val = *f0elemf0elemf1valiter
-							f0elemf0elemf1[f0elemf0elemf1key] = &f0elemf0elemf1val
+						f0elemf0elemf2 := map[string]*string{}
+						for f0elemf0elemf2key, f0elemf0elemf2valiter := range f0elemf0iter.Environment {
+							var f0elemf0elemf2val string
+							f0elemf0elemf2val = *f0elemf0elemf2valiter
+							f0elemf0elemf2[f0elemf0elemf2key] = &f0elemf0elemf2val
 						}
-						f0elemf0elem.SetEnvironment(f0elemf0elemf1)
+						f0elemf0elem.SetEnvironment(f0elemf0elemf2)
 					}
 					if f0elemf0iter.Framework != nil {
 						f0elemf0elem.SetFramework(*f0elemf0iter.Framework)
@@ -921,11 +965,11 @@ func (rm *resourceManager) newCreateRequestPayload(
 						f0elemf0elem.SetModelDataUrl(*f0elemf0iter.ModelDataURL)
 					}
 					if f0elemf0iter.ModelInput != nil {
-						f0elemf0elemf7 := &svcsdk.ModelInput_{}
+						f0elemf0elemf8 := &svcsdk.ModelInput_{}
 						if f0elemf0iter.ModelInput.DataInputConfig != nil {
-							f0elemf0elemf7.SetDataInputConfig(*f0elemf0iter.ModelInput.DataInputConfig)
+							f0elemf0elemf8.SetDataInputConfig(*f0elemf0iter.ModelInput.DataInputConfig)
 						}
-						f0elemf0elem.SetModelInput(f0elemf0elemf7)
+						f0elemf0elem.SetModelInput(f0elemf0elemf8)
 					}
 					if f0elemf0iter.NearestModelName != nil {
 						f0elemf0elem.SetNearestModelName(*f0elemf0iter.NearestModelName)
@@ -1144,17 +1188,30 @@ func (rm *resourceManager) newCreateRequestPayload(
 			f6f0 := []*svcsdk.ModelPackageContainerDefinition{}
 			for _, f6f0iter := range r.ko.Spec.InferenceSpecification.Containers {
 				f6f0elem := &svcsdk.ModelPackageContainerDefinition{}
+				if f6f0iter.AdditionalS3DataSource != nil {
+					f6f0elemf0 := &svcsdk.AdditionalS3DataSource{}
+					if f6f0iter.AdditionalS3DataSource.CompressionType != nil {
+						f6f0elemf0.SetCompressionType(*f6f0iter.AdditionalS3DataSource.CompressionType)
+					}
+					if f6f0iter.AdditionalS3DataSource.S3DataType != nil {
+						f6f0elemf0.SetS3DataType(*f6f0iter.AdditionalS3DataSource.S3DataType)
+					}
+					if f6f0iter.AdditionalS3DataSource.S3URI != nil {
+						f6f0elemf0.SetS3Uri(*f6f0iter.AdditionalS3DataSource.S3URI)
+					}
+					f6f0elem.SetAdditionalS3DataSource(f6f0elemf0)
+				}
 				if f6f0iter.ContainerHostname != nil {
 					f6f0elem.SetContainerHostname(*f6f0iter.ContainerHostname)
 				}
 				if f6f0iter.Environment != nil {
-					f6f0elemf1 := map[string]*string{}
-					for f6f0elemf1key, f6f0elemf1valiter := range f6f0iter.Environment {
-						var f6f0elemf1val string
-						f6f0elemf1val = *f6f0elemf1valiter
-						f6f0elemf1[f6f0elemf1key] = &f6f0elemf1val
+					f6f0elemf2 := map[string]*string{}
+					for f6f0elemf2key, f6f0elemf2valiter := range f6f0iter.Environment {
+						var f6f0elemf2val string
+						f6f0elemf2val = *f6f0elemf2valiter
+						f6f0elemf2[f6f0elemf2key] = &f6f0elemf2val
 					}
-					f6f0elem.SetEnvironment(f6f0elemf1)
+					f6f0elem.SetEnvironment(f6f0elemf2)
 				}
 				if f6f0iter.Framework != nil {
 					f6f0elem.SetFramework(*f6f0iter.Framework)
@@ -1172,11 +1229,11 @@ func (rm *resourceManager) newCreateRequestPayload(
 					f6f0elem.SetModelDataUrl(*f6f0iter.ModelDataURL)
 				}
 				if f6f0iter.ModelInput != nil {
-					f6f0elemf7 := &svcsdk.ModelInput_{}
+					f6f0elemf8 := &svcsdk.ModelInput_{}
 					if f6f0iter.ModelInput.DataInputConfig != nil {
-						f6f0elemf7.SetDataInputConfig(*f6f0iter.ModelInput.DataInputConfig)
+						f6f0elemf8.SetDataInputConfig(*f6f0iter.ModelInput.DataInputConfig)
 					}
-					f6f0elem.SetModelInput(f6f0elemf7)
+					f6f0elem.SetModelInput(f6f0elemf8)
 				}
 				if f6f0iter.NearestModelName != nil {
 					f6f0elem.SetNearestModelName(*f6f0iter.NearestModelName)
@@ -1381,136 +1438,139 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.SamplePayloadURL != nil {
 		res.SetSamplePayloadUrl(*r.ko.Spec.SamplePayloadURL)
 	}
+	if r.ko.Spec.SkipModelValidation != nil {
+		res.SetSkipModelValidation(*r.ko.Spec.SkipModelValidation)
+	}
 	if r.ko.Spec.SourceAlgorithmSpecification != nil {
-		f14 := &svcsdk.SourceAlgorithmSpecification{}
+		f15 := &svcsdk.SourceAlgorithmSpecification{}
 		if r.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms != nil {
-			f14f0 := []*svcsdk.SourceAlgorithm{}
-			for _, f14f0iter := range r.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms {
-				f14f0elem := &svcsdk.SourceAlgorithm{}
-				if f14f0iter.AlgorithmName != nil {
-					f14f0elem.SetAlgorithmName(*f14f0iter.AlgorithmName)
+			f15f0 := []*svcsdk.SourceAlgorithm{}
+			for _, f15f0iter := range r.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms {
+				f15f0elem := &svcsdk.SourceAlgorithm{}
+				if f15f0iter.AlgorithmName != nil {
+					f15f0elem.SetAlgorithmName(*f15f0iter.AlgorithmName)
 				}
-				if f14f0iter.ModelDataURL != nil {
-					f14f0elem.SetModelDataUrl(*f14f0iter.ModelDataURL)
+				if f15f0iter.ModelDataURL != nil {
+					f15f0elem.SetModelDataUrl(*f15f0iter.ModelDataURL)
 				}
-				f14f0 = append(f14f0, f14f0elem)
+				f15f0 = append(f15f0, f15f0elem)
 			}
-			f14.SetSourceAlgorithms(f14f0)
+			f15.SetSourceAlgorithms(f15f0)
 		}
-		res.SetSourceAlgorithmSpecification(f14)
+		res.SetSourceAlgorithmSpecification(f15)
 	}
 	if r.ko.Spec.Tags != nil {
-		f15 := []*svcsdk.Tag{}
-		for _, f15iter := range r.ko.Spec.Tags {
-			f15elem := &svcsdk.Tag{}
-			if f15iter.Key != nil {
-				f15elem.SetKey(*f15iter.Key)
+		f16 := []*svcsdk.Tag{}
+		for _, f16iter := range r.ko.Spec.Tags {
+			f16elem := &svcsdk.Tag{}
+			if f16iter.Key != nil {
+				f16elem.SetKey(*f16iter.Key)
 			}
-			if f15iter.Value != nil {
-				f15elem.SetValue(*f15iter.Value)
+			if f16iter.Value != nil {
+				f16elem.SetValue(*f16iter.Value)
 			}
-			f15 = append(f15, f15elem)
+			f16 = append(f16, f16elem)
 		}
-		res.SetTags(f15)
+		res.SetTags(f16)
 	}
 	if r.ko.Spec.Task != nil {
 		res.SetTask(*r.ko.Spec.Task)
 	}
 	if r.ko.Spec.ValidationSpecification != nil {
-		f17 := &svcsdk.ModelPackageValidationSpecification{}
+		f18 := &svcsdk.ModelPackageValidationSpecification{}
 		if r.ko.Spec.ValidationSpecification.ValidationProfiles != nil {
-			f17f0 := []*svcsdk.ModelPackageValidationProfile{}
-			for _, f17f0iter := range r.ko.Spec.ValidationSpecification.ValidationProfiles {
-				f17f0elem := &svcsdk.ModelPackageValidationProfile{}
-				if f17f0iter.ProfileName != nil {
-					f17f0elem.SetProfileName(*f17f0iter.ProfileName)
+			f18f0 := []*svcsdk.ModelPackageValidationProfile{}
+			for _, f18f0iter := range r.ko.Spec.ValidationSpecification.ValidationProfiles {
+				f18f0elem := &svcsdk.ModelPackageValidationProfile{}
+				if f18f0iter.ProfileName != nil {
+					f18f0elem.SetProfileName(*f18f0iter.ProfileName)
 				}
-				if f17f0iter.TransformJobDefinition != nil {
-					f17f0elemf1 := &svcsdk.TransformJobDefinition{}
-					if f17f0iter.TransformJobDefinition.BatchStrategy != nil {
-						f17f0elemf1.SetBatchStrategy(*f17f0iter.TransformJobDefinition.BatchStrategy)
+				if f18f0iter.TransformJobDefinition != nil {
+					f18f0elemf1 := &svcsdk.TransformJobDefinition{}
+					if f18f0iter.TransformJobDefinition.BatchStrategy != nil {
+						f18f0elemf1.SetBatchStrategy(*f18f0iter.TransformJobDefinition.BatchStrategy)
 					}
-					if f17f0iter.TransformJobDefinition.Environment != nil {
-						f17f0elemf1f1 := map[string]*string{}
-						for f17f0elemf1f1key, f17f0elemf1f1valiter := range f17f0iter.TransformJobDefinition.Environment {
-							var f17f0elemf1f1val string
-							f17f0elemf1f1val = *f17f0elemf1f1valiter
-							f17f0elemf1f1[f17f0elemf1f1key] = &f17f0elemf1f1val
+					if f18f0iter.TransformJobDefinition.Environment != nil {
+						f18f0elemf1f1 := map[string]*string{}
+						for f18f0elemf1f1key, f18f0elemf1f1valiter := range f18f0iter.TransformJobDefinition.Environment {
+							var f18f0elemf1f1val string
+							f18f0elemf1f1val = *f18f0elemf1f1valiter
+							f18f0elemf1f1[f18f0elemf1f1key] = &f18f0elemf1f1val
 						}
-						f17f0elemf1.SetEnvironment(f17f0elemf1f1)
+						f18f0elemf1.SetEnvironment(f18f0elemf1f1)
 					}
-					if f17f0iter.TransformJobDefinition.MaxConcurrentTransforms != nil {
-						f17f0elemf1.SetMaxConcurrentTransforms(*f17f0iter.TransformJobDefinition.MaxConcurrentTransforms)
+					if f18f0iter.TransformJobDefinition.MaxConcurrentTransforms != nil {
+						f18f0elemf1.SetMaxConcurrentTransforms(*f18f0iter.TransformJobDefinition.MaxConcurrentTransforms)
 					}
-					if f17f0iter.TransformJobDefinition.MaxPayloadInMB != nil {
-						f17f0elemf1.SetMaxPayloadInMB(*f17f0iter.TransformJobDefinition.MaxPayloadInMB)
+					if f18f0iter.TransformJobDefinition.MaxPayloadInMB != nil {
+						f18f0elemf1.SetMaxPayloadInMB(*f18f0iter.TransformJobDefinition.MaxPayloadInMB)
 					}
-					if f17f0iter.TransformJobDefinition.TransformInput != nil {
-						f17f0elemf1f4 := &svcsdk.TransformInput{}
-						if f17f0iter.TransformJobDefinition.TransformInput.CompressionType != nil {
-							f17f0elemf1f4.SetCompressionType(*f17f0iter.TransformJobDefinition.TransformInput.CompressionType)
+					if f18f0iter.TransformJobDefinition.TransformInput != nil {
+						f18f0elemf1f4 := &svcsdk.TransformInput{}
+						if f18f0iter.TransformJobDefinition.TransformInput.CompressionType != nil {
+							f18f0elemf1f4.SetCompressionType(*f18f0iter.TransformJobDefinition.TransformInput.CompressionType)
 						}
-						if f17f0iter.TransformJobDefinition.TransformInput.ContentType != nil {
-							f17f0elemf1f4.SetContentType(*f17f0iter.TransformJobDefinition.TransformInput.ContentType)
+						if f18f0iter.TransformJobDefinition.TransformInput.ContentType != nil {
+							f18f0elemf1f4.SetContentType(*f18f0iter.TransformJobDefinition.TransformInput.ContentType)
 						}
-						if f17f0iter.TransformJobDefinition.TransformInput.DataSource != nil {
-							f17f0elemf1f4f2 := &svcsdk.TransformDataSource{}
-							if f17f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource != nil {
-								f17f0elemf1f4f2f0 := &svcsdk.TransformS3DataSource{}
-								if f17f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3DataType != nil {
-									f17f0elemf1f4f2f0.SetS3DataType(*f17f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3DataType)
+						if f18f0iter.TransformJobDefinition.TransformInput.DataSource != nil {
+							f18f0elemf1f4f2 := &svcsdk.TransformDataSource{}
+							if f18f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource != nil {
+								f18f0elemf1f4f2f0 := &svcsdk.TransformS3DataSource{}
+								if f18f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3DataType != nil {
+									f18f0elemf1f4f2f0.SetS3DataType(*f18f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3DataType)
 								}
-								if f17f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3URI != nil {
-									f17f0elemf1f4f2f0.SetS3Uri(*f17f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3URI)
+								if f18f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3URI != nil {
+									f18f0elemf1f4f2f0.SetS3Uri(*f18f0iter.TransformJobDefinition.TransformInput.DataSource.S3DataSource.S3URI)
 								}
-								f17f0elemf1f4f2.SetS3DataSource(f17f0elemf1f4f2f0)
+								f18f0elemf1f4f2.SetS3DataSource(f18f0elemf1f4f2f0)
 							}
-							f17f0elemf1f4.SetDataSource(f17f0elemf1f4f2)
+							f18f0elemf1f4.SetDataSource(f18f0elemf1f4f2)
 						}
-						if f17f0iter.TransformJobDefinition.TransformInput.SplitType != nil {
-							f17f0elemf1f4.SetSplitType(*f17f0iter.TransformJobDefinition.TransformInput.SplitType)
+						if f18f0iter.TransformJobDefinition.TransformInput.SplitType != nil {
+							f18f0elemf1f4.SetSplitType(*f18f0iter.TransformJobDefinition.TransformInput.SplitType)
 						}
-						f17f0elemf1.SetTransformInput(f17f0elemf1f4)
+						f18f0elemf1.SetTransformInput(f18f0elemf1f4)
 					}
-					if f17f0iter.TransformJobDefinition.TransformOutput != nil {
-						f17f0elemf1f5 := &svcsdk.TransformOutput{}
-						if f17f0iter.TransformJobDefinition.TransformOutput.Accept != nil {
-							f17f0elemf1f5.SetAccept(*f17f0iter.TransformJobDefinition.TransformOutput.Accept)
+					if f18f0iter.TransformJobDefinition.TransformOutput != nil {
+						f18f0elemf1f5 := &svcsdk.TransformOutput{}
+						if f18f0iter.TransformJobDefinition.TransformOutput.Accept != nil {
+							f18f0elemf1f5.SetAccept(*f18f0iter.TransformJobDefinition.TransformOutput.Accept)
 						}
-						if f17f0iter.TransformJobDefinition.TransformOutput.AssembleWith != nil {
-							f17f0elemf1f5.SetAssembleWith(*f17f0iter.TransformJobDefinition.TransformOutput.AssembleWith)
+						if f18f0iter.TransformJobDefinition.TransformOutput.AssembleWith != nil {
+							f18f0elemf1f5.SetAssembleWith(*f18f0iter.TransformJobDefinition.TransformOutput.AssembleWith)
 						}
-						if f17f0iter.TransformJobDefinition.TransformOutput.KMSKeyID != nil {
-							f17f0elemf1f5.SetKmsKeyId(*f17f0iter.TransformJobDefinition.TransformOutput.KMSKeyID)
+						if f18f0iter.TransformJobDefinition.TransformOutput.KMSKeyID != nil {
+							f18f0elemf1f5.SetKmsKeyId(*f18f0iter.TransformJobDefinition.TransformOutput.KMSKeyID)
 						}
-						if f17f0iter.TransformJobDefinition.TransformOutput.S3OutputPath != nil {
-							f17f0elemf1f5.SetS3OutputPath(*f17f0iter.TransformJobDefinition.TransformOutput.S3OutputPath)
+						if f18f0iter.TransformJobDefinition.TransformOutput.S3OutputPath != nil {
+							f18f0elemf1f5.SetS3OutputPath(*f18f0iter.TransformJobDefinition.TransformOutput.S3OutputPath)
 						}
-						f17f0elemf1.SetTransformOutput(f17f0elemf1f5)
+						f18f0elemf1.SetTransformOutput(f18f0elemf1f5)
 					}
-					if f17f0iter.TransformJobDefinition.TransformResources != nil {
-						f17f0elemf1f6 := &svcsdk.TransformResources{}
-						if f17f0iter.TransformJobDefinition.TransformResources.InstanceCount != nil {
-							f17f0elemf1f6.SetInstanceCount(*f17f0iter.TransformJobDefinition.TransformResources.InstanceCount)
+					if f18f0iter.TransformJobDefinition.TransformResources != nil {
+						f18f0elemf1f6 := &svcsdk.TransformResources{}
+						if f18f0iter.TransformJobDefinition.TransformResources.InstanceCount != nil {
+							f18f0elemf1f6.SetInstanceCount(*f18f0iter.TransformJobDefinition.TransformResources.InstanceCount)
 						}
-						if f17f0iter.TransformJobDefinition.TransformResources.InstanceType != nil {
-							f17f0elemf1f6.SetInstanceType(*f17f0iter.TransformJobDefinition.TransformResources.InstanceType)
+						if f18f0iter.TransformJobDefinition.TransformResources.InstanceType != nil {
+							f18f0elemf1f6.SetInstanceType(*f18f0iter.TransformJobDefinition.TransformResources.InstanceType)
 						}
-						if f17f0iter.TransformJobDefinition.TransformResources.VolumeKMSKeyID != nil {
-							f17f0elemf1f6.SetVolumeKmsKeyId(*f17f0iter.TransformJobDefinition.TransformResources.VolumeKMSKeyID)
+						if f18f0iter.TransformJobDefinition.TransformResources.VolumeKMSKeyID != nil {
+							f18f0elemf1f6.SetVolumeKmsKeyId(*f18f0iter.TransformJobDefinition.TransformResources.VolumeKMSKeyID)
 						}
-						f17f0elemf1.SetTransformResources(f17f0elemf1f6)
+						f18f0elemf1.SetTransformResources(f18f0elemf1f6)
 					}
-					f17f0elem.SetTransformJobDefinition(f17f0elemf1)
+					f18f0elem.SetTransformJobDefinition(f18f0elemf1)
 				}
-				f17f0 = append(f17f0, f17f0elem)
+				f18f0 = append(f18f0, f18f0elem)
 			}
-			f17.SetValidationProfiles(f17f0)
+			f18.SetValidationProfiles(f18f0)
 		}
 		if r.ko.Spec.ValidationSpecification.ValidationRole != nil {
-			f17.SetValidationRole(*r.ko.Spec.ValidationSpecification.ValidationRole)
+			f18.SetValidationRole(*r.ko.Spec.ValidationSpecification.ValidationRole)
 		}
-		res.SetValidationSpecification(f17)
+		res.SetValidationSpecification(f18)
 	}
 
 	return res, nil
