@@ -1,3 +1,3 @@
-acktest @ git+https://github.com/aws-controllers-k8s/test-infra.git@c7d61848a9011c05410da20392de637cc8d8a7da
+acktest @ git+https://github.com/aws-controllers-k8s/test-infra.git@c6e15c30e2ec94c0450e7b3591e19d17351b6e94
 black==20.8b1
 flaky==3.7.0
