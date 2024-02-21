@@ -38,7 +38,7 @@ SPEC_FILE = "feature_group"
 FEATURE_GROUP_STATUS_CREATING = "Creating"
 FEATURE_GROUP_STATUS_CREATED = "Created"
 # longer wait is used because we sometimes see server taking time to create/delete
-WAIT_PERIOD_COUNT = 9
+WAIT_PERIOD_COUNT = 15
 WAIT_PERIOD_LENGTH = 30
 STATUS = "status"
 RESOURCE_STATUS = "featureGroupStatus"
