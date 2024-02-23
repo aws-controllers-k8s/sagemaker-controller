@@ -119,10 +119,10 @@ def apply_app_yaml(domain_id, user_profile_name):
 
 def assert_domain_status_in_sync(domain_id, reference, expected_status):
     sm_status = wait_for_status(
-        expected_status, 15, 30, get_domain_sagemaker_status, domain_id
+        expected_status, 10, 30, get_domain_sagemaker_status, domain_id
     )
     k8s_status = wait_for_status(
-        expected_status, 15, 30, get_k8s_resource_status, reference
+        expected_status, 10, 30, get_k8s_resource_status, reference
     )
     assert sm_status == k8s_status == expected_status
 

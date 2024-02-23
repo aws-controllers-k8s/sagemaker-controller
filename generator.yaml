@@ -815,6 +815,15 @@ resources:
       AppNetworkAccessType:
         late_initialize:
           min_backoff_seconds: 5
+      DefaultUserSettings.DefaultLandingURI:
+        late_initialize:
+          min_backoff_seconds: 5
+      DefaultUserSettings.SpaceStorageSettings:
+        late_initialize:
+          min_backoff_seconds: 5
+      DefaultUserSettings.StudioWebPortal:
+        late_initialize:
+          min_backoff_seconds: 5
       Tags:
         compare:
           is_ignored: true   
