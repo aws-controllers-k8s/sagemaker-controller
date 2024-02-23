@@ -9,6 +9,7 @@ resources:
   - bases/sagemaker.services.k8s.aws_endpointconfigs.yaml
   - bases/sagemaker.services.k8s.aws_featuregroups.yaml
   - bases/sagemaker.services.k8s.aws_hyperparametertuningjobs.yaml
+  - bases/sagemaker.services.k8s.aws_inferencecomponents.yaml
   - bases/sagemaker.services.k8s.aws_models.yaml
   - bases/sagemaker.services.k8s.aws_modelbiasjobdefinitions.yaml
   - bases/sagemaker.services.k8s.aws_modelexplainabilityjobdefinitions.yaml
