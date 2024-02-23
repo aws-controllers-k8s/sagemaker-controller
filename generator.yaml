@@ -856,7 +856,10 @@ resources:
           name: STATUS
         from:
           operation: DescribeUserProfile
-          path: Status 
+          path: Status
+      UserSettings.SpaceStorageSettings:
+        late_initialize:
+          min_backoff_seconds: 5
       Tags:
         compare:
           is_ignored: true  
