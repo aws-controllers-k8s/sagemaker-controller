@@ -79,6 +79,7 @@ spec:
   outputDataConfig:
     kmsKeyID: ""
     s3OutputPath: s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/output
+    compressionType: "GZIP"
   resourceConfig:
     instanceCount: 1
     instanceType: ml.m4.xlarge
