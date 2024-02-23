@@ -1007,7 +1007,7 @@ ignore:
       - Hub
       - HumanTaskUi
       # - HyperParameterTuningJob
-      - InferenceComponent
+      # - InferenceComponent
       - InferenceRecommendationsJob
       - Image
       - ImageVersion
