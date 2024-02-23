@@ -235,6 +235,9 @@ resources:
       OutputDataConfig.KMSKeyID:
         late_initialize:
           min_backoff_seconds: 5
+      OutputDataConfig.CompressionType:
+        late_initialize:
+          min_backoff_seconds: 5
       ResourceConfig.InstanceCount:
         late_initialize:
           min_backoff_seconds: 5
