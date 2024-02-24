@@ -1785,6 +1785,16 @@ type ImageVersion struct {
 	Version          *int64       `json:"version,omitempty"`
 }
 
+// Defines the compute resources to allocate to run a model that you assign
+// to an inference component. These resources include CPU cores, accelerators,
+// and memory.
+type InferenceComponentComputeResourceRequirements struct {
+	MaxMemoryRequiredInMb              *int64   `json:"maxMemoryRequiredInMb,omitempty"`
+	MinMemoryRequiredInMb              *int64   `json:"minMemoryRequiredInMb,omitempty"`
+	NumberOfAcceleratorDevicesRequired *float64 `json:"numberOfAcceleratorDevicesRequired,omitempty"`
+	NumberOfCPUCoresRequired           *float64 `json:"numberOfCPUCoresRequired,omitempty"`
+}
+
 // Defines a container that provides the runtime environment for a model that
 // you deploy with an inference component.
 type InferenceComponentContainerSpecification struct {
@@ -1809,15 +1819,44 @@ type InferenceComponentContainerSpecificationSummary struct {
 	Environment   map[string]*string `json:"environment,omitempty"`
 }
 
+// Runtime settings for a model that is deployed with an inference component.
+type InferenceComponentRuntimeConfig struct {
+	CopyCount *int64 `json:"copyCount,omitempty"`
+}
+
+// Details about the runtime settings for the model that is deployed with the
+// inference component.
+type InferenceComponentRuntimeConfigSummary struct {
+	CurrentCopyCount *int64 `json:"currentCopyCount,omitempty"`
+	DesiredCopyCount *int64 `json:"desiredCopyCount,omitempty"`
+}
+
 // Details about the resources to deploy with this inference component, including
 // the model, container, and compute resources.
 type InferenceComponentSpecification struct {
-	ModelName *string `json:"modelName,omitempty"`
+	// Defines the compute resources to allocate to run a model that you assign
+	// to an inference component. These resources include CPU cores, accelerators,
+	// and memory.
+	ComputeResourceRequirements *InferenceComponentComputeResourceRequirements `json:"computeResourceRequirements,omitempty"`
+	// Defines a container that provides the runtime environment for a model that
+	// you deploy with an inference component.
+	Container *InferenceComponentContainerSpecification `json:"container,omitempty"`
+	ModelName *string                                   `json:"modelName,omitempty"`
+	// Settings that take effect while the model container starts up.
+	StartupParameters *InferenceComponentStartupParameters `json:"startupParameters,omitempty"`
 }
 
 // Details about the resources that are deployed with this inference component.
 type InferenceComponentSpecificationSummary struct {
-	ModelName *string `json:"modelName,omitempty"`
+	// Defines the compute resources to allocate to run a model that you assign
+	// to an inference component. These resources include CPU cores, accelerators,
+	// and memory.
+	ComputeResourceRequirements *InferenceComponentComputeResourceRequirements `json:"computeResourceRequirements,omitempty"`
+	// Details about the resources that are deployed with this inference component.
+	Container *InferenceComponentContainerSpecificationSummary `json:"container,omitempty"`
+	ModelName *string                                          `json:"modelName,omitempty"`
+	// Settings that take effect while the model container starts up.
+	StartupParameters *InferenceComponentStartupParameters `json:"startupParameters,omitempty"`
 }
 
 // Settings that take effect while the model container starts up.
@@ -1828,11 +1867,14 @@ type InferenceComponentStartupParameters struct {
 
 // A summary of the properties of an inference component.
 type InferenceComponentSummary struct {
-	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
-	EndpointARN      *string      `json:"endpointARN,omitempty"`
-	EndpointName     *string      `json:"endpointName,omitempty"`
-	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
-	VariantName      *string      `json:"variantName,omitempty"`
+	CreationTime             *metav1.Time `json:"creationTime,omitempty"`
+	EndpointARN              *string      `json:"endpointARN,omitempty"`
+	EndpointName             *string      `json:"endpointName,omitempty"`
+	InferenceComponentARN    *string      `json:"inferenceComponentARN,omitempty"`
+	InferenceComponentName   *string      `json:"inferenceComponentName,omitempty"`
+	InferenceComponentStatus *string      `json:"inferenceComponentStatus,omitempty"`
+	LastModifiedTime         *metav1.Time `json:"lastModifiedTime,omitempty"`
+	VariantName              *string      `json:"variantName,omitempty"`
 }
 
 // Specifies details about how containers in a multi-container endpoint are

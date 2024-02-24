@@ -1127,14 +1127,14 @@ const (
 	InferenceComponentSortKey_Status       InferenceComponentSortKey = "Status"
 )
 
-type InferenceComponentStatus string
+type InferenceComponentStatus_SDK string
 
 const (
-	InferenceComponentStatus_InService InferenceComponentStatus = "InService"
-	InferenceComponentStatus_Creating  InferenceComponentStatus = "Creating"
-	InferenceComponentStatus_Updating  InferenceComponentStatus = "Updating"
-	InferenceComponentStatus_Failed    InferenceComponentStatus = "Failed"
-	InferenceComponentStatus_Deleting  InferenceComponentStatus = "Deleting"
+	InferenceComponentStatus_SDK_InService InferenceComponentStatus_SDK = "InService"
+	InferenceComponentStatus_SDK_Creating  InferenceComponentStatus_SDK = "Creating"
+	InferenceComponentStatus_SDK_Updating  InferenceComponentStatus_SDK = "Updating"
+	InferenceComponentStatus_SDK_Failed    InferenceComponentStatus_SDK = "Failed"
+	InferenceComponentStatus_SDK_Deleting  InferenceComponentStatus_SDK = "Deleting"
 )
 
 type InferenceExecutionMode string
