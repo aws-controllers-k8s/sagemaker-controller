@@ -41,7 +41,8 @@ spec:
               ModelSpec defines the desired state of Model.
 
 
-              The properties of a model as returned by the Search API.
+              The properties of a model as returned by the Search (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_Search.html)
+              API.
             properties:
               containers:
                 description: Specifies the containers in the inference pipeline.
@@ -79,6 +80,42 @@ spec:
                       type: string
                     mode:
                       type: string
+                    modelDataSource:
+                      description: |-
+                        Specifies the location of ML model data to deploy. If specified, you must
+                        specify one and only one of the available data sources.
+                      properties:
+                        s3DataSource:
+                          description: Specifies the S3 location of ML model data
+                            to deploy.
+                          properties:
+                            compressionType:
+                              type: string
+                            modelAccessConfig:
+                              description: |-
+                                The access configuration file to control access to the ML model. You can
+                                explicitly accept the model end-user license agreement (EULA) within the
+                                ModelAccessConfig.
+
+
+                                   * If you are a Jumpstart user, see the End-user license agreements (https://docs.aws.amazon.com/sagemaker/latest/dg/jumpstart-foundation-models-choose.html#jumpstart-foundation-models-choose-eula)
+                                   section for more details on accepting the EULA.
+
+
+                                   * If you are an AutoML user, see the Optional Parameters section of Create
+                                   an AutoML job to fine-tune text generation models using the API for details
+                                   on How to set the EULA acceptance when fine-tuning a model using the AutoML
+                                   API (https://docs.aws.amazon.com/sagemaker/latest/dg/autopilot-create-experiment-finetune-llms.html#autopilot-llms-finetuning-api-optional-params).
+                              properties:
+                                acceptEula:
+                                  type: boolean
+                              type: object
+                            s3DataType:
+                              type: string
+                            s3URI:
+                              type: string
+                          type: object
+                      type: object
                     modelDataURL:
                       type: string
                     modelPackageName:
@@ -155,6 +192,42 @@ spec:
                     type: string
                   mode:
                     type: string
+                  modelDataSource:
+                    description: |-
+                      Specifies the location of ML model data to deploy. If specified, you must
+                      specify one and only one of the available data sources.
+                    properties:
+                      s3DataSource:
+                        description: Specifies the S3 location of ML model data to
+                          deploy.
+                        properties:
+                          compressionType:
+                            type: string
+                          modelAccessConfig:
+                            description: |-
+                              The access configuration file to control access to the ML model. You can
+                              explicitly accept the model end-user license agreement (EULA) within the
+                              ModelAccessConfig.
+
+
+                                 * If you are a Jumpstart user, see the End-user license agreements (https://docs.aws.amazon.com/sagemaker/latest/dg/jumpstart-foundation-models-choose.html#jumpstart-foundation-models-choose-eula)
+                                 section for more details on accepting the EULA.
+
+
+                                 * If you are an AutoML user, see the Optional Parameters section of Create
+                                 an AutoML job to fine-tune text generation models using the API for details
+                                 on How to set the EULA acceptance when fine-tuning a model using the AutoML
+                                 API (https://docs.aws.amazon.com/sagemaker/latest/dg/autopilot-create-experiment-finetune-llms.html#autopilot-llms-finetuning-api-optional-params).
+                            properties:
+                              acceptEula:
+                                type: boolean
+                            type: object
+                          s3DataType:
+                            type: string
+                          s3URI:
+                            type: string
+                        type: object
+                    type: object
                   modelDataURL:
                     type: string
                   modelPackageName:
@@ -182,7 +255,7 @@ spec:
                     You can add tags to notebook instances, training jobs, hyperparameter tuning
                     jobs, batch transform jobs, models, labeling jobs, work teams, endpoint configurations,
                     and endpoints. For more information on adding tags to SageMaker resources,
-                    see AddTags.
+                    see AddTags (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_AddTags.html).
 
 
                     For more information on adding metadata to your Amazon Web Services resources
@@ -199,9 +272,10 @@ spec:
                 type: array
               vpcConfig:
                 description: |-
-                  A VpcConfig object that specifies the VPC that you want your model to connect
-                  to. Control access to and from your model container by configuring the VPC.
-                  VpcConfig is used in hosting services and in batch transform. For more information,
+                  A VpcConfig (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_VpcConfig.html)
+                  object that specifies the VPC that you want your model to connect to. Control
+                  access to and from your model container by configuring the VPC. VpcConfig
+                  is used in hosting services and in batch transform. For more information,
                   see Protect Endpoints by Using an Amazon Virtual Private Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/host-vpc.html)
                   and Protect Data in Batch Transform Jobs by Using an Amazon Virtual Private
                   Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/batch-vpc.html).
@@ -216,7 +290,6 @@ spec:
                     type: array
                 type: object
             required:
-            - executionRoleARN
             - modelName
             type: object
           status:

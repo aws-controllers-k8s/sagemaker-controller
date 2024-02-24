@@ -129,6 +129,30 @@ func (rm *resourceManager) sdkFind(
 			if f0iter.Mode != nil {
 				f0elem.Mode = f0iter.Mode
 			}
+			if f0iter.ModelDataSource != nil {
+				f0elemf6 := &svcapitypes.ModelDataSource{}
+				if f0iter.ModelDataSource.S3DataSource != nil {
+					f0elemf6f0 := &svcapitypes.S3ModelDataSource{}
+					if f0iter.ModelDataSource.S3DataSource.CompressionType != nil {
+						f0elemf6f0.CompressionType = f0iter.ModelDataSource.S3DataSource.CompressionType
+					}
+					if f0iter.ModelDataSource.S3DataSource.ModelAccessConfig != nil {
+						f0elemf6f0f1 := &svcapitypes.ModelAccessConfig{}
+						if f0iter.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula != nil {
+							f0elemf6f0f1.AcceptEula = f0iter.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula
+						}
+						f0elemf6f0.ModelAccessConfig = f0elemf6f0f1
+					}
+					if f0iter.ModelDataSource.S3DataSource.S3DataType != nil {
+						f0elemf6f0.S3DataType = f0iter.ModelDataSource.S3DataSource.S3DataType
+					}
+					if f0iter.ModelDataSource.S3DataSource.S3Uri != nil {
+						f0elemf6f0.S3URI = f0iter.ModelDataSource.S3DataSource.S3Uri
+					}
+					f0elemf6.S3DataSource = f0elemf6f0
+				}
+				f0elem.ModelDataSource = f0elemf6
+			}
 			if f0iter.ModelDataUrl != nil {
 				f0elem.ModelDataURL = f0iter.ModelDataUrl
 			}
@@ -136,11 +160,11 @@ func (rm *resourceManager) sdkFind(
 				f0elem.ModelPackageName = f0iter.ModelPackageName
 			}
 			if f0iter.MultiModelConfig != nil {
-				f0elemf8 := &svcapitypes.MultiModelConfig{}
+				f0elemf9 := &svcapitypes.MultiModelConfig{}
 				if f0iter.MultiModelConfig.ModelCacheSetting != nil {
-					f0elemf8.ModelCacheSetting = f0iter.MultiModelConfig.ModelCacheSetting
+					f0elemf9.ModelCacheSetting = f0iter.MultiModelConfig.ModelCacheSetting
 				}
-				f0elem.MultiModelConfig = f0elemf8
+				f0elem.MultiModelConfig = f0elemf9
 			}
 			f0 = append(f0, f0elem)
 		}
@@ -159,11 +183,11 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.ExecutionRoleARN = nil
 	}
 	if resp.InferenceExecutionConfig != nil {
-		f4 := &svcapitypes.InferenceExecutionConfig{}
+		f5 := &svcapitypes.InferenceExecutionConfig{}
 		if resp.InferenceExecutionConfig.Mode != nil {
-			f4.Mode = resp.InferenceExecutionConfig.Mode
+			f5.Mode = resp.InferenceExecutionConfig.Mode
 		}
-		ko.Spec.InferenceExecutionConfig = f4
+		ko.Spec.InferenceExecutionConfig = f5
 	} else {
 		ko.Spec.InferenceExecutionConfig = nil
 	}
@@ -180,80 +204,104 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.ModelName = nil
 	}
 	if resp.PrimaryContainer != nil {
-		f7 := &svcapitypes.ContainerDefinition{}
+		f8 := &svcapitypes.ContainerDefinition{}
 		if resp.PrimaryContainer.ContainerHostname != nil {
-			f7.ContainerHostname = resp.PrimaryContainer.ContainerHostname
+			f8.ContainerHostname = resp.PrimaryContainer.ContainerHostname
 		}
 		if resp.PrimaryContainer.Environment != nil {
-			f7f1 := map[string]*string{}
-			for f7f1key, f7f1valiter := range resp.PrimaryContainer.Environment {
-				var f7f1val string
-				f7f1val = *f7f1valiter
-				f7f1[f7f1key] = &f7f1val
+			f8f1 := map[string]*string{}
+			for f8f1key, f8f1valiter := range resp.PrimaryContainer.Environment {
+				var f8f1val string
+				f8f1val = *f8f1valiter
+				f8f1[f8f1key] = &f8f1val
 			}
-			f7.Environment = f7f1
+			f8.Environment = f8f1
 		}
 		if resp.PrimaryContainer.Image != nil {
-			f7.Image = resp.PrimaryContainer.Image
+			f8.Image = resp.PrimaryContainer.Image
 		}
 		if resp.PrimaryContainer.ImageConfig != nil {
-			f7f3 := &svcapitypes.ImageConfig{}
+			f8f3 := &svcapitypes.ImageConfig{}
 			if resp.PrimaryContainer.ImageConfig.RepositoryAccessMode != nil {
-				f7f3.RepositoryAccessMode = resp.PrimaryContainer.ImageConfig.RepositoryAccessMode
+				f8f3.RepositoryAccessMode = resp.PrimaryContainer.ImageConfig.RepositoryAccessMode
 			}
 			if resp.PrimaryContainer.ImageConfig.RepositoryAuthConfig != nil {
-				f7f3f1 := &svcapitypes.RepositoryAuthConfig{}
+				f8f3f1 := &svcapitypes.RepositoryAuthConfig{}
 				if resp.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderArn != nil {
-					f7f3f1.RepositoryCredentialsProviderARN = resp.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderArn
+					f8f3f1.RepositoryCredentialsProviderARN = resp.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderArn
 				}
-				f7f3.RepositoryAuthConfig = f7f3f1
+				f8f3.RepositoryAuthConfig = f8f3f1
 			}
-			f7.ImageConfig = f7f3
+			f8.ImageConfig = f8f3
 		}
 		if resp.PrimaryContainer.InferenceSpecificationName != nil {
-			f7.InferenceSpecificationName = resp.PrimaryContainer.InferenceSpecificationName
+			f8.InferenceSpecificationName = resp.PrimaryContainer.InferenceSpecificationName
 		}
 		if resp.PrimaryContainer.Mode != nil {
-			f7.Mode = resp.PrimaryContainer.Mode
+			f8.Mode = resp.PrimaryContainer.Mode
+		}
+		if resp.PrimaryContainer.ModelDataSource != nil {
+			f8f6 := &svcapitypes.ModelDataSource{}
+			if resp.PrimaryContainer.ModelDataSource.S3DataSource != nil {
+				f8f6f0 := &svcapitypes.S3ModelDataSource{}
+				if resp.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType != nil {
+					f8f6f0.CompressionType = resp.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType
+				}
+				if resp.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig != nil {
+					f8f6f0f1 := &svcapitypes.ModelAccessConfig{}
+					if resp.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula != nil {
+						f8f6f0f1.AcceptEula = resp.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula
+					}
+					f8f6f0.ModelAccessConfig = f8f6f0f1
+				}
+				if resp.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType != nil {
+					f8f6f0.S3DataType = resp.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType
+				}
+				if resp.PrimaryContainer.ModelDataSource.S3DataSource.S3Uri != nil {
+					f8f6f0.S3URI = resp.PrimaryContainer.ModelDataSource.S3DataSource.S3Uri
+				}
+				f8f6.S3DataSource = f8f6f0
+			}
+			f8.ModelDataSource = f8f6
 		}
 		if resp.PrimaryContainer.ModelDataUrl != nil {
-			f7.ModelDataURL = resp.PrimaryContainer.ModelDataUrl
+			f8.ModelDataURL = resp.PrimaryContainer.ModelDataUrl
 		}
 		if resp.PrimaryContainer.ModelPackageName != nil {
-			f7.ModelPackageName = resp.PrimaryContainer.ModelPackageName
+			f8.ModelPackageName = resp.PrimaryContainer.ModelPackageName
 		}
 		if resp.PrimaryContainer.MultiModelConfig != nil {
-			f7f8 := &svcapitypes.MultiModelConfig{}
+			f8f9 := &svcapitypes.MultiModelConfig{}
 			if resp.PrimaryContainer.MultiModelConfig.ModelCacheSetting != nil {
-				f7f8.ModelCacheSetting = resp.PrimaryContainer.MultiModelConfig.ModelCacheSetting
+				f8f9.ModelCacheSetting = resp.PrimaryContainer.MultiModelConfig.ModelCacheSetting
 			}
-			f7.MultiModelConfig = f7f8
+			f8.MultiModelConfig = f8f9
 		}
-		ko.Spec.PrimaryContainer = f7
+		ko.Spec.PrimaryContainer = f8
 	} else {
 		ko.Spec.PrimaryContainer = nil
 	}
 	if resp.VpcConfig != nil {
-		f8 := &svcapitypes.VPCConfig{}
+		f9 := &svcapitypes.VPCConfig{}
 		if resp.VpcConfig.SecurityGroupIds != nil {
-			f8f0 := []*string{}
-			for _, f8f0iter := range resp.VpcConfig.SecurityGroupIds {
-				var f8f0elem string
-				f8f0elem = *f8f0iter
-				f8f0 = append(f8f0, &f8f0elem)
+			f9f0 := []*string{}
+			for _, f9f0iter := range resp.VpcConfig.SecurityGroupIds {
+				var f9f0elem string
+				f9f0elem = *f9f0iter
+				f9f0 = append(f9f0, &f9f0elem)
 			}
-			f8.SecurityGroupIDs = f8f0
+			f9.SecurityGroupIDs = f9f0
 		}
 		if resp.VpcConfig.Subnets != nil {
-			f8f1 := []*string{}
-			for _, f8f1iter := range resp.VpcConfig.Subnets {
-				var f8f1elem string
-				f8f1elem = *f8f1iter
-				f8f1 = append(f8f1, &f8f1elem)
+			f9f1 := []*string{}
+			for _, f9f1iter := range resp.VpcConfig.Subnets {
+				var f9f1elem string
+				f9f1elem = *f9f1iter
+				f9f1 = append(f9f1, &f9f1elem)
 			}
-			f8.Subnets = f8f1
+			f9.Subnets = f9f1
 		}
-		ko.Spec.VPCConfig = f8
+		ko.Spec.VPCConfig = f9
 	} else {
 		ko.Spec.VPCConfig = nil
 	}
@@ -373,6 +421,30 @@ func (rm *resourceManager) newCreateRequestPayload(
 			if f0iter.Mode != nil {
 				f0elem.SetMode(*f0iter.Mode)
 			}
+			if f0iter.ModelDataSource != nil {
+				f0elemf6 := &svcsdk.ModelDataSource{}
+				if f0iter.ModelDataSource.S3DataSource != nil {
+					f0elemf6f0 := &svcsdk.S3ModelDataSource{}
+					if f0iter.ModelDataSource.S3DataSource.CompressionType != nil {
+						f0elemf6f0.SetCompressionType(*f0iter.ModelDataSource.S3DataSource.CompressionType)
+					}
+					if f0iter.ModelDataSource.S3DataSource.ModelAccessConfig != nil {
+						f0elemf6f0f1 := &svcsdk.ModelAccessConfig{}
+						if f0iter.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula != nil {
+							f0elemf6f0f1.SetAcceptEula(*f0iter.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula)
+						}
+						f0elemf6f0.SetModelAccessConfig(f0elemf6f0f1)
+					}
+					if f0iter.ModelDataSource.S3DataSource.S3DataType != nil {
+						f0elemf6f0.SetS3DataType(*f0iter.ModelDataSource.S3DataSource.S3DataType)
+					}
+					if f0iter.ModelDataSource.S3DataSource.S3URI != nil {
+						f0elemf6f0.SetS3Uri(*f0iter.ModelDataSource.S3DataSource.S3URI)
+					}
+					f0elemf6.SetS3DataSource(f0elemf6f0)
+				}
+				f0elem.SetModelDataSource(f0elemf6)
+			}
 			if f0iter.ModelDataURL != nil {
 				f0elem.SetModelDataUrl(*f0iter.ModelDataURL)
 			}
@@ -380,11 +452,11 @@ func (rm *resourceManager) newCreateRequestPayload(
 				f0elem.SetModelPackageName(*f0iter.ModelPackageName)
 			}
 			if f0iter.MultiModelConfig != nil {
-				f0elemf8 := &svcsdk.MultiModelConfig{}
+				f0elemf9 := &svcsdk.MultiModelConfig{}
 				if f0iter.MultiModelConfig.ModelCacheSetting != nil {
-					f0elemf8.SetModelCacheSetting(*f0iter.MultiModelConfig.ModelCacheSetting)
+					f0elemf9.SetModelCacheSetting(*f0iter.MultiModelConfig.ModelCacheSetting)
 				}
-				f0elem.SetMultiModelConfig(f0elemf8)
+				f0elem.SetMultiModelConfig(f0elemf9)
 			}
 			f0 = append(f0, f0elem)
 		}
@@ -443,6 +515,30 @@ func (rm *resourceManager) newCreateRequestPayload(
 		if r.ko.Spec.PrimaryContainer.Mode != nil {
 			f5.SetMode(*r.ko.Spec.PrimaryContainer.Mode)
 		}
+		if r.ko.Spec.PrimaryContainer.ModelDataSource != nil {
+			f5f6 := &svcsdk.ModelDataSource{}
+			if r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource != nil {
+				f5f6f0 := &svcsdk.S3ModelDataSource{}
+				if r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType != nil {
+					f5f6f0.SetCompressionType(*r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType)
+				}
+				if r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig != nil {
+					f5f6f0f1 := &svcsdk.ModelAccessConfig{}
+					if r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula != nil {
+						f5f6f0f1.SetAcceptEula(*r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula)
+					}
+					f5f6f0.SetModelAccessConfig(f5f6f0f1)
+				}
+				if r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType != nil {
+					f5f6f0.SetS3DataType(*r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType)
+				}
+				if r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3URI != nil {
+					f5f6f0.SetS3Uri(*r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3URI)
+				}
+				f5f6.SetS3DataSource(f5f6f0)
+			}
+			f5.SetModelDataSource(f5f6)
+		}
 		if r.ko.Spec.PrimaryContainer.ModelDataURL != nil {
 			f5.SetModelDataUrl(*r.ko.Spec.PrimaryContainer.ModelDataURL)
 		}
@@ -450,11 +546,11 @@ func (rm *resourceManager) newCreateRequestPayload(
 			f5.SetModelPackageName(*r.ko.Spec.PrimaryContainer.ModelPackageName)
 		}
 		if r.ko.Spec.PrimaryContainer.MultiModelConfig != nil {
-			f5f8 := &svcsdk.MultiModelConfig{}
+			f5f9 := &svcsdk.MultiModelConfig{}
 			if r.ko.Spec.PrimaryContainer.MultiModelConfig.ModelCacheSetting != nil {
-				f5f8.SetModelCacheSetting(*r.ko.Spec.PrimaryContainer.MultiModelConfig.ModelCacheSetting)
+				f5f9.SetModelCacheSetting(*r.ko.Spec.PrimaryContainer.MultiModelConfig.ModelCacheSetting)
 			}
-			f5.SetMultiModelConfig(f5f8)
+			f5.SetMultiModelConfig(f5f9)
 		}
 		res.SetPrimaryContainer(f5)
 	}

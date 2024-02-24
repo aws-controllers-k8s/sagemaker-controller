@@ -28,10 +28,22 @@ type EndpointConfigSpec struct {
 	// (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpointAsync.html).
 	AsyncInferenceConfig *AsyncInferenceConfig `json:"asyncInferenceConfig,omitempty"`
 	DataCaptureConfig    *DataCaptureConfig    `json:"dataCaptureConfig,omitempty"`
+	// Sets whether all model containers deployed to the endpoint are isolated.
+	// If they are, no inbound or outbound network calls can be made to or from
+	// the model containers.
+	EnableNetworkIsolation *bool `json:"enableNetworkIsolation,omitempty"`
 	// The name of the endpoint configuration. You specify this name in a CreateEndpoint
+	// (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateEndpoint.html)
 	// request.
 	// +kubebuilder:validation:Required
 	EndpointConfigName *string `json:"endpointConfigName"`
+	// The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
+	// to perform actions on your behalf. For more information, see SageMaker Roles
+	// (https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-roles.html).
+	//
+	// To be able to pass this role to Amazon SageMaker, the caller of this action
+	// must have the iam:PassRole permission.
+	ExecutionRoleARN *string `json:"executionRoleARN,omitempty"`
 	// The Amazon Resource Name (ARN) of a Amazon Web Services Key Management Service
 	// key that SageMaker uses to encrypt data on the storage volume attached to
 	// the ML compute instance that hosts the endpoint.
@@ -74,7 +86,8 @@ type EndpointConfigSpec struct {
 	// Services resources in different ways, for example, by purpose, owner, or
 	// environment. For more information, see Tagging Amazon Web Services Resources
 	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
-	Tags []*Tag `json:"tags,omitempty"`
+	Tags      []*Tag     `json:"tags,omitempty"`
+	VPCConfig *VPCConfig `json:"vpcConfig,omitempty"`
 }
 
 // EndpointConfigStatus defines the observed state of EndpointConfig

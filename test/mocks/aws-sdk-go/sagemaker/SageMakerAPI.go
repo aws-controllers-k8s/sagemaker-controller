@@ -6748,6 +6748,105 @@ func (_m *SageMakerAPI) DeleteCodeRepositoryWithContext(_a0 context.Context, _a1
 	return r0, r1
 }
 
+// DeleteCompilationJob provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) DeleteCompilationJob(_a0 *sagemaker.DeleteCompilationJobInput) (*sagemaker.DeleteCompilationJobOutput, error) {
+	ret := _m.Called(_a0)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteCompilationJob")
+	}
+
+	var r0 *sagemaker.DeleteCompilationJobOutput
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*sagemaker.DeleteCompilationJobInput) (*sagemaker.DeleteCompilationJobOutput, error)); ok {
+		return rf(_a0)
+	}
+	if rf, ok := ret.Get(0).(func(*sagemaker.DeleteCompilationJobInput) *sagemaker.DeleteCompilationJobOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.DeleteCompilationJobOutput)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(*sagemaker.DeleteCompilationJobInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// DeleteCompilationJobRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) DeleteCompilationJobRequest(_a0 *sagemaker.DeleteCompilationJobInput) (*request.Request, *sagemaker.DeleteCompilationJobOutput) {
+	ret := _m.Called(_a0)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteCompilationJobRequest")
+	}
+
+	var r0 *request.Request
+	var r1 *sagemaker.DeleteCompilationJobOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.DeleteCompilationJobInput) (*request.Request, *sagemaker.DeleteCompilationJobOutput)); ok {
+		return rf(_a0)
+	}
+	if rf, ok := ret.Get(0).(func(*sagemaker.DeleteCompilationJobInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(*sagemaker.DeleteCompilationJobInput) *sagemaker.DeleteCompilationJobOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.DeleteCompilationJobOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// DeleteCompilationJobWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) DeleteCompilationJobWithContext(_a0 context.Context, _a1 *sagemaker.DeleteCompilationJobInput, _a2 ...request.Option) (*sagemaker.DeleteCompilationJobOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteCompilationJobWithContext")
+	}
+
+	var r0 *sagemaker.DeleteCompilationJobOutput
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.DeleteCompilationJobInput, ...request.Option) (*sagemaker.DeleteCompilationJobOutput, error)); ok {
+		return rf(_a0, _a1, _a2...)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.DeleteCompilationJobInput, ...request.Option) *sagemaker.DeleteCompilationJobOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.DeleteCompilationJobOutput)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.DeleteCompilationJobInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // DeleteContext provides a mock function with given fields: _a0
 func (_m *SageMakerAPI) DeleteContext(_a0 *sagemaker.DeleteContextInput) (*sagemaker.DeleteContextOutput, error) {
 	ret := _m.Called(_a0)
@@ -8126,6 +8225,105 @@ func (_m *SageMakerAPI) DeleteHumanTaskUiWithContext(_a0 context.Context, _a1 *s
 	}
 
 	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.DeleteHumanTaskUiInput, ...request.Option) error); ok {
+		r1 = rf(_a0, _a1, _a2...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// DeleteHyperParameterTuningJob provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) DeleteHyperParameterTuningJob(_a0 *sagemaker.DeleteHyperParameterTuningJobInput) (*sagemaker.DeleteHyperParameterTuningJobOutput, error) {
+	ret := _m.Called(_a0)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteHyperParameterTuningJob")
+	}
+
+	var r0 *sagemaker.DeleteHyperParameterTuningJobOutput
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*sagemaker.DeleteHyperParameterTuningJobInput) (*sagemaker.DeleteHyperParameterTuningJobOutput, error)); ok {
+		return rf(_a0)
+	}
+	if rf, ok := ret.Get(0).(func(*sagemaker.DeleteHyperParameterTuningJobInput) *sagemaker.DeleteHyperParameterTuningJobOutput); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.DeleteHyperParameterTuningJobOutput)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(*sagemaker.DeleteHyperParameterTuningJobInput) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// DeleteHyperParameterTuningJobRequest provides a mock function with given fields: _a0
+func (_m *SageMakerAPI) DeleteHyperParameterTuningJobRequest(_a0 *sagemaker.DeleteHyperParameterTuningJobInput) (*request.Request, *sagemaker.DeleteHyperParameterTuningJobOutput) {
+	ret := _m.Called(_a0)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteHyperParameterTuningJobRequest")
+	}
+
+	var r0 *request.Request
+	var r1 *sagemaker.DeleteHyperParameterTuningJobOutput
+	if rf, ok := ret.Get(0).(func(*sagemaker.DeleteHyperParameterTuningJobInput) (*request.Request, *sagemaker.DeleteHyperParameterTuningJobOutput)); ok {
+		return rf(_a0)
+	}
+	if rf, ok := ret.Get(0).(func(*sagemaker.DeleteHyperParameterTuningJobInput) *request.Request); ok {
+		r0 = rf(_a0)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*request.Request)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(*sagemaker.DeleteHyperParameterTuningJobInput) *sagemaker.DeleteHyperParameterTuningJobOutput); ok {
+		r1 = rf(_a0)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*sagemaker.DeleteHyperParameterTuningJobOutput)
+		}
+	}
+
+	return r0, r1
+}
+
+// DeleteHyperParameterTuningJobWithContext provides a mock function with given fields: _a0, _a1, _a2
+func (_m *SageMakerAPI) DeleteHyperParameterTuningJobWithContext(_a0 context.Context, _a1 *sagemaker.DeleteHyperParameterTuningJobInput, _a2 ...request.Option) (*sagemaker.DeleteHyperParameterTuningJobOutput, error) {
+	_va := make([]interface{}, len(_a2))
+	for _i := range _a2 {
+		_va[_i] = _a2[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _a0, _a1)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteHyperParameterTuningJobWithContext")
+	}
+
+	var r0 *sagemaker.DeleteHyperParameterTuningJobOutput
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.DeleteHyperParameterTuningJobInput, ...request.Option) (*sagemaker.DeleteHyperParameterTuningJobOutput, error)); ok {
+		return rf(_a0, _a1, _a2...)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, *sagemaker.DeleteHyperParameterTuningJobInput, ...request.Option) *sagemaker.DeleteHyperParameterTuningJobOutput); ok {
+		r0 = rf(_a0, _a1, _a2...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*sagemaker.DeleteHyperParameterTuningJobOutput)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, *sagemaker.DeleteHyperParameterTuningJobInput, ...request.Option) error); ok {
 		r1 = rf(_a0, _a1, _a2...)
 	} else {
 		r1 = ret.Error(1)

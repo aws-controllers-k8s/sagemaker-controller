@@ -154,6 +154,31 @@ func newResourceDelta(
 				}
 			}
 		}
+		if ackcompare.HasNilDifference(a.ko.Spec.OnlineStoreConfig.StorageType, b.ko.Spec.OnlineStoreConfig.StorageType) {
+			delta.Add("Spec.OnlineStoreConfig.StorageType", a.ko.Spec.OnlineStoreConfig.StorageType, b.ko.Spec.OnlineStoreConfig.StorageType)
+		} else if a.ko.Spec.OnlineStoreConfig.StorageType != nil && b.ko.Spec.OnlineStoreConfig.StorageType != nil {
+			if *a.ko.Spec.OnlineStoreConfig.StorageType != *b.ko.Spec.OnlineStoreConfig.StorageType {
+				delta.Add("Spec.OnlineStoreConfig.StorageType", a.ko.Spec.OnlineStoreConfig.StorageType, b.ko.Spec.OnlineStoreConfig.StorageType)
+			}
+		}
+		if ackcompare.HasNilDifference(a.ko.Spec.OnlineStoreConfig.TTLDuration, b.ko.Spec.OnlineStoreConfig.TTLDuration) {
+			delta.Add("Spec.OnlineStoreConfig.TTLDuration", a.ko.Spec.OnlineStoreConfig.TTLDuration, b.ko.Spec.OnlineStoreConfig.TTLDuration)
+		} else if a.ko.Spec.OnlineStoreConfig.TTLDuration != nil && b.ko.Spec.OnlineStoreConfig.TTLDuration != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.OnlineStoreConfig.TTLDuration.Unit, b.ko.Spec.OnlineStoreConfig.TTLDuration.Unit) {
+				delta.Add("Spec.OnlineStoreConfig.TTLDuration.Unit", a.ko.Spec.OnlineStoreConfig.TTLDuration.Unit, b.ko.Spec.OnlineStoreConfig.TTLDuration.Unit)
+			} else if a.ko.Spec.OnlineStoreConfig.TTLDuration.Unit != nil && b.ko.Spec.OnlineStoreConfig.TTLDuration.Unit != nil {
+				if *a.ko.Spec.OnlineStoreConfig.TTLDuration.Unit != *b.ko.Spec.OnlineStoreConfig.TTLDuration.Unit {
+					delta.Add("Spec.OnlineStoreConfig.TTLDuration.Unit", a.ko.Spec.OnlineStoreConfig.TTLDuration.Unit, b.ko.Spec.OnlineStoreConfig.TTLDuration.Unit)
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.OnlineStoreConfig.TTLDuration.Value, b.ko.Spec.OnlineStoreConfig.TTLDuration.Value) {
+				delta.Add("Spec.OnlineStoreConfig.TTLDuration.Value", a.ko.Spec.OnlineStoreConfig.TTLDuration.Value, b.ko.Spec.OnlineStoreConfig.TTLDuration.Value)
+			} else if a.ko.Spec.OnlineStoreConfig.TTLDuration.Value != nil && b.ko.Spec.OnlineStoreConfig.TTLDuration.Value != nil {
+				if *a.ko.Spec.OnlineStoreConfig.TTLDuration.Value != *b.ko.Spec.OnlineStoreConfig.TTLDuration.Value {
+					delta.Add("Spec.OnlineStoreConfig.TTLDuration.Value", a.ko.Spec.OnlineStoreConfig.TTLDuration.Value, b.ko.Spec.OnlineStoreConfig.TTLDuration.Value)
+				}
+			}
+		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.RecordIdentifierFeatureName, b.ko.Spec.RecordIdentifierFeatureName) {
 		delta.Add("Spec.RecordIdentifierFeatureName", a.ko.Spec.RecordIdentifierFeatureName, b.ko.Spec.RecordIdentifierFeatureName)
@@ -167,6 +192,31 @@ func newResourceDelta(
 	} else if a.ko.Spec.RoleARN != nil && b.ko.Spec.RoleARN != nil {
 		if *a.ko.Spec.RoleARN != *b.ko.Spec.RoleARN {
 			delta.Add("Spec.RoleARN", a.ko.Spec.RoleARN, b.ko.Spec.RoleARN)
+		}
+	}
+	if ackcompare.HasNilDifference(a.ko.Spec.ThroughputConfig, b.ko.Spec.ThroughputConfig) {
+		delta.Add("Spec.ThroughputConfig", a.ko.Spec.ThroughputConfig, b.ko.Spec.ThroughputConfig)
+	} else if a.ko.Spec.ThroughputConfig != nil && b.ko.Spec.ThroughputConfig != nil {
+		if ackcompare.HasNilDifference(a.ko.Spec.ThroughputConfig.ProvisionedReadCapacityUnits, b.ko.Spec.ThroughputConfig.ProvisionedReadCapacityUnits) {
+			delta.Add("Spec.ThroughputConfig.ProvisionedReadCapacityUnits", a.ko.Spec.ThroughputConfig.ProvisionedReadCapacityUnits, b.ko.Spec.ThroughputConfig.ProvisionedReadCapacityUnits)
+		} else if a.ko.Spec.ThroughputConfig.ProvisionedReadCapacityUnits != nil && b.ko.Spec.ThroughputConfig.ProvisionedReadCapacityUnits != nil {
+			if *a.ko.Spec.ThroughputConfig.ProvisionedReadCapacityUnits != *b.ko.Spec.ThroughputConfig.ProvisionedReadCapacityUnits {
+				delta.Add("Spec.ThroughputConfig.ProvisionedReadCapacityUnits", a.ko.Spec.ThroughputConfig.ProvisionedReadCapacityUnits, b.ko.Spec.ThroughputConfig.ProvisionedReadCapacityUnits)
+			}
+		}
+		if ackcompare.HasNilDifference(a.ko.Spec.ThroughputConfig.ProvisionedWriteCapacityUnits, b.ko.Spec.ThroughputConfig.ProvisionedWriteCapacityUnits) {
+			delta.Add("Spec.ThroughputConfig.ProvisionedWriteCapacityUnits", a.ko.Spec.ThroughputConfig.ProvisionedWriteCapacityUnits, b.ko.Spec.ThroughputConfig.ProvisionedWriteCapacityUnits)
+		} else if a.ko.Spec.ThroughputConfig.ProvisionedWriteCapacityUnits != nil && b.ko.Spec.ThroughputConfig.ProvisionedWriteCapacityUnits != nil {
+			if *a.ko.Spec.ThroughputConfig.ProvisionedWriteCapacityUnits != *b.ko.Spec.ThroughputConfig.ProvisionedWriteCapacityUnits {
+				delta.Add("Spec.ThroughputConfig.ProvisionedWriteCapacityUnits", a.ko.Spec.ThroughputConfig.ProvisionedWriteCapacityUnits, b.ko.Spec.ThroughputConfig.ProvisionedWriteCapacityUnits)
+			}
+		}
+		if ackcompare.HasNilDifference(a.ko.Spec.ThroughputConfig.ThroughputMode, b.ko.Spec.ThroughputConfig.ThroughputMode) {
+			delta.Add("Spec.ThroughputConfig.ThroughputMode", a.ko.Spec.ThroughputConfig.ThroughputMode, b.ko.Spec.ThroughputConfig.ThroughputMode)
+		} else if a.ko.Spec.ThroughputConfig.ThroughputMode != nil && b.ko.Spec.ThroughputConfig.ThroughputMode != nil {
+			if *a.ko.Spec.ThroughputConfig.ThroughputMode != *b.ko.Spec.ThroughputConfig.ThroughputMode {
+				delta.Add("Spec.ThroughputConfig.ThroughputMode", a.ko.Spec.ThroughputConfig.ThroughputMode, b.ko.Spec.ThroughputConfig.ThroughputMode)
+			}
 		}
 	}
 

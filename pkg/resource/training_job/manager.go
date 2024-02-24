@@ -51,7 +51,7 @@ var (
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=trainingjobs,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=trainingjobs/status,verbs=get;update;patch
 
-var lateInitializeFieldNames = []string{"AlgorithmSpecification.EnableSageMakerMetricsTimeSeries", "EnableInterContainerTrafficEncryption", "EnableManagedSpotTraining", "EnableNetworkIsolation", "OutputDataConfig.KMSKeyID", "ResourceConfig.InstanceCount"}
+var lateInitializeFieldNames = []string{"AlgorithmSpecification.EnableSageMakerMetricsTimeSeries", "EnableInterContainerTrafficEncryption", "EnableManagedSpotTraining", "EnableNetworkIsolation", "OutputDataConfig.CompressionType", "OutputDataConfig.KMSKeyID", "ResourceConfig.InstanceCount"}
 
 // resourceManager is responsible for providing a consistent way to perform
 // CRUD operations in a backend AWS service API for Book custom resources.
@@ -264,6 +264,11 @@ func (rm *resourceManager) incompleteLateInitialization(
 		return true
 	}
 	if ko.Spec.OutputDataConfig != nil {
+		if ko.Spec.OutputDataConfig.CompressionType == nil {
+			return true
+		}
+	}
+	if ko.Spec.OutputDataConfig != nil {
 		if ko.Spec.OutputDataConfig.KMSKeyID == nil {
 			return true
 		}
@@ -297,6 +302,11 @@ func (rm *resourceManager) lateInitializeFromReadOneOutput(
 	}
 	if observedKo.Spec.EnableNetworkIsolation != nil && latestKo.Spec.EnableNetworkIsolation == nil {
 		latestKo.Spec.EnableNetworkIsolation = observedKo.Spec.EnableNetworkIsolation
+	}
+	if observedKo.Spec.OutputDataConfig != nil && latestKo.Spec.OutputDataConfig != nil {
+		if observedKo.Spec.OutputDataConfig.CompressionType != nil && latestKo.Spec.OutputDataConfig.CompressionType == nil {
+			latestKo.Spec.OutputDataConfig.CompressionType = observedKo.Spec.OutputDataConfig.CompressionType
+		}
 	}
 	if observedKo.Spec.OutputDataConfig != nil && latestKo.Spec.OutputDataConfig != nil {
 		if observedKo.Spec.OutputDataConfig.KMSKeyID != nil && latestKo.Spec.OutputDataConfig.KMSKeyID == nil {

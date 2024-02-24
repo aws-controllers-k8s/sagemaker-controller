@@ -67,9 +67,15 @@ spec:
                         properties:
                           errorTopic:
                             type: string
+                          includeInferenceResponseIn:
+                            items:
+                              type: string
+                            type: array
                           successTopic:
                             type: string
                         type: object
+                      s3FailurePath:
+                        type: string
                       s3OutputPath:
                         type: string
                     type: object
@@ -81,7 +87,8 @@ spec:
                   captureContentTypeHeader:
                     description: |-
                       Configuration specifying how to treat different headers. If no headers are
-                      specified SageMaker will by default base64 encode when capturing the data.
+                      specified Amazon SageMaker will by default base64 encode when capturing the
+                      data.
                     properties:
                       csvContentTypes:
                         items:
@@ -110,10 +117,27 @@ spec:
                   kmsKeyID:
                     type: string
                 type: object
+              enableNetworkIsolation:
+                description: |-
+                  Sets whether all model containers deployed to the endpoint are isolated.
+                  If they are, no inbound or outbound network calls can be made to or from
+                  the model containers.
+                type: boolean
               endpointConfigName:
                 description: |-
                   The name of the endpoint configuration. You specify this name in a CreateEndpoint
+                  (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateEndpoint.html)
                   request.
+                type: string
+              executionRoleARN:
+                description: |-
+                  The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
+                  to perform actions on your behalf. For more information, see SageMaker Roles
+                  (https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-roles.html).
+
+
+                  To be able to pass this role to Amazon SageMaker, the caller of this action
+                  must have the iam:PassRole permission.
                 type: string
               kmsKeyID:
                 description: |-
@@ -195,11 +219,33 @@ spec:
                       type: number
                     instanceType:
                       type: string
+                    managedInstanceScaling:
+                      description: |-
+                        Settings that control the range in the number of instances that the endpoint
+                        provisions as it scales up or down to accommodate traffic.
+                      properties:
+                        maxInstanceCount:
+                          format: int64
+                          type: integer
+                        minInstanceCount:
+                          format: int64
+                          type: integer
+                        status:
+                          type: string
+                      type: object
                     modelDataDownloadTimeoutInSeconds:
                       format: int64
                       type: integer
                     modelName:
                       type: string
+                    routingConfig:
+                      description: |-
+                        Settings that control how the endpoint routes incoming traffic to the instances
+                        that the endpoint hosts.
+                      properties:
+                        routingStrategy:
+                          type: string
+                      type: object
                     serverlessConfig:
                       description: Specifies the serverless configuration for an endpoint
                         variant.
@@ -208,6 +254,9 @@ spec:
                           format: int64
                           type: integer
                         memorySizeInMB:
+                          format: int64
+                          type: integer
+                        provisionedConcurrency:
                           format: int64
                           type: integer
                       type: object
@@ -233,7 +282,7 @@ spec:
                     You can add tags to notebook instances, training jobs, hyperparameter tuning
                     jobs, batch transform jobs, models, labeling jobs, work teams, endpoint configurations,
                     and endpoints. For more information on adding tags to SageMaker resources,
-                    see AddTags.
+                    see AddTags (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_AddTags.html).
 
 
                     For more information on adding metadata to your Amazon Web Services resources
@@ -248,6 +297,22 @@ spec:
                       type: string
                   type: object
                 type: array
+              vpcConfig:
+                description: |-
+                  Specifies an Amazon Virtual Private Cloud (VPC) that your SageMaker jobs,
+                  hosted models, and compute resources have access to. You can control access
+                  to and from your resources by configuring a VPC. For more information, see
+                  Give SageMaker Access to Resources in your Amazon VPC (https://docs.aws.amazon.com/sagemaker/latest/dg/infrastructure-give-access.html).
+                properties:
+                  securityGroupIDs:
+                    items:
+                      type: string
+                    type: array
+                  subnets:
+                    items:
+                      type: string
+                    type: array
+                type: object
             required:
             - endpointConfigName
             - productionVariants

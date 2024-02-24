@@ -179,6 +179,36 @@ func (rm *resourceManager) sdkFind(
 			}
 			f8.BlueGreenUpdatePolicy = f8f1
 		}
+		if resp.LastDeploymentConfig.RollingUpdatePolicy != nil {
+			f8f2 := &svcapitypes.RollingUpdatePolicy{}
+			if resp.LastDeploymentConfig.RollingUpdatePolicy.MaximumBatchSize != nil {
+				f8f2f0 := &svcapitypes.CapacitySize{}
+				if resp.LastDeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type != nil {
+					f8f2f0.Type = resp.LastDeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type
+				}
+				if resp.LastDeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value != nil {
+					f8f2f0.Value = resp.LastDeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value
+				}
+				f8f2.MaximumBatchSize = f8f2f0
+			}
+			if resp.LastDeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds != nil {
+				f8f2.MaximumExecutionTimeoutInSeconds = resp.LastDeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds
+			}
+			if resp.LastDeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize != nil {
+				f8f2f2 := &svcapitypes.CapacitySize{}
+				if resp.LastDeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type != nil {
+					f8f2f2.Type = resp.LastDeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type
+				}
+				if resp.LastDeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value != nil {
+					f8f2f2.Value = resp.LastDeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value
+				}
+				f8f2.RollbackMaximumBatchSize = f8f2f2
+			}
+			if resp.LastDeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds != nil {
+				f8f2.WaitIntervalInSeconds = resp.LastDeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds
+			}
+			f8.RollingUpdatePolicy = f8f2
+		}
 		ko.Spec.DeploymentConfig = f8
 	} else {
 		ko.Spec.DeploymentConfig = nil
@@ -210,6 +240,9 @@ func (rm *resourceManager) sdkFind(
 					}
 					if f10f1iter.CurrentServerlessConfig.MemorySizeInMB != nil {
 						f10f1elemf2.MemorySizeInMB = f10f1iter.CurrentServerlessConfig.MemorySizeInMB
+					}
+					if f10f1iter.CurrentServerlessConfig.ProvisionedConcurrency != nil {
+						f10f1elemf2.ProvisionedConcurrency = f10f1iter.CurrentServerlessConfig.ProvisionedConcurrency
 					}
 					f10f1elem.CurrentServerlessConfig = f10f1elemf2
 				}
@@ -244,6 +277,9 @@ func (rm *resourceManager) sdkFind(
 					if f10f1iter.DesiredServerlessConfig.MemorySizeInMB != nil {
 						f10f1elemf6.MemorySizeInMB = f10f1iter.DesiredServerlessConfig.MemorySizeInMB
 					}
+					if f10f1iter.DesiredServerlessConfig.ProvisionedConcurrency != nil {
+						f10f1elemf6.ProvisionedConcurrency = f10f1iter.DesiredServerlessConfig.ProvisionedConcurrency
+					}
 					f10f1elem.DesiredServerlessConfig = f10f1elemf6
 				}
 				if f10f1iter.DesiredWeight != nil {
@@ -252,25 +288,45 @@ func (rm *resourceManager) sdkFind(
 				if f10f1iter.InstanceType != nil {
 					f10f1elem.InstanceType = f10f1iter.InstanceType
 				}
+				if f10f1iter.ManagedInstanceScaling != nil {
+					f10f1elemf9 := &svcapitypes.ProductionVariantManagedInstanceScaling{}
+					if f10f1iter.ManagedInstanceScaling.MaxInstanceCount != nil {
+						f10f1elemf9.MaxInstanceCount = f10f1iter.ManagedInstanceScaling.MaxInstanceCount
+					}
+					if f10f1iter.ManagedInstanceScaling.MinInstanceCount != nil {
+						f10f1elemf9.MinInstanceCount = f10f1iter.ManagedInstanceScaling.MinInstanceCount
+					}
+					if f10f1iter.ManagedInstanceScaling.Status != nil {
+						f10f1elemf9.Status = f10f1iter.ManagedInstanceScaling.Status
+					}
+					f10f1elem.ManagedInstanceScaling = f10f1elemf9
+				}
+				if f10f1iter.RoutingConfig != nil {
+					f10f1elemf10 := &svcapitypes.ProductionVariantRoutingConfig{}
+					if f10f1iter.RoutingConfig.RoutingStrategy != nil {
+						f10f1elemf10.RoutingStrategy = f10f1iter.RoutingConfig.RoutingStrategy
+					}
+					f10f1elem.RoutingConfig = f10f1elemf10
+				}
 				if f10f1iter.VariantName != nil {
 					f10f1elem.VariantName = f10f1iter.VariantName
 				}
 				if f10f1iter.VariantStatus != nil {
-					f10f1elemf10 := []*svcapitypes.ProductionVariantStatus{}
-					for _, f10f1elemf10iter := range f10f1iter.VariantStatus {
-						f10f1elemf10elem := &svcapitypes.ProductionVariantStatus{}
-						if f10f1elemf10iter.StartTime != nil {
-							f10f1elemf10elem.StartTime = &metav1.Time{*f10f1elemf10iter.StartTime}
+					f10f1elemf12 := []*svcapitypes.ProductionVariantStatus{}
+					for _, f10f1elemf12iter := range f10f1iter.VariantStatus {
+						f10f1elemf12elem := &svcapitypes.ProductionVariantStatus{}
+						if f10f1elemf12iter.StartTime != nil {
+							f10f1elemf12elem.StartTime = &metav1.Time{*f10f1elemf12iter.StartTime}
 						}
-						if f10f1elemf10iter.Status != nil {
-							f10f1elemf10elem.Status = f10f1elemf10iter.Status
+						if f10f1elemf12iter.Status != nil {
+							f10f1elemf12elem.Status = f10f1elemf12iter.Status
 						}
-						if f10f1elemf10iter.StatusMessage != nil {
-							f10f1elemf10elem.StatusMessage = f10f1elemf10iter.StatusMessage
+						if f10f1elemf12iter.StatusMessage != nil {
+							f10f1elemf12elem.StatusMessage = f10f1elemf12iter.StatusMessage
 						}
-						f10f1elemf10 = append(f10f1elemf10, f10f1elemf10elem)
+						f10f1elemf12 = append(f10f1elemf12, f10f1elemf12elem)
 					}
-					f10f1elem.VariantStatus = f10f1elemf10
+					f10f1elem.VariantStatus = f10f1elemf12
 				}
 				f10f1 = append(f10f1, f10f1elem)
 			}
@@ -297,6 +353,9 @@ func (rm *resourceManager) sdkFind(
 				}
 				if f11iter.CurrentServerlessConfig.MemorySizeInMB != nil {
 					f11elemf1.MemorySizeInMB = f11iter.CurrentServerlessConfig.MemorySizeInMB
+				}
+				if f11iter.CurrentServerlessConfig.ProvisionedConcurrency != nil {
+					f11elemf1.ProvisionedConcurrency = f11iter.CurrentServerlessConfig.ProvisionedConcurrency
 				}
 				f11elem.CurrentServerlessConfig = f11elemf1
 			}
@@ -331,30 +390,53 @@ func (rm *resourceManager) sdkFind(
 				if f11iter.DesiredServerlessConfig.MemorySizeInMB != nil {
 					f11elemf5.MemorySizeInMB = f11iter.DesiredServerlessConfig.MemorySizeInMB
 				}
+				if f11iter.DesiredServerlessConfig.ProvisionedConcurrency != nil {
+					f11elemf5.ProvisionedConcurrency = f11iter.DesiredServerlessConfig.ProvisionedConcurrency
+				}
 				f11elem.DesiredServerlessConfig = f11elemf5
 			}
 			if f11iter.DesiredWeight != nil {
 				f11elem.DesiredWeight = f11iter.DesiredWeight
 			}
+			if f11iter.ManagedInstanceScaling != nil {
+				f11elemf7 := &svcapitypes.ProductionVariantManagedInstanceScaling{}
+				if f11iter.ManagedInstanceScaling.MaxInstanceCount != nil {
+					f11elemf7.MaxInstanceCount = f11iter.ManagedInstanceScaling.MaxInstanceCount
+				}
+				if f11iter.ManagedInstanceScaling.MinInstanceCount != nil {
+					f11elemf7.MinInstanceCount = f11iter.ManagedInstanceScaling.MinInstanceCount
+				}
+				if f11iter.ManagedInstanceScaling.Status != nil {
+					f11elemf7.Status = f11iter.ManagedInstanceScaling.Status
+				}
+				f11elem.ManagedInstanceScaling = f11elemf7
+			}
+			if f11iter.RoutingConfig != nil {
+				f11elemf8 := &svcapitypes.ProductionVariantRoutingConfig{}
+				if f11iter.RoutingConfig.RoutingStrategy != nil {
+					f11elemf8.RoutingStrategy = f11iter.RoutingConfig.RoutingStrategy
+				}
+				f11elem.RoutingConfig = f11elemf8
+			}
 			if f11iter.VariantName != nil {
 				f11elem.VariantName = f11iter.VariantName
 			}
 			if f11iter.VariantStatus != nil {
-				f11elemf8 := []*svcapitypes.ProductionVariantStatus{}
-				for _, f11elemf8iter := range f11iter.VariantStatus {
-					f11elemf8elem := &svcapitypes.ProductionVariantStatus{}
-					if f11elemf8iter.StartTime != nil {
-						f11elemf8elem.StartTime = &metav1.Time{*f11elemf8iter.StartTime}
+				f11elemf10 := []*svcapitypes.ProductionVariantStatus{}
+				for _, f11elemf10iter := range f11iter.VariantStatus {
+					f11elemf10elem := &svcapitypes.ProductionVariantStatus{}
+					if f11elemf10iter.StartTime != nil {
+						f11elemf10elem.StartTime = &metav1.Time{*f11elemf10iter.StartTime}
 					}
-					if f11elemf8iter.Status != nil {
-						f11elemf8elem.Status = f11elemf8iter.Status
+					if f11elemf10iter.Status != nil {
+						f11elemf10elem.Status = f11elemf10iter.Status
 					}
-					if f11elemf8iter.StatusMessage != nil {
-						f11elemf8elem.StatusMessage = f11elemf8iter.StatusMessage
+					if f11elemf10iter.StatusMessage != nil {
+						f11elemf10elem.StatusMessage = f11elemf10iter.StatusMessage
 					}
-					f11elemf8 = append(f11elemf8, f11elemf8elem)
+					f11elemf10 = append(f11elemf10, f11elemf10elem)
 				}
-				f11elem.VariantStatus = f11elemf8
+				f11elem.VariantStatus = f11elemf10
 			}
 			f11 = append(f11, f11elem)
 		}
@@ -497,6 +579,36 @@ func (rm *resourceManager) newCreateRequestPayload(
 			}
 			f0.SetBlueGreenUpdatePolicy(f0f1)
 		}
+		if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy != nil {
+			f0f2 := &svcsdk.RollingUpdatePolicy{}
+			if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize != nil {
+				f0f2f0 := &svcsdk.CapacitySize{}
+				if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type != nil {
+					f0f2f0.SetType(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type)
+				}
+				if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value != nil {
+					f0f2f0.SetValue(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value)
+				}
+				f0f2.SetMaximumBatchSize(f0f2f0)
+			}
+			if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds != nil {
+				f0f2.SetMaximumExecutionTimeoutInSeconds(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds)
+			}
+			if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize != nil {
+				f0f2f2 := &svcsdk.CapacitySize{}
+				if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type != nil {
+					f0f2f2.SetType(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type)
+				}
+				if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value != nil {
+					f0f2f2.SetValue(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value)
+				}
+				f0f2.SetRollbackMaximumBatchSize(f0f2f2)
+			}
+			if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds != nil {
+				f0f2.SetWaitIntervalInSeconds(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds)
+			}
+			f0.SetRollingUpdatePolicy(f0f2)
+		}
 		res.SetDeploymentConfig(f0)
 	}
 	if r.ko.Spec.EndpointConfigName != nil {
@@ -638,6 +750,36 @@ func (rm *resourceManager) newUpdateRequestPayload(
 				f0f1.SetTrafficRoutingConfiguration(f0f1f2)
 			}
 			f0.SetBlueGreenUpdatePolicy(f0f1)
+		}
+		if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy != nil {
+			f0f2 := &svcsdk.RollingUpdatePolicy{}
+			if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize != nil {
+				f0f2f0 := &svcsdk.CapacitySize{}
+				if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type != nil {
+					f0f2f0.SetType(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type)
+				}
+				if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value != nil {
+					f0f2f0.SetValue(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value)
+				}
+				f0f2.SetMaximumBatchSize(f0f2f0)
+			}
+			if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds != nil {
+				f0f2.SetMaximumExecutionTimeoutInSeconds(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds)
+			}
+			if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize != nil {
+				f0f2f2 := &svcsdk.CapacitySize{}
+				if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type != nil {
+					f0f2f2.SetType(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type)
+				}
+				if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value != nil {
+					f0f2f2.SetValue(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value)
+				}
+				f0f2.SetRollbackMaximumBatchSize(f0f2f2)
+			}
+			if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds != nil {
+				f0f2.SetWaitIntervalInSeconds(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds)
+			}
+			f0.SetRollingUpdatePolicy(f0f2)
 		}
 		res.SetDeploymentConfig(f0)
 	}

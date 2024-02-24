@@ -109,6 +109,20 @@ func (rm *resourceManager) sdkFind(
 		f4 := []*svcapitypes.FeatureDefinition{}
 		for _, f4iter := range resp.FeatureDefinitions {
 			f4elem := &svcapitypes.FeatureDefinition{}
+			if f4iter.CollectionConfig != nil {
+				f4elemf0 := &svcapitypes.CollectionConfig{}
+				if f4iter.CollectionConfig.VectorConfig != nil {
+					f4elemf0f0 := &svcapitypes.VectorConfig{}
+					if f4iter.CollectionConfig.VectorConfig.Dimension != nil {
+						f4elemf0f0.Dimension = f4iter.CollectionConfig.VectorConfig.Dimension
+					}
+					f4elemf0.VectorConfig = f4elemf0f0
+				}
+				f4elem.CollectionConfig = f4elemf0
+			}
+			if f4iter.CollectionType != nil {
+				f4elem.CollectionType = f4iter.CollectionType
+			}
 			if f4iter.FeatureName != nil {
 				f4elem.FeatureName = f4iter.FeatureName
 			}
@@ -185,6 +199,19 @@ func (rm *resourceManager) sdkFind(
 			}
 			f13.SecurityConfig = f13f1
 		}
+		if resp.OnlineStoreConfig.StorageType != nil {
+			f13.StorageType = resp.OnlineStoreConfig.StorageType
+		}
+		if resp.OnlineStoreConfig.TtlDuration != nil {
+			f13f3 := &svcapitypes.TTLDuration{}
+			if resp.OnlineStoreConfig.TtlDuration.Unit != nil {
+				f13f3.Unit = resp.OnlineStoreConfig.TtlDuration.Unit
+			}
+			if resp.OnlineStoreConfig.TtlDuration.Value != nil {
+				f13f3.Value = resp.OnlineStoreConfig.TtlDuration.Value
+			}
+			f13.TTLDuration = f13f3
+		}
 		ko.Spec.OnlineStoreConfig = f13
 	} else {
 		ko.Spec.OnlineStoreConfig = nil
@@ -198,6 +225,21 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.RoleARN = resp.RoleArn
 	} else {
 		ko.Spec.RoleARN = nil
+	}
+	if resp.ThroughputConfig != nil {
+		f17 := &svcapitypes.ThroughputConfig{}
+		if resp.ThroughputConfig.ProvisionedReadCapacityUnits != nil {
+			f17.ProvisionedReadCapacityUnits = resp.ThroughputConfig.ProvisionedReadCapacityUnits
+		}
+		if resp.ThroughputConfig.ProvisionedWriteCapacityUnits != nil {
+			f17.ProvisionedWriteCapacityUnits = resp.ThroughputConfig.ProvisionedWriteCapacityUnits
+		}
+		if resp.ThroughputConfig.ThroughputMode != nil {
+			f17.ThroughputMode = resp.ThroughputConfig.ThroughputMode
+		}
+		ko.Spec.ThroughputConfig = f17
+	} else {
+		ko.Spec.ThroughputConfig = nil
 	}
 
 	rm.setStatusDefaults(ko)
@@ -287,6 +329,20 @@ func (rm *resourceManager) newCreateRequestPayload(
 		f2 := []*svcsdk.FeatureDefinition{}
 		for _, f2iter := range r.ko.Spec.FeatureDefinitions {
 			f2elem := &svcsdk.FeatureDefinition{}
+			if f2iter.CollectionConfig != nil {
+				f2elemf0 := &svcsdk.CollectionConfig{}
+				if f2iter.CollectionConfig.VectorConfig != nil {
+					f2elemf0f0 := &svcsdk.VectorConfig{}
+					if f2iter.CollectionConfig.VectorConfig.Dimension != nil {
+						f2elemf0f0.SetDimension(*f2iter.CollectionConfig.VectorConfig.Dimension)
+					}
+					f2elemf0.SetVectorConfig(f2elemf0f0)
+				}
+				f2elem.SetCollectionConfig(f2elemf0)
+			}
+			if f2iter.CollectionType != nil {
+				f2elem.SetCollectionType(*f2iter.CollectionType)
+			}
 			if f2iter.FeatureName != nil {
 				f2elem.SetFeatureName(*f2iter.FeatureName)
 			}
@@ -345,6 +401,19 @@ func (rm *resourceManager) newCreateRequestPayload(
 			}
 			f5.SetSecurityConfig(f5f1)
 		}
+		if r.ko.Spec.OnlineStoreConfig.StorageType != nil {
+			f5.SetStorageType(*r.ko.Spec.OnlineStoreConfig.StorageType)
+		}
+		if r.ko.Spec.OnlineStoreConfig.TTLDuration != nil {
+			f5f3 := &svcsdk.TtlDuration{}
+			if r.ko.Spec.OnlineStoreConfig.TTLDuration.Unit != nil {
+				f5f3.SetUnit(*r.ko.Spec.OnlineStoreConfig.TTLDuration.Unit)
+			}
+			if r.ko.Spec.OnlineStoreConfig.TTLDuration.Value != nil {
+				f5f3.SetValue(*r.ko.Spec.OnlineStoreConfig.TTLDuration.Value)
+			}
+			f5.SetTtlDuration(f5f3)
+		}
 		res.SetOnlineStoreConfig(f5)
 	}
 	if r.ko.Spec.RecordIdentifierFeatureName != nil {
@@ -366,6 +435,19 @@ func (rm *resourceManager) newCreateRequestPayload(
 			f8 = append(f8, f8elem)
 		}
 		res.SetTags(f8)
+	}
+	if r.ko.Spec.ThroughputConfig != nil {
+		f9 := &svcsdk.ThroughputConfig{}
+		if r.ko.Spec.ThroughputConfig.ProvisionedReadCapacityUnits != nil {
+			f9.SetProvisionedReadCapacityUnits(*r.ko.Spec.ThroughputConfig.ProvisionedReadCapacityUnits)
+		}
+		if r.ko.Spec.ThroughputConfig.ProvisionedWriteCapacityUnits != nil {
+			f9.SetProvisionedWriteCapacityUnits(*r.ko.Spec.ThroughputConfig.ProvisionedWriteCapacityUnits)
+		}
+		if r.ko.Spec.ThroughputConfig.ThroughputMode != nil {
+			f9.SetThroughputMode(*r.ko.Spec.ThroughputConfig.ThroughputMode)
+		}
+		res.SetThroughputConfig(f9)
 	}
 
 	return res, nil

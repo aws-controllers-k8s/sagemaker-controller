@@ -32,11 +32,13 @@ type PipelineExecutionSpec struct {
 	PipelineExecutionDescription *string `json:"pipelineExecutionDescription,omitempty"`
 	// The display name of the pipeline execution.
 	PipelineExecutionDisplayName *string `json:"pipelineExecutionDisplayName,omitempty"`
-	// The name of the pipeline.
+	// The name or Amazon Resource Name (ARN) of the pipeline.
 	// +kubebuilder:validation:Required
 	PipelineName *string `json:"pipelineName"`
 	// Contains a list of pipeline parameters. This list can be empty.
 	PipelineParameters []*Parameter `json:"pipelineParameters,omitempty"`
+	// The selective execution configuration applied to the pipeline run.
+	SelectiveExecutionConfig *SelectiveExecutionConfig `json:"selectiveExecutionConfig,omitempty"`
 }
 
 // PipelineExecutionStatus defines the observed state of PipelineExecution

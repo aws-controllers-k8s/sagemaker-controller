@@ -23,10 +23,39 @@ import (
 // HyperParameterTuningJobSpec defines the desired state of HyperParameterTuningJob.
 type HyperParameterTuningJobSpec struct {
 
-	// The HyperParameterTuningJobConfig object that describes the tuning job, including
-	// the search strategy, the objective metric used to evaluate training jobs,
-	// ranges of parameters to search, and resource limits for the tuning job. For
-	// more information, see How Hyperparameter Tuning Works (https://docs.aws.amazon.com/sagemaker/latest/dg/automatic-model-tuning-how-it-works.html).
+	// Configures SageMaker Automatic model tuning (AMT) to automatically find optimal
+	// parameters for the following fields:
+	//
+	//   - ParameterRanges (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_HyperParameterTuningJobConfig.html#sagemaker-Type-HyperParameterTuningJobConfig-ParameterRanges):
+	//     The names and ranges of parameters that a hyperparameter tuning job can
+	//     optimize.
+	//
+	//   - ResourceLimits (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_ResourceLimits.html):
+	//     The maximum resources that can be used for a training job. These resources
+	//     include the maximum number of training jobs, the maximum runtime of a
+	//     tuning job, and the maximum number of training jobs to run at the same
+	//     time.
+	//
+	//   - TrainingJobEarlyStoppingType (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_HyperParameterTuningJobConfig.html#sagemaker-Type-HyperParameterTuningJobConfig-TrainingJobEarlyStoppingType):
+	//     A flag that specifies whether or not to use early stopping for training
+	//     jobs launched by a hyperparameter tuning job.
+	//
+	//   - RetryStrategy (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_HyperParameterTrainingJobDefinition.html#sagemaker-Type-HyperParameterTrainingJobDefinition-RetryStrategy):
+	//     The number of times to retry a training job.
+	//
+	//   - Strategy (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_HyperParameterTuningJobConfig.html):
+	//     Specifies how hyperparameter tuning chooses the combinations of hyperparameter
+	//     values to use for the training jobs that it launches.
+	//
+	//   - ConvergenceDetected (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_ConvergenceDetected.html):
+	//     A flag to indicate that Automatic model tuning (AMT) has detected model
+	//     convergence.
+	Autotune *Autotune `json:"autotune,omitempty"`
+	// The HyperParameterTuningJobConfig (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_HyperParameterTuningJobConfig.html)
+	// object that describes the tuning job, including the search strategy, the
+	// objective metric used to evaluate training jobs, ranges of parameters to
+	// search, and resource limits for the tuning job. For more information, see
+	// How Hyperparameter Tuning Works (https://docs.aws.amazon.com/sagemaker/latest/dg/automatic-model-tuning-how-it-works.html).
 	// +kubebuilder:validation:Required
 	HyperParameterTuningJobConfig *HyperParameterTuningJobConfig `json:"hyperParameterTuningJobConfig"`
 	// The name of the tuning job. This name is the prefix for the names of all
@@ -44,13 +73,13 @@ type HyperParameterTuningJobSpec struct {
 	// Tags that you specify for the tuning job are also added to all training jobs
 	// that the tuning job launches.
 	Tags []*Tag `json:"tags,omitempty"`
-	// The HyperParameterTrainingJobDefinition object that describes the training
-	// jobs that this tuning job launches, including static hyperparameters, input
-	// data configuration, output data configuration, resource configuration, and
-	// stopping condition.
+	// The HyperParameterTrainingJobDefinition (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_HyperParameterTrainingJobDefinition.html)
+	// object that describes the training jobs that this tuning job launches, including
+	// static hyperparameters, input data configuration, output data configuration,
+	// resource configuration, and stopping condition.
 	TrainingJobDefinition *HyperParameterTrainingJobDefinition `json:"trainingJobDefinition,omitempty"`
-	// A list of the HyperParameterTrainingJobDefinition objects launched for this
-	// tuning job.
+	// A list of the HyperParameterTrainingJobDefinition (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_HyperParameterTrainingJobDefinition.html)
+	// objects launched for this tuning job.
 	TrainingJobDefinitions []*HyperParameterTrainingJobDefinition `json:"trainingJobDefinitions,omitempty"`
 	// Specifies the configuration for starting the hyperparameter tuning job using
 	// one or more previous tuning jobs as a starting point. The results of previous
@@ -84,21 +113,22 @@ type HyperParameterTuningJobStatus struct {
 	// resource
 	// +kubebuilder:validation:Optional
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
-	// A TrainingJobSummary object that describes the training job that completed
-	// with the best current HyperParameterTuningJobObjective.
+	// A TrainingJobSummary (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_TrainingJobSummary.html)
+	// object that describes the training job that completed with the best current
+	// HyperParameterTuningJobObjective (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_HyperParameterTuningJobObjective.html).
 	// +kubebuilder:validation:Optional
 	BestTrainingJob *HyperParameterTrainingJobSummary `json:"bestTrainingJob,omitempty"`
 	// If the tuning job failed, the reason it failed.
 	// +kubebuilder:validation:Optional
 	FailureReason *string `json:"failureReason,omitempty"`
-	// The status of the tuning job: InProgress, Completed, Failed, Stopping, or
-	// Stopped.
+	// The status of the tuning job.
 	// +kubebuilder:validation:Optional
 	HyperParameterTuningJobStatus *string `json:"hyperParameterTuningJobStatus,omitempty"`
 	// If the hyperparameter tuning job is an warm start tuning job with a WarmStartType
-	// of IDENTICAL_DATA_AND_ALGORITHM, this is the TrainingJobSummary for the training
-	// job with the best objective metric value of all training jobs launched by
-	// this tuning job and all parent jobs specified for the warm start tuning job.
+	// of IDENTICAL_DATA_AND_ALGORITHM, this is the TrainingJobSummary (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_TrainingJobSummary.html)
+	// for the training job with the best objective metric value of all training
+	// jobs launched by this tuning job and all parent jobs specified for the warm
+	// start tuning job.
 	// +kubebuilder:validation:Optional
 	OverallBestTrainingJob *HyperParameterTrainingJobSummary `json:"overallBestTrainingJob,omitempty"`
 }

@@ -657,6 +657,13 @@ func newResourceDelta(
 			delta.Add("Spec.SamplePayloadURL", a.ko.Spec.SamplePayloadURL, b.ko.Spec.SamplePayloadURL)
 		}
 	}
+	if ackcompare.HasNilDifference(a.ko.Spec.SkipModelValidation, b.ko.Spec.SkipModelValidation) {
+		delta.Add("Spec.SkipModelValidation", a.ko.Spec.SkipModelValidation, b.ko.Spec.SkipModelValidation)
+	} else if a.ko.Spec.SkipModelValidation != nil && b.ko.Spec.SkipModelValidation != nil {
+		if *a.ko.Spec.SkipModelValidation != *b.ko.Spec.SkipModelValidation {
+			delta.Add("Spec.SkipModelValidation", a.ko.Spec.SkipModelValidation, b.ko.Spec.SkipModelValidation)
+		}
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.SourceAlgorithmSpecification, b.ko.Spec.SourceAlgorithmSpecification) {
 		delta.Add("Spec.SourceAlgorithmSpecification", a.ko.Spec.SourceAlgorithmSpecification, b.ko.Spec.SourceAlgorithmSpecification)
 	} else if a.ko.Spec.SourceAlgorithmSpecification != nil && b.ko.Spec.SourceAlgorithmSpecification != nil {

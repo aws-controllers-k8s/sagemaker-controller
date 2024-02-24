@@ -67,7 +67,7 @@ spec:
                 description: The display name of the pipeline execution.
                 type: string
               pipelineName:
-                description: The name of the pipeline.
+                description: The name or Amazon Resource Name (ARN) of the pipeline.
                 type: string
               pipelineParameters:
                 description: Contains a list of pipeline parameters. This list can
@@ -81,6 +81,21 @@ spec:
                       type: string
                   type: object
                 type: array
+              selectiveExecutionConfig:
+                description: The selective execution configuration applied to the
+                  pipeline run.
+                properties:
+                  selectedSteps:
+                    items:
+                      description: A step selected to run in selective execution mode.
+                      properties:
+                        stepName:
+                          type: string
+                      type: object
+                    type: array
+                  sourcePipelineExecutionARN:
+                    type: string
+                type: object
             required:
             - pipelineName
             type: object

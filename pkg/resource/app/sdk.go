@@ -123,6 +123,9 @@ func (rm *resourceManager) sdkFind(
 		if resp.ResourceSpec.SageMakerImageArn != nil {
 			f8.SageMakerImageARN = resp.ResourceSpec.SageMakerImageArn
 		}
+		if resp.ResourceSpec.SageMakerImageVersionAlias != nil {
+			f8.SageMakerImageVersionAlias = resp.ResourceSpec.SageMakerImageVersionAlias
+		}
 		if resp.ResourceSpec.SageMakerImageVersionArn != nil {
 			f8.SageMakerImageVersionARN = resp.ResourceSpec.SageMakerImageVersionArn
 		}
@@ -246,6 +249,9 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		if r.ko.Spec.ResourceSpec.SageMakerImageARN != nil {
 			f3.SetSageMakerImageArn(*r.ko.Spec.ResourceSpec.SageMakerImageARN)
+		}
+		if r.ko.Spec.ResourceSpec.SageMakerImageVersionAlias != nil {
+			f3.SetSageMakerImageVersionAlias(*r.ko.Spec.ResourceSpec.SageMakerImageVersionAlias)
 		}
 		if r.ko.Spec.ResourceSpec.SageMakerImageVersionARN != nil {
 			f3.SetSageMakerImageVersionArn(*r.ko.Spec.ResourceSpec.SageMakerImageVersionARN)

@@ -129,6 +129,60 @@ func newResourceDelta(
 				}
 			}
 		}
+		if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.RollingUpdatePolicy, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy) {
+			delta.Add("Spec.DeploymentConfig.RollingUpdatePolicy", a.ko.Spec.DeploymentConfig.RollingUpdatePolicy, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy)
+		} else if a.ko.Spec.DeploymentConfig.RollingUpdatePolicy != nil && b.ko.Spec.DeploymentConfig.RollingUpdatePolicy != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize) {
+				delta.Add("Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize", a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize)
+			} else if a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize != nil && b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type) {
+					delta.Add("Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type", a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type)
+				} else if a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type != nil && b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type != nil {
+					if *a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type != *b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type {
+						delta.Add("Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type", a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value) {
+					delta.Add("Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value", a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value)
+				} else if a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value != nil && b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value != nil {
+					if *a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value != *b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value {
+						delta.Add("Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value", a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value)
+					}
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds) {
+				delta.Add("Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds", a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds)
+			} else if a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds != nil && b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds != nil {
+				if *a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds != *b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds {
+					delta.Add("Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds", a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds)
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize) {
+				delta.Add("Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize", a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize)
+			} else if a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize != nil && b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type) {
+					delta.Add("Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type", a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type)
+				} else if a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type != nil && b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type != nil {
+					if *a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type != *b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type {
+						delta.Add("Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type", a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value) {
+					delta.Add("Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value", a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value)
+				} else if a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value != nil && b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value != nil {
+					if *a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value != *b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value {
+						delta.Add("Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value", a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value)
+					}
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds) {
+				delta.Add("Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds", a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds)
+			} else if a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds != nil && b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds != nil {
+				if *a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds != *b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds {
+					delta.Add("Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds", a.ko.Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds, b.ko.Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds)
+				}
+			}
+		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.EndpointConfigName, b.ko.Spec.EndpointConfigName) {
 		delta.Add("Spec.EndpointConfigName", a.ko.Spec.EndpointConfigName, b.ko.Spec.EndpointConfigName)

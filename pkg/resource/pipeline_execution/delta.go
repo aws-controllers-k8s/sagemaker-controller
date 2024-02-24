@@ -82,6 +82,24 @@ func newResourceDelta(
 			delta.Add("Spec.PipelineParameters", a.ko.Spec.PipelineParameters, b.ko.Spec.PipelineParameters)
 		}
 	}
+	if ackcompare.HasNilDifference(a.ko.Spec.SelectiveExecutionConfig, b.ko.Spec.SelectiveExecutionConfig) {
+		delta.Add("Spec.SelectiveExecutionConfig", a.ko.Spec.SelectiveExecutionConfig, b.ko.Spec.SelectiveExecutionConfig)
+	} else if a.ko.Spec.SelectiveExecutionConfig != nil && b.ko.Spec.SelectiveExecutionConfig != nil {
+		if len(a.ko.Spec.SelectiveExecutionConfig.SelectedSteps) != len(b.ko.Spec.SelectiveExecutionConfig.SelectedSteps) {
+			delta.Add("Spec.SelectiveExecutionConfig.SelectedSteps", a.ko.Spec.SelectiveExecutionConfig.SelectedSteps, b.ko.Spec.SelectiveExecutionConfig.SelectedSteps)
+		} else if len(a.ko.Spec.SelectiveExecutionConfig.SelectedSteps) > 0 {
+			if !reflect.DeepEqual(a.ko.Spec.SelectiveExecutionConfig.SelectedSteps, b.ko.Spec.SelectiveExecutionConfig.SelectedSteps) {
+				delta.Add("Spec.SelectiveExecutionConfig.SelectedSteps", a.ko.Spec.SelectiveExecutionConfig.SelectedSteps, b.ko.Spec.SelectiveExecutionConfig.SelectedSteps)
+			}
+		}
+		if ackcompare.HasNilDifference(a.ko.Spec.SelectiveExecutionConfig.SourcePipelineExecutionARN, b.ko.Spec.SelectiveExecutionConfig.SourcePipelineExecutionARN) {
+			delta.Add("Spec.SelectiveExecutionConfig.SourcePipelineExecutionARN", a.ko.Spec.SelectiveExecutionConfig.SourcePipelineExecutionARN, b.ko.Spec.SelectiveExecutionConfig.SourcePipelineExecutionARN)
+		} else if a.ko.Spec.SelectiveExecutionConfig.SourcePipelineExecutionARN != nil && b.ko.Spec.SelectiveExecutionConfig.SourcePipelineExecutionARN != nil {
+			if *a.ko.Spec.SelectiveExecutionConfig.SourcePipelineExecutionARN != *b.ko.Spec.SelectiveExecutionConfig.SourcePipelineExecutionARN {
+				delta.Add("Spec.SelectiveExecutionConfig.SourcePipelineExecutionARN", a.ko.Spec.SelectiveExecutionConfig.SourcePipelineExecutionARN, b.ko.Spec.SelectiveExecutionConfig.SourcePipelineExecutionARN)
+			}
+		}
+	}
 
 	return delta
 }

@@ -85,13 +85,15 @@ type FeatureGroupSpec struct {
 	//   - Format for the offline store table. Supported formats are Glue (Default)
 	//     and Apache Iceberg (https://iceberg.apache.org/).
 	//
-	// To learn more about this parameter, see OfflineStoreConfig.
+	// To learn more about this parameter, see OfflineStoreConfig (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_OfflineStoreConfig.html).
 	OfflineStoreConfig *OfflineStoreConfig `json:"offlineStoreConfig,omitempty"`
 	// You can turn the OnlineStore on or off by specifying True for the EnableOnlineStore
-	// flag in OnlineStoreConfig; the default value is False.
+	// flag in OnlineStoreConfig.
 	//
 	// You can also include an Amazon Web Services KMS key ID (KMSKeyId) for at-rest
 	// encryption of the OnlineStore.
+	//
+	// The default value is False.
 	OnlineStoreConfig *OnlineStoreConfig `json:"onlineStoreConfig,omitempty"`
 	// The name of the Feature whose value uniquely identifies a Record defined
 	// in the FeatureStore. Only the latest record per identifier value will be
@@ -113,7 +115,8 @@ type FeatureGroupSpec struct {
 	// data into the OfflineStore if an OfflineStoreConfig is provided.
 	RoleARN *string `json:"roleARN,omitempty"`
 	// Tags used to identify Features in each FeatureGroup.
-	Tags []*Tag `json:"tags,omitempty"`
+	Tags             []*Tag            `json:"tags,omitempty"`
+	ThroughputConfig *ThroughputConfig `json:"throughputConfig,omitempty"`
 }
 
 // FeatureGroupStatus defines the observed state of FeatureGroup

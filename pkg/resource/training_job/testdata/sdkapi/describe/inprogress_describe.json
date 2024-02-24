@@ -144,7 +144,8 @@
     "ModelArtifacts": null,
     "OutputDataConfig": {
         "KmsKeyId": "",
-        "S3OutputPath": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/output"
+        "S3OutputPath": "s3://source-data-bucket-592697580195-us-west-2/sagemaker/training/output",
+        "CompressionType": "GZIP"
     },
     "ProfilerConfig": null,
     "ProfilerRuleConfigurations": null,

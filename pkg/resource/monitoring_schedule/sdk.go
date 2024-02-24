@@ -225,6 +225,9 @@ func (rm *resourceManager) sdkFind(
 						if f6f0f3iter.EndpointInput.EndpointName != nil {
 							f6f0f3elemf0.EndpointName = f6f0f3iter.EndpointInput.EndpointName
 						}
+						if f6f0f3iter.EndpointInput.ExcludeFeaturesAttribute != nil {
+							f6f0f3elemf0.ExcludeFeaturesAttribute = f6f0f3iter.EndpointInput.ExcludeFeaturesAttribute
+						}
 						if f6f0f3iter.EndpointInput.FeaturesAttribute != nil {
 							f6f0f3elemf0.FeaturesAttribute = f6f0f3iter.EndpointInput.FeaturesAttribute
 						}
@@ -355,6 +358,12 @@ func (rm *resourceManager) sdkFind(
 		}
 		if resp.MonitoringScheduleConfig.ScheduleConfig != nil {
 			f6f3 := &svcapitypes.ScheduleConfig{}
+			if resp.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime != nil {
+				f6f3.DataAnalysisEndTime = resp.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime
+			}
+			if resp.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime != nil {
+				f6f3.DataAnalysisStartTime = resp.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime
+			}
 			if resp.MonitoringScheduleConfig.ScheduleConfig.ScheduleExpression != nil {
 				f6f3.ScheduleExpression = resp.MonitoringScheduleConfig.ScheduleConfig.ScheduleExpression
 			}
@@ -529,6 +538,9 @@ func (rm *resourceManager) newCreateRequestPayload(
 						if f0f0f3iter.EndpointInput.EndpointName != nil {
 							f0f0f3elemf0.SetEndpointName(*f0f0f3iter.EndpointInput.EndpointName)
 						}
+						if f0f0f3iter.EndpointInput.ExcludeFeaturesAttribute != nil {
+							f0f0f3elemf0.SetExcludeFeaturesAttribute(*f0f0f3iter.EndpointInput.ExcludeFeaturesAttribute)
+						}
 						if f0f0f3iter.EndpointInput.FeaturesAttribute != nil {
 							f0f0f3elemf0.SetFeaturesAttribute(*f0f0f3iter.EndpointInput.FeaturesAttribute)
 						}
@@ -659,6 +671,12 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		if r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig != nil {
 			f0f3 := &svcsdk.ScheduleConfig{}
+			if r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime != nil {
+				f0f3.SetDataAnalysisEndTime(*r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime)
+			}
+			if r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime != nil {
+				f0f3.SetDataAnalysisStartTime(*r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime)
+			}
 			if r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.ScheduleExpression != nil {
 				f0f3.SetScheduleExpression(*r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.ScheduleExpression)
 			}
@@ -818,6 +836,9 @@ func (rm *resourceManager) newUpdateRequestPayload(
 						if f0f0f3iter.EndpointInput.EndpointName != nil {
 							f0f0f3elemf0.SetEndpointName(*f0f0f3iter.EndpointInput.EndpointName)
 						}
+						if f0f0f3iter.EndpointInput.ExcludeFeaturesAttribute != nil {
+							f0f0f3elemf0.SetExcludeFeaturesAttribute(*f0f0f3iter.EndpointInput.ExcludeFeaturesAttribute)
+						}
 						if f0f0f3iter.EndpointInput.FeaturesAttribute != nil {
 							f0f0f3elemf0.SetFeaturesAttribute(*f0f0f3iter.EndpointInput.FeaturesAttribute)
 						}
@@ -948,6 +969,12 @@ func (rm *resourceManager) newUpdateRequestPayload(
 		}
 		if r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig != nil {
 			f0f3 := &svcsdk.ScheduleConfig{}
+			if r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime != nil {
+				f0f3.SetDataAnalysisEndTime(*r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime)
+			}
+			if r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime != nil {
+				f0f3.SetDataAnalysisStartTime(*r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime)
+			}
 			if r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.ScheduleExpression != nil {
 				f0f3.SetScheduleExpression(*r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.ScheduleExpression)
 			}

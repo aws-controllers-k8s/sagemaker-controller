@@ -67,11 +67,150 @@ func newResourceDelta(
 	if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings, b.ko.Spec.DefaultUserSettings) {
 		delta.Add("Spec.DefaultUserSettings", a.ko.Spec.DefaultUserSettings, b.ko.Spec.DefaultUserSettings)
 	} else if a.ko.Spec.DefaultUserSettings != nil && b.ko.Spec.DefaultUserSettings != nil {
+		if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings) {
+			delta.Add("Spec.DefaultUserSettings.CodeEditorAppSettings", a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings)
+		} else if a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings != nil && b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec) {
+				delta.Add("Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec", a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec)
+			} else if a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec != nil && b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.InstanceType, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.InstanceType) {
+					delta.Add("Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.InstanceType", a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.InstanceType, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.InstanceType)
+				} else if a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.InstanceType != nil && b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.InstanceType != nil {
+					if *a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.InstanceType != *b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.InstanceType {
+						delta.Add("Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.InstanceType", a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.InstanceType, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.InstanceType)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.LifecycleConfigARN, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.LifecycleConfigARN) {
+					delta.Add("Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.LifecycleConfigARN", a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.LifecycleConfigARN, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.LifecycleConfigARN)
+				} else if a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil && b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
+					if *a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.LifecycleConfigARN != *b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.LifecycleConfigARN {
+						delta.Add("Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.LifecycleConfigARN", a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.LifecycleConfigARN, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.LifecycleConfigARN)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageARN, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageARN) {
+					delta.Add("Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageARN", a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageARN, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageARN)
+				} else if a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageARN != nil && b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
+					if *a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageARN != *b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageARN {
+						delta.Add("Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageARN", a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageARN, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageARN)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias) {
+					delta.Add("Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias", a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias)
+				} else if a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil && b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					if *a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != *b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias {
+						delta.Add("Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias", a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionARN, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionARN) {
+					delta.Add("Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionARN", a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionARN, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionARN)
+				} else if a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil && b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
+					if *a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != *b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionARN {
+						delta.Add("Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionARN", a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionARN, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionARN)
+					}
+				}
+			}
+			if len(a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.LifecycleConfigARNs) != len(b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.LifecycleConfigARNs) {
+				delta.Add("Spec.DefaultUserSettings.CodeEditorAppSettings.LifecycleConfigARNs", a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.LifecycleConfigARNs, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.LifecycleConfigARNs)
+			} else if len(a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.LifecycleConfigARNs) > 0 {
+				if !ackcompare.SliceStringPEqual(a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.LifecycleConfigARNs, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.LifecycleConfigARNs) {
+					delta.Add("Spec.DefaultUserSettings.CodeEditorAppSettings.LifecycleConfigARNs", a.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.LifecycleConfigARNs, b.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.LifecycleConfigARNs)
+				}
+			}
+		}
+		if len(a.ko.Spec.DefaultUserSettings.CustomFileSystemConfigs) != len(b.ko.Spec.DefaultUserSettings.CustomFileSystemConfigs) {
+			delta.Add("Spec.DefaultUserSettings.CustomFileSystemConfigs", a.ko.Spec.DefaultUserSettings.CustomFileSystemConfigs, b.ko.Spec.DefaultUserSettings.CustomFileSystemConfigs)
+		} else if len(a.ko.Spec.DefaultUserSettings.CustomFileSystemConfigs) > 0 {
+			if !reflect.DeepEqual(a.ko.Spec.DefaultUserSettings.CustomFileSystemConfigs, b.ko.Spec.DefaultUserSettings.CustomFileSystemConfigs) {
+				delta.Add("Spec.DefaultUserSettings.CustomFileSystemConfigs", a.ko.Spec.DefaultUserSettings.CustomFileSystemConfigs, b.ko.Spec.DefaultUserSettings.CustomFileSystemConfigs)
+			}
+		}
+		if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.CustomPosixUserConfig, b.ko.Spec.DefaultUserSettings.CustomPosixUserConfig) {
+			delta.Add("Spec.DefaultUserSettings.CustomPosixUserConfig", a.ko.Spec.DefaultUserSettings.CustomPosixUserConfig, b.ko.Spec.DefaultUserSettings.CustomPosixUserConfig)
+		} else if a.ko.Spec.DefaultUserSettings.CustomPosixUserConfig != nil && b.ko.Spec.DefaultUserSettings.CustomPosixUserConfig != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.GID, b.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.GID) {
+				delta.Add("Spec.DefaultUserSettings.CustomPosixUserConfig.GID", a.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.GID, b.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.GID)
+			} else if a.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.GID != nil && b.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.GID != nil {
+				if *a.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.GID != *b.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.GID {
+					delta.Add("Spec.DefaultUserSettings.CustomPosixUserConfig.GID", a.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.GID, b.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.GID)
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.UID, b.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.UID) {
+				delta.Add("Spec.DefaultUserSettings.CustomPosixUserConfig.UID", a.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.UID, b.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.UID)
+			} else if a.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.UID != nil && b.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.UID != nil {
+				if *a.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.UID != *b.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.UID {
+					delta.Add("Spec.DefaultUserSettings.CustomPosixUserConfig.UID", a.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.UID, b.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.UID)
+				}
+			}
+		}
+		if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.DefaultLandingURI, b.ko.Spec.DefaultUserSettings.DefaultLandingURI) {
+			delta.Add("Spec.DefaultUserSettings.DefaultLandingURI", a.ko.Spec.DefaultUserSettings.DefaultLandingURI, b.ko.Spec.DefaultUserSettings.DefaultLandingURI)
+		} else if a.ko.Spec.DefaultUserSettings.DefaultLandingURI != nil && b.ko.Spec.DefaultUserSettings.DefaultLandingURI != nil {
+			if *a.ko.Spec.DefaultUserSettings.DefaultLandingURI != *b.ko.Spec.DefaultUserSettings.DefaultLandingURI {
+				delta.Add("Spec.DefaultUserSettings.DefaultLandingURI", a.ko.Spec.DefaultUserSettings.DefaultLandingURI, b.ko.Spec.DefaultUserSettings.DefaultLandingURI)
+			}
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.ExecutionRole, b.ko.Spec.DefaultUserSettings.ExecutionRole) {
 			delta.Add("Spec.DefaultUserSettings.ExecutionRole", a.ko.Spec.DefaultUserSettings.ExecutionRole, b.ko.Spec.DefaultUserSettings.ExecutionRole)
 		} else if a.ko.Spec.DefaultUserSettings.ExecutionRole != nil && b.ko.Spec.DefaultUserSettings.ExecutionRole != nil {
 			if *a.ko.Spec.DefaultUserSettings.ExecutionRole != *b.ko.Spec.DefaultUserSettings.ExecutionRole {
 				delta.Add("Spec.DefaultUserSettings.ExecutionRole", a.ko.Spec.DefaultUserSettings.ExecutionRole, b.ko.Spec.DefaultUserSettings.ExecutionRole)
+			}
+		}
+		if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings) {
+			delta.Add("Spec.DefaultUserSettings.JupyterLabAppSettings", a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings)
+		} else if a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings != nil && b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings != nil {
+			if len(a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.CustomImages) != len(b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.CustomImages) {
+				delta.Add("Spec.DefaultUserSettings.JupyterLabAppSettings.CustomImages", a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.CustomImages, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.CustomImages)
+			} else if len(a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.CustomImages) > 0 {
+				if !reflect.DeepEqual(a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.CustomImages, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.CustomImages) {
+					delta.Add("Spec.DefaultUserSettings.JupyterLabAppSettings.CustomImages", a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.CustomImages, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.CustomImages)
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec) {
+				delta.Add("Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec", a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec)
+			} else if a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec != nil && b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType) {
+					delta.Add("Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType", a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType)
+				} else if a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType != nil && b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType != nil {
+					if *a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType != *b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType {
+						delta.Add("Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType", a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN) {
+					delta.Add("Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN", a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN)
+				} else if a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil && b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
+					if *a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN != *b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN {
+						delta.Add("Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN", a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN) {
+					delta.Add("Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN", a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN)
+				} else if a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN != nil && b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
+					if *a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN != *b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN {
+						delta.Add("Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN", a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias) {
+					delta.Add("Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias", a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias)
+				} else if a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil && b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					if *a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != *b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias {
+						delta.Add("Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias", a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN) {
+					delta.Add("Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN", a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN)
+				} else if a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil && b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
+					if *a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != *b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN {
+						delta.Add("Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN", a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN)
+					}
+				}
+			}
+			if len(a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigARNs) != len(b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigARNs) {
+				delta.Add("Spec.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigARNs", a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigARNs, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigARNs)
+			} else if len(a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigARNs) > 0 {
+				if !ackcompare.SliceStringPEqual(a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigARNs, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigARNs) {
+					delta.Add("Spec.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigARNs", a.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigARNs, b.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigARNs)
+				}
 			}
 		}
 		if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings, b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings) {
@@ -99,6 +238,13 @@ func newResourceDelta(
 				} else if a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN != nil && b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
 					if *a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN != *b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN {
 						delta.Add("Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN", a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN, b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias) {
+					delta.Add("Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias", a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias)
+				} else if a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil && b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					if *a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != *b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias {
+						delta.Add("Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias", a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias)
 					}
 				}
 				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN, b.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN) {
@@ -149,6 +295,13 @@ func newResourceDelta(
 				} else if a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN != nil && b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
 					if *a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN != *b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN {
 						delta.Add("Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN", a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias) {
+					delta.Add("Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias", a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias)
+				} else if a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil && b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					if *a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != *b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias {
+						delta.Add("Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias", a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias)
 					}
 				}
 				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionARN, b.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionARN) {
@@ -217,6 +370,35 @@ func newResourceDelta(
 				}
 			}
 		}
+		if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.SpaceStorageSettings, b.ko.Spec.DefaultUserSettings.SpaceStorageSettings) {
+			delta.Add("Spec.DefaultUserSettings.SpaceStorageSettings", a.ko.Spec.DefaultUserSettings.SpaceStorageSettings, b.ko.Spec.DefaultUserSettings.SpaceStorageSettings)
+		} else if a.ko.Spec.DefaultUserSettings.SpaceStorageSettings != nil && b.ko.Spec.DefaultUserSettings.SpaceStorageSettings != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings, b.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings) {
+				delta.Add("Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings", a.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings, b.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings)
+			} else if a.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings != nil && b.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.DefaultEBSVolumeSizeInGb, b.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.DefaultEBSVolumeSizeInGb) {
+					delta.Add("Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.DefaultEBSVolumeSizeInGb", a.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.DefaultEBSVolumeSizeInGb, b.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.DefaultEBSVolumeSizeInGb)
+				} else if a.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.DefaultEBSVolumeSizeInGb != nil && b.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.DefaultEBSVolumeSizeInGb != nil {
+					if *a.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.DefaultEBSVolumeSizeInGb != *b.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.DefaultEBSVolumeSizeInGb {
+						delta.Add("Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.DefaultEBSVolumeSizeInGb", a.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.DefaultEBSVolumeSizeInGb, b.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.DefaultEBSVolumeSizeInGb)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.MaximumEBSVolumeSizeInGb, b.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.MaximumEBSVolumeSizeInGb) {
+					delta.Add("Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.MaximumEBSVolumeSizeInGb", a.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.MaximumEBSVolumeSizeInGb, b.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.MaximumEBSVolumeSizeInGb)
+				} else if a.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.MaximumEBSVolumeSizeInGb != nil && b.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.MaximumEBSVolumeSizeInGb != nil {
+					if *a.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.MaximumEBSVolumeSizeInGb != *b.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.MaximumEBSVolumeSizeInGb {
+						delta.Add("Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.MaximumEBSVolumeSizeInGb", a.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.MaximumEBSVolumeSizeInGb, b.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.MaximumEBSVolumeSizeInGb)
+					}
+				}
+			}
+		}
+		if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.StudioWebPortal, b.ko.Spec.DefaultUserSettings.StudioWebPortal) {
+			delta.Add("Spec.DefaultUserSettings.StudioWebPortal", a.ko.Spec.DefaultUserSettings.StudioWebPortal, b.ko.Spec.DefaultUserSettings.StudioWebPortal)
+		} else if a.ko.Spec.DefaultUserSettings.StudioWebPortal != nil && b.ko.Spec.DefaultUserSettings.StudioWebPortal != nil {
+			if *a.ko.Spec.DefaultUserSettings.StudioWebPortal != *b.ko.Spec.DefaultUserSettings.StudioWebPortal {
+				delta.Add("Spec.DefaultUserSettings.StudioWebPortal", a.ko.Spec.DefaultUserSettings.StudioWebPortal, b.ko.Spec.DefaultUserSettings.StudioWebPortal)
+			}
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings, b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings) {
 			delta.Add("Spec.DefaultUserSettings.TensorBoardAppSettings", a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings, b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings)
 		} else if a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings != nil && b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings != nil {
@@ -244,6 +426,13 @@ func newResourceDelta(
 						delta.Add("Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageARN", a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageARN, b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageARN)
 					}
 				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias) {
+					delta.Add("Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias", a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias)
+				} else if a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil && b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					if *a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != *b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias {
+						delta.Add("Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias", a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias)
+					}
+				}
 				if ackcompare.HasNilDifference(a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionARN, b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionARN) {
 					delta.Add("Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionARN", a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionARN, b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionARN)
 				} else if a.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil && b.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
@@ -264,6 +453,24 @@ func newResourceDelta(
 	if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings, b.ko.Spec.DomainSettings) {
 		delta.Add("Spec.DomainSettings", a.ko.Spec.DomainSettings, b.ko.Spec.DomainSettings)
 	} else if a.ko.Spec.DomainSettings != nil && b.ko.Spec.DomainSettings != nil {
+		if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.DockerSettings, b.ko.Spec.DomainSettings.DockerSettings) {
+			delta.Add("Spec.DomainSettings.DockerSettings", a.ko.Spec.DomainSettings.DockerSettings, b.ko.Spec.DomainSettings.DockerSettings)
+		} else if a.ko.Spec.DomainSettings.DockerSettings != nil && b.ko.Spec.DomainSettings.DockerSettings != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.DockerSettings.EnableDockerAccess, b.ko.Spec.DomainSettings.DockerSettings.EnableDockerAccess) {
+				delta.Add("Spec.DomainSettings.DockerSettings.EnableDockerAccess", a.ko.Spec.DomainSettings.DockerSettings.EnableDockerAccess, b.ko.Spec.DomainSettings.DockerSettings.EnableDockerAccess)
+			} else if a.ko.Spec.DomainSettings.DockerSettings.EnableDockerAccess != nil && b.ko.Spec.DomainSettings.DockerSettings.EnableDockerAccess != nil {
+				if *a.ko.Spec.DomainSettings.DockerSettings.EnableDockerAccess != *b.ko.Spec.DomainSettings.DockerSettings.EnableDockerAccess {
+					delta.Add("Spec.DomainSettings.DockerSettings.EnableDockerAccess", a.ko.Spec.DomainSettings.DockerSettings.EnableDockerAccess, b.ko.Spec.DomainSettings.DockerSettings.EnableDockerAccess)
+				}
+			}
+			if len(a.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts) != len(b.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts) {
+				delta.Add("Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts", a.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts, b.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts)
+			} else if len(a.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts) > 0 {
+				if !ackcompare.SliceStringPEqual(a.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts, b.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts) {
+					delta.Add("Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts", a.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts, b.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts)
+				}
+			}
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.RStudioServerProDomainSettings, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings) {
 			delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings)
 		} else if a.ko.Spec.DomainSettings.RStudioServerProDomainSettings != nil && b.ko.Spec.DomainSettings.RStudioServerProDomainSettings != nil {
@@ -289,6 +496,13 @@ func newResourceDelta(
 				} else if a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN != nil && b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN != nil {
 					if *a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN != *b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN {
 						delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias) {
+					delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias)
+				} else if a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil && b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					if *a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias != *b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias {
+						delta.Add("Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias", a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias)
 					}
 				}
 				if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN) {

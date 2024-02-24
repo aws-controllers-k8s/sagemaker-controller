@@ -143,6 +143,46 @@ func newResourceDelta(
 				delta.Add("Spec.PrimaryContainer.Mode", a.ko.Spec.PrimaryContainer.Mode, b.ko.Spec.PrimaryContainer.Mode)
 			}
 		}
+		if ackcompare.HasNilDifference(a.ko.Spec.PrimaryContainer.ModelDataSource, b.ko.Spec.PrimaryContainer.ModelDataSource) {
+			delta.Add("Spec.PrimaryContainer.ModelDataSource", a.ko.Spec.PrimaryContainer.ModelDataSource, b.ko.Spec.PrimaryContainer.ModelDataSource)
+		} else if a.ko.Spec.PrimaryContainer.ModelDataSource != nil && b.ko.Spec.PrimaryContainer.ModelDataSource != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource, b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource) {
+				delta.Add("Spec.PrimaryContainer.ModelDataSource.S3DataSource", a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource, b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource)
+			} else if a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource != nil && b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType, b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType) {
+					delta.Add("Spec.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType", a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType, b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType)
+				} else if a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType != nil && b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType != nil {
+					if *a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType != *b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType {
+						delta.Add("Spec.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType", a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType, b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig, b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig) {
+					delta.Add("Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig", a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig, b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig)
+				} else if a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig != nil && b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig != nil {
+					if ackcompare.HasNilDifference(a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula, b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula) {
+						delta.Add("Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula", a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula, b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula)
+					} else if a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula != nil && b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula != nil {
+						if *a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula != *b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula {
+							delta.Add("Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula", a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula, b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula)
+						}
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType, b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType) {
+					delta.Add("Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType", a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType, b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType)
+				} else if a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType != nil && b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType != nil {
+					if *a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType != *b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType {
+						delta.Add("Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType", a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType, b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType)
+					}
+				}
+				if ackcompare.HasNilDifference(a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3URI, b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3URI) {
+					delta.Add("Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3URI", a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3URI, b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3URI)
+				} else if a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3URI != nil && b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3URI != nil {
+					if *a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3URI != *b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3URI {
+						delta.Add("Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3URI", a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3URI, b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3URI)
+					}
+				}
+			}
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.PrimaryContainer.ModelDataURL, b.ko.Spec.PrimaryContainer.ModelDataURL) {
 			delta.Add("Spec.PrimaryContainer.ModelDataURL", a.ko.Spec.PrimaryContainer.ModelDataURL, b.ko.Spec.PrimaryContainer.ModelDataURL)
 		} else if a.ko.Spec.PrimaryContainer.ModelDataURL != nil && b.ko.Spec.PrimaryContainer.ModelDataURL != nil {

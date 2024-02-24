@@ -235,6 +235,9 @@ resources:
       OutputDataConfig.KMSKeyID:
         late_initialize:
           min_backoff_seconds: 5
+      OutputDataConfig.CompressionType:
+        late_initialize:
+          min_backoff_seconds: 5
       ResourceConfig.InstanceCount:
         late_initialize:
           min_backoff_seconds: 5
@@ -815,6 +818,15 @@ resources:
       AppNetworkAccessType:
         late_initialize:
           min_backoff_seconds: 5
+      DefaultUserSettings.DefaultLandingURI:
+        late_initialize:
+          min_backoff_seconds: 5
+      DefaultUserSettings.SpaceStorageSettings:
+        late_initialize:
+          min_backoff_seconds: 5
+      DefaultUserSettings.StudioWebPortal:
+        late_initialize:
+          min_backoff_seconds: 5
       Tags:
         compare:
           is_ignored: true   
@@ -844,7 +856,10 @@ resources:
           name: STATUS
         from:
           operation: DescribeUserProfile
-          path: Status 
+          path: Status
+      UserSettings.SpaceStorageSettings:
+        late_initialize:
+          min_backoff_seconds: 5
       Tags:
         compare:
           is_ignored: true  
@@ -970,9 +985,11 @@ ignore:
       - Algorithm
       # - App
       - AutoMLJob
+      - AutoMLJobV2
       - Action
       - AppImageConfig
       - Artifact
+      - Cluster
       - CodeRepository
       - CompilationJob
       - Context
@@ -990,6 +1007,7 @@ ignore:
       - Hub
       - HumanTaskUi
       # - HyperParameterTuningJob
+      - InferenceComponent
       - InferenceRecommendationsJob
       - Image
       - ImageVersion
@@ -1000,8 +1018,8 @@ ignore:
       - ModelCardExportJob
       # - ModelBiasJobDefinition
       # - ModelExplainabilityJobDefinition
-      # ModelPackage
-      # ModelPackageGroup
+      # - ModelPackage
+      # - ModelPackageGroup
       # - ModelQualityJobDefinition
       # - MonitoringSchedule
       # - NotebookInstanceLifecycleConfig

@@ -51,7 +51,7 @@ var (
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=domains,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=domains/status,verbs=get;update;patch
 
-var lateInitializeFieldNames = []string{"AppNetworkAccessType"}
+var lateInitializeFieldNames = []string{"AppNetworkAccessType", "DefaultUserSettings.DefaultLandingURI", "DefaultUserSettings.SpaceStorageSettings", "DefaultUserSettings.StudioWebPortal"}
 
 // resourceManager is responsible for providing a consistent way to perform
 // CRUD operations in a backend AWS service API for Book custom resources.
@@ -252,6 +252,21 @@ func (rm *resourceManager) incompleteLateInitialization(
 	if ko.Spec.AppNetworkAccessType == nil {
 		return true
 	}
+	if ko.Spec.DefaultUserSettings != nil {
+		if ko.Spec.DefaultUserSettings.DefaultLandingURI == nil {
+			return true
+		}
+	}
+	if ko.Spec.DefaultUserSettings != nil {
+		if ko.Spec.DefaultUserSettings.SpaceStorageSettings == nil {
+			return true
+		}
+	}
+	if ko.Spec.DefaultUserSettings != nil {
+		if ko.Spec.DefaultUserSettings.StudioWebPortal == nil {
+			return true
+		}
+	}
 	return false
 }
 
@@ -265,6 +280,21 @@ func (rm *resourceManager) lateInitializeFromReadOneOutput(
 	latestKo := rm.concreteResource(latest).ko.DeepCopy()
 	if observedKo.Spec.AppNetworkAccessType != nil && latestKo.Spec.AppNetworkAccessType == nil {
 		latestKo.Spec.AppNetworkAccessType = observedKo.Spec.AppNetworkAccessType
+	}
+	if observedKo.Spec.DefaultUserSettings != nil && latestKo.Spec.DefaultUserSettings != nil {
+		if observedKo.Spec.DefaultUserSettings.DefaultLandingURI != nil && latestKo.Spec.DefaultUserSettings.DefaultLandingURI == nil {
+			latestKo.Spec.DefaultUserSettings.DefaultLandingURI = observedKo.Spec.DefaultUserSettings.DefaultLandingURI
+		}
+	}
+	if observedKo.Spec.DefaultUserSettings != nil && latestKo.Spec.DefaultUserSettings != nil {
+		if observedKo.Spec.DefaultUserSettings.SpaceStorageSettings != nil && latestKo.Spec.DefaultUserSettings.SpaceStorageSettings == nil {
+			latestKo.Spec.DefaultUserSettings.SpaceStorageSettings = observedKo.Spec.DefaultUserSettings.SpaceStorageSettings
+		}
+	}
+	if observedKo.Spec.DefaultUserSettings != nil && latestKo.Spec.DefaultUserSettings != nil {
+		if observedKo.Spec.DefaultUserSettings.StudioWebPortal != nil && latestKo.Spec.DefaultUserSettings.StudioWebPortal == nil {
+			latestKo.Spec.DefaultUserSettings.StudioWebPortal = observedKo.Spec.DefaultUserSettings.StudioWebPortal
+		}
 	}
 	return &resource{latestKo}
 }
