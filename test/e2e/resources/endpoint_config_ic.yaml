@@ -1,0 +1,13 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: EndpointConfig
+metadata:
+  name: endpoint-config-k8s-01
+spec:
+  endpointConfigName: endpoint-config-k8s-01
+  executionRoleARN: arn:aws:iam::597217924798:role/Admin
+  productionVariants:
+    - variantName: variant-1
+      # instanceCount is 2 to test retainAllVariantProperties
+      initialInstanceCount: 2
+      # This is the smallest instance type which will support scaling
+      instanceType: ml.g5.12xlarge
