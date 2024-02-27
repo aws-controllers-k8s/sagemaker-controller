@@ -1,0 +1,29 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: InferenceComponent
+metadata:
+  name: xgboost-inference-component
+spec:
+  inferenceComponentName: xgboost-inference-component
+  endpointName: xgboost-endpoint
+  variantName: variant-1
+  specification:
+    modelName: model-1
+    computeResourceRequirements:
+      numberOfAcceleratorDevicesRequired: 4
+      numberOfCPUCoresRequired: 4
+      minMemoryRequiredInMb: 1024
+  runtimeConfig:
+    copyCount: 1
+status:
+  ackResourceMetadata:
+    arn: arn:aws:sagemaker:us-west-2:123456789012:inference-component/xgboost-inference-component
+    ownerAccountID: ""
+    region: ""
+  conditions:
+  - lastTransitionTime: "0001-01-01T00:00:00.109Z"
+    message: InferenceComponent is in InService status.
+    status: "True"
+    type: ACK.ResourceSynced
+  creationTime: "0001-01-01T00:00:00.109Z"
+  inferenceComponentStatus: InService
+  lastModifiedTime: "0001-01-01T00:00:00.109Z"

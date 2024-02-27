@@ -121,8 +121,6 @@ resources:
       Tags:
         compare:
           is_ignored: true
-
-
   Endpoint:
     reconcile: 
       requeue_on_success_seconds: 30
