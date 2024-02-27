@@ -14,7 +14,15 @@ spec:
     singular: inferencecomponent
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .status.failureReason
+      name: FAILURE-REASON
+      priority: 1
+      type: string
+    - jsonPath: .status.inferenceComponentStatus
+      name: STATUS
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: InferenceComponent is the Schema for the InferenceComponents
@@ -139,7 +147,6 @@ spec:
                   host the inference component.
                 type: string
             required:
-            - endpointName
             - inferenceComponentName
             - runtimeConfig
             - specification
@@ -213,6 +220,24 @@ spec:
                   - type
                   type: object
                 type: array
+              creationTime:
+                description: The time when the inference component was created.
+                format: date-time
+                type: string
+              endpointName:
+                description: The name of the endpoint that hosts the inference component.
+                type: string
+              failureReason:
+                description: If the inference component status is Failed, the reason
+                  for the failure.
+                type: string
+              inferenceComponentStatus:
+                description: The status of the inference component.
+                type: string
+              lastModifiedTime:
+                description: The time when the inference component was last updated.
+                format: date-time
+                type: string
             type: object
         type: object
     served: true

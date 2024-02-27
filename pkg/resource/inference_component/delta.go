@@ -154,9 +154,6 @@ func newResourceDelta(
 			}
 		}
 	}
-	if !ackcompare.MapStringStringEqual(ToACKTags(a.ko.Spec.Tags), ToACKTags(b.ko.Spec.Tags)) {
-		delta.Add("Spec.Tags", a.ko.Spec.Tags, b.ko.Spec.Tags)
-	}
 	if ackcompare.HasNilDifference(a.ko.Spec.VariantName, b.ko.Spec.VariantName) {
 		delta.Add("Spec.VariantName", a.ko.Spec.VariantName, b.ko.Spec.VariantName)
 	} else if a.ko.Spec.VariantName != nil && b.ko.Spec.VariantName != nil {

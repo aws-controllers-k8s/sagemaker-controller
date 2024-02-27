@@ -25,7 +25,7 @@ type InferenceComponentSpec struct {
 
 	// The name of an existing endpoint where you host the inference component.
 	// +kubebuilder:validation:Required
-	EndpointName *string `json:"endpointName"`
+	EndpointName *string `json:"endpointName,omitempty"`
 	// A unique name to assign to the inference component.
 	// +kubebuilder:validation:Required
 	InferenceComponentName *string `json:"inferenceComponentName"`
@@ -58,11 +58,28 @@ type InferenceComponentStatus struct {
 	// resource
 	// +kubebuilder:validation:Optional
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	// The time when the inference component was created.
+	// +kubebuilder:validation:Optional
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	// The name of the endpoint that hosts the inference component.
+	// +kubebuilder:validation:Optional
+	EndpointName *string `json:"endpointName,omitempty"`
+	// If the inference component status is Failed, the reason for the failure.
+	// +kubebuilder:validation:Optional
+	FailureReason *string `json:"failureReason,omitempty"`
+	// The status of the inference component.
+	// +kubebuilder:validation:Optional
+	InferenceComponentStatus *string `json:"inferenceComponentStatus,omitempty"`
+	// The time when the inference component was last updated.
+	// +kubebuilder:validation:Optional
+	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
 // InferenceComponent is the Schema for the InferenceComponents API
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="FAILURE-REASON",type=string,priority=1,JSONPath=`.status.failureReason`
+// +kubebuilder:printcolumn:name="STATUS",type=string,priority=0,JSONPath=`.status.inferenceComponentStatus`
 type InferenceComponent struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

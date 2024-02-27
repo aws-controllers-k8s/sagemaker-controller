@@ -80,7 +80,7 @@ func (rm *resourceManager) sdkFind(
 		if reqErr, ok := ackerr.AWSRequestFailure(err); ok && reqErr.StatusCode() == 404 {
 			return nil, ackerr.NotFound
 		}
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "UNKNOWN" {
+		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ValidationException" && strings.HasPrefix(awsErr.Message(), "Could not find inference component") {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
@@ -90,10 +90,20 @@ func (rm *resourceManager) sdkFind(
 	// the original Kubernetes object we passed to the function
 	ko := r.ko.DeepCopy()
 
+	if resp.CreationTime != nil {
+		ko.Status.CreationTime = &metav1.Time{*resp.CreationTime}
+	} else {
+		ko.Status.CreationTime = nil
+	}
 	if resp.EndpointName != nil {
 		ko.Spec.EndpointName = resp.EndpointName
 	} else {
 		ko.Spec.EndpointName = nil
+	}
+	if resp.FailureReason != nil {
+		ko.Status.FailureReason = resp.FailureReason
+	} else {
+		ko.Status.FailureReason = nil
 	}
 	if ko.Status.ACKResourceMetadata == nil {
 		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
@@ -106,6 +116,16 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.InferenceComponentName = resp.InferenceComponentName
 	} else {
 		ko.Spec.InferenceComponentName = nil
+	}
+	if resp.InferenceComponentStatus != nil {
+		ko.Status.InferenceComponentStatus = resp.InferenceComponentStatus
+	} else {
+		ko.Status.InferenceComponentStatus = nil
+	}
+	if resp.LastModifiedTime != nil {
+		ko.Status.LastModifiedTime = &metav1.Time{*resp.LastModifiedTime}
+	} else {
+		ko.Status.LastModifiedTime = nil
 	}
 	if resp.RuntimeConfig != nil {
 		f8 := &svcapitypes.InferenceComponentRuntimeConfig{}
@@ -171,6 +191,13 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
+	// Manually set the RuntimeConfig.CopyCount from read response RuntimeConfig.DesiredCopyCount
+	if resp.RuntimeConfig != nil && ko.Spec.RuntimeConfig != nil {
+		ko.Spec.RuntimeConfig.CopyCount = resp.RuntimeConfig.DesiredCopyCount
+	}
+
+	rm.customDescribeInferenceComponentSetOutput(ko)
+
 	return &resource{ko}, nil
 }
 
@@ -345,6 +372,9 @@ func (rm *resourceManager) sdkUpdate(
 	defer func() {
 		exit(err)
 	}()
+	if err = rm.requeueUntilCanModify(ctx, latest); err != nil {
+		return nil, err
+	}
 	input, err := rm.newUpdateRequestPayload(ctx, desired, delta)
 	if err != nil {
 		return nil, err
@@ -370,6 +400,7 @@ func (rm *resourceManager) sdkUpdate(
 	}
 
 	rm.setStatusDefaults(ko)
+	rm.customUpdateInferenceComponentSetOutput(ko)
 	return &resource{ko}, nil
 }
 
@@ -458,6 +489,10 @@ func (rm *resourceManager) sdkDelete(
 	defer func() {
 		exit(err)
 	}()
+	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
+		return r, err
+	}
+
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
 		return nil, err
@@ -466,6 +501,17 @@ func (rm *resourceManager) sdkDelete(
 	_ = resp
 	resp, err = rm.sdkapi.DeleteInferenceComponentWithContext(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteInferenceComponent", err)
+
+	if err == nil {
+		if observed, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
+			if err != nil {
+				return nil, err
+			}
+			r.SetStatus(observed)
+			return r, requeueWaitWhileDeleting
+		}
+	}
+
 	return nil, err
 }
 
@@ -570,9 +616,16 @@ func (rm *resourceManager) updateConditions(
 			recoverableCondition.Message = nil
 		}
 	}
-	// Required to avoid the "declared but not used" error in the default case
-	_ = syncCondition
-	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil {
+	if syncCondition == nil && onSuccess {
+		syncCondition = &ackv1alpha1.Condition{
+			Type:   ackv1alpha1.ConditionTypeResourceSynced,
+			Status: corev1.ConditionTrue,
+		}
+		ko.Status.Conditions = append(ko.Status.Conditions, syncCondition)
+	}
+	// custom update conditions
+	customUpdate := rm.CustomUpdateConditions(ko, r, err)
+	if terminalCondition != nil || recoverableCondition != nil || syncCondition != nil || customUpdate {
 		return &resource{ko}, true // updated
 	}
 	return nil, false // not updated
@@ -582,6 +635,19 @@ func (rm *resourceManager) updateConditions(
 // and if the exception indicates that it is a Terminal exception
 // 'Terminal' exception are specified in generator configuration
 func (rm *resourceManager) terminalAWSError(err error) bool {
-	// No terminal_errors specified for this resource in generator config
-	return false
+	if err == nil {
+		return false
+	}
+	awsErr, ok := ackerr.AWSError(err)
+	if !ok {
+		return false
+	}
+	switch awsErr.Code() {
+	case "InvalidParameterCombination",
+		"InvalidParameterValue",
+		"MissingParameter":
+		return true
+	default:
+		return false
+	}
 }

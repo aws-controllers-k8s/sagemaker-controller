@@ -54,12 +54,75 @@ resources:
         - InvalidParameterValue
         - MissingParameter
     fields:
+      EnableNetworkIsolation:
+        late_initialize:
+          min_backoff_seconds: 5
       Tags:
         compare:
           is_ignored: true
     hooks:
       delta_pre_compare:
         code: customSetDefaults(a, b)
+  InferenceComponent:
+    reconcile:
+      requeue_on_success_seconds: 30
+    update_conditions_custom_method_name: CustomUpdateConditions
+    exceptions:
+      errors:
+        404:
+          code: ValidationException
+          message_prefix: Could not find inference component
+      terminal_codes:
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+    hooks:
+      sdk_update_pre_build_request:
+        template_path: common/sdk_update_pre_build_request.go.tpl
+      sdk_read_one_post_set_output:
+        template_path: inference_component/sdk_read_one_post_set_output.go.tpl
+      sdk_update_post_set_output:
+        code: rm.customUpdateInferenceComponentSetOutput(ko)
+      sdk_delete_pre_build_request:
+        template_path: common/sdk_delete_pre_build_request.go.tpl
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
+    fields:
+      InferenceComponentStatus:
+        is_read_only: true
+        print:
+          name: STATUS
+        from:
+          operation: DescribeInferenceComponent
+          path: InferenceComponentStatus
+      FailureReason:
+        is_read_only: true
+        print:
+          name: FAILURE-REASON
+          priority: 1
+        from:
+          operation: DescribeInferenceComponent
+          path: FailureReason
+      CreationTime:
+        is_read_only: true
+        from:
+          operation: DescribeInferenceComponent
+          path: CreationTime
+      LastModifiedTime:
+        is_read_only: true
+        from:
+          operation: DescribeInferenceComponent
+          path: LastModifiedTime
+      EndpointName:
+        is_read_only: true
+        from:
+          operation: DescribeInferenceComponent
+          path: EndpointName
+      Tags:
+        compare:
+          is_ignored: true
+
+
   Endpoint:
     reconcile: 
       requeue_on_success_seconds: 30
