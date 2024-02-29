@@ -46,14 +46,16 @@ func (rm *resourceManager) customDescribeInferenceComponentSetOutput(ko *svcapit
 	svccommon.SetSyncedCondition(&resource{ko}, latestStatus, &resourceName, &modifyingStatuses)
 }
 
-// customUpdateInferenceComponentSetOutput sets the resource ResourceSynced condition to False if
-// InferenceComponent is being updated. At this stage we know call to updateEndpoint was successful.
+// customUpdateInferenceComponentSetOutput sets ConditionTypeResourceSynced condition to True or False
+// based on the InferenceComponentStatus on AWS so the reconciler can determine if a
+// requeue is needed
 func (rm *resourceManager) customUpdateInferenceComponentSetOutput(ko *svcapitypes.InferenceComponent) {
 
 	// injecting Updating status to keep the Sync condition message and status.InferenceComponentStatus in sync
-	ko.Status.InferenceComponentStatus = aws.String(svcsdk.InferenceComponentStatusUpdating)
+	//ko.Status.InferenceComponentStatus = aws.String(svcsdk.InferenceComponentStatusUpdating)
 
-	svccommon.SetSyncedCondition(&resource{ko}, ko.Status.InferenceComponentStatus, &resourceName, &modifyingStatuses)
+	latestStatus := ko.Status.InferenceComponentStatus
+	svccommon.SetSyncedCondition(&resource{ko}, latestStatus, &resourceName, &modifyingStatuses)
 }
 
 // requeueUntilCanModify creates and returns an ackrequeue error
