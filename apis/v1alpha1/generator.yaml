@@ -22,11 +22,20 @@ operations:
   StopPipelineExecution:
     operation_type: Delete
     resource_name: PipelineExecution
+  AddTags:
+    operation_type: Update
+    resource_name: Model
 resources:
   Model:
     hooks:
       delta_pre_compare:
         code: customSetDefaults(a, b)
+      sdk_read_one_post_set_output:
+        template_path: model/sdk_read_one_post_set_output.go.tpl
+      sdk_update_pre_build_request:
+        template_path: model/sdk_update_pre_build_request.go.tpl
+      sdk_update_post_build_request:
+        template_path: model/sdk_update_post_build_request.go.tpl
     exceptions:
       errors:
         404:

@@ -307,6 +307,25 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
+	var resp_tags *svcsdk.ListTagsOutput
+
+	resp_tags, err = rm.sdkapi.ListTagsWithContext(ctx, &svcsdk.ListTagsInput{ResourceArn: resp.ModelArn})
+	rm.metrics.RecordAPICall("READ_ONE", "DescribeTags", err)
+
+	if resp_tags != nil {
+		f6 := []*svcapitypes.Tag{}
+		for _, f6iter := range resp_tags.Tags {
+			f6elem := &svcapitypes.Tag{}
+			if f6iter.Key != nil {
+				f6elem.Key = f6iter.Key
+			}
+			if f6iter.Value != nil {
+				f6elem.Value = f6iter.Value
+			}
+			f6 = append(f6, f6elem)
+		}
+		ko.Spec.Tags = f6
+	}
 	return &resource{ko}, nil
 }
 
@@ -601,8 +620,82 @@ func (rm *resourceManager) sdkUpdate(
 	desired *resource,
 	latest *resource,
 	delta *ackcompare.Delta,
-) (*resource, error) {
-	return nil, ackerr.NewTerminalError(ackerr.NotImplemented)
+) (updated *resource, err error) {
+	rlog := ackrtlog.FromContext(ctx)
+	exit := rlog.Trace("rm.sdkUpdate")
+	defer func() {
+		exit(err)
+	}()
+	// this to handle delete/remove tags
+	_, err = rm.deleteTags(ctx, desired, latest)
+	if err != nil {
+		return nil, err
+	}
+	input, err := rm.newUpdateRequestPayload(ctx, desired, delta)
+	if err != nil {
+		return nil, err
+	}
+	if desired.ko.Status.ACKResourceMetadata.ARN != nil {
+		input.SetResourceArn(string(*desired.ko.Status.ACKResourceMetadata.ARN))
+	}
+
+	var resp *svcsdk.AddTagsOutput
+	_ = resp
+	resp, err = rm.sdkapi.AddTagsWithContext(ctx, input)
+	rm.metrics.RecordAPICall("UPDATE", "AddTags", err)
+	if err != nil {
+		return nil, err
+	}
+	// Merge in the information we read from the API call above to the copy of
+	// the original Kubernetes object we passed to the function
+	ko := desired.ko.DeepCopy()
+
+	if resp.Tags != nil {
+		f0 := []*svcapitypes.Tag{}
+		for _, f0iter := range resp.Tags {
+			f0elem := &svcapitypes.Tag{}
+			if f0iter.Key != nil {
+				f0elem.Key = f0iter.Key
+			}
+			if f0iter.Value != nil {
+				f0elem.Value = f0iter.Value
+			}
+			f0 = append(f0, f0elem)
+		}
+		ko.Spec.Tags = f0
+	} else {
+		ko.Spec.Tags = nil
+	}
+
+	rm.setStatusDefaults(ko)
+	return &resource{ko}, nil
+}
+
+// newUpdateRequestPayload returns an SDK-specific struct for the HTTP request
+// payload of the Update API call for the resource
+func (rm *resourceManager) newUpdateRequestPayload(
+	ctx context.Context,
+	r *resource,
+	delta *ackcompare.Delta,
+) (*svcsdk.AddTagsInput, error) {
+	res := &svcsdk.AddTagsInput{}
+
+	if r.ko.Spec.Tags != nil {
+		f1 := []*svcsdk.Tag{}
+		for _, f1iter := range r.ko.Spec.Tags {
+			f1elem := &svcsdk.Tag{}
+			if f1iter.Key != nil {
+				f1elem.SetKey(*f1iter.Key)
+			}
+			if f1iter.Value != nil {
+				f1elem.SetValue(*f1iter.Value)
+			}
+			f1 = append(f1, f1elem)
+		}
+		res.SetTags(f1)
+	}
+
+	return res, nil
 }
 
 // sdkDelete deletes the supplied resource in the backend AWS service API
