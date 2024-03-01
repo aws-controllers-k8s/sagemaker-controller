@@ -90,6 +90,10 @@ func (rm *resourceManager) sdkFind(
 	// the original Kubernetes object we passed to the function
 	ko := r.ko.DeepCopy()
 
+	if ko.Spec.PrimaryContainer.ModelDataSource == nil && resp.PrimaryContainer.ModelDataSource != nil {
+		resp.PrimaryContainer.ModelDataSource = nil	
+	}
+
 	if resp.Containers != nil {
 		f0 := []*svcapitypes.ContainerDefinition{}
 		for _, f0iter := range resp.Containers {
