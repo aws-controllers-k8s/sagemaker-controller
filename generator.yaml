@@ -30,6 +30,8 @@ resources:
     hooks:
       delta_pre_compare:
         code: customSetDefaults(a, b)
+      sdk_read_one_pre_set_output:
+        template_path: model/sdk_read_one_pre_set_output.go.tpl
       sdk_read_one_post_set_output:
         template_path: model/sdk_read_one_post_set_output.go.tpl
       sdk_update_pre_build_request:
