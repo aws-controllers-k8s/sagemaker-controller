@@ -150,7 +150,6 @@ spec:
             - inferenceComponentName
             - runtimeConfig
             - specification
-            - variantName
             type: object
           status:
             description: InferenceComponentStatus defines the observed state of InferenceComponent
@@ -237,6 +236,10 @@ spec:
               lastModifiedTime:
                 description: The time when the inference component was last updated.
                 format: date-time
+                type: string
+              variantName:
+                description: The name of the production variant that hosts the inference
+                  component.
                 type: string
             type: object
         type: object

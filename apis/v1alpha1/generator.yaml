@@ -118,11 +118,14 @@ resources:
         from:
           operation: DescribeInferenceComponent
           path: EndpointName
+      VariantName:
+        is_read_only: true
+        from:
+          operation: DescribeInferenceComponent
+          path: VariantName
       Tags:
         compare:
           is_ignored: true
-
-
   Endpoint:
     reconcile: 
       requeue_on_success_seconds: 30

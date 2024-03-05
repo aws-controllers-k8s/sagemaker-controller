@@ -167,6 +167,56 @@ def assert_endpoint_status_in_sync(endpoint_name, reference, expected_status):
     )
 
 
+def get_inference_component_sagemaker_status(inference_component_name):
+    response = sagemaker_client().describe_inference_component(
+        InferenceComponentName=inference_component_name)
+    return response["InferenceComponentStatus"]
+
+
+def get_inference_component_resource_status(reference: k8s.CustomResourceReference):
+    resource = k8s.get_resource(reference)
+    assert "inferenceComponentStatus" in resource["status"]
+    return resource["status"]["inferenceComponentStatus"]
+
+
+def wait_sagemaker_inference_component_status(
+        endpoint_name,
+        expected_status: str,
+        wait_periods: int = 60,
+        period_length: int = 30,
+):
+    return wait_for_status(
+        expected_status,
+        wait_periods,
+        period_length,
+        get_inference_component_sagemaker_status,
+        endpoint_name,
+    )
+
+
+def wait_resource_inference_component_status(
+        reference: k8s.CustomResourceReference,
+        expected_status: str,
+        wait_periods: int = 30,
+        period_length: int = 30,
+):
+    return wait_for_status(
+        expected_status,
+        wait_periods,
+        period_length,
+        get_inference_component_resource_status,
+        reference,
+    )
+
+
+def assert_inference_component_status_in_sync(inference_component_name, reference, expected_status):
+    assert (
+            wait_sagemaker_inference_component_status(inference_component_name, expected_status)
+            == wait_resource_inference_component_status(reference, expected_status, 2)
+            == expected_status
+    )
+
+
 def get_model_package_sagemaker_status(model_package_arn):
     response = sagemaker_client().describe_model_package(
         ModelPackageName=model_package_arn
@@ -326,6 +376,16 @@ def get_sagemaker_endpoint(endpoint_name: str):
     except botocore.exceptions.ClientError as error:
         logging.error(
             f"SageMaker could not find a endpoint with the name {endpoint_name}. Error {error}"
+        )
+        return None
+
+
+def get_sagemaker_inference_component(inference_component_name: str):
+    try:
+        return sagemaker_client().describe_inference_component(InferenceComponentName=inference_component_name)
+    except botocore.exceptions.ClientError as error:
+        logging.error(
+            f"SageMaker could not find an inference component_name with the name {inference_component_name}. Error {error}"
         )
         return None
 

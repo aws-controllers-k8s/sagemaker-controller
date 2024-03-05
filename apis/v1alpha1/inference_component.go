@@ -42,7 +42,7 @@ type InferenceComponentSpec struct {
 	Tags []*Tag `json:"tags,omitempty"`
 	// The name of an existing production variant where you host the inference component.
 	// +kubebuilder:validation:Required
-	VariantName *string `json:"variantName"`
+	VariantName *string `json:"variantName,omitempty"`
 }
 
 // InferenceComponentStatus defines the observed state of InferenceComponent
@@ -73,6 +73,9 @@ type InferenceComponentStatus struct {
 	// The time when the inference component was last updated.
 	// +kubebuilder:validation:Optional
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	// The name of the production variant that hosts the inference component.
+	// +kubebuilder:validation:Optional
+	VariantName *string `json:"variantName,omitempty"`
 }
 
 // InferenceComponent is the Schema for the InferenceComponents API

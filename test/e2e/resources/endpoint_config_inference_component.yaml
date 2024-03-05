@@ -1,0 +1,18 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: EndpointConfig
+metadata:
+  name: $ENDPOINT_CONFIG_NAME
+spec:
+  endpointConfigName: $ENDPOINT_CONFIG_NAME
+  executionRoleARN: $SAGEMAKER_EXECUTION_ROLE_ARN
+  productionVariants:
+    - variantName: variant-1
+      initialInstanceCount: 2
+      instanceType: $ENDPOINT_INSTANCE_TYPE
+  tags:
+    - key: confidentiality
+      value: public
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user
