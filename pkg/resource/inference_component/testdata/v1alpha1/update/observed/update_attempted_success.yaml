@@ -4,10 +4,10 @@ metadata:
   name: xgboost-inference-component
 spec:
   inferenceComponentName: xgboost-inference-component
-  endpointName: xgboost-endpoint-updated
+  endpointName: xgboost-endpoint
   variantName: variant-1
   specification:
-    modelName: model-1
+    modelName: model-1-updated
     computeResourceRequirements:
       numberOfAcceleratorDevicesRequired: 4
       numberOfCPUCoresRequired: 4

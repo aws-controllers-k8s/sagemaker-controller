@@ -20,6 +20,7 @@ import (
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
+	"github.com/aws/aws-sdk-go/aws"
 	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 )
 
@@ -49,6 +50,9 @@ func (rm *resourceManager) customDescribeInferenceComponentSetOutput(ko *svcapit
 // based on the InferenceComponentStatus on AWS so the reconciler can determine if a
 // requeue is needed
 func (rm *resourceManager) customUpdateInferenceComponentSetOutput(ko *svcapitypes.InferenceComponent) {
+
+	// injecting Updating status to keep the Sync condition message and status.InferenceComponentStatus in sync
+	ko.Status.InferenceComponentStatus = aws.String(svcsdk.InferenceComponentStatusUpdating)
 
 	latestStatus := ko.Status.InferenceComponentStatus
 	svccommon.SetSyncedCondition(&resource{ko}, latestStatus, &resourceName, &modifyingStatuses)
