@@ -138,7 +138,7 @@ func main() {
 		LeaderElection:          ackCfg.EnableLeaderElection,
 		LeaderElectionID:        "ack-" + awsServiceAPIGroup,
 		LeaderElectionNamespace: ackCfg.LeaderElectionNamespace,
-
+	
 	})
 	if err != nil {
 		setupLog.Error(
