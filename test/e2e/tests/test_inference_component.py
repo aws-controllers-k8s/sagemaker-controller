@@ -16,6 +16,7 @@
 import pytest
 import logging
 
+from acktest.aws import s3
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
 
@@ -32,6 +33,8 @@ from e2e import (
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
 
+FAIL_UPDATE_ERROR_MESSAGE = ("InferenceComponentUpdateError: Unable to update inference component. "
+                             "Check FailureReason.")
 
 @pytest.fixture(scope="module")
 def name_suffix():
@@ -133,7 +136,6 @@ def endpoint(name_suffix, endpoint_config):
 
     yield (endpoint_reference, endpoint_resource)
 
-    # Delete the k8s resource if not already deleted by tests
     assert delete_custom_resource(endpoint_reference, 40, cfg.DELETE_WAIT_LENGTH)
 
 
@@ -163,6 +165,44 @@ def inference_component(name_suffix, endpoint, xgboost_model):
 
     # Delete the k8s resource if not already deleted by tests
     assert delete_custom_resource(reference, 40, cfg.DELETE_WAIT_LENGTH)
+
+
+@pytest.fixture(scope="module")
+def faulty_model(name_suffix, xgboost_model):
+    replacements = REPLACEMENT_VALUES.copy()
+
+    # copy model data to a temp S3 location and delete it after model is created on SageMaker
+    model_bucket = replacements["SAGEMAKER_DATA_BUCKET"]
+    copy_source = {
+        "Bucket": model_bucket,
+        "Key": "sagemaker/model/xgboost-mnist-model.tar.gz",
+    }
+    model_destination_key = "sagemaker/model/delete/xgboost-mnist-model.tar.gz"
+    s3.copy_object(model_bucket, copy_source, model_destination_key)
+
+    model_resource_name = name_suffix + "-faulty-model"
+    replacements["MODEL_NAME"] = model_resource_name
+    replacements["MODEL_LOCATION"] = f"s3://{model_bucket}/{model_destination_key}"
+    model_reference, model_spec, model_resource = create_sagemaker_resource(
+        resource_plural=cfg.MODEL_RESOURCE_PLURAL,
+        resource_name=model_resource_name,
+        spec_file="xgboost_model_with_model_location_inference_component",
+        replacements=replacements,
+    )
+    assert model_resource is not None
+    if k8s.get_resource_arn(model_resource) is None:
+        logging.error(
+            f"ARN for this resource is None, resource status is: {model_resource['status']}"
+        )
+    assert k8s.get_resource_arn(model_resource) is not None
+    s3.delete_object(model_bucket, model_destination_key)
+
+    yield (model_reference, model_resource)
+
+    _, deleted = k8s.delete_custom_resource(
+        model_reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+    )
+    assert deleted
 
 
 @service_marker
@@ -195,14 +235,58 @@ class TestInferenceComponent:
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(inference_component_arn, resource_tags)
 
-    def update_inference_component_successful_test(self, inference_component):
-        (reference, resource, spec) = inference_component
+    def update_inference_component_failed_test(self, inference_component, faulty_model):
+        (reference, _, spec) = inference_component
+        (_, faulty_model_resource) = faulty_model
+        faulty_model_name = faulty_model_resource["spec"].get(
+            "modelName", None
+        )
+        spec["spec"]["specification"]["modelName"] = faulty_model_name
+        resource = k8s.patch_custom_resource(reference, spec)
+        resource = k8s.wait_resource_consumed_by_controller(reference)
+        assert resource is not None
 
+        # inference component transitions Updating -> InService state
+        assert_inference_component_status_in_sync(
+            reference.name,
+            reference,
+            cfg.INFERENCE_COMPONENT_STATUS_UPDATING,
+        )
+
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
+        assert k8s.get_resource_condition(reference, "ACK.Terminal") is None
+        resource = k8s.get_resource(reference)
+
+        assert_inference_component_status_in_sync(
+            reference.name,
+            reference,
+            cfg.INFERENCE_COMPONENT_STATUS_INSERVICE,
+        )
+
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
+
+        assert k8s.assert_condition_state_message(
+            reference,
+            "ACK.Terminal",
+            "True",
+            FAIL_UPDATE_ERROR_MESSAGE,
+            )
+
+        resource = k8s.get_resource(reference)
+        assert resource["status"].get("failureReason", None) is not None
+
+    def update_inference_component_successful_test(self, inference_component, xgboost_model):
+        (reference, resource, spec) = inference_component
         inference_component_name = resource["spec"].get("inferenceComponentName", None)
+        (_, model_resource) = xgboost_model
+        model_name = model_resource["spec"].get(
+            "modelName", None
+        )
+        spec["spec"]["specification"]["modelName"] = model_name
 
         desired_memory_required = 2024
-
         spec["spec"]["specification"]["computeResourceRequirements"]["minMemoryRequiredInMb"] = desired_memory_required
+
         resource = k8s.patch_custom_resource(reference, spec)
         resource = k8s.wait_resource_consumed_by_controller(reference)
         assert resource is not None
@@ -226,7 +310,10 @@ class TestInferenceComponent:
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
         assert k8s.get_resource_condition(reference, "ACK.Terminal") is None
         resource = k8s.get_resource(reference)
-        assert resource["status"].get("failureReason", None) is None
+        # We will not check for failureReason is None, since the InferenceComponent has
+        # consistently in testing shown successful update with failureReason still present.
+        # Instead, we rely on resource synced and no terminal status.
+        # assert resource["status"].get("failureReason", None) is None
         new_memory_required = get_sagemaker_inference_component(inference_component_name)[
             "Specification"]["ComputeResourceRequirements"]["MinMemoryRequiredInMb"]
 
@@ -244,8 +331,11 @@ class TestInferenceComponent:
 
     def test_driver(
             self,
-            inference_component
+            inference_component,
+            faulty_model,
+            xgboost_model
     ):
         self.create_inference_component_test(inference_component)
-        self.update_inference_component_successful_test(inference_component)
+        self.update_inference_component_failed_test(inference_component, faulty_model)
+        self.update_inference_component_successful_test(inference_component, xgboost_model)
         self.delete_inference_component_test(inference_component)

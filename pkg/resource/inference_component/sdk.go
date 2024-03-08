@@ -375,6 +375,11 @@ func (rm *resourceManager) sdkUpdate(
 	if err = rm.requeueUntilCanModify(ctx, latest); err != nil {
 		return nil, err
 	}
+
+	if err = rm.customUpdateInferenceComponentPreChecks(ctx, desired, latest, delta); err != nil {
+		return nil, err
+	}
+
 	input, err := rm.newUpdateRequestPayload(ctx, desired, delta)
 	if err != nil {
 		return nil, err
@@ -400,7 +405,9 @@ func (rm *resourceManager) sdkUpdate(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customUpdateInferenceComponentSetOutput(ko)
+	if err = rm.customUpdateInferenceComponentSetOutput(ko); err != nil {
+		return nil, err
+	}
 	return &resource{ko}, nil
 }
 
@@ -645,7 +652,8 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 	switch awsErr.Code() {
 	case "InvalidParameterCombination",
 		"InvalidParameterValue",
-		"MissingParameter":
+		"MissingParameter",
+		"InferenceComponentUpdateError":
 		return true
 	default:
 		return false
