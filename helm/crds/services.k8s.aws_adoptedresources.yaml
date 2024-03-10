@@ -183,12 +183,12 @@ spec:
                             name:
                               description: |-
                                 Name of the referent.
-                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#names
+                                More info: http://kubernetes.io/docs/user-guide/identifiers#names
                               type: string
                             uid:
                               description: |-
                                 UID of the referent.
-                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#uids
+                                More info: http://kubernetes.io/docs/user-guide/identifiers#uids
                               type: string
                           required:
                           - apiVersion

@@ -70,6 +70,27 @@ class TestModel:
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(model_arn, resource_tags)
 
+        # Add new tags
+        resource_tags.append({'key': 'newtagkey', 'value': 'newtagvalue'})
+
+        updates = {
+            "spec": {"tags": resource_tags},
+        }
+
+        k8s.patch_custom_resource(reference,updates)
+        time.sleep(cfg.TAG_DELAY_SLEEP)
+        assert_tags_in_sync(model_arn, resource_tags)
+       
+
+        # Remove latest added tag
+        resource_tags = [i for i in resource_tags if not i["key"] == "newtagkey"]       
+        updates = {
+            "spec": {"tags": resource_tags},
+        }
+        k8s.patch_custom_resource(reference,updates)
+        time.sleep(cfg.TAG_DELAY_SLEEP)
+        assert_tags_in_sync(model_arn, resource_tags)
+
         # Delete the k8s resource.
         assert delete_custom_resource(
             reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
