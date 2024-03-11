@@ -25,6 +25,7 @@
     "EndpointConfigArn": "arn:aws:sagemaker:us-west-2:123456789012:endpoint-config/single-variant-config",
     "EndpointConfigName": "single-variant-config",
     "KmsKeyId": null,
+    "EnableNetworkIsolation": false,
     "ProductionVariants": [
      {
       "AcceleratorType": null,

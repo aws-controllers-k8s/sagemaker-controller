@@ -1,0 +1,3 @@
+{
+    "InferenceComponentArn": "arn:aws:sagemaker:us-west-2:123456789012:inference-component/xgboost-inference-component"
+}

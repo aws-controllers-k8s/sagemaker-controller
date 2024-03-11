@@ -1,0 +1,32 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: InferenceComponent
+metadata:
+  name: xgboost-inference-component
+spec:
+  inferenceComponentName:   intentionally@invalid-name
+  endpointName: xgboost-endpoint
+  variantName: variant-1
+  specification:
+    modelName: model-1
+    computeResourceRequirements:
+      numberOfAcceleratorDevicesRequired: 4
+      numberOfCPUCoresRequired: 4
+      minMemoryRequiredInMb: 1024
+  runtimeConfig:
+    copyCount: 1
+  tags:
+  - key: confidentiality
+    value: public
+  - key: environment
+    value: testing
+  - key: customer
+    value: test-user
+status:
+  ackResourceMetadata:
+    ownerAccountID: ""
+    region: ""
+  conditions:
+  - message: "InvalidParameterValue: The inference component name must not include a special
+      character.\n\tstatus code: 0, request id: "
+    status: "True"
+    type: ACK.Terminal

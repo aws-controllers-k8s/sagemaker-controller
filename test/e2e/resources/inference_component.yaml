@@ -1,0 +1,22 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: InferenceComponent
+metadata:
+  name: $INFERENCE_COMPONENT_NAME
+spec:
+  inferenceComponentName: $INFERENCE_COMPONENT_NAME
+  endpointName: $ENDPOINT_NAME
+  variantName: variant-1
+  specification:
+    modelName: $MODEL_NAME
+    computeResourceRequirements:
+      numberOfCPUCoresRequired: 1
+      minMemoryRequiredInMb: 1024
+  runtimeConfig:
+    copyCount: 1
+  tags:
+    - key: confidentiality
+      value: public
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

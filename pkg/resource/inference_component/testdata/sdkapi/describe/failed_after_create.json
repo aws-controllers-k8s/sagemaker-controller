@@ -1,0 +1,24 @@
+{
+    "CreationTime": "0001-01-01T00:00:00.109Z",
+    "InferenceComponentArn": "arn:aws:sagemaker:us-west-2:123456789012:inference-component/xgboost-inference-component",
+    "InferenceComponentName": "xgboost-inference-component",
+    "EndpointArn": "arn:aws:sagemaker:us-west-2:123456789012:endpoint/xgboost-endpoint",
+    "EndpointName": "xgboost-endpoint",
+    "VariantName": "variant-1",
+    "Specification": {
+        "ModelName": "model-1",
+        "ComputeResourceRequirements": {
+            "NumberOfCpuCoresRequired": 4.0,
+            "NumberOfAcceleratorDevicesRequired": 4.0,
+            "MinMemoryRequiredInMb": 1024
+        }
+    },
+    "RuntimeConfig": {
+        "DesiredCopyCount": 1,
+        "CurrentCopyCount": 1
+    },
+    "LastModifiedTime": "0001-01-01T00:00:00.109Z",
+    "InferenceComponentStatus": "Failed",
+    "FailureReason": "Random failure - Failed to download the model from the container URL."
+}
+   

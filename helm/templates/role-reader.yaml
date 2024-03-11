@@ -16,6 +16,7 @@ rules:
   - endpointconfigs
   - featuregroups
   - hyperparametertuningjobs
+  - inferencecomponents
   - models
   - modelbiasjobdefinitions
   - modelexplainabilityjobdefinitions

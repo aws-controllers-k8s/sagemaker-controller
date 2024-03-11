@@ -220,6 +220,26 @@ rules:
 - apiGroups:
   - sagemaker.services.k8s.aws
   resources:
+  - inferencecomponents
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
+  - inferencecomponents/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - sagemaker.services.k8s.aws
+  resources:
   - modelbiasjobdefinitions
   verbs:
   - create

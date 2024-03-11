@@ -1,0 +1,6 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: InferenceComponent
+metadata:
+  name: xgboost-inference-component
+spec:
+  endpointName: xgboost-endpoint

@@ -46,6 +46,7 @@ import (
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/endpoint_config"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/feature_group"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/hyper_parameter_tuning_job"
+	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/inference_component"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/model"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/model_bias_job_definition"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/model_explainability_job_definition"
