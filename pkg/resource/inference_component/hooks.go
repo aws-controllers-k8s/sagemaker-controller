@@ -133,7 +133,7 @@ func (rm *resourceManager) customUpdateInferenceComponentPreChecks(
 		// 2. desiredSpec == lastSpecForUpdate only tells us an update was tried with lastSpecForUpdate
 		// but does not tell us anything if the update was successful or not in the past because
 		// it is set if updateInferenceComponent returns 200 (async operation).
-		// 3. Now, sdkUpdate can execute because of change in any field in Spec (like tags/deploymentConfig in future)
+		// 3. Now, sdkUpdate can execute because of change in any field in Spec.
 
 		// 1 & 2 does not guarantee an update Failed. Hence, we need to look at `lastSpecForUpdate` to determine if the update was unsuccessful
 		// `desiredSpec != latestSpec` + `desiredSpec == lastSpecForUpdate
