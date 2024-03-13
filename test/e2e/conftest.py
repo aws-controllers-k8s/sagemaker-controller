@@ -31,6 +31,7 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "slow: mark test as slow to run")
     config.addinivalue_line("markers", "select_regions_1: mark test to only run if in select region")
     config.addinivalue_line("markers", "shallow_canary: mark test to run in shallow canary tests")
+    config.addinivalue_line("markers", "inference_component: mark test to run inference component tests in select regions")
 
 
 def pytest_collection_modifyitems(config, items):

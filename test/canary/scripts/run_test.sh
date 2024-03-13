@@ -102,5 +102,9 @@ pushd $E2E_DIR
   else
     pytest_args+=(-m "canary")
   fi
+  if ! [[ $SERVICE_REGION =~ ^(eu-north-1|ap-south-1|ap-southeast-3|us-east-2|me-central-1|eu-west-1|eu-central-1|sa-east-1|us-east-1|ap-northeast-2|eu-west-2|ap-northeast-1|us-west-2|ap-southeast-1|ap-southeast-2|ca-central-1)$  ]]; then
+      # If select_regions_1 true we run the notebook_instance test
+      pytest_args+=(-m "not inference_component")
+  fi
   pytest "${pytest_args[@]}"
 popd
