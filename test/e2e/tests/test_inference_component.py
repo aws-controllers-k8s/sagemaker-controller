@@ -206,8 +206,7 @@ def faulty_model(name_suffix, xgboost_model):
 
 
 @service_marker
-@pytest.mark.shallow_canary
-@pytest.mark.canary
+@pytest.mark.inference_component
 class TestInferenceComponent:
     def create_inference_component_test(self, inference_component):
         (reference, resource, _) = inference_component
