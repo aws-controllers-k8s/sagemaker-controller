@@ -1,0 +1,10 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: PipelineExecution
+metadata:
+  name: my-kubernetes-pipeline-execution
+spec:
+  parallelismConfiguration:
+    maxParallelExecutionSteps: 2
+  pipelineExecutionDescription: "My first pipeline execution via Amazon EKS cluster."
+  pipelineName: my-kubernetes-pipeline
+  
