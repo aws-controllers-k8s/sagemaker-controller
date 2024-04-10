@@ -14,7 +14,13 @@ In the `pipeline.yaml` file, modify the placeholder values with those associated
 
 ### Modify/Create a JSON pipeline definition
 
-Create the JSON pipeline definition using the JSON schema documented at https://aws-sagemaker-mlops.github.io/sagemaker-model-building-pipeline-definition-JSON-schema/. You will need to convert your JSON pipeline definition into String format to pass to the *.spec.pipelineDefinition* key in the Kubernetes YAML spec. You may use online third-party tools to convert from JSON to String format. In this sample, you are provided a sample pipeline definition with one Training step.
+Create the JSON pipeline definition using the JSON schema documented at https://aws-sagemaker-mlops.github.io/sagemaker-model-building-pipeline-definition-JSON-schema/. In this sample, you are provided a sample pipeline definition with one Training step.
+
+There are two ways to modify the *.spec.pipelineDefinition* key in the Kubernetes YAML spec. Choose one:
+
+Option 1: You can pass JSON pipeline definition inline as a JSON object. Example of this option is included in the `pipeline.yaml` file.
+
+Option 2: You can convert your JSON pipeline definition into String format. You may use online third-party tools to convert from JSON to String format.
 
 ### Submit pipeline to Sagemaker and start an execution
 
@@ -33,33 +39,33 @@ pipelineexecution.sagemaker.services.k8s.aws/my-kubernetes-pipeline-execution cr
 
 To list all pipelines created using the ACK controller use the following command:
 ```
-$ kubectl get pipeline.sagemaker.services.k8s.aws
+$ kubectl get pipeline
 ```
 If it is a pipeline executions it is endpointsconfigs.sagemaker.services.k8s.aws  
 ```
-$ kubectl get pipelineexecution.sagemaker.services.k8s.aws
+$ kubectl get pipelineexecution
 ```
 
 ### Describe a pipeline and pipeline execution
 
 To get more details about the pipeline once it's submitted, like checking the status, errors or parameters of the pipeline, use the following command:
 ```
-$ kubectl describe pipeline.sagemaker.services.k8s.aws my-kubernetes-pipeline
+$ kubectl describe pipeline my-kubernetes-pipeline
 ```
 
 If it is a endpoint config it is endpointsconfigs.sagemaker.services.k8s.aws  
 ```
-$ kubectl describe pipelineexecution.sagemaker.services.k8s.aws my-kubernetes-pipeline-execution
+$ kubectl describe pipelineexecution my-kubernetes-pipeline-execution
 ```
 
 ### Delete a pipeline and a pipeline execution
 
 To delete the pipeline, use the following command:
 ```
-$ kubectl delete pipeline.sagemaker.services.k8s.aws my-kubernetes-pipeline
+$ kubectl delete pipeline my-kubernetes-pipeline
 ```
 
 If it is a endpoint config it is endpointsconfigs.sagemaker.services.k8s.aws  
 ```
-$ kubectl delete pipelineexecution.sagemaker.services.k8s.aws my-kubernetes-pipeline-execution
+$ kubectl delete pipelineexecution my-kubernetes-pipeline-execution
 ```
