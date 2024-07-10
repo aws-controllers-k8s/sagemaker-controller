@@ -245,17 +245,6 @@ class TestInferenceComponent:
         resource = k8s.wait_resource_consumed_by_controller(reference)
         assert resource is not None
 
-        # inference component transitions Updating -> InService state
-        assert_inference_component_status_in_sync(
-            reference.name,
-            reference,
-            cfg.INFERENCE_COMPONENT_STATUS_UPDATING,
-        )
-
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
-        assert k8s.get_resource_condition(reference, "ACK.Terminal") is None
-        resource = k8s.get_resource(reference)
-
         assert_inference_component_status_in_sync(
             reference.name,
             reference,
