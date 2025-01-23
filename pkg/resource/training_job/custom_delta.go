@@ -55,7 +55,7 @@ func customSetDefaults(
 
 	if ackcompare.IsNotNil(a.ko.Spec.InputDataConfig) && ackcompare.IsNotNil(b.ko.Spec.InputDataConfig) {
 		for index := range a.ko.Spec.InputDataConfig {
-			if ackcompare.IsNil(a.ko.Spec.InputDataConfig[index].RecordWrapperType) && ackcompare.IsNotNil(b.ko.Spec.InputDataConfig[index].RecordWrapperType) {
+			if (ackcompare.IsNil(a.ko.Spec.InputDataConfig[index].RecordWrapperType) && index >= len(b.ko.Spec.InputDataConfig)) || ackcompare.IsNil(a.ko.Spec.InputDataConfig[index].RecordWrapperType) && ackcompare.IsNotNil(b.ko.Spec.InputDataConfig[index].RecordWrapperType) {
 				a.ko.Spec.InputDataConfig[index].RecordWrapperType = defaultRecordWrapperType
 			}
 		}
