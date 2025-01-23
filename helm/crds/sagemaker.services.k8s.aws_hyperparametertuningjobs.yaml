@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.2
   name: hyperparametertuningjobs.sagemaker.services.k8s.aws
 spec:
   group: sagemaker.services.k8s.aws
@@ -54,11 +54,9 @@ spec:
                   Configures SageMaker Automatic model tuning (AMT) to automatically find optimal
                   parameters for the following fields:
 
-
                     - ParameterRanges (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_HyperParameterTuningJobConfig.html#sagemaker-Type-HyperParameterTuningJobConfig-ParameterRanges):
                       The names and ranges of parameters that a hyperparameter tuning job can
                       optimize.
-
 
                     - ResourceLimits (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_ResourceLimits.html):
                       The maximum resources that can be used for a training job. These resources
@@ -66,20 +64,16 @@ spec:
                       tuning job, and the maximum number of training jobs to run at the same
                       time.
 
-
                     - TrainingJobEarlyStoppingType (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_HyperParameterTuningJobConfig.html#sagemaker-Type-HyperParameterTuningJobConfig-TrainingJobEarlyStoppingType):
                       A flag that specifies whether or not to use early stopping for training
                       jobs launched by a hyperparameter tuning job.
 
-
                     - RetryStrategy (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_HyperParameterTrainingJobDefinition.html#sagemaker-Type-HyperParameterTrainingJobDefinition-RetryStrategy):
                       The number of times to retry a training job.
-
 
                     - Strategy (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_HyperParameterTuningJobConfig.html):
                       Specifies how hyperparameter tuning chooses the combinations of hyperparameter
                       values to use for the training jobs that it launches.
-
 
                     - ConvergenceDetected (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_ConvergenceDetected.html):
                       A flag to indicate that Automatic model tuning (AMT) has detected model
@@ -118,7 +112,6 @@ spec:
                       find the combination of values that result in the training job with the best
                       performance as measured by the objective metric of the hyperparameter tuning
                       job.
-
 
                       The maximum number of items specified for Array Members refers to the maximum
                       number of hyperparameters for each range and also the maximum for the hyperparameter
@@ -223,7 +216,6 @@ spec:
                   environment. For more information, see Tagging Amazon Web Services Resources
                   (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
 
-
                   Tags that you specify for the tuning job are also added to all training jobs
                   that the tuning job launches.
                 items:
@@ -231,12 +223,10 @@ spec:
                     A tag object that consists of a key and an optional value, used to manage
                     metadata for SageMaker Amazon Web Services resources.
 
-
                     You can add tags to notebook instances, training jobs, hyperparameter tuning
                     jobs, batch transform jobs, models, labeling jobs, work teams, endpoint configurations,
                     and endpoints. For more information on adding tags to SageMaker resources,
                     see AddTags (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_AddTags.html).
-
 
                     For more information on adding metadata to your Amazon Web Services resources
                     with tagging, see Tagging Amazon Web Services resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
@@ -288,27 +278,21 @@ spec:
                           The training input mode that the algorithm supports. For more information
                           about input modes, see Algorithms (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html).
 
-
                           Pipe mode
-
 
                           If an algorithm supports Pipe mode, Amazon SageMaker streams data directly
                           from Amazon S3 to the container.
 
-
                           File mode
-
 
                           If an algorithm supports File mode, SageMaker downloads the training data
                           from S3 to the provisioned ML storage volume, and mounts the directory to
                           the Docker volume for the training container.
 
-
                           You must provision the ML storage volume with sufficient capacity to accommodate
                           the data downloaded from S3. In addition to the training data, the ML storage
                           volume also stores the output model. The algorithm container uses the ML
                           storage volume to also store intermediate information, if any.
-
 
                           For distributed algorithms, training data is distributed uniformly. Your
                           training duration is predictable if the input data objects sizes are approximately
@@ -317,15 +301,12 @@ spec:
                           is also skewed when one host in a training cluster is overloaded, thus becoming
                           a bottleneck in training.
 
-
                           FastFile mode
-
 
                           If an algorithm supports FastFile mode, SageMaker streams data directly from
                           S3 to the container with no code changes, and provides file system access
                           to the data. Users can author their training script to interact with these
                           files as if they were stored on disk.
-
 
                           FastFile mode works best when the data is read sequentially. Augmented manifest
                           files aren't supported. The startup time is lower when there are fewer files
@@ -358,7 +339,6 @@ spec:
                       find the combination of values that result in the training job with the best
                       performance as measured by the objective metric of the hyperparameter tuning
                       job.
-
 
                       The maximum number of items specified for Array Members refers to the maximum
                       number of hyperparameters for each range and also the maximum for the hyperparameter
@@ -453,7 +433,6 @@ spec:
                               description: |-
                                 Describes the S3 data source.
 
-
                                 Your input bucket must be in the same Amazon Web Services region as your
                                 training job.
                               properties:
@@ -478,27 +457,21 @@ spec:
                             The training input mode that the algorithm supports. For more information
                             about input modes, see Algorithms (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html).
 
-
                             Pipe mode
-
 
                             If an algorithm supports Pipe mode, Amazon SageMaker streams data directly
                             from Amazon S3 to the container.
 
-
                             File mode
-
 
                             If an algorithm supports File mode, SageMaker downloads the training data
                             from S3 to the provisioned ML storage volume, and mounts the directory to
                             the Docker volume for the training container.
 
-
                             You must provision the ML storage volume with sufficient capacity to accommodate
                             the data downloaded from S3. In addition to the training data, the ML storage
                             volume also stores the output model. The algorithm container uses the ML
                             storage volume to also store intermediate information, if any.
-
 
                             For distributed algorithms, training data is distributed uniformly. Your
                             training duration is predictable if the input data objects sizes are approximately
@@ -507,15 +480,12 @@ spec:
                             is also skewed when one host in a training cluster is overloaded, thus becoming
                             a bottleneck in training.
 
-
                             FastFile mode
-
 
                             If an algorithm supports FastFile mode, SageMaker streams data directly from
                             S3 to the container with no code changes, and provides file system access
                             to the data. Users can author their training script to interact with these
                             files as if they were stored on disk.
-
 
                             FastFile mode works best when the data is read sequentially. Augmented manifest
                             files aren't supported. The startup time is lower when there are fewer files
@@ -531,7 +501,6 @@ spec:
                             in the ManifestFile is shuffled. If you use AugmentedManifestFile, the order
                             of the JSON lines in the AugmentedManifestFile is shuffled. The shuffling
                             order is determined using the Seed value.
-
 
                             For Pipe input mode, when ShuffleConfig is specified shuffling is done at
                             the start of every epoch. With large datasets, this ensures that the order
@@ -620,11 +589,9 @@ spec:
                       When the job reaches the time limit, SageMaker ends the training or compilation
                       job. Use this API to cap model training costs.
 
-
                       To stop a training job, SageMaker sends the algorithm the SIGTERM signal,
                       which delays job termination for 120 seconds. Algorithms can use this 120-second
                       window to save the model artifacts, so the results of training are not lost.
-
 
                       The training algorithms provided by SageMaker automatically save the intermediate
                       results of a model training job when possible. This attempt to save artifacts
@@ -632,7 +599,6 @@ spec:
                       can be saved. For example, if training has just started, the model might
                       not be ready to save. When saved, this intermediate data is a valid model
                       artifact. You can use it to create a model with CreateModel.
-
 
                       The Neural Topic Model (NTM) currently does not support saving intermediate
                       model artifacts. When training NTMs, make sure that the maximum runtime is
@@ -719,27 +685,21 @@ spec:
                             The training input mode that the algorithm supports. For more information
                             about input modes, see Algorithms (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html).
 
-
                             Pipe mode
-
 
                             If an algorithm supports Pipe mode, Amazon SageMaker streams data directly
                             from Amazon S3 to the container.
 
-
                             File mode
-
 
                             If an algorithm supports File mode, SageMaker downloads the training data
                             from S3 to the provisioned ML storage volume, and mounts the directory to
                             the Docker volume for the training container.
 
-
                             You must provision the ML storage volume with sufficient capacity to accommodate
                             the data downloaded from S3. In addition to the training data, the ML storage
                             volume also stores the output model. The algorithm container uses the ML
                             storage volume to also store intermediate information, if any.
-
 
                             For distributed algorithms, training data is distributed uniformly. Your
                             training duration is predictable if the input data objects sizes are approximately
@@ -748,15 +708,12 @@ spec:
                             is also skewed when one host in a training cluster is overloaded, thus becoming
                             a bottleneck in training.
 
-
                             FastFile mode
-
 
                             If an algorithm supports FastFile mode, SageMaker streams data directly from
                             S3 to the container with no code changes, and provides file system access
                             to the data. Users can author their training script to interact with these
                             files as if they were stored on disk.
-
 
                             FastFile mode works best when the data is read sequentially. Augmented manifest
                             files aren't supported. The startup time is lower when there are fewer files
@@ -789,7 +746,6 @@ spec:
                         find the combination of values that result in the training job with the best
                         performance as measured by the objective metric of the hyperparameter tuning
                         job.
-
 
                         The maximum number of items specified for Array Members refers to the maximum
                         number of hyperparameters for each range and also the maximum for the hyperparameter
@@ -885,7 +841,6 @@ spec:
                                 description: |-
                                   Describes the S3 data source.
 
-
                                   Your input bucket must be in the same Amazon Web Services region as your
                                   training job.
                                 properties:
@@ -910,27 +865,21 @@ spec:
                               The training input mode that the algorithm supports. For more information
                               about input modes, see Algorithms (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html).
 
-
                               Pipe mode
-
 
                               If an algorithm supports Pipe mode, Amazon SageMaker streams data directly
                               from Amazon S3 to the container.
 
-
                               File mode
-
 
                               If an algorithm supports File mode, SageMaker downloads the training data
                               from S3 to the provisioned ML storage volume, and mounts the directory to
                               the Docker volume for the training container.
 
-
                               You must provision the ML storage volume with sufficient capacity to accommodate
                               the data downloaded from S3. In addition to the training data, the ML storage
                               volume also stores the output model. The algorithm container uses the ML
                               storage volume to also store intermediate information, if any.
-
 
                               For distributed algorithms, training data is distributed uniformly. Your
                               training duration is predictable if the input data objects sizes are approximately
@@ -939,15 +888,12 @@ spec:
                               is also skewed when one host in a training cluster is overloaded, thus becoming
                               a bottleneck in training.
 
-
                               FastFile mode
-
 
                               If an algorithm supports FastFile mode, SageMaker streams data directly from
                               S3 to the container with no code changes, and provides file system access
                               to the data. Users can author their training script to interact with these
                               files as if they were stored on disk.
-
 
                               FastFile mode works best when the data is read sequentially. Augmented manifest
                               files aren't supported. The startup time is lower when there are fewer files
@@ -963,7 +909,6 @@ spec:
                               in the ManifestFile is shuffled. If you use AugmentedManifestFile, the order
                               of the JSON lines in the AugmentedManifestFile is shuffled. The shuffling
                               order is determined using the Seed value.
-
 
                               For Pipe input mode, when ShuffleConfig is specified shuffling is done at
                               the start of every epoch. With large datasets, this ensures that the order
@@ -1052,11 +997,9 @@ spec:
                         When the job reaches the time limit, SageMaker ends the training or compilation
                         job. Use this API to cap model training costs.
 
-
                         To stop a training job, SageMaker sends the algorithm the SIGTERM signal,
                         which delays job termination for 120 seconds. Algorithms can use this 120-second
                         window to save the model artifacts, so the results of training are not lost.
-
 
                         The training algorithms provided by SageMaker automatically save the intermediate
                         results of a model training job when possible. This attempt to save artifacts
@@ -1064,7 +1007,6 @@ spec:
                         can be saved. For example, if training has just started, the model might
                         not be ready to save. When saved, this intermediate data is a valid model
                         artifact. You can use it to create a model with CreateModel.
-
 
                         The Neural Topic Model (NTM) currently does not support saving intermediate
                         model artifacts. When training NTMs, make sure that the maximum runtime is
@@ -1120,7 +1062,6 @@ spec:
                   tuning jobs are used to inform which combinations of hyperparameters to search
                   over in the new tuning job.
 
-
                   All training jobs launched by the new hyperparameter tuning job are evaluated
                   by using the objective metric. If you specify IDENTICAL_DATA_AND_ALGORITHM
                   as the WarmStartType value for the warm start configuration, the training
@@ -1128,7 +1069,6 @@ spec:
                   training jobs from the parent tuning jobs. From these, the training job that
                   performs the best as measured by the objective metric is returned as the
                   overall best training job.
-
 
                   All training jobs launched by parent hyperparameter tuning jobs and the new
                   hyperparameter tuning jobs count against the limit of training jobs for the
@@ -1169,7 +1109,6 @@ spec:
                       when it has verified that an "adopted" resource (a resource where the
                       ARN annotation was set by the Kubernetes user on the CR) exists and
                       matches the supplied CR's Spec field values.
-                      TODO(vijat@): Find a better strategy for resources that do not have ARN in CreateOutputResponse
                       https://github.com/aws/aws-controllers-k8s/issues/270
                     type: string
                   ownerAccountID:

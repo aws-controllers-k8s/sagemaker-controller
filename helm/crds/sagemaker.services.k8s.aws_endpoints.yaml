@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.2
   name: endpoints.sagemaker.services.k8s.aws
 spec:
   group: sagemaker.services.k8s.aws
@@ -47,7 +47,6 @@ spec:
           spec:
             description: |-
               EndpointSpec defines the desired state of Endpoint.
-
 
               A hosted endpoint for real-time inference.
             properties:
@@ -97,7 +96,6 @@ spec:
                               deployment, a rolling deployment, or a rollback strategy. You can specify
                               your batches as either instance count or the overall percentage or your fleet.
 
-
                               For a rollback strategy, if you don't specify the fields in this object,
                               or if you set the Value to 100%, then SageMaker uses a blue/green rollback
                               strategy and rolls all traffic back to the blue fleet.
@@ -113,7 +111,6 @@ spec:
                               Specifies the type and size of the endpoint capacity to activate for a blue/green
                               deployment, a rolling deployment, or a rollback strategy. You can specify
                               your batches as either instance count or the overall percentage or your fleet.
-
 
                               For a rollback strategy, if you don't specify the fields in this object,
                               or if you set the Value to 100%, then SageMaker uses a blue/green rollback
@@ -142,7 +139,6 @@ spec:
                           deployment, a rolling deployment, or a rollback strategy. You can specify
                           your batches as either instance count or the overall percentage or your fleet.
 
-
                           For a rollback strategy, if you don't specify the fields in this object,
                           or if you set the Value to 100%, then SageMaker uses a blue/green rollback
                           strategy and rolls all traffic back to the blue fleet.
@@ -161,7 +157,6 @@ spec:
                           Specifies the type and size of the endpoint capacity to activate for a blue/green
                           deployment, a rolling deployment, or a rollback strategy. You can specify
                           your batches as either instance count or the overall percentage or your fleet.
-
 
                           For a rollback strategy, if you don't specify the fields in this object,
                           or if you set the Value to 100%, then SageMaker uses a blue/green rollback
@@ -201,12 +196,10 @@ spec:
                     A tag object that consists of a key and an optional value, used to manage
                     metadata for SageMaker Amazon Web Services resources.
 
-
                     You can add tags to notebook instances, training jobs, hyperparameter tuning
                     jobs, batch transform jobs, models, labeling jobs, work teams, endpoint configurations,
                     and endpoints. For more information on adding tags to SageMaker resources,
                     see AddTags (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_AddTags.html).
-
 
                     For more information on adding metadata to your Amazon Web Services resources
                     with tagging, see Tagging Amazon Web Services resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
@@ -241,7 +234,6 @@ spec:
                       when it has verified that an "adopted" resource (a resource where the
                       ARN annotation was set by the Kubernetes user on the CR) exists and
                       matches the supplied CR's Spec field values.
-                      TODO(vijat@): Find a better strategy for resources that do not have ARN in CreateOutputResponse
                       https://github.com/aws/aws-controllers-k8s/issues/270
                     type: string
                   ownerAccountID:
@@ -300,24 +292,19 @@ spec:
                 description: |-
                   The status of the endpoint.
 
-
                      * OutOfService: Endpoint is not available to take incoming requests.
-
 
                      * Creating: CreateEndpoint (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateEndpoint.html)
                      is executing.
-
 
                      * Updating: UpdateEndpoint (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_UpdateEndpoint.html)
                      or UpdateEndpointWeightsAndCapacities (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_UpdateEndpointWeightsAndCapacities.html)
                      is executing.
 
-
                      * SystemUpdating: Endpoint is undergoing maintenance and cannot be updated
                      or deleted or re-scaled until it has completed. This maintenance operation
                      does not change any customer-specified values such as VPC config, KMS
                      encryption, model, instance type, or instance count.
-
 
                      * RollingBack: Endpoint fails to scale up or down or change its variant
                      weight and is in the process of rolling back to its previous configuration.
@@ -328,19 +315,15 @@ spec:
                      call or when the UpdateEndpointWeightsAndCapacities (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_UpdateEndpointWeightsAndCapacities.html)
                      operation is called explicitly.
 
-
                      * InService: Endpoint is available to process incoming requests.
-
 
                      * Deleting: DeleteEndpoint (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_DeleteEndpoint.html)
                      is executing.
-
 
                      * Failed: Endpoint could not be created, updated, or re-scaled. Use the
                      FailureReason value returned by DescribeEndpoint (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_DescribeEndpoint.html)
                      for information about the failure. DeleteEndpoint (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_DeleteEndpoint.html)
                      is the only operation that can be performed on a failed endpoint.
-
 
                      * UpdateRollbackFailed: Both the rolling deployment and auto-rollback
                      failed. Your endpoint is in service with a mix of the old and new endpoint
@@ -397,7 +380,6 @@ spec:
                             description: |-
                               Gets the Amazon EC2 Container Registry path of the docker image of the model
                               that is hosted in this ProductionVariant (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_ProductionVariant.html).
-
 
                               If you used the registry/repository[:tag] form to specify the image path
                               of the primary container when you created the model hosted in this ProductionVariant,
@@ -514,7 +496,6 @@ spec:
                         description: |-
                           Gets the Amazon EC2 Container Registry path of the docker image of the model
                           that is hosted in this ProductionVariant (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_ProductionVariant.html).
-
 
                           If you used the registry/repository[:tag] form to specify the image path
                           of the primary container when you created the model hosted in this ProductionVariant,
