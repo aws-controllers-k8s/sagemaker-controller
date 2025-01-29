@@ -19,6 +19,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math"
 	"reflect"
 	"strings"
 
@@ -28,8 +29,10 @@ import (
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
-	"github.com/aws/aws-sdk-go/aws"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
+	smithy "github.com/aws/smithy-go"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -40,8 +43,7 @@ import (
 var (
 	_ = &metav1.Time{}
 	_ = strings.ToLower("")
-	_ = &aws.JSONValue{}
-	_ = &svcsdk.SageMaker{}
+	_ = &svcsdk.Client{}
 	_ = &svcapitypes.ModelExplainabilityJobDefinition{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
@@ -49,6 +51,7 @@ var (
 	_ = &reflect.Value{}
 	_ = fmt.Sprintf("")
 	_ = &ackrequeue.NoRequeue{}
+	_ = &aws.Config{}
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -74,13 +77,11 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	var resp *svcsdk.DescribeModelExplainabilityJobDefinitionOutput
-	resp, err = rm.sdkapi.DescribeModelExplainabilityJobDefinitionWithContext(ctx, input)
+	resp, err = rm.sdkapi.DescribeModelExplainabilityJobDefinition(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeModelExplainabilityJobDefinition", err)
 	if err != nil {
-		if reqErr, ok := ackerr.AWSRequestFailure(err); ok && reqErr.StatusCode() == 404 {
-			return nil, ackerr.NotFound
-		}
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ResourceNotFound" {
+		var awsErr smithy.APIError
+		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ResourceNotFound" {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
@@ -107,16 +108,18 @@ func (rm *resourceManager) sdkFind(
 		if resp.JobResources.ClusterConfig != nil {
 			f3f0 := &svcapitypes.MonitoringClusterConfig{}
 			if resp.JobResources.ClusterConfig.InstanceCount != nil {
-				f3f0.InstanceCount = resp.JobResources.ClusterConfig.InstanceCount
+				instanceCountCopy := int64(*resp.JobResources.ClusterConfig.InstanceCount)
+				f3f0.InstanceCount = &instanceCountCopy
 			}
-			if resp.JobResources.ClusterConfig.InstanceType != nil {
-				f3f0.InstanceType = resp.JobResources.ClusterConfig.InstanceType
+			if resp.JobResources.ClusterConfig.InstanceType != "" {
+				f3f0.InstanceType = aws.String(string(resp.JobResources.ClusterConfig.InstanceType))
 			}
 			if resp.JobResources.ClusterConfig.VolumeKmsKeyId != nil {
 				f3f0.VolumeKMSKeyID = resp.JobResources.ClusterConfig.VolumeKmsKeyId
 			}
 			if resp.JobResources.ClusterConfig.VolumeSizeInGB != nil {
-				f3f0.VolumeSizeInGB = resp.JobResources.ClusterConfig.VolumeSizeInGB
+				volumeSizeInGBCopy := int64(*resp.JobResources.ClusterConfig.VolumeSizeInGB)
+				f3f0.VolumeSizeInGB = &volumeSizeInGBCopy
 			}
 			f3.ClusterConfig = f3f0
 		}
@@ -130,13 +133,7 @@ func (rm *resourceManager) sdkFind(
 			f4.ConfigURI = resp.ModelExplainabilityAppSpecification.ConfigUri
 		}
 		if resp.ModelExplainabilityAppSpecification.Environment != nil {
-			f4f1 := map[string]*string{}
-			for f4f1key, f4f1valiter := range resp.ModelExplainabilityAppSpecification.Environment {
-				var f4f1val string
-				f4f1val = *f4f1valiter
-				f4f1[f4f1key] = &f4f1val
-			}
-			f4.Environment = f4f1
+			f4.Environment = aws.StringMap(resp.ModelExplainabilityAppSpecification.Environment)
 		}
 		if resp.ModelExplainabilityAppSpecification.ImageUri != nil {
 			f4.ImageURI = resp.ModelExplainabilityAppSpecification.ImageUri
@@ -189,11 +186,11 @@ func (rm *resourceManager) sdkFind(
 			if resp.ModelExplainabilityJobInput.EndpointInput.ProbabilityThresholdAttribute != nil {
 				f6f0.ProbabilityThresholdAttribute = resp.ModelExplainabilityJobInput.EndpointInput.ProbabilityThresholdAttribute
 			}
-			if resp.ModelExplainabilityJobInput.EndpointInput.S3DataDistributionType != nil {
-				f6f0.S3DataDistributionType = resp.ModelExplainabilityJobInput.EndpointInput.S3DataDistributionType
+			if resp.ModelExplainabilityJobInput.EndpointInput.S3DataDistributionType != "" {
+				f6f0.S3DataDistributionType = aws.String(string(resp.ModelExplainabilityJobInput.EndpointInput.S3DataDistributionType))
 			}
-			if resp.ModelExplainabilityJobInput.EndpointInput.S3InputMode != nil {
-				f6f0.S3InputMode = resp.ModelExplainabilityJobInput.EndpointInput.S3InputMode
+			if resp.ModelExplainabilityJobInput.EndpointInput.S3InputMode != "" {
+				f6f0.S3InputMode = aws.String(string(resp.ModelExplainabilityJobInput.EndpointInput.S3InputMode))
 			}
 			if resp.ModelExplainabilityJobInput.EndpointInput.StartTimeOffset != nil {
 				f6f0.StartTimeOffset = resp.ModelExplainabilityJobInput.EndpointInput.StartTimeOffset
@@ -218,8 +215,8 @@ func (rm *resourceManager) sdkFind(
 					if f7f1iter.S3Output.LocalPath != nil {
 						f7f1elemf0.LocalPath = f7f1iter.S3Output.LocalPath
 					}
-					if f7f1iter.S3Output.S3UploadMode != nil {
-						f7f1elemf0.S3UploadMode = f7f1iter.S3Output.S3UploadMode
+					if f7f1iter.S3Output.S3UploadMode != "" {
+						f7f1elemf0.S3UploadMode = aws.String(string(f7f1iter.S3Output.S3UploadMode))
 					}
 					if f7f1iter.S3Output.S3Uri != nil {
 						f7f1elemf0.S3URI = f7f1iter.S3Output.S3Uri
@@ -245,22 +242,10 @@ func (rm *resourceManager) sdkFind(
 		if resp.NetworkConfig.VpcConfig != nil {
 			f8f2 := &svcapitypes.VPCConfig{}
 			if resp.NetworkConfig.VpcConfig.SecurityGroupIds != nil {
-				f8f2f0 := []*string{}
-				for _, f8f2f0iter := range resp.NetworkConfig.VpcConfig.SecurityGroupIds {
-					var f8f2f0elem string
-					f8f2f0elem = *f8f2f0iter
-					f8f2f0 = append(f8f2f0, &f8f2f0elem)
-				}
-				f8f2.SecurityGroupIDs = f8f2f0
+				f8f2.SecurityGroupIDs = aws.StringSlice(resp.NetworkConfig.VpcConfig.SecurityGroupIds)
 			}
 			if resp.NetworkConfig.VpcConfig.Subnets != nil {
-				f8f2f1 := []*string{}
-				for _, f8f2f1iter := range resp.NetworkConfig.VpcConfig.Subnets {
-					var f8f2f1elem string
-					f8f2f1elem = *f8f2f1iter
-					f8f2f1 = append(f8f2f1, &f8f2f1elem)
-				}
-				f8f2.Subnets = f8f2f1
+				f8f2.Subnets = aws.StringSlice(resp.NetworkConfig.VpcConfig.Subnets)
 			}
 			f8.VPCConfig = f8f2
 		}
@@ -276,7 +261,8 @@ func (rm *resourceManager) sdkFind(
 	if resp.StoppingCondition != nil {
 		f10 := &svcapitypes.MonitoringStoppingCondition{}
 		if resp.StoppingCondition.MaxRuntimeInSeconds != nil {
-			f10.MaxRuntimeInSeconds = resp.StoppingCondition.MaxRuntimeInSeconds
+			maxRuntimeInSecondsCopy := int64(*resp.StoppingCondition.MaxRuntimeInSeconds)
+			f10.MaxRuntimeInSeconds = &maxRuntimeInSecondsCopy
 		}
 		ko.Spec.StoppingCondition = f10
 	} else {
@@ -305,7 +291,7 @@ func (rm *resourceManager) newDescribeRequestPayload(
 	res := &svcsdk.DescribeModelExplainabilityJobDefinitionInput{}
 
 	if r.ko.Spec.JobDefinitionName != nil {
-		res.SetJobDefinitionName(*r.ko.Spec.JobDefinitionName)
+		res.JobDefinitionName = r.ko.Spec.JobDefinitionName
 	}
 
 	return res, nil
@@ -330,7 +316,7 @@ func (rm *resourceManager) sdkCreate(
 
 	var resp *svcsdk.CreateModelExplainabilityJobDefinitionOutput
 	_ = resp
-	resp, err = rm.sdkapi.CreateModelExplainabilityJobDefinitionWithContext(ctx, input)
+	resp, err = rm.sdkapi.CreateModelExplainabilityJobDefinition(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateModelExplainabilityJobDefinition", err)
 	if err != nil {
 		return nil, err
@@ -360,185 +346,182 @@ func (rm *resourceManager) newCreateRequestPayload(
 	res := &svcsdk.CreateModelExplainabilityJobDefinitionInput{}
 
 	if r.ko.Spec.JobDefinitionName != nil {
-		res.SetJobDefinitionName(*r.ko.Spec.JobDefinitionName)
+		res.JobDefinitionName = r.ko.Spec.JobDefinitionName
 	}
 	if r.ko.Spec.JobResources != nil {
-		f1 := &svcsdk.MonitoringResources{}
+		f1 := &svcsdktypes.MonitoringResources{}
 		if r.ko.Spec.JobResources.ClusterConfig != nil {
-			f1f0 := &svcsdk.MonitoringClusterConfig{}
+			f1f0 := &svcsdktypes.MonitoringClusterConfig{}
 			if r.ko.Spec.JobResources.ClusterConfig.InstanceCount != nil {
-				f1f0.SetInstanceCount(*r.ko.Spec.JobResources.ClusterConfig.InstanceCount)
+				instanceCountCopy0 := *r.ko.Spec.JobResources.ClusterConfig.InstanceCount
+				if instanceCountCopy0 > math.MaxInt32 || instanceCountCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field InstanceCount is of type int32")
+				}
+				instanceCountCopy := int32(instanceCountCopy0)
+				f1f0.InstanceCount = &instanceCountCopy
 			}
 			if r.ko.Spec.JobResources.ClusterConfig.InstanceType != nil {
-				f1f0.SetInstanceType(*r.ko.Spec.JobResources.ClusterConfig.InstanceType)
+				f1f0.InstanceType = svcsdktypes.ProcessingInstanceType(*r.ko.Spec.JobResources.ClusterConfig.InstanceType)
 			}
 			if r.ko.Spec.JobResources.ClusterConfig.VolumeKMSKeyID != nil {
-				f1f0.SetVolumeKmsKeyId(*r.ko.Spec.JobResources.ClusterConfig.VolumeKMSKeyID)
+				f1f0.VolumeKmsKeyId = r.ko.Spec.JobResources.ClusterConfig.VolumeKMSKeyID
 			}
 			if r.ko.Spec.JobResources.ClusterConfig.VolumeSizeInGB != nil {
-				f1f0.SetVolumeSizeInGB(*r.ko.Spec.JobResources.ClusterConfig.VolumeSizeInGB)
+				volumeSizeInGBCopy0 := *r.ko.Spec.JobResources.ClusterConfig.VolumeSizeInGB
+				if volumeSizeInGBCopy0 > math.MaxInt32 || volumeSizeInGBCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field VolumeSizeInGB is of type int32")
+				}
+				volumeSizeInGBCopy := int32(volumeSizeInGBCopy0)
+				f1f0.VolumeSizeInGB = &volumeSizeInGBCopy
 			}
-			f1.SetClusterConfig(f1f0)
+			f1.ClusterConfig = f1f0
 		}
-		res.SetJobResources(f1)
+		res.JobResources = f1
 	}
 	if r.ko.Spec.ModelExplainabilityAppSpecification != nil {
-		f2 := &svcsdk.ModelExplainabilityAppSpecification{}
+		f2 := &svcsdktypes.ModelExplainabilityAppSpecification{}
 		if r.ko.Spec.ModelExplainabilityAppSpecification.ConfigURI != nil {
-			f2.SetConfigUri(*r.ko.Spec.ModelExplainabilityAppSpecification.ConfigURI)
+			f2.ConfigUri = r.ko.Spec.ModelExplainabilityAppSpecification.ConfigURI
 		}
 		if r.ko.Spec.ModelExplainabilityAppSpecification.Environment != nil {
-			f2f1 := map[string]*string{}
-			for f2f1key, f2f1valiter := range r.ko.Spec.ModelExplainabilityAppSpecification.Environment {
-				var f2f1val string
-				f2f1val = *f2f1valiter
-				f2f1[f2f1key] = &f2f1val
-			}
-			f2.SetEnvironment(f2f1)
+			f2.Environment = aws.ToStringMap(r.ko.Spec.ModelExplainabilityAppSpecification.Environment)
 		}
 		if r.ko.Spec.ModelExplainabilityAppSpecification.ImageURI != nil {
-			f2.SetImageUri(*r.ko.Spec.ModelExplainabilityAppSpecification.ImageURI)
+			f2.ImageUri = r.ko.Spec.ModelExplainabilityAppSpecification.ImageURI
 		}
-		res.SetModelExplainabilityAppSpecification(f2)
+		res.ModelExplainabilityAppSpecification = f2
 	}
 	if r.ko.Spec.ModelExplainabilityBaselineConfig != nil {
-		f3 := &svcsdk.ModelExplainabilityBaselineConfig{}
+		f3 := &svcsdktypes.ModelExplainabilityBaselineConfig{}
 		if r.ko.Spec.ModelExplainabilityBaselineConfig.BaseliningJobName != nil {
-			f3.SetBaseliningJobName(*r.ko.Spec.ModelExplainabilityBaselineConfig.BaseliningJobName)
+			f3.BaseliningJobName = r.ko.Spec.ModelExplainabilityBaselineConfig.BaseliningJobName
 		}
 		if r.ko.Spec.ModelExplainabilityBaselineConfig.ConstraintsResource != nil {
-			f3f1 := &svcsdk.MonitoringConstraintsResource{}
+			f3f1 := &svcsdktypes.MonitoringConstraintsResource{}
 			if r.ko.Spec.ModelExplainabilityBaselineConfig.ConstraintsResource.S3URI != nil {
-				f3f1.SetS3Uri(*r.ko.Spec.ModelExplainabilityBaselineConfig.ConstraintsResource.S3URI)
+				f3f1.S3Uri = r.ko.Spec.ModelExplainabilityBaselineConfig.ConstraintsResource.S3URI
 			}
-			f3.SetConstraintsResource(f3f1)
+			f3.ConstraintsResource = f3f1
 		}
-		res.SetModelExplainabilityBaselineConfig(f3)
+		res.ModelExplainabilityBaselineConfig = f3
 	}
 	if r.ko.Spec.ModelExplainabilityJobInput != nil {
-		f4 := &svcsdk.ModelExplainabilityJobInput{}
+		f4 := &svcsdktypes.ModelExplainabilityJobInput{}
 		if r.ko.Spec.ModelExplainabilityJobInput.EndpointInput != nil {
-			f4f0 := &svcsdk.EndpointInput{}
+			f4f0 := &svcsdktypes.EndpointInput{}
 			if r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.EndTimeOffset != nil {
-				f4f0.SetEndTimeOffset(*r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.EndTimeOffset)
+				f4f0.EndTimeOffset = r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.EndTimeOffset
 			}
 			if r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.EndpointName != nil {
-				f4f0.SetEndpointName(*r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.EndpointName)
+				f4f0.EndpointName = r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.EndpointName
 			}
 			if r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.ExcludeFeaturesAttribute != nil {
-				f4f0.SetExcludeFeaturesAttribute(*r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.ExcludeFeaturesAttribute)
+				f4f0.ExcludeFeaturesAttribute = r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.ExcludeFeaturesAttribute
 			}
 			if r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.FeaturesAttribute != nil {
-				f4f0.SetFeaturesAttribute(*r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.FeaturesAttribute)
+				f4f0.FeaturesAttribute = r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.FeaturesAttribute
 			}
 			if r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.InferenceAttribute != nil {
-				f4f0.SetInferenceAttribute(*r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.InferenceAttribute)
+				f4f0.InferenceAttribute = r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.InferenceAttribute
 			}
 			if r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.LocalPath != nil {
-				f4f0.SetLocalPath(*r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.LocalPath)
+				f4f0.LocalPath = r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.LocalPath
 			}
 			if r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.ProbabilityAttribute != nil {
-				f4f0.SetProbabilityAttribute(*r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.ProbabilityAttribute)
+				f4f0.ProbabilityAttribute = r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.ProbabilityAttribute
 			}
 			if r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.ProbabilityThresholdAttribute != nil {
-				f4f0.SetProbabilityThresholdAttribute(*r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.ProbabilityThresholdAttribute)
+				f4f0.ProbabilityThresholdAttribute = r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.ProbabilityThresholdAttribute
 			}
 			if r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.S3DataDistributionType != nil {
-				f4f0.SetS3DataDistributionType(*r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.S3DataDistributionType)
+				f4f0.S3DataDistributionType = svcsdktypes.ProcessingS3DataDistributionType(*r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.S3DataDistributionType)
 			}
 			if r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.S3InputMode != nil {
-				f4f0.SetS3InputMode(*r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.S3InputMode)
+				f4f0.S3InputMode = svcsdktypes.ProcessingS3InputMode(*r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.S3InputMode)
 			}
 			if r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.StartTimeOffset != nil {
-				f4f0.SetStartTimeOffset(*r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.StartTimeOffset)
+				f4f0.StartTimeOffset = r.ko.Spec.ModelExplainabilityJobInput.EndpointInput.StartTimeOffset
 			}
-			f4.SetEndpointInput(f4f0)
+			f4.EndpointInput = f4f0
 		}
-		res.SetModelExplainabilityJobInput(f4)
+		res.ModelExplainabilityJobInput = f4
 	}
 	if r.ko.Spec.ModelExplainabilityJobOutputConfig != nil {
-		f5 := &svcsdk.MonitoringOutputConfig{}
+		f5 := &svcsdktypes.MonitoringOutputConfig{}
 		if r.ko.Spec.ModelExplainabilityJobOutputConfig.KMSKeyID != nil {
-			f5.SetKmsKeyId(*r.ko.Spec.ModelExplainabilityJobOutputConfig.KMSKeyID)
+			f5.KmsKeyId = r.ko.Spec.ModelExplainabilityJobOutputConfig.KMSKeyID
 		}
 		if r.ko.Spec.ModelExplainabilityJobOutputConfig.MonitoringOutputs != nil {
-			f5f1 := []*svcsdk.MonitoringOutput{}
+			f5f1 := []svcsdktypes.MonitoringOutput{}
 			for _, f5f1iter := range r.ko.Spec.ModelExplainabilityJobOutputConfig.MonitoringOutputs {
-				f5f1elem := &svcsdk.MonitoringOutput{}
+				f5f1elem := &svcsdktypes.MonitoringOutput{}
 				if f5f1iter.S3Output != nil {
-					f5f1elemf0 := &svcsdk.MonitoringS3Output{}
+					f5f1elemf0 := &svcsdktypes.MonitoringS3Output{}
 					if f5f1iter.S3Output.LocalPath != nil {
-						f5f1elemf0.SetLocalPath(*f5f1iter.S3Output.LocalPath)
+						f5f1elemf0.LocalPath = f5f1iter.S3Output.LocalPath
 					}
 					if f5f1iter.S3Output.S3UploadMode != nil {
-						f5f1elemf0.SetS3UploadMode(*f5f1iter.S3Output.S3UploadMode)
+						f5f1elemf0.S3UploadMode = svcsdktypes.ProcessingS3UploadMode(*f5f1iter.S3Output.S3UploadMode)
 					}
 					if f5f1iter.S3Output.S3URI != nil {
-						f5f1elemf0.SetS3Uri(*f5f1iter.S3Output.S3URI)
+						f5f1elemf0.S3Uri = f5f1iter.S3Output.S3URI
 					}
-					f5f1elem.SetS3Output(f5f1elemf0)
+					f5f1elem.S3Output = f5f1elemf0
 				}
-				f5f1 = append(f5f1, f5f1elem)
+				f5f1 = append(f5f1, *f5f1elem)
 			}
-			f5.SetMonitoringOutputs(f5f1)
+			f5.MonitoringOutputs = f5f1
 		}
-		res.SetModelExplainabilityJobOutputConfig(f5)
+		res.ModelExplainabilityJobOutputConfig = f5
 	}
 	if r.ko.Spec.NetworkConfig != nil {
-		f6 := &svcsdk.MonitoringNetworkConfig{}
+		f6 := &svcsdktypes.MonitoringNetworkConfig{}
 		if r.ko.Spec.NetworkConfig.EnableInterContainerTrafficEncryption != nil {
-			f6.SetEnableInterContainerTrafficEncryption(*r.ko.Spec.NetworkConfig.EnableInterContainerTrafficEncryption)
+			f6.EnableInterContainerTrafficEncryption = r.ko.Spec.NetworkConfig.EnableInterContainerTrafficEncryption
 		}
 		if r.ko.Spec.NetworkConfig.EnableNetworkIsolation != nil {
-			f6.SetEnableNetworkIsolation(*r.ko.Spec.NetworkConfig.EnableNetworkIsolation)
+			f6.EnableNetworkIsolation = r.ko.Spec.NetworkConfig.EnableNetworkIsolation
 		}
 		if r.ko.Spec.NetworkConfig.VPCConfig != nil {
-			f6f2 := &svcsdk.VpcConfig{}
+			f6f2 := &svcsdktypes.VpcConfig{}
 			if r.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs != nil {
-				f6f2f0 := []*string{}
-				for _, f6f2f0iter := range r.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs {
-					var f6f2f0elem string
-					f6f2f0elem = *f6f2f0iter
-					f6f2f0 = append(f6f2f0, &f6f2f0elem)
-				}
-				f6f2.SetSecurityGroupIds(f6f2f0)
+				f6f2.SecurityGroupIds = aws.ToStringSlice(r.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs)
 			}
 			if r.ko.Spec.NetworkConfig.VPCConfig.Subnets != nil {
-				f6f2f1 := []*string{}
-				for _, f6f2f1iter := range r.ko.Spec.NetworkConfig.VPCConfig.Subnets {
-					var f6f2f1elem string
-					f6f2f1elem = *f6f2f1iter
-					f6f2f1 = append(f6f2f1, &f6f2f1elem)
-				}
-				f6f2.SetSubnets(f6f2f1)
+				f6f2.Subnets = aws.ToStringSlice(r.ko.Spec.NetworkConfig.VPCConfig.Subnets)
 			}
-			f6.SetVpcConfig(f6f2)
+			f6.VpcConfig = f6f2
 		}
-		res.SetNetworkConfig(f6)
+		res.NetworkConfig = f6
 	}
 	if r.ko.Spec.RoleARN != nil {
-		res.SetRoleArn(*r.ko.Spec.RoleARN)
+		res.RoleArn = r.ko.Spec.RoleARN
 	}
 	if r.ko.Spec.StoppingCondition != nil {
-		f8 := &svcsdk.MonitoringStoppingCondition{}
+		f8 := &svcsdktypes.MonitoringStoppingCondition{}
 		if r.ko.Spec.StoppingCondition.MaxRuntimeInSeconds != nil {
-			f8.SetMaxRuntimeInSeconds(*r.ko.Spec.StoppingCondition.MaxRuntimeInSeconds)
+			maxRuntimeInSecondsCopy0 := *r.ko.Spec.StoppingCondition.MaxRuntimeInSeconds
+			if maxRuntimeInSecondsCopy0 > math.MaxInt32 || maxRuntimeInSecondsCopy0 < math.MinInt32 {
+				return nil, fmt.Errorf("error: field MaxRuntimeInSeconds is of type int32")
+			}
+			maxRuntimeInSecondsCopy := int32(maxRuntimeInSecondsCopy0)
+			f8.MaxRuntimeInSeconds = &maxRuntimeInSecondsCopy
 		}
-		res.SetStoppingCondition(f8)
+		res.StoppingCondition = f8
 	}
 	if r.ko.Spec.Tags != nil {
-		f9 := []*svcsdk.Tag{}
+		f9 := []svcsdktypes.Tag{}
 		for _, f9iter := range r.ko.Spec.Tags {
-			f9elem := &svcsdk.Tag{}
+			f9elem := &svcsdktypes.Tag{}
 			if f9iter.Key != nil {
-				f9elem.SetKey(*f9iter.Key)
+				f9elem.Key = f9iter.Key
 			}
 			if f9iter.Value != nil {
-				f9elem.SetValue(*f9iter.Value)
+				f9elem.Value = f9iter.Value
 			}
-			f9 = append(f9, f9elem)
+			f9 = append(f9, *f9elem)
 		}
-		res.SetTags(f9)
+		res.Tags = f9
 	}
 
 	return res, nil
@@ -571,7 +554,7 @@ func (rm *resourceManager) sdkDelete(
 	}
 	var resp *svcsdk.DeleteModelExplainabilityJobDefinitionOutput
 	_ = resp
-	resp, err = rm.sdkapi.DeleteModelExplainabilityJobDefinitionWithContext(ctx, input)
+	resp, err = rm.sdkapi.DeleteModelExplainabilityJobDefinition(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteModelExplainabilityJobDefinition", err)
 	return nil, err
 }
@@ -584,7 +567,7 @@ func (rm *resourceManager) newDeleteRequestPayload(
 	res := &svcsdk.DeleteModelExplainabilityJobDefinitionInput{}
 
 	if r.ko.Spec.JobDefinitionName != nil {
-		res.SetJobDefinitionName(*r.ko.Spec.JobDefinitionName)
+		res.JobDefinitionName = r.ko.Spec.JobDefinitionName
 	}
 
 	return res, nil
@@ -692,11 +675,12 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 	if err == nil {
 		return false
 	}
-	awsErr, ok := ackerr.AWSError(err)
-	if !ok {
+
+	var terminalErr smithy.APIError
+	if !errors.As(err, &terminalErr) {
 		return false
 	}
-	switch awsErr.Code() {
+	switch terminalErr.ErrorCode() {
 	case "ResourceNotFound",
 		"ResourceInUse",
 		"InvalidParameterCombination",

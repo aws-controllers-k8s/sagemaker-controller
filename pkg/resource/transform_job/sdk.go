@@ -19,6 +19,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math"
 	"reflect"
 	"strings"
 
@@ -28,8 +29,10 @@ import (
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
-	"github.com/aws/aws-sdk-go/aws"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
+	smithy "github.com/aws/smithy-go"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -40,8 +43,7 @@ import (
 var (
 	_ = &metav1.Time{}
 	_ = strings.ToLower("")
-	_ = &aws.JSONValue{}
-	_ = &svcsdk.SageMaker{}
+	_ = &svcsdk.Client{}
 	_ = &svcapitypes.TransformJob{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
@@ -49,6 +51,7 @@ var (
 	_ = &reflect.Value{}
 	_ = fmt.Sprintf("")
 	_ = &ackrequeue.NoRequeue{}
+	_ = &aws.Config{}
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -74,13 +77,11 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	var resp *svcsdk.DescribeTransformJobOutput
-	resp, err = rm.sdkapi.DescribeTransformJobWithContext(ctx, input)
+	resp, err = rm.sdkapi.DescribeTransformJob(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeTransformJob", err)
 	if err != nil {
-		if reqErr, ok := ackerr.AWSRequestFailure(err); ok && reqErr.StatusCode() == 404 {
-			return nil, ackerr.NotFound
-		}
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ValidationException" && strings.HasPrefix(awsErr.Message(), "Could not find requested job with name") {
+		var awsErr smithy.APIError
+		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ValidationException" && strings.HasPrefix(awsErr.ErrorMessage(), "Could not find requested job with name") {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
@@ -90,8 +91,8 @@ func (rm *resourceManager) sdkFind(
 	// the original Kubernetes object we passed to the function
 	ko := r.ko.DeepCopy()
 
-	if resp.BatchStrategy != nil {
-		ko.Spec.BatchStrategy = resp.BatchStrategy
+	if resp.BatchStrategy != "" {
+		ko.Spec.BatchStrategy = aws.String(string(resp.BatchStrategy))
 	} else {
 		ko.Spec.BatchStrategy = nil
 	}
@@ -100,8 +101,8 @@ func (rm *resourceManager) sdkFind(
 		if resp.DataProcessing.InputFilter != nil {
 			f3.InputFilter = resp.DataProcessing.InputFilter
 		}
-		if resp.DataProcessing.JoinSource != nil {
-			f3.JoinSource = resp.DataProcessing.JoinSource
+		if resp.DataProcessing.JoinSource != "" {
+			f3.JoinSource = aws.String(string(resp.DataProcessing.JoinSource))
 		}
 		if resp.DataProcessing.OutputFilter != nil {
 			f3.OutputFilter = resp.DataProcessing.OutputFilter
@@ -111,13 +112,7 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.DataProcessing = nil
 	}
 	if resp.Environment != nil {
-		f4 := map[string]*string{}
-		for f4key, f4valiter := range resp.Environment {
-			var f4val string
-			f4val = *f4valiter
-			f4[f4key] = &f4val
-		}
-		ko.Spec.Environment = f4
+		ko.Spec.Environment = aws.StringMap(resp.Environment)
 	} else {
 		ko.Spec.Environment = nil
 	}
@@ -142,22 +137,26 @@ func (rm *resourceManager) sdkFind(
 		ko.Status.FailureReason = nil
 	}
 	if resp.MaxConcurrentTransforms != nil {
-		ko.Spec.MaxConcurrentTransforms = resp.MaxConcurrentTransforms
+		maxConcurrentTransformsCopy := int64(*resp.MaxConcurrentTransforms)
+		ko.Spec.MaxConcurrentTransforms = &maxConcurrentTransformsCopy
 	} else {
 		ko.Spec.MaxConcurrentTransforms = nil
 	}
 	if resp.MaxPayloadInMB != nil {
-		ko.Spec.MaxPayloadInMB = resp.MaxPayloadInMB
+		maxPayloadInMBCopy := int64(*resp.MaxPayloadInMB)
+		ko.Spec.MaxPayloadInMB = &maxPayloadInMBCopy
 	} else {
 		ko.Spec.MaxPayloadInMB = nil
 	}
 	if resp.ModelClientConfig != nil {
 		f10 := &svcapitypes.ModelClientConfig{}
 		if resp.ModelClientConfig.InvocationsMaxRetries != nil {
-			f10.InvocationsMaxRetries = resp.ModelClientConfig.InvocationsMaxRetries
+			invocationsMaxRetriesCopy := int64(*resp.ModelClientConfig.InvocationsMaxRetries)
+			f10.InvocationsMaxRetries = &invocationsMaxRetriesCopy
 		}
 		if resp.ModelClientConfig.InvocationsTimeoutInSeconds != nil {
-			f10.InvocationsTimeoutInSeconds = resp.ModelClientConfig.InvocationsTimeoutInSeconds
+			invocationsTimeoutInSecondsCopy := int64(*resp.ModelClientConfig.InvocationsTimeoutInSeconds)
+			f10.InvocationsTimeoutInSeconds = &invocationsTimeoutInSecondsCopy
 		}
 		ko.Spec.ModelClientConfig = f10
 	} else {
@@ -170,8 +169,8 @@ func (rm *resourceManager) sdkFind(
 	}
 	if resp.TransformInput != nil {
 		f13 := &svcapitypes.TransformInput{}
-		if resp.TransformInput.CompressionType != nil {
-			f13.CompressionType = resp.TransformInput.CompressionType
+		if resp.TransformInput.CompressionType != "" {
+			f13.CompressionType = aws.String(string(resp.TransformInput.CompressionType))
 		}
 		if resp.TransformInput.ContentType != nil {
 			f13.ContentType = resp.TransformInput.ContentType
@@ -180,8 +179,8 @@ func (rm *resourceManager) sdkFind(
 			f13f2 := &svcapitypes.TransformDataSource{}
 			if resp.TransformInput.DataSource.S3DataSource != nil {
 				f13f2f0 := &svcapitypes.TransformS3DataSource{}
-				if resp.TransformInput.DataSource.S3DataSource.S3DataType != nil {
-					f13f2f0.S3DataType = resp.TransformInput.DataSource.S3DataSource.S3DataType
+				if resp.TransformInput.DataSource.S3DataSource.S3DataType != "" {
+					f13f2f0.S3DataType = aws.String(string(resp.TransformInput.DataSource.S3DataSource.S3DataType))
 				}
 				if resp.TransformInput.DataSource.S3DataSource.S3Uri != nil {
 					f13f2f0.S3URI = resp.TransformInput.DataSource.S3DataSource.S3Uri
@@ -190,8 +189,8 @@ func (rm *resourceManager) sdkFind(
 			}
 			f13.DataSource = f13f2
 		}
-		if resp.TransformInput.SplitType != nil {
-			f13.SplitType = resp.TransformInput.SplitType
+		if resp.TransformInput.SplitType != "" {
+			f13.SplitType = aws.String(string(resp.TransformInput.SplitType))
 		}
 		ko.Spec.TransformInput = f13
 	} else {
@@ -209,8 +208,8 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.TransformJobName = nil
 	}
-	if resp.TransformJobStatus != nil {
-		ko.Status.TransformJobStatus = resp.TransformJobStatus
+	if resp.TransformJobStatus != "" {
+		ko.Status.TransformJobStatus = aws.String(string(resp.TransformJobStatus))
 	} else {
 		ko.Status.TransformJobStatus = nil
 	}
@@ -219,8 +218,8 @@ func (rm *resourceManager) sdkFind(
 		if resp.TransformOutput.Accept != nil {
 			f17.Accept = resp.TransformOutput.Accept
 		}
-		if resp.TransformOutput.AssembleWith != nil {
-			f17.AssembleWith = resp.TransformOutput.AssembleWith
+		if resp.TransformOutput.AssembleWith != "" {
+			f17.AssembleWith = aws.String(string(resp.TransformOutput.AssembleWith))
 		}
 		if resp.TransformOutput.KmsKeyId != nil {
 			f17.KMSKeyID = resp.TransformOutput.KmsKeyId
@@ -235,10 +234,11 @@ func (rm *resourceManager) sdkFind(
 	if resp.TransformResources != nil {
 		f18 := &svcapitypes.TransformResources{}
 		if resp.TransformResources.InstanceCount != nil {
-			f18.InstanceCount = resp.TransformResources.InstanceCount
+			instanceCountCopy := int64(*resp.TransformResources.InstanceCount)
+			f18.InstanceCount = &instanceCountCopy
 		}
-		if resp.TransformResources.InstanceType != nil {
-			f18.InstanceType = resp.TransformResources.InstanceType
+		if resp.TransformResources.InstanceType != "" {
+			f18.InstanceType = aws.String(string(resp.TransformResources.InstanceType))
 		}
 		if resp.TransformResources.VolumeKmsKeyId != nil {
 			f18.VolumeKMSKeyID = resp.TransformResources.VolumeKmsKeyId
@@ -271,7 +271,7 @@ func (rm *resourceManager) newDescribeRequestPayload(
 	res := &svcsdk.DescribeTransformJobInput{}
 
 	if r.ko.Spec.TransformJobName != nil {
-		res.SetTransformJobName(*r.ko.Spec.TransformJobName)
+		res.TransformJobName = r.ko.Spec.TransformJobName
 	}
 
 	return res, nil
@@ -296,7 +296,7 @@ func (rm *resourceManager) sdkCreate(
 
 	var resp *svcsdk.CreateTransformJobOutput
 	_ = resp
-	resp, err = rm.sdkapi.CreateTransformJobWithContext(ctx, input)
+	resp, err = rm.sdkapi.CreateTransformJob(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateTransformJob", err)
 	if err != nil {
 		return nil, err
@@ -326,134 +326,153 @@ func (rm *resourceManager) newCreateRequestPayload(
 	res := &svcsdk.CreateTransformJobInput{}
 
 	if r.ko.Spec.BatchStrategy != nil {
-		res.SetBatchStrategy(*r.ko.Spec.BatchStrategy)
+		res.BatchStrategy = svcsdktypes.BatchStrategy(*r.ko.Spec.BatchStrategy)
 	}
 	if r.ko.Spec.DataProcessing != nil {
-		f1 := &svcsdk.DataProcessing{}
+		f1 := &svcsdktypes.DataProcessing{}
 		if r.ko.Spec.DataProcessing.InputFilter != nil {
-			f1.SetInputFilter(*r.ko.Spec.DataProcessing.InputFilter)
+			f1.InputFilter = r.ko.Spec.DataProcessing.InputFilter
 		}
 		if r.ko.Spec.DataProcessing.JoinSource != nil {
-			f1.SetJoinSource(*r.ko.Spec.DataProcessing.JoinSource)
+			f1.JoinSource = svcsdktypes.JoinSource(*r.ko.Spec.DataProcessing.JoinSource)
 		}
 		if r.ko.Spec.DataProcessing.OutputFilter != nil {
-			f1.SetOutputFilter(*r.ko.Spec.DataProcessing.OutputFilter)
+			f1.OutputFilter = r.ko.Spec.DataProcessing.OutputFilter
 		}
-		res.SetDataProcessing(f1)
+		res.DataProcessing = f1
 	}
 	if r.ko.Spec.Environment != nil {
-		f2 := map[string]*string{}
-		for f2key, f2valiter := range r.ko.Spec.Environment {
-			var f2val string
-			f2val = *f2valiter
-			f2[f2key] = &f2val
-		}
-		res.SetEnvironment(f2)
+		res.Environment = aws.ToStringMap(r.ko.Spec.Environment)
 	}
 	if r.ko.Spec.ExperimentConfig != nil {
-		f3 := &svcsdk.ExperimentConfig{}
+		f3 := &svcsdktypes.ExperimentConfig{}
 		if r.ko.Spec.ExperimentConfig.ExperimentName != nil {
-			f3.SetExperimentName(*r.ko.Spec.ExperimentConfig.ExperimentName)
+			f3.ExperimentName = r.ko.Spec.ExperimentConfig.ExperimentName
 		}
 		if r.ko.Spec.ExperimentConfig.TrialComponentDisplayName != nil {
-			f3.SetTrialComponentDisplayName(*r.ko.Spec.ExperimentConfig.TrialComponentDisplayName)
+			f3.TrialComponentDisplayName = r.ko.Spec.ExperimentConfig.TrialComponentDisplayName
 		}
 		if r.ko.Spec.ExperimentConfig.TrialName != nil {
-			f3.SetTrialName(*r.ko.Spec.ExperimentConfig.TrialName)
+			f3.TrialName = r.ko.Spec.ExperimentConfig.TrialName
 		}
-		res.SetExperimentConfig(f3)
+		res.ExperimentConfig = f3
 	}
 	if r.ko.Spec.MaxConcurrentTransforms != nil {
-		res.SetMaxConcurrentTransforms(*r.ko.Spec.MaxConcurrentTransforms)
+		maxConcurrentTransformsCopy0 := *r.ko.Spec.MaxConcurrentTransforms
+		if maxConcurrentTransformsCopy0 > math.MaxInt32 || maxConcurrentTransformsCopy0 < math.MinInt32 {
+			return nil, fmt.Errorf("error: field MaxConcurrentTransforms is of type int32")
+		}
+		maxConcurrentTransformsCopy := int32(maxConcurrentTransformsCopy0)
+		res.MaxConcurrentTransforms = &maxConcurrentTransformsCopy
 	}
 	if r.ko.Spec.MaxPayloadInMB != nil {
-		res.SetMaxPayloadInMB(*r.ko.Spec.MaxPayloadInMB)
+		maxPayloadInMBCopy0 := *r.ko.Spec.MaxPayloadInMB
+		if maxPayloadInMBCopy0 > math.MaxInt32 || maxPayloadInMBCopy0 < math.MinInt32 {
+			return nil, fmt.Errorf("error: field MaxPayloadInMB is of type int32")
+		}
+		maxPayloadInMBCopy := int32(maxPayloadInMBCopy0)
+		res.MaxPayloadInMB = &maxPayloadInMBCopy
 	}
 	if r.ko.Spec.ModelClientConfig != nil {
-		f6 := &svcsdk.ModelClientConfig{}
+		f6 := &svcsdktypes.ModelClientConfig{}
 		if r.ko.Spec.ModelClientConfig.InvocationsMaxRetries != nil {
-			f6.SetInvocationsMaxRetries(*r.ko.Spec.ModelClientConfig.InvocationsMaxRetries)
+			invocationsMaxRetriesCopy0 := *r.ko.Spec.ModelClientConfig.InvocationsMaxRetries
+			if invocationsMaxRetriesCopy0 > math.MaxInt32 || invocationsMaxRetriesCopy0 < math.MinInt32 {
+				return nil, fmt.Errorf("error: field InvocationsMaxRetries is of type int32")
+			}
+			invocationsMaxRetriesCopy := int32(invocationsMaxRetriesCopy0)
+			f6.InvocationsMaxRetries = &invocationsMaxRetriesCopy
 		}
 		if r.ko.Spec.ModelClientConfig.InvocationsTimeoutInSeconds != nil {
-			f6.SetInvocationsTimeoutInSeconds(*r.ko.Spec.ModelClientConfig.InvocationsTimeoutInSeconds)
+			invocationsTimeoutInSecondsCopy0 := *r.ko.Spec.ModelClientConfig.InvocationsTimeoutInSeconds
+			if invocationsTimeoutInSecondsCopy0 > math.MaxInt32 || invocationsTimeoutInSecondsCopy0 < math.MinInt32 {
+				return nil, fmt.Errorf("error: field InvocationsTimeoutInSeconds is of type int32")
+			}
+			invocationsTimeoutInSecondsCopy := int32(invocationsTimeoutInSecondsCopy0)
+			f6.InvocationsTimeoutInSeconds = &invocationsTimeoutInSecondsCopy
 		}
-		res.SetModelClientConfig(f6)
+		res.ModelClientConfig = f6
 	}
 	if r.ko.Spec.ModelName != nil {
-		res.SetModelName(*r.ko.Spec.ModelName)
+		res.ModelName = r.ko.Spec.ModelName
 	}
 	if r.ko.Spec.Tags != nil {
-		f8 := []*svcsdk.Tag{}
+		f8 := []svcsdktypes.Tag{}
 		for _, f8iter := range r.ko.Spec.Tags {
-			f8elem := &svcsdk.Tag{}
+			f8elem := &svcsdktypes.Tag{}
 			if f8iter.Key != nil {
-				f8elem.SetKey(*f8iter.Key)
+				f8elem.Key = f8iter.Key
 			}
 			if f8iter.Value != nil {
-				f8elem.SetValue(*f8iter.Value)
+				f8elem.Value = f8iter.Value
 			}
-			f8 = append(f8, f8elem)
+			f8 = append(f8, *f8elem)
 		}
-		res.SetTags(f8)
+		res.Tags = f8
 	}
 	if r.ko.Spec.TransformInput != nil {
-		f9 := &svcsdk.TransformInput{}
+		f9 := &svcsdktypes.TransformInput{}
 		if r.ko.Spec.TransformInput.CompressionType != nil {
-			f9.SetCompressionType(*r.ko.Spec.TransformInput.CompressionType)
+			f9.CompressionType = svcsdktypes.CompressionType(*r.ko.Spec.TransformInput.CompressionType)
 		}
 		if r.ko.Spec.TransformInput.ContentType != nil {
-			f9.SetContentType(*r.ko.Spec.TransformInput.ContentType)
+			f9.ContentType = r.ko.Spec.TransformInput.ContentType
 		}
 		if r.ko.Spec.TransformInput.DataSource != nil {
-			f9f2 := &svcsdk.TransformDataSource{}
+			f9f2 := &svcsdktypes.TransformDataSource{}
 			if r.ko.Spec.TransformInput.DataSource.S3DataSource != nil {
-				f9f2f0 := &svcsdk.TransformS3DataSource{}
+				f9f2f0 := &svcsdktypes.TransformS3DataSource{}
 				if r.ko.Spec.TransformInput.DataSource.S3DataSource.S3DataType != nil {
-					f9f2f0.SetS3DataType(*r.ko.Spec.TransformInput.DataSource.S3DataSource.S3DataType)
+					f9f2f0.S3DataType = svcsdktypes.S3DataType(*r.ko.Spec.TransformInput.DataSource.S3DataSource.S3DataType)
 				}
 				if r.ko.Spec.TransformInput.DataSource.S3DataSource.S3URI != nil {
-					f9f2f0.SetS3Uri(*r.ko.Spec.TransformInput.DataSource.S3DataSource.S3URI)
+					f9f2f0.S3Uri = r.ko.Spec.TransformInput.DataSource.S3DataSource.S3URI
 				}
-				f9f2.SetS3DataSource(f9f2f0)
+				f9f2.S3DataSource = f9f2f0
 			}
-			f9.SetDataSource(f9f2)
+			f9.DataSource = f9f2
 		}
 		if r.ko.Spec.TransformInput.SplitType != nil {
-			f9.SetSplitType(*r.ko.Spec.TransformInput.SplitType)
+			f9.SplitType = svcsdktypes.SplitType(*r.ko.Spec.TransformInput.SplitType)
 		}
-		res.SetTransformInput(f9)
+		res.TransformInput = f9
 	}
 	if r.ko.Spec.TransformJobName != nil {
-		res.SetTransformJobName(*r.ko.Spec.TransformJobName)
+		res.TransformJobName = r.ko.Spec.TransformJobName
 	}
 	if r.ko.Spec.TransformOutput != nil {
-		f11 := &svcsdk.TransformOutput{}
+		f11 := &svcsdktypes.TransformOutput{}
 		if r.ko.Spec.TransformOutput.Accept != nil {
-			f11.SetAccept(*r.ko.Spec.TransformOutput.Accept)
+			f11.Accept = r.ko.Spec.TransformOutput.Accept
 		}
 		if r.ko.Spec.TransformOutput.AssembleWith != nil {
-			f11.SetAssembleWith(*r.ko.Spec.TransformOutput.AssembleWith)
+			f11.AssembleWith = svcsdktypes.AssemblyType(*r.ko.Spec.TransformOutput.AssembleWith)
 		}
 		if r.ko.Spec.TransformOutput.KMSKeyID != nil {
-			f11.SetKmsKeyId(*r.ko.Spec.TransformOutput.KMSKeyID)
+			f11.KmsKeyId = r.ko.Spec.TransformOutput.KMSKeyID
 		}
 		if r.ko.Spec.TransformOutput.S3OutputPath != nil {
-			f11.SetS3OutputPath(*r.ko.Spec.TransformOutput.S3OutputPath)
+			f11.S3OutputPath = r.ko.Spec.TransformOutput.S3OutputPath
 		}
-		res.SetTransformOutput(f11)
+		res.TransformOutput = f11
 	}
 	if r.ko.Spec.TransformResources != nil {
-		f12 := &svcsdk.TransformResources{}
+		f12 := &svcsdktypes.TransformResources{}
 		if r.ko.Spec.TransformResources.InstanceCount != nil {
-			f12.SetInstanceCount(*r.ko.Spec.TransformResources.InstanceCount)
+			instanceCountCopy0 := *r.ko.Spec.TransformResources.InstanceCount
+			if instanceCountCopy0 > math.MaxInt32 || instanceCountCopy0 < math.MinInt32 {
+				return nil, fmt.Errorf("error: field InstanceCount is of type int32")
+			}
+			instanceCountCopy := int32(instanceCountCopy0)
+			f12.InstanceCount = &instanceCountCopy
 		}
 		if r.ko.Spec.TransformResources.InstanceType != nil {
-			f12.SetInstanceType(*r.ko.Spec.TransformResources.InstanceType)
+			f12.InstanceType = svcsdktypes.TransformInstanceType(*r.ko.Spec.TransformResources.InstanceType)
 		}
 		if r.ko.Spec.TransformResources.VolumeKMSKeyID != nil {
-			f12.SetVolumeKmsKeyId(*r.ko.Spec.TransformResources.VolumeKMSKeyID)
+			f12.VolumeKmsKeyId = r.ko.Spec.TransformResources.VolumeKMSKeyID
 		}
-		res.SetTransformResources(f12)
+		res.TransformResources = f12
 	}
 
 	return res, nil
@@ -482,13 +501,13 @@ func (rm *resourceManager) sdkDelete(
 	}()
 	latestStatus := r.ko.Status.TransformJobStatus
 	if latestStatus != nil {
-		if *latestStatus == svcsdk.TransformJobStatusStopping {
+		if *latestStatus == string(svcsdktypes.TransformJobStatusStopping) {
 			return r, requeueWaitWhileDeleting
 		}
 
 		// Call StopTranformJob only if the job is InProgress, otherwise just
 		// return nil to mark the resource Unmanaged
-		if *latestStatus != svcsdk.TransformJobStatusInProgress {
+		if *latestStatus != string(svcsdktypes.TransformJobStatusInProgress) {
 			return r, err
 		}
 	}
@@ -498,7 +517,7 @@ func (rm *resourceManager) sdkDelete(
 	}
 	var resp *svcsdk.StopTransformJobOutput
 	_ = resp
-	resp, err = rm.sdkapi.StopTransformJobWithContext(ctx, input)
+	resp, err = rm.sdkapi.StopTransformJob(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "StopTransformJob", err)
 
 	if err == nil {
@@ -522,7 +541,7 @@ func (rm *resourceManager) newDeleteRequestPayload(
 	res := &svcsdk.StopTransformJobInput{}
 
 	if r.ko.Spec.TransformJobName != nil {
-		res.SetTransformJobName(*r.ko.Spec.TransformJobName)
+		res.TransformJobName = r.ko.Spec.TransformJobName
 	}
 
 	return res, nil
@@ -630,11 +649,12 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 	if err == nil {
 		return false
 	}
-	awsErr, ok := ackerr.AWSError(err)
-	if !ok {
+
+	var terminalErr smithy.APIError
+	if !errors.As(err, &terminalErr) {
 		return false
 	}
-	switch awsErr.Code() {
+	switch terminalErr.ErrorCode() {
 	case "ResourceNotFound",
 		"ResourceInUse",
 		"InvalidParameterCombination",

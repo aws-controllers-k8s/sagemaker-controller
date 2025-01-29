@@ -18,21 +18,22 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"reflect"
+
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/awserr"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
-	"reflect"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
+	"github.com/aws/smithy-go"
 )
 
 var (
 	modifyingStatuses = []string{
-		svcsdk.InferenceComponentStatusCreating,
-		svcsdk.InferenceComponentStatusUpdating,
-		svcsdk.InferenceComponentStatusDeleting,
+		string(svcsdktypes.InferenceComponentStatusCreating),
+		string(svcsdktypes.InferenceComponentStatusUpdating),
+		string(svcsdktypes.InferenceComponentStatusDeleting),
 	}
 
 	resourceName = GroupKind.Kind
@@ -71,7 +72,7 @@ func (rm *resourceManager) customUpdateInferenceComponentSetOutput(ko *svcapityp
 	ko.ObjectMeta.SetAnnotations(annotations)
 
 	// injecting Updating status to keep the Sync condition message and status.InferenceComponentStatus in sync
-	ko.Status.InferenceComponentStatus = aws.String(svcsdk.InferenceComponentStatusUpdating)
+	ko.Status.InferenceComponentStatus = aws.String(string(svcsdktypes.InferenceComponentStatusUpdating))
 
 	latestStatus := ko.Status.InferenceComponentStatus
 	svccommon.SetSyncedCondition(&resource{ko}, latestStatus, &resourceName, &modifyingStatuses)
@@ -123,7 +124,7 @@ func (rm *resourceManager) customUpdateInferenceComponentPreChecks(
 	}
 
 	// Case 2 - InferenceComponentStatus == Failed
-	if *latestStatus == svcsdk.InferenceComponentStatusFailed ||
+	if *latestStatus == string(svcsdktypes.InferenceComponentStatusFailed) ||
 		// Case 3 - A previous update to the InferenceComponent with same spec failed
 		// Following checks indicate FailureReason is related to a failed update
 		(failureReason != nil && lastSpecForUpdateString != nil &&
@@ -138,8 +139,11 @@ func (rm *resourceManager) customUpdateInferenceComponentPreChecks(
 		// 1 & 2 does not guarantee an update Failed. Hence, we need to look at `lastSpecForUpdate` to determine if the update was unsuccessful
 		// `desiredSpec != latestSpec` + `desiredSpec == lastSpecForUpdate
 		//`+ `FailureReason != nil` indicate that an update is needed, has already been tried and failed.
-		return awserr.New("InferenceComponentUpdateError", "Unable to update inference component."+
-			" Check FailureReason.", nil)
+		return &smithy.GenericAPIError{
+			Code:    "InferenceComponentUpdateError",
+			Message: "Unable to update inference component." + " Check FailureReason.",
+			Fault:   1,
+		}
 	}
 
 	return nil

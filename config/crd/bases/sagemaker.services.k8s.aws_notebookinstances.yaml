@@ -49,10 +49,11 @@ spec:
             properties:
               acceleratorTypes:
                 description: |-
-                  A list of Elastic Inference (EI) instance types to associate with this notebook
-                  instance. Currently, only one instance type can be associated with a notebook
-                  instance. For more information, see Using Elastic Inference in Amazon SageMaker
-                  (https://docs.aws.amazon.com/sagemaker/latest/dg/ei.html).
+                  This parameter is no longer supported. Elastic Inference (EI) is no longer
+                  available.
+
+                  This parameter was used to specify a list of EI instance types to associate
+                  with this notebook instance.
                 items:
                   type: string
                 type: array

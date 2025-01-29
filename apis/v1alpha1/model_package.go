@@ -49,8 +49,8 @@ type ModelPackageSpec struct {
 	// Detection against Previous Baselines in SageMaker Pipelines (https://docs.aws.amazon.com/sagemaker/latest/dg/pipelines-quality-clarify-baseline-lifecycle.html#pipelines-quality-clarify-baseline-drift-detection)
 	// in the Amazon SageMaker Developer Guide.
 	DriftCheckBaselines *DriftCheckBaselines `json:"driftCheckBaselines,omitempty"`
-	// Specifies details about inference jobs that can be run with models based
-	// on this model package, including the following:
+	// Specifies details about inference jobs that you can run with models based
+	// on this model package, including the following information:
 	//
 	//   - The Amazon ECR paths of containers that contain the inference code and
 	//     model artifacts.

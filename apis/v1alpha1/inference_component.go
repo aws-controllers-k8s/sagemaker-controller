@@ -30,8 +30,7 @@ type InferenceComponentSpec struct {
 	// +kubebuilder:validation:Required
 	InferenceComponentName *string `json:"inferenceComponentName"`
 	// Runtime settings for a model that is deployed with an inference component.
-	// +kubebuilder:validation:Required
-	RuntimeConfig *InferenceComponentRuntimeConfig `json:"runtimeConfig"`
+	RuntimeConfig *InferenceComponentRuntimeConfig `json:"runtimeConfig,omitempty"`
 	// Details about the resources to deploy with this inference component, including
 	// the model, container, and compute resources.
 	// +kubebuilder:validation:Required
@@ -41,7 +40,6 @@ type InferenceComponentSpec struct {
 	// in the Amazon Web Services General Reference.
 	Tags []*Tag `json:"tags,omitempty"`
 	// The name of an existing production variant where you host the inference component.
-	// +kubebuilder:validation:Required
 	VariantName *string `json:"variantName,omitempty"`
 }
 

@@ -16,6 +16,7 @@
 package main
 
 import (
+	"context"
 	"os"
 
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
@@ -37,7 +38,6 @@ import (
 
 	svctypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svcresource "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
 
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/app"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/data_quality_job_definition"
@@ -67,11 +67,10 @@ import (
 )
 
 var (
-	awsServiceAPIGroup    = "sagemaker.services.k8s.aws"
-	awsServiceAlias       = "sagemaker"
-	awsServiceEndpointsID = svcsdk.EndpointsID
-	scheme                = runtime.NewScheme()
-	setupLog              = ctrlrt.Log.WithName("setup")
+	awsServiceAPIGroup = "sagemaker.services.k8s.aws"
+	awsServiceAlias    = "sagemaker"
+	scheme             = runtime.NewScheme()
+	setupLog           = ctrlrt.Log.WithName("setup")
 )
 
 func init() {
@@ -93,7 +92,8 @@ func main() {
 		resourceGVKs = append(resourceGVKs, mf.ResourceDescriptor().GroupVersionKind())
 	}
 
-	if err := ackCfg.Validate(ackcfg.WithGVKs(resourceGVKs)); err != nil {
+	ctx := context.Background()
+	if err := ackCfg.Validate(ctx, ackcfg.WithGVKs(resourceGVKs)); err != nil {
 		setupLog.Error(
 			err, "Unable to create controller manager",
 			"aws.service", awsServiceAlias,
@@ -158,7 +158,7 @@ func main() {
 		"aws.service", awsServiceAlias,
 	)
 	sc := ackrt.NewServiceController(
-		awsServiceAlias, awsServiceAPIGroup, awsServiceEndpointsID,
+		awsServiceAlias, awsServiceAPIGroup,
 		acktypes.VersionInfo{
 			version.GitCommit,
 			version.GitVersion,

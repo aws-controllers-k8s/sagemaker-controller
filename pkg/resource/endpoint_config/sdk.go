@@ -19,6 +19,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math"
 	"reflect"
 	"strings"
 
@@ -28,8 +29,10 @@ import (
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
-	"github.com/aws/aws-sdk-go/aws"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
+	smithy "github.com/aws/smithy-go"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -40,8 +43,7 @@ import (
 var (
 	_ = &metav1.Time{}
 	_ = strings.ToLower("")
-	_ = &aws.JSONValue{}
-	_ = &svcsdk.SageMaker{}
+	_ = &svcsdk.Client{}
 	_ = &svcapitypes.EndpointConfig{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
@@ -49,6 +51,7 @@ var (
 	_ = &reflect.Value{}
 	_ = fmt.Sprintf("")
 	_ = &ackrequeue.NoRequeue{}
+	_ = &aws.Config{}
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -74,13 +77,11 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	var resp *svcsdk.DescribeEndpointConfigOutput
-	resp, err = rm.sdkapi.DescribeEndpointConfigWithContext(ctx, input)
+	resp, err = rm.sdkapi.DescribeEndpointConfig(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeEndpointConfig", err)
 	if err != nil {
-		if reqErr, ok := ackerr.AWSRequestFailure(err); ok && reqErr.StatusCode() == 404 {
-			return nil, ackerr.NotFound
-		}
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ValidationException" && strings.HasPrefix(awsErr.Message(), "Could not find endpoint configuration") {
+		var awsErr smithy.APIError
+		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ValidationException" && strings.HasPrefix(awsErr.ErrorMessage(), "Could not find endpoint configuration") {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
@@ -95,7 +96,8 @@ func (rm *resourceManager) sdkFind(
 		if resp.AsyncInferenceConfig.ClientConfig != nil {
 			f0f0 := &svcapitypes.AsyncInferenceClientConfig{}
 			if resp.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance != nil {
-				f0f0.MaxConcurrentInvocationsPerInstance = resp.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance
+				maxConcurrentInvocationsPerInstanceCopy := int64(*resp.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance)
+				f0f0.MaxConcurrentInvocationsPerInstance = &maxConcurrentInvocationsPerInstanceCopy
 			}
 			f0.ClientConfig = f0f0
 		}
@@ -112,9 +114,9 @@ func (rm *resourceManager) sdkFind(
 				if resp.AsyncInferenceConfig.OutputConfig.NotificationConfig.IncludeInferenceResponseIn != nil {
 					f0f1f1f1 := []*string{}
 					for _, f0f1f1f1iter := range resp.AsyncInferenceConfig.OutputConfig.NotificationConfig.IncludeInferenceResponseIn {
-						var f0f1f1f1elem string
-						f0f1f1f1elem = *f0f1f1f1iter
-						f0f1f1f1 = append(f0f1f1f1, &f0f1f1f1elem)
+						var f0f1f1f1elem *string
+						f0f1f1f1elem = aws.String(string(f0f1f1f1iter))
+						f0f1f1f1 = append(f0f1f1f1, f0f1f1f1elem)
 					}
 					f0f1f1.IncludeInferenceResponseIn = f0f1f1f1
 				}
@@ -140,22 +142,10 @@ func (rm *resourceManager) sdkFind(
 		if resp.DataCaptureConfig.CaptureContentTypeHeader != nil {
 			f2f0 := &svcapitypes.CaptureContentTypeHeader{}
 			if resp.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes != nil {
-				f2f0f0 := []*string{}
-				for _, f2f0f0iter := range resp.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes {
-					var f2f0f0elem string
-					f2f0f0elem = *f2f0f0iter
-					f2f0f0 = append(f2f0f0, &f2f0f0elem)
-				}
-				f2f0.CsvContentTypes = f2f0f0
+				f2f0.CsvContentTypes = aws.StringSlice(resp.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes)
 			}
 			if resp.DataCaptureConfig.CaptureContentTypeHeader.JsonContentTypes != nil {
-				f2f0f1 := []*string{}
-				for _, f2f0f1iter := range resp.DataCaptureConfig.CaptureContentTypeHeader.JsonContentTypes {
-					var f2f0f1elem string
-					f2f0f1elem = *f2f0f1iter
-					f2f0f1 = append(f2f0f1, &f2f0f1elem)
-				}
-				f2f0.JSONContentTypes = f2f0f1
+				f2f0.JSONContentTypes = aws.StringSlice(resp.DataCaptureConfig.CaptureContentTypeHeader.JsonContentTypes)
 			}
 			f2.CaptureContentTypeHeader = f2f0
 		}
@@ -163,8 +153,8 @@ func (rm *resourceManager) sdkFind(
 			f2f1 := []*svcapitypes.CaptureOption{}
 			for _, f2f1iter := range resp.DataCaptureConfig.CaptureOptions {
 				f2f1elem := &svcapitypes.CaptureOption{}
-				if f2f1iter.CaptureMode != nil {
-					f2f1elem.CaptureMode = f2f1iter.CaptureMode
+				if f2f1iter.CaptureMode != "" {
+					f2f1elem.CaptureMode = aws.String(string(f2f1iter.CaptureMode))
 				}
 				f2f1 = append(f2f1, f2f1elem)
 			}
@@ -177,7 +167,8 @@ func (rm *resourceManager) sdkFind(
 			f2.EnableCapture = resp.DataCaptureConfig.EnableCapture
 		}
 		if resp.DataCaptureConfig.InitialSamplingPercentage != nil {
-			f2.InitialSamplingPercentage = resp.DataCaptureConfig.InitialSamplingPercentage
+			initialSamplingPercentageCopy := int64(*resp.DataCaptureConfig.InitialSamplingPercentage)
+			f2.InitialSamplingPercentage = &initialSamplingPercentageCopy
 		}
 		if resp.DataCaptureConfig.KmsKeyId != nil {
 			f2.KMSKeyID = resp.DataCaptureConfig.KmsKeyId
@@ -217,11 +208,12 @@ func (rm *resourceManager) sdkFind(
 		f8 := []*svcapitypes.ProductionVariant{}
 		for _, f8iter := range resp.ProductionVariants {
 			f8elem := &svcapitypes.ProductionVariant{}
-			if f8iter.AcceleratorType != nil {
-				f8elem.AcceleratorType = f8iter.AcceleratorType
+			if f8iter.AcceleratorType != "" {
+				f8elem.AcceleratorType = aws.String(string(f8iter.AcceleratorType))
 			}
 			if f8iter.ContainerStartupHealthCheckTimeoutInSeconds != nil {
-				f8elem.ContainerStartupHealthCheckTimeoutInSeconds = f8iter.ContainerStartupHealthCheckTimeoutInSeconds
+				containerStartupHealthCheckTimeoutInSecondsCopy := int64(*f8iter.ContainerStartupHealthCheckTimeoutInSeconds)
+				f8elem.ContainerStartupHealthCheckTimeoutInSeconds = &containerStartupHealthCheckTimeoutInSecondsCopy
 			}
 			if f8iter.CoreDumpConfig != nil {
 				f8elemf2 := &svcapitypes.ProductionVariantCoreDumpConfig{}
@@ -237,50 +229,58 @@ func (rm *resourceManager) sdkFind(
 				f8elem.EnableSSMAccess = f8iter.EnableSSMAccess
 			}
 			if f8iter.InitialInstanceCount != nil {
-				f8elem.InitialInstanceCount = f8iter.InitialInstanceCount
+				initialInstanceCountCopy := int64(*f8iter.InitialInstanceCount)
+				f8elem.InitialInstanceCount = &initialInstanceCountCopy
 			}
 			if f8iter.InitialVariantWeight != nil {
-				f8elem.InitialVariantWeight = f8iter.InitialVariantWeight
+				initialVariantWeightCopy := float64(*f8iter.InitialVariantWeight)
+				f8elem.InitialVariantWeight = &initialVariantWeightCopy
 			}
-			if f8iter.InstanceType != nil {
-				f8elem.InstanceType = f8iter.InstanceType
+			if f8iter.InstanceType != "" {
+				f8elem.InstanceType = aws.String(string(f8iter.InstanceType))
 			}
 			if f8iter.ManagedInstanceScaling != nil {
 				f8elemf7 := &svcapitypes.ProductionVariantManagedInstanceScaling{}
 				if f8iter.ManagedInstanceScaling.MaxInstanceCount != nil {
-					f8elemf7.MaxInstanceCount = f8iter.ManagedInstanceScaling.MaxInstanceCount
+					maxInstanceCountCopy := int64(*f8iter.ManagedInstanceScaling.MaxInstanceCount)
+					f8elemf7.MaxInstanceCount = &maxInstanceCountCopy
 				}
 				if f8iter.ManagedInstanceScaling.MinInstanceCount != nil {
-					f8elemf7.MinInstanceCount = f8iter.ManagedInstanceScaling.MinInstanceCount
+					minInstanceCountCopy := int64(*f8iter.ManagedInstanceScaling.MinInstanceCount)
+					f8elemf7.MinInstanceCount = &minInstanceCountCopy
 				}
-				if f8iter.ManagedInstanceScaling.Status != nil {
-					f8elemf7.Status = f8iter.ManagedInstanceScaling.Status
+				if f8iter.ManagedInstanceScaling.Status != "" {
+					f8elemf7.Status = aws.String(string(f8iter.ManagedInstanceScaling.Status))
 				}
 				f8elem.ManagedInstanceScaling = f8elemf7
 			}
 			if f8iter.ModelDataDownloadTimeoutInSeconds != nil {
-				f8elem.ModelDataDownloadTimeoutInSeconds = f8iter.ModelDataDownloadTimeoutInSeconds
+				modelDataDownloadTimeoutInSecondsCopy := int64(*f8iter.ModelDataDownloadTimeoutInSeconds)
+				f8elem.ModelDataDownloadTimeoutInSeconds = &modelDataDownloadTimeoutInSecondsCopy
 			}
 			if f8iter.ModelName != nil {
 				f8elem.ModelName = f8iter.ModelName
 			}
 			if f8iter.RoutingConfig != nil {
 				f8elemf10 := &svcapitypes.ProductionVariantRoutingConfig{}
-				if f8iter.RoutingConfig.RoutingStrategy != nil {
-					f8elemf10.RoutingStrategy = f8iter.RoutingConfig.RoutingStrategy
+				if f8iter.RoutingConfig.RoutingStrategy != "" {
+					f8elemf10.RoutingStrategy = aws.String(string(f8iter.RoutingConfig.RoutingStrategy))
 				}
 				f8elem.RoutingConfig = f8elemf10
 			}
 			if f8iter.ServerlessConfig != nil {
 				f8elemf11 := &svcapitypes.ProductionVariantServerlessConfig{}
 				if f8iter.ServerlessConfig.MaxConcurrency != nil {
-					f8elemf11.MaxConcurrency = f8iter.ServerlessConfig.MaxConcurrency
+					maxConcurrencyCopy := int64(*f8iter.ServerlessConfig.MaxConcurrency)
+					f8elemf11.MaxConcurrency = &maxConcurrencyCopy
 				}
 				if f8iter.ServerlessConfig.MemorySizeInMB != nil {
-					f8elemf11.MemorySizeInMB = f8iter.ServerlessConfig.MemorySizeInMB
+					memorySizeInMBCopy := int64(*f8iter.ServerlessConfig.MemorySizeInMB)
+					f8elemf11.MemorySizeInMB = &memorySizeInMBCopy
 				}
 				if f8iter.ServerlessConfig.ProvisionedConcurrency != nil {
-					f8elemf11.ProvisionedConcurrency = f8iter.ServerlessConfig.ProvisionedConcurrency
+					provisionedConcurrencyCopy := int64(*f8iter.ServerlessConfig.ProvisionedConcurrency)
+					f8elemf11.ProvisionedConcurrency = &provisionedConcurrencyCopy
 				}
 				f8elem.ServerlessConfig = f8elemf11
 			}
@@ -288,7 +288,8 @@ func (rm *resourceManager) sdkFind(
 				f8elem.VariantName = f8iter.VariantName
 			}
 			if f8iter.VolumeSizeInGB != nil {
-				f8elem.VolumeSizeInGB = f8iter.VolumeSizeInGB
+				volumeSizeInGBCopy := int64(*f8iter.VolumeSizeInGB)
+				f8elem.VolumeSizeInGB = &volumeSizeInGBCopy
 			}
 			f8 = append(f8, f8elem)
 		}
@@ -299,22 +300,10 @@ func (rm *resourceManager) sdkFind(
 	if resp.VpcConfig != nil {
 		f10 := &svcapitypes.VPCConfig{}
 		if resp.VpcConfig.SecurityGroupIds != nil {
-			f10f0 := []*string{}
-			for _, f10f0iter := range resp.VpcConfig.SecurityGroupIds {
-				var f10f0elem string
-				f10f0elem = *f10f0iter
-				f10f0 = append(f10f0, &f10f0elem)
-			}
-			f10.SecurityGroupIDs = f10f0
+			f10.SecurityGroupIDs = aws.StringSlice(resp.VpcConfig.SecurityGroupIds)
 		}
 		if resp.VpcConfig.Subnets != nil {
-			f10f1 := []*string{}
-			for _, f10f1iter := range resp.VpcConfig.Subnets {
-				var f10f1elem string
-				f10f1elem = *f10f1iter
-				f10f1 = append(f10f1, &f10f1elem)
-			}
-			f10.Subnets = f10f1
+			f10.Subnets = aws.StringSlice(resp.VpcConfig.Subnets)
 		}
 		ko.Spec.VPCConfig = f10
 	} else {
@@ -343,7 +332,7 @@ func (rm *resourceManager) newDescribeRequestPayload(
 	res := &svcsdk.DescribeEndpointConfigInput{}
 
 	if r.ko.Spec.EndpointConfigName != nil {
-		res.SetEndpointConfigName(*r.ko.Spec.EndpointConfigName)
+		res.EndpointConfigName = r.ko.Spec.EndpointConfigName
 	}
 
 	return res, nil
@@ -368,7 +357,7 @@ func (rm *resourceManager) sdkCreate(
 
 	var resp *svcsdk.CreateEndpointConfigOutput
 	_ = resp
-	resp, err = rm.sdkapi.CreateEndpointConfigWithContext(ctx, input)
+	resp, err = rm.sdkapi.CreateEndpointConfig(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateEndpointConfig", err)
 	if err != nil {
 		return nil, err
@@ -398,225 +387,261 @@ func (rm *resourceManager) newCreateRequestPayload(
 	res := &svcsdk.CreateEndpointConfigInput{}
 
 	if r.ko.Spec.AsyncInferenceConfig != nil {
-		f0 := &svcsdk.AsyncInferenceConfig{}
+		f0 := &svcsdktypes.AsyncInferenceConfig{}
 		if r.ko.Spec.AsyncInferenceConfig.ClientConfig != nil {
-			f0f0 := &svcsdk.AsyncInferenceClientConfig{}
+			f0f0 := &svcsdktypes.AsyncInferenceClientConfig{}
 			if r.ko.Spec.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance != nil {
-				f0f0.SetMaxConcurrentInvocationsPerInstance(*r.ko.Spec.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance)
+				maxConcurrentInvocationsPerInstanceCopy0 := *r.ko.Spec.AsyncInferenceConfig.ClientConfig.MaxConcurrentInvocationsPerInstance
+				if maxConcurrentInvocationsPerInstanceCopy0 > math.MaxInt32 || maxConcurrentInvocationsPerInstanceCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field MaxConcurrentInvocationsPerInstance is of type int32")
+				}
+				maxConcurrentInvocationsPerInstanceCopy := int32(maxConcurrentInvocationsPerInstanceCopy0)
+				f0f0.MaxConcurrentInvocationsPerInstance = &maxConcurrentInvocationsPerInstanceCopy
 			}
-			f0.SetClientConfig(f0f0)
+			f0.ClientConfig = f0f0
 		}
 		if r.ko.Spec.AsyncInferenceConfig.OutputConfig != nil {
-			f0f1 := &svcsdk.AsyncInferenceOutputConfig{}
+			f0f1 := &svcsdktypes.AsyncInferenceOutputConfig{}
 			if r.ko.Spec.AsyncInferenceConfig.OutputConfig.KMSKeyID != nil {
-				f0f1.SetKmsKeyId(*r.ko.Spec.AsyncInferenceConfig.OutputConfig.KMSKeyID)
+				f0f1.KmsKeyId = r.ko.Spec.AsyncInferenceConfig.OutputConfig.KMSKeyID
 			}
 			if r.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig != nil {
-				f0f1f1 := &svcsdk.AsyncInferenceNotificationConfig{}
+				f0f1f1 := &svcsdktypes.AsyncInferenceNotificationConfig{}
 				if r.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic != nil {
-					f0f1f1.SetErrorTopic(*r.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic)
+					f0f1f1.ErrorTopic = r.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.ErrorTopic
 				}
 				if r.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.IncludeInferenceResponseIn != nil {
-					f0f1f1f1 := []*string{}
+					f0f1f1f1 := []svcsdktypes.AsyncNotificationTopicTypes{}
 					for _, f0f1f1f1iter := range r.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.IncludeInferenceResponseIn {
 						var f0f1f1f1elem string
-						f0f1f1f1elem = *f0f1f1f1iter
-						f0f1f1f1 = append(f0f1f1f1, &f0f1f1f1elem)
+						f0f1f1f1elem = string(*f0f1f1f1iter)
+						f0f1f1f1 = append(f0f1f1f1, svcsdktypes.AsyncNotificationTopicTypes(f0f1f1f1elem))
 					}
-					f0f1f1.SetIncludeInferenceResponseIn(f0f1f1f1)
+					f0f1f1.IncludeInferenceResponseIn = f0f1f1f1
 				}
 				if r.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic != nil {
-					f0f1f1.SetSuccessTopic(*r.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic)
+					f0f1f1.SuccessTopic = r.ko.Spec.AsyncInferenceConfig.OutputConfig.NotificationConfig.SuccessTopic
 				}
-				f0f1.SetNotificationConfig(f0f1f1)
+				f0f1.NotificationConfig = f0f1f1
 			}
 			if r.ko.Spec.AsyncInferenceConfig.OutputConfig.S3FailurePath != nil {
-				f0f1.SetS3FailurePath(*r.ko.Spec.AsyncInferenceConfig.OutputConfig.S3FailurePath)
+				f0f1.S3FailurePath = r.ko.Spec.AsyncInferenceConfig.OutputConfig.S3FailurePath
 			}
 			if r.ko.Spec.AsyncInferenceConfig.OutputConfig.S3OutputPath != nil {
-				f0f1.SetS3OutputPath(*r.ko.Spec.AsyncInferenceConfig.OutputConfig.S3OutputPath)
+				f0f1.S3OutputPath = r.ko.Spec.AsyncInferenceConfig.OutputConfig.S3OutputPath
 			}
-			f0.SetOutputConfig(f0f1)
+			f0.OutputConfig = f0f1
 		}
-		res.SetAsyncInferenceConfig(f0)
+		res.AsyncInferenceConfig = f0
 	}
 	if r.ko.Spec.DataCaptureConfig != nil {
-		f1 := &svcsdk.DataCaptureConfig{}
+		f1 := &svcsdktypes.DataCaptureConfig{}
 		if r.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader != nil {
-			f1f0 := &svcsdk.CaptureContentTypeHeader{}
+			f1f0 := &svcsdktypes.CaptureContentTypeHeader{}
 			if r.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes != nil {
-				f1f0f0 := []*string{}
-				for _, f1f0f0iter := range r.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes {
-					var f1f0f0elem string
-					f1f0f0elem = *f1f0f0iter
-					f1f0f0 = append(f1f0f0, &f1f0f0elem)
-				}
-				f1f0.SetCsvContentTypes(f1f0f0)
+				f1f0.CsvContentTypes = aws.ToStringSlice(r.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.CsvContentTypes)
 			}
 			if r.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes != nil {
-				f1f0f1 := []*string{}
-				for _, f1f0f1iter := range r.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes {
-					var f1f0f1elem string
-					f1f0f1elem = *f1f0f1iter
-					f1f0f1 = append(f1f0f1, &f1f0f1elem)
-				}
-				f1f0.SetJsonContentTypes(f1f0f1)
+				f1f0.JsonContentTypes = aws.ToStringSlice(r.ko.Spec.DataCaptureConfig.CaptureContentTypeHeader.JSONContentTypes)
 			}
-			f1.SetCaptureContentTypeHeader(f1f0)
+			f1.CaptureContentTypeHeader = f1f0
 		}
 		if r.ko.Spec.DataCaptureConfig.CaptureOptions != nil {
-			f1f1 := []*svcsdk.CaptureOption{}
+			f1f1 := []svcsdktypes.CaptureOption{}
 			for _, f1f1iter := range r.ko.Spec.DataCaptureConfig.CaptureOptions {
-				f1f1elem := &svcsdk.CaptureOption{}
+				f1f1elem := &svcsdktypes.CaptureOption{}
 				if f1f1iter.CaptureMode != nil {
-					f1f1elem.SetCaptureMode(*f1f1iter.CaptureMode)
+					f1f1elem.CaptureMode = svcsdktypes.CaptureMode(*f1f1iter.CaptureMode)
 				}
-				f1f1 = append(f1f1, f1f1elem)
+				f1f1 = append(f1f1, *f1f1elem)
 			}
-			f1.SetCaptureOptions(f1f1)
+			f1.CaptureOptions = f1f1
 		}
 		if r.ko.Spec.DataCaptureConfig.DestinationS3URI != nil {
-			f1.SetDestinationS3Uri(*r.ko.Spec.DataCaptureConfig.DestinationS3URI)
+			f1.DestinationS3Uri = r.ko.Spec.DataCaptureConfig.DestinationS3URI
 		}
 		if r.ko.Spec.DataCaptureConfig.EnableCapture != nil {
-			f1.SetEnableCapture(*r.ko.Spec.DataCaptureConfig.EnableCapture)
+			f1.EnableCapture = r.ko.Spec.DataCaptureConfig.EnableCapture
 		}
 		if r.ko.Spec.DataCaptureConfig.InitialSamplingPercentage != nil {
-			f1.SetInitialSamplingPercentage(*r.ko.Spec.DataCaptureConfig.InitialSamplingPercentage)
+			initialSamplingPercentageCopy0 := *r.ko.Spec.DataCaptureConfig.InitialSamplingPercentage
+			if initialSamplingPercentageCopy0 > math.MaxInt32 || initialSamplingPercentageCopy0 < math.MinInt32 {
+				return nil, fmt.Errorf("error: field InitialSamplingPercentage is of type int32")
+			}
+			initialSamplingPercentageCopy := int32(initialSamplingPercentageCopy0)
+			f1.InitialSamplingPercentage = &initialSamplingPercentageCopy
 		}
 		if r.ko.Spec.DataCaptureConfig.KMSKeyID != nil {
-			f1.SetKmsKeyId(*r.ko.Spec.DataCaptureConfig.KMSKeyID)
+			f1.KmsKeyId = r.ko.Spec.DataCaptureConfig.KMSKeyID
 		}
-		res.SetDataCaptureConfig(f1)
+		res.DataCaptureConfig = f1
 	}
 	if r.ko.Spec.EnableNetworkIsolation != nil {
-		res.SetEnableNetworkIsolation(*r.ko.Spec.EnableNetworkIsolation)
+		res.EnableNetworkIsolation = r.ko.Spec.EnableNetworkIsolation
 	}
 	if r.ko.Spec.EndpointConfigName != nil {
-		res.SetEndpointConfigName(*r.ko.Spec.EndpointConfigName)
+		res.EndpointConfigName = r.ko.Spec.EndpointConfigName
 	}
 	if r.ko.Spec.ExecutionRoleARN != nil {
-		res.SetExecutionRoleArn(*r.ko.Spec.ExecutionRoleARN)
+		res.ExecutionRoleArn = r.ko.Spec.ExecutionRoleARN
 	}
 	if r.ko.Spec.KMSKeyID != nil {
-		res.SetKmsKeyId(*r.ko.Spec.KMSKeyID)
+		res.KmsKeyId = r.ko.Spec.KMSKeyID
 	}
 	if r.ko.Spec.ProductionVariants != nil {
-		f6 := []*svcsdk.ProductionVariant{}
+		f6 := []svcsdktypes.ProductionVariant{}
 		for _, f6iter := range r.ko.Spec.ProductionVariants {
-			f6elem := &svcsdk.ProductionVariant{}
+			f6elem := &svcsdktypes.ProductionVariant{}
 			if f6iter.AcceleratorType != nil {
-				f6elem.SetAcceleratorType(*f6iter.AcceleratorType)
+				f6elem.AcceleratorType = svcsdktypes.ProductionVariantAcceleratorType(*f6iter.AcceleratorType)
 			}
 			if f6iter.ContainerStartupHealthCheckTimeoutInSeconds != nil {
-				f6elem.SetContainerStartupHealthCheckTimeoutInSeconds(*f6iter.ContainerStartupHealthCheckTimeoutInSeconds)
+				containerStartupHealthCheckTimeoutInSecondsCopy0 := *f6iter.ContainerStartupHealthCheckTimeoutInSeconds
+				if containerStartupHealthCheckTimeoutInSecondsCopy0 > math.MaxInt32 || containerStartupHealthCheckTimeoutInSecondsCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field ContainerStartupHealthCheckTimeoutInSeconds is of type int32")
+				}
+				containerStartupHealthCheckTimeoutInSecondsCopy := int32(containerStartupHealthCheckTimeoutInSecondsCopy0)
+				f6elem.ContainerStartupHealthCheckTimeoutInSeconds = &containerStartupHealthCheckTimeoutInSecondsCopy
 			}
 			if f6iter.CoreDumpConfig != nil {
-				f6elemf2 := &svcsdk.ProductionVariantCoreDumpConfig{}
+				f6elemf2 := &svcsdktypes.ProductionVariantCoreDumpConfig{}
 				if f6iter.CoreDumpConfig.DestinationS3URI != nil {
-					f6elemf2.SetDestinationS3Uri(*f6iter.CoreDumpConfig.DestinationS3URI)
+					f6elemf2.DestinationS3Uri = f6iter.CoreDumpConfig.DestinationS3URI
 				}
 				if f6iter.CoreDumpConfig.KMSKeyID != nil {
-					f6elemf2.SetKmsKeyId(*f6iter.CoreDumpConfig.KMSKeyID)
+					f6elemf2.KmsKeyId = f6iter.CoreDumpConfig.KMSKeyID
 				}
-				f6elem.SetCoreDumpConfig(f6elemf2)
+				f6elem.CoreDumpConfig = f6elemf2
 			}
 			if f6iter.EnableSSMAccess != nil {
-				f6elem.SetEnableSSMAccess(*f6iter.EnableSSMAccess)
+				f6elem.EnableSSMAccess = f6iter.EnableSSMAccess
 			}
 			if f6iter.InitialInstanceCount != nil {
-				f6elem.SetInitialInstanceCount(*f6iter.InitialInstanceCount)
+				initialInstanceCountCopy0 := *f6iter.InitialInstanceCount
+				if initialInstanceCountCopy0 > math.MaxInt32 || initialInstanceCountCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field InitialInstanceCount is of type int32")
+				}
+				initialInstanceCountCopy := int32(initialInstanceCountCopy0)
+				f6elem.InitialInstanceCount = &initialInstanceCountCopy
 			}
 			if f6iter.InitialVariantWeight != nil {
-				f6elem.SetInitialVariantWeight(*f6iter.InitialVariantWeight)
+				initialVariantWeightCopy0 := *f6iter.InitialVariantWeight
+				if initialVariantWeightCopy0 > math.MaxFloat32 || initialVariantWeightCopy0 < math.SmallestNonzeroFloat32 {
+					return nil, fmt.Errorf("error: field InitialVariantWeight is of type float32")
+				}
+				initialVariantWeightCopy := float32(initialVariantWeightCopy0)
+				f6elem.InitialVariantWeight = &initialVariantWeightCopy
 			}
 			if f6iter.InstanceType != nil {
-				f6elem.SetInstanceType(*f6iter.InstanceType)
+				f6elem.InstanceType = svcsdktypes.ProductionVariantInstanceType(*f6iter.InstanceType)
 			}
 			if f6iter.ManagedInstanceScaling != nil {
-				f6elemf7 := &svcsdk.ProductionVariantManagedInstanceScaling{}
+				f6elemf7 := &svcsdktypes.ProductionVariantManagedInstanceScaling{}
 				if f6iter.ManagedInstanceScaling.MaxInstanceCount != nil {
-					f6elemf7.SetMaxInstanceCount(*f6iter.ManagedInstanceScaling.MaxInstanceCount)
+					maxInstanceCountCopy0 := *f6iter.ManagedInstanceScaling.MaxInstanceCount
+					if maxInstanceCountCopy0 > math.MaxInt32 || maxInstanceCountCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field MaxInstanceCount is of type int32")
+					}
+					maxInstanceCountCopy := int32(maxInstanceCountCopy0)
+					f6elemf7.MaxInstanceCount = &maxInstanceCountCopy
 				}
 				if f6iter.ManagedInstanceScaling.MinInstanceCount != nil {
-					f6elemf7.SetMinInstanceCount(*f6iter.ManagedInstanceScaling.MinInstanceCount)
+					minInstanceCountCopy0 := *f6iter.ManagedInstanceScaling.MinInstanceCount
+					if minInstanceCountCopy0 > math.MaxInt32 || minInstanceCountCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field MinInstanceCount is of type int32")
+					}
+					minInstanceCountCopy := int32(minInstanceCountCopy0)
+					f6elemf7.MinInstanceCount = &minInstanceCountCopy
 				}
 				if f6iter.ManagedInstanceScaling.Status != nil {
-					f6elemf7.SetStatus(*f6iter.ManagedInstanceScaling.Status)
+					f6elemf7.Status = svcsdktypes.ManagedInstanceScalingStatus(*f6iter.ManagedInstanceScaling.Status)
 				}
-				f6elem.SetManagedInstanceScaling(f6elemf7)
+				f6elem.ManagedInstanceScaling = f6elemf7
 			}
 			if f6iter.ModelDataDownloadTimeoutInSeconds != nil {
-				f6elem.SetModelDataDownloadTimeoutInSeconds(*f6iter.ModelDataDownloadTimeoutInSeconds)
+				modelDataDownloadTimeoutInSecondsCopy0 := *f6iter.ModelDataDownloadTimeoutInSeconds
+				if modelDataDownloadTimeoutInSecondsCopy0 > math.MaxInt32 || modelDataDownloadTimeoutInSecondsCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field ModelDataDownloadTimeoutInSeconds is of type int32")
+				}
+				modelDataDownloadTimeoutInSecondsCopy := int32(modelDataDownloadTimeoutInSecondsCopy0)
+				f6elem.ModelDataDownloadTimeoutInSeconds = &modelDataDownloadTimeoutInSecondsCopy
 			}
 			if f6iter.ModelName != nil {
-				f6elem.SetModelName(*f6iter.ModelName)
+				f6elem.ModelName = f6iter.ModelName
 			}
 			if f6iter.RoutingConfig != nil {
-				f6elemf10 := &svcsdk.ProductionVariantRoutingConfig{}
+				f6elemf10 := &svcsdktypes.ProductionVariantRoutingConfig{}
 				if f6iter.RoutingConfig.RoutingStrategy != nil {
-					f6elemf10.SetRoutingStrategy(*f6iter.RoutingConfig.RoutingStrategy)
+					f6elemf10.RoutingStrategy = svcsdktypes.RoutingStrategy(*f6iter.RoutingConfig.RoutingStrategy)
 				}
-				f6elem.SetRoutingConfig(f6elemf10)
+				f6elem.RoutingConfig = f6elemf10
 			}
 			if f6iter.ServerlessConfig != nil {
-				f6elemf11 := &svcsdk.ProductionVariantServerlessConfig{}
+				f6elemf11 := &svcsdktypes.ProductionVariantServerlessConfig{}
 				if f6iter.ServerlessConfig.MaxConcurrency != nil {
-					f6elemf11.SetMaxConcurrency(*f6iter.ServerlessConfig.MaxConcurrency)
+					maxConcurrencyCopy0 := *f6iter.ServerlessConfig.MaxConcurrency
+					if maxConcurrencyCopy0 > math.MaxInt32 || maxConcurrencyCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field MaxConcurrency is of type int32")
+					}
+					maxConcurrencyCopy := int32(maxConcurrencyCopy0)
+					f6elemf11.MaxConcurrency = &maxConcurrencyCopy
 				}
 				if f6iter.ServerlessConfig.MemorySizeInMB != nil {
-					f6elemf11.SetMemorySizeInMB(*f6iter.ServerlessConfig.MemorySizeInMB)
+					memorySizeInMBCopy0 := *f6iter.ServerlessConfig.MemorySizeInMB
+					if memorySizeInMBCopy0 > math.MaxInt32 || memorySizeInMBCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field MemorySizeInMB is of type int32")
+					}
+					memorySizeInMBCopy := int32(memorySizeInMBCopy0)
+					f6elemf11.MemorySizeInMB = &memorySizeInMBCopy
 				}
 				if f6iter.ServerlessConfig.ProvisionedConcurrency != nil {
-					f6elemf11.SetProvisionedConcurrency(*f6iter.ServerlessConfig.ProvisionedConcurrency)
+					provisionedConcurrencyCopy0 := *f6iter.ServerlessConfig.ProvisionedConcurrency
+					if provisionedConcurrencyCopy0 > math.MaxInt32 || provisionedConcurrencyCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field ProvisionedConcurrency is of type int32")
+					}
+					provisionedConcurrencyCopy := int32(provisionedConcurrencyCopy0)
+					f6elemf11.ProvisionedConcurrency = &provisionedConcurrencyCopy
 				}
-				f6elem.SetServerlessConfig(f6elemf11)
+				f6elem.ServerlessConfig = f6elemf11
 			}
 			if f6iter.VariantName != nil {
-				f6elem.SetVariantName(*f6iter.VariantName)
+				f6elem.VariantName = f6iter.VariantName
 			}
 			if f6iter.VolumeSizeInGB != nil {
-				f6elem.SetVolumeSizeInGB(*f6iter.VolumeSizeInGB)
+				volumeSizeInGBCopy0 := *f6iter.VolumeSizeInGB
+				if volumeSizeInGBCopy0 > math.MaxInt32 || volumeSizeInGBCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field VolumeSizeInGB is of type int32")
+				}
+				volumeSizeInGBCopy := int32(volumeSizeInGBCopy0)
+				f6elem.VolumeSizeInGB = &volumeSizeInGBCopy
 			}
-			f6 = append(f6, f6elem)
+			f6 = append(f6, *f6elem)
 		}
-		res.SetProductionVariants(f6)
+		res.ProductionVariants = f6
 	}
 	if r.ko.Spec.Tags != nil {
-		f7 := []*svcsdk.Tag{}
+		f7 := []svcsdktypes.Tag{}
 		for _, f7iter := range r.ko.Spec.Tags {
-			f7elem := &svcsdk.Tag{}
+			f7elem := &svcsdktypes.Tag{}
 			if f7iter.Key != nil {
-				f7elem.SetKey(*f7iter.Key)
+				f7elem.Key = f7iter.Key
 			}
 			if f7iter.Value != nil {
-				f7elem.SetValue(*f7iter.Value)
+				f7elem.Value = f7iter.Value
 			}
-			f7 = append(f7, f7elem)
+			f7 = append(f7, *f7elem)
 		}
-		res.SetTags(f7)
+		res.Tags = f7
 	}
 	if r.ko.Spec.VPCConfig != nil {
-		f8 := &svcsdk.VpcConfig{}
+		f8 := &svcsdktypes.VpcConfig{}
 		if r.ko.Spec.VPCConfig.SecurityGroupIDs != nil {
-			f8f0 := []*string{}
-			for _, f8f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
-				var f8f0elem string
-				f8f0elem = *f8f0iter
-				f8f0 = append(f8f0, &f8f0elem)
-			}
-			f8.SetSecurityGroupIds(f8f0)
+			f8.SecurityGroupIds = aws.ToStringSlice(r.ko.Spec.VPCConfig.SecurityGroupIDs)
 		}
 		if r.ko.Spec.VPCConfig.Subnets != nil {
-			f8f1 := []*string{}
-			for _, f8f1iter := range r.ko.Spec.VPCConfig.Subnets {
-				var f8f1elem string
-				f8f1elem = *f8f1iter
-				f8f1 = append(f8f1, &f8f1elem)
-			}
-			f8.SetSubnets(f8f1)
+			f8.Subnets = aws.ToStringSlice(r.ko.Spec.VPCConfig.Subnets)
 		}
-		res.SetVpcConfig(f8)
+		res.VpcConfig = f8
 	}
 
 	return res, nil
@@ -649,7 +674,7 @@ func (rm *resourceManager) sdkDelete(
 	}
 	var resp *svcsdk.DeleteEndpointConfigOutput
 	_ = resp
-	resp, err = rm.sdkapi.DeleteEndpointConfigWithContext(ctx, input)
+	resp, err = rm.sdkapi.DeleteEndpointConfig(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteEndpointConfig", err)
 	return nil, err
 }
@@ -662,7 +687,7 @@ func (rm *resourceManager) newDeleteRequestPayload(
 	res := &svcsdk.DeleteEndpointConfigInput{}
 
 	if r.ko.Spec.EndpointConfigName != nil {
-		res.SetEndpointConfigName(*r.ko.Spec.EndpointConfigName)
+		res.EndpointConfigName = r.ko.Spec.EndpointConfigName
 	}
 
 	return res, nil
@@ -770,11 +795,12 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 	if err == nil {
 		return false
 	}
-	awsErr, ok := ackerr.AWSError(err)
-	if !ok {
+
+	var terminalErr smithy.APIError
+	if !errors.As(err, &terminalErr) {
 		return false
 	}
-	switch awsErr.Code() {
+	switch terminalErr.ErrorCode() {
 	case "InvalidParameterCombination",
 		"InvalidParameterValue",
 		"MissingParameter":

@@ -58,12 +58,14 @@ type FeatureGroupSpec struct {
 	// +kubebuilder:validation:Required
 	FeatureDefinitions []*FeatureDefinition `json:"featureDefinitions"`
 	// The name of the FeatureGroup. The name must be unique within an Amazon Web
-	// Services Region in an Amazon Web Services account. The name:
+	// Services Region in an Amazon Web Services account.
 	//
-	//   - Must start and end with an alphanumeric character.
+	// The name:
 	//
-	//   - Can only contain alphanumeric character and hyphens. Spaces are not
-	//     allowed.
+	//   - Must start with an alphanumeric character.
+	//
+	//   - Can only include alphanumeric characters, underscores, and hyphens.
+	//     Spaces are not allowed.
 	//
 	// +kubebuilder:validation:Required
 	FeatureGroupName *string `json:"featureGroupName"`
@@ -104,7 +106,7 @@ type FeatureGroupSpec struct {
 	//
 	// This name:
 	//
-	//   - Must start and end with an alphanumeric character.
+	//   - Must start with an alphanumeric character.
 	//
 	//   - Can only contains alphanumeric characters, hyphens, underscores. Spaces
 	//     are not allowed.

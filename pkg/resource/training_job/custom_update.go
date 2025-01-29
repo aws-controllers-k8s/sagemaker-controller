@@ -22,7 +22,8 @@ import (
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
 )
 
 // buildProfilerRuleConfigUpdateInput sets the input of the ProfilerRuleConfiguration so that
@@ -51,7 +52,7 @@ func (rm *resourceManager) buildProfilerRuleConfigUpdateInput(desired *resource,
 	if err != nil {
 		return err
 	}
-	profilerRuleInput := []*svcsdk.ProfilerRuleConfiguration{}
+	profilerRuleInput := []svcsdktypes.ProfilerRuleConfiguration{}
 
 	for _, rule := range profilerRuleDesired {
 		if ackcompare.IsNotNil(rule) && ackcompare.IsNotNil(rule.RuleConfigurationName) {
@@ -65,7 +66,7 @@ func (rm *resourceManager) buildProfilerRuleConfigUpdateInput(desired *resource,
 	if len(profilerRuleInput) == 0 {
 		return ackerr.NewTerminalError(errors.New("cannot modify an existing profiler rule."))
 	}
-	input.SetProfilerRuleConfigurations(profilerRuleInput)
+	input.ProfilerRuleConfigurations = profilerRuleInput
 	return nil
 }
 
@@ -89,7 +90,7 @@ func (rm *resourceManager) markNonUpdatableRules(profilerRuleDesired []*svcapity
 		// This means that there exists a rule in latest that is not present in desired
 		// which means that the input is invalid.
 		if val == 0 {
-			return nil, ackerr.NewTerminalError(errors.New("cannot remove an existing profiler rule."))
+			return nil, ackerr.NewTerminalError(errors.New("cannot remove an existing profiler rule"))
 		}
 	}
 
@@ -98,43 +99,45 @@ func (rm *resourceManager) markNonUpdatableRules(profilerRuleDesired []*svcapity
 
 // handleProfilerRemoval sets the input parameters to disable the profiler.
 func (rm *resourceManager) handleProfilerRemoval(input *svcsdk.UpdateTrainingJobInput) {
-	input.SetProfilerRuleConfigurations(nil)
-	profilerConfig := svcsdk.ProfilerConfigForUpdate{}
-	profilerConfig.SetDisableProfiler(true)
-	input.SetProfilerConfig(&profilerConfig)
+	input.ProfilerRuleConfigurations = nil
+	profilerConfig := svcsdktypes.ProfilerConfigForUpdate{}
+	disableProfilerCopy := true
+	profilerConfig.DisableProfiler = &disableProfilerCopy
+	input.ProfilerConfig = &profilerConfig
 }
 
 // convertProfileRuleType converts the kubernetes object ProfilerRuleConfiguration into
 // a type that is compatible with the AWS API.
 // Sagemaker and kubernetes types are not the same so the input has to be reconstructed.
-func (rm *resourceManager) convertProfileRuleType(kubernetesObjectRule *svcapitypes.ProfilerRuleConfiguration) *svcsdk.ProfilerRuleConfiguration {
-	sagemakerAPIRule := &svcsdk.ProfilerRuleConfiguration{}
+func (rm *resourceManager) convertProfileRuleType(kubernetesObjectRule *svcapitypes.ProfilerRuleConfiguration) svcsdktypes.ProfilerRuleConfiguration {
+	sagemakerAPIRule := svcsdktypes.ProfilerRuleConfiguration{}
 	if kubernetesObjectRule.InstanceType != nil {
-		sagemakerAPIRule.SetInstanceType(*kubernetesObjectRule.InstanceType)
+		sagemakerAPIRule.InstanceType = svcsdktypes.ProcessingInstanceType(*kubernetesObjectRule.InstanceType)
 	}
 	if kubernetesObjectRule.LocalPath != nil {
-		sagemakerAPIRule.SetLocalPath(*kubernetesObjectRule.LocalPath)
+		sagemakerAPIRule.LocalPath = kubernetesObjectRule.LocalPath
 	}
 	if kubernetesObjectRule.RuleConfigurationName != nil {
-		sagemakerAPIRule.SetRuleConfigurationName(*kubernetesObjectRule.RuleConfigurationName)
+		sagemakerAPIRule.RuleConfigurationName = kubernetesObjectRule.RuleConfigurationName
 	}
 	if kubernetesObjectRule.RuleEvaluatorImage != nil {
-		sagemakerAPIRule.SetRuleEvaluatorImage(*kubernetesObjectRule.RuleEvaluatorImage)
+		sagemakerAPIRule.RuleEvaluatorImage = kubernetesObjectRule.RuleEvaluatorImage
 	}
 	if kubernetesObjectRule.RuleParameters != nil {
-		f1elemf4 := map[string]*string{}
+		f1elemf4 := map[string]string{}
 		for f1elemf4key, f1elemf4valiter := range kubernetesObjectRule.RuleParameters {
 			var f1elemf4val string
 			f1elemf4val = *f1elemf4valiter
-			f1elemf4[f1elemf4key] = &f1elemf4val
+			f1elemf4[f1elemf4key] = f1elemf4val
 		}
-		sagemakerAPIRule.SetRuleParameters(f1elemf4)
+		sagemakerAPIRule.RuleParameters = f1elemf4
 	}
 	if kubernetesObjectRule.S3OutputPath != nil {
-		sagemakerAPIRule.SetS3OutputPath(*kubernetesObjectRule.S3OutputPath)
+		sagemakerAPIRule.S3OutputPath = kubernetesObjectRule.S3OutputPath
 	}
 	if kubernetesObjectRule.VolumeSizeInGB != nil {
-		sagemakerAPIRule.SetVolumeSizeInGB(*kubernetesObjectRule.VolumeSizeInGB)
+		volumeSizeInGBCopy0 := int32(*kubernetesObjectRule.VolumeSizeInGB)
+		sagemakerAPIRule.VolumeSizeInGB = &volumeSizeInGBCopy0
 	}
 	return sagemakerAPIRule
 }

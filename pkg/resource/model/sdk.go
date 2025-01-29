@@ -28,8 +28,10 @@ import (
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
-	"github.com/aws/aws-sdk-go/aws"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
+	smithy "github.com/aws/smithy-go"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -40,8 +42,7 @@ import (
 var (
 	_ = &metav1.Time{}
 	_ = strings.ToLower("")
-	_ = &aws.JSONValue{}
-	_ = &svcsdk.SageMaker{}
+	_ = &svcsdk.Client{}
 	_ = &svcapitypes.Model{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
@@ -49,6 +50,7 @@ var (
 	_ = &reflect.Value{}
 	_ = fmt.Sprintf("")
 	_ = &ackrequeue.NoRequeue{}
+	_ = &aws.Config{}
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -74,13 +76,11 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	var resp *svcsdk.DescribeModelOutput
-	resp, err = rm.sdkapi.DescribeModelWithContext(ctx, input)
+	resp, err = rm.sdkapi.DescribeModel(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeModel", err)
 	if err != nil {
-		if reqErr, ok := ackerr.AWSRequestFailure(err); ok && reqErr.StatusCode() == 404 {
-			return nil, ackerr.NotFound
-		}
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ValidationException" && strings.HasPrefix(awsErr.Message(), "Could not find model") {
+		var awsErr smithy.APIError
+		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ValidationException" && strings.HasPrefix(awsErr.ErrorMessage(), "Could not find model") {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
@@ -98,21 +98,15 @@ func (rm *resourceManager) sdkFind(
 				f0elem.ContainerHostname = f0iter.ContainerHostname
 			}
 			if f0iter.Environment != nil {
-				f0elemf1 := map[string]*string{}
-				for f0elemf1key, f0elemf1valiter := range f0iter.Environment {
-					var f0elemf1val string
-					f0elemf1val = *f0elemf1valiter
-					f0elemf1[f0elemf1key] = &f0elemf1val
-				}
-				f0elem.Environment = f0elemf1
+				f0elem.Environment = aws.StringMap(f0iter.Environment)
 			}
 			if f0iter.Image != nil {
 				f0elem.Image = f0iter.Image
 			}
 			if f0iter.ImageConfig != nil {
 				f0elemf3 := &svcapitypes.ImageConfig{}
-				if f0iter.ImageConfig.RepositoryAccessMode != nil {
-					f0elemf3.RepositoryAccessMode = f0iter.ImageConfig.RepositoryAccessMode
+				if f0iter.ImageConfig.RepositoryAccessMode != "" {
+					f0elemf3.RepositoryAccessMode = aws.String(string(f0iter.ImageConfig.RepositoryAccessMode))
 				}
 				if f0iter.ImageConfig.RepositoryAuthConfig != nil {
 					f0elemf3f1 := &svcapitypes.RepositoryAuthConfig{}
@@ -126,15 +120,15 @@ func (rm *resourceManager) sdkFind(
 			if f0iter.InferenceSpecificationName != nil {
 				f0elem.InferenceSpecificationName = f0iter.InferenceSpecificationName
 			}
-			if f0iter.Mode != nil {
-				f0elem.Mode = f0iter.Mode
+			if f0iter.Mode != "" {
+				f0elem.Mode = aws.String(string(f0iter.Mode))
 			}
 			if f0iter.ModelDataSource != nil {
 				f0elemf6 := &svcapitypes.ModelDataSource{}
 				if f0iter.ModelDataSource.S3DataSource != nil {
 					f0elemf6f0 := &svcapitypes.S3ModelDataSource{}
-					if f0iter.ModelDataSource.S3DataSource.CompressionType != nil {
-						f0elemf6f0.CompressionType = f0iter.ModelDataSource.S3DataSource.CompressionType
+					if f0iter.ModelDataSource.S3DataSource.CompressionType != "" {
+						f0elemf6f0.CompressionType = aws.String(string(f0iter.ModelDataSource.S3DataSource.CompressionType))
 					}
 					if f0iter.ModelDataSource.S3DataSource.ModelAccessConfig != nil {
 						f0elemf6f0f1 := &svcapitypes.ModelAccessConfig{}
@@ -143,8 +137,8 @@ func (rm *resourceManager) sdkFind(
 						}
 						f0elemf6f0.ModelAccessConfig = f0elemf6f0f1
 					}
-					if f0iter.ModelDataSource.S3DataSource.S3DataType != nil {
-						f0elemf6f0.S3DataType = f0iter.ModelDataSource.S3DataSource.S3DataType
+					if f0iter.ModelDataSource.S3DataSource.S3DataType != "" {
+						f0elemf6f0.S3DataType = aws.String(string(f0iter.ModelDataSource.S3DataSource.S3DataType))
 					}
 					if f0iter.ModelDataSource.S3DataSource.S3Uri != nil {
 						f0elemf6f0.S3URI = f0iter.ModelDataSource.S3DataSource.S3Uri
@@ -161,8 +155,8 @@ func (rm *resourceManager) sdkFind(
 			}
 			if f0iter.MultiModelConfig != nil {
 				f0elemf9 := &svcapitypes.MultiModelConfig{}
-				if f0iter.MultiModelConfig.ModelCacheSetting != nil {
-					f0elemf9.ModelCacheSetting = f0iter.MultiModelConfig.ModelCacheSetting
+				if f0iter.MultiModelConfig.ModelCacheSetting != "" {
+					f0elemf9.ModelCacheSetting = aws.String(string(f0iter.MultiModelConfig.ModelCacheSetting))
 				}
 				f0elem.MultiModelConfig = f0elemf9
 			}
@@ -184,8 +178,8 @@ func (rm *resourceManager) sdkFind(
 	}
 	if resp.InferenceExecutionConfig != nil {
 		f5 := &svcapitypes.InferenceExecutionConfig{}
-		if resp.InferenceExecutionConfig.Mode != nil {
-			f5.Mode = resp.InferenceExecutionConfig.Mode
+		if resp.InferenceExecutionConfig.Mode != "" {
+			f5.Mode = aws.String(string(resp.InferenceExecutionConfig.Mode))
 		}
 		ko.Spec.InferenceExecutionConfig = f5
 	} else {
@@ -209,21 +203,15 @@ func (rm *resourceManager) sdkFind(
 			f8.ContainerHostname = resp.PrimaryContainer.ContainerHostname
 		}
 		if resp.PrimaryContainer.Environment != nil {
-			f8f1 := map[string]*string{}
-			for f8f1key, f8f1valiter := range resp.PrimaryContainer.Environment {
-				var f8f1val string
-				f8f1val = *f8f1valiter
-				f8f1[f8f1key] = &f8f1val
-			}
-			f8.Environment = f8f1
+			f8.Environment = aws.StringMap(resp.PrimaryContainer.Environment)
 		}
 		if resp.PrimaryContainer.Image != nil {
 			f8.Image = resp.PrimaryContainer.Image
 		}
 		if resp.PrimaryContainer.ImageConfig != nil {
 			f8f3 := &svcapitypes.ImageConfig{}
-			if resp.PrimaryContainer.ImageConfig.RepositoryAccessMode != nil {
-				f8f3.RepositoryAccessMode = resp.PrimaryContainer.ImageConfig.RepositoryAccessMode
+			if resp.PrimaryContainer.ImageConfig.RepositoryAccessMode != "" {
+				f8f3.RepositoryAccessMode = aws.String(string(resp.PrimaryContainer.ImageConfig.RepositoryAccessMode))
 			}
 			if resp.PrimaryContainer.ImageConfig.RepositoryAuthConfig != nil {
 				f8f3f1 := &svcapitypes.RepositoryAuthConfig{}
@@ -237,15 +225,15 @@ func (rm *resourceManager) sdkFind(
 		if resp.PrimaryContainer.InferenceSpecificationName != nil {
 			f8.InferenceSpecificationName = resp.PrimaryContainer.InferenceSpecificationName
 		}
-		if resp.PrimaryContainer.Mode != nil {
-			f8.Mode = resp.PrimaryContainer.Mode
+		if resp.PrimaryContainer.Mode != "" {
+			f8.Mode = aws.String(string(resp.PrimaryContainer.Mode))
 		}
 		if resp.PrimaryContainer.ModelDataSource != nil {
 			f8f6 := &svcapitypes.ModelDataSource{}
 			if resp.PrimaryContainer.ModelDataSource.S3DataSource != nil {
 				f8f6f0 := &svcapitypes.S3ModelDataSource{}
-				if resp.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType != nil {
-					f8f6f0.CompressionType = resp.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType
+				if resp.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType != "" {
+					f8f6f0.CompressionType = aws.String(string(resp.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType))
 				}
 				if resp.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig != nil {
 					f8f6f0f1 := &svcapitypes.ModelAccessConfig{}
@@ -254,8 +242,8 @@ func (rm *resourceManager) sdkFind(
 					}
 					f8f6f0.ModelAccessConfig = f8f6f0f1
 				}
-				if resp.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType != nil {
-					f8f6f0.S3DataType = resp.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType
+				if resp.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType != "" {
+					f8f6f0.S3DataType = aws.String(string(resp.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType))
 				}
 				if resp.PrimaryContainer.ModelDataSource.S3DataSource.S3Uri != nil {
 					f8f6f0.S3URI = resp.PrimaryContainer.ModelDataSource.S3DataSource.S3Uri
@@ -272,8 +260,8 @@ func (rm *resourceManager) sdkFind(
 		}
 		if resp.PrimaryContainer.MultiModelConfig != nil {
 			f8f9 := &svcapitypes.MultiModelConfig{}
-			if resp.PrimaryContainer.MultiModelConfig.ModelCacheSetting != nil {
-				f8f9.ModelCacheSetting = resp.PrimaryContainer.MultiModelConfig.ModelCacheSetting
+			if resp.PrimaryContainer.MultiModelConfig.ModelCacheSetting != "" {
+				f8f9.ModelCacheSetting = aws.String(string(resp.PrimaryContainer.MultiModelConfig.ModelCacheSetting))
 			}
 			f8.MultiModelConfig = f8f9
 		}
@@ -284,22 +272,10 @@ func (rm *resourceManager) sdkFind(
 	if resp.VpcConfig != nil {
 		f9 := &svcapitypes.VPCConfig{}
 		if resp.VpcConfig.SecurityGroupIds != nil {
-			f9f0 := []*string{}
-			for _, f9f0iter := range resp.VpcConfig.SecurityGroupIds {
-				var f9f0elem string
-				f9f0elem = *f9f0iter
-				f9f0 = append(f9f0, &f9f0elem)
-			}
-			f9.SecurityGroupIDs = f9f0
+			f9.SecurityGroupIDs = aws.StringSlice(resp.VpcConfig.SecurityGroupIds)
 		}
 		if resp.VpcConfig.Subnets != nil {
-			f9f1 := []*string{}
-			for _, f9f1iter := range resp.VpcConfig.Subnets {
-				var f9f1elem string
-				f9f1elem = *f9f1iter
-				f9f1 = append(f9f1, &f9f1elem)
-			}
-			f9.Subnets = f9f1
+			f9.Subnets = aws.StringSlice(resp.VpcConfig.Subnets)
 		}
 		ko.Spec.VPCConfig = f9
 	} else {
@@ -328,7 +304,7 @@ func (rm *resourceManager) newDescribeRequestPayload(
 	res := &svcsdk.DescribeModelInput{}
 
 	if r.ko.Spec.ModelName != nil {
-		res.SetModelName(*r.ko.Spec.ModelName)
+		res.ModelName = r.ko.Spec.ModelName
 	}
 
 	return res, nil
@@ -353,7 +329,7 @@ func (rm *resourceManager) sdkCreate(
 
 	var resp *svcsdk.CreateModelOutput
 	_ = resp
-	resp, err = rm.sdkapi.CreateModelWithContext(ctx, input)
+	resp, err = rm.sdkapi.CreateModel(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateModel", err)
 	if err != nil {
 		return nil, err
@@ -383,212 +359,188 @@ func (rm *resourceManager) newCreateRequestPayload(
 	res := &svcsdk.CreateModelInput{}
 
 	if r.ko.Spec.Containers != nil {
-		f0 := []*svcsdk.ContainerDefinition{}
+		f0 := []svcsdktypes.ContainerDefinition{}
 		for _, f0iter := range r.ko.Spec.Containers {
-			f0elem := &svcsdk.ContainerDefinition{}
+			f0elem := &svcsdktypes.ContainerDefinition{}
 			if f0iter.ContainerHostname != nil {
-				f0elem.SetContainerHostname(*f0iter.ContainerHostname)
+				f0elem.ContainerHostname = f0iter.ContainerHostname
 			}
 			if f0iter.Environment != nil {
-				f0elemf1 := map[string]*string{}
-				for f0elemf1key, f0elemf1valiter := range f0iter.Environment {
-					var f0elemf1val string
-					f0elemf1val = *f0elemf1valiter
-					f0elemf1[f0elemf1key] = &f0elemf1val
-				}
-				f0elem.SetEnvironment(f0elemf1)
+				f0elem.Environment = aws.ToStringMap(f0iter.Environment)
 			}
 			if f0iter.Image != nil {
-				f0elem.SetImage(*f0iter.Image)
+				f0elem.Image = f0iter.Image
 			}
 			if f0iter.ImageConfig != nil {
-				f0elemf3 := &svcsdk.ImageConfig{}
+				f0elemf3 := &svcsdktypes.ImageConfig{}
 				if f0iter.ImageConfig.RepositoryAccessMode != nil {
-					f0elemf3.SetRepositoryAccessMode(*f0iter.ImageConfig.RepositoryAccessMode)
+					f0elemf3.RepositoryAccessMode = svcsdktypes.RepositoryAccessMode(*f0iter.ImageConfig.RepositoryAccessMode)
 				}
 				if f0iter.ImageConfig.RepositoryAuthConfig != nil {
-					f0elemf3f1 := &svcsdk.RepositoryAuthConfig{}
+					f0elemf3f1 := &svcsdktypes.RepositoryAuthConfig{}
 					if f0iter.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN != nil {
-						f0elemf3f1.SetRepositoryCredentialsProviderArn(*f0iter.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN)
+						f0elemf3f1.RepositoryCredentialsProviderArn = f0iter.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN
 					}
-					f0elemf3.SetRepositoryAuthConfig(f0elemf3f1)
+					f0elemf3.RepositoryAuthConfig = f0elemf3f1
 				}
-				f0elem.SetImageConfig(f0elemf3)
+				f0elem.ImageConfig = f0elemf3
 			}
 			if f0iter.InferenceSpecificationName != nil {
-				f0elem.SetInferenceSpecificationName(*f0iter.InferenceSpecificationName)
+				f0elem.InferenceSpecificationName = f0iter.InferenceSpecificationName
 			}
 			if f0iter.Mode != nil {
-				f0elem.SetMode(*f0iter.Mode)
+				f0elem.Mode = svcsdktypes.ContainerMode(*f0iter.Mode)
 			}
 			if f0iter.ModelDataSource != nil {
-				f0elemf6 := &svcsdk.ModelDataSource{}
+				f0elemf6 := &svcsdktypes.ModelDataSource{}
 				if f0iter.ModelDataSource.S3DataSource != nil {
-					f0elemf6f0 := &svcsdk.S3ModelDataSource{}
+					f0elemf6f0 := &svcsdktypes.S3ModelDataSource{}
 					if f0iter.ModelDataSource.S3DataSource.CompressionType != nil {
-						f0elemf6f0.SetCompressionType(*f0iter.ModelDataSource.S3DataSource.CompressionType)
+						f0elemf6f0.CompressionType = svcsdktypes.ModelCompressionType(*f0iter.ModelDataSource.S3DataSource.CompressionType)
 					}
 					if f0iter.ModelDataSource.S3DataSource.ModelAccessConfig != nil {
-						f0elemf6f0f1 := &svcsdk.ModelAccessConfig{}
+						f0elemf6f0f1 := &svcsdktypes.ModelAccessConfig{}
 						if f0iter.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula != nil {
-							f0elemf6f0f1.SetAcceptEula(*f0iter.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula)
+							f0elemf6f0f1.AcceptEula = f0iter.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula
 						}
-						f0elemf6f0.SetModelAccessConfig(f0elemf6f0f1)
+						f0elemf6f0.ModelAccessConfig = f0elemf6f0f1
 					}
 					if f0iter.ModelDataSource.S3DataSource.S3DataType != nil {
-						f0elemf6f0.SetS3DataType(*f0iter.ModelDataSource.S3DataSource.S3DataType)
+						f0elemf6f0.S3DataType = svcsdktypes.S3ModelDataType(*f0iter.ModelDataSource.S3DataSource.S3DataType)
 					}
 					if f0iter.ModelDataSource.S3DataSource.S3URI != nil {
-						f0elemf6f0.SetS3Uri(*f0iter.ModelDataSource.S3DataSource.S3URI)
+						f0elemf6f0.S3Uri = f0iter.ModelDataSource.S3DataSource.S3URI
 					}
-					f0elemf6.SetS3DataSource(f0elemf6f0)
+					f0elemf6.S3DataSource = f0elemf6f0
 				}
-				f0elem.SetModelDataSource(f0elemf6)
+				f0elem.ModelDataSource = f0elemf6
 			}
 			if f0iter.ModelDataURL != nil {
-				f0elem.SetModelDataUrl(*f0iter.ModelDataURL)
+				f0elem.ModelDataUrl = f0iter.ModelDataURL
 			}
 			if f0iter.ModelPackageName != nil {
-				f0elem.SetModelPackageName(*f0iter.ModelPackageName)
+				f0elem.ModelPackageName = f0iter.ModelPackageName
 			}
 			if f0iter.MultiModelConfig != nil {
-				f0elemf9 := &svcsdk.MultiModelConfig{}
+				f0elemf9 := &svcsdktypes.MultiModelConfig{}
 				if f0iter.MultiModelConfig.ModelCacheSetting != nil {
-					f0elemf9.SetModelCacheSetting(*f0iter.MultiModelConfig.ModelCacheSetting)
+					f0elemf9.ModelCacheSetting = svcsdktypes.ModelCacheSetting(*f0iter.MultiModelConfig.ModelCacheSetting)
 				}
-				f0elem.SetMultiModelConfig(f0elemf9)
+				f0elem.MultiModelConfig = f0elemf9
 			}
-			f0 = append(f0, f0elem)
+			f0 = append(f0, *f0elem)
 		}
-		res.SetContainers(f0)
+		res.Containers = f0
 	}
 	if r.ko.Spec.EnableNetworkIsolation != nil {
-		res.SetEnableNetworkIsolation(*r.ko.Spec.EnableNetworkIsolation)
+		res.EnableNetworkIsolation = r.ko.Spec.EnableNetworkIsolation
 	}
 	if r.ko.Spec.ExecutionRoleARN != nil {
-		res.SetExecutionRoleArn(*r.ko.Spec.ExecutionRoleARN)
+		res.ExecutionRoleArn = r.ko.Spec.ExecutionRoleARN
 	}
 	if r.ko.Spec.InferenceExecutionConfig != nil {
-		f3 := &svcsdk.InferenceExecutionConfig{}
+		f3 := &svcsdktypes.InferenceExecutionConfig{}
 		if r.ko.Spec.InferenceExecutionConfig.Mode != nil {
-			f3.SetMode(*r.ko.Spec.InferenceExecutionConfig.Mode)
+			f3.Mode = svcsdktypes.InferenceExecutionMode(*r.ko.Spec.InferenceExecutionConfig.Mode)
 		}
-		res.SetInferenceExecutionConfig(f3)
+		res.InferenceExecutionConfig = f3
 	}
 	if r.ko.Spec.ModelName != nil {
-		res.SetModelName(*r.ko.Spec.ModelName)
+		res.ModelName = r.ko.Spec.ModelName
 	}
 	if r.ko.Spec.PrimaryContainer != nil {
-		f5 := &svcsdk.ContainerDefinition{}
+		f5 := &svcsdktypes.ContainerDefinition{}
 		if r.ko.Spec.PrimaryContainer.ContainerHostname != nil {
-			f5.SetContainerHostname(*r.ko.Spec.PrimaryContainer.ContainerHostname)
+			f5.ContainerHostname = r.ko.Spec.PrimaryContainer.ContainerHostname
 		}
 		if r.ko.Spec.PrimaryContainer.Environment != nil {
-			f5f1 := map[string]*string{}
-			for f5f1key, f5f1valiter := range r.ko.Spec.PrimaryContainer.Environment {
-				var f5f1val string
-				f5f1val = *f5f1valiter
-				f5f1[f5f1key] = &f5f1val
-			}
-			f5.SetEnvironment(f5f1)
+			f5.Environment = aws.ToStringMap(r.ko.Spec.PrimaryContainer.Environment)
 		}
 		if r.ko.Spec.PrimaryContainer.Image != nil {
-			f5.SetImage(*r.ko.Spec.PrimaryContainer.Image)
+			f5.Image = r.ko.Spec.PrimaryContainer.Image
 		}
 		if r.ko.Spec.PrimaryContainer.ImageConfig != nil {
-			f5f3 := &svcsdk.ImageConfig{}
+			f5f3 := &svcsdktypes.ImageConfig{}
 			if r.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAccessMode != nil {
-				f5f3.SetRepositoryAccessMode(*r.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAccessMode)
+				f5f3.RepositoryAccessMode = svcsdktypes.RepositoryAccessMode(*r.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAccessMode)
 			}
 			if r.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig != nil {
-				f5f3f1 := &svcsdk.RepositoryAuthConfig{}
+				f5f3f1 := &svcsdktypes.RepositoryAuthConfig{}
 				if r.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN != nil {
-					f5f3f1.SetRepositoryCredentialsProviderArn(*r.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN)
+					f5f3f1.RepositoryCredentialsProviderArn = r.ko.Spec.PrimaryContainer.ImageConfig.RepositoryAuthConfig.RepositoryCredentialsProviderARN
 				}
-				f5f3.SetRepositoryAuthConfig(f5f3f1)
+				f5f3.RepositoryAuthConfig = f5f3f1
 			}
-			f5.SetImageConfig(f5f3)
+			f5.ImageConfig = f5f3
 		}
 		if r.ko.Spec.PrimaryContainer.InferenceSpecificationName != nil {
-			f5.SetInferenceSpecificationName(*r.ko.Spec.PrimaryContainer.InferenceSpecificationName)
+			f5.InferenceSpecificationName = r.ko.Spec.PrimaryContainer.InferenceSpecificationName
 		}
 		if r.ko.Spec.PrimaryContainer.Mode != nil {
-			f5.SetMode(*r.ko.Spec.PrimaryContainer.Mode)
+			f5.Mode = svcsdktypes.ContainerMode(*r.ko.Spec.PrimaryContainer.Mode)
 		}
 		if r.ko.Spec.PrimaryContainer.ModelDataSource != nil {
-			f5f6 := &svcsdk.ModelDataSource{}
+			f5f6 := &svcsdktypes.ModelDataSource{}
 			if r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource != nil {
-				f5f6f0 := &svcsdk.S3ModelDataSource{}
+				f5f6f0 := &svcsdktypes.S3ModelDataSource{}
 				if r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType != nil {
-					f5f6f0.SetCompressionType(*r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType)
+					f5f6f0.CompressionType = svcsdktypes.ModelCompressionType(*r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType)
 				}
 				if r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig != nil {
-					f5f6f0f1 := &svcsdk.ModelAccessConfig{}
+					f5f6f0f1 := &svcsdktypes.ModelAccessConfig{}
 					if r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula != nil {
-						f5f6f0f1.SetAcceptEula(*r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula)
+						f5f6f0f1.AcceptEula = r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula
 					}
-					f5f6f0.SetModelAccessConfig(f5f6f0f1)
+					f5f6f0.ModelAccessConfig = f5f6f0f1
 				}
 				if r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType != nil {
-					f5f6f0.SetS3DataType(*r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType)
+					f5f6f0.S3DataType = svcsdktypes.S3ModelDataType(*r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType)
 				}
 				if r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3URI != nil {
-					f5f6f0.SetS3Uri(*r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3URI)
+					f5f6f0.S3Uri = r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3URI
 				}
-				f5f6.SetS3DataSource(f5f6f0)
+				f5f6.S3DataSource = f5f6f0
 			}
-			f5.SetModelDataSource(f5f6)
+			f5.ModelDataSource = f5f6
 		}
 		if r.ko.Spec.PrimaryContainer.ModelDataURL != nil {
-			f5.SetModelDataUrl(*r.ko.Spec.PrimaryContainer.ModelDataURL)
+			f5.ModelDataUrl = r.ko.Spec.PrimaryContainer.ModelDataURL
 		}
 		if r.ko.Spec.PrimaryContainer.ModelPackageName != nil {
-			f5.SetModelPackageName(*r.ko.Spec.PrimaryContainer.ModelPackageName)
+			f5.ModelPackageName = r.ko.Spec.PrimaryContainer.ModelPackageName
 		}
 		if r.ko.Spec.PrimaryContainer.MultiModelConfig != nil {
-			f5f9 := &svcsdk.MultiModelConfig{}
+			f5f9 := &svcsdktypes.MultiModelConfig{}
 			if r.ko.Spec.PrimaryContainer.MultiModelConfig.ModelCacheSetting != nil {
-				f5f9.SetModelCacheSetting(*r.ko.Spec.PrimaryContainer.MultiModelConfig.ModelCacheSetting)
+				f5f9.ModelCacheSetting = svcsdktypes.ModelCacheSetting(*r.ko.Spec.PrimaryContainer.MultiModelConfig.ModelCacheSetting)
 			}
-			f5.SetMultiModelConfig(f5f9)
+			f5.MultiModelConfig = f5f9
 		}
-		res.SetPrimaryContainer(f5)
+		res.PrimaryContainer = f5
 	}
 	if r.ko.Spec.Tags != nil {
-		f6 := []*svcsdk.Tag{}
+		f6 := []svcsdktypes.Tag{}
 		for _, f6iter := range r.ko.Spec.Tags {
-			f6elem := &svcsdk.Tag{}
+			f6elem := &svcsdktypes.Tag{}
 			if f6iter.Key != nil {
-				f6elem.SetKey(*f6iter.Key)
+				f6elem.Key = f6iter.Key
 			}
 			if f6iter.Value != nil {
-				f6elem.SetValue(*f6iter.Value)
+				f6elem.Value = f6iter.Value
 			}
-			f6 = append(f6, f6elem)
+			f6 = append(f6, *f6elem)
 		}
-		res.SetTags(f6)
+		res.Tags = f6
 	}
 	if r.ko.Spec.VPCConfig != nil {
-		f7 := &svcsdk.VpcConfig{}
+		f7 := &svcsdktypes.VpcConfig{}
 		if r.ko.Spec.VPCConfig.SecurityGroupIDs != nil {
-			f7f0 := []*string{}
-			for _, f7f0iter := range r.ko.Spec.VPCConfig.SecurityGroupIDs {
-				var f7f0elem string
-				f7f0elem = *f7f0iter
-				f7f0 = append(f7f0, &f7f0elem)
-			}
-			f7.SetSecurityGroupIds(f7f0)
+			f7.SecurityGroupIds = aws.ToStringSlice(r.ko.Spec.VPCConfig.SecurityGroupIDs)
 		}
 		if r.ko.Spec.VPCConfig.Subnets != nil {
-			f7f1 := []*string{}
-			for _, f7f1iter := range r.ko.Spec.VPCConfig.Subnets {
-				var f7f1elem string
-				f7f1elem = *f7f1iter
-				f7f1 = append(f7f1, &f7f1elem)
-			}
-			f7.SetSubnets(f7f1)
+			f7.Subnets = aws.ToStringSlice(r.ko.Spec.VPCConfig.Subnets)
 		}
-		res.SetVpcConfig(f7)
+		res.VpcConfig = f7
 	}
 
 	return res, nil
@@ -621,7 +573,7 @@ func (rm *resourceManager) sdkDelete(
 	}
 	var resp *svcsdk.DeleteModelOutput
 	_ = resp
-	resp, err = rm.sdkapi.DeleteModelWithContext(ctx, input)
+	resp, err = rm.sdkapi.DeleteModel(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteModel", err)
 	return nil, err
 }
@@ -634,7 +586,7 @@ func (rm *resourceManager) newDeleteRequestPayload(
 	res := &svcsdk.DeleteModelInput{}
 
 	if r.ko.Spec.ModelName != nil {
-		res.SetModelName(*r.ko.Spec.ModelName)
+		res.ModelName = r.ko.Spec.ModelName
 	}
 
 	return res, nil
@@ -742,11 +694,12 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 	if err == nil {
 		return false
 	}
-	awsErr, ok := ackerr.AWSError(err)
-	if !ok {
+
+	var terminalErr smithy.APIError
+	if !errors.As(err, &terminalErr) {
 		return false
 	}
-	switch awsErr.Code() {
+	switch terminalErr.ErrorCode() {
 	case "InvalidParameterCombination",
 		"InvalidParameterValue",
 		"MissingParameter":

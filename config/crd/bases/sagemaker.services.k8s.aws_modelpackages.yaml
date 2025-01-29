@@ -274,8 +274,8 @@ spec:
                 type: object
               inferenceSpecification:
                 description: |-
-                  Specifies details about inference jobs that can be run with models based
-                  on this model package, including the following:
+                  Specifies details about inference jobs that you can run with models based
+                  on this model package, including the following information:
 
                      * The Amazon ECR paths of containers that contain the inference code and
                      model artifacts.

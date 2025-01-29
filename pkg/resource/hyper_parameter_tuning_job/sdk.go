@@ -19,6 +19,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math"
 	"reflect"
 	"strings"
 
@@ -28,8 +29,10 @@ import (
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
-	"github.com/aws/aws-sdk-go/aws"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
+	smithy "github.com/aws/smithy-go"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -40,8 +43,7 @@ import (
 var (
 	_ = &metav1.Time{}
 	_ = strings.ToLower("")
-	_ = &aws.JSONValue{}
-	_ = &svcsdk.SageMaker{}
+	_ = &svcsdk.Client{}
 	_ = &svcapitypes.HyperParameterTuningJob{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
@@ -49,6 +51,7 @@ var (
 	_ = &reflect.Value{}
 	_ = fmt.Sprintf("")
 	_ = &ackrequeue.NoRequeue{}
+	_ = &aws.Config{}
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -74,13 +77,11 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	var resp *svcsdk.DescribeHyperParameterTuningJobOutput
-	resp, err = rm.sdkapi.DescribeHyperParameterTuningJobWithContext(ctx, input)
+	resp, err = rm.sdkapi.DescribeHyperParameterTuningJob(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeHyperParameterTuningJob", err)
 	if err != nil {
-		if reqErr, ok := ackerr.AWSRequestFailure(err); ok && reqErr.StatusCode() == 404 {
-			return nil, ackerr.NotFound
-		}
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ResourceNotFound" {
+		var awsErr smithy.APIError
+		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ResourceNotFound" {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
@@ -92,8 +93,8 @@ func (rm *resourceManager) sdkFind(
 
 	if resp.Autotune != nil {
 		f0 := &svcapitypes.Autotune{}
-		if resp.Autotune.Mode != nil {
-			f0.Mode = resp.Autotune.Mode
+		if resp.Autotune.Mode != "" {
+			f0.Mode = aws.String(string(resp.Autotune.Mode))
 		}
 		ko.Spec.Autotune = f0
 	} else {
@@ -112,16 +113,17 @@ func (rm *resourceManager) sdkFind(
 			if resp.BestTrainingJob.FinalHyperParameterTuningJobObjectiveMetric.MetricName != nil {
 				f1f2.MetricName = resp.BestTrainingJob.FinalHyperParameterTuningJobObjectiveMetric.MetricName
 			}
-			if resp.BestTrainingJob.FinalHyperParameterTuningJobObjectiveMetric.Type != nil {
-				f1f2.Type = resp.BestTrainingJob.FinalHyperParameterTuningJobObjectiveMetric.Type
+			if resp.BestTrainingJob.FinalHyperParameterTuningJobObjectiveMetric.Type != "" {
+				f1f2.Type = aws.String(string(resp.BestTrainingJob.FinalHyperParameterTuningJobObjectiveMetric.Type))
 			}
 			if resp.BestTrainingJob.FinalHyperParameterTuningJobObjectiveMetric.Value != nil {
-				f1f2.Value = resp.BestTrainingJob.FinalHyperParameterTuningJobObjectiveMetric.Value
+				valueCopy := float64(*resp.BestTrainingJob.FinalHyperParameterTuningJobObjectiveMetric.Value)
+				f1f2.Value = &valueCopy
 			}
 			f1.FinalHyperParameterTuningJobObjectiveMetric = f1f2
 		}
-		if resp.BestTrainingJob.ObjectiveStatus != nil {
-			f1.ObjectiveStatus = resp.BestTrainingJob.ObjectiveStatus
+		if resp.BestTrainingJob.ObjectiveStatus != "" {
+			f1.ObjectiveStatus = aws.String(string(resp.BestTrainingJob.ObjectiveStatus))
 		}
 		if resp.BestTrainingJob.TrainingEndTime != nil {
 			f1.TrainingEndTime = &metav1.Time{*resp.BestTrainingJob.TrainingEndTime}
@@ -135,20 +137,14 @@ func (rm *resourceManager) sdkFind(
 		if resp.BestTrainingJob.TrainingJobName != nil {
 			f1.TrainingJobName = resp.BestTrainingJob.TrainingJobName
 		}
-		if resp.BestTrainingJob.TrainingJobStatus != nil {
-			f1.TrainingJobStatus = resp.BestTrainingJob.TrainingJobStatus
+		if resp.BestTrainingJob.TrainingJobStatus != "" {
+			f1.TrainingJobStatus = aws.String(string(resp.BestTrainingJob.TrainingJobStatus))
 		}
 		if resp.BestTrainingJob.TrainingStartTime != nil {
 			f1.TrainingStartTime = &metav1.Time{*resp.BestTrainingJob.TrainingStartTime}
 		}
 		if resp.BestTrainingJob.TunedHyperParameters != nil {
-			f1f10 := map[string]*string{}
-			for f1f10key, f1f10valiter := range resp.BestTrainingJob.TunedHyperParameters {
-				var f1f10val string
-				f1f10val = *f1f10valiter
-				f1f10[f1f10key] = &f1f10val
-			}
-			f1.TunedHyperParameters = f1f10
+			f1.TunedHyperParameters = aws.StringMap(resp.BestTrainingJob.TunedHyperParameters)
 		}
 		if resp.BestTrainingJob.TuningJobName != nil {
 			f1.TuningJobName = resp.BestTrainingJob.TuningJobName
@@ -176,8 +172,8 @@ func (rm *resourceManager) sdkFind(
 			if resp.HyperParameterTuningJobConfig.HyperParameterTuningJobObjective.MetricName != nil {
 				f7f0.MetricName = resp.HyperParameterTuningJobConfig.HyperParameterTuningJobObjective.MetricName
 			}
-			if resp.HyperParameterTuningJobConfig.HyperParameterTuningJobObjective.Type != nil {
-				f7f0.Type = resp.HyperParameterTuningJobConfig.HyperParameterTuningJobObjective.Type
+			if resp.HyperParameterTuningJobConfig.HyperParameterTuningJobObjective.Type != "" {
+				f7f0.Type = aws.String(string(resp.HyperParameterTuningJobConfig.HyperParameterTuningJobObjective.Type))
 			}
 			f7.HyperParameterTuningJobObjective = f7f0
 		}
@@ -205,13 +201,7 @@ func (rm *resourceManager) sdkFind(
 						f7f1f1elem.Name = f7f1f1iter.Name
 					}
 					if f7f1f1iter.Values != nil {
-						f7f1f1elemf1 := []*string{}
-						for _, f7f1f1elemf1iter := range f7f1f1iter.Values {
-							var f7f1f1elemf1elem string
-							f7f1f1elemf1elem = *f7f1f1elemf1iter
-							f7f1f1elemf1 = append(f7f1f1elemf1, &f7f1f1elemf1elem)
-						}
-						f7f1f1elem.Values = f7f1f1elemf1
+						f7f1f1elem.Values = aws.StringSlice(f7f1f1iter.Values)
 					}
 					f7f1f1 = append(f7f1f1, f7f1f1elem)
 				}
@@ -230,8 +220,8 @@ func (rm *resourceManager) sdkFind(
 					if f7f1f2iter.Name != nil {
 						f7f1f2elem.Name = f7f1f2iter.Name
 					}
-					if f7f1f2iter.ScalingType != nil {
-						f7f1f2elem.ScalingType = f7f1f2iter.ScalingType
+					if f7f1f2iter.ScalingType != "" {
+						f7f1f2elem.ScalingType = aws.String(string(f7f1f2iter.ScalingType))
 					}
 					f7f1f2 = append(f7f1f2, f7f1f2elem)
 				}
@@ -250,8 +240,8 @@ func (rm *resourceManager) sdkFind(
 					if f7f1f3iter.Name != nil {
 						f7f1f3elem.Name = f7f1f3iter.Name
 					}
-					if f7f1f3iter.ScalingType != nil {
-						f7f1f3elem.ScalingType = f7f1f3iter.ScalingType
+					if f7f1f3iter.ScalingType != "" {
+						f7f1f3elem.ScalingType = aws.String(string(f7f1f3iter.ScalingType))
 					}
 					f7f1f3 = append(f7f1f3, f7f1f3elem)
 				}
@@ -262,23 +252,26 @@ func (rm *resourceManager) sdkFind(
 		if resp.HyperParameterTuningJobConfig.ResourceLimits != nil {
 			f7f2 := &svcapitypes.ResourceLimits{}
 			if resp.HyperParameterTuningJobConfig.ResourceLimits.MaxNumberOfTrainingJobs != nil {
-				f7f2.MaxNumberOfTrainingJobs = resp.HyperParameterTuningJobConfig.ResourceLimits.MaxNumberOfTrainingJobs
+				maxNumberOfTrainingJobsCopy := int64(*resp.HyperParameterTuningJobConfig.ResourceLimits.MaxNumberOfTrainingJobs)
+				f7f2.MaxNumberOfTrainingJobs = &maxNumberOfTrainingJobsCopy
 			}
 			if resp.HyperParameterTuningJobConfig.ResourceLimits.MaxParallelTrainingJobs != nil {
-				f7f2.MaxParallelTrainingJobs = resp.HyperParameterTuningJobConfig.ResourceLimits.MaxParallelTrainingJobs
+				maxParallelTrainingJobsCopy := int64(*resp.HyperParameterTuningJobConfig.ResourceLimits.MaxParallelTrainingJobs)
+				f7f2.MaxParallelTrainingJobs = &maxParallelTrainingJobsCopy
 			}
 			f7.ResourceLimits = f7f2
 		}
-		if resp.HyperParameterTuningJobConfig.Strategy != nil {
-			f7.Strategy = resp.HyperParameterTuningJobConfig.Strategy
+		if resp.HyperParameterTuningJobConfig.Strategy != "" {
+			f7.Strategy = aws.String(string(resp.HyperParameterTuningJobConfig.Strategy))
 		}
-		if resp.HyperParameterTuningJobConfig.TrainingJobEarlyStoppingType != nil {
-			f7.TrainingJobEarlyStoppingType = resp.HyperParameterTuningJobConfig.TrainingJobEarlyStoppingType
+		if resp.HyperParameterTuningJobConfig.TrainingJobEarlyStoppingType != "" {
+			f7.TrainingJobEarlyStoppingType = aws.String(string(resp.HyperParameterTuningJobConfig.TrainingJobEarlyStoppingType))
 		}
 		if resp.HyperParameterTuningJobConfig.TuningJobCompletionCriteria != nil {
 			f7f5 := &svcapitypes.TuningJobCompletionCriteria{}
 			if resp.HyperParameterTuningJobConfig.TuningJobCompletionCriteria.TargetObjectiveMetricValue != nil {
-				f7f5.TargetObjectiveMetricValue = resp.HyperParameterTuningJobConfig.TuningJobCompletionCriteria.TargetObjectiveMetricValue
+				targetObjectiveMetricValueCopy := float64(*resp.HyperParameterTuningJobConfig.TuningJobCompletionCriteria.TargetObjectiveMetricValue)
+				f7f5.TargetObjectiveMetricValue = &targetObjectiveMetricValueCopy
 			}
 			f7.TuningJobCompletionCriteria = f7f5
 		}
@@ -291,8 +284,8 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.HyperParameterTuningJobName = nil
 	}
-	if resp.HyperParameterTuningJobStatus != nil {
-		ko.Status.HyperParameterTuningJobStatus = resp.HyperParameterTuningJobStatus
+	if resp.HyperParameterTuningJobStatus != "" {
+		ko.Status.HyperParameterTuningJobStatus = aws.String(string(resp.HyperParameterTuningJobStatus))
 	} else {
 		ko.Status.HyperParameterTuningJobStatus = nil
 	}
@@ -309,16 +302,17 @@ func (rm *resourceManager) sdkFind(
 			if resp.OverallBestTrainingJob.FinalHyperParameterTuningJobObjectiveMetric.MetricName != nil {
 				f12f2.MetricName = resp.OverallBestTrainingJob.FinalHyperParameterTuningJobObjectiveMetric.MetricName
 			}
-			if resp.OverallBestTrainingJob.FinalHyperParameterTuningJobObjectiveMetric.Type != nil {
-				f12f2.Type = resp.OverallBestTrainingJob.FinalHyperParameterTuningJobObjectiveMetric.Type
+			if resp.OverallBestTrainingJob.FinalHyperParameterTuningJobObjectiveMetric.Type != "" {
+				f12f2.Type = aws.String(string(resp.OverallBestTrainingJob.FinalHyperParameterTuningJobObjectiveMetric.Type))
 			}
 			if resp.OverallBestTrainingJob.FinalHyperParameterTuningJobObjectiveMetric.Value != nil {
-				f12f2.Value = resp.OverallBestTrainingJob.FinalHyperParameterTuningJobObjectiveMetric.Value
+				valueCopy := float64(*resp.OverallBestTrainingJob.FinalHyperParameterTuningJobObjectiveMetric.Value)
+				f12f2.Value = &valueCopy
 			}
 			f12.FinalHyperParameterTuningJobObjectiveMetric = f12f2
 		}
-		if resp.OverallBestTrainingJob.ObjectiveStatus != nil {
-			f12.ObjectiveStatus = resp.OverallBestTrainingJob.ObjectiveStatus
+		if resp.OverallBestTrainingJob.ObjectiveStatus != "" {
+			f12.ObjectiveStatus = aws.String(string(resp.OverallBestTrainingJob.ObjectiveStatus))
 		}
 		if resp.OverallBestTrainingJob.TrainingEndTime != nil {
 			f12.TrainingEndTime = &metav1.Time{*resp.OverallBestTrainingJob.TrainingEndTime}
@@ -332,20 +326,14 @@ func (rm *resourceManager) sdkFind(
 		if resp.OverallBestTrainingJob.TrainingJobName != nil {
 			f12.TrainingJobName = resp.OverallBestTrainingJob.TrainingJobName
 		}
-		if resp.OverallBestTrainingJob.TrainingJobStatus != nil {
-			f12.TrainingJobStatus = resp.OverallBestTrainingJob.TrainingJobStatus
+		if resp.OverallBestTrainingJob.TrainingJobStatus != "" {
+			f12.TrainingJobStatus = aws.String(string(resp.OverallBestTrainingJob.TrainingJobStatus))
 		}
 		if resp.OverallBestTrainingJob.TrainingStartTime != nil {
 			f12.TrainingStartTime = &metav1.Time{*resp.OverallBestTrainingJob.TrainingStartTime}
 		}
 		if resp.OverallBestTrainingJob.TunedHyperParameters != nil {
-			f12f10 := map[string]*string{}
-			for f12f10key, f12f10valiter := range resp.OverallBestTrainingJob.TunedHyperParameters {
-				var f12f10val string
-				f12f10val = *f12f10valiter
-				f12f10[f12f10key] = &f12f10val
-			}
-			f12.TunedHyperParameters = f12f10
+			f12.TunedHyperParameters = aws.StringMap(resp.OverallBestTrainingJob.TunedHyperParameters)
 		}
 		if resp.OverallBestTrainingJob.TuningJobName != nil {
 			f12.TuningJobName = resp.OverallBestTrainingJob.TuningJobName
@@ -378,8 +366,8 @@ func (rm *resourceManager) sdkFind(
 			if resp.TrainingJobDefinition.AlgorithmSpecification.TrainingImage != nil {
 				f13f0.TrainingImage = resp.TrainingJobDefinition.AlgorithmSpecification.TrainingImage
 			}
-			if resp.TrainingJobDefinition.AlgorithmSpecification.TrainingInputMode != nil {
-				f13f0.TrainingInputMode = resp.TrainingJobDefinition.AlgorithmSpecification.TrainingInputMode
+			if resp.TrainingJobDefinition.AlgorithmSpecification.TrainingInputMode != "" {
+				f13f0.TrainingInputMode = aws.String(string(resp.TrainingJobDefinition.AlgorithmSpecification.TrainingInputMode))
 			}
 			f13.AlgorithmSpecification = f13f0
 		}
@@ -429,13 +417,7 @@ func (rm *resourceManager) sdkFind(
 						f13f6f1elem.Name = f13f6f1iter.Name
 					}
 					if f13f6f1iter.Values != nil {
-						f13f6f1elemf1 := []*string{}
-						for _, f13f6f1elemf1iter := range f13f6f1iter.Values {
-							var f13f6f1elemf1elem string
-							f13f6f1elemf1elem = *f13f6f1elemf1iter
-							f13f6f1elemf1 = append(f13f6f1elemf1, &f13f6f1elemf1elem)
-						}
-						f13f6f1elem.Values = f13f6f1elemf1
+						f13f6f1elem.Values = aws.StringSlice(f13f6f1iter.Values)
 					}
 					f13f6f1 = append(f13f6f1, f13f6f1elem)
 				}
@@ -454,8 +436,8 @@ func (rm *resourceManager) sdkFind(
 					if f13f6f2iter.Name != nil {
 						f13f6f2elem.Name = f13f6f2iter.Name
 					}
-					if f13f6f2iter.ScalingType != nil {
-						f13f6f2elem.ScalingType = f13f6f2iter.ScalingType
+					if f13f6f2iter.ScalingType != "" {
+						f13f6f2elem.ScalingType = aws.String(string(f13f6f2iter.ScalingType))
 					}
 					f13f6f2 = append(f13f6f2, f13f6f2elem)
 				}
@@ -474,8 +456,8 @@ func (rm *resourceManager) sdkFind(
 					if f13f6f3iter.Name != nil {
 						f13f6f3elem.Name = f13f6f3iter.Name
 					}
-					if f13f6f3iter.ScalingType != nil {
-						f13f6f3elem.ScalingType = f13f6f3iter.ScalingType
+					if f13f6f3iter.ScalingType != "" {
+						f13f6f3elem.ScalingType = aws.String(string(f13f6f3iter.ScalingType))
 					}
 					f13f6f3 = append(f13f6f3, f13f6f3elem)
 				}
@@ -490,8 +472,8 @@ func (rm *resourceManager) sdkFind(
 				if f13f7iter.ChannelName != nil {
 					f13f7elem.ChannelName = f13f7iter.ChannelName
 				}
-				if f13f7iter.CompressionType != nil {
-					f13f7elem.CompressionType = f13f7iter.CompressionType
+				if f13f7iter.CompressionType != "" {
+					f13f7elem.CompressionType = aws.String(string(f13f7iter.CompressionType))
 				}
 				if f13f7iter.ContentType != nil {
 					f13f7elem.ContentType = f13f7iter.ContentType
@@ -503,42 +485,30 @@ func (rm *resourceManager) sdkFind(
 						if f13f7iter.DataSource.FileSystemDataSource.DirectoryPath != nil {
 							f13f7elemf3f0.DirectoryPath = f13f7iter.DataSource.FileSystemDataSource.DirectoryPath
 						}
-						if f13f7iter.DataSource.FileSystemDataSource.FileSystemAccessMode != nil {
-							f13f7elemf3f0.FileSystemAccessMode = f13f7iter.DataSource.FileSystemDataSource.FileSystemAccessMode
+						if f13f7iter.DataSource.FileSystemDataSource.FileSystemAccessMode != "" {
+							f13f7elemf3f0.FileSystemAccessMode = aws.String(string(f13f7iter.DataSource.FileSystemDataSource.FileSystemAccessMode))
 						}
 						if f13f7iter.DataSource.FileSystemDataSource.FileSystemId != nil {
 							f13f7elemf3f0.FileSystemID = f13f7iter.DataSource.FileSystemDataSource.FileSystemId
 						}
-						if f13f7iter.DataSource.FileSystemDataSource.FileSystemType != nil {
-							f13f7elemf3f0.FileSystemType = f13f7iter.DataSource.FileSystemDataSource.FileSystemType
+						if f13f7iter.DataSource.FileSystemDataSource.FileSystemType != "" {
+							f13f7elemf3f0.FileSystemType = aws.String(string(f13f7iter.DataSource.FileSystemDataSource.FileSystemType))
 						}
 						f13f7elemf3.FileSystemDataSource = f13f7elemf3f0
 					}
 					if f13f7iter.DataSource.S3DataSource != nil {
 						f13f7elemf3f1 := &svcapitypes.S3DataSource{}
 						if f13f7iter.DataSource.S3DataSource.AttributeNames != nil {
-							f13f7elemf3f1f0 := []*string{}
-							for _, f13f7elemf3f1f0iter := range f13f7iter.DataSource.S3DataSource.AttributeNames {
-								var f13f7elemf3f1f0elem string
-								f13f7elemf3f1f0elem = *f13f7elemf3f1f0iter
-								f13f7elemf3f1f0 = append(f13f7elemf3f1f0, &f13f7elemf3f1f0elem)
-							}
-							f13f7elemf3f1.AttributeNames = f13f7elemf3f1f0
+							f13f7elemf3f1.AttributeNames = aws.StringSlice(f13f7iter.DataSource.S3DataSource.AttributeNames)
 						}
 						if f13f7iter.DataSource.S3DataSource.InstanceGroupNames != nil {
-							f13f7elemf3f1f1 := []*string{}
-							for _, f13f7elemf3f1f1iter := range f13f7iter.DataSource.S3DataSource.InstanceGroupNames {
-								var f13f7elemf3f1f1elem string
-								f13f7elemf3f1f1elem = *f13f7elemf3f1f1iter
-								f13f7elemf3f1f1 = append(f13f7elemf3f1f1, &f13f7elemf3f1f1elem)
-							}
-							f13f7elemf3f1.InstanceGroupNames = f13f7elemf3f1f1
+							f13f7elemf3f1.InstanceGroupNames = aws.StringSlice(f13f7iter.DataSource.S3DataSource.InstanceGroupNames)
 						}
-						if f13f7iter.DataSource.S3DataSource.S3DataDistributionType != nil {
-							f13f7elemf3f1.S3DataDistributionType = f13f7iter.DataSource.S3DataSource.S3DataDistributionType
+						if f13f7iter.DataSource.S3DataSource.S3DataDistributionType != "" {
+							f13f7elemf3f1.S3DataDistributionType = aws.String(string(f13f7iter.DataSource.S3DataSource.S3DataDistributionType))
 						}
-						if f13f7iter.DataSource.S3DataSource.S3DataType != nil {
-							f13f7elemf3f1.S3DataType = f13f7iter.DataSource.S3DataSource.S3DataType
+						if f13f7iter.DataSource.S3DataSource.S3DataType != "" {
+							f13f7elemf3f1.S3DataType = aws.String(string(f13f7iter.DataSource.S3DataSource.S3DataType))
 						}
 						if f13f7iter.DataSource.S3DataSource.S3Uri != nil {
 							f13f7elemf3f1.S3URI = f13f7iter.DataSource.S3DataSource.S3Uri
@@ -547,11 +517,11 @@ func (rm *resourceManager) sdkFind(
 					}
 					f13f7elem.DataSource = f13f7elemf3
 				}
-				if f13f7iter.InputMode != nil {
-					f13f7elem.InputMode = f13f7iter.InputMode
+				if f13f7iter.InputMode != "" {
+					f13f7elem.InputMode = aws.String(string(f13f7iter.InputMode))
 				}
-				if f13f7iter.RecordWrapperType != nil {
-					f13f7elem.RecordWrapperType = f13f7iter.RecordWrapperType
+				if f13f7iter.RecordWrapperType != "" {
+					f13f7elem.RecordWrapperType = aws.String(string(f13f7iter.RecordWrapperType))
 				}
 				if f13f7iter.ShuffleConfig != nil {
 					f13f7elemf6 := &svcapitypes.ShuffleConfig{}
@@ -566,8 +536,8 @@ func (rm *resourceManager) sdkFind(
 		}
 		if resp.TrainingJobDefinition.OutputDataConfig != nil {
 			f13f8 := &svcapitypes.OutputDataConfig{}
-			if resp.TrainingJobDefinition.OutputDataConfig.CompressionType != nil {
-				f13f8.CompressionType = resp.TrainingJobDefinition.OutputDataConfig.CompressionType
+			if resp.TrainingJobDefinition.OutputDataConfig.CompressionType != "" {
+				f13f8.CompressionType = aws.String(string(resp.TrainingJobDefinition.OutputDataConfig.CompressionType))
 			}
 			if resp.TrainingJobDefinition.OutputDataConfig.KmsKeyId != nil {
 				f13f8.KMSKeyID = resp.TrainingJobDefinition.OutputDataConfig.KmsKeyId
@@ -580,43 +550,48 @@ func (rm *resourceManager) sdkFind(
 		if resp.TrainingJobDefinition.ResourceConfig != nil {
 			f13f9 := &svcapitypes.ResourceConfig{}
 			if resp.TrainingJobDefinition.ResourceConfig.InstanceCount != nil {
-				f13f9.InstanceCount = resp.TrainingJobDefinition.ResourceConfig.InstanceCount
+				instanceCountCopy := int64(*resp.TrainingJobDefinition.ResourceConfig.InstanceCount)
+				f13f9.InstanceCount = &instanceCountCopy
 			}
 			if resp.TrainingJobDefinition.ResourceConfig.InstanceGroups != nil {
 				f13f9f1 := []*svcapitypes.InstanceGroup{}
 				for _, f13f9f1iter := range resp.TrainingJobDefinition.ResourceConfig.InstanceGroups {
 					f13f9f1elem := &svcapitypes.InstanceGroup{}
 					if f13f9f1iter.InstanceCount != nil {
-						f13f9f1elem.InstanceCount = f13f9f1iter.InstanceCount
+						instanceCountCopy := int64(*f13f9f1iter.InstanceCount)
+						f13f9f1elem.InstanceCount = &instanceCountCopy
 					}
 					if f13f9f1iter.InstanceGroupName != nil {
 						f13f9f1elem.InstanceGroupName = f13f9f1iter.InstanceGroupName
 					}
-					if f13f9f1iter.InstanceType != nil {
-						f13f9f1elem.InstanceType = f13f9f1iter.InstanceType
+					if f13f9f1iter.InstanceType != "" {
+						f13f9f1elem.InstanceType = aws.String(string(f13f9f1iter.InstanceType))
 					}
 					f13f9f1 = append(f13f9f1, f13f9f1elem)
 				}
 				f13f9.InstanceGroups = f13f9f1
 			}
-			if resp.TrainingJobDefinition.ResourceConfig.InstanceType != nil {
-				f13f9.InstanceType = resp.TrainingJobDefinition.ResourceConfig.InstanceType
+			if resp.TrainingJobDefinition.ResourceConfig.InstanceType != "" {
+				f13f9.InstanceType = aws.String(string(resp.TrainingJobDefinition.ResourceConfig.InstanceType))
 			}
 			if resp.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds != nil {
-				f13f9.KeepAlivePeriodInSeconds = resp.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds
+				keepAlivePeriodInSecondsCopy := int64(*resp.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds)
+				f13f9.KeepAlivePeriodInSeconds = &keepAlivePeriodInSecondsCopy
 			}
 			if resp.TrainingJobDefinition.ResourceConfig.VolumeKmsKeyId != nil {
 				f13f9.VolumeKMSKeyID = resp.TrainingJobDefinition.ResourceConfig.VolumeKmsKeyId
 			}
 			if resp.TrainingJobDefinition.ResourceConfig.VolumeSizeInGB != nil {
-				f13f9.VolumeSizeInGB = resp.TrainingJobDefinition.ResourceConfig.VolumeSizeInGB
+				volumeSizeInGBCopy := int64(*resp.TrainingJobDefinition.ResourceConfig.VolumeSizeInGB)
+				f13f9.VolumeSizeInGB = &volumeSizeInGBCopy
 			}
 			f13.ResourceConfig = f13f9
 		}
 		if resp.TrainingJobDefinition.RetryStrategy != nil {
 			f13f10 := &svcapitypes.RetryStrategy{}
 			if resp.TrainingJobDefinition.RetryStrategy.MaximumRetryAttempts != nil {
-				f13f10.MaximumRetryAttempts = resp.TrainingJobDefinition.RetryStrategy.MaximumRetryAttempts
+				maximumRetryAttemptsCopy := int64(*resp.TrainingJobDefinition.RetryStrategy.MaximumRetryAttempts)
+				f13f10.MaximumRetryAttempts = &maximumRetryAttemptsCopy
 			}
 			f13.RetryStrategy = f13f10
 		}
@@ -624,24 +599,21 @@ func (rm *resourceManager) sdkFind(
 			f13.RoleARN = resp.TrainingJobDefinition.RoleArn
 		}
 		if resp.TrainingJobDefinition.StaticHyperParameters != nil {
-			f13f12 := map[string]*string{}
-			for f13f12key, f13f12valiter := range resp.TrainingJobDefinition.StaticHyperParameters {
-				var f13f12val string
-				f13f12val = *f13f12valiter
-				f13f12[f13f12key] = &f13f12val
-			}
-			f13.StaticHyperParameters = f13f12
+			f13.StaticHyperParameters = aws.StringMap(resp.TrainingJobDefinition.StaticHyperParameters)
 		}
 		if resp.TrainingJobDefinition.StoppingCondition != nil {
 			f13f13 := &svcapitypes.StoppingCondition{}
 			if resp.TrainingJobDefinition.StoppingCondition.MaxPendingTimeInSeconds != nil {
-				f13f13.MaxPendingTimeInSeconds = resp.TrainingJobDefinition.StoppingCondition.MaxPendingTimeInSeconds
+				maxPendingTimeInSecondsCopy := int64(*resp.TrainingJobDefinition.StoppingCondition.MaxPendingTimeInSeconds)
+				f13f13.MaxPendingTimeInSeconds = &maxPendingTimeInSecondsCopy
 			}
 			if resp.TrainingJobDefinition.StoppingCondition.MaxRuntimeInSeconds != nil {
-				f13f13.MaxRuntimeInSeconds = resp.TrainingJobDefinition.StoppingCondition.MaxRuntimeInSeconds
+				maxRuntimeInSecondsCopy := int64(*resp.TrainingJobDefinition.StoppingCondition.MaxRuntimeInSeconds)
+				f13f13.MaxRuntimeInSeconds = &maxRuntimeInSecondsCopy
 			}
 			if resp.TrainingJobDefinition.StoppingCondition.MaxWaitTimeInSeconds != nil {
-				f13f13.MaxWaitTimeInSeconds = resp.TrainingJobDefinition.StoppingCondition.MaxWaitTimeInSeconds
+				maxWaitTimeInSecondsCopy := int64(*resp.TrainingJobDefinition.StoppingCondition.MaxWaitTimeInSeconds)
+				f13f13.MaxWaitTimeInSeconds = &maxWaitTimeInSecondsCopy
 			}
 			f13.StoppingCondition = f13f13
 		}
@@ -650,30 +622,18 @@ func (rm *resourceManager) sdkFind(
 			if resp.TrainingJobDefinition.TuningObjective.MetricName != nil {
 				f13f14.MetricName = resp.TrainingJobDefinition.TuningObjective.MetricName
 			}
-			if resp.TrainingJobDefinition.TuningObjective.Type != nil {
-				f13f14.Type = resp.TrainingJobDefinition.TuningObjective.Type
+			if resp.TrainingJobDefinition.TuningObjective.Type != "" {
+				f13f14.Type = aws.String(string(resp.TrainingJobDefinition.TuningObjective.Type))
 			}
 			f13.TuningObjective = f13f14
 		}
 		if resp.TrainingJobDefinition.VpcConfig != nil {
 			f13f15 := &svcapitypes.VPCConfig{}
 			if resp.TrainingJobDefinition.VpcConfig.SecurityGroupIds != nil {
-				f13f15f0 := []*string{}
-				for _, f13f15f0iter := range resp.TrainingJobDefinition.VpcConfig.SecurityGroupIds {
-					var f13f15f0elem string
-					f13f15f0elem = *f13f15f0iter
-					f13f15f0 = append(f13f15f0, &f13f15f0elem)
-				}
-				f13f15.SecurityGroupIDs = f13f15f0
+				f13f15.SecurityGroupIDs = aws.StringSlice(resp.TrainingJobDefinition.VpcConfig.SecurityGroupIds)
 			}
 			if resp.TrainingJobDefinition.VpcConfig.Subnets != nil {
-				f13f15f1 := []*string{}
-				for _, f13f15f1iter := range resp.TrainingJobDefinition.VpcConfig.Subnets {
-					var f13f15f1elem string
-					f13f15f1elem = *f13f15f1iter
-					f13f15f1 = append(f13f15f1, &f13f15f1elem)
-				}
-				f13f15.Subnets = f13f15f1
+				f13f15.Subnets = aws.StringSlice(resp.TrainingJobDefinition.VpcConfig.Subnets)
 			}
 			f13.VPCConfig = f13f15
 		}
@@ -707,8 +667,8 @@ func (rm *resourceManager) sdkFind(
 				if f14iter.AlgorithmSpecification.TrainingImage != nil {
 					f14elemf0.TrainingImage = f14iter.AlgorithmSpecification.TrainingImage
 				}
-				if f14iter.AlgorithmSpecification.TrainingInputMode != nil {
-					f14elemf0.TrainingInputMode = f14iter.AlgorithmSpecification.TrainingInputMode
+				if f14iter.AlgorithmSpecification.TrainingInputMode != "" {
+					f14elemf0.TrainingInputMode = aws.String(string(f14iter.AlgorithmSpecification.TrainingInputMode))
 				}
 				f14elem.AlgorithmSpecification = f14elemf0
 			}
@@ -758,13 +718,7 @@ func (rm *resourceManager) sdkFind(
 							f14elemf6f1elem.Name = f14elemf6f1iter.Name
 						}
 						if f14elemf6f1iter.Values != nil {
-							f14elemf6f1elemf1 := []*string{}
-							for _, f14elemf6f1elemf1iter := range f14elemf6f1iter.Values {
-								var f14elemf6f1elemf1elem string
-								f14elemf6f1elemf1elem = *f14elemf6f1elemf1iter
-								f14elemf6f1elemf1 = append(f14elemf6f1elemf1, &f14elemf6f1elemf1elem)
-							}
-							f14elemf6f1elem.Values = f14elemf6f1elemf1
+							f14elemf6f1elem.Values = aws.StringSlice(f14elemf6f1iter.Values)
 						}
 						f14elemf6f1 = append(f14elemf6f1, f14elemf6f1elem)
 					}
@@ -783,8 +737,8 @@ func (rm *resourceManager) sdkFind(
 						if f14elemf6f2iter.Name != nil {
 							f14elemf6f2elem.Name = f14elemf6f2iter.Name
 						}
-						if f14elemf6f2iter.ScalingType != nil {
-							f14elemf6f2elem.ScalingType = f14elemf6f2iter.ScalingType
+						if f14elemf6f2iter.ScalingType != "" {
+							f14elemf6f2elem.ScalingType = aws.String(string(f14elemf6f2iter.ScalingType))
 						}
 						f14elemf6f2 = append(f14elemf6f2, f14elemf6f2elem)
 					}
@@ -803,8 +757,8 @@ func (rm *resourceManager) sdkFind(
 						if f14elemf6f3iter.Name != nil {
 							f14elemf6f3elem.Name = f14elemf6f3iter.Name
 						}
-						if f14elemf6f3iter.ScalingType != nil {
-							f14elemf6f3elem.ScalingType = f14elemf6f3iter.ScalingType
+						if f14elemf6f3iter.ScalingType != "" {
+							f14elemf6f3elem.ScalingType = aws.String(string(f14elemf6f3iter.ScalingType))
 						}
 						f14elemf6f3 = append(f14elemf6f3, f14elemf6f3elem)
 					}
@@ -819,8 +773,8 @@ func (rm *resourceManager) sdkFind(
 					if f14elemf7iter.ChannelName != nil {
 						f14elemf7elem.ChannelName = f14elemf7iter.ChannelName
 					}
-					if f14elemf7iter.CompressionType != nil {
-						f14elemf7elem.CompressionType = f14elemf7iter.CompressionType
+					if f14elemf7iter.CompressionType != "" {
+						f14elemf7elem.CompressionType = aws.String(string(f14elemf7iter.CompressionType))
 					}
 					if f14elemf7iter.ContentType != nil {
 						f14elemf7elem.ContentType = f14elemf7iter.ContentType
@@ -832,42 +786,30 @@ func (rm *resourceManager) sdkFind(
 							if f14elemf7iter.DataSource.FileSystemDataSource.DirectoryPath != nil {
 								f14elemf7elemf3f0.DirectoryPath = f14elemf7iter.DataSource.FileSystemDataSource.DirectoryPath
 							}
-							if f14elemf7iter.DataSource.FileSystemDataSource.FileSystemAccessMode != nil {
-								f14elemf7elemf3f0.FileSystemAccessMode = f14elemf7iter.DataSource.FileSystemDataSource.FileSystemAccessMode
+							if f14elemf7iter.DataSource.FileSystemDataSource.FileSystemAccessMode != "" {
+								f14elemf7elemf3f0.FileSystemAccessMode = aws.String(string(f14elemf7iter.DataSource.FileSystemDataSource.FileSystemAccessMode))
 							}
 							if f14elemf7iter.DataSource.FileSystemDataSource.FileSystemId != nil {
 								f14elemf7elemf3f0.FileSystemID = f14elemf7iter.DataSource.FileSystemDataSource.FileSystemId
 							}
-							if f14elemf7iter.DataSource.FileSystemDataSource.FileSystemType != nil {
-								f14elemf7elemf3f0.FileSystemType = f14elemf7iter.DataSource.FileSystemDataSource.FileSystemType
+							if f14elemf7iter.DataSource.FileSystemDataSource.FileSystemType != "" {
+								f14elemf7elemf3f0.FileSystemType = aws.String(string(f14elemf7iter.DataSource.FileSystemDataSource.FileSystemType))
 							}
 							f14elemf7elemf3.FileSystemDataSource = f14elemf7elemf3f0
 						}
 						if f14elemf7iter.DataSource.S3DataSource != nil {
 							f14elemf7elemf3f1 := &svcapitypes.S3DataSource{}
 							if f14elemf7iter.DataSource.S3DataSource.AttributeNames != nil {
-								f14elemf7elemf3f1f0 := []*string{}
-								for _, f14elemf7elemf3f1f0iter := range f14elemf7iter.DataSource.S3DataSource.AttributeNames {
-									var f14elemf7elemf3f1f0elem string
-									f14elemf7elemf3f1f0elem = *f14elemf7elemf3f1f0iter
-									f14elemf7elemf3f1f0 = append(f14elemf7elemf3f1f0, &f14elemf7elemf3f1f0elem)
-								}
-								f14elemf7elemf3f1.AttributeNames = f14elemf7elemf3f1f0
+								f14elemf7elemf3f1.AttributeNames = aws.StringSlice(f14elemf7iter.DataSource.S3DataSource.AttributeNames)
 							}
 							if f14elemf7iter.DataSource.S3DataSource.InstanceGroupNames != nil {
-								f14elemf7elemf3f1f1 := []*string{}
-								for _, f14elemf7elemf3f1f1iter := range f14elemf7iter.DataSource.S3DataSource.InstanceGroupNames {
-									var f14elemf7elemf3f1f1elem string
-									f14elemf7elemf3f1f1elem = *f14elemf7elemf3f1f1iter
-									f14elemf7elemf3f1f1 = append(f14elemf7elemf3f1f1, &f14elemf7elemf3f1f1elem)
-								}
-								f14elemf7elemf3f1.InstanceGroupNames = f14elemf7elemf3f1f1
+								f14elemf7elemf3f1.InstanceGroupNames = aws.StringSlice(f14elemf7iter.DataSource.S3DataSource.InstanceGroupNames)
 							}
-							if f14elemf7iter.DataSource.S3DataSource.S3DataDistributionType != nil {
-								f14elemf7elemf3f1.S3DataDistributionType = f14elemf7iter.DataSource.S3DataSource.S3DataDistributionType
+							if f14elemf7iter.DataSource.S3DataSource.S3DataDistributionType != "" {
+								f14elemf7elemf3f1.S3DataDistributionType = aws.String(string(f14elemf7iter.DataSource.S3DataSource.S3DataDistributionType))
 							}
-							if f14elemf7iter.DataSource.S3DataSource.S3DataType != nil {
-								f14elemf7elemf3f1.S3DataType = f14elemf7iter.DataSource.S3DataSource.S3DataType
+							if f14elemf7iter.DataSource.S3DataSource.S3DataType != "" {
+								f14elemf7elemf3f1.S3DataType = aws.String(string(f14elemf7iter.DataSource.S3DataSource.S3DataType))
 							}
 							if f14elemf7iter.DataSource.S3DataSource.S3Uri != nil {
 								f14elemf7elemf3f1.S3URI = f14elemf7iter.DataSource.S3DataSource.S3Uri
@@ -876,11 +818,11 @@ func (rm *resourceManager) sdkFind(
 						}
 						f14elemf7elem.DataSource = f14elemf7elemf3
 					}
-					if f14elemf7iter.InputMode != nil {
-						f14elemf7elem.InputMode = f14elemf7iter.InputMode
+					if f14elemf7iter.InputMode != "" {
+						f14elemf7elem.InputMode = aws.String(string(f14elemf7iter.InputMode))
 					}
-					if f14elemf7iter.RecordWrapperType != nil {
-						f14elemf7elem.RecordWrapperType = f14elemf7iter.RecordWrapperType
+					if f14elemf7iter.RecordWrapperType != "" {
+						f14elemf7elem.RecordWrapperType = aws.String(string(f14elemf7iter.RecordWrapperType))
 					}
 					if f14elemf7iter.ShuffleConfig != nil {
 						f14elemf7elemf6 := &svcapitypes.ShuffleConfig{}
@@ -895,8 +837,8 @@ func (rm *resourceManager) sdkFind(
 			}
 			if f14iter.OutputDataConfig != nil {
 				f14elemf8 := &svcapitypes.OutputDataConfig{}
-				if f14iter.OutputDataConfig.CompressionType != nil {
-					f14elemf8.CompressionType = f14iter.OutputDataConfig.CompressionType
+				if f14iter.OutputDataConfig.CompressionType != "" {
+					f14elemf8.CompressionType = aws.String(string(f14iter.OutputDataConfig.CompressionType))
 				}
 				if f14iter.OutputDataConfig.KmsKeyId != nil {
 					f14elemf8.KMSKeyID = f14iter.OutputDataConfig.KmsKeyId
@@ -909,43 +851,48 @@ func (rm *resourceManager) sdkFind(
 			if f14iter.ResourceConfig != nil {
 				f14elemf9 := &svcapitypes.ResourceConfig{}
 				if f14iter.ResourceConfig.InstanceCount != nil {
-					f14elemf9.InstanceCount = f14iter.ResourceConfig.InstanceCount
+					instanceCountCopy := int64(*f14iter.ResourceConfig.InstanceCount)
+					f14elemf9.InstanceCount = &instanceCountCopy
 				}
 				if f14iter.ResourceConfig.InstanceGroups != nil {
 					f14elemf9f1 := []*svcapitypes.InstanceGroup{}
 					for _, f14elemf9f1iter := range f14iter.ResourceConfig.InstanceGroups {
 						f14elemf9f1elem := &svcapitypes.InstanceGroup{}
 						if f14elemf9f1iter.InstanceCount != nil {
-							f14elemf9f1elem.InstanceCount = f14elemf9f1iter.InstanceCount
+							instanceCountCopy := int64(*f14elemf9f1iter.InstanceCount)
+							f14elemf9f1elem.InstanceCount = &instanceCountCopy
 						}
 						if f14elemf9f1iter.InstanceGroupName != nil {
 							f14elemf9f1elem.InstanceGroupName = f14elemf9f1iter.InstanceGroupName
 						}
-						if f14elemf9f1iter.InstanceType != nil {
-							f14elemf9f1elem.InstanceType = f14elemf9f1iter.InstanceType
+						if f14elemf9f1iter.InstanceType != "" {
+							f14elemf9f1elem.InstanceType = aws.String(string(f14elemf9f1iter.InstanceType))
 						}
 						f14elemf9f1 = append(f14elemf9f1, f14elemf9f1elem)
 					}
 					f14elemf9.InstanceGroups = f14elemf9f1
 				}
-				if f14iter.ResourceConfig.InstanceType != nil {
-					f14elemf9.InstanceType = f14iter.ResourceConfig.InstanceType
+				if f14iter.ResourceConfig.InstanceType != "" {
+					f14elemf9.InstanceType = aws.String(string(f14iter.ResourceConfig.InstanceType))
 				}
 				if f14iter.ResourceConfig.KeepAlivePeriodInSeconds != nil {
-					f14elemf9.KeepAlivePeriodInSeconds = f14iter.ResourceConfig.KeepAlivePeriodInSeconds
+					keepAlivePeriodInSecondsCopy := int64(*f14iter.ResourceConfig.KeepAlivePeriodInSeconds)
+					f14elemf9.KeepAlivePeriodInSeconds = &keepAlivePeriodInSecondsCopy
 				}
 				if f14iter.ResourceConfig.VolumeKmsKeyId != nil {
 					f14elemf9.VolumeKMSKeyID = f14iter.ResourceConfig.VolumeKmsKeyId
 				}
 				if f14iter.ResourceConfig.VolumeSizeInGB != nil {
-					f14elemf9.VolumeSizeInGB = f14iter.ResourceConfig.VolumeSizeInGB
+					volumeSizeInGBCopy := int64(*f14iter.ResourceConfig.VolumeSizeInGB)
+					f14elemf9.VolumeSizeInGB = &volumeSizeInGBCopy
 				}
 				f14elem.ResourceConfig = f14elemf9
 			}
 			if f14iter.RetryStrategy != nil {
 				f14elemf10 := &svcapitypes.RetryStrategy{}
 				if f14iter.RetryStrategy.MaximumRetryAttempts != nil {
-					f14elemf10.MaximumRetryAttempts = f14iter.RetryStrategy.MaximumRetryAttempts
+					maximumRetryAttemptsCopy := int64(*f14iter.RetryStrategy.MaximumRetryAttempts)
+					f14elemf10.MaximumRetryAttempts = &maximumRetryAttemptsCopy
 				}
 				f14elem.RetryStrategy = f14elemf10
 			}
@@ -953,24 +900,21 @@ func (rm *resourceManager) sdkFind(
 				f14elem.RoleARN = f14iter.RoleArn
 			}
 			if f14iter.StaticHyperParameters != nil {
-				f14elemf12 := map[string]*string{}
-				for f14elemf12key, f14elemf12valiter := range f14iter.StaticHyperParameters {
-					var f14elemf12val string
-					f14elemf12val = *f14elemf12valiter
-					f14elemf12[f14elemf12key] = &f14elemf12val
-				}
-				f14elem.StaticHyperParameters = f14elemf12
+				f14elem.StaticHyperParameters = aws.StringMap(f14iter.StaticHyperParameters)
 			}
 			if f14iter.StoppingCondition != nil {
 				f14elemf13 := &svcapitypes.StoppingCondition{}
 				if f14iter.StoppingCondition.MaxPendingTimeInSeconds != nil {
-					f14elemf13.MaxPendingTimeInSeconds = f14iter.StoppingCondition.MaxPendingTimeInSeconds
+					maxPendingTimeInSecondsCopy := int64(*f14iter.StoppingCondition.MaxPendingTimeInSeconds)
+					f14elemf13.MaxPendingTimeInSeconds = &maxPendingTimeInSecondsCopy
 				}
 				if f14iter.StoppingCondition.MaxRuntimeInSeconds != nil {
-					f14elemf13.MaxRuntimeInSeconds = f14iter.StoppingCondition.MaxRuntimeInSeconds
+					maxRuntimeInSecondsCopy := int64(*f14iter.StoppingCondition.MaxRuntimeInSeconds)
+					f14elemf13.MaxRuntimeInSeconds = &maxRuntimeInSecondsCopy
 				}
 				if f14iter.StoppingCondition.MaxWaitTimeInSeconds != nil {
-					f14elemf13.MaxWaitTimeInSeconds = f14iter.StoppingCondition.MaxWaitTimeInSeconds
+					maxWaitTimeInSecondsCopy := int64(*f14iter.StoppingCondition.MaxWaitTimeInSeconds)
+					f14elemf13.MaxWaitTimeInSeconds = &maxWaitTimeInSecondsCopy
 				}
 				f14elem.StoppingCondition = f14elemf13
 			}
@@ -979,30 +923,18 @@ func (rm *resourceManager) sdkFind(
 				if f14iter.TuningObjective.MetricName != nil {
 					f14elemf14.MetricName = f14iter.TuningObjective.MetricName
 				}
-				if f14iter.TuningObjective.Type != nil {
-					f14elemf14.Type = f14iter.TuningObjective.Type
+				if f14iter.TuningObjective.Type != "" {
+					f14elemf14.Type = aws.String(string(f14iter.TuningObjective.Type))
 				}
 				f14elem.TuningObjective = f14elemf14
 			}
 			if f14iter.VpcConfig != nil {
 				f14elemf15 := &svcapitypes.VPCConfig{}
 				if f14iter.VpcConfig.SecurityGroupIds != nil {
-					f14elemf15f0 := []*string{}
-					for _, f14elemf15f0iter := range f14iter.VpcConfig.SecurityGroupIds {
-						var f14elemf15f0elem string
-						f14elemf15f0elem = *f14elemf15f0iter
-						f14elemf15f0 = append(f14elemf15f0, &f14elemf15f0elem)
-					}
-					f14elemf15.SecurityGroupIDs = f14elemf15f0
+					f14elemf15.SecurityGroupIDs = aws.StringSlice(f14iter.VpcConfig.SecurityGroupIds)
 				}
 				if f14iter.VpcConfig.Subnets != nil {
-					f14elemf15f1 := []*string{}
-					for _, f14elemf15f1iter := range f14iter.VpcConfig.Subnets {
-						var f14elemf15f1elem string
-						f14elemf15f1elem = *f14elemf15f1iter
-						f14elemf15f1 = append(f14elemf15f1, &f14elemf15f1elem)
-					}
-					f14elemf15.Subnets = f14elemf15f1
+					f14elemf15.Subnets = aws.StringSlice(f14iter.VpcConfig.Subnets)
 				}
 				f14elem.VPCConfig = f14elemf15
 			}
@@ -1025,8 +957,8 @@ func (rm *resourceManager) sdkFind(
 			}
 			f17.ParentHyperParameterTuningJobs = f17f0
 		}
-		if resp.WarmStartConfig.WarmStartType != nil {
-			f17.WarmStartType = resp.WarmStartConfig.WarmStartType
+		if resp.WarmStartConfig.WarmStartType != "" {
+			f17.WarmStartType = aws.String(string(resp.WarmStartConfig.WarmStartType))
 		}
 		ko.Spec.WarmStartConfig = f17
 	} else {
@@ -1056,7 +988,7 @@ func (rm *resourceManager) newDescribeRequestPayload(
 	res := &svcsdk.DescribeHyperParameterTuningJobInput{}
 
 	if r.ko.Spec.HyperParameterTuningJobName != nil {
-		res.SetHyperParameterTuningJobName(*r.ko.Spec.HyperParameterTuningJobName)
+		res.HyperParameterTuningJobName = r.ko.Spec.HyperParameterTuningJobName
 	}
 
 	return res, nil
@@ -1081,7 +1013,7 @@ func (rm *resourceManager) sdkCreate(
 
 	var resp *svcsdk.CreateHyperParameterTuningJobOutput
 	_ = resp
-	resp, err = rm.sdkapi.CreateHyperParameterTuningJobWithContext(ctx, input)
+	resp, err = rm.sdkapi.CreateHyperParameterTuningJob(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateHyperParameterTuningJob", err)
 	if err != nil {
 		return nil, err
@@ -1111,815 +1043,832 @@ func (rm *resourceManager) newCreateRequestPayload(
 	res := &svcsdk.CreateHyperParameterTuningJobInput{}
 
 	if r.ko.Spec.Autotune != nil {
-		f0 := &svcsdk.Autotune{}
+		f0 := &svcsdktypes.Autotune{}
 		if r.ko.Spec.Autotune.Mode != nil {
-			f0.SetMode(*r.ko.Spec.Autotune.Mode)
+			f0.Mode = svcsdktypes.AutotuneMode(*r.ko.Spec.Autotune.Mode)
 		}
-		res.SetAutotune(f0)
+		res.Autotune = f0
 	}
 	if r.ko.Spec.HyperParameterTuningJobConfig != nil {
-		f1 := &svcsdk.HyperParameterTuningJobConfig{}
+		f1 := &svcsdktypes.HyperParameterTuningJobConfig{}
 		if r.ko.Spec.HyperParameterTuningJobConfig.HyperParameterTuningJobObjective != nil {
-			f1f0 := &svcsdk.HyperParameterTuningJobObjective{}
+			f1f0 := &svcsdktypes.HyperParameterTuningJobObjective{}
 			if r.ko.Spec.HyperParameterTuningJobConfig.HyperParameterTuningJobObjective.MetricName != nil {
-				f1f0.SetMetricName(*r.ko.Spec.HyperParameterTuningJobConfig.HyperParameterTuningJobObjective.MetricName)
+				f1f0.MetricName = r.ko.Spec.HyperParameterTuningJobConfig.HyperParameterTuningJobObjective.MetricName
 			}
 			if r.ko.Spec.HyperParameterTuningJobConfig.HyperParameterTuningJobObjective.Type != nil {
-				f1f0.SetType(*r.ko.Spec.HyperParameterTuningJobConfig.HyperParameterTuningJobObjective.Type)
+				f1f0.Type = svcsdktypes.HyperParameterTuningJobObjectiveType(*r.ko.Spec.HyperParameterTuningJobConfig.HyperParameterTuningJobObjective.Type)
 			}
-			f1.SetHyperParameterTuningJobObjective(f1f0)
+			f1.HyperParameterTuningJobObjective = f1f0
 		}
 		if r.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges != nil {
-			f1f1 := &svcsdk.ParameterRanges{}
+			f1f1 := &svcsdktypes.ParameterRanges{}
 			if r.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges.AutoParameters != nil {
-				f1f1f0 := []*svcsdk.AutoParameter{}
+				f1f1f0 := []svcsdktypes.AutoParameter{}
 				for _, f1f1f0iter := range r.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges.AutoParameters {
-					f1f1f0elem := &svcsdk.AutoParameter{}
+					f1f1f0elem := &svcsdktypes.AutoParameter{}
 					if f1f1f0iter.Name != nil {
-						f1f1f0elem.SetName(*f1f1f0iter.Name)
+						f1f1f0elem.Name = f1f1f0iter.Name
 					}
 					if f1f1f0iter.ValueHint != nil {
-						f1f1f0elem.SetValueHint(*f1f1f0iter.ValueHint)
+						f1f1f0elem.ValueHint = f1f1f0iter.ValueHint
 					}
-					f1f1f0 = append(f1f1f0, f1f1f0elem)
+					f1f1f0 = append(f1f1f0, *f1f1f0elem)
 				}
-				f1f1.SetAutoParameters(f1f1f0)
+				f1f1.AutoParameters = f1f1f0
 			}
 			if r.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges.CategoricalParameterRanges != nil {
-				f1f1f1 := []*svcsdk.CategoricalParameterRange{}
+				f1f1f1 := []svcsdktypes.CategoricalParameterRange{}
 				for _, f1f1f1iter := range r.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges.CategoricalParameterRanges {
-					f1f1f1elem := &svcsdk.CategoricalParameterRange{}
+					f1f1f1elem := &svcsdktypes.CategoricalParameterRange{}
 					if f1f1f1iter.Name != nil {
-						f1f1f1elem.SetName(*f1f1f1iter.Name)
+						f1f1f1elem.Name = f1f1f1iter.Name
 					}
 					if f1f1f1iter.Values != nil {
-						f1f1f1elemf1 := []*string{}
-						for _, f1f1f1elemf1iter := range f1f1f1iter.Values {
-							var f1f1f1elemf1elem string
-							f1f1f1elemf1elem = *f1f1f1elemf1iter
-							f1f1f1elemf1 = append(f1f1f1elemf1, &f1f1f1elemf1elem)
-						}
-						f1f1f1elem.SetValues(f1f1f1elemf1)
+						f1f1f1elem.Values = aws.ToStringSlice(f1f1f1iter.Values)
 					}
-					f1f1f1 = append(f1f1f1, f1f1f1elem)
+					f1f1f1 = append(f1f1f1, *f1f1f1elem)
 				}
-				f1f1.SetCategoricalParameterRanges(f1f1f1)
+				f1f1.CategoricalParameterRanges = f1f1f1
 			}
 			if r.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges.ContinuousParameterRanges != nil {
-				f1f1f2 := []*svcsdk.ContinuousParameterRange{}
+				f1f1f2 := []svcsdktypes.ContinuousParameterRange{}
 				for _, f1f1f2iter := range r.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges.ContinuousParameterRanges {
-					f1f1f2elem := &svcsdk.ContinuousParameterRange{}
+					f1f1f2elem := &svcsdktypes.ContinuousParameterRange{}
 					if f1f1f2iter.MaxValue != nil {
-						f1f1f2elem.SetMaxValue(*f1f1f2iter.MaxValue)
+						f1f1f2elem.MaxValue = f1f1f2iter.MaxValue
 					}
 					if f1f1f2iter.MinValue != nil {
-						f1f1f2elem.SetMinValue(*f1f1f2iter.MinValue)
+						f1f1f2elem.MinValue = f1f1f2iter.MinValue
 					}
 					if f1f1f2iter.Name != nil {
-						f1f1f2elem.SetName(*f1f1f2iter.Name)
+						f1f1f2elem.Name = f1f1f2iter.Name
 					}
 					if f1f1f2iter.ScalingType != nil {
-						f1f1f2elem.SetScalingType(*f1f1f2iter.ScalingType)
+						f1f1f2elem.ScalingType = svcsdktypes.HyperParameterScalingType(*f1f1f2iter.ScalingType)
 					}
-					f1f1f2 = append(f1f1f2, f1f1f2elem)
+					f1f1f2 = append(f1f1f2, *f1f1f2elem)
 				}
-				f1f1.SetContinuousParameterRanges(f1f1f2)
+				f1f1.ContinuousParameterRanges = f1f1f2
 			}
 			if r.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges.IntegerParameterRanges != nil {
-				f1f1f3 := []*svcsdk.IntegerParameterRange{}
+				f1f1f3 := []svcsdktypes.IntegerParameterRange{}
 				for _, f1f1f3iter := range r.ko.Spec.HyperParameterTuningJobConfig.ParameterRanges.IntegerParameterRanges {
-					f1f1f3elem := &svcsdk.IntegerParameterRange{}
+					f1f1f3elem := &svcsdktypes.IntegerParameterRange{}
 					if f1f1f3iter.MaxValue != nil {
-						f1f1f3elem.SetMaxValue(*f1f1f3iter.MaxValue)
+						f1f1f3elem.MaxValue = f1f1f3iter.MaxValue
 					}
 					if f1f1f3iter.MinValue != nil {
-						f1f1f3elem.SetMinValue(*f1f1f3iter.MinValue)
+						f1f1f3elem.MinValue = f1f1f3iter.MinValue
 					}
 					if f1f1f3iter.Name != nil {
-						f1f1f3elem.SetName(*f1f1f3iter.Name)
+						f1f1f3elem.Name = f1f1f3iter.Name
 					}
 					if f1f1f3iter.ScalingType != nil {
-						f1f1f3elem.SetScalingType(*f1f1f3iter.ScalingType)
+						f1f1f3elem.ScalingType = svcsdktypes.HyperParameterScalingType(*f1f1f3iter.ScalingType)
 					}
-					f1f1f3 = append(f1f1f3, f1f1f3elem)
+					f1f1f3 = append(f1f1f3, *f1f1f3elem)
 				}
-				f1f1.SetIntegerParameterRanges(f1f1f3)
+				f1f1.IntegerParameterRanges = f1f1f3
 			}
-			f1.SetParameterRanges(f1f1)
+			f1.ParameterRanges = f1f1
 		}
 		if r.ko.Spec.HyperParameterTuningJobConfig.ResourceLimits != nil {
-			f1f2 := &svcsdk.ResourceLimits{}
+			f1f2 := &svcsdktypes.ResourceLimits{}
 			if r.ko.Spec.HyperParameterTuningJobConfig.ResourceLimits.MaxNumberOfTrainingJobs != nil {
-				f1f2.SetMaxNumberOfTrainingJobs(*r.ko.Spec.HyperParameterTuningJobConfig.ResourceLimits.MaxNumberOfTrainingJobs)
+				maxNumberOfTrainingJobsCopy0 := *r.ko.Spec.HyperParameterTuningJobConfig.ResourceLimits.MaxNumberOfTrainingJobs
+				if maxNumberOfTrainingJobsCopy0 > math.MaxInt32 || maxNumberOfTrainingJobsCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field MaxNumberOfTrainingJobs is of type int32")
+				}
+				maxNumberOfTrainingJobsCopy := int32(maxNumberOfTrainingJobsCopy0)
+				f1f2.MaxNumberOfTrainingJobs = &maxNumberOfTrainingJobsCopy
 			}
 			if r.ko.Spec.HyperParameterTuningJobConfig.ResourceLimits.MaxParallelTrainingJobs != nil {
-				f1f2.SetMaxParallelTrainingJobs(*r.ko.Spec.HyperParameterTuningJobConfig.ResourceLimits.MaxParallelTrainingJobs)
+				maxParallelTrainingJobsCopy0 := *r.ko.Spec.HyperParameterTuningJobConfig.ResourceLimits.MaxParallelTrainingJobs
+				if maxParallelTrainingJobsCopy0 > math.MaxInt32 || maxParallelTrainingJobsCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field MaxParallelTrainingJobs is of type int32")
+				}
+				maxParallelTrainingJobsCopy := int32(maxParallelTrainingJobsCopy0)
+				f1f2.MaxParallelTrainingJobs = &maxParallelTrainingJobsCopy
 			}
-			f1.SetResourceLimits(f1f2)
+			f1.ResourceLimits = f1f2
 		}
 		if r.ko.Spec.HyperParameterTuningJobConfig.Strategy != nil {
-			f1.SetStrategy(*r.ko.Spec.HyperParameterTuningJobConfig.Strategy)
+			f1.Strategy = svcsdktypes.HyperParameterTuningJobStrategyType(*r.ko.Spec.HyperParameterTuningJobConfig.Strategy)
 		}
 		if r.ko.Spec.HyperParameterTuningJobConfig.TrainingJobEarlyStoppingType != nil {
-			f1.SetTrainingJobEarlyStoppingType(*r.ko.Spec.HyperParameterTuningJobConfig.TrainingJobEarlyStoppingType)
+			f1.TrainingJobEarlyStoppingType = svcsdktypes.TrainingJobEarlyStoppingType(*r.ko.Spec.HyperParameterTuningJobConfig.TrainingJobEarlyStoppingType)
 		}
 		if r.ko.Spec.HyperParameterTuningJobConfig.TuningJobCompletionCriteria != nil {
-			f1f5 := &svcsdk.TuningJobCompletionCriteria{}
+			f1f5 := &svcsdktypes.TuningJobCompletionCriteria{}
 			if r.ko.Spec.HyperParameterTuningJobConfig.TuningJobCompletionCriteria.TargetObjectiveMetricValue != nil {
-				f1f5.SetTargetObjectiveMetricValue(*r.ko.Spec.HyperParameterTuningJobConfig.TuningJobCompletionCriteria.TargetObjectiveMetricValue)
+				targetObjectiveMetricValueCopy0 := *r.ko.Spec.HyperParameterTuningJobConfig.TuningJobCompletionCriteria.TargetObjectiveMetricValue
+				if targetObjectiveMetricValueCopy0 > math.MaxFloat32 || targetObjectiveMetricValueCopy0 < math.SmallestNonzeroFloat32 {
+					return nil, fmt.Errorf("error: field TargetObjectiveMetricValue is of type float32")
+				}
+				targetObjectiveMetricValueCopy := float32(targetObjectiveMetricValueCopy0)
+				f1f5.TargetObjectiveMetricValue = &targetObjectiveMetricValueCopy
 			}
-			f1.SetTuningJobCompletionCriteria(f1f5)
+			f1.TuningJobCompletionCriteria = f1f5
 		}
-		res.SetHyperParameterTuningJobConfig(f1)
+		res.HyperParameterTuningJobConfig = f1
 	}
 	if r.ko.Spec.HyperParameterTuningJobName != nil {
-		res.SetHyperParameterTuningJobName(*r.ko.Spec.HyperParameterTuningJobName)
+		res.HyperParameterTuningJobName = r.ko.Spec.HyperParameterTuningJobName
 	}
 	if r.ko.Spec.Tags != nil {
-		f3 := []*svcsdk.Tag{}
+		f3 := []svcsdktypes.Tag{}
 		for _, f3iter := range r.ko.Spec.Tags {
-			f3elem := &svcsdk.Tag{}
+			f3elem := &svcsdktypes.Tag{}
 			if f3iter.Key != nil {
-				f3elem.SetKey(*f3iter.Key)
+				f3elem.Key = f3iter.Key
 			}
 			if f3iter.Value != nil {
-				f3elem.SetValue(*f3iter.Value)
+				f3elem.Value = f3iter.Value
 			}
-			f3 = append(f3, f3elem)
+			f3 = append(f3, *f3elem)
 		}
-		res.SetTags(f3)
+		res.Tags = f3
 	}
 	if r.ko.Spec.TrainingJobDefinition != nil {
-		f4 := &svcsdk.HyperParameterTrainingJobDefinition{}
+		f4 := &svcsdktypes.HyperParameterTrainingJobDefinition{}
 		if r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification != nil {
-			f4f0 := &svcsdk.HyperParameterAlgorithmSpecification{}
+			f4f0 := &svcsdktypes.HyperParameterAlgorithmSpecification{}
 			if r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.AlgorithmName != nil {
-				f4f0.SetAlgorithmName(*r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.AlgorithmName)
+				f4f0.AlgorithmName = r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.AlgorithmName
 			}
 			if r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions != nil {
-				f4f0f1 := []*svcsdk.MetricDefinition{}
+				f4f0f1 := []svcsdktypes.MetricDefinition{}
 				for _, f4f0f1iter := range r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions {
-					f4f0f1elem := &svcsdk.MetricDefinition{}
+					f4f0f1elem := &svcsdktypes.MetricDefinition{}
 					if f4f0f1iter.Name != nil {
-						f4f0f1elem.SetName(*f4f0f1iter.Name)
+						f4f0f1elem.Name = f4f0f1iter.Name
 					}
 					if f4f0f1iter.Regex != nil {
-						f4f0f1elem.SetRegex(*f4f0f1iter.Regex)
+						f4f0f1elem.Regex = f4f0f1iter.Regex
 					}
-					f4f0f1 = append(f4f0f1, f4f0f1elem)
+					f4f0f1 = append(f4f0f1, *f4f0f1elem)
 				}
-				f4f0.SetMetricDefinitions(f4f0f1)
+				f4f0.MetricDefinitions = f4f0f1
 			}
 			if r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.TrainingImage != nil {
-				f4f0.SetTrainingImage(*r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.TrainingImage)
+				f4f0.TrainingImage = r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.TrainingImage
 			}
 			if r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.TrainingInputMode != nil {
-				f4f0.SetTrainingInputMode(*r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.TrainingInputMode)
+				f4f0.TrainingInputMode = svcsdktypes.TrainingInputMode(*r.ko.Spec.TrainingJobDefinition.AlgorithmSpecification.TrainingInputMode)
 			}
-			f4.SetAlgorithmSpecification(f4f0)
+			f4.AlgorithmSpecification = f4f0
 		}
 		if r.ko.Spec.TrainingJobDefinition.CheckpointConfig != nil {
-			f4f1 := &svcsdk.CheckpointConfig{}
+			f4f1 := &svcsdktypes.CheckpointConfig{}
 			if r.ko.Spec.TrainingJobDefinition.CheckpointConfig.LocalPath != nil {
-				f4f1.SetLocalPath(*r.ko.Spec.TrainingJobDefinition.CheckpointConfig.LocalPath)
+				f4f1.LocalPath = r.ko.Spec.TrainingJobDefinition.CheckpointConfig.LocalPath
 			}
 			if r.ko.Spec.TrainingJobDefinition.CheckpointConfig.S3URI != nil {
-				f4f1.SetS3Uri(*r.ko.Spec.TrainingJobDefinition.CheckpointConfig.S3URI)
+				f4f1.S3Uri = r.ko.Spec.TrainingJobDefinition.CheckpointConfig.S3URI
 			}
-			f4.SetCheckpointConfig(f4f1)
+			f4.CheckpointConfig = f4f1
 		}
 		if r.ko.Spec.TrainingJobDefinition.DefinitionName != nil {
-			f4.SetDefinitionName(*r.ko.Spec.TrainingJobDefinition.DefinitionName)
+			f4.DefinitionName = r.ko.Spec.TrainingJobDefinition.DefinitionName
 		}
 		if r.ko.Spec.TrainingJobDefinition.EnableInterContainerTrafficEncryption != nil {
-			f4.SetEnableInterContainerTrafficEncryption(*r.ko.Spec.TrainingJobDefinition.EnableInterContainerTrafficEncryption)
+			f4.EnableInterContainerTrafficEncryption = r.ko.Spec.TrainingJobDefinition.EnableInterContainerTrafficEncryption
 		}
 		if r.ko.Spec.TrainingJobDefinition.EnableManagedSpotTraining != nil {
-			f4.SetEnableManagedSpotTraining(*r.ko.Spec.TrainingJobDefinition.EnableManagedSpotTraining)
+			f4.EnableManagedSpotTraining = r.ko.Spec.TrainingJobDefinition.EnableManagedSpotTraining
 		}
 		if r.ko.Spec.TrainingJobDefinition.EnableNetworkIsolation != nil {
-			f4.SetEnableNetworkIsolation(*r.ko.Spec.TrainingJobDefinition.EnableNetworkIsolation)
+			f4.EnableNetworkIsolation = r.ko.Spec.TrainingJobDefinition.EnableNetworkIsolation
 		}
 		if r.ko.Spec.TrainingJobDefinition.HyperParameterRanges != nil {
-			f4f6 := &svcsdk.ParameterRanges{}
+			f4f6 := &svcsdktypes.ParameterRanges{}
 			if r.ko.Spec.TrainingJobDefinition.HyperParameterRanges.AutoParameters != nil {
-				f4f6f0 := []*svcsdk.AutoParameter{}
+				f4f6f0 := []svcsdktypes.AutoParameter{}
 				for _, f4f6f0iter := range r.ko.Spec.TrainingJobDefinition.HyperParameterRanges.AutoParameters {
-					f4f6f0elem := &svcsdk.AutoParameter{}
+					f4f6f0elem := &svcsdktypes.AutoParameter{}
 					if f4f6f0iter.Name != nil {
-						f4f6f0elem.SetName(*f4f6f0iter.Name)
+						f4f6f0elem.Name = f4f6f0iter.Name
 					}
 					if f4f6f0iter.ValueHint != nil {
-						f4f6f0elem.SetValueHint(*f4f6f0iter.ValueHint)
+						f4f6f0elem.ValueHint = f4f6f0iter.ValueHint
 					}
-					f4f6f0 = append(f4f6f0, f4f6f0elem)
+					f4f6f0 = append(f4f6f0, *f4f6f0elem)
 				}
-				f4f6.SetAutoParameters(f4f6f0)
+				f4f6.AutoParameters = f4f6f0
 			}
 			if r.ko.Spec.TrainingJobDefinition.HyperParameterRanges.CategoricalParameterRanges != nil {
-				f4f6f1 := []*svcsdk.CategoricalParameterRange{}
+				f4f6f1 := []svcsdktypes.CategoricalParameterRange{}
 				for _, f4f6f1iter := range r.ko.Spec.TrainingJobDefinition.HyperParameterRanges.CategoricalParameterRanges {
-					f4f6f1elem := &svcsdk.CategoricalParameterRange{}
+					f4f6f1elem := &svcsdktypes.CategoricalParameterRange{}
 					if f4f6f1iter.Name != nil {
-						f4f6f1elem.SetName(*f4f6f1iter.Name)
+						f4f6f1elem.Name = f4f6f1iter.Name
 					}
 					if f4f6f1iter.Values != nil {
-						f4f6f1elemf1 := []*string{}
-						for _, f4f6f1elemf1iter := range f4f6f1iter.Values {
-							var f4f6f1elemf1elem string
-							f4f6f1elemf1elem = *f4f6f1elemf1iter
-							f4f6f1elemf1 = append(f4f6f1elemf1, &f4f6f1elemf1elem)
-						}
-						f4f6f1elem.SetValues(f4f6f1elemf1)
+						f4f6f1elem.Values = aws.ToStringSlice(f4f6f1iter.Values)
 					}
-					f4f6f1 = append(f4f6f1, f4f6f1elem)
+					f4f6f1 = append(f4f6f1, *f4f6f1elem)
 				}
-				f4f6.SetCategoricalParameterRanges(f4f6f1)
+				f4f6.CategoricalParameterRanges = f4f6f1
 			}
 			if r.ko.Spec.TrainingJobDefinition.HyperParameterRanges.ContinuousParameterRanges != nil {
-				f4f6f2 := []*svcsdk.ContinuousParameterRange{}
+				f4f6f2 := []svcsdktypes.ContinuousParameterRange{}
 				for _, f4f6f2iter := range r.ko.Spec.TrainingJobDefinition.HyperParameterRanges.ContinuousParameterRanges {
-					f4f6f2elem := &svcsdk.ContinuousParameterRange{}
+					f4f6f2elem := &svcsdktypes.ContinuousParameterRange{}
 					if f4f6f2iter.MaxValue != nil {
-						f4f6f2elem.SetMaxValue(*f4f6f2iter.MaxValue)
+						f4f6f2elem.MaxValue = f4f6f2iter.MaxValue
 					}
 					if f4f6f2iter.MinValue != nil {
-						f4f6f2elem.SetMinValue(*f4f6f2iter.MinValue)
+						f4f6f2elem.MinValue = f4f6f2iter.MinValue
 					}
 					if f4f6f2iter.Name != nil {
-						f4f6f2elem.SetName(*f4f6f2iter.Name)
+						f4f6f2elem.Name = f4f6f2iter.Name
 					}
 					if f4f6f2iter.ScalingType != nil {
-						f4f6f2elem.SetScalingType(*f4f6f2iter.ScalingType)
+						f4f6f2elem.ScalingType = svcsdktypes.HyperParameterScalingType(*f4f6f2iter.ScalingType)
 					}
-					f4f6f2 = append(f4f6f2, f4f6f2elem)
+					f4f6f2 = append(f4f6f2, *f4f6f2elem)
 				}
-				f4f6.SetContinuousParameterRanges(f4f6f2)
+				f4f6.ContinuousParameterRanges = f4f6f2
 			}
 			if r.ko.Spec.TrainingJobDefinition.HyperParameterRanges.IntegerParameterRanges != nil {
-				f4f6f3 := []*svcsdk.IntegerParameterRange{}
+				f4f6f3 := []svcsdktypes.IntegerParameterRange{}
 				for _, f4f6f3iter := range r.ko.Spec.TrainingJobDefinition.HyperParameterRanges.IntegerParameterRanges {
-					f4f6f3elem := &svcsdk.IntegerParameterRange{}
+					f4f6f3elem := &svcsdktypes.IntegerParameterRange{}
 					if f4f6f3iter.MaxValue != nil {
-						f4f6f3elem.SetMaxValue(*f4f6f3iter.MaxValue)
+						f4f6f3elem.MaxValue = f4f6f3iter.MaxValue
 					}
 					if f4f6f3iter.MinValue != nil {
-						f4f6f3elem.SetMinValue(*f4f6f3iter.MinValue)
+						f4f6f3elem.MinValue = f4f6f3iter.MinValue
 					}
 					if f4f6f3iter.Name != nil {
-						f4f6f3elem.SetName(*f4f6f3iter.Name)
+						f4f6f3elem.Name = f4f6f3iter.Name
 					}
 					if f4f6f3iter.ScalingType != nil {
-						f4f6f3elem.SetScalingType(*f4f6f3iter.ScalingType)
+						f4f6f3elem.ScalingType = svcsdktypes.HyperParameterScalingType(*f4f6f3iter.ScalingType)
 					}
-					f4f6f3 = append(f4f6f3, f4f6f3elem)
+					f4f6f3 = append(f4f6f3, *f4f6f3elem)
 				}
-				f4f6.SetIntegerParameterRanges(f4f6f3)
+				f4f6.IntegerParameterRanges = f4f6f3
 			}
-			f4.SetHyperParameterRanges(f4f6)
+			f4.HyperParameterRanges = f4f6
 		}
 		if r.ko.Spec.TrainingJobDefinition.InputDataConfig != nil {
-			f4f7 := []*svcsdk.Channel{}
+			f4f7 := []svcsdktypes.Channel{}
 			for _, f4f7iter := range r.ko.Spec.TrainingJobDefinition.InputDataConfig {
-				f4f7elem := &svcsdk.Channel{}
+				f4f7elem := &svcsdktypes.Channel{}
 				if f4f7iter.ChannelName != nil {
-					f4f7elem.SetChannelName(*f4f7iter.ChannelName)
+					f4f7elem.ChannelName = f4f7iter.ChannelName
 				}
 				if f4f7iter.CompressionType != nil {
-					f4f7elem.SetCompressionType(*f4f7iter.CompressionType)
+					f4f7elem.CompressionType = svcsdktypes.CompressionType(*f4f7iter.CompressionType)
 				}
 				if f4f7iter.ContentType != nil {
-					f4f7elem.SetContentType(*f4f7iter.ContentType)
+					f4f7elem.ContentType = f4f7iter.ContentType
 				}
 				if f4f7iter.DataSource != nil {
-					f4f7elemf3 := &svcsdk.DataSource{}
+					f4f7elemf3 := &svcsdktypes.DataSource{}
 					if f4f7iter.DataSource.FileSystemDataSource != nil {
-						f4f7elemf3f0 := &svcsdk.FileSystemDataSource{}
+						f4f7elemf3f0 := &svcsdktypes.FileSystemDataSource{}
 						if f4f7iter.DataSource.FileSystemDataSource.DirectoryPath != nil {
-							f4f7elemf3f0.SetDirectoryPath(*f4f7iter.DataSource.FileSystemDataSource.DirectoryPath)
+							f4f7elemf3f0.DirectoryPath = f4f7iter.DataSource.FileSystemDataSource.DirectoryPath
 						}
 						if f4f7iter.DataSource.FileSystemDataSource.FileSystemAccessMode != nil {
-							f4f7elemf3f0.SetFileSystemAccessMode(*f4f7iter.DataSource.FileSystemDataSource.FileSystemAccessMode)
+							f4f7elemf3f0.FileSystemAccessMode = svcsdktypes.FileSystemAccessMode(*f4f7iter.DataSource.FileSystemDataSource.FileSystemAccessMode)
 						}
 						if f4f7iter.DataSource.FileSystemDataSource.FileSystemID != nil {
-							f4f7elemf3f0.SetFileSystemId(*f4f7iter.DataSource.FileSystemDataSource.FileSystemID)
+							f4f7elemf3f0.FileSystemId = f4f7iter.DataSource.FileSystemDataSource.FileSystemID
 						}
 						if f4f7iter.DataSource.FileSystemDataSource.FileSystemType != nil {
-							f4f7elemf3f0.SetFileSystemType(*f4f7iter.DataSource.FileSystemDataSource.FileSystemType)
+							f4f7elemf3f0.FileSystemType = svcsdktypes.FileSystemType(*f4f7iter.DataSource.FileSystemDataSource.FileSystemType)
 						}
-						f4f7elemf3.SetFileSystemDataSource(f4f7elemf3f0)
+						f4f7elemf3.FileSystemDataSource = f4f7elemf3f0
 					}
 					if f4f7iter.DataSource.S3DataSource != nil {
-						f4f7elemf3f1 := &svcsdk.S3DataSource{}
+						f4f7elemf3f1 := &svcsdktypes.S3DataSource{}
 						if f4f7iter.DataSource.S3DataSource.AttributeNames != nil {
-							f4f7elemf3f1f0 := []*string{}
-							for _, f4f7elemf3f1f0iter := range f4f7iter.DataSource.S3DataSource.AttributeNames {
-								var f4f7elemf3f1f0elem string
-								f4f7elemf3f1f0elem = *f4f7elemf3f1f0iter
-								f4f7elemf3f1f0 = append(f4f7elemf3f1f0, &f4f7elemf3f1f0elem)
-							}
-							f4f7elemf3f1.SetAttributeNames(f4f7elemf3f1f0)
+							f4f7elemf3f1.AttributeNames = aws.ToStringSlice(f4f7iter.DataSource.S3DataSource.AttributeNames)
 						}
 						if f4f7iter.DataSource.S3DataSource.InstanceGroupNames != nil {
-							f4f7elemf3f1f1 := []*string{}
-							for _, f4f7elemf3f1f1iter := range f4f7iter.DataSource.S3DataSource.InstanceGroupNames {
-								var f4f7elemf3f1f1elem string
-								f4f7elemf3f1f1elem = *f4f7elemf3f1f1iter
-								f4f7elemf3f1f1 = append(f4f7elemf3f1f1, &f4f7elemf3f1f1elem)
-							}
-							f4f7elemf3f1.SetInstanceGroupNames(f4f7elemf3f1f1)
+							f4f7elemf3f1.InstanceGroupNames = aws.ToStringSlice(f4f7iter.DataSource.S3DataSource.InstanceGroupNames)
 						}
 						if f4f7iter.DataSource.S3DataSource.S3DataDistributionType != nil {
-							f4f7elemf3f1.SetS3DataDistributionType(*f4f7iter.DataSource.S3DataSource.S3DataDistributionType)
+							f4f7elemf3f1.S3DataDistributionType = svcsdktypes.S3DataDistribution(*f4f7iter.DataSource.S3DataSource.S3DataDistributionType)
 						}
 						if f4f7iter.DataSource.S3DataSource.S3DataType != nil {
-							f4f7elemf3f1.SetS3DataType(*f4f7iter.DataSource.S3DataSource.S3DataType)
+							f4f7elemf3f1.S3DataType = svcsdktypes.S3DataType(*f4f7iter.DataSource.S3DataSource.S3DataType)
 						}
 						if f4f7iter.DataSource.S3DataSource.S3URI != nil {
-							f4f7elemf3f1.SetS3Uri(*f4f7iter.DataSource.S3DataSource.S3URI)
+							f4f7elemf3f1.S3Uri = f4f7iter.DataSource.S3DataSource.S3URI
 						}
-						f4f7elemf3.SetS3DataSource(f4f7elemf3f1)
+						f4f7elemf3.S3DataSource = f4f7elemf3f1
 					}
-					f4f7elem.SetDataSource(f4f7elemf3)
+					f4f7elem.DataSource = f4f7elemf3
 				}
 				if f4f7iter.InputMode != nil {
-					f4f7elem.SetInputMode(*f4f7iter.InputMode)
+					f4f7elem.InputMode = svcsdktypes.TrainingInputMode(*f4f7iter.InputMode)
 				}
 				if f4f7iter.RecordWrapperType != nil {
-					f4f7elem.SetRecordWrapperType(*f4f7iter.RecordWrapperType)
+					f4f7elem.RecordWrapperType = svcsdktypes.RecordWrapper(*f4f7iter.RecordWrapperType)
 				}
 				if f4f7iter.ShuffleConfig != nil {
-					f4f7elemf6 := &svcsdk.ShuffleConfig{}
+					f4f7elemf6 := &svcsdktypes.ShuffleConfig{}
 					if f4f7iter.ShuffleConfig.Seed != nil {
-						f4f7elemf6.SetSeed(*f4f7iter.ShuffleConfig.Seed)
+						f4f7elemf6.Seed = f4f7iter.ShuffleConfig.Seed
 					}
-					f4f7elem.SetShuffleConfig(f4f7elemf6)
+					f4f7elem.ShuffleConfig = f4f7elemf6
 				}
-				f4f7 = append(f4f7, f4f7elem)
+				f4f7 = append(f4f7, *f4f7elem)
 			}
-			f4.SetInputDataConfig(f4f7)
+			f4.InputDataConfig = f4f7
 		}
 		if r.ko.Spec.TrainingJobDefinition.OutputDataConfig != nil {
-			f4f8 := &svcsdk.OutputDataConfig{}
+			f4f8 := &svcsdktypes.OutputDataConfig{}
 			if r.ko.Spec.TrainingJobDefinition.OutputDataConfig.CompressionType != nil {
-				f4f8.SetCompressionType(*r.ko.Spec.TrainingJobDefinition.OutputDataConfig.CompressionType)
+				f4f8.CompressionType = svcsdktypes.OutputCompressionType(*r.ko.Spec.TrainingJobDefinition.OutputDataConfig.CompressionType)
 			}
 			if r.ko.Spec.TrainingJobDefinition.OutputDataConfig.KMSKeyID != nil {
-				f4f8.SetKmsKeyId(*r.ko.Spec.TrainingJobDefinition.OutputDataConfig.KMSKeyID)
+				f4f8.KmsKeyId = r.ko.Spec.TrainingJobDefinition.OutputDataConfig.KMSKeyID
 			}
 			if r.ko.Spec.TrainingJobDefinition.OutputDataConfig.S3OutputPath != nil {
-				f4f8.SetS3OutputPath(*r.ko.Spec.TrainingJobDefinition.OutputDataConfig.S3OutputPath)
+				f4f8.S3OutputPath = r.ko.Spec.TrainingJobDefinition.OutputDataConfig.S3OutputPath
 			}
-			f4.SetOutputDataConfig(f4f8)
+			f4.OutputDataConfig = f4f8
 		}
 		if r.ko.Spec.TrainingJobDefinition.ResourceConfig != nil {
-			f4f9 := &svcsdk.ResourceConfig{}
+			f4f9 := &svcsdktypes.ResourceConfig{}
 			if r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceCount != nil {
-				f4f9.SetInstanceCount(*r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceCount)
+				instanceCountCopy0 := *r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceCount
+				if instanceCountCopy0 > math.MaxInt32 || instanceCountCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field InstanceCount is of type int32")
+				}
+				instanceCountCopy := int32(instanceCountCopy0)
+				f4f9.InstanceCount = &instanceCountCopy
 			}
 			if r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceGroups != nil {
-				f4f9f1 := []*svcsdk.InstanceGroup{}
+				f4f9f1 := []svcsdktypes.InstanceGroup{}
 				for _, f4f9f1iter := range r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceGroups {
-					f4f9f1elem := &svcsdk.InstanceGroup{}
+					f4f9f1elem := &svcsdktypes.InstanceGroup{}
 					if f4f9f1iter.InstanceCount != nil {
-						f4f9f1elem.SetInstanceCount(*f4f9f1iter.InstanceCount)
+						instanceCountCopy0 := *f4f9f1iter.InstanceCount
+						if instanceCountCopy0 > math.MaxInt32 || instanceCountCopy0 < math.MinInt32 {
+							return nil, fmt.Errorf("error: field InstanceCount is of type int32")
+						}
+						instanceCountCopy := int32(instanceCountCopy0)
+						f4f9f1elem.InstanceCount = &instanceCountCopy
 					}
 					if f4f9f1iter.InstanceGroupName != nil {
-						f4f9f1elem.SetInstanceGroupName(*f4f9f1iter.InstanceGroupName)
+						f4f9f1elem.InstanceGroupName = f4f9f1iter.InstanceGroupName
 					}
 					if f4f9f1iter.InstanceType != nil {
-						f4f9f1elem.SetInstanceType(*f4f9f1iter.InstanceType)
+						f4f9f1elem.InstanceType = svcsdktypes.TrainingInstanceType(*f4f9f1iter.InstanceType)
 					}
-					f4f9f1 = append(f4f9f1, f4f9f1elem)
+					f4f9f1 = append(f4f9f1, *f4f9f1elem)
 				}
-				f4f9.SetInstanceGroups(f4f9f1)
+				f4f9.InstanceGroups = f4f9f1
 			}
 			if r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType != nil {
-				f4f9.SetInstanceType(*r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType)
+				f4f9.InstanceType = svcsdktypes.TrainingInstanceType(*r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType)
 			}
 			if r.ko.Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds != nil {
-				f4f9.SetKeepAlivePeriodInSeconds(*r.ko.Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds)
+				keepAlivePeriodInSecondsCopy0 := *r.ko.Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds
+				if keepAlivePeriodInSecondsCopy0 > math.MaxInt32 || keepAlivePeriodInSecondsCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field KeepAlivePeriodInSeconds is of type int32")
+				}
+				keepAlivePeriodInSecondsCopy := int32(keepAlivePeriodInSecondsCopy0)
+				f4f9.KeepAlivePeriodInSeconds = &keepAlivePeriodInSecondsCopy
 			}
 			if r.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID != nil {
-				f4f9.SetVolumeKmsKeyId(*r.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID)
+				f4f9.VolumeKmsKeyId = r.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID
 			}
 			if r.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeSizeInGB != nil {
-				f4f9.SetVolumeSizeInGB(*r.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeSizeInGB)
+				volumeSizeInGBCopy0 := *r.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeSizeInGB
+				if volumeSizeInGBCopy0 > math.MaxInt32 || volumeSizeInGBCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field VolumeSizeInGB is of type int32")
+				}
+				volumeSizeInGBCopy := int32(volumeSizeInGBCopy0)
+				f4f9.VolumeSizeInGB = &volumeSizeInGBCopy
 			}
-			f4.SetResourceConfig(f4f9)
+			f4.ResourceConfig = f4f9
 		}
 		if r.ko.Spec.TrainingJobDefinition.RetryStrategy != nil {
-			f4f10 := &svcsdk.RetryStrategy{}
+			f4f10 := &svcsdktypes.RetryStrategy{}
 			if r.ko.Spec.TrainingJobDefinition.RetryStrategy.MaximumRetryAttempts != nil {
-				f4f10.SetMaximumRetryAttempts(*r.ko.Spec.TrainingJobDefinition.RetryStrategy.MaximumRetryAttempts)
+				maximumRetryAttemptsCopy0 := *r.ko.Spec.TrainingJobDefinition.RetryStrategy.MaximumRetryAttempts
+				if maximumRetryAttemptsCopy0 > math.MaxInt32 || maximumRetryAttemptsCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field MaximumRetryAttempts is of type int32")
+				}
+				maximumRetryAttemptsCopy := int32(maximumRetryAttemptsCopy0)
+				f4f10.MaximumRetryAttempts = &maximumRetryAttemptsCopy
 			}
-			f4.SetRetryStrategy(f4f10)
+			f4.RetryStrategy = f4f10
 		}
 		if r.ko.Spec.TrainingJobDefinition.RoleARN != nil {
-			f4.SetRoleArn(*r.ko.Spec.TrainingJobDefinition.RoleARN)
+			f4.RoleArn = r.ko.Spec.TrainingJobDefinition.RoleARN
 		}
 		if r.ko.Spec.TrainingJobDefinition.StaticHyperParameters != nil {
-			f4f12 := map[string]*string{}
-			for f4f12key, f4f12valiter := range r.ko.Spec.TrainingJobDefinition.StaticHyperParameters {
-				var f4f12val string
-				f4f12val = *f4f12valiter
-				f4f12[f4f12key] = &f4f12val
-			}
-			f4.SetStaticHyperParameters(f4f12)
+			f4.StaticHyperParameters = aws.ToStringMap(r.ko.Spec.TrainingJobDefinition.StaticHyperParameters)
 		}
 		if r.ko.Spec.TrainingJobDefinition.StoppingCondition != nil {
-			f4f13 := &svcsdk.StoppingCondition{}
+			f4f13 := &svcsdktypes.StoppingCondition{}
 			if r.ko.Spec.TrainingJobDefinition.StoppingCondition.MaxPendingTimeInSeconds != nil {
-				f4f13.SetMaxPendingTimeInSeconds(*r.ko.Spec.TrainingJobDefinition.StoppingCondition.MaxPendingTimeInSeconds)
+				maxPendingTimeInSecondsCopy0 := *r.ko.Spec.TrainingJobDefinition.StoppingCondition.MaxPendingTimeInSeconds
+				if maxPendingTimeInSecondsCopy0 > math.MaxInt32 || maxPendingTimeInSecondsCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field MaxPendingTimeInSeconds is of type int32")
+				}
+				maxPendingTimeInSecondsCopy := int32(maxPendingTimeInSecondsCopy0)
+				f4f13.MaxPendingTimeInSeconds = &maxPendingTimeInSecondsCopy
 			}
 			if r.ko.Spec.TrainingJobDefinition.StoppingCondition.MaxRuntimeInSeconds != nil {
-				f4f13.SetMaxRuntimeInSeconds(*r.ko.Spec.TrainingJobDefinition.StoppingCondition.MaxRuntimeInSeconds)
+				maxRuntimeInSecondsCopy0 := *r.ko.Spec.TrainingJobDefinition.StoppingCondition.MaxRuntimeInSeconds
+				if maxRuntimeInSecondsCopy0 > math.MaxInt32 || maxRuntimeInSecondsCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field MaxRuntimeInSeconds is of type int32")
+				}
+				maxRuntimeInSecondsCopy := int32(maxRuntimeInSecondsCopy0)
+				f4f13.MaxRuntimeInSeconds = &maxRuntimeInSecondsCopy
 			}
 			if r.ko.Spec.TrainingJobDefinition.StoppingCondition.MaxWaitTimeInSeconds != nil {
-				f4f13.SetMaxWaitTimeInSeconds(*r.ko.Spec.TrainingJobDefinition.StoppingCondition.MaxWaitTimeInSeconds)
+				maxWaitTimeInSecondsCopy0 := *r.ko.Spec.TrainingJobDefinition.StoppingCondition.MaxWaitTimeInSeconds
+				if maxWaitTimeInSecondsCopy0 > math.MaxInt32 || maxWaitTimeInSecondsCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field MaxWaitTimeInSeconds is of type int32")
+				}
+				maxWaitTimeInSecondsCopy := int32(maxWaitTimeInSecondsCopy0)
+				f4f13.MaxWaitTimeInSeconds = &maxWaitTimeInSecondsCopy
 			}
-			f4.SetStoppingCondition(f4f13)
+			f4.StoppingCondition = f4f13
 		}
 		if r.ko.Spec.TrainingJobDefinition.TuningObjective != nil {
-			f4f14 := &svcsdk.HyperParameterTuningJobObjective{}
+			f4f14 := &svcsdktypes.HyperParameterTuningJobObjective{}
 			if r.ko.Spec.TrainingJobDefinition.TuningObjective.MetricName != nil {
-				f4f14.SetMetricName(*r.ko.Spec.TrainingJobDefinition.TuningObjective.MetricName)
+				f4f14.MetricName = r.ko.Spec.TrainingJobDefinition.TuningObjective.MetricName
 			}
 			if r.ko.Spec.TrainingJobDefinition.TuningObjective.Type != nil {
-				f4f14.SetType(*r.ko.Spec.TrainingJobDefinition.TuningObjective.Type)
+				f4f14.Type = svcsdktypes.HyperParameterTuningJobObjectiveType(*r.ko.Spec.TrainingJobDefinition.TuningObjective.Type)
 			}
-			f4.SetTuningObjective(f4f14)
+			f4.TuningObjective = f4f14
 		}
 		if r.ko.Spec.TrainingJobDefinition.VPCConfig != nil {
-			f4f15 := &svcsdk.VpcConfig{}
+			f4f15 := &svcsdktypes.VpcConfig{}
 			if r.ko.Spec.TrainingJobDefinition.VPCConfig.SecurityGroupIDs != nil {
-				f4f15f0 := []*string{}
-				for _, f4f15f0iter := range r.ko.Spec.TrainingJobDefinition.VPCConfig.SecurityGroupIDs {
-					var f4f15f0elem string
-					f4f15f0elem = *f4f15f0iter
-					f4f15f0 = append(f4f15f0, &f4f15f0elem)
-				}
-				f4f15.SetSecurityGroupIds(f4f15f0)
+				f4f15.SecurityGroupIds = aws.ToStringSlice(r.ko.Spec.TrainingJobDefinition.VPCConfig.SecurityGroupIDs)
 			}
 			if r.ko.Spec.TrainingJobDefinition.VPCConfig.Subnets != nil {
-				f4f15f1 := []*string{}
-				for _, f4f15f1iter := range r.ko.Spec.TrainingJobDefinition.VPCConfig.Subnets {
-					var f4f15f1elem string
-					f4f15f1elem = *f4f15f1iter
-					f4f15f1 = append(f4f15f1, &f4f15f1elem)
-				}
-				f4f15.SetSubnets(f4f15f1)
+				f4f15.Subnets = aws.ToStringSlice(r.ko.Spec.TrainingJobDefinition.VPCConfig.Subnets)
 			}
-			f4.SetVpcConfig(f4f15)
+			f4.VpcConfig = f4f15
 		}
-		res.SetTrainingJobDefinition(f4)
+		res.TrainingJobDefinition = f4
 	}
 	if r.ko.Spec.TrainingJobDefinitions != nil {
-		f5 := []*svcsdk.HyperParameterTrainingJobDefinition{}
+		f5 := []svcsdktypes.HyperParameterTrainingJobDefinition{}
 		for _, f5iter := range r.ko.Spec.TrainingJobDefinitions {
-			f5elem := &svcsdk.HyperParameterTrainingJobDefinition{}
+			f5elem := &svcsdktypes.HyperParameterTrainingJobDefinition{}
 			if f5iter.AlgorithmSpecification != nil {
-				f5elemf0 := &svcsdk.HyperParameterAlgorithmSpecification{}
+				f5elemf0 := &svcsdktypes.HyperParameterAlgorithmSpecification{}
 				if f5iter.AlgorithmSpecification.AlgorithmName != nil {
-					f5elemf0.SetAlgorithmName(*f5iter.AlgorithmSpecification.AlgorithmName)
+					f5elemf0.AlgorithmName = f5iter.AlgorithmSpecification.AlgorithmName
 				}
 				if f5iter.AlgorithmSpecification.MetricDefinitions != nil {
-					f5elemf0f1 := []*svcsdk.MetricDefinition{}
+					f5elemf0f1 := []svcsdktypes.MetricDefinition{}
 					for _, f5elemf0f1iter := range f5iter.AlgorithmSpecification.MetricDefinitions {
-						f5elemf0f1elem := &svcsdk.MetricDefinition{}
+						f5elemf0f1elem := &svcsdktypes.MetricDefinition{}
 						if f5elemf0f1iter.Name != nil {
-							f5elemf0f1elem.SetName(*f5elemf0f1iter.Name)
+							f5elemf0f1elem.Name = f5elemf0f1iter.Name
 						}
 						if f5elemf0f1iter.Regex != nil {
-							f5elemf0f1elem.SetRegex(*f5elemf0f1iter.Regex)
+							f5elemf0f1elem.Regex = f5elemf0f1iter.Regex
 						}
-						f5elemf0f1 = append(f5elemf0f1, f5elemf0f1elem)
+						f5elemf0f1 = append(f5elemf0f1, *f5elemf0f1elem)
 					}
-					f5elemf0.SetMetricDefinitions(f5elemf0f1)
+					f5elemf0.MetricDefinitions = f5elemf0f1
 				}
 				if f5iter.AlgorithmSpecification.TrainingImage != nil {
-					f5elemf0.SetTrainingImage(*f5iter.AlgorithmSpecification.TrainingImage)
+					f5elemf0.TrainingImage = f5iter.AlgorithmSpecification.TrainingImage
 				}
 				if f5iter.AlgorithmSpecification.TrainingInputMode != nil {
-					f5elemf0.SetTrainingInputMode(*f5iter.AlgorithmSpecification.TrainingInputMode)
+					f5elemf0.TrainingInputMode = svcsdktypes.TrainingInputMode(*f5iter.AlgorithmSpecification.TrainingInputMode)
 				}
-				f5elem.SetAlgorithmSpecification(f5elemf0)
+				f5elem.AlgorithmSpecification = f5elemf0
 			}
 			if f5iter.CheckpointConfig != nil {
-				f5elemf1 := &svcsdk.CheckpointConfig{}
+				f5elemf1 := &svcsdktypes.CheckpointConfig{}
 				if f5iter.CheckpointConfig.LocalPath != nil {
-					f5elemf1.SetLocalPath(*f5iter.CheckpointConfig.LocalPath)
+					f5elemf1.LocalPath = f5iter.CheckpointConfig.LocalPath
 				}
 				if f5iter.CheckpointConfig.S3URI != nil {
-					f5elemf1.SetS3Uri(*f5iter.CheckpointConfig.S3URI)
+					f5elemf1.S3Uri = f5iter.CheckpointConfig.S3URI
 				}
-				f5elem.SetCheckpointConfig(f5elemf1)
+				f5elem.CheckpointConfig = f5elemf1
 			}
 			if f5iter.DefinitionName != nil {
-				f5elem.SetDefinitionName(*f5iter.DefinitionName)
+				f5elem.DefinitionName = f5iter.DefinitionName
 			}
 			if f5iter.EnableInterContainerTrafficEncryption != nil {
-				f5elem.SetEnableInterContainerTrafficEncryption(*f5iter.EnableInterContainerTrafficEncryption)
+				f5elem.EnableInterContainerTrafficEncryption = f5iter.EnableInterContainerTrafficEncryption
 			}
 			if f5iter.EnableManagedSpotTraining != nil {
-				f5elem.SetEnableManagedSpotTraining(*f5iter.EnableManagedSpotTraining)
+				f5elem.EnableManagedSpotTraining = f5iter.EnableManagedSpotTraining
 			}
 			if f5iter.EnableNetworkIsolation != nil {
-				f5elem.SetEnableNetworkIsolation(*f5iter.EnableNetworkIsolation)
+				f5elem.EnableNetworkIsolation = f5iter.EnableNetworkIsolation
 			}
 			if f5iter.HyperParameterRanges != nil {
-				f5elemf6 := &svcsdk.ParameterRanges{}
+				f5elemf6 := &svcsdktypes.ParameterRanges{}
 				if f5iter.HyperParameterRanges.AutoParameters != nil {
-					f5elemf6f0 := []*svcsdk.AutoParameter{}
+					f5elemf6f0 := []svcsdktypes.AutoParameter{}
 					for _, f5elemf6f0iter := range f5iter.HyperParameterRanges.AutoParameters {
-						f5elemf6f0elem := &svcsdk.AutoParameter{}
+						f5elemf6f0elem := &svcsdktypes.AutoParameter{}
 						if f5elemf6f0iter.Name != nil {
-							f5elemf6f0elem.SetName(*f5elemf6f0iter.Name)
+							f5elemf6f0elem.Name = f5elemf6f0iter.Name
 						}
 						if f5elemf6f0iter.ValueHint != nil {
-							f5elemf6f0elem.SetValueHint(*f5elemf6f0iter.ValueHint)
+							f5elemf6f0elem.ValueHint = f5elemf6f0iter.ValueHint
 						}
-						f5elemf6f0 = append(f5elemf6f0, f5elemf6f0elem)
+						f5elemf6f0 = append(f5elemf6f0, *f5elemf6f0elem)
 					}
-					f5elemf6.SetAutoParameters(f5elemf6f0)
+					f5elemf6.AutoParameters = f5elemf6f0
 				}
 				if f5iter.HyperParameterRanges.CategoricalParameterRanges != nil {
-					f5elemf6f1 := []*svcsdk.CategoricalParameterRange{}
+					f5elemf6f1 := []svcsdktypes.CategoricalParameterRange{}
 					for _, f5elemf6f1iter := range f5iter.HyperParameterRanges.CategoricalParameterRanges {
-						f5elemf6f1elem := &svcsdk.CategoricalParameterRange{}
+						f5elemf6f1elem := &svcsdktypes.CategoricalParameterRange{}
 						if f5elemf6f1iter.Name != nil {
-							f5elemf6f1elem.SetName(*f5elemf6f1iter.Name)
+							f5elemf6f1elem.Name = f5elemf6f1iter.Name
 						}
 						if f5elemf6f1iter.Values != nil {
-							f5elemf6f1elemf1 := []*string{}
-							for _, f5elemf6f1elemf1iter := range f5elemf6f1iter.Values {
-								var f5elemf6f1elemf1elem string
-								f5elemf6f1elemf1elem = *f5elemf6f1elemf1iter
-								f5elemf6f1elemf1 = append(f5elemf6f1elemf1, &f5elemf6f1elemf1elem)
-							}
-							f5elemf6f1elem.SetValues(f5elemf6f1elemf1)
+							f5elemf6f1elem.Values = aws.ToStringSlice(f5elemf6f1iter.Values)
 						}
-						f5elemf6f1 = append(f5elemf6f1, f5elemf6f1elem)
+						f5elemf6f1 = append(f5elemf6f1, *f5elemf6f1elem)
 					}
-					f5elemf6.SetCategoricalParameterRanges(f5elemf6f1)
+					f5elemf6.CategoricalParameterRanges = f5elemf6f1
 				}
 				if f5iter.HyperParameterRanges.ContinuousParameterRanges != nil {
-					f5elemf6f2 := []*svcsdk.ContinuousParameterRange{}
+					f5elemf6f2 := []svcsdktypes.ContinuousParameterRange{}
 					for _, f5elemf6f2iter := range f5iter.HyperParameterRanges.ContinuousParameterRanges {
-						f5elemf6f2elem := &svcsdk.ContinuousParameterRange{}
+						f5elemf6f2elem := &svcsdktypes.ContinuousParameterRange{}
 						if f5elemf6f2iter.MaxValue != nil {
-							f5elemf6f2elem.SetMaxValue(*f5elemf6f2iter.MaxValue)
+							f5elemf6f2elem.MaxValue = f5elemf6f2iter.MaxValue
 						}
 						if f5elemf6f2iter.MinValue != nil {
-							f5elemf6f2elem.SetMinValue(*f5elemf6f2iter.MinValue)
+							f5elemf6f2elem.MinValue = f5elemf6f2iter.MinValue
 						}
 						if f5elemf6f2iter.Name != nil {
-							f5elemf6f2elem.SetName(*f5elemf6f2iter.Name)
+							f5elemf6f2elem.Name = f5elemf6f2iter.Name
 						}
 						if f5elemf6f2iter.ScalingType != nil {
-							f5elemf6f2elem.SetScalingType(*f5elemf6f2iter.ScalingType)
+							f5elemf6f2elem.ScalingType = svcsdktypes.HyperParameterScalingType(*f5elemf6f2iter.ScalingType)
 						}
-						f5elemf6f2 = append(f5elemf6f2, f5elemf6f2elem)
+						f5elemf6f2 = append(f5elemf6f2, *f5elemf6f2elem)
 					}
-					f5elemf6.SetContinuousParameterRanges(f5elemf6f2)
+					f5elemf6.ContinuousParameterRanges = f5elemf6f2
 				}
 				if f5iter.HyperParameterRanges.IntegerParameterRanges != nil {
-					f5elemf6f3 := []*svcsdk.IntegerParameterRange{}
+					f5elemf6f3 := []svcsdktypes.IntegerParameterRange{}
 					for _, f5elemf6f3iter := range f5iter.HyperParameterRanges.IntegerParameterRanges {
-						f5elemf6f3elem := &svcsdk.IntegerParameterRange{}
+						f5elemf6f3elem := &svcsdktypes.IntegerParameterRange{}
 						if f5elemf6f3iter.MaxValue != nil {
-							f5elemf6f3elem.SetMaxValue(*f5elemf6f3iter.MaxValue)
+							f5elemf6f3elem.MaxValue = f5elemf6f3iter.MaxValue
 						}
 						if f5elemf6f3iter.MinValue != nil {
-							f5elemf6f3elem.SetMinValue(*f5elemf6f3iter.MinValue)
+							f5elemf6f3elem.MinValue = f5elemf6f3iter.MinValue
 						}
 						if f5elemf6f3iter.Name != nil {
-							f5elemf6f3elem.SetName(*f5elemf6f3iter.Name)
+							f5elemf6f3elem.Name = f5elemf6f3iter.Name
 						}
 						if f5elemf6f3iter.ScalingType != nil {
-							f5elemf6f3elem.SetScalingType(*f5elemf6f3iter.ScalingType)
+							f5elemf6f3elem.ScalingType = svcsdktypes.HyperParameterScalingType(*f5elemf6f3iter.ScalingType)
 						}
-						f5elemf6f3 = append(f5elemf6f3, f5elemf6f3elem)
+						f5elemf6f3 = append(f5elemf6f3, *f5elemf6f3elem)
 					}
-					f5elemf6.SetIntegerParameterRanges(f5elemf6f3)
+					f5elemf6.IntegerParameterRanges = f5elemf6f3
 				}
-				f5elem.SetHyperParameterRanges(f5elemf6)
+				f5elem.HyperParameterRanges = f5elemf6
 			}
 			if f5iter.InputDataConfig != nil {
-				f5elemf7 := []*svcsdk.Channel{}
+				f5elemf7 := []svcsdktypes.Channel{}
 				for _, f5elemf7iter := range f5iter.InputDataConfig {
-					f5elemf7elem := &svcsdk.Channel{}
+					f5elemf7elem := &svcsdktypes.Channel{}
 					if f5elemf7iter.ChannelName != nil {
-						f5elemf7elem.SetChannelName(*f5elemf7iter.ChannelName)
+						f5elemf7elem.ChannelName = f5elemf7iter.ChannelName
 					}
 					if f5elemf7iter.CompressionType != nil {
-						f5elemf7elem.SetCompressionType(*f5elemf7iter.CompressionType)
+						f5elemf7elem.CompressionType = svcsdktypes.CompressionType(*f5elemf7iter.CompressionType)
 					}
 					if f5elemf7iter.ContentType != nil {
-						f5elemf7elem.SetContentType(*f5elemf7iter.ContentType)
+						f5elemf7elem.ContentType = f5elemf7iter.ContentType
 					}
 					if f5elemf7iter.DataSource != nil {
-						f5elemf7elemf3 := &svcsdk.DataSource{}
+						f5elemf7elemf3 := &svcsdktypes.DataSource{}
 						if f5elemf7iter.DataSource.FileSystemDataSource != nil {
-							f5elemf7elemf3f0 := &svcsdk.FileSystemDataSource{}
+							f5elemf7elemf3f0 := &svcsdktypes.FileSystemDataSource{}
 							if f5elemf7iter.DataSource.FileSystemDataSource.DirectoryPath != nil {
-								f5elemf7elemf3f0.SetDirectoryPath(*f5elemf7iter.DataSource.FileSystemDataSource.DirectoryPath)
+								f5elemf7elemf3f0.DirectoryPath = f5elemf7iter.DataSource.FileSystemDataSource.DirectoryPath
 							}
 							if f5elemf7iter.DataSource.FileSystemDataSource.FileSystemAccessMode != nil {
-								f5elemf7elemf3f0.SetFileSystemAccessMode(*f5elemf7iter.DataSource.FileSystemDataSource.FileSystemAccessMode)
+								f5elemf7elemf3f0.FileSystemAccessMode = svcsdktypes.FileSystemAccessMode(*f5elemf7iter.DataSource.FileSystemDataSource.FileSystemAccessMode)
 							}
 							if f5elemf7iter.DataSource.FileSystemDataSource.FileSystemID != nil {
-								f5elemf7elemf3f0.SetFileSystemId(*f5elemf7iter.DataSource.FileSystemDataSource.FileSystemID)
+								f5elemf7elemf3f0.FileSystemId = f5elemf7iter.DataSource.FileSystemDataSource.FileSystemID
 							}
 							if f5elemf7iter.DataSource.FileSystemDataSource.FileSystemType != nil {
-								f5elemf7elemf3f0.SetFileSystemType(*f5elemf7iter.DataSource.FileSystemDataSource.FileSystemType)
+								f5elemf7elemf3f0.FileSystemType = svcsdktypes.FileSystemType(*f5elemf7iter.DataSource.FileSystemDataSource.FileSystemType)
 							}
-							f5elemf7elemf3.SetFileSystemDataSource(f5elemf7elemf3f0)
+							f5elemf7elemf3.FileSystemDataSource = f5elemf7elemf3f0
 						}
 						if f5elemf7iter.DataSource.S3DataSource != nil {
-							f5elemf7elemf3f1 := &svcsdk.S3DataSource{}
+							f5elemf7elemf3f1 := &svcsdktypes.S3DataSource{}
 							if f5elemf7iter.DataSource.S3DataSource.AttributeNames != nil {
-								f5elemf7elemf3f1f0 := []*string{}
-								for _, f5elemf7elemf3f1f0iter := range f5elemf7iter.DataSource.S3DataSource.AttributeNames {
-									var f5elemf7elemf3f1f0elem string
-									f5elemf7elemf3f1f0elem = *f5elemf7elemf3f1f0iter
-									f5elemf7elemf3f1f0 = append(f5elemf7elemf3f1f0, &f5elemf7elemf3f1f0elem)
-								}
-								f5elemf7elemf3f1.SetAttributeNames(f5elemf7elemf3f1f0)
+								f5elemf7elemf3f1.AttributeNames = aws.ToStringSlice(f5elemf7iter.DataSource.S3DataSource.AttributeNames)
 							}
 							if f5elemf7iter.DataSource.S3DataSource.InstanceGroupNames != nil {
-								f5elemf7elemf3f1f1 := []*string{}
-								for _, f5elemf7elemf3f1f1iter := range f5elemf7iter.DataSource.S3DataSource.InstanceGroupNames {
-									var f5elemf7elemf3f1f1elem string
-									f5elemf7elemf3f1f1elem = *f5elemf7elemf3f1f1iter
-									f5elemf7elemf3f1f1 = append(f5elemf7elemf3f1f1, &f5elemf7elemf3f1f1elem)
-								}
-								f5elemf7elemf3f1.SetInstanceGroupNames(f5elemf7elemf3f1f1)
+								f5elemf7elemf3f1.InstanceGroupNames = aws.ToStringSlice(f5elemf7iter.DataSource.S3DataSource.InstanceGroupNames)
 							}
 							if f5elemf7iter.DataSource.S3DataSource.S3DataDistributionType != nil {
-								f5elemf7elemf3f1.SetS3DataDistributionType(*f5elemf7iter.DataSource.S3DataSource.S3DataDistributionType)
+								f5elemf7elemf3f1.S3DataDistributionType = svcsdktypes.S3DataDistribution(*f5elemf7iter.DataSource.S3DataSource.S3DataDistributionType)
 							}
 							if f5elemf7iter.DataSource.S3DataSource.S3DataType != nil {
-								f5elemf7elemf3f1.SetS3DataType(*f5elemf7iter.DataSource.S3DataSource.S3DataType)
+								f5elemf7elemf3f1.S3DataType = svcsdktypes.S3DataType(*f5elemf7iter.DataSource.S3DataSource.S3DataType)
 							}
 							if f5elemf7iter.DataSource.S3DataSource.S3URI != nil {
-								f5elemf7elemf3f1.SetS3Uri(*f5elemf7iter.DataSource.S3DataSource.S3URI)
+								f5elemf7elemf3f1.S3Uri = f5elemf7iter.DataSource.S3DataSource.S3URI
 							}
-							f5elemf7elemf3.SetS3DataSource(f5elemf7elemf3f1)
+							f5elemf7elemf3.S3DataSource = f5elemf7elemf3f1
 						}
-						f5elemf7elem.SetDataSource(f5elemf7elemf3)
+						f5elemf7elem.DataSource = f5elemf7elemf3
 					}
 					if f5elemf7iter.InputMode != nil {
-						f5elemf7elem.SetInputMode(*f5elemf7iter.InputMode)
+						f5elemf7elem.InputMode = svcsdktypes.TrainingInputMode(*f5elemf7iter.InputMode)
 					}
 					if f5elemf7iter.RecordWrapperType != nil {
-						f5elemf7elem.SetRecordWrapperType(*f5elemf7iter.RecordWrapperType)
+						f5elemf7elem.RecordWrapperType = svcsdktypes.RecordWrapper(*f5elemf7iter.RecordWrapperType)
 					}
 					if f5elemf7iter.ShuffleConfig != nil {
-						f5elemf7elemf6 := &svcsdk.ShuffleConfig{}
+						f5elemf7elemf6 := &svcsdktypes.ShuffleConfig{}
 						if f5elemf7iter.ShuffleConfig.Seed != nil {
-							f5elemf7elemf6.SetSeed(*f5elemf7iter.ShuffleConfig.Seed)
+							f5elemf7elemf6.Seed = f5elemf7iter.ShuffleConfig.Seed
 						}
-						f5elemf7elem.SetShuffleConfig(f5elemf7elemf6)
+						f5elemf7elem.ShuffleConfig = f5elemf7elemf6
 					}
-					f5elemf7 = append(f5elemf7, f5elemf7elem)
+					f5elemf7 = append(f5elemf7, *f5elemf7elem)
 				}
-				f5elem.SetInputDataConfig(f5elemf7)
+				f5elem.InputDataConfig = f5elemf7
 			}
 			if f5iter.OutputDataConfig != nil {
-				f5elemf8 := &svcsdk.OutputDataConfig{}
+				f5elemf8 := &svcsdktypes.OutputDataConfig{}
 				if f5iter.OutputDataConfig.CompressionType != nil {
-					f5elemf8.SetCompressionType(*f5iter.OutputDataConfig.CompressionType)
+					f5elemf8.CompressionType = svcsdktypes.OutputCompressionType(*f5iter.OutputDataConfig.CompressionType)
 				}
 				if f5iter.OutputDataConfig.KMSKeyID != nil {
-					f5elemf8.SetKmsKeyId(*f5iter.OutputDataConfig.KMSKeyID)
+					f5elemf8.KmsKeyId = f5iter.OutputDataConfig.KMSKeyID
 				}
 				if f5iter.OutputDataConfig.S3OutputPath != nil {
-					f5elemf8.SetS3OutputPath(*f5iter.OutputDataConfig.S3OutputPath)
+					f5elemf8.S3OutputPath = f5iter.OutputDataConfig.S3OutputPath
 				}
-				f5elem.SetOutputDataConfig(f5elemf8)
+				f5elem.OutputDataConfig = f5elemf8
 			}
 			if f5iter.ResourceConfig != nil {
-				f5elemf9 := &svcsdk.ResourceConfig{}
+				f5elemf9 := &svcsdktypes.ResourceConfig{}
 				if f5iter.ResourceConfig.InstanceCount != nil {
-					f5elemf9.SetInstanceCount(*f5iter.ResourceConfig.InstanceCount)
+					instanceCountCopy0 := *f5iter.ResourceConfig.InstanceCount
+					if instanceCountCopy0 > math.MaxInt32 || instanceCountCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field InstanceCount is of type int32")
+					}
+					instanceCountCopy := int32(instanceCountCopy0)
+					f5elemf9.InstanceCount = &instanceCountCopy
 				}
 				if f5iter.ResourceConfig.InstanceGroups != nil {
-					f5elemf9f1 := []*svcsdk.InstanceGroup{}
+					f5elemf9f1 := []svcsdktypes.InstanceGroup{}
 					for _, f5elemf9f1iter := range f5iter.ResourceConfig.InstanceGroups {
-						f5elemf9f1elem := &svcsdk.InstanceGroup{}
+						f5elemf9f1elem := &svcsdktypes.InstanceGroup{}
 						if f5elemf9f1iter.InstanceCount != nil {
-							f5elemf9f1elem.SetInstanceCount(*f5elemf9f1iter.InstanceCount)
+							instanceCountCopy0 := *f5elemf9f1iter.InstanceCount
+							if instanceCountCopy0 > math.MaxInt32 || instanceCountCopy0 < math.MinInt32 {
+								return nil, fmt.Errorf("error: field InstanceCount is of type int32")
+							}
+							instanceCountCopy := int32(instanceCountCopy0)
+							f5elemf9f1elem.InstanceCount = &instanceCountCopy
 						}
 						if f5elemf9f1iter.InstanceGroupName != nil {
-							f5elemf9f1elem.SetInstanceGroupName(*f5elemf9f1iter.InstanceGroupName)
+							f5elemf9f1elem.InstanceGroupName = f5elemf9f1iter.InstanceGroupName
 						}
 						if f5elemf9f1iter.InstanceType != nil {
-							f5elemf9f1elem.SetInstanceType(*f5elemf9f1iter.InstanceType)
+							f5elemf9f1elem.InstanceType = svcsdktypes.TrainingInstanceType(*f5elemf9f1iter.InstanceType)
 						}
-						f5elemf9f1 = append(f5elemf9f1, f5elemf9f1elem)
+						f5elemf9f1 = append(f5elemf9f1, *f5elemf9f1elem)
 					}
-					f5elemf9.SetInstanceGroups(f5elemf9f1)
+					f5elemf9.InstanceGroups = f5elemf9f1
 				}
 				if f5iter.ResourceConfig.InstanceType != nil {
-					f5elemf9.SetInstanceType(*f5iter.ResourceConfig.InstanceType)
+					f5elemf9.InstanceType = svcsdktypes.TrainingInstanceType(*f5iter.ResourceConfig.InstanceType)
 				}
 				if f5iter.ResourceConfig.KeepAlivePeriodInSeconds != nil {
-					f5elemf9.SetKeepAlivePeriodInSeconds(*f5iter.ResourceConfig.KeepAlivePeriodInSeconds)
+					keepAlivePeriodInSecondsCopy0 := *f5iter.ResourceConfig.KeepAlivePeriodInSeconds
+					if keepAlivePeriodInSecondsCopy0 > math.MaxInt32 || keepAlivePeriodInSecondsCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field KeepAlivePeriodInSeconds is of type int32")
+					}
+					keepAlivePeriodInSecondsCopy := int32(keepAlivePeriodInSecondsCopy0)
+					f5elemf9.KeepAlivePeriodInSeconds = &keepAlivePeriodInSecondsCopy
 				}
 				if f5iter.ResourceConfig.VolumeKMSKeyID != nil {
-					f5elemf9.SetVolumeKmsKeyId(*f5iter.ResourceConfig.VolumeKMSKeyID)
+					f5elemf9.VolumeKmsKeyId = f5iter.ResourceConfig.VolumeKMSKeyID
 				}
 				if f5iter.ResourceConfig.VolumeSizeInGB != nil {
-					f5elemf9.SetVolumeSizeInGB(*f5iter.ResourceConfig.VolumeSizeInGB)
+					volumeSizeInGBCopy0 := *f5iter.ResourceConfig.VolumeSizeInGB
+					if volumeSizeInGBCopy0 > math.MaxInt32 || volumeSizeInGBCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field VolumeSizeInGB is of type int32")
+					}
+					volumeSizeInGBCopy := int32(volumeSizeInGBCopy0)
+					f5elemf9.VolumeSizeInGB = &volumeSizeInGBCopy
 				}
-				f5elem.SetResourceConfig(f5elemf9)
+				f5elem.ResourceConfig = f5elemf9
 			}
 			if f5iter.RetryStrategy != nil {
-				f5elemf10 := &svcsdk.RetryStrategy{}
+				f5elemf10 := &svcsdktypes.RetryStrategy{}
 				if f5iter.RetryStrategy.MaximumRetryAttempts != nil {
-					f5elemf10.SetMaximumRetryAttempts(*f5iter.RetryStrategy.MaximumRetryAttempts)
+					maximumRetryAttemptsCopy0 := *f5iter.RetryStrategy.MaximumRetryAttempts
+					if maximumRetryAttemptsCopy0 > math.MaxInt32 || maximumRetryAttemptsCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field MaximumRetryAttempts is of type int32")
+					}
+					maximumRetryAttemptsCopy := int32(maximumRetryAttemptsCopy0)
+					f5elemf10.MaximumRetryAttempts = &maximumRetryAttemptsCopy
 				}
-				f5elem.SetRetryStrategy(f5elemf10)
+				f5elem.RetryStrategy = f5elemf10
 			}
 			if f5iter.RoleARN != nil {
-				f5elem.SetRoleArn(*f5iter.RoleARN)
+				f5elem.RoleArn = f5iter.RoleARN
 			}
 			if f5iter.StaticHyperParameters != nil {
-				f5elemf12 := map[string]*string{}
-				for f5elemf12key, f5elemf12valiter := range f5iter.StaticHyperParameters {
-					var f5elemf12val string
-					f5elemf12val = *f5elemf12valiter
-					f5elemf12[f5elemf12key] = &f5elemf12val
-				}
-				f5elem.SetStaticHyperParameters(f5elemf12)
+				f5elem.StaticHyperParameters = aws.ToStringMap(f5iter.StaticHyperParameters)
 			}
 			if f5iter.StoppingCondition != nil {
-				f5elemf13 := &svcsdk.StoppingCondition{}
+				f5elemf13 := &svcsdktypes.StoppingCondition{}
 				if f5iter.StoppingCondition.MaxPendingTimeInSeconds != nil {
-					f5elemf13.SetMaxPendingTimeInSeconds(*f5iter.StoppingCondition.MaxPendingTimeInSeconds)
+					maxPendingTimeInSecondsCopy0 := *f5iter.StoppingCondition.MaxPendingTimeInSeconds
+					if maxPendingTimeInSecondsCopy0 > math.MaxInt32 || maxPendingTimeInSecondsCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field MaxPendingTimeInSeconds is of type int32")
+					}
+					maxPendingTimeInSecondsCopy := int32(maxPendingTimeInSecondsCopy0)
+					f5elemf13.MaxPendingTimeInSeconds = &maxPendingTimeInSecondsCopy
 				}
 				if f5iter.StoppingCondition.MaxRuntimeInSeconds != nil {
-					f5elemf13.SetMaxRuntimeInSeconds(*f5iter.StoppingCondition.MaxRuntimeInSeconds)
+					maxRuntimeInSecondsCopy0 := *f5iter.StoppingCondition.MaxRuntimeInSeconds
+					if maxRuntimeInSecondsCopy0 > math.MaxInt32 || maxRuntimeInSecondsCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field MaxRuntimeInSeconds is of type int32")
+					}
+					maxRuntimeInSecondsCopy := int32(maxRuntimeInSecondsCopy0)
+					f5elemf13.MaxRuntimeInSeconds = &maxRuntimeInSecondsCopy
 				}
 				if f5iter.StoppingCondition.MaxWaitTimeInSeconds != nil {
-					f5elemf13.SetMaxWaitTimeInSeconds(*f5iter.StoppingCondition.MaxWaitTimeInSeconds)
+					maxWaitTimeInSecondsCopy0 := *f5iter.StoppingCondition.MaxWaitTimeInSeconds
+					if maxWaitTimeInSecondsCopy0 > math.MaxInt32 || maxWaitTimeInSecondsCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field MaxWaitTimeInSeconds is of type int32")
+					}
+					maxWaitTimeInSecondsCopy := int32(maxWaitTimeInSecondsCopy0)
+					f5elemf13.MaxWaitTimeInSeconds = &maxWaitTimeInSecondsCopy
 				}
-				f5elem.SetStoppingCondition(f5elemf13)
+				f5elem.StoppingCondition = f5elemf13
 			}
 			if f5iter.TuningObjective != nil {
-				f5elemf14 := &svcsdk.HyperParameterTuningJobObjective{}
+				f5elemf14 := &svcsdktypes.HyperParameterTuningJobObjective{}
 				if f5iter.TuningObjective.MetricName != nil {
-					f5elemf14.SetMetricName(*f5iter.TuningObjective.MetricName)
+					f5elemf14.MetricName = f5iter.TuningObjective.MetricName
 				}
 				if f5iter.TuningObjective.Type != nil {
-					f5elemf14.SetType(*f5iter.TuningObjective.Type)
+					f5elemf14.Type = svcsdktypes.HyperParameterTuningJobObjectiveType(*f5iter.TuningObjective.Type)
 				}
-				f5elem.SetTuningObjective(f5elemf14)
+				f5elem.TuningObjective = f5elemf14
 			}
 			if f5iter.VPCConfig != nil {
-				f5elemf15 := &svcsdk.VpcConfig{}
+				f5elemf15 := &svcsdktypes.VpcConfig{}
 				if f5iter.VPCConfig.SecurityGroupIDs != nil {
-					f5elemf15f0 := []*string{}
-					for _, f5elemf15f0iter := range f5iter.VPCConfig.SecurityGroupIDs {
-						var f5elemf15f0elem string
-						f5elemf15f0elem = *f5elemf15f0iter
-						f5elemf15f0 = append(f5elemf15f0, &f5elemf15f0elem)
-					}
-					f5elemf15.SetSecurityGroupIds(f5elemf15f0)
+					f5elemf15.SecurityGroupIds = aws.ToStringSlice(f5iter.VPCConfig.SecurityGroupIDs)
 				}
 				if f5iter.VPCConfig.Subnets != nil {
-					f5elemf15f1 := []*string{}
-					for _, f5elemf15f1iter := range f5iter.VPCConfig.Subnets {
-						var f5elemf15f1elem string
-						f5elemf15f1elem = *f5elemf15f1iter
-						f5elemf15f1 = append(f5elemf15f1, &f5elemf15f1elem)
-					}
-					f5elemf15.SetSubnets(f5elemf15f1)
+					f5elemf15.Subnets = aws.ToStringSlice(f5iter.VPCConfig.Subnets)
 				}
-				f5elem.SetVpcConfig(f5elemf15)
+				f5elem.VpcConfig = f5elemf15
 			}
-			f5 = append(f5, f5elem)
+			f5 = append(f5, *f5elem)
 		}
-		res.SetTrainingJobDefinitions(f5)
+		res.TrainingJobDefinitions = f5
 	}
 	if r.ko.Spec.WarmStartConfig != nil {
-		f6 := &svcsdk.HyperParameterTuningJobWarmStartConfig{}
+		f6 := &svcsdktypes.HyperParameterTuningJobWarmStartConfig{}
 		if r.ko.Spec.WarmStartConfig.ParentHyperParameterTuningJobs != nil {
-			f6f0 := []*svcsdk.ParentHyperParameterTuningJob{}
+			f6f0 := []svcsdktypes.ParentHyperParameterTuningJob{}
 			for _, f6f0iter := range r.ko.Spec.WarmStartConfig.ParentHyperParameterTuningJobs {
-				f6f0elem := &svcsdk.ParentHyperParameterTuningJob{}
+				f6f0elem := &svcsdktypes.ParentHyperParameterTuningJob{}
 				if f6f0iter.HyperParameterTuningJobName != nil {
-					f6f0elem.SetHyperParameterTuningJobName(*f6f0iter.HyperParameterTuningJobName)
+					f6f0elem.HyperParameterTuningJobName = f6f0iter.HyperParameterTuningJobName
 				}
-				f6f0 = append(f6f0, f6f0elem)
+				f6f0 = append(f6f0, *f6f0elem)
 			}
-			f6.SetParentHyperParameterTuningJobs(f6f0)
+			f6.ParentHyperParameterTuningJobs = f6f0
 		}
 		if r.ko.Spec.WarmStartConfig.WarmStartType != nil {
-			f6.SetWarmStartType(*r.ko.Spec.WarmStartConfig.WarmStartType)
+			f6.WarmStartType = svcsdktypes.HyperParameterTuningJobWarmStartType(*r.ko.Spec.WarmStartConfig.WarmStartType)
 		}
-		res.SetWarmStartConfig(f6)
+		res.WarmStartConfig = f6
 	}
 
 	return res, nil
@@ -1948,13 +1897,13 @@ func (rm *resourceManager) sdkDelete(
 	}()
 	latestStatus := r.ko.Status.HyperParameterTuningJobStatus
 	if latestStatus != nil {
-		if *latestStatus == svcsdk.HyperParameterTuningJobStatusStopping {
+		if *latestStatus == string(svcsdktypes.HyperParameterTuningJobStatusStopping) {
 			return r, requeueWaitWhileDeleting
 		}
 
 		// Call StopHyperParameterTuningJob only if the job is InProgress, otherwise just
 		// return nil to mark the resource Unmanaged
-		if *latestStatus != svcsdk.HyperParameterTuningJobStatusInProgress {
+		if *latestStatus != string(svcsdktypes.HyperParameterTuningJobStatusInProgress) {
 			return r, err
 		}
 	}
@@ -1964,7 +1913,7 @@ func (rm *resourceManager) sdkDelete(
 	}
 	var resp *svcsdk.StopHyperParameterTuningJobOutput
 	_ = resp
-	resp, err = rm.sdkapi.StopHyperParameterTuningJobWithContext(ctx, input)
+	resp, err = rm.sdkapi.StopHyperParameterTuningJob(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "StopHyperParameterTuningJob", err)
 
 	if err == nil {
@@ -1988,7 +1937,7 @@ func (rm *resourceManager) newDeleteRequestPayload(
 	res := &svcsdk.StopHyperParameterTuningJobInput{}
 
 	if r.ko.Spec.HyperParameterTuningJobName != nil {
-		res.SetHyperParameterTuningJobName(*r.ko.Spec.HyperParameterTuningJobName)
+		res.HyperParameterTuningJobName = r.ko.Spec.HyperParameterTuningJobName
 	}
 
 	return res, nil
@@ -2096,11 +2045,12 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 	if err == nil {
 		return false
 	}
-	awsErr, ok := ackerr.AWSError(err)
-	if !ok {
+
+	var terminalErr smithy.APIError
+	if !errors.As(err, &terminalErr) {
 		return false
 	}
-	switch awsErr.Code() {
+	switch terminalErr.ErrorCode() {
 	case "ResourceNotFound",
 		"ResourceInUse",
 		"InvalidParameterCombination",

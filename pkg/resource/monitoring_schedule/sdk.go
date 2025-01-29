@@ -19,6 +19,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math"
 	"reflect"
 	"strings"
 
@@ -28,8 +29,10 @@ import (
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
-	"github.com/aws/aws-sdk-go/aws"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
+	smithy "github.com/aws/smithy-go"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -40,8 +43,7 @@ import (
 var (
 	_ = &metav1.Time{}
 	_ = strings.ToLower("")
-	_ = &aws.JSONValue{}
-	_ = &svcsdk.SageMaker{}
+	_ = &svcsdk.Client{}
 	_ = &svcapitypes.MonitoringSchedule{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
@@ -49,6 +51,7 @@ var (
 	_ = &reflect.Value{}
 	_ = fmt.Sprintf("")
 	_ = &ackrequeue.NoRequeue{}
+	_ = &aws.Config{}
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -74,13 +77,11 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	var resp *svcsdk.DescribeMonitoringScheduleOutput
-	resp, err = rm.sdkapi.DescribeMonitoringScheduleWithContext(ctx, input)
+	resp, err = rm.sdkapi.DescribeMonitoringSchedule(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeMonitoringSchedule", err)
 	if err != nil {
-		if reqErr, ok := ackerr.AWSRequestFailure(err); ok && reqErr.StatusCode() == 404 {
-			return nil, ackerr.NotFound
-		}
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ResourceNotFound" {
+		var awsErr smithy.APIError
+		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ResourceNotFound" {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
@@ -119,8 +120,8 @@ func (rm *resourceManager) sdkFind(
 		if resp.LastMonitoringExecutionSummary.LastModifiedTime != nil {
 			f4.LastModifiedTime = &metav1.Time{*resp.LastMonitoringExecutionSummary.LastModifiedTime}
 		}
-		if resp.LastMonitoringExecutionSummary.MonitoringExecutionStatus != nil {
-			f4.MonitoringExecutionStatus = resp.LastMonitoringExecutionSummary.MonitoringExecutionStatus
+		if resp.LastMonitoringExecutionSummary.MonitoringExecutionStatus != "" {
+			f4.MonitoringExecutionStatus = aws.String(string(resp.LastMonitoringExecutionSummary.MonitoringExecutionStatus))
 		}
 		if resp.LastMonitoringExecutionSummary.MonitoringJobDefinitionName != nil {
 			f4.MonitoringJobDefinitionName = resp.LastMonitoringExecutionSummary.MonitoringJobDefinitionName
@@ -128,8 +129,8 @@ func (rm *resourceManager) sdkFind(
 		if resp.LastMonitoringExecutionSummary.MonitoringScheduleName != nil {
 			f4.MonitoringScheduleName = resp.LastMonitoringExecutionSummary.MonitoringScheduleName
 		}
-		if resp.LastMonitoringExecutionSummary.MonitoringType != nil {
-			f4.MonitoringType = resp.LastMonitoringExecutionSummary.MonitoringType
+		if resp.LastMonitoringExecutionSummary.MonitoringType != "" {
+			f4.MonitoringType = aws.String(string(resp.LastMonitoringExecutionSummary.MonitoringType))
 		}
 		if resp.LastMonitoringExecutionSummary.ProcessingJobArn != nil {
 			f4.ProcessingJobARN = resp.LastMonitoringExecutionSummary.ProcessingJobArn
@@ -174,33 +175,15 @@ func (rm *resourceManager) sdkFind(
 				f6f0.BaselineConfig = f6f0f0
 			}
 			if resp.MonitoringScheduleConfig.MonitoringJobDefinition.Environment != nil {
-				f6f0f1 := map[string]*string{}
-				for f6f0f1key, f6f0f1valiter := range resp.MonitoringScheduleConfig.MonitoringJobDefinition.Environment {
-					var f6f0f1val string
-					f6f0f1val = *f6f0f1valiter
-					f6f0f1[f6f0f1key] = &f6f0f1val
-				}
-				f6f0.Environment = f6f0f1
+				f6f0.Environment = aws.StringMap(resp.MonitoringScheduleConfig.MonitoringJobDefinition.Environment)
 			}
 			if resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification != nil {
 				f6f0f2 := &svcapitypes.MonitoringAppSpecification{}
 				if resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments != nil {
-					f6f0f2f0 := []*string{}
-					for _, f6f0f2f0iter := range resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments {
-						var f6f0f2f0elem string
-						f6f0f2f0elem = *f6f0f2f0iter
-						f6f0f2f0 = append(f6f0f2f0, &f6f0f2f0elem)
-					}
-					f6f0f2.ContainerArguments = f6f0f2f0
+					f6f0f2.ContainerArguments = aws.StringSlice(resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments)
 				}
 				if resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint != nil {
-					f6f0f2f1 := []*string{}
-					for _, f6f0f2f1iter := range resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint {
-						var f6f0f2f1elem string
-						f6f0f2f1elem = *f6f0f2f1iter
-						f6f0f2f1 = append(f6f0f2f1, &f6f0f2f1elem)
-					}
-					f6f0f2.ContainerEntrypoint = f6f0f2f1
+					f6f0f2.ContainerEntrypoint = aws.StringSlice(resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint)
 				}
 				if resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ImageUri != nil {
 					f6f0f2.ImageURI = resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ImageUri
@@ -243,11 +226,11 @@ func (rm *resourceManager) sdkFind(
 						if f6f0f3iter.EndpointInput.ProbabilityThresholdAttribute != nil {
 							f6f0f3elemf0.ProbabilityThresholdAttribute = f6f0f3iter.EndpointInput.ProbabilityThresholdAttribute
 						}
-						if f6f0f3iter.EndpointInput.S3DataDistributionType != nil {
-							f6f0f3elemf0.S3DataDistributionType = f6f0f3iter.EndpointInput.S3DataDistributionType
+						if f6f0f3iter.EndpointInput.S3DataDistributionType != "" {
+							f6f0f3elemf0.S3DataDistributionType = aws.String(string(f6f0f3iter.EndpointInput.S3DataDistributionType))
 						}
-						if f6f0f3iter.EndpointInput.S3InputMode != nil {
-							f6f0f3elemf0.S3InputMode = f6f0f3iter.EndpointInput.S3InputMode
+						if f6f0f3iter.EndpointInput.S3InputMode != "" {
+							f6f0f3elemf0.S3InputMode = aws.String(string(f6f0f3iter.EndpointInput.S3InputMode))
 						}
 						if f6f0f3iter.EndpointInput.StartTimeOffset != nil {
 							f6f0f3elemf0.StartTimeOffset = f6f0f3iter.EndpointInput.StartTimeOffset
@@ -272,8 +255,8 @@ func (rm *resourceManager) sdkFind(
 							if f6f0f4f1iter.S3Output.LocalPath != nil {
 								f6f0f4f1elemf0.LocalPath = f6f0f4f1iter.S3Output.LocalPath
 							}
-							if f6f0f4f1iter.S3Output.S3UploadMode != nil {
-								f6f0f4f1elemf0.S3UploadMode = f6f0f4f1iter.S3Output.S3UploadMode
+							if f6f0f4f1iter.S3Output.S3UploadMode != "" {
+								f6f0f4f1elemf0.S3UploadMode = aws.String(string(f6f0f4f1iter.S3Output.S3UploadMode))
 							}
 							if f6f0f4f1iter.S3Output.S3Uri != nil {
 								f6f0f4f1elemf0.S3URI = f6f0f4f1iter.S3Output.S3Uri
@@ -291,16 +274,18 @@ func (rm *resourceManager) sdkFind(
 				if resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig != nil {
 					f6f0f5f0 := &svcapitypes.MonitoringClusterConfig{}
 					if resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.InstanceCount != nil {
-						f6f0f5f0.InstanceCount = resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.InstanceCount
+						instanceCountCopy := int64(*resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.InstanceCount)
+						f6f0f5f0.InstanceCount = &instanceCountCopy
 					}
-					if resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.InstanceType != nil {
-						f6f0f5f0.InstanceType = resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.InstanceType
+					if resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.InstanceType != "" {
+						f6f0f5f0.InstanceType = aws.String(string(resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.InstanceType))
 					}
 					if resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.VolumeKmsKeyId != nil {
 						f6f0f5f0.VolumeKMSKeyID = resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.VolumeKmsKeyId
 					}
 					if resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.VolumeSizeInGB != nil {
-						f6f0f5f0.VolumeSizeInGB = resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.VolumeSizeInGB
+						volumeSizeInGBCopy := int64(*resp.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.VolumeSizeInGB)
+						f6f0f5f0.VolumeSizeInGB = &volumeSizeInGBCopy
 					}
 					f6f0f5.ClusterConfig = f6f0f5f0
 				}
@@ -317,22 +302,10 @@ func (rm *resourceManager) sdkFind(
 				if resp.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VpcConfig != nil {
 					f6f0f6f2 := &svcapitypes.VPCConfig{}
 					if resp.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VpcConfig.SecurityGroupIds != nil {
-						f6f0f6f2f0 := []*string{}
-						for _, f6f0f6f2f0iter := range resp.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VpcConfig.SecurityGroupIds {
-							var f6f0f6f2f0elem string
-							f6f0f6f2f0elem = *f6f0f6f2f0iter
-							f6f0f6f2f0 = append(f6f0f6f2f0, &f6f0f6f2f0elem)
-						}
-						f6f0f6f2.SecurityGroupIDs = f6f0f6f2f0
+						f6f0f6f2.SecurityGroupIDs = aws.StringSlice(resp.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VpcConfig.SecurityGroupIds)
 					}
 					if resp.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VpcConfig.Subnets != nil {
-						f6f0f6f2f1 := []*string{}
-						for _, f6f0f6f2f1iter := range resp.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VpcConfig.Subnets {
-							var f6f0f6f2f1elem string
-							f6f0f6f2f1elem = *f6f0f6f2f1iter
-							f6f0f6f2f1 = append(f6f0f6f2f1, &f6f0f6f2f1elem)
-						}
-						f6f0f6f2.Subnets = f6f0f6f2f1
+						f6f0f6f2.Subnets = aws.StringSlice(resp.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VpcConfig.Subnets)
 					}
 					f6f0f6.VPCConfig = f6f0f6f2
 				}
@@ -344,7 +317,8 @@ func (rm *resourceManager) sdkFind(
 			if resp.MonitoringScheduleConfig.MonitoringJobDefinition.StoppingCondition != nil {
 				f6f0f8 := &svcapitypes.MonitoringStoppingCondition{}
 				if resp.MonitoringScheduleConfig.MonitoringJobDefinition.StoppingCondition.MaxRuntimeInSeconds != nil {
-					f6f0f8.MaxRuntimeInSeconds = resp.MonitoringScheduleConfig.MonitoringJobDefinition.StoppingCondition.MaxRuntimeInSeconds
+					maxRuntimeInSecondsCopy := int64(*resp.MonitoringScheduleConfig.MonitoringJobDefinition.StoppingCondition.MaxRuntimeInSeconds)
+					f6f0f8.MaxRuntimeInSeconds = &maxRuntimeInSecondsCopy
 				}
 				f6f0.StoppingCondition = f6f0f8
 			}
@@ -353,8 +327,8 @@ func (rm *resourceManager) sdkFind(
 		if resp.MonitoringScheduleConfig.MonitoringJobDefinitionName != nil {
 			f6.MonitoringJobDefinitionName = resp.MonitoringScheduleConfig.MonitoringJobDefinitionName
 		}
-		if resp.MonitoringScheduleConfig.MonitoringType != nil {
-			f6.MonitoringType = resp.MonitoringScheduleConfig.MonitoringType
+		if resp.MonitoringScheduleConfig.MonitoringType != "" {
+			f6.MonitoringType = aws.String(string(resp.MonitoringScheduleConfig.MonitoringType))
 		}
 		if resp.MonitoringScheduleConfig.ScheduleConfig != nil {
 			f6f3 := &svcapitypes.ScheduleConfig{}
@@ -378,14 +352,14 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.MonitoringScheduleName = nil
 	}
-	if resp.MonitoringScheduleStatus != nil {
-		ko.Status.MonitoringScheduleStatus = resp.MonitoringScheduleStatus
+	if resp.MonitoringScheduleStatus != "" {
+		ko.Status.MonitoringScheduleStatus = aws.String(string(resp.MonitoringScheduleStatus))
 	} else {
 		ko.Status.MonitoringScheduleStatus = nil
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutput(&resource{ko}, resp.MonitoringScheduleStatus)
+	rm.customSetOutput(&resource{ko}, string(resp.MonitoringScheduleStatus))
 	return &resource{ko}, nil
 }
 
@@ -407,7 +381,7 @@ func (rm *resourceManager) newDescribeRequestPayload(
 	res := &svcsdk.DescribeMonitoringScheduleInput{}
 
 	if r.ko.Spec.MonitoringScheduleName != nil {
-		res.SetMonitoringScheduleName(*r.ko.Spec.MonitoringScheduleName)
+		res.MonitoringScheduleName = r.ko.Spec.MonitoringScheduleName
 	}
 
 	return res, nil
@@ -432,7 +406,7 @@ func (rm *resourceManager) sdkCreate(
 
 	var resp *svcsdk.CreateMonitoringScheduleOutput
 	_ = resp
-	resp, err = rm.sdkapi.CreateMonitoringScheduleWithContext(ctx, input)
+	resp, err = rm.sdkapi.CreateMonitoringSchedule(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateMonitoringSchedule", err)
 	if err != nil {
 		return nil, err
@@ -462,244 +436,229 @@ func (rm *resourceManager) newCreateRequestPayload(
 	res := &svcsdk.CreateMonitoringScheduleInput{}
 
 	if r.ko.Spec.MonitoringScheduleConfig != nil {
-		f0 := &svcsdk.MonitoringScheduleConfig{}
+		f0 := &svcsdktypes.MonitoringScheduleConfig{}
 		if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition != nil {
-			f0f0 := &svcsdk.MonitoringJobDefinition{}
+			f0f0 := &svcsdktypes.MonitoringJobDefinition{}
 			if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig != nil {
-				f0f0f0 := &svcsdk.MonitoringBaselineConfig{}
+				f0f0f0 := &svcsdktypes.MonitoringBaselineConfig{}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.BaseliningJobName != nil {
-					f0f0f0.SetBaseliningJobName(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.BaseliningJobName)
+					f0f0f0.BaseliningJobName = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.BaseliningJobName
 				}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.ConstraintsResource != nil {
-					f0f0f0f1 := &svcsdk.MonitoringConstraintsResource{}
+					f0f0f0f1 := &svcsdktypes.MonitoringConstraintsResource{}
 					if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.ConstraintsResource.S3URI != nil {
-						f0f0f0f1.SetS3Uri(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.ConstraintsResource.S3URI)
+						f0f0f0f1.S3Uri = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.ConstraintsResource.S3URI
 					}
-					f0f0f0.SetConstraintsResource(f0f0f0f1)
+					f0f0f0.ConstraintsResource = f0f0f0f1
 				}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.StatisticsResource != nil {
-					f0f0f0f2 := &svcsdk.MonitoringStatisticsResource{}
+					f0f0f0f2 := &svcsdktypes.MonitoringStatisticsResource{}
 					if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.StatisticsResource.S3URI != nil {
-						f0f0f0f2.SetS3Uri(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.StatisticsResource.S3URI)
+						f0f0f0f2.S3Uri = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.StatisticsResource.S3URI
 					}
-					f0f0f0.SetStatisticsResource(f0f0f0f2)
+					f0f0f0.StatisticsResource = f0f0f0f2
 				}
-				f0f0.SetBaselineConfig(f0f0f0)
+				f0f0.BaselineConfig = f0f0f0
 			}
 			if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment != nil {
-				f0f0f1 := map[string]*string{}
-				for f0f0f1key, f0f0f1valiter := range r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment {
-					var f0f0f1val string
-					f0f0f1val = *f0f0f1valiter
-					f0f0f1[f0f0f1key] = &f0f0f1val
-				}
-				f0f0.SetEnvironment(f0f0f1)
+				f0f0.Environment = aws.ToStringMap(r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment)
 			}
 			if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification != nil {
-				f0f0f2 := &svcsdk.MonitoringAppSpecification{}
+				f0f0f2 := &svcsdktypes.MonitoringAppSpecification{}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments != nil {
-					f0f0f2f0 := []*string{}
-					for _, f0f0f2f0iter := range r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments {
-						var f0f0f2f0elem string
-						f0f0f2f0elem = *f0f0f2f0iter
-						f0f0f2f0 = append(f0f0f2f0, &f0f0f2f0elem)
-					}
-					f0f0f2.SetContainerArguments(f0f0f2f0)
+					f0f0f2.ContainerArguments = aws.ToStringSlice(r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments)
 				}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint != nil {
-					f0f0f2f1 := []*string{}
-					for _, f0f0f2f1iter := range r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint {
-						var f0f0f2f1elem string
-						f0f0f2f1elem = *f0f0f2f1iter
-						f0f0f2f1 = append(f0f0f2f1, &f0f0f2f1elem)
-					}
-					f0f0f2.SetContainerEntrypoint(f0f0f2f1)
+					f0f0f2.ContainerEntrypoint = aws.ToStringSlice(r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint)
 				}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ImageURI != nil {
-					f0f0f2.SetImageUri(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ImageURI)
+					f0f0f2.ImageUri = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ImageURI
 				}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.PostAnalyticsProcessorSourceURI != nil {
-					f0f0f2.SetPostAnalyticsProcessorSourceUri(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.PostAnalyticsProcessorSourceURI)
+					f0f0f2.PostAnalyticsProcessorSourceUri = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.PostAnalyticsProcessorSourceURI
 				}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.RecordPreprocessorSourceURI != nil {
-					f0f0f2.SetRecordPreprocessorSourceUri(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.RecordPreprocessorSourceURI)
+					f0f0f2.RecordPreprocessorSourceUri = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.RecordPreprocessorSourceURI
 				}
-				f0f0.SetMonitoringAppSpecification(f0f0f2)
+				f0f0.MonitoringAppSpecification = f0f0f2
 			}
 			if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs != nil {
-				f0f0f3 := []*svcsdk.MonitoringInput{}
+				f0f0f3 := []svcsdktypes.MonitoringInput{}
 				for _, f0f0f3iter := range r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs {
-					f0f0f3elem := &svcsdk.MonitoringInput{}
+					f0f0f3elem := &svcsdktypes.MonitoringInput{}
 					if f0f0f3iter.EndpointInput != nil {
-						f0f0f3elemf0 := &svcsdk.EndpointInput{}
+						f0f0f3elemf0 := &svcsdktypes.EndpointInput{}
 						if f0f0f3iter.EndpointInput.EndTimeOffset != nil {
-							f0f0f3elemf0.SetEndTimeOffset(*f0f0f3iter.EndpointInput.EndTimeOffset)
+							f0f0f3elemf0.EndTimeOffset = f0f0f3iter.EndpointInput.EndTimeOffset
 						}
 						if f0f0f3iter.EndpointInput.EndpointName != nil {
-							f0f0f3elemf0.SetEndpointName(*f0f0f3iter.EndpointInput.EndpointName)
+							f0f0f3elemf0.EndpointName = f0f0f3iter.EndpointInput.EndpointName
 						}
 						if f0f0f3iter.EndpointInput.ExcludeFeaturesAttribute != nil {
-							f0f0f3elemf0.SetExcludeFeaturesAttribute(*f0f0f3iter.EndpointInput.ExcludeFeaturesAttribute)
+							f0f0f3elemf0.ExcludeFeaturesAttribute = f0f0f3iter.EndpointInput.ExcludeFeaturesAttribute
 						}
 						if f0f0f3iter.EndpointInput.FeaturesAttribute != nil {
-							f0f0f3elemf0.SetFeaturesAttribute(*f0f0f3iter.EndpointInput.FeaturesAttribute)
+							f0f0f3elemf0.FeaturesAttribute = f0f0f3iter.EndpointInput.FeaturesAttribute
 						}
 						if f0f0f3iter.EndpointInput.InferenceAttribute != nil {
-							f0f0f3elemf0.SetInferenceAttribute(*f0f0f3iter.EndpointInput.InferenceAttribute)
+							f0f0f3elemf0.InferenceAttribute = f0f0f3iter.EndpointInput.InferenceAttribute
 						}
 						if f0f0f3iter.EndpointInput.LocalPath != nil {
-							f0f0f3elemf0.SetLocalPath(*f0f0f3iter.EndpointInput.LocalPath)
+							f0f0f3elemf0.LocalPath = f0f0f3iter.EndpointInput.LocalPath
 						}
 						if f0f0f3iter.EndpointInput.ProbabilityAttribute != nil {
-							f0f0f3elemf0.SetProbabilityAttribute(*f0f0f3iter.EndpointInput.ProbabilityAttribute)
+							f0f0f3elemf0.ProbabilityAttribute = f0f0f3iter.EndpointInput.ProbabilityAttribute
 						}
 						if f0f0f3iter.EndpointInput.ProbabilityThresholdAttribute != nil {
-							f0f0f3elemf0.SetProbabilityThresholdAttribute(*f0f0f3iter.EndpointInput.ProbabilityThresholdAttribute)
+							f0f0f3elemf0.ProbabilityThresholdAttribute = f0f0f3iter.EndpointInput.ProbabilityThresholdAttribute
 						}
 						if f0f0f3iter.EndpointInput.S3DataDistributionType != nil {
-							f0f0f3elemf0.SetS3DataDistributionType(*f0f0f3iter.EndpointInput.S3DataDistributionType)
+							f0f0f3elemf0.S3DataDistributionType = svcsdktypes.ProcessingS3DataDistributionType(*f0f0f3iter.EndpointInput.S3DataDistributionType)
 						}
 						if f0f0f3iter.EndpointInput.S3InputMode != nil {
-							f0f0f3elemf0.SetS3InputMode(*f0f0f3iter.EndpointInput.S3InputMode)
+							f0f0f3elemf0.S3InputMode = svcsdktypes.ProcessingS3InputMode(*f0f0f3iter.EndpointInput.S3InputMode)
 						}
 						if f0f0f3iter.EndpointInput.StartTimeOffset != nil {
-							f0f0f3elemf0.SetStartTimeOffset(*f0f0f3iter.EndpointInput.StartTimeOffset)
+							f0f0f3elemf0.StartTimeOffset = f0f0f3iter.EndpointInput.StartTimeOffset
 						}
-						f0f0f3elem.SetEndpointInput(f0f0f3elemf0)
+						f0f0f3elem.EndpointInput = f0f0f3elemf0
 					}
-					f0f0f3 = append(f0f0f3, f0f0f3elem)
+					f0f0f3 = append(f0f0f3, *f0f0f3elem)
 				}
-				f0f0.SetMonitoringInputs(f0f0f3)
+				f0f0.MonitoringInputs = f0f0f3
 			}
 			if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig != nil {
-				f0f0f4 := &svcsdk.MonitoringOutputConfig{}
+				f0f0f4 := &svcsdktypes.MonitoringOutputConfig{}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.KMSKeyID != nil {
-					f0f0f4.SetKmsKeyId(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.KMSKeyID)
+					f0f0f4.KmsKeyId = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.KMSKeyID
 				}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs != nil {
-					f0f0f4f1 := []*svcsdk.MonitoringOutput{}
+					f0f0f4f1 := []svcsdktypes.MonitoringOutput{}
 					for _, f0f0f4f1iter := range r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs {
-						f0f0f4f1elem := &svcsdk.MonitoringOutput{}
+						f0f0f4f1elem := &svcsdktypes.MonitoringOutput{}
 						if f0f0f4f1iter.S3Output != nil {
-							f0f0f4f1elemf0 := &svcsdk.MonitoringS3Output{}
+							f0f0f4f1elemf0 := &svcsdktypes.MonitoringS3Output{}
 							if f0f0f4f1iter.S3Output.LocalPath != nil {
-								f0f0f4f1elemf0.SetLocalPath(*f0f0f4f1iter.S3Output.LocalPath)
+								f0f0f4f1elemf0.LocalPath = f0f0f4f1iter.S3Output.LocalPath
 							}
 							if f0f0f4f1iter.S3Output.S3UploadMode != nil {
-								f0f0f4f1elemf0.SetS3UploadMode(*f0f0f4f1iter.S3Output.S3UploadMode)
+								f0f0f4f1elemf0.S3UploadMode = svcsdktypes.ProcessingS3UploadMode(*f0f0f4f1iter.S3Output.S3UploadMode)
 							}
 							if f0f0f4f1iter.S3Output.S3URI != nil {
-								f0f0f4f1elemf0.SetS3Uri(*f0f0f4f1iter.S3Output.S3URI)
+								f0f0f4f1elemf0.S3Uri = f0f0f4f1iter.S3Output.S3URI
 							}
-							f0f0f4f1elem.SetS3Output(f0f0f4f1elemf0)
+							f0f0f4f1elem.S3Output = f0f0f4f1elemf0
 						}
-						f0f0f4f1 = append(f0f0f4f1, f0f0f4f1elem)
+						f0f0f4f1 = append(f0f0f4f1, *f0f0f4f1elem)
 					}
-					f0f0f4.SetMonitoringOutputs(f0f0f4f1)
+					f0f0f4.MonitoringOutputs = f0f0f4f1
 				}
-				f0f0.SetMonitoringOutputConfig(f0f0f4)
+				f0f0.MonitoringOutputConfig = f0f0f4
 			}
 			if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources != nil {
-				f0f0f5 := &svcsdk.MonitoringResources{}
+				f0f0f5 := &svcsdktypes.MonitoringResources{}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig != nil {
-					f0f0f5f0 := &svcsdk.MonitoringClusterConfig{}
+					f0f0f5f0 := &svcsdktypes.MonitoringClusterConfig{}
 					if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.InstanceCount != nil {
-						f0f0f5f0.SetInstanceCount(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.InstanceCount)
+						instanceCountCopy0 := *r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.InstanceCount
+						if instanceCountCopy0 > math.MaxInt32 || instanceCountCopy0 < math.MinInt32 {
+							return nil, fmt.Errorf("error: field InstanceCount is of type int32")
+						}
+						instanceCountCopy := int32(instanceCountCopy0)
+						f0f0f5f0.InstanceCount = &instanceCountCopy
 					}
 					if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.InstanceType != nil {
-						f0f0f5f0.SetInstanceType(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.InstanceType)
+						f0f0f5f0.InstanceType = svcsdktypes.ProcessingInstanceType(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.InstanceType)
 					}
 					if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.VolumeKMSKeyID != nil {
-						f0f0f5f0.SetVolumeKmsKeyId(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.VolumeKMSKeyID)
+						f0f0f5f0.VolumeKmsKeyId = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.VolumeKMSKeyID
 					}
 					if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.VolumeSizeInGB != nil {
-						f0f0f5f0.SetVolumeSizeInGB(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.VolumeSizeInGB)
+						volumeSizeInGBCopy0 := *r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.VolumeSizeInGB
+						if volumeSizeInGBCopy0 > math.MaxInt32 || volumeSizeInGBCopy0 < math.MinInt32 {
+							return nil, fmt.Errorf("error: field VolumeSizeInGB is of type int32")
+						}
+						volumeSizeInGBCopy := int32(volumeSizeInGBCopy0)
+						f0f0f5f0.VolumeSizeInGB = &volumeSizeInGBCopy
 					}
-					f0f0f5.SetClusterConfig(f0f0f5f0)
+					f0f0f5.ClusterConfig = f0f0f5f0
 				}
-				f0f0.SetMonitoringResources(f0f0f5)
+				f0f0.MonitoringResources = f0f0f5
 			}
 			if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig != nil {
-				f0f0f6 := &svcsdk.NetworkConfig{}
+				f0f0f6 := &svcsdktypes.NetworkConfig{}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.EnableInterContainerTrafficEncryption != nil {
-					f0f0f6.SetEnableInterContainerTrafficEncryption(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.EnableInterContainerTrafficEncryption)
+					f0f0f6.EnableInterContainerTrafficEncryption = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.EnableInterContainerTrafficEncryption
 				}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.EnableNetworkIsolation != nil {
-					f0f0f6.SetEnableNetworkIsolation(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.EnableNetworkIsolation)
+					f0f0f6.EnableNetworkIsolation = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.EnableNetworkIsolation
 				}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig != nil {
-					f0f0f6f2 := &svcsdk.VpcConfig{}
+					f0f0f6f2 := &svcsdktypes.VpcConfig{}
 					if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs != nil {
-						f0f0f6f2f0 := []*string{}
-						for _, f0f0f6f2f0iter := range r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs {
-							var f0f0f6f2f0elem string
-							f0f0f6f2f0elem = *f0f0f6f2f0iter
-							f0f0f6f2f0 = append(f0f0f6f2f0, &f0f0f6f2f0elem)
-						}
-						f0f0f6f2.SetSecurityGroupIds(f0f0f6f2f0)
+						f0f0f6f2.SecurityGroupIds = aws.ToStringSlice(r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs)
 					}
 					if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets != nil {
-						f0f0f6f2f1 := []*string{}
-						for _, f0f0f6f2f1iter := range r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets {
-							var f0f0f6f2f1elem string
-							f0f0f6f2f1elem = *f0f0f6f2f1iter
-							f0f0f6f2f1 = append(f0f0f6f2f1, &f0f0f6f2f1elem)
-						}
-						f0f0f6f2.SetSubnets(f0f0f6f2f1)
+						f0f0f6f2.Subnets = aws.ToStringSlice(r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets)
 					}
-					f0f0f6.SetVpcConfig(f0f0f6f2)
+					f0f0f6.VpcConfig = f0f0f6f2
 				}
-				f0f0.SetNetworkConfig(f0f0f6)
+				f0f0.NetworkConfig = f0f0f6
 			}
 			if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.RoleARN != nil {
-				f0f0.SetRoleArn(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.RoleARN)
+				f0f0.RoleArn = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.RoleARN
 			}
 			if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.StoppingCondition != nil {
-				f0f0f8 := &svcsdk.MonitoringStoppingCondition{}
+				f0f0f8 := &svcsdktypes.MonitoringStoppingCondition{}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.StoppingCondition.MaxRuntimeInSeconds != nil {
-					f0f0f8.SetMaxRuntimeInSeconds(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.StoppingCondition.MaxRuntimeInSeconds)
+					maxRuntimeInSecondsCopy0 := *r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.StoppingCondition.MaxRuntimeInSeconds
+					if maxRuntimeInSecondsCopy0 > math.MaxInt32 || maxRuntimeInSecondsCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field MaxRuntimeInSeconds is of type int32")
+					}
+					maxRuntimeInSecondsCopy := int32(maxRuntimeInSecondsCopy0)
+					f0f0f8.MaxRuntimeInSeconds = &maxRuntimeInSecondsCopy
 				}
-				f0f0.SetStoppingCondition(f0f0f8)
+				f0f0.StoppingCondition = f0f0f8
 			}
-			f0.SetMonitoringJobDefinition(f0f0)
+			f0.MonitoringJobDefinition = f0f0
 		}
 		if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinitionName != nil {
-			f0.SetMonitoringJobDefinitionName(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinitionName)
+			f0.MonitoringJobDefinitionName = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinitionName
 		}
 		if r.ko.Spec.MonitoringScheduleConfig.MonitoringType != nil {
-			f0.SetMonitoringType(*r.ko.Spec.MonitoringScheduleConfig.MonitoringType)
+			f0.MonitoringType = svcsdktypes.MonitoringType(*r.ko.Spec.MonitoringScheduleConfig.MonitoringType)
 		}
 		if r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig != nil {
-			f0f3 := &svcsdk.ScheduleConfig{}
+			f0f3 := &svcsdktypes.ScheduleConfig{}
 			if r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime != nil {
-				f0f3.SetDataAnalysisEndTime(*r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime)
+				f0f3.DataAnalysisEndTime = r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime
 			}
 			if r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime != nil {
-				f0f3.SetDataAnalysisStartTime(*r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime)
+				f0f3.DataAnalysisStartTime = r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime
 			}
 			if r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.ScheduleExpression != nil {
-				f0f3.SetScheduleExpression(*r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.ScheduleExpression)
+				f0f3.ScheduleExpression = r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.ScheduleExpression
 			}
-			f0.SetScheduleConfig(f0f3)
+			f0.ScheduleConfig = f0f3
 		}
-		res.SetMonitoringScheduleConfig(f0)
+		res.MonitoringScheduleConfig = f0
 	}
 	if r.ko.Spec.MonitoringScheduleName != nil {
-		res.SetMonitoringScheduleName(*r.ko.Spec.MonitoringScheduleName)
+		res.MonitoringScheduleName = r.ko.Spec.MonitoringScheduleName
 	}
 	if r.ko.Spec.Tags != nil {
-		f2 := []*svcsdk.Tag{}
+		f2 := []svcsdktypes.Tag{}
 		for _, f2iter := range r.ko.Spec.Tags {
-			f2elem := &svcsdk.Tag{}
+			f2elem := &svcsdktypes.Tag{}
 			if f2iter.Key != nil {
-				f2elem.SetKey(*f2iter.Key)
+				f2elem.Key = f2iter.Key
 			}
 			if f2iter.Value != nil {
-				f2elem.SetValue(*f2iter.Value)
+				f2elem.Value = f2iter.Value
 			}
-			f2 = append(f2, f2elem)
+			f2 = append(f2, *f2elem)
 		}
-		res.SetTags(f2)
+		res.Tags = f2
 	}
 
 	return res, nil
@@ -728,7 +687,7 @@ func (rm *resourceManager) sdkUpdate(
 
 	var resp *svcsdk.UpdateMonitoringScheduleOutput
 	_ = resp
-	resp, err = rm.sdkapi.UpdateMonitoringScheduleWithContext(ctx, input)
+	resp, err = rm.sdkapi.UpdateMonitoringSchedule(ctx, input)
 	rm.metrics.RecordAPICall("UPDATE", "UpdateMonitoringSchedule", err)
 	if err != nil {
 		return nil, err
@@ -746,7 +705,7 @@ func (rm *resourceManager) sdkUpdate(
 	}
 
 	rm.setStatusDefaults(ko)
-	rm.customSetOutput(&resource{ko}, aws.String("Pending"))
+	rm.customSetOutput(&resource{ko}, string(svcsdktypes.ScheduleStatusPending))
 	return &resource{ko}, nil
 }
 
@@ -760,230 +719,215 @@ func (rm *resourceManager) newUpdateRequestPayload(
 	res := &svcsdk.UpdateMonitoringScheduleInput{}
 
 	if r.ko.Spec.MonitoringScheduleConfig != nil {
-		f0 := &svcsdk.MonitoringScheduleConfig{}
+		f0 := &svcsdktypes.MonitoringScheduleConfig{}
 		if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition != nil {
-			f0f0 := &svcsdk.MonitoringJobDefinition{}
+			f0f0 := &svcsdktypes.MonitoringJobDefinition{}
 			if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig != nil {
-				f0f0f0 := &svcsdk.MonitoringBaselineConfig{}
+				f0f0f0 := &svcsdktypes.MonitoringBaselineConfig{}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.BaseliningJobName != nil {
-					f0f0f0.SetBaseliningJobName(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.BaseliningJobName)
+					f0f0f0.BaseliningJobName = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.BaseliningJobName
 				}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.ConstraintsResource != nil {
-					f0f0f0f1 := &svcsdk.MonitoringConstraintsResource{}
+					f0f0f0f1 := &svcsdktypes.MonitoringConstraintsResource{}
 					if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.ConstraintsResource.S3URI != nil {
-						f0f0f0f1.SetS3Uri(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.ConstraintsResource.S3URI)
+						f0f0f0f1.S3Uri = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.ConstraintsResource.S3URI
 					}
-					f0f0f0.SetConstraintsResource(f0f0f0f1)
+					f0f0f0.ConstraintsResource = f0f0f0f1
 				}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.StatisticsResource != nil {
-					f0f0f0f2 := &svcsdk.MonitoringStatisticsResource{}
+					f0f0f0f2 := &svcsdktypes.MonitoringStatisticsResource{}
 					if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.StatisticsResource.S3URI != nil {
-						f0f0f0f2.SetS3Uri(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.StatisticsResource.S3URI)
+						f0f0f0f2.S3Uri = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.BaselineConfig.StatisticsResource.S3URI
 					}
-					f0f0f0.SetStatisticsResource(f0f0f0f2)
+					f0f0f0.StatisticsResource = f0f0f0f2
 				}
-				f0f0.SetBaselineConfig(f0f0f0)
+				f0f0.BaselineConfig = f0f0f0
 			}
 			if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment != nil {
-				f0f0f1 := map[string]*string{}
-				for f0f0f1key, f0f0f1valiter := range r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment {
-					var f0f0f1val string
-					f0f0f1val = *f0f0f1valiter
-					f0f0f1[f0f0f1key] = &f0f0f1val
-				}
-				f0f0.SetEnvironment(f0f0f1)
+				f0f0.Environment = aws.ToStringMap(r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.Environment)
 			}
 			if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification != nil {
-				f0f0f2 := &svcsdk.MonitoringAppSpecification{}
+				f0f0f2 := &svcsdktypes.MonitoringAppSpecification{}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments != nil {
-					f0f0f2f0 := []*string{}
-					for _, f0f0f2f0iter := range r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments {
-						var f0f0f2f0elem string
-						f0f0f2f0elem = *f0f0f2f0iter
-						f0f0f2f0 = append(f0f0f2f0, &f0f0f2f0elem)
-					}
-					f0f0f2.SetContainerArguments(f0f0f2f0)
+					f0f0f2.ContainerArguments = aws.ToStringSlice(r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerArguments)
 				}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint != nil {
-					f0f0f2f1 := []*string{}
-					for _, f0f0f2f1iter := range r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint {
-						var f0f0f2f1elem string
-						f0f0f2f1elem = *f0f0f2f1iter
-						f0f0f2f1 = append(f0f0f2f1, &f0f0f2f1elem)
-					}
-					f0f0f2.SetContainerEntrypoint(f0f0f2f1)
+					f0f0f2.ContainerEntrypoint = aws.ToStringSlice(r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ContainerEntrypoint)
 				}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ImageURI != nil {
-					f0f0f2.SetImageUri(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ImageURI)
+					f0f0f2.ImageUri = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.ImageURI
 				}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.PostAnalyticsProcessorSourceURI != nil {
-					f0f0f2.SetPostAnalyticsProcessorSourceUri(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.PostAnalyticsProcessorSourceURI)
+					f0f0f2.PostAnalyticsProcessorSourceUri = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.PostAnalyticsProcessorSourceURI
 				}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.RecordPreprocessorSourceURI != nil {
-					f0f0f2.SetRecordPreprocessorSourceUri(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.RecordPreprocessorSourceURI)
+					f0f0f2.RecordPreprocessorSourceUri = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringAppSpecification.RecordPreprocessorSourceURI
 				}
-				f0f0.SetMonitoringAppSpecification(f0f0f2)
+				f0f0.MonitoringAppSpecification = f0f0f2
 			}
 			if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs != nil {
-				f0f0f3 := []*svcsdk.MonitoringInput{}
+				f0f0f3 := []svcsdktypes.MonitoringInput{}
 				for _, f0f0f3iter := range r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs {
-					f0f0f3elem := &svcsdk.MonitoringInput{}
+					f0f0f3elem := &svcsdktypes.MonitoringInput{}
 					if f0f0f3iter.EndpointInput != nil {
-						f0f0f3elemf0 := &svcsdk.EndpointInput{}
+						f0f0f3elemf0 := &svcsdktypes.EndpointInput{}
 						if f0f0f3iter.EndpointInput.EndTimeOffset != nil {
-							f0f0f3elemf0.SetEndTimeOffset(*f0f0f3iter.EndpointInput.EndTimeOffset)
+							f0f0f3elemf0.EndTimeOffset = f0f0f3iter.EndpointInput.EndTimeOffset
 						}
 						if f0f0f3iter.EndpointInput.EndpointName != nil {
-							f0f0f3elemf0.SetEndpointName(*f0f0f3iter.EndpointInput.EndpointName)
+							f0f0f3elemf0.EndpointName = f0f0f3iter.EndpointInput.EndpointName
 						}
 						if f0f0f3iter.EndpointInput.ExcludeFeaturesAttribute != nil {
-							f0f0f3elemf0.SetExcludeFeaturesAttribute(*f0f0f3iter.EndpointInput.ExcludeFeaturesAttribute)
+							f0f0f3elemf0.ExcludeFeaturesAttribute = f0f0f3iter.EndpointInput.ExcludeFeaturesAttribute
 						}
 						if f0f0f3iter.EndpointInput.FeaturesAttribute != nil {
-							f0f0f3elemf0.SetFeaturesAttribute(*f0f0f3iter.EndpointInput.FeaturesAttribute)
+							f0f0f3elemf0.FeaturesAttribute = f0f0f3iter.EndpointInput.FeaturesAttribute
 						}
 						if f0f0f3iter.EndpointInput.InferenceAttribute != nil {
-							f0f0f3elemf0.SetInferenceAttribute(*f0f0f3iter.EndpointInput.InferenceAttribute)
+							f0f0f3elemf0.InferenceAttribute = f0f0f3iter.EndpointInput.InferenceAttribute
 						}
 						if f0f0f3iter.EndpointInput.LocalPath != nil {
-							f0f0f3elemf0.SetLocalPath(*f0f0f3iter.EndpointInput.LocalPath)
+							f0f0f3elemf0.LocalPath = f0f0f3iter.EndpointInput.LocalPath
 						}
 						if f0f0f3iter.EndpointInput.ProbabilityAttribute != nil {
-							f0f0f3elemf0.SetProbabilityAttribute(*f0f0f3iter.EndpointInput.ProbabilityAttribute)
+							f0f0f3elemf0.ProbabilityAttribute = f0f0f3iter.EndpointInput.ProbabilityAttribute
 						}
 						if f0f0f3iter.EndpointInput.ProbabilityThresholdAttribute != nil {
-							f0f0f3elemf0.SetProbabilityThresholdAttribute(*f0f0f3iter.EndpointInput.ProbabilityThresholdAttribute)
+							f0f0f3elemf0.ProbabilityThresholdAttribute = f0f0f3iter.EndpointInput.ProbabilityThresholdAttribute
 						}
 						if f0f0f3iter.EndpointInput.S3DataDistributionType != nil {
-							f0f0f3elemf0.SetS3DataDistributionType(*f0f0f3iter.EndpointInput.S3DataDistributionType)
+							f0f0f3elemf0.S3DataDistributionType = svcsdktypes.ProcessingS3DataDistributionType(*f0f0f3iter.EndpointInput.S3DataDistributionType)
 						}
 						if f0f0f3iter.EndpointInput.S3InputMode != nil {
-							f0f0f3elemf0.SetS3InputMode(*f0f0f3iter.EndpointInput.S3InputMode)
+							f0f0f3elemf0.S3InputMode = svcsdktypes.ProcessingS3InputMode(*f0f0f3iter.EndpointInput.S3InputMode)
 						}
 						if f0f0f3iter.EndpointInput.StartTimeOffset != nil {
-							f0f0f3elemf0.SetStartTimeOffset(*f0f0f3iter.EndpointInput.StartTimeOffset)
+							f0f0f3elemf0.StartTimeOffset = f0f0f3iter.EndpointInput.StartTimeOffset
 						}
-						f0f0f3elem.SetEndpointInput(f0f0f3elemf0)
+						f0f0f3elem.EndpointInput = f0f0f3elemf0
 					}
-					f0f0f3 = append(f0f0f3, f0f0f3elem)
+					f0f0f3 = append(f0f0f3, *f0f0f3elem)
 				}
-				f0f0.SetMonitoringInputs(f0f0f3)
+				f0f0.MonitoringInputs = f0f0f3
 			}
 			if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig != nil {
-				f0f0f4 := &svcsdk.MonitoringOutputConfig{}
+				f0f0f4 := &svcsdktypes.MonitoringOutputConfig{}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.KMSKeyID != nil {
-					f0f0f4.SetKmsKeyId(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.KMSKeyID)
+					f0f0f4.KmsKeyId = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.KMSKeyID
 				}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs != nil {
-					f0f0f4f1 := []*svcsdk.MonitoringOutput{}
+					f0f0f4f1 := []svcsdktypes.MonitoringOutput{}
 					for _, f0f0f4f1iter := range r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs {
-						f0f0f4f1elem := &svcsdk.MonitoringOutput{}
+						f0f0f4f1elem := &svcsdktypes.MonitoringOutput{}
 						if f0f0f4f1iter.S3Output != nil {
-							f0f0f4f1elemf0 := &svcsdk.MonitoringS3Output{}
+							f0f0f4f1elemf0 := &svcsdktypes.MonitoringS3Output{}
 							if f0f0f4f1iter.S3Output.LocalPath != nil {
-								f0f0f4f1elemf0.SetLocalPath(*f0f0f4f1iter.S3Output.LocalPath)
+								f0f0f4f1elemf0.LocalPath = f0f0f4f1iter.S3Output.LocalPath
 							}
 							if f0f0f4f1iter.S3Output.S3UploadMode != nil {
-								f0f0f4f1elemf0.SetS3UploadMode(*f0f0f4f1iter.S3Output.S3UploadMode)
+								f0f0f4f1elemf0.S3UploadMode = svcsdktypes.ProcessingS3UploadMode(*f0f0f4f1iter.S3Output.S3UploadMode)
 							}
 							if f0f0f4f1iter.S3Output.S3URI != nil {
-								f0f0f4f1elemf0.SetS3Uri(*f0f0f4f1iter.S3Output.S3URI)
+								f0f0f4f1elemf0.S3Uri = f0f0f4f1iter.S3Output.S3URI
 							}
-							f0f0f4f1elem.SetS3Output(f0f0f4f1elemf0)
+							f0f0f4f1elem.S3Output = f0f0f4f1elemf0
 						}
-						f0f0f4f1 = append(f0f0f4f1, f0f0f4f1elem)
+						f0f0f4f1 = append(f0f0f4f1, *f0f0f4f1elem)
 					}
-					f0f0f4.SetMonitoringOutputs(f0f0f4f1)
+					f0f0f4.MonitoringOutputs = f0f0f4f1
 				}
-				f0f0.SetMonitoringOutputConfig(f0f0f4)
+				f0f0.MonitoringOutputConfig = f0f0f4
 			}
 			if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources != nil {
-				f0f0f5 := &svcsdk.MonitoringResources{}
+				f0f0f5 := &svcsdktypes.MonitoringResources{}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig != nil {
-					f0f0f5f0 := &svcsdk.MonitoringClusterConfig{}
+					f0f0f5f0 := &svcsdktypes.MonitoringClusterConfig{}
 					if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.InstanceCount != nil {
-						f0f0f5f0.SetInstanceCount(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.InstanceCount)
+						instanceCountCopy0 := *r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.InstanceCount
+						if instanceCountCopy0 > math.MaxInt32 || instanceCountCopy0 < math.MinInt32 {
+							return nil, fmt.Errorf("error: field InstanceCount is of type int32")
+						}
+						instanceCountCopy := int32(instanceCountCopy0)
+						f0f0f5f0.InstanceCount = &instanceCountCopy
 					}
 					if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.InstanceType != nil {
-						f0f0f5f0.SetInstanceType(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.InstanceType)
+						f0f0f5f0.InstanceType = svcsdktypes.ProcessingInstanceType(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.InstanceType)
 					}
 					if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.VolumeKMSKeyID != nil {
-						f0f0f5f0.SetVolumeKmsKeyId(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.VolumeKMSKeyID)
+						f0f0f5f0.VolumeKmsKeyId = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.VolumeKMSKeyID
 					}
 					if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.VolumeSizeInGB != nil {
-						f0f0f5f0.SetVolumeSizeInGB(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.VolumeSizeInGB)
+						volumeSizeInGBCopy0 := *r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringResources.ClusterConfig.VolumeSizeInGB
+						if volumeSizeInGBCopy0 > math.MaxInt32 || volumeSizeInGBCopy0 < math.MinInt32 {
+							return nil, fmt.Errorf("error: field VolumeSizeInGB is of type int32")
+						}
+						volumeSizeInGBCopy := int32(volumeSizeInGBCopy0)
+						f0f0f5f0.VolumeSizeInGB = &volumeSizeInGBCopy
 					}
-					f0f0f5.SetClusterConfig(f0f0f5f0)
+					f0f0f5.ClusterConfig = f0f0f5f0
 				}
-				f0f0.SetMonitoringResources(f0f0f5)
+				f0f0.MonitoringResources = f0f0f5
 			}
 			if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig != nil {
-				f0f0f6 := &svcsdk.NetworkConfig{}
+				f0f0f6 := &svcsdktypes.NetworkConfig{}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.EnableInterContainerTrafficEncryption != nil {
-					f0f0f6.SetEnableInterContainerTrafficEncryption(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.EnableInterContainerTrafficEncryption)
+					f0f0f6.EnableInterContainerTrafficEncryption = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.EnableInterContainerTrafficEncryption
 				}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.EnableNetworkIsolation != nil {
-					f0f0f6.SetEnableNetworkIsolation(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.EnableNetworkIsolation)
+					f0f0f6.EnableNetworkIsolation = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.EnableNetworkIsolation
 				}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig != nil {
-					f0f0f6f2 := &svcsdk.VpcConfig{}
+					f0f0f6f2 := &svcsdktypes.VpcConfig{}
 					if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs != nil {
-						f0f0f6f2f0 := []*string{}
-						for _, f0f0f6f2f0iter := range r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs {
-							var f0f0f6f2f0elem string
-							f0f0f6f2f0elem = *f0f0f6f2f0iter
-							f0f0f6f2f0 = append(f0f0f6f2f0, &f0f0f6f2f0elem)
-						}
-						f0f0f6f2.SetSecurityGroupIds(f0f0f6f2f0)
+						f0f0f6f2.SecurityGroupIds = aws.ToStringSlice(r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.SecurityGroupIDs)
 					}
 					if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets != nil {
-						f0f0f6f2f1 := []*string{}
-						for _, f0f0f6f2f1iter := range r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets {
-							var f0f0f6f2f1elem string
-							f0f0f6f2f1elem = *f0f0f6f2f1iter
-							f0f0f6f2f1 = append(f0f0f6f2f1, &f0f0f6f2f1elem)
-						}
-						f0f0f6f2.SetSubnets(f0f0f6f2f1)
+						f0f0f6f2.Subnets = aws.ToStringSlice(r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.NetworkConfig.VPCConfig.Subnets)
 					}
-					f0f0f6.SetVpcConfig(f0f0f6f2)
+					f0f0f6.VpcConfig = f0f0f6f2
 				}
-				f0f0.SetNetworkConfig(f0f0f6)
+				f0f0.NetworkConfig = f0f0f6
 			}
 			if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.RoleARN != nil {
-				f0f0.SetRoleArn(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.RoleARN)
+				f0f0.RoleArn = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.RoleARN
 			}
 			if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.StoppingCondition != nil {
-				f0f0f8 := &svcsdk.MonitoringStoppingCondition{}
+				f0f0f8 := &svcsdktypes.MonitoringStoppingCondition{}
 				if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.StoppingCondition.MaxRuntimeInSeconds != nil {
-					f0f0f8.SetMaxRuntimeInSeconds(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.StoppingCondition.MaxRuntimeInSeconds)
+					maxRuntimeInSecondsCopy0 := *r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.StoppingCondition.MaxRuntimeInSeconds
+					if maxRuntimeInSecondsCopy0 > math.MaxInt32 || maxRuntimeInSecondsCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field MaxRuntimeInSeconds is of type int32")
+					}
+					maxRuntimeInSecondsCopy := int32(maxRuntimeInSecondsCopy0)
+					f0f0f8.MaxRuntimeInSeconds = &maxRuntimeInSecondsCopy
 				}
-				f0f0.SetStoppingCondition(f0f0f8)
+				f0f0.StoppingCondition = f0f0f8
 			}
-			f0.SetMonitoringJobDefinition(f0f0)
+			f0.MonitoringJobDefinition = f0f0
 		}
 		if r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinitionName != nil {
-			f0.SetMonitoringJobDefinitionName(*r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinitionName)
+			f0.MonitoringJobDefinitionName = r.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinitionName
 		}
 		if r.ko.Spec.MonitoringScheduleConfig.MonitoringType != nil {
-			f0.SetMonitoringType(*r.ko.Spec.MonitoringScheduleConfig.MonitoringType)
+			f0.MonitoringType = svcsdktypes.MonitoringType(*r.ko.Spec.MonitoringScheduleConfig.MonitoringType)
 		}
 		if r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig != nil {
-			f0f3 := &svcsdk.ScheduleConfig{}
+			f0f3 := &svcsdktypes.ScheduleConfig{}
 			if r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime != nil {
-				f0f3.SetDataAnalysisEndTime(*r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime)
+				f0f3.DataAnalysisEndTime = r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisEndTime
 			}
 			if r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime != nil {
-				f0f3.SetDataAnalysisStartTime(*r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime)
+				f0f3.DataAnalysisStartTime = r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.DataAnalysisStartTime
 			}
 			if r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.ScheduleExpression != nil {
-				f0f3.SetScheduleExpression(*r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.ScheduleExpression)
+				f0f3.ScheduleExpression = r.ko.Spec.MonitoringScheduleConfig.ScheduleConfig.ScheduleExpression
 			}
-			f0.SetScheduleConfig(f0f3)
+			f0.ScheduleConfig = f0f3
 		}
-		res.SetMonitoringScheduleConfig(f0)
+		res.MonitoringScheduleConfig = f0
 	}
 	if r.ko.Spec.MonitoringScheduleName != nil {
-		res.SetMonitoringScheduleName(*r.ko.Spec.MonitoringScheduleName)
+		res.MonitoringScheduleName = r.ko.Spec.MonitoringScheduleName
 	}
 
 	return res, nil
@@ -1009,7 +953,7 @@ func (rm *resourceManager) sdkDelete(
 	}
 	var resp *svcsdk.DeleteMonitoringScheduleOutput
 	_ = resp
-	resp, err = rm.sdkapi.DeleteMonitoringScheduleWithContext(ctx, input)
+	resp, err = rm.sdkapi.DeleteMonitoringSchedule(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteMonitoringSchedule", err)
 
 	if err == nil {
@@ -1033,7 +977,7 @@ func (rm *resourceManager) newDeleteRequestPayload(
 	res := &svcsdk.DeleteMonitoringScheduleInput{}
 
 	if r.ko.Spec.MonitoringScheduleName != nil {
-		res.SetMonitoringScheduleName(*r.ko.Spec.MonitoringScheduleName)
+		res.MonitoringScheduleName = r.ko.Spec.MonitoringScheduleName
 	}
 
 	return res, nil
@@ -1148,11 +1092,12 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 	if err == nil {
 		return false
 	}
-	awsErr, ok := ackerr.AWSError(err)
-	if !ok {
+
+	var terminalErr smithy.APIError
+	if !errors.As(err, &terminalErr) {
 		return false
 	}
-	switch awsErr.Code() {
+	switch terminalErr.ErrorCode() {
 	case "ResourceNotFound",
 		"ResourceInUse",
 		"InvalidParameterCombination",

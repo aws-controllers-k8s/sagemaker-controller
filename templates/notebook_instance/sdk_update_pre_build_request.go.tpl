@@ -5,8 +5,8 @@ if err = rm.requeueUntilCanModify(ctx, latest); err != nil {
 latestStatus := latest.ko.Status.NotebookInstanceStatus
 // The Notebook Instance is stopped and the StoppedByControllerMetadata status is
 // set to UpdatePending.
-if latestStatus != nil && *latestStatus == svcsdk.NotebookInstanceStatusInService {
-	if err := rm.stopNotebookInstance(latest); err != nil {
+if latestStatus != nil && *latestStatus == string(svcsdktypes.NotebookInstanceStatusInService) {
+	if err := rm.stopNotebookInstance(ctx, latest); err != nil {
 		return nil, err
 	} else {
 		//TODO: Replace with annotations once rutime supports it.

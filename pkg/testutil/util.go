@@ -21,7 +21,6 @@ import (
 	"path"
 	"strings"
 
-	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/ghodss/yaml"
 )
 
@@ -47,12 +46,4 @@ func LoadFromFixture(
 	if err != nil {
 		panic(err)
 	}
-}
-
-// CreateAWSError is used for mocking the types of errors received from aws-sdk-go
-// so that the expected code path executes. Support for specifying the HTTP status code and request ID
-// can be added in the future if needed
-func CreateAWSError(awsError ServiceAPIError) awserr.RequestFailure {
-	error := awserr.New(awsError.Code, awsError.Message, nil)
-	return awserr.NewRequestFailure(error, 0, "")
 }

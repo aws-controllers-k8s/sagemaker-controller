@@ -20,28 +20,29 @@ import (
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
-	"github.com/aws/aws-sdk-go/aws"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
 )
 
 var (
 	trainingJobModifyingStatuses = []string{
-		svcsdk.TrainingJobStatusInProgress,
-		svcsdk.TrainingJobStatusStopping,
+		string(svcsdktypes.TrainingJobStatusInProgress),
+		string(svcsdktypes.TrainingJobStatusStopping),
 	}
 	ruleModifyingStatuses = []string{
-		svcsdk.RuleEvaluationStatusInProgress,
-		svcsdk.RuleEvaluationStatusStopping,
+		string(svcsdktypes.RuleEvaluationStatusInProgress),
+		string(svcsdktypes.RuleEvaluationStatusStopping),
 	}
 	WarmPoolModifyingStatuses = []string{
-		svcsdk.WarmPoolResourceStatusAvailable,
-		svcsdk.WarmPoolResourceStatusInUse,
+		string(svcsdktypes.WarmPoolResourceStatusAvailable),
+		string(svcsdktypes.WarmPoolResourceStatusInuse),
 	}
 	TrainingJobTerminalProfiler = []string{
-		svcsdk.TrainingJobStatusCompleted,
-		svcsdk.TrainingJobStatusFailed,
-		svcsdk.TrainingJobStatusStopping,
-		svcsdk.TrainingJobStatusStopped,
+		string(svcsdktypes.TrainingJobStatusCompleted),
+		string(svcsdktypes.TrainingJobStatusFailed),
+		string(svcsdktypes.TrainingJobStatusStopping),
+		string(svcsdktypes.TrainingJobStatusStopped),
 	}
 	resourceName = GroupKind.Kind
 
@@ -61,7 +62,7 @@ var (
 func (rm *resourceManager) customSetOutput(r *resource) {
 	trainingJobStatus := r.ko.Status.TrainingJobStatus
 	// early exit if training job is InProgress
-	if trainingJobStatus != nil && *trainingJobStatus == svcsdk.TrainingJobStatusInProgress {
+	if trainingJobStatus != nil && *trainingJobStatus == string(svcsdktypes.TrainingJobStatusInProgress) {
 		svccommon.SetSyncedCondition(r, trainingJobStatus, &resourceName, &trainingJobModifyingStatuses)
 		return
 	}
@@ -94,10 +95,10 @@ func (rm *resourceManager) isWarmPoolUpdatable(latest *resource) error {
 		return ackerr.NewTerminalError(errors.New("warm pool does not exist and can only be configured at creation time"))
 	}
 	if ackcompare.IsNotNil(trainingJobStatus) {
-		if *trainingJobStatus == svcsdk.TrainingJobStatusInProgress {
+		if *trainingJobStatus == string(svcsdktypes.TrainingJobStatusInProgress) {
 			return requeueBeforeUpdate
 		}
-		if *trainingJobStatus == svcsdk.TrainingJobStatusCompleted {
+		if *trainingJobStatus == string(svcsdktypes.TrainingJobStatusCompleted) {
 			if ackcompare.IsNotNil(latest.ko.Status.WarmPoolStatus) {
 				if svccommon.IsModifyingStatus(latest.ko.Status.WarmPoolStatus.Status, &WarmPoolModifyingStatuses) {
 					return nil
@@ -153,10 +154,10 @@ func (rm *resourceManager) isProfilerRemoved(desired *resource, latest *resource
 //     safer to do this because the "only add" behavior might reappear.
 func (rm *resourceManager) customSetUpdateInput(desired *resource, latest *resource, delta *ackcompare.Delta, input *svcsdk.UpdateTrainingJobInput) error {
 	if !delta.DifferentAt("Spec.ProfilerConfig") {
-		input.SetProfilerConfig(nil)
+		input.ProfilerConfig = nil
 	}
 	if !delta.DifferentAt("Spec.ProfilerRuleConfigurations") {
-		input.SetProfilerRuleConfigurations(nil)
+		input.ProfilerRuleConfigurations = nil
 	} else {
 		err := rm.buildProfilerRuleConfigUpdateInput(desired, latest, input)
 		return err

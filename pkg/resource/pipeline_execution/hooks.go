@@ -20,12 +20,13 @@ import (
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
 )
 
 var (
-	modifyingStatuses = []string{svcsdk.PipelineExecutionStatusExecuting,
-		svcsdk.PipelineExecutionStatusStopping}
+	modifyingStatuses = []string{string(svcsdktypes.PipelineExecutionStatusExecuting),
+		string(svcsdktypes.PipelineExecutionStatusStopping)}
 
 	resourceName = GroupKind.Kind
 

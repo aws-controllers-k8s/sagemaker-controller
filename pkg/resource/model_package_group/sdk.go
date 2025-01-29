@@ -28,8 +28,10 @@ import (
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
-	"github.com/aws/aws-sdk-go/aws"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
+	smithy "github.com/aws/smithy-go"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -40,8 +42,7 @@ import (
 var (
 	_ = &metav1.Time{}
 	_ = strings.ToLower("")
-	_ = &aws.JSONValue{}
-	_ = &svcsdk.SageMaker{}
+	_ = &svcsdk.Client{}
 	_ = &svcapitypes.ModelPackageGroup{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
@@ -49,6 +50,7 @@ var (
 	_ = &reflect.Value{}
 	_ = fmt.Sprintf("")
 	_ = &ackrequeue.NoRequeue{}
+	_ = &aws.Config{}
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -74,13 +76,11 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	var resp *svcsdk.DescribeModelPackageGroupOutput
-	resp, err = rm.sdkapi.DescribeModelPackageGroupWithContext(ctx, input)
+	resp, err = rm.sdkapi.DescribeModelPackageGroup(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeModelPackageGroup", err)
 	if err != nil {
-		if reqErr, ok := ackerr.AWSRequestFailure(err); ok && reqErr.StatusCode() == 404 {
-			return nil, ackerr.NotFound
-		}
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ValidationException" && strings.HasSuffix(awsErr.Message(), "does not exist.") {
+		var awsErr smithy.APIError
+		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ValidationException" && strings.HasSuffix(awsErr.ErrorMessage(), "does not exist.") {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
@@ -107,8 +107,8 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.ModelPackageGroupName = nil
 	}
-	if resp.ModelPackageGroupStatus != nil {
-		ko.Status.ModelPackageGroupStatus = resp.ModelPackageGroupStatus
+	if resp.ModelPackageGroupStatus != "" {
+		ko.Status.ModelPackageGroupStatus = aws.String(string(resp.ModelPackageGroupStatus))
 	} else {
 		ko.Status.ModelPackageGroupStatus = nil
 	}
@@ -136,7 +136,7 @@ func (rm *resourceManager) newDescribeRequestPayload(
 	res := &svcsdk.DescribeModelPackageGroupInput{}
 
 	if r.ko.Spec.ModelPackageGroupName != nil {
-		res.SetModelPackageGroupName(*r.ko.Spec.ModelPackageGroupName)
+		res.ModelPackageGroupName = r.ko.Spec.ModelPackageGroupName
 	}
 
 	return res, nil
@@ -161,7 +161,7 @@ func (rm *resourceManager) sdkCreate(
 
 	var resp *svcsdk.CreateModelPackageGroupOutput
 	_ = resp
-	resp, err = rm.sdkapi.CreateModelPackageGroupWithContext(ctx, input)
+	resp, err = rm.sdkapi.CreateModelPackageGroup(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateModelPackageGroup", err)
 	if err != nil {
 		return nil, err
@@ -191,24 +191,24 @@ func (rm *resourceManager) newCreateRequestPayload(
 	res := &svcsdk.CreateModelPackageGroupInput{}
 
 	if r.ko.Spec.ModelPackageGroupDescription != nil {
-		res.SetModelPackageGroupDescription(*r.ko.Spec.ModelPackageGroupDescription)
+		res.ModelPackageGroupDescription = r.ko.Spec.ModelPackageGroupDescription
 	}
 	if r.ko.Spec.ModelPackageGroupName != nil {
-		res.SetModelPackageGroupName(*r.ko.Spec.ModelPackageGroupName)
+		res.ModelPackageGroupName = r.ko.Spec.ModelPackageGroupName
 	}
 	if r.ko.Spec.Tags != nil {
-		f2 := []*svcsdk.Tag{}
+		f2 := []svcsdktypes.Tag{}
 		for _, f2iter := range r.ko.Spec.Tags {
-			f2elem := &svcsdk.Tag{}
+			f2elem := &svcsdktypes.Tag{}
 			if f2iter.Key != nil {
-				f2elem.SetKey(*f2iter.Key)
+				f2elem.Key = f2iter.Key
 			}
 			if f2iter.Value != nil {
-				f2elem.SetValue(*f2iter.Value)
+				f2elem.Value = f2iter.Value
 			}
-			f2 = append(f2, f2elem)
+			f2 = append(f2, *f2elem)
 		}
-		res.SetTags(f2)
+		res.Tags = f2
 	}
 
 	return res, nil
@@ -245,7 +245,7 @@ func (rm *resourceManager) sdkDelete(
 	}
 	var resp *svcsdk.DeleteModelPackageGroupOutput
 	_ = resp
-	resp, err = rm.sdkapi.DeleteModelPackageGroupWithContext(ctx, input)
+	resp, err = rm.sdkapi.DeleteModelPackageGroup(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteModelPackageGroup", err)
 
 	if err == nil {
@@ -269,7 +269,7 @@ func (rm *resourceManager) newDeleteRequestPayload(
 	res := &svcsdk.DeleteModelPackageGroupInput{}
 
 	if r.ko.Spec.ModelPackageGroupName != nil {
-		res.SetModelPackageGroupName(*r.ko.Spec.ModelPackageGroupName)
+		res.ModelPackageGroupName = r.ko.Spec.ModelPackageGroupName
 	}
 
 	return res, nil
@@ -377,11 +377,12 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 	if err == nil {
 		return false
 	}
-	awsErr, ok := ackerr.AWSError(err)
-	if !ok {
+
+	var terminalErr smithy.APIError
+	if !errors.As(err, &terminalErr) {
 		return false
 	}
-	switch awsErr.Code() {
+	switch terminalErr.ErrorCode() {
 	case "InvalidParameterCombination",
 		"InvalidParameterValue",
 		"MissingParameter",

@@ -269,12 +269,12 @@ spec:
                         type: string
                     type: object
                   spaceStorageSettings:
-                    description: The default storage settings for a private space.
+                    description: The default storage settings for a space.
                     properties:
                       defaultEBSStorageSettings:
                         description: |-
-                          A collection of default EBS storage settings that applies to private spaces
-                          created within a domain or user profile.
+                          A collection of default EBS storage settings that apply to spaces created
+                          within a domain or user profile.
                         properties:
                           defaultEBSVolumeSizeInGb:
                             format: int64
@@ -362,7 +362,7 @@ spec:
                 type: string
               kmsKeyID:
                 description: |-
-                  SageMaker uses Amazon Web Services KMS to encrypt the EFS volume attached
+                  SageMaker uses Amazon Web Services KMS to encrypt EFS and EBS volumes attached
                   to the domain with an Amazon Web Services managed key by default. For more
                   control, specify a customer managed key.
                 type: string

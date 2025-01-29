@@ -20,14 +20,14 @@ import (
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
 )
 
 var (
 	modifyingStatuses = []string{
-		svcsdk.UserProfileStatusPending,
-		svcsdk.UserProfileStatusUpdating,
-		svcsdk.UserProfileStatusDeleting,
+		string(svcsdktypes.UserProfileStatusPending),
+		string(svcsdktypes.UserProfileStatusUpdating),
+		string(svcsdktypes.UserProfileStatusDeleting),
 	}
 
 	resourceName = GroupKind.Kind

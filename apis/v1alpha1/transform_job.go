@@ -47,8 +47,9 @@ type TransformJobSpec struct {
 	// the predictions in the output from the job. For more information, see Associate
 	// Prediction Results with their Corresponding Input Records (https://docs.aws.amazon.com/sagemaker/latest/dg/batch-transform-data-processing.html).
 	DataProcessing *DataProcessing `json:"dataProcessing,omitempty"`
-	// The environment variables to set in the Docker container. We support up to
-	// 16 key and values entries in the map.
+	// The environment variables to set in the Docker container. Don't include any
+	// sensitive data in your environment variables. We support up to 16 key and
+	// values entries in the map.
 	Environment      map[string]*string `json:"environment,omitempty"`
 	ExperimentConfig *ExperimentConfig  `json:"experimentConfig,omitempty"`
 	// The maximum number of parallel requests that can be sent to each instance

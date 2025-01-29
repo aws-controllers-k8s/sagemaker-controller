@@ -33,7 +33,7 @@ from e2e import (
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
 
-FAIL_UPDATE_ERROR_MESSAGE = "EndpointUpdateError: unable to update endpoint. check FailureReason. latest EndpointConfigName is "
+FAIL_UPDATE_ERROR_MESSAGE = "api error EndpointUpdateError: unable to update endpoint. check FailureReason. latest EndpointConfigName is "
 # annontation key for last endpoint config name used for update
 LAST_ENDPOINTCONFIG_UPDATE_ANNOTATION = (
     "sagemaker.services.k8s.aws/last-endpoint-config-for-update"

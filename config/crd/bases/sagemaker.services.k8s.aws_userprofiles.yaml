@@ -289,12 +289,12 @@ spec:
                         type: string
                     type: object
                   spaceStorageSettings:
-                    description: The default storage settings for a private space.
+                    description: The default storage settings for a space.
                     properties:
                       defaultEBSStorageSettings:
                         description: |-
-                          A collection of default EBS storage settings that applies to private spaces
-                          created within a domain or user profile.
+                          A collection of default EBS storage settings that apply to spaces created
+                          within a domain or user profile.
                         properties:
                           defaultEBSVolumeSizeInGb:
                             format: int64

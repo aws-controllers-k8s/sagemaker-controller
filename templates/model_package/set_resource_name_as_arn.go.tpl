@@ -5,5 +5,5 @@
 		if arn == nil {
 			return nil, ackerr.NotFound
 		}
-		input.SetModelPackageName(string(*arn))
+		input.ModelPackageName = aws.String(string(*arn))
 	}
