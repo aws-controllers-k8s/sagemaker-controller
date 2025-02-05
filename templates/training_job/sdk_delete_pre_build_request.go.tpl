@@ -1,12 +1,12 @@
 	latestStatus := r.ko.Status.TrainingJobStatus
 	if latestStatus != nil {
-		if *latestStatus == svcsdk.TrainingJobStatusStopping {
+		if *latestStatus == string(svcsdktypes.TrainingJobStatusStopping) {
 			return r, requeueWaitWhileDeleting
 		}
 
-		// Call StopTrainingJob only if the job is InProgress, otherwise just 
+		// Call StopTrainingJob only if the job is InProgress, otherwise just
 		// return nil to mark the resource Unmanaged
-		if *latestStatus != svcsdk.TrainingJobStatusInProgress {
+		if *latestStatus != string(svcsdktypes.TrainingJobStatusInProgress) {
 			return r, err
 		}
 	}

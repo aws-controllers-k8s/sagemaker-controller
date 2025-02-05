@@ -17,13 +17,13 @@
 package endpoint
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go-v2/aws"
 
 	ackcondition "github.com/aws-controllers-k8s/runtime/pkg/condition"
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
 	corev1 "k8s.io/api/core/v1"
 )
 
@@ -36,7 +36,7 @@ func (rm *resourceManager) CustomUpdateConditions(
 	err error,
 ) bool {
 	latestStatus := r.ko.Status.EndpointStatus
-	terminalStatus := svcsdk.EndpointStatusFailed
+	terminalStatus := string(svcsdktypes.EndpointStatusFailed)
 	conditionManager := &resource{ko}
 	resourceName := GroupKind.Kind
 	// If the latestStatus == terminalStatus we will set
@@ -51,7 +51,7 @@ func (rm *resourceManager) CustomUpdateConditions(
 	// in condition message and last endpointconfig used for update in annotations
 	if err != nil {
 		awsErr, ok := ackerr.AWSError(err)
-		if ok && awsErr.Code() == "EndpointUpdateError" {
+		if ok && awsErr.ErrorCode() == "EndpointUpdateError" {
 			ackcondition.SetSynced(conditionManager, corev1.ConditionFalse, aws.String(awsErr.Error()), nil)
 			return true
 		}

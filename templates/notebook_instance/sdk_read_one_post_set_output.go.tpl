@@ -6,11 +6,11 @@ if resp.NotebookInstanceLifecycleConfigName != nil {
 	ko.Spec.LifecycleConfigName = nil
 }
 if resp.SecurityGroups != nil {
-	ko.Spec.SecurityGroupIDs = resp.SecurityGroups
+	ko.Spec.SecurityGroupIDs = aws.StringSlice(resp.SecurityGroups)
 } else {
 	ko.Spec.SecurityGroupIDs = nil
 }
-err = rm.customSetOutputDescribe(&resource{ko})
+err = rm.customSetOutputDescribe(ctx, &resource{ko})
 if err != nil{
   return nil, err
 }

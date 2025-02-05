@@ -1,5 +1,5 @@
 	latestStatus := r.ko.Status.Status
-	if latestStatus != nil && *latestStatus == svcsdk.AppStatusDeleted {
+	if latestStatus != nil && *latestStatus == string(svcsdktypes.AppStatusDeleted) {
 		return nil, nil
 	}
 

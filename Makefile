@@ -3,9 +3,9 @@ SHELL := /bin/bash # Use bash syntax
 # Set up variables
 GO111MODULE=on
 
-AWS_SDK_GO_VERSION="$(shell echo $(shell go list -m -f '{{.Version}}' github.com/aws/aws-sdk-go))"
-AWS_SDK_GO_VERSIONED_PATH="$(shell echo github.com/aws/aws-sdk-go@$(AWS_SDK_GO_VERSION))"
-SAGEMAKER_API_PATH="$(shell echo $(shell go env GOPATH))/pkg/mod/$(AWS_SDK_GO_VERSIONED_PATH)/service/sagemaker/sagemakeriface"
+AWS_SDK_GO_VERSION="$(shell echo $(shell go list -m -f '{{.Version}}' github.com/aws/aws-sdk-go-v2/service/sagemaker))"
+AWS_SDK_GO_VERSIONED_PATH="$(shell echo github.com/aws/aws-sdk-go-v2/service/sagemaker@$(AWS_SDK_GO_VERSION))"
+SAGEMAKER_API_PATH="$(shell echo $(shell go env GOPATH))/pkg/mod/$(AWS_SDK_GO_VERSIONED_PATH)"
 SERVICE_CONTROLLER_SRC_PATH="$(shell pwd)"
 
 # Build ldflags
@@ -29,19 +29,19 @@ test-cover: | mocks				## Run code tests with resources coverage
 	$(GOCOVER) -func=coverage.out
 	$(GOCOVER) -html=coverage.out -o coverage.html
 
-clean-mocks:	## Remove mocks directory
-	rm -r test/mocks
+# clean-mocks:	## Remove mocks directory
+# 	rm -r test/mocks
 
-install-mockery:
-	@test/scripts/install-mockery.sh
+# install-mockery:
+# 	@test/scripts/install-mockery.sh
 
-mocks: install-mockery ## Build mocks
-	go get -d $(AWS_SDK_GO_VERSIONED_PATH)
-	@echo "building mocks for $(SAGEMAKER_API_PATH) ... "
-	@pushd $(SAGEMAKER_API_PATH) 1>/dev/null; \
-	$(SERVICE_CONTROLLER_SRC_PATH)/test/bin/mockery --all --dir=. --output=$(SERVICE_CONTROLLER_SRC_PATH)/test/mocks/aws-sdk-go/sagemaker/ ; \
-	popd 1>/dev/null;
-	@echo "ok."
+# mocks: install-mockery ## Build mocks
+# 	go get $(AWS_SDK_GO_VERSIONED_PATH)
+# 	@echo "building mocks for $(SAGEMAKER_API_PATH) ... "
+# 	@pushd $(SAGEMAKER_API_PATH) 1>/dev/null; \
+# 	$(SERVICE_CONTROLLER_SRC_PATH)/test/bin/mockery --all --dir=. --output=$(SERVICE_CONTROLLER_SRC_PATH)/test/mocks/aws-sdk-go-v2/sagemaker/ ; \
+# 	popd 1>/dev/null;
+# 	@echo "ok."
 
 
 help:           	## Show this help.

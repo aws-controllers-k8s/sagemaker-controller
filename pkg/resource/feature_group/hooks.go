@@ -16,14 +16,15 @@ package feature_group
 import (
 	"context"
 	"errors"
+
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
 )
 
 var (
-	modifyingStatuses = []string{svcsdk.FeatureGroupStatusCreating,
-		svcsdk.FeatureGroupStatusDeleting}
+	modifyingStatuses = []string{string(svcsdktypes.FeatureGroupStatusCreating),
+		string(svcsdktypes.FeatureGroupStatusDeleting)}
 
 	resourceName = GroupKind.Kind
 

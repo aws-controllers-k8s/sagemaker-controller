@@ -10,7 +10,7 @@ operations:
     resource_name: TransformJob
   UpdateEndpoint:
     override_values:
-      RetainAllVariantProperties: true
+      RetainAllVariantProperties: aws.Bool(true)
   DescribeModelPackage:
     custom_check_required_fields_missing_method: customCheckRequiredFieldsMissingMethod
   StopHyperParameterTuningJob:
@@ -558,11 +558,11 @@ resources:
         - MissingParameter
     hooks:
       sdk_read_one_post_set_output:
-        code: rm.customSetOutput(&resource{ko}, resp.MonitoringScheduleStatus)
+        code: rm.customSetOutput(&resource{ko}, string(resp.MonitoringScheduleStatus))
       sdk_update_pre_build_request:
         template_path: common/sdk_update_pre_build_request.go.tpl
       sdk_update_post_set_output:
-        code: rm.customSetOutput(&resource{ko}, aws.String("Pending"))
+        code: rm.customSetOutput(&resource{ko}, string(svcsdktypes.ScheduleStatusPending))
       sdk_delete_pre_build_request:
         template_path: common/sdk_delete_pre_build_request.go.tpl
       sdk_delete_post_request:
@@ -632,6 +632,10 @@ resources:
       sdk_update_post_set_output:
         code: rm.customSetOutput(&resource{ko})
     fields:
+      InferenceSpecification:
+        set:
+          - method: Update
+            ignore: to
       ModelPackageStatus:
         is_read_only: true
         print:
@@ -913,7 +917,7 @@ resources:
         code: rm.customDescribeUserProfileSetOutput(ko)
       sdk_update_pre_build_request:
         template_path: common/sdk_update_pre_build_request.go.tpl
-      dk_delete_pre_build_request:
+      sdk_delete_pre_build_request:
         template_path: common/sdk_delete_pre_build_request.go.tpl
       sdk_delete_post_request:
         template_path: common/sdk_delete_post_request.go.tpl
@@ -1073,6 +1077,7 @@ ignore:
       # - FeatureGroup
       - FlowDefinition
       - Hub
+      - HubContentReference
       - HumanTaskUi
       # - HyperParameterTuningJob
       # - InferenceComponent
@@ -1082,6 +1087,7 @@ ignore:
       - InferenceExperiment
       - LabelingJob
       # - Model
+      - MlflowTrackingServer
       - ModelCard
       - ModelCardExportJob
       # - ModelBiasJobDefinition
@@ -1093,8 +1099,10 @@ ignore:
       # - NotebookInstanceLifecycleConfig
       # - NotebookInstance
       # - Pipeline
+      - OptimizationJob
       - PresignedDomainUrl
       - PresignedNotebookInstanceUrl
+      - PresignedMlflowTrackingServerUrl
       # - ProcessingJob
       - Project
       - Space
@@ -1137,10 +1145,31 @@ ignore:
       - CreateTrainingJobInput.AlgorithmSpecification.ContainerArguments
       - CreateTrainingJobInput.AlgorithmSpecification.ContainerEntrypoint
       - CreateTrainingJobInput.ExperimentConfig.RunName
-      - CreateTransformJobInput.ExperimentConfig.RunName
       - CreateHyperParameterTuningJobInput.TrainingJobDefinition.Environment
-      - CreateHyperParameterTuningJobInput.TrainingJobDefinitions.Environment
       - CreateHyperParameterTuningJobInput.HyperParameterTuningJobConfig.ResourceLimits.MaxRuntimeInSeconds
       - CreateHyperParameterTuningJobInput.HyperParameterTuningJobConfig.TuningJobCompletionCriteria.BestObjectiveNotImproving
       - CreateHyperParameterTuningJobInput.HyperParameterTuningJobConfig.TuningJobCompletionCriteria.ConvergenceDetected
+      - CreateDomainInput.TagPropagation
+      - CreateModelPackageInput.ModelCard
+      - CreateModelPackageInput.ModelLifeCycle
+      - CreateModelPackageInput.SecurityConfig
+      - CreateModelPackageInput.SourceUri
+      - CreateTrainingJobInput.SessionChainingConfig
+      - ContainerDefinition.AdditionalModelDataSources
+      - CreateDomainInput.DomainSettings.AmazonQSettings
+      - CreateUserProfileInput.UserSettings.CodeEditorAppSettings.AppLifecycleManagement
+      - CreateUserProfileInput.UserSettings.CodeEditorAppSettings.BuiltInLifecycleConfigArn
+      - CreateUserProfileInput.UserSettings.CodeEditorAppSettings.CustomImages
+      - CreateDomainInput.DefaultUserSettings.JupyterLabAppSettings.AppLifecycleManagement
+      - CreateDomainInput.DefaultUserSettings.JupyterLabAppSettings.BuiltInLifecycleConfigArn
+      - CreateDomainInput.DefaultUserSettings.JupyterLabAppSettings.EmrSettings
+      - CreateDomainInput.DefaultUserSettings.StudioWebPortalSettings
+      - CreateInferenceComponentInput.Specification.BaseInferenceComponentName
+      - ProductionVariant.InferenceAmiVersion
+      - CreateDomainInput.DefaultUserSettings.AutoMountHomeEFS
+      - SourceAlgorithm.ModelDataSource
+      - ModelPackageContainerDefinition.ModelDataSource
+      - S3ModelDataSource.HubAccessConfig
+      - S3ModelDataSource.ManifestS3Uri
+
       

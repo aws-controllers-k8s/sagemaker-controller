@@ -19,6 +19,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math"
 	"reflect"
 	"strings"
 
@@ -28,8 +29,10 @@ import (
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
-	"github.com/aws/aws-sdk-go/aws"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
+	smithy "github.com/aws/smithy-go"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -40,8 +43,7 @@ import (
 var (
 	_ = &metav1.Time{}
 	_ = strings.ToLower("")
-	_ = &aws.JSONValue{}
-	_ = &svcsdk.SageMaker{}
+	_ = &svcsdk.Client{}
 	_ = &svcapitypes.NotebookInstance{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
@@ -49,6 +51,7 @@ var (
 	_ = &reflect.Value{}
 	_ = fmt.Sprintf("")
 	_ = &ackrequeue.NoRequeue{}
+	_ = &aws.Config{}
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -74,13 +77,11 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	var resp *svcsdk.DescribeNotebookInstanceOutput
-	resp, err = rm.sdkapi.DescribeNotebookInstanceWithContext(ctx, input)
+	resp, err = rm.sdkapi.DescribeNotebookInstance(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeNotebookInstance", err)
 	if err != nil {
-		if reqErr, ok := ackerr.AWSRequestFailure(err); ok && reqErr.StatusCode() == 404 {
-			return nil, ackerr.NotFound
-		}
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ValidationException" && strings.HasPrefix(awsErr.Message(), "RecordNotFound") {
+		var awsErr smithy.APIError
+		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ValidationException" && strings.HasPrefix(awsErr.ErrorMessage(), "RecordNotFound") {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
@@ -93,22 +94,16 @@ func (rm *resourceManager) sdkFind(
 	if resp.AcceleratorTypes != nil {
 		f0 := []*string{}
 		for _, f0iter := range resp.AcceleratorTypes {
-			var f0elem string
-			f0elem = *f0iter
-			f0 = append(f0, &f0elem)
+			var f0elem *string
+			f0elem = aws.String(string(f0iter))
+			f0 = append(f0, f0elem)
 		}
 		ko.Spec.AcceleratorTypes = f0
 	} else {
 		ko.Spec.AcceleratorTypes = nil
 	}
 	if resp.AdditionalCodeRepositories != nil {
-		f1 := []*string{}
-		for _, f1iter := range resp.AdditionalCodeRepositories {
-			var f1elem string
-			f1elem = *f1iter
-			f1 = append(f1, &f1elem)
-		}
-		ko.Spec.AdditionalCodeRepositories = f1
+		ko.Spec.AdditionalCodeRepositories = aws.StringSlice(resp.AdditionalCodeRepositories)
 	} else {
 		ko.Spec.AdditionalCodeRepositories = nil
 	}
@@ -117,8 +112,8 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.DefaultCodeRepository = nil
 	}
-	if resp.DirectInternetAccess != nil {
-		ko.Spec.DirectInternetAccess = resp.DirectInternetAccess
+	if resp.DirectInternetAccess != "" {
+		ko.Spec.DirectInternetAccess = aws.String(string(resp.DirectInternetAccess))
 	} else {
 		ko.Spec.DirectInternetAccess = nil
 	}
@@ -127,8 +122,8 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Status.FailureReason = nil
 	}
-	if resp.InstanceType != nil {
-		ko.Spec.InstanceType = resp.InstanceType
+	if resp.InstanceType != "" {
+		ko.Spec.InstanceType = aws.String(string(resp.InstanceType))
 	} else {
 		ko.Spec.InstanceType = nil
 	}
@@ -149,8 +144,8 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.NotebookInstanceName = nil
 	}
-	if resp.NotebookInstanceStatus != nil {
-		ko.Status.NotebookInstanceStatus = resp.NotebookInstanceStatus
+	if resp.NotebookInstanceStatus != "" {
+		ko.Status.NotebookInstanceStatus = aws.String(string(resp.NotebookInstanceStatus))
 	} else {
 		ko.Status.NotebookInstanceStatus = nil
 	}
@@ -164,8 +159,8 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.RoleARN = nil
 	}
-	if resp.RootAccess != nil {
-		ko.Spec.RootAccess = resp.RootAccess
+	if resp.RootAccess != "" {
+		ko.Spec.RootAccess = aws.String(string(resp.RootAccess))
 	} else {
 		ko.Spec.RootAccess = nil
 	}
@@ -180,7 +175,8 @@ func (rm *resourceManager) sdkFind(
 		ko.Status.URL = nil
 	}
 	if resp.VolumeSizeInGB != nil {
-		ko.Spec.VolumeSizeInGB = resp.VolumeSizeInGB
+		volumeSizeInGBCopy := int64(*resp.VolumeSizeInGB)
+		ko.Spec.VolumeSizeInGB = &volumeSizeInGBCopy
 	} else {
 		ko.Spec.VolumeSizeInGB = nil
 	}
@@ -194,11 +190,11 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.LifecycleConfigName = nil
 	}
 	if resp.SecurityGroups != nil {
-		ko.Spec.SecurityGroupIDs = resp.SecurityGroups
+		ko.Spec.SecurityGroupIDs = aws.StringSlice(resp.SecurityGroups)
 	} else {
 		ko.Spec.SecurityGroupIDs = nil
 	}
-	err = rm.customSetOutputDescribe(&resource{ko})
+	err = rm.customSetOutputDescribe(ctx, &resource{ko})
 	if err != nil {
 		return nil, err
 	}
@@ -223,7 +219,7 @@ func (rm *resourceManager) newDescribeRequestPayload(
 	res := &svcsdk.DescribeNotebookInstanceInput{}
 
 	if r.ko.Spec.NotebookInstanceName != nil {
-		res.SetNotebookInstanceName(*r.ko.Spec.NotebookInstanceName)
+		res.NotebookInstanceName = r.ko.Spec.NotebookInstanceName
 	}
 
 	return res, nil
@@ -248,7 +244,7 @@ func (rm *resourceManager) sdkCreate(
 
 	var resp *svcsdk.CreateNotebookInstanceOutput
 	_ = resp
-	resp, err = rm.sdkapi.CreateNotebookInstanceWithContext(ctx, input)
+	resp, err = rm.sdkapi.CreateNotebookInstance(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateNotebookInstance", err)
 	if err != nil {
 		return nil, err
@@ -278,78 +274,71 @@ func (rm *resourceManager) newCreateRequestPayload(
 	res := &svcsdk.CreateNotebookInstanceInput{}
 
 	if r.ko.Spec.AcceleratorTypes != nil {
-		f0 := []*string{}
+		f0 := []svcsdktypes.NotebookInstanceAcceleratorType{}
 		for _, f0iter := range r.ko.Spec.AcceleratorTypes {
 			var f0elem string
-			f0elem = *f0iter
-			f0 = append(f0, &f0elem)
+			f0elem = string(*f0iter)
+			f0 = append(f0, svcsdktypes.NotebookInstanceAcceleratorType(f0elem))
 		}
-		res.SetAcceleratorTypes(f0)
+		res.AcceleratorTypes = f0
 	}
 	if r.ko.Spec.AdditionalCodeRepositories != nil {
-		f1 := []*string{}
-		for _, f1iter := range r.ko.Spec.AdditionalCodeRepositories {
-			var f1elem string
-			f1elem = *f1iter
-			f1 = append(f1, &f1elem)
-		}
-		res.SetAdditionalCodeRepositories(f1)
+		res.AdditionalCodeRepositories = aws.ToStringSlice(r.ko.Spec.AdditionalCodeRepositories)
 	}
 	if r.ko.Spec.DefaultCodeRepository != nil {
-		res.SetDefaultCodeRepository(*r.ko.Spec.DefaultCodeRepository)
+		res.DefaultCodeRepository = r.ko.Spec.DefaultCodeRepository
 	}
 	if r.ko.Spec.DirectInternetAccess != nil {
-		res.SetDirectInternetAccess(*r.ko.Spec.DirectInternetAccess)
+		res.DirectInternetAccess = svcsdktypes.DirectInternetAccess(*r.ko.Spec.DirectInternetAccess)
 	}
 	if r.ko.Spec.InstanceType != nil {
-		res.SetInstanceType(*r.ko.Spec.InstanceType)
+		res.InstanceType = svcsdktypes.InstanceType(*r.ko.Spec.InstanceType)
 	}
 	if r.ko.Spec.KMSKeyID != nil {
-		res.SetKmsKeyId(*r.ko.Spec.KMSKeyID)
+		res.KmsKeyId = r.ko.Spec.KMSKeyID
 	}
 	if r.ko.Spec.LifecycleConfigName != nil {
-		res.SetLifecycleConfigName(*r.ko.Spec.LifecycleConfigName)
+		res.LifecycleConfigName = r.ko.Spec.LifecycleConfigName
 	}
 	if r.ko.Spec.NotebookInstanceName != nil {
-		res.SetNotebookInstanceName(*r.ko.Spec.NotebookInstanceName)
+		res.NotebookInstanceName = r.ko.Spec.NotebookInstanceName
 	}
 	if r.ko.Spec.PlatformIdentifier != nil {
-		res.SetPlatformIdentifier(*r.ko.Spec.PlatformIdentifier)
+		res.PlatformIdentifier = r.ko.Spec.PlatformIdentifier
 	}
 	if r.ko.Spec.RoleARN != nil {
-		res.SetRoleArn(*r.ko.Spec.RoleARN)
+		res.RoleArn = r.ko.Spec.RoleARN
 	}
 	if r.ko.Spec.RootAccess != nil {
-		res.SetRootAccess(*r.ko.Spec.RootAccess)
+		res.RootAccess = svcsdktypes.RootAccess(*r.ko.Spec.RootAccess)
 	}
 	if r.ko.Spec.SecurityGroupIDs != nil {
-		f11 := []*string{}
-		for _, f11iter := range r.ko.Spec.SecurityGroupIDs {
-			var f11elem string
-			f11elem = *f11iter
-			f11 = append(f11, &f11elem)
-		}
-		res.SetSecurityGroupIds(f11)
+		res.SecurityGroupIds = aws.ToStringSlice(r.ko.Spec.SecurityGroupIDs)
 	}
 	if r.ko.Spec.SubnetID != nil {
-		res.SetSubnetId(*r.ko.Spec.SubnetID)
+		res.SubnetId = r.ko.Spec.SubnetID
 	}
 	if r.ko.Spec.Tags != nil {
-		f13 := []*svcsdk.Tag{}
+		f13 := []svcsdktypes.Tag{}
 		for _, f13iter := range r.ko.Spec.Tags {
-			f13elem := &svcsdk.Tag{}
+			f13elem := &svcsdktypes.Tag{}
 			if f13iter.Key != nil {
-				f13elem.SetKey(*f13iter.Key)
+				f13elem.Key = f13iter.Key
 			}
 			if f13iter.Value != nil {
-				f13elem.SetValue(*f13iter.Value)
+				f13elem.Value = f13iter.Value
 			}
-			f13 = append(f13, f13elem)
+			f13 = append(f13, *f13elem)
 		}
-		res.SetTags(f13)
+		res.Tags = f13
 	}
 	if r.ko.Spec.VolumeSizeInGB != nil {
-		res.SetVolumeSizeInGB(*r.ko.Spec.VolumeSizeInGB)
+		volumeSizeInGBCopy0 := *r.ko.Spec.VolumeSizeInGB
+		if volumeSizeInGBCopy0 > math.MaxInt32 || volumeSizeInGBCopy0 < math.MinInt32 {
+			return nil, fmt.Errorf("error: field VolumeSizeInGB is of type int32")
+		}
+		volumeSizeInGBCopy := int32(volumeSizeInGBCopy0)
+		res.VolumeSizeInGB = &volumeSizeInGBCopy
 	}
 
 	return res, nil
@@ -375,8 +364,8 @@ func (rm *resourceManager) sdkUpdate(
 	latestStatus := latest.ko.Status.NotebookInstanceStatus
 	// The Notebook Instance is stopped and the StoppedByControllerMetadata status is
 	// set to UpdatePending.
-	if latestStatus != nil && *latestStatus == svcsdk.NotebookInstanceStatusInService {
-		if err := rm.stopNotebookInstance(latest); err != nil {
+	if latestStatus != nil && *latestStatus == string(svcsdktypes.NotebookInstanceStatusInService) {
+		if err := rm.stopNotebookInstance(ctx, latest); err != nil {
 			return nil, err
 		} else {
 			//TODO: Replace with annotations once rutime supports it.
@@ -392,7 +381,7 @@ func (rm *resourceManager) sdkUpdate(
 
 	var resp *svcsdk.UpdateNotebookInstanceOutput
 	_ = resp
-	resp, err = rm.sdkapi.UpdateNotebookInstanceWithContext(ctx, input)
+	resp, err = rm.sdkapi.UpdateNotebookInstance(ctx, input)
 	rm.metrics.RecordAPICall("UPDATE", "UpdateNotebookInstance", err)
 	if err != nil {
 		return nil, err
@@ -416,43 +405,42 @@ func (rm *resourceManager) newUpdateRequestPayload(
 	res := &svcsdk.UpdateNotebookInstanceInput{}
 
 	if r.ko.Spec.AcceleratorTypes != nil {
-		f0 := []*string{}
+		f0 := []svcsdktypes.NotebookInstanceAcceleratorType{}
 		for _, f0iter := range r.ko.Spec.AcceleratorTypes {
 			var f0elem string
-			f0elem = *f0iter
-			f0 = append(f0, &f0elem)
+			f0elem = string(*f0iter)
+			f0 = append(f0, svcsdktypes.NotebookInstanceAcceleratorType(f0elem))
 		}
-		res.SetAcceleratorTypes(f0)
+		res.AcceleratorTypes = f0
 	}
 	if r.ko.Spec.AdditionalCodeRepositories != nil {
-		f1 := []*string{}
-		for _, f1iter := range r.ko.Spec.AdditionalCodeRepositories {
-			var f1elem string
-			f1elem = *f1iter
-			f1 = append(f1, &f1elem)
-		}
-		res.SetAdditionalCodeRepositories(f1)
+		res.AdditionalCodeRepositories = aws.ToStringSlice(r.ko.Spec.AdditionalCodeRepositories)
 	}
 	if r.ko.Spec.DefaultCodeRepository != nil {
-		res.SetDefaultCodeRepository(*r.ko.Spec.DefaultCodeRepository)
+		res.DefaultCodeRepository = r.ko.Spec.DefaultCodeRepository
 	}
 	if r.ko.Spec.InstanceType != nil {
-		res.SetInstanceType(*r.ko.Spec.InstanceType)
+		res.InstanceType = svcsdktypes.InstanceType(*r.ko.Spec.InstanceType)
 	}
 	if r.ko.Spec.LifecycleConfigName != nil {
-		res.SetLifecycleConfigName(*r.ko.Spec.LifecycleConfigName)
+		res.LifecycleConfigName = r.ko.Spec.LifecycleConfigName
 	}
 	if r.ko.Spec.NotebookInstanceName != nil {
-		res.SetNotebookInstanceName(*r.ko.Spec.NotebookInstanceName)
+		res.NotebookInstanceName = r.ko.Spec.NotebookInstanceName
 	}
 	if r.ko.Spec.RoleARN != nil {
-		res.SetRoleArn(*r.ko.Spec.RoleARN)
+		res.RoleArn = r.ko.Spec.RoleARN
 	}
 	if r.ko.Spec.RootAccess != nil {
-		res.SetRootAccess(*r.ko.Spec.RootAccess)
+		res.RootAccess = svcsdktypes.RootAccess(*r.ko.Spec.RootAccess)
 	}
 	if r.ko.Spec.VolumeSizeInGB != nil {
-		res.SetVolumeSizeInGB(*r.ko.Spec.VolumeSizeInGB)
+		volumeSizeInGBCopy0 := *r.ko.Spec.VolumeSizeInGB
+		if volumeSizeInGBCopy0 > math.MaxInt32 || volumeSizeInGBCopy0 < math.MinInt32 {
+			return nil, fmt.Errorf("error: field VolumeSizeInGB is of type int32")
+		}
+		volumeSizeInGBCopy := int32(volumeSizeInGBCopy0)
+		res.VolumeSizeInGB = &volumeSizeInGBCopy
 	}
 
 	return res, nil
@@ -475,8 +463,8 @@ func (rm *resourceManager) sdkDelete(
 	latestStatus := r.ko.Status.NotebookInstanceStatus
 
 	if latestStatus != nil &&
-		*latestStatus == svcsdk.NotebookInstanceStatusInService {
-		if err := rm.stopNotebookInstance(r); err != nil {
+		*latestStatus == string(svcsdktypes.NotebookInstanceStatusInService) {
+		if err := rm.stopNotebookInstance(ctx, r); err != nil {
 			return nil, err
 		} else {
 			return r, requeueWaitWhileStopping
@@ -488,7 +476,7 @@ func (rm *resourceManager) sdkDelete(
 	}
 	var resp *svcsdk.DeleteNotebookInstanceOutput
 	_ = resp
-	resp, err = rm.sdkapi.DeleteNotebookInstanceWithContext(ctx, input)
+	resp, err = rm.sdkapi.DeleteNotebookInstance(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteNotebookInstance", err)
 
 	if err == nil {
@@ -512,7 +500,7 @@ func (rm *resourceManager) newDeleteRequestPayload(
 	res := &svcsdk.DeleteNotebookInstanceInput{}
 
 	if r.ko.Spec.NotebookInstanceName != nil {
-		res.SetNotebookInstanceName(*r.ko.Spec.NotebookInstanceName)
+		res.NotebookInstanceName = r.ko.Spec.NotebookInstanceName
 	}
 
 	return res, nil
@@ -625,11 +613,12 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 	if err == nil {
 		return false
 	}
-	awsErr, ok := ackerr.AWSError(err)
-	if !ok {
+
+	var terminalErr smithy.APIError
+	if !errors.As(err, &terminalErr) {
 		return false
 	}
-	switch awsErr.Code() {
+	switch terminalErr.ErrorCode() {
 	case "InvalidParameterCombination",
 		"InvalidParameterValue",
 		"MissingParameter":

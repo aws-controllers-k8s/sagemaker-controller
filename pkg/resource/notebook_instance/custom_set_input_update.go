@@ -2,8 +2,8 @@ package notebook_instance
 
 import (
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
-	"github.com/aws/aws-sdk-go/aws"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/sagemaker"
 )
 
 // handleUpdateOnlyParameters sets Disassociate<field> to true if corresponding value in desired is nil(ie not included in the spec)

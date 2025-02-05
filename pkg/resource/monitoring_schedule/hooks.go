@@ -40,9 +40,9 @@ var (
 // requeue is needed
 func (rm *resourceManager) customSetOutput(
 	r *resource,
-	latestStatus *string,
+	latestStatus string,
 ) {
-	svccommon.SetSyncedCondition(r, latestStatus, &resourceName, &modifyingStatuses)
+	svccommon.SetSyncedCondition(r, &latestStatus, &resourceName, &modifyingStatuses)
 }
 
 // requeueUntilCanModify is a helper method to determine if monitoring schedule status allows modification

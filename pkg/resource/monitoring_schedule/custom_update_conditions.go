@@ -19,7 +19,7 @@ package monitoring_schedule
 import (
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
 )
 
 // CustomUpdateConditions sets conditions (terminal) on supplied monitoring schedule.
@@ -31,7 +31,7 @@ func (rm *resourceManager) CustomUpdateConditions(
 	err error,
 ) bool {
 	latestStatus := r.ko.Status.MonitoringScheduleStatus
-	terminalStatus := svcsdk.ScheduleStatusFailed
+	terminalStatus := string(svcsdktypes.ScheduleStatusFailed)
 	conditionManager := &resource{ko}
 	resourceName := GroupKind.Kind
 	// If the latestStatus == terminalStatus we will set

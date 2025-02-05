@@ -87,8 +87,9 @@ spec:
                 additionalProperties:
                   type: string
                 description: |-
-                  The environment variables to set in the Docker container. We support up to
-                  16 key and values entries in the map.
+                  The environment variables to set in the Docker container. Don't include any
+                  sensitive data in your environment variables. We support up to 16 key and
+                  values entries in the map.
                 type: object
               experimentConfig:
                 description: |-

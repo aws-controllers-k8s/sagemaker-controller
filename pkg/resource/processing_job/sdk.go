@@ -19,6 +19,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math"
 	"reflect"
 	"strings"
 
@@ -28,8 +29,10 @@ import (
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
-	"github.com/aws/aws-sdk-go/aws"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
+	smithy "github.com/aws/smithy-go"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -40,8 +43,7 @@ import (
 var (
 	_ = &metav1.Time{}
 	_ = strings.ToLower("")
-	_ = &aws.JSONValue{}
-	_ = &svcsdk.SageMaker{}
+	_ = &svcsdk.Client{}
 	_ = &svcapitypes.ProcessingJob{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
@@ -49,6 +51,7 @@ var (
 	_ = &reflect.Value{}
 	_ = fmt.Sprintf("")
 	_ = &ackrequeue.NoRequeue{}
+	_ = &aws.Config{}
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -74,13 +77,11 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	var resp *svcsdk.DescribeProcessingJobOutput
-	resp, err = rm.sdkapi.DescribeProcessingJobWithContext(ctx, input)
+	resp, err = rm.sdkapi.DescribeProcessingJob(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeProcessingJob", err)
 	if err != nil {
-		if reqErr, ok := ackerr.AWSRequestFailure(err); ok && reqErr.StatusCode() == 404 {
-			return nil, ackerr.NotFound
-		}
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ValidationException" && strings.HasPrefix(awsErr.Message(), "Could not find requested job") {
+		var awsErr smithy.APIError
+		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ValidationException" && strings.HasPrefix(awsErr.ErrorMessage(), "Could not find requested job") {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
@@ -93,22 +94,10 @@ func (rm *resourceManager) sdkFind(
 	if resp.AppSpecification != nil {
 		f0 := &svcapitypes.AppSpecification{}
 		if resp.AppSpecification.ContainerArguments != nil {
-			f0f0 := []*string{}
-			for _, f0f0iter := range resp.AppSpecification.ContainerArguments {
-				var f0f0elem string
-				f0f0elem = *f0f0iter
-				f0f0 = append(f0f0, &f0f0elem)
-			}
-			f0.ContainerArguments = f0f0
+			f0.ContainerArguments = aws.StringSlice(resp.AppSpecification.ContainerArguments)
 		}
 		if resp.AppSpecification.ContainerEntrypoint != nil {
-			f0f1 := []*string{}
-			for _, f0f1iter := range resp.AppSpecification.ContainerEntrypoint {
-				var f0f1elem string
-				f0f1elem = *f0f1iter
-				f0f1 = append(f0f1, &f0f1elem)
-			}
-			f0.ContainerEntrypoint = f0f1
+			f0.ContainerEntrypoint = aws.StringSlice(resp.AppSpecification.ContainerEntrypoint)
 		}
 		if resp.AppSpecification.ImageUri != nil {
 			f0.ImageURI = resp.AppSpecification.ImageUri
@@ -118,13 +107,7 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.AppSpecification = nil
 	}
 	if resp.Environment != nil {
-		f3 := map[string]*string{}
-		for f3key, f3valiter := range resp.Environment {
-			var f3val string
-			f3val = *f3valiter
-			f3[f3key] = &f3val
-		}
-		ko.Spec.Environment = f3
+		ko.Spec.Environment = aws.StringMap(resp.Environment)
 	} else {
 		ko.Spec.Environment = nil
 	}
@@ -159,22 +142,10 @@ func (rm *resourceManager) sdkFind(
 		if resp.NetworkConfig.VpcConfig != nil {
 			f9f2 := &svcapitypes.VPCConfig{}
 			if resp.NetworkConfig.VpcConfig.SecurityGroupIds != nil {
-				f9f2f0 := []*string{}
-				for _, f9f2f0iter := range resp.NetworkConfig.VpcConfig.SecurityGroupIds {
-					var f9f2f0elem string
-					f9f2f0elem = *f9f2f0iter
-					f9f2f0 = append(f9f2f0, &f9f2f0elem)
-				}
-				f9f2.SecurityGroupIDs = f9f2f0
+				f9f2.SecurityGroupIDs = aws.StringSlice(resp.NetworkConfig.VpcConfig.SecurityGroupIds)
 			}
 			if resp.NetworkConfig.VpcConfig.Subnets != nil {
-				f9f2f1 := []*string{}
-				for _, f9f2f1iter := range resp.NetworkConfig.VpcConfig.Subnets {
-					var f9f2f1elem string
-					f9f2f1elem = *f9f2f1iter
-					f9f2f1 = append(f9f2f1, &f9f2f1elem)
-				}
-				f9f2.Subnets = f9f2f1
+				f9f2.Subnets = aws.StringSlice(resp.NetworkConfig.VpcConfig.Subnets)
 			}
 			f9.VPCConfig = f9f2
 		}
@@ -202,11 +173,11 @@ func (rm *resourceManager) sdkFind(
 					if f11iter.DatasetDefinition.AthenaDatasetDefinition.KmsKeyId != nil {
 						f11elemf1f0.KMSKeyID = f11iter.DatasetDefinition.AthenaDatasetDefinition.KmsKeyId
 					}
-					if f11iter.DatasetDefinition.AthenaDatasetDefinition.OutputCompression != nil {
-						f11elemf1f0.OutputCompression = f11iter.DatasetDefinition.AthenaDatasetDefinition.OutputCompression
+					if f11iter.DatasetDefinition.AthenaDatasetDefinition.OutputCompression != "" {
+						f11elemf1f0.OutputCompression = aws.String(string(f11iter.DatasetDefinition.AthenaDatasetDefinition.OutputCompression))
 					}
-					if f11iter.DatasetDefinition.AthenaDatasetDefinition.OutputFormat != nil {
-						f11elemf1f0.OutputFormat = f11iter.DatasetDefinition.AthenaDatasetDefinition.OutputFormat
+					if f11iter.DatasetDefinition.AthenaDatasetDefinition.OutputFormat != "" {
+						f11elemf1f0.OutputFormat = aws.String(string(f11iter.DatasetDefinition.AthenaDatasetDefinition.OutputFormat))
 					}
 					if f11iter.DatasetDefinition.AthenaDatasetDefinition.OutputS3Uri != nil {
 						f11elemf1f0.OutputS3URI = f11iter.DatasetDefinition.AthenaDatasetDefinition.OutputS3Uri
@@ -219,11 +190,11 @@ func (rm *resourceManager) sdkFind(
 					}
 					f11elemf1.AthenaDatasetDefinition = f11elemf1f0
 				}
-				if f11iter.DatasetDefinition.DataDistributionType != nil {
-					f11elemf1.DataDistributionType = f11iter.DatasetDefinition.DataDistributionType
+				if f11iter.DatasetDefinition.DataDistributionType != "" {
+					f11elemf1.DataDistributionType = aws.String(string(f11iter.DatasetDefinition.DataDistributionType))
 				}
-				if f11iter.DatasetDefinition.InputMode != nil {
-					f11elemf1.InputMode = f11iter.DatasetDefinition.InputMode
+				if f11iter.DatasetDefinition.InputMode != "" {
+					f11elemf1.InputMode = aws.String(string(f11iter.DatasetDefinition.InputMode))
 				}
 				if f11iter.DatasetDefinition.LocalPath != nil {
 					f11elemf1.LocalPath = f11iter.DatasetDefinition.LocalPath
@@ -245,11 +216,11 @@ func (rm *resourceManager) sdkFind(
 					if f11iter.DatasetDefinition.RedshiftDatasetDefinition.KmsKeyId != nil {
 						f11elemf1f4.KMSKeyID = f11iter.DatasetDefinition.RedshiftDatasetDefinition.KmsKeyId
 					}
-					if f11iter.DatasetDefinition.RedshiftDatasetDefinition.OutputCompression != nil {
-						f11elemf1f4.OutputCompression = f11iter.DatasetDefinition.RedshiftDatasetDefinition.OutputCompression
+					if f11iter.DatasetDefinition.RedshiftDatasetDefinition.OutputCompression != "" {
+						f11elemf1f4.OutputCompression = aws.String(string(f11iter.DatasetDefinition.RedshiftDatasetDefinition.OutputCompression))
 					}
-					if f11iter.DatasetDefinition.RedshiftDatasetDefinition.OutputFormat != nil {
-						f11elemf1f4.OutputFormat = f11iter.DatasetDefinition.RedshiftDatasetDefinition.OutputFormat
+					if f11iter.DatasetDefinition.RedshiftDatasetDefinition.OutputFormat != "" {
+						f11elemf1f4.OutputFormat = aws.String(string(f11iter.DatasetDefinition.RedshiftDatasetDefinition.OutputFormat))
 					}
 					if f11iter.DatasetDefinition.RedshiftDatasetDefinition.OutputS3Uri != nil {
 						f11elemf1f4.OutputS3URI = f11iter.DatasetDefinition.RedshiftDatasetDefinition.OutputS3Uri
@@ -269,17 +240,17 @@ func (rm *resourceManager) sdkFind(
 				if f11iter.S3Input.LocalPath != nil {
 					f11elemf3.LocalPath = f11iter.S3Input.LocalPath
 				}
-				if f11iter.S3Input.S3CompressionType != nil {
-					f11elemf3.S3CompressionType = f11iter.S3Input.S3CompressionType
+				if f11iter.S3Input.S3CompressionType != "" {
+					f11elemf3.S3CompressionType = aws.String(string(f11iter.S3Input.S3CompressionType))
 				}
-				if f11iter.S3Input.S3DataDistributionType != nil {
-					f11elemf3.S3DataDistributionType = f11iter.S3Input.S3DataDistributionType
+				if f11iter.S3Input.S3DataDistributionType != "" {
+					f11elemf3.S3DataDistributionType = aws.String(string(f11iter.S3Input.S3DataDistributionType))
 				}
-				if f11iter.S3Input.S3DataType != nil {
-					f11elemf3.S3DataType = f11iter.S3Input.S3DataType
+				if f11iter.S3Input.S3DataType != "" {
+					f11elemf3.S3DataType = aws.String(string(f11iter.S3Input.S3DataType))
 				}
-				if f11iter.S3Input.S3InputMode != nil {
-					f11elemf3.S3InputMode = f11iter.S3Input.S3InputMode
+				if f11iter.S3Input.S3InputMode != "" {
+					f11elemf3.S3InputMode = aws.String(string(f11iter.S3Input.S3InputMode))
 				}
 				if f11iter.S3Input.S3Uri != nil {
 					f11elemf3.S3URI = f11iter.S3Input.S3Uri
@@ -304,8 +275,8 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.ProcessingJobName = nil
 	}
-	if resp.ProcessingJobStatus != nil {
-		ko.Status.ProcessingJobStatus = resp.ProcessingJobStatus
+	if resp.ProcessingJobStatus != "" {
+		ko.Status.ProcessingJobStatus = aws.String(string(resp.ProcessingJobStatus))
 	} else {
 		ko.Status.ProcessingJobStatus = nil
 	}
@@ -336,8 +307,8 @@ func (rm *resourceManager) sdkFind(
 					if f15f1iter.S3Output.LocalPath != nil {
 						f15f1elemf3.LocalPath = f15f1iter.S3Output.LocalPath
 					}
-					if f15f1iter.S3Output.S3UploadMode != nil {
-						f15f1elemf3.S3UploadMode = f15f1iter.S3Output.S3UploadMode
+					if f15f1iter.S3Output.S3UploadMode != "" {
+						f15f1elemf3.S3UploadMode = aws.String(string(f15f1iter.S3Output.S3UploadMode))
 					}
 					if f15f1iter.S3Output.S3Uri != nil {
 						f15f1elemf3.S3URI = f15f1iter.S3Output.S3Uri
@@ -357,16 +328,18 @@ func (rm *resourceManager) sdkFind(
 		if resp.ProcessingResources.ClusterConfig != nil {
 			f16f0 := &svcapitypes.ProcessingClusterConfig{}
 			if resp.ProcessingResources.ClusterConfig.InstanceCount != nil {
-				f16f0.InstanceCount = resp.ProcessingResources.ClusterConfig.InstanceCount
+				instanceCountCopy := int64(*resp.ProcessingResources.ClusterConfig.InstanceCount)
+				f16f0.InstanceCount = &instanceCountCopy
 			}
-			if resp.ProcessingResources.ClusterConfig.InstanceType != nil {
-				f16f0.InstanceType = resp.ProcessingResources.ClusterConfig.InstanceType
+			if resp.ProcessingResources.ClusterConfig.InstanceType != "" {
+				f16f0.InstanceType = aws.String(string(resp.ProcessingResources.ClusterConfig.InstanceType))
 			}
 			if resp.ProcessingResources.ClusterConfig.VolumeKmsKeyId != nil {
 				f16f0.VolumeKMSKeyID = resp.ProcessingResources.ClusterConfig.VolumeKmsKeyId
 			}
 			if resp.ProcessingResources.ClusterConfig.VolumeSizeInGB != nil {
-				f16f0.VolumeSizeInGB = resp.ProcessingResources.ClusterConfig.VolumeSizeInGB
+				volumeSizeInGBCopy := int64(*resp.ProcessingResources.ClusterConfig.VolumeSizeInGB)
+				f16f0.VolumeSizeInGB = &volumeSizeInGBCopy
 			}
 			f16.ClusterConfig = f16f0
 		}
@@ -382,7 +355,8 @@ func (rm *resourceManager) sdkFind(
 	if resp.StoppingCondition != nil {
 		f19 := &svcapitypes.ProcessingStoppingCondition{}
 		if resp.StoppingCondition.MaxRuntimeInSeconds != nil {
-			f19.MaxRuntimeInSeconds = resp.StoppingCondition.MaxRuntimeInSeconds
+			maxRuntimeInSecondsCopy := int64(*resp.StoppingCondition.MaxRuntimeInSeconds)
+			f19.MaxRuntimeInSeconds = &maxRuntimeInSecondsCopy
 		}
 		ko.Spec.StoppingCondition = f19
 	} else {
@@ -412,7 +386,7 @@ func (rm *resourceManager) newDescribeRequestPayload(
 	res := &svcsdk.DescribeProcessingJobInput{}
 
 	if r.ko.Spec.ProcessingJobName != nil {
-		res.SetProcessingJobName(*r.ko.Spec.ProcessingJobName)
+		res.ProcessingJobName = r.ko.Spec.ProcessingJobName
 	}
 
 	return res, nil
@@ -437,7 +411,7 @@ func (rm *resourceManager) sdkCreate(
 
 	var resp *svcsdk.CreateProcessingJobOutput
 	_ = resp
-	resp, err = rm.sdkapi.CreateProcessingJobWithContext(ctx, input)
+	resp, err = rm.sdkapi.CreateProcessingJob(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateProcessingJob", err)
 	if err != nil {
 		return nil, err
@@ -467,279 +441,264 @@ func (rm *resourceManager) newCreateRequestPayload(
 	res := &svcsdk.CreateProcessingJobInput{}
 
 	if r.ko.Spec.AppSpecification != nil {
-		f0 := &svcsdk.AppSpecification{}
+		f0 := &svcsdktypes.AppSpecification{}
 		if r.ko.Spec.AppSpecification.ContainerArguments != nil {
-			f0f0 := []*string{}
-			for _, f0f0iter := range r.ko.Spec.AppSpecification.ContainerArguments {
-				var f0f0elem string
-				f0f0elem = *f0f0iter
-				f0f0 = append(f0f0, &f0f0elem)
-			}
-			f0.SetContainerArguments(f0f0)
+			f0.ContainerArguments = aws.ToStringSlice(r.ko.Spec.AppSpecification.ContainerArguments)
 		}
 		if r.ko.Spec.AppSpecification.ContainerEntrypoint != nil {
-			f0f1 := []*string{}
-			for _, f0f1iter := range r.ko.Spec.AppSpecification.ContainerEntrypoint {
-				var f0f1elem string
-				f0f1elem = *f0f1iter
-				f0f1 = append(f0f1, &f0f1elem)
-			}
-			f0.SetContainerEntrypoint(f0f1)
+			f0.ContainerEntrypoint = aws.ToStringSlice(r.ko.Spec.AppSpecification.ContainerEntrypoint)
 		}
 		if r.ko.Spec.AppSpecification.ImageURI != nil {
-			f0.SetImageUri(*r.ko.Spec.AppSpecification.ImageURI)
+			f0.ImageUri = r.ko.Spec.AppSpecification.ImageURI
 		}
-		res.SetAppSpecification(f0)
+		res.AppSpecification = f0
 	}
 	if r.ko.Spec.Environment != nil {
-		f1 := map[string]*string{}
-		for f1key, f1valiter := range r.ko.Spec.Environment {
-			var f1val string
-			f1val = *f1valiter
-			f1[f1key] = &f1val
-		}
-		res.SetEnvironment(f1)
+		res.Environment = aws.ToStringMap(r.ko.Spec.Environment)
 	}
 	if r.ko.Spec.ExperimentConfig != nil {
-		f2 := &svcsdk.ExperimentConfig{}
+		f2 := &svcsdktypes.ExperimentConfig{}
 		if r.ko.Spec.ExperimentConfig.ExperimentName != nil {
-			f2.SetExperimentName(*r.ko.Spec.ExperimentConfig.ExperimentName)
+			f2.ExperimentName = r.ko.Spec.ExperimentConfig.ExperimentName
 		}
 		if r.ko.Spec.ExperimentConfig.TrialComponentDisplayName != nil {
-			f2.SetTrialComponentDisplayName(*r.ko.Spec.ExperimentConfig.TrialComponentDisplayName)
+			f2.TrialComponentDisplayName = r.ko.Spec.ExperimentConfig.TrialComponentDisplayName
 		}
 		if r.ko.Spec.ExperimentConfig.TrialName != nil {
-			f2.SetTrialName(*r.ko.Spec.ExperimentConfig.TrialName)
+			f2.TrialName = r.ko.Spec.ExperimentConfig.TrialName
 		}
-		res.SetExperimentConfig(f2)
+		res.ExperimentConfig = f2
 	}
 	if r.ko.Spec.NetworkConfig != nil {
-		f3 := &svcsdk.NetworkConfig{}
+		f3 := &svcsdktypes.NetworkConfig{}
 		if r.ko.Spec.NetworkConfig.EnableInterContainerTrafficEncryption != nil {
-			f3.SetEnableInterContainerTrafficEncryption(*r.ko.Spec.NetworkConfig.EnableInterContainerTrafficEncryption)
+			f3.EnableInterContainerTrafficEncryption = r.ko.Spec.NetworkConfig.EnableInterContainerTrafficEncryption
 		}
 		if r.ko.Spec.NetworkConfig.EnableNetworkIsolation != nil {
-			f3.SetEnableNetworkIsolation(*r.ko.Spec.NetworkConfig.EnableNetworkIsolation)
+			f3.EnableNetworkIsolation = r.ko.Spec.NetworkConfig.EnableNetworkIsolation
 		}
 		if r.ko.Spec.NetworkConfig.VPCConfig != nil {
-			f3f2 := &svcsdk.VpcConfig{}
+			f3f2 := &svcsdktypes.VpcConfig{}
 			if r.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs != nil {
-				f3f2f0 := []*string{}
-				for _, f3f2f0iter := range r.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs {
-					var f3f2f0elem string
-					f3f2f0elem = *f3f2f0iter
-					f3f2f0 = append(f3f2f0, &f3f2f0elem)
-				}
-				f3f2.SetSecurityGroupIds(f3f2f0)
+				f3f2.SecurityGroupIds = aws.ToStringSlice(r.ko.Spec.NetworkConfig.VPCConfig.SecurityGroupIDs)
 			}
 			if r.ko.Spec.NetworkConfig.VPCConfig.Subnets != nil {
-				f3f2f1 := []*string{}
-				for _, f3f2f1iter := range r.ko.Spec.NetworkConfig.VPCConfig.Subnets {
-					var f3f2f1elem string
-					f3f2f1elem = *f3f2f1iter
-					f3f2f1 = append(f3f2f1, &f3f2f1elem)
-				}
-				f3f2.SetSubnets(f3f2f1)
+				f3f2.Subnets = aws.ToStringSlice(r.ko.Spec.NetworkConfig.VPCConfig.Subnets)
 			}
-			f3.SetVpcConfig(f3f2)
+			f3.VpcConfig = f3f2
 		}
-		res.SetNetworkConfig(f3)
+		res.NetworkConfig = f3
 	}
 	if r.ko.Spec.ProcessingInputs != nil {
-		f4 := []*svcsdk.ProcessingInput{}
+		f4 := []svcsdktypes.ProcessingInput{}
 		for _, f4iter := range r.ko.Spec.ProcessingInputs {
-			f4elem := &svcsdk.ProcessingInput{}
+			f4elem := &svcsdktypes.ProcessingInput{}
 			if f4iter.AppManaged != nil {
-				f4elem.SetAppManaged(*f4iter.AppManaged)
+				f4elem.AppManaged = f4iter.AppManaged
 			}
 			if f4iter.DatasetDefinition != nil {
-				f4elemf1 := &svcsdk.DatasetDefinition{}
+				f4elemf1 := &svcsdktypes.DatasetDefinition{}
 				if f4iter.DatasetDefinition.AthenaDatasetDefinition != nil {
-					f4elemf1f0 := &svcsdk.AthenaDatasetDefinition{}
+					f4elemf1f0 := &svcsdktypes.AthenaDatasetDefinition{}
 					if f4iter.DatasetDefinition.AthenaDatasetDefinition.Catalog != nil {
-						f4elemf1f0.SetCatalog(*f4iter.DatasetDefinition.AthenaDatasetDefinition.Catalog)
+						f4elemf1f0.Catalog = f4iter.DatasetDefinition.AthenaDatasetDefinition.Catalog
 					}
 					if f4iter.DatasetDefinition.AthenaDatasetDefinition.Database != nil {
-						f4elemf1f0.SetDatabase(*f4iter.DatasetDefinition.AthenaDatasetDefinition.Database)
+						f4elemf1f0.Database = f4iter.DatasetDefinition.AthenaDatasetDefinition.Database
 					}
 					if f4iter.DatasetDefinition.AthenaDatasetDefinition.KMSKeyID != nil {
-						f4elemf1f0.SetKmsKeyId(*f4iter.DatasetDefinition.AthenaDatasetDefinition.KMSKeyID)
+						f4elemf1f0.KmsKeyId = f4iter.DatasetDefinition.AthenaDatasetDefinition.KMSKeyID
 					}
 					if f4iter.DatasetDefinition.AthenaDatasetDefinition.OutputCompression != nil {
-						f4elemf1f0.SetOutputCompression(*f4iter.DatasetDefinition.AthenaDatasetDefinition.OutputCompression)
+						f4elemf1f0.OutputCompression = svcsdktypes.AthenaResultCompressionType(*f4iter.DatasetDefinition.AthenaDatasetDefinition.OutputCompression)
 					}
 					if f4iter.DatasetDefinition.AthenaDatasetDefinition.OutputFormat != nil {
-						f4elemf1f0.SetOutputFormat(*f4iter.DatasetDefinition.AthenaDatasetDefinition.OutputFormat)
+						f4elemf1f0.OutputFormat = svcsdktypes.AthenaResultFormat(*f4iter.DatasetDefinition.AthenaDatasetDefinition.OutputFormat)
 					}
 					if f4iter.DatasetDefinition.AthenaDatasetDefinition.OutputS3URI != nil {
-						f4elemf1f0.SetOutputS3Uri(*f4iter.DatasetDefinition.AthenaDatasetDefinition.OutputS3URI)
+						f4elemf1f0.OutputS3Uri = f4iter.DatasetDefinition.AthenaDatasetDefinition.OutputS3URI
 					}
 					if f4iter.DatasetDefinition.AthenaDatasetDefinition.QueryString != nil {
-						f4elemf1f0.SetQueryString(*f4iter.DatasetDefinition.AthenaDatasetDefinition.QueryString)
+						f4elemf1f0.QueryString = f4iter.DatasetDefinition.AthenaDatasetDefinition.QueryString
 					}
 					if f4iter.DatasetDefinition.AthenaDatasetDefinition.WorkGroup != nil {
-						f4elemf1f0.SetWorkGroup(*f4iter.DatasetDefinition.AthenaDatasetDefinition.WorkGroup)
+						f4elemf1f0.WorkGroup = f4iter.DatasetDefinition.AthenaDatasetDefinition.WorkGroup
 					}
-					f4elemf1.SetAthenaDatasetDefinition(f4elemf1f0)
+					f4elemf1.AthenaDatasetDefinition = f4elemf1f0
 				}
 				if f4iter.DatasetDefinition.DataDistributionType != nil {
-					f4elemf1.SetDataDistributionType(*f4iter.DatasetDefinition.DataDistributionType)
+					f4elemf1.DataDistributionType = svcsdktypes.DataDistributionType(*f4iter.DatasetDefinition.DataDistributionType)
 				}
 				if f4iter.DatasetDefinition.InputMode != nil {
-					f4elemf1.SetInputMode(*f4iter.DatasetDefinition.InputMode)
+					f4elemf1.InputMode = svcsdktypes.InputMode(*f4iter.DatasetDefinition.InputMode)
 				}
 				if f4iter.DatasetDefinition.LocalPath != nil {
-					f4elemf1.SetLocalPath(*f4iter.DatasetDefinition.LocalPath)
+					f4elemf1.LocalPath = f4iter.DatasetDefinition.LocalPath
 				}
 				if f4iter.DatasetDefinition.RedshiftDatasetDefinition != nil {
-					f4elemf1f4 := &svcsdk.RedshiftDatasetDefinition{}
+					f4elemf1f4 := &svcsdktypes.RedshiftDatasetDefinition{}
 					if f4iter.DatasetDefinition.RedshiftDatasetDefinition.ClusterID != nil {
-						f4elemf1f4.SetClusterId(*f4iter.DatasetDefinition.RedshiftDatasetDefinition.ClusterID)
+						f4elemf1f4.ClusterId = f4iter.DatasetDefinition.RedshiftDatasetDefinition.ClusterID
 					}
 					if f4iter.DatasetDefinition.RedshiftDatasetDefinition.ClusterRoleARN != nil {
-						f4elemf1f4.SetClusterRoleArn(*f4iter.DatasetDefinition.RedshiftDatasetDefinition.ClusterRoleARN)
+						f4elemf1f4.ClusterRoleArn = f4iter.DatasetDefinition.RedshiftDatasetDefinition.ClusterRoleARN
 					}
 					if f4iter.DatasetDefinition.RedshiftDatasetDefinition.Database != nil {
-						f4elemf1f4.SetDatabase(*f4iter.DatasetDefinition.RedshiftDatasetDefinition.Database)
+						f4elemf1f4.Database = f4iter.DatasetDefinition.RedshiftDatasetDefinition.Database
 					}
 					if f4iter.DatasetDefinition.RedshiftDatasetDefinition.DBUser != nil {
-						f4elemf1f4.SetDbUser(*f4iter.DatasetDefinition.RedshiftDatasetDefinition.DBUser)
+						f4elemf1f4.DbUser = f4iter.DatasetDefinition.RedshiftDatasetDefinition.DBUser
 					}
 					if f4iter.DatasetDefinition.RedshiftDatasetDefinition.KMSKeyID != nil {
-						f4elemf1f4.SetKmsKeyId(*f4iter.DatasetDefinition.RedshiftDatasetDefinition.KMSKeyID)
+						f4elemf1f4.KmsKeyId = f4iter.DatasetDefinition.RedshiftDatasetDefinition.KMSKeyID
 					}
 					if f4iter.DatasetDefinition.RedshiftDatasetDefinition.OutputCompression != nil {
-						f4elemf1f4.SetOutputCompression(*f4iter.DatasetDefinition.RedshiftDatasetDefinition.OutputCompression)
+						f4elemf1f4.OutputCompression = svcsdktypes.RedshiftResultCompressionType(*f4iter.DatasetDefinition.RedshiftDatasetDefinition.OutputCompression)
 					}
 					if f4iter.DatasetDefinition.RedshiftDatasetDefinition.OutputFormat != nil {
-						f4elemf1f4.SetOutputFormat(*f4iter.DatasetDefinition.RedshiftDatasetDefinition.OutputFormat)
+						f4elemf1f4.OutputFormat = svcsdktypes.RedshiftResultFormat(*f4iter.DatasetDefinition.RedshiftDatasetDefinition.OutputFormat)
 					}
 					if f4iter.DatasetDefinition.RedshiftDatasetDefinition.OutputS3URI != nil {
-						f4elemf1f4.SetOutputS3Uri(*f4iter.DatasetDefinition.RedshiftDatasetDefinition.OutputS3URI)
+						f4elemf1f4.OutputS3Uri = f4iter.DatasetDefinition.RedshiftDatasetDefinition.OutputS3URI
 					}
 					if f4iter.DatasetDefinition.RedshiftDatasetDefinition.QueryString != nil {
-						f4elemf1f4.SetQueryString(*f4iter.DatasetDefinition.RedshiftDatasetDefinition.QueryString)
+						f4elemf1f4.QueryString = f4iter.DatasetDefinition.RedshiftDatasetDefinition.QueryString
 					}
-					f4elemf1.SetRedshiftDatasetDefinition(f4elemf1f4)
+					f4elemf1.RedshiftDatasetDefinition = f4elemf1f4
 				}
-				f4elem.SetDatasetDefinition(f4elemf1)
+				f4elem.DatasetDefinition = f4elemf1
 			}
 			if f4iter.InputName != nil {
-				f4elem.SetInputName(*f4iter.InputName)
+				f4elem.InputName = f4iter.InputName
 			}
 			if f4iter.S3Input != nil {
-				f4elemf3 := &svcsdk.ProcessingS3Input{}
+				f4elemf3 := &svcsdktypes.ProcessingS3Input{}
 				if f4iter.S3Input.LocalPath != nil {
-					f4elemf3.SetLocalPath(*f4iter.S3Input.LocalPath)
+					f4elemf3.LocalPath = f4iter.S3Input.LocalPath
 				}
 				if f4iter.S3Input.S3CompressionType != nil {
-					f4elemf3.SetS3CompressionType(*f4iter.S3Input.S3CompressionType)
+					f4elemf3.S3CompressionType = svcsdktypes.ProcessingS3CompressionType(*f4iter.S3Input.S3CompressionType)
 				}
 				if f4iter.S3Input.S3DataDistributionType != nil {
-					f4elemf3.SetS3DataDistributionType(*f4iter.S3Input.S3DataDistributionType)
+					f4elemf3.S3DataDistributionType = svcsdktypes.ProcessingS3DataDistributionType(*f4iter.S3Input.S3DataDistributionType)
 				}
 				if f4iter.S3Input.S3DataType != nil {
-					f4elemf3.SetS3DataType(*f4iter.S3Input.S3DataType)
+					f4elemf3.S3DataType = svcsdktypes.ProcessingS3DataType(*f4iter.S3Input.S3DataType)
 				}
 				if f4iter.S3Input.S3InputMode != nil {
-					f4elemf3.SetS3InputMode(*f4iter.S3Input.S3InputMode)
+					f4elemf3.S3InputMode = svcsdktypes.ProcessingS3InputMode(*f4iter.S3Input.S3InputMode)
 				}
 				if f4iter.S3Input.S3URI != nil {
-					f4elemf3.SetS3Uri(*f4iter.S3Input.S3URI)
+					f4elemf3.S3Uri = f4iter.S3Input.S3URI
 				}
-				f4elem.SetS3Input(f4elemf3)
+				f4elem.S3Input = f4elemf3
 			}
-			f4 = append(f4, f4elem)
+			f4 = append(f4, *f4elem)
 		}
-		res.SetProcessingInputs(f4)
+		res.ProcessingInputs = f4
 	}
 	if r.ko.Spec.ProcessingJobName != nil {
-		res.SetProcessingJobName(*r.ko.Spec.ProcessingJobName)
+		res.ProcessingJobName = r.ko.Spec.ProcessingJobName
 	}
 	if r.ko.Spec.ProcessingOutputConfig != nil {
-		f6 := &svcsdk.ProcessingOutputConfig{}
+		f6 := &svcsdktypes.ProcessingOutputConfig{}
 		if r.ko.Spec.ProcessingOutputConfig.KMSKeyID != nil {
-			f6.SetKmsKeyId(*r.ko.Spec.ProcessingOutputConfig.KMSKeyID)
+			f6.KmsKeyId = r.ko.Spec.ProcessingOutputConfig.KMSKeyID
 		}
 		if r.ko.Spec.ProcessingOutputConfig.Outputs != nil {
-			f6f1 := []*svcsdk.ProcessingOutput{}
+			f6f1 := []svcsdktypes.ProcessingOutput{}
 			for _, f6f1iter := range r.ko.Spec.ProcessingOutputConfig.Outputs {
-				f6f1elem := &svcsdk.ProcessingOutput{}
+				f6f1elem := &svcsdktypes.ProcessingOutput{}
 				if f6f1iter.AppManaged != nil {
-					f6f1elem.SetAppManaged(*f6f1iter.AppManaged)
+					f6f1elem.AppManaged = f6f1iter.AppManaged
 				}
 				if f6f1iter.FeatureStoreOutput != nil {
-					f6f1elemf1 := &svcsdk.ProcessingFeatureStoreOutput{}
+					f6f1elemf1 := &svcsdktypes.ProcessingFeatureStoreOutput{}
 					if f6f1iter.FeatureStoreOutput.FeatureGroupName != nil {
-						f6f1elemf1.SetFeatureGroupName(*f6f1iter.FeatureStoreOutput.FeatureGroupName)
+						f6f1elemf1.FeatureGroupName = f6f1iter.FeatureStoreOutput.FeatureGroupName
 					}
-					f6f1elem.SetFeatureStoreOutput(f6f1elemf1)
+					f6f1elem.FeatureStoreOutput = f6f1elemf1
 				}
 				if f6f1iter.OutputName != nil {
-					f6f1elem.SetOutputName(*f6f1iter.OutputName)
+					f6f1elem.OutputName = f6f1iter.OutputName
 				}
 				if f6f1iter.S3Output != nil {
-					f6f1elemf3 := &svcsdk.ProcessingS3Output{}
+					f6f1elemf3 := &svcsdktypes.ProcessingS3Output{}
 					if f6f1iter.S3Output.LocalPath != nil {
-						f6f1elemf3.SetLocalPath(*f6f1iter.S3Output.LocalPath)
+						f6f1elemf3.LocalPath = f6f1iter.S3Output.LocalPath
 					}
 					if f6f1iter.S3Output.S3UploadMode != nil {
-						f6f1elemf3.SetS3UploadMode(*f6f1iter.S3Output.S3UploadMode)
+						f6f1elemf3.S3UploadMode = svcsdktypes.ProcessingS3UploadMode(*f6f1iter.S3Output.S3UploadMode)
 					}
 					if f6f1iter.S3Output.S3URI != nil {
-						f6f1elemf3.SetS3Uri(*f6f1iter.S3Output.S3URI)
+						f6f1elemf3.S3Uri = f6f1iter.S3Output.S3URI
 					}
-					f6f1elem.SetS3Output(f6f1elemf3)
+					f6f1elem.S3Output = f6f1elemf3
 				}
-				f6f1 = append(f6f1, f6f1elem)
+				f6f1 = append(f6f1, *f6f1elem)
 			}
-			f6.SetOutputs(f6f1)
+			f6.Outputs = f6f1
 		}
-		res.SetProcessingOutputConfig(f6)
+		res.ProcessingOutputConfig = f6
 	}
 	if r.ko.Spec.ProcessingResources != nil {
-		f7 := &svcsdk.ProcessingResources{}
+		f7 := &svcsdktypes.ProcessingResources{}
 		if r.ko.Spec.ProcessingResources.ClusterConfig != nil {
-			f7f0 := &svcsdk.ProcessingClusterConfig{}
+			f7f0 := &svcsdktypes.ProcessingClusterConfig{}
 			if r.ko.Spec.ProcessingResources.ClusterConfig.InstanceCount != nil {
-				f7f0.SetInstanceCount(*r.ko.Spec.ProcessingResources.ClusterConfig.InstanceCount)
+				instanceCountCopy0 := *r.ko.Spec.ProcessingResources.ClusterConfig.InstanceCount
+				if instanceCountCopy0 > math.MaxInt32 || instanceCountCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field InstanceCount is of type int32")
+				}
+				instanceCountCopy := int32(instanceCountCopy0)
+				f7f0.InstanceCount = &instanceCountCopy
 			}
 			if r.ko.Spec.ProcessingResources.ClusterConfig.InstanceType != nil {
-				f7f0.SetInstanceType(*r.ko.Spec.ProcessingResources.ClusterConfig.InstanceType)
+				f7f0.InstanceType = svcsdktypes.ProcessingInstanceType(*r.ko.Spec.ProcessingResources.ClusterConfig.InstanceType)
 			}
 			if r.ko.Spec.ProcessingResources.ClusterConfig.VolumeKMSKeyID != nil {
-				f7f0.SetVolumeKmsKeyId(*r.ko.Spec.ProcessingResources.ClusterConfig.VolumeKMSKeyID)
+				f7f0.VolumeKmsKeyId = r.ko.Spec.ProcessingResources.ClusterConfig.VolumeKMSKeyID
 			}
 			if r.ko.Spec.ProcessingResources.ClusterConfig.VolumeSizeInGB != nil {
-				f7f0.SetVolumeSizeInGB(*r.ko.Spec.ProcessingResources.ClusterConfig.VolumeSizeInGB)
+				volumeSizeInGBCopy0 := *r.ko.Spec.ProcessingResources.ClusterConfig.VolumeSizeInGB
+				if volumeSizeInGBCopy0 > math.MaxInt32 || volumeSizeInGBCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field VolumeSizeInGB is of type int32")
+				}
+				volumeSizeInGBCopy := int32(volumeSizeInGBCopy0)
+				f7f0.VolumeSizeInGB = &volumeSizeInGBCopy
 			}
-			f7.SetClusterConfig(f7f0)
+			f7.ClusterConfig = f7f0
 		}
-		res.SetProcessingResources(f7)
+		res.ProcessingResources = f7
 	}
 	if r.ko.Spec.RoleARN != nil {
-		res.SetRoleArn(*r.ko.Spec.RoleARN)
+		res.RoleArn = r.ko.Spec.RoleARN
 	}
 	if r.ko.Spec.StoppingCondition != nil {
-		f9 := &svcsdk.ProcessingStoppingCondition{}
+		f9 := &svcsdktypes.ProcessingStoppingCondition{}
 		if r.ko.Spec.StoppingCondition.MaxRuntimeInSeconds != nil {
-			f9.SetMaxRuntimeInSeconds(*r.ko.Spec.StoppingCondition.MaxRuntimeInSeconds)
+			maxRuntimeInSecondsCopy0 := *r.ko.Spec.StoppingCondition.MaxRuntimeInSeconds
+			if maxRuntimeInSecondsCopy0 > math.MaxInt32 || maxRuntimeInSecondsCopy0 < math.MinInt32 {
+				return nil, fmt.Errorf("error: field MaxRuntimeInSeconds is of type int32")
+			}
+			maxRuntimeInSecondsCopy := int32(maxRuntimeInSecondsCopy0)
+			f9.MaxRuntimeInSeconds = &maxRuntimeInSecondsCopy
 		}
-		res.SetStoppingCondition(f9)
+		res.StoppingCondition = f9
 	}
 	if r.ko.Spec.Tags != nil {
-		f10 := []*svcsdk.Tag{}
+		f10 := []svcsdktypes.Tag{}
 		for _, f10iter := range r.ko.Spec.Tags {
-			f10elem := &svcsdk.Tag{}
+			f10elem := &svcsdktypes.Tag{}
 			if f10iter.Key != nil {
-				f10elem.SetKey(*f10iter.Key)
+				f10elem.Key = f10iter.Key
 			}
 			if f10iter.Value != nil {
-				f10elem.SetValue(*f10iter.Value)
+				f10elem.Value = f10iter.Value
 			}
-			f10 = append(f10, f10elem)
+			f10 = append(f10, *f10elem)
 		}
-		res.SetTags(f10)
+		res.Tags = f10
 	}
 
 	return res, nil
@@ -768,13 +727,13 @@ func (rm *resourceManager) sdkDelete(
 	}()
 	latestStatus := r.ko.Status.ProcessingJobStatus
 	if latestStatus != nil {
-		if *latestStatus == svcsdk.ProcessingJobStatusStopping {
+		if *latestStatus == string(svcsdktypes.ProcessingJobStatusStopping) {
 			return r, requeueWaitWhileDeleting
 		}
 
 		// Call StopProcessingJob only if the job is InProgress, otherwise just
 		// return nil to mark the resource Unmanaged
-		if *latestStatus != svcsdk.ProcessingJobStatusInProgress {
+		if *latestStatus != string(svcsdktypes.ProcessingJobStatusInProgress) {
 			return r, err
 		}
 	}
@@ -784,7 +743,7 @@ func (rm *resourceManager) sdkDelete(
 	}
 	var resp *svcsdk.StopProcessingJobOutput
 	_ = resp
-	resp, err = rm.sdkapi.StopProcessingJobWithContext(ctx, input)
+	resp, err = rm.sdkapi.StopProcessingJob(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "StopProcessingJob", err)
 
 	if err == nil {
@@ -808,7 +767,7 @@ func (rm *resourceManager) newDeleteRequestPayload(
 	res := &svcsdk.StopProcessingJobInput{}
 
 	if r.ko.Spec.ProcessingJobName != nil {
-		res.SetProcessingJobName(*r.ko.Spec.ProcessingJobName)
+		res.ProcessingJobName = r.ko.Spec.ProcessingJobName
 	}
 
 	return res, nil
@@ -916,11 +875,12 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 	if err == nil {
 		return false
 	}
-	awsErr, ok := ackerr.AWSError(err)
-	if !ok {
+
+	var terminalErr smithy.APIError
+	if !errors.As(err, &terminalErr) {
 		return false
 	}
-	switch awsErr.Code() {
+	switch terminalErr.ErrorCode() {
 	case "ResourceNotFound",
 		"ResourceInUse",
 		"InvalidParameterCombination",

@@ -23,18 +23,18 @@ import (
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/awserr"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
+	"github.com/aws/smithy-go"
 )
 
 var (
 	modifyingStatuses = []string{
-		svcsdk.EndpointStatusCreating,
-		svcsdk.EndpointStatusUpdating,
-		svcsdk.EndpointStatusSystemUpdating,
-		svcsdk.EndpointStatusRollingBack,
-		svcsdk.EndpointStatusDeleting,
+		string(svcsdktypes.EndpointStatusCreating),
+		string(svcsdktypes.EndpointStatusUpdating),
+		string(svcsdktypes.EndpointStatusSystemUpdating),
+		string(svcsdktypes.EndpointStatusRollingBack),
+		string(svcsdktypes.EndpointStatusDeleting),
 	}
 
 	resourceName = GroupKind.Kind
@@ -68,7 +68,7 @@ func (rm *resourceManager) customUpdateEndpointSetOutput(ko *svcapitypes.Endpoin
 	ko.ObjectMeta.SetAnnotations(annotations)
 
 	// injecting Updating status to keep the Sync condition message and status.endpointStatus in sync
-	ko.Status.EndpointStatus = aws.String(svcsdk.EndpointStatusUpdating)
+	ko.Status.EndpointStatus = aws.String(string(svcsdktypes.EndpointStatusUpdating))
 
 	svccommon.SetSyncedCondition(&resource{ko}, ko.Status.EndpointStatus, &resourceName, &modifyingStatuses)
 }
@@ -105,7 +105,7 @@ func (rm *resourceManager) customUpdateEndpointPreChecks(
 	}
 
 	// Case 2 - EndpointStatus == Failed
-	if *latestStatus == svcsdk.EndpointStatusFailed ||
+	if *latestStatus == string(svcsdktypes.EndpointStatusFailed) ||
 		// Case 3 - A previous update to the Endpoint with same endpointConfigName failed
 		// Following checks indicate FailureReason is related to a failed update
 		// Note: Internal service error is an exception for this case
@@ -122,7 +122,11 @@ func (rm *resourceManager) customUpdateEndpointPreChecks(
 		// 1 & 2 does not guarantee an update Failed. Hence we need to look at `*latestEndpointConfigName` to determine if the update was unsuccessful
 		// `*desiredEndpointConfig != *latestEndpointConfig` + `*desiredEndpointConfig == *lastEndpointConfigForUpdate`+ `FailureReason != nil` indicate that an update is needed,
 		// has already been tried and failed.
-		return awserr.New("EndpointUpdateError", fmt.Sprintf("unable to update endpoint. check FailureReason. latest EndpointConfigName is %s", *latest.ko.Spec.EndpointConfigName), nil)
+		return &smithy.GenericAPIError{
+			Code:    "EndpointUpdateError",
+			Message: fmt.Sprintf("unable to update endpoint. check FailureReason. latest EndpointConfigName is %s", *latest.ko.Spec.EndpointConfigName),
+			Fault:   0,
+		}
 	}
 
 	return nil

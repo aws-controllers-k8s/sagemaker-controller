@@ -16,7 +16,7 @@ package model_package
 import (
 	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
 )
 
 // CustomUpdateConditions sets conditions (terminal) on supplied model package.
@@ -28,7 +28,7 @@ func (rm *resourceManager) CustomUpdateConditions(
 	err error,
 ) bool {
 	latestStatus := r.ko.Status.ModelPackageStatus
-	terminalStatus := svcsdk.ModelPackageStatusFailed
+	terminalStatus := string(svcsdktypes.ModelPackageStatusFailed)
 	conditionManager := &resource{ko}
 	// If the latestStatus == terminalStatus we will set
 	// the terminal condition and terminal message.

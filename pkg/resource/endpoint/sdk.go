@@ -19,6 +19,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math"
 	"reflect"
 	"strings"
 
@@ -28,8 +29,10 @@ import (
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
-	"github.com/aws/aws-sdk-go/aws"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
+	smithy "github.com/aws/smithy-go"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -40,8 +43,7 @@ import (
 var (
 	_ = &metav1.Time{}
 	_ = strings.ToLower("")
-	_ = &aws.JSONValue{}
-	_ = &svcsdk.SageMaker{}
+	_ = &svcsdk.Client{}
 	_ = &svcapitypes.Endpoint{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
@@ -49,6 +51,7 @@ var (
 	_ = &reflect.Value{}
 	_ = fmt.Sprintf("")
 	_ = &ackrequeue.NoRequeue{}
+	_ = &aws.Config{}
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -74,13 +77,11 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	var resp *svcsdk.DescribeEndpointOutput
-	resp, err = rm.sdkapi.DescribeEndpointWithContext(ctx, input)
+	resp, err = rm.sdkapi.DescribeEndpoint(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeEndpoint", err)
 	if err != nil {
-		if reqErr, ok := ackerr.AWSRequestFailure(err); ok && reqErr.StatusCode() == 404 {
-			return nil, ackerr.NotFound
-		}
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ValidationException" && strings.HasPrefix(awsErr.Message(), "Could not find endpoint") {
+		var awsErr smithy.APIError
+		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ValidationException" && strings.HasPrefix(awsErr.ErrorMessage(), "Could not find endpoint") {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
@@ -112,8 +113,8 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.EndpointName = nil
 	}
-	if resp.EndpointStatus != nil {
-		ko.Status.EndpointStatus = resp.EndpointStatus
+	if resp.EndpointStatus != "" {
+		ko.Status.EndpointStatus = aws.String(string(resp.EndpointStatus))
 	} else {
 		ko.Status.EndpointStatus = nil
 	}
@@ -142,38 +143,43 @@ func (rm *resourceManager) sdkFind(
 		if resp.LastDeploymentConfig.BlueGreenUpdatePolicy != nil {
 			f8f1 := &svcapitypes.BlueGreenUpdatePolicy{}
 			if resp.LastDeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds != nil {
-				f8f1.MaximumExecutionTimeoutInSeconds = resp.LastDeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds
+				maximumExecutionTimeoutInSecondsCopy := int64(*resp.LastDeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds)
+				f8f1.MaximumExecutionTimeoutInSeconds = &maximumExecutionTimeoutInSecondsCopy
 			}
 			if resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds != nil {
-				f8f1.TerminationWaitInSeconds = resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds
+				terminationWaitInSecondsCopy := int64(*resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds)
+				f8f1.TerminationWaitInSeconds = &terminationWaitInSecondsCopy
 			}
 			if resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration != nil {
 				f8f1f2 := &svcapitypes.TrafficRoutingConfig{}
 				if resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize != nil {
 					f8f1f2f0 := &svcapitypes.CapacitySize{}
-					if resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type != nil {
-						f8f1f2f0.Type = resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type
+					if resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type != "" {
+						f8f1f2f0.Type = aws.String(string(resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type))
 					}
 					if resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value != nil {
-						f8f1f2f0.Value = resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value
+						valueCopy := int64(*resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value)
+						f8f1f2f0.Value = &valueCopy
 					}
 					f8f1f2.CanarySize = f8f1f2f0
 				}
 				if resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize != nil {
 					f8f1f2f1 := &svcapitypes.CapacitySize{}
-					if resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type != nil {
-						f8f1f2f1.Type = resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type
+					if resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type != "" {
+						f8f1f2f1.Type = aws.String(string(resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type))
 					}
 					if resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value != nil {
-						f8f1f2f1.Value = resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value
+						valueCopy := int64(*resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value)
+						f8f1f2f1.Value = &valueCopy
 					}
 					f8f1f2.LinearStepSize = f8f1f2f1
 				}
-				if resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type != nil {
-					f8f1f2.Type = resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type
+				if resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type != "" {
+					f8f1f2.Type = aws.String(string(resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type))
 				}
 				if resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds != nil {
-					f8f1f2.WaitIntervalInSeconds = resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds
+					waitIntervalInSecondsCopy := int64(*resp.LastDeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds)
+					f8f1f2.WaitIntervalInSeconds = &waitIntervalInSecondsCopy
 				}
 				f8f1.TrafficRoutingConfiguration = f8f1f2
 			}
@@ -183,29 +189,33 @@ func (rm *resourceManager) sdkFind(
 			f8f2 := &svcapitypes.RollingUpdatePolicy{}
 			if resp.LastDeploymentConfig.RollingUpdatePolicy.MaximumBatchSize != nil {
 				f8f2f0 := &svcapitypes.CapacitySize{}
-				if resp.LastDeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type != nil {
-					f8f2f0.Type = resp.LastDeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type
+				if resp.LastDeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type != "" {
+					f8f2f0.Type = aws.String(string(resp.LastDeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type))
 				}
 				if resp.LastDeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value != nil {
-					f8f2f0.Value = resp.LastDeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value
+					valueCopy := int64(*resp.LastDeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value)
+					f8f2f0.Value = &valueCopy
 				}
 				f8f2.MaximumBatchSize = f8f2f0
 			}
 			if resp.LastDeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds != nil {
-				f8f2.MaximumExecutionTimeoutInSeconds = resp.LastDeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds
+				maximumExecutionTimeoutInSecondsCopy := int64(*resp.LastDeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds)
+				f8f2.MaximumExecutionTimeoutInSeconds = &maximumExecutionTimeoutInSecondsCopy
 			}
 			if resp.LastDeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize != nil {
 				f8f2f2 := &svcapitypes.CapacitySize{}
-				if resp.LastDeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type != nil {
-					f8f2f2.Type = resp.LastDeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type
+				if resp.LastDeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type != "" {
+					f8f2f2.Type = aws.String(string(resp.LastDeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type))
 				}
 				if resp.LastDeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value != nil {
-					f8f2f2.Value = resp.LastDeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value
+					valueCopy := int64(*resp.LastDeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value)
+					f8f2f2.Value = &valueCopy
 				}
 				f8f2.RollbackMaximumBatchSize = f8f2f2
 			}
 			if resp.LastDeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds != nil {
-				f8f2.WaitIntervalInSeconds = resp.LastDeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds
+				waitIntervalInSecondsCopy := int64(*resp.LastDeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds)
+				f8f2.WaitIntervalInSeconds = &waitIntervalInSecondsCopy
 			}
 			f8.RollingUpdatePolicy = f8f2
 		}
@@ -227,27 +237,32 @@ func (rm *resourceManager) sdkFind(
 			f10f1 := []*svcapitypes.PendingProductionVariantSummary{}
 			for _, f10f1iter := range resp.PendingDeploymentSummary.ProductionVariants {
 				f10f1elem := &svcapitypes.PendingProductionVariantSummary{}
-				if f10f1iter.AcceleratorType != nil {
-					f10f1elem.AcceleratorType = f10f1iter.AcceleratorType
+				if f10f1iter.AcceleratorType != "" {
+					f10f1elem.AcceleratorType = aws.String(string(f10f1iter.AcceleratorType))
 				}
 				if f10f1iter.CurrentInstanceCount != nil {
-					f10f1elem.CurrentInstanceCount = f10f1iter.CurrentInstanceCount
+					currentInstanceCountCopy := int64(*f10f1iter.CurrentInstanceCount)
+					f10f1elem.CurrentInstanceCount = &currentInstanceCountCopy
 				}
 				if f10f1iter.CurrentServerlessConfig != nil {
 					f10f1elemf2 := &svcapitypes.ProductionVariantServerlessConfig{}
 					if f10f1iter.CurrentServerlessConfig.MaxConcurrency != nil {
-						f10f1elemf2.MaxConcurrency = f10f1iter.CurrentServerlessConfig.MaxConcurrency
+						maxConcurrencyCopy := int64(*f10f1iter.CurrentServerlessConfig.MaxConcurrency)
+						f10f1elemf2.MaxConcurrency = &maxConcurrencyCopy
 					}
 					if f10f1iter.CurrentServerlessConfig.MemorySizeInMB != nil {
-						f10f1elemf2.MemorySizeInMB = f10f1iter.CurrentServerlessConfig.MemorySizeInMB
+						memorySizeInMBCopy := int64(*f10f1iter.CurrentServerlessConfig.MemorySizeInMB)
+						f10f1elemf2.MemorySizeInMB = &memorySizeInMBCopy
 					}
 					if f10f1iter.CurrentServerlessConfig.ProvisionedConcurrency != nil {
-						f10f1elemf2.ProvisionedConcurrency = f10f1iter.CurrentServerlessConfig.ProvisionedConcurrency
+						provisionedConcurrencyCopy := int64(*f10f1iter.CurrentServerlessConfig.ProvisionedConcurrency)
+						f10f1elemf2.ProvisionedConcurrency = &provisionedConcurrencyCopy
 					}
 					f10f1elem.CurrentServerlessConfig = f10f1elemf2
 				}
 				if f10f1iter.CurrentWeight != nil {
-					f10f1elem.CurrentWeight = f10f1iter.CurrentWeight
+					currentWeightCopy := float64(*f10f1iter.CurrentWeight)
+					f10f1elem.CurrentWeight = &currentWeightCopy
 				}
 				if f10f1iter.DeployedImages != nil {
 					f10f1elemf4 := []*svcapitypes.DeployedImage{}
@@ -267,44 +282,51 @@ func (rm *resourceManager) sdkFind(
 					f10f1elem.DeployedImages = f10f1elemf4
 				}
 				if f10f1iter.DesiredInstanceCount != nil {
-					f10f1elem.DesiredInstanceCount = f10f1iter.DesiredInstanceCount
+					desiredInstanceCountCopy := int64(*f10f1iter.DesiredInstanceCount)
+					f10f1elem.DesiredInstanceCount = &desiredInstanceCountCopy
 				}
 				if f10f1iter.DesiredServerlessConfig != nil {
 					f10f1elemf6 := &svcapitypes.ProductionVariantServerlessConfig{}
 					if f10f1iter.DesiredServerlessConfig.MaxConcurrency != nil {
-						f10f1elemf6.MaxConcurrency = f10f1iter.DesiredServerlessConfig.MaxConcurrency
+						maxConcurrencyCopy := int64(*f10f1iter.DesiredServerlessConfig.MaxConcurrency)
+						f10f1elemf6.MaxConcurrency = &maxConcurrencyCopy
 					}
 					if f10f1iter.DesiredServerlessConfig.MemorySizeInMB != nil {
-						f10f1elemf6.MemorySizeInMB = f10f1iter.DesiredServerlessConfig.MemorySizeInMB
+						memorySizeInMBCopy := int64(*f10f1iter.DesiredServerlessConfig.MemorySizeInMB)
+						f10f1elemf6.MemorySizeInMB = &memorySizeInMBCopy
 					}
 					if f10f1iter.DesiredServerlessConfig.ProvisionedConcurrency != nil {
-						f10f1elemf6.ProvisionedConcurrency = f10f1iter.DesiredServerlessConfig.ProvisionedConcurrency
+						provisionedConcurrencyCopy := int64(*f10f1iter.DesiredServerlessConfig.ProvisionedConcurrency)
+						f10f1elemf6.ProvisionedConcurrency = &provisionedConcurrencyCopy
 					}
 					f10f1elem.DesiredServerlessConfig = f10f1elemf6
 				}
 				if f10f1iter.DesiredWeight != nil {
-					f10f1elem.DesiredWeight = f10f1iter.DesiredWeight
+					desiredWeightCopy := float64(*f10f1iter.DesiredWeight)
+					f10f1elem.DesiredWeight = &desiredWeightCopy
 				}
-				if f10f1iter.InstanceType != nil {
-					f10f1elem.InstanceType = f10f1iter.InstanceType
+				if f10f1iter.InstanceType != "" {
+					f10f1elem.InstanceType = aws.String(string(f10f1iter.InstanceType))
 				}
 				if f10f1iter.ManagedInstanceScaling != nil {
 					f10f1elemf9 := &svcapitypes.ProductionVariantManagedInstanceScaling{}
 					if f10f1iter.ManagedInstanceScaling.MaxInstanceCount != nil {
-						f10f1elemf9.MaxInstanceCount = f10f1iter.ManagedInstanceScaling.MaxInstanceCount
+						maxInstanceCountCopy := int64(*f10f1iter.ManagedInstanceScaling.MaxInstanceCount)
+						f10f1elemf9.MaxInstanceCount = &maxInstanceCountCopy
 					}
 					if f10f1iter.ManagedInstanceScaling.MinInstanceCount != nil {
-						f10f1elemf9.MinInstanceCount = f10f1iter.ManagedInstanceScaling.MinInstanceCount
+						minInstanceCountCopy := int64(*f10f1iter.ManagedInstanceScaling.MinInstanceCount)
+						f10f1elemf9.MinInstanceCount = &minInstanceCountCopy
 					}
-					if f10f1iter.ManagedInstanceScaling.Status != nil {
-						f10f1elemf9.Status = f10f1iter.ManagedInstanceScaling.Status
+					if f10f1iter.ManagedInstanceScaling.Status != "" {
+						f10f1elemf9.Status = aws.String(string(f10f1iter.ManagedInstanceScaling.Status))
 					}
 					f10f1elem.ManagedInstanceScaling = f10f1elemf9
 				}
 				if f10f1iter.RoutingConfig != nil {
 					f10f1elemf10 := &svcapitypes.ProductionVariantRoutingConfig{}
-					if f10f1iter.RoutingConfig.RoutingStrategy != nil {
-						f10f1elemf10.RoutingStrategy = f10f1iter.RoutingConfig.RoutingStrategy
+					if f10f1iter.RoutingConfig.RoutingStrategy != "" {
+						f10f1elemf10.RoutingStrategy = aws.String(string(f10f1iter.RoutingConfig.RoutingStrategy))
 					}
 					f10f1elem.RoutingConfig = f10f1elemf10
 				}
@@ -318,8 +340,8 @@ func (rm *resourceManager) sdkFind(
 						if f10f1elemf12iter.StartTime != nil {
 							f10f1elemf12elem.StartTime = &metav1.Time{*f10f1elemf12iter.StartTime}
 						}
-						if f10f1elemf12iter.Status != nil {
-							f10f1elemf12elem.Status = f10f1elemf12iter.Status
+						if f10f1elemf12iter.Status != "" {
+							f10f1elemf12elem.Status = aws.String(string(f10f1elemf12iter.Status))
 						}
 						if f10f1elemf12iter.StatusMessage != nil {
 							f10f1elemf12elem.StatusMessage = f10f1elemf12iter.StatusMessage
@@ -344,23 +366,28 @@ func (rm *resourceManager) sdkFind(
 		for _, f11iter := range resp.ProductionVariants {
 			f11elem := &svcapitypes.ProductionVariantSummary{}
 			if f11iter.CurrentInstanceCount != nil {
-				f11elem.CurrentInstanceCount = f11iter.CurrentInstanceCount
+				currentInstanceCountCopy := int64(*f11iter.CurrentInstanceCount)
+				f11elem.CurrentInstanceCount = &currentInstanceCountCopy
 			}
 			if f11iter.CurrentServerlessConfig != nil {
 				f11elemf1 := &svcapitypes.ProductionVariantServerlessConfig{}
 				if f11iter.CurrentServerlessConfig.MaxConcurrency != nil {
-					f11elemf1.MaxConcurrency = f11iter.CurrentServerlessConfig.MaxConcurrency
+					maxConcurrencyCopy := int64(*f11iter.CurrentServerlessConfig.MaxConcurrency)
+					f11elemf1.MaxConcurrency = &maxConcurrencyCopy
 				}
 				if f11iter.CurrentServerlessConfig.MemorySizeInMB != nil {
-					f11elemf1.MemorySizeInMB = f11iter.CurrentServerlessConfig.MemorySizeInMB
+					memorySizeInMBCopy := int64(*f11iter.CurrentServerlessConfig.MemorySizeInMB)
+					f11elemf1.MemorySizeInMB = &memorySizeInMBCopy
 				}
 				if f11iter.CurrentServerlessConfig.ProvisionedConcurrency != nil {
-					f11elemf1.ProvisionedConcurrency = f11iter.CurrentServerlessConfig.ProvisionedConcurrency
+					provisionedConcurrencyCopy := int64(*f11iter.CurrentServerlessConfig.ProvisionedConcurrency)
+					f11elemf1.ProvisionedConcurrency = &provisionedConcurrencyCopy
 				}
 				f11elem.CurrentServerlessConfig = f11elemf1
 			}
 			if f11iter.CurrentWeight != nil {
-				f11elem.CurrentWeight = f11iter.CurrentWeight
+				currentWeightCopy := float64(*f11iter.CurrentWeight)
+				f11elem.CurrentWeight = &currentWeightCopy
 			}
 			if f11iter.DeployedImages != nil {
 				f11elemf3 := []*svcapitypes.DeployedImage{}
@@ -380,41 +407,48 @@ func (rm *resourceManager) sdkFind(
 				f11elem.DeployedImages = f11elemf3
 			}
 			if f11iter.DesiredInstanceCount != nil {
-				f11elem.DesiredInstanceCount = f11iter.DesiredInstanceCount
+				desiredInstanceCountCopy := int64(*f11iter.DesiredInstanceCount)
+				f11elem.DesiredInstanceCount = &desiredInstanceCountCopy
 			}
 			if f11iter.DesiredServerlessConfig != nil {
 				f11elemf5 := &svcapitypes.ProductionVariantServerlessConfig{}
 				if f11iter.DesiredServerlessConfig.MaxConcurrency != nil {
-					f11elemf5.MaxConcurrency = f11iter.DesiredServerlessConfig.MaxConcurrency
+					maxConcurrencyCopy := int64(*f11iter.DesiredServerlessConfig.MaxConcurrency)
+					f11elemf5.MaxConcurrency = &maxConcurrencyCopy
 				}
 				if f11iter.DesiredServerlessConfig.MemorySizeInMB != nil {
-					f11elemf5.MemorySizeInMB = f11iter.DesiredServerlessConfig.MemorySizeInMB
+					memorySizeInMBCopy := int64(*f11iter.DesiredServerlessConfig.MemorySizeInMB)
+					f11elemf5.MemorySizeInMB = &memorySizeInMBCopy
 				}
 				if f11iter.DesiredServerlessConfig.ProvisionedConcurrency != nil {
-					f11elemf5.ProvisionedConcurrency = f11iter.DesiredServerlessConfig.ProvisionedConcurrency
+					provisionedConcurrencyCopy := int64(*f11iter.DesiredServerlessConfig.ProvisionedConcurrency)
+					f11elemf5.ProvisionedConcurrency = &provisionedConcurrencyCopy
 				}
 				f11elem.DesiredServerlessConfig = f11elemf5
 			}
 			if f11iter.DesiredWeight != nil {
-				f11elem.DesiredWeight = f11iter.DesiredWeight
+				desiredWeightCopy := float64(*f11iter.DesiredWeight)
+				f11elem.DesiredWeight = &desiredWeightCopy
 			}
 			if f11iter.ManagedInstanceScaling != nil {
 				f11elemf7 := &svcapitypes.ProductionVariantManagedInstanceScaling{}
 				if f11iter.ManagedInstanceScaling.MaxInstanceCount != nil {
-					f11elemf7.MaxInstanceCount = f11iter.ManagedInstanceScaling.MaxInstanceCount
+					maxInstanceCountCopy := int64(*f11iter.ManagedInstanceScaling.MaxInstanceCount)
+					f11elemf7.MaxInstanceCount = &maxInstanceCountCopy
 				}
 				if f11iter.ManagedInstanceScaling.MinInstanceCount != nil {
-					f11elemf7.MinInstanceCount = f11iter.ManagedInstanceScaling.MinInstanceCount
+					minInstanceCountCopy := int64(*f11iter.ManagedInstanceScaling.MinInstanceCount)
+					f11elemf7.MinInstanceCount = &minInstanceCountCopy
 				}
-				if f11iter.ManagedInstanceScaling.Status != nil {
-					f11elemf7.Status = f11iter.ManagedInstanceScaling.Status
+				if f11iter.ManagedInstanceScaling.Status != "" {
+					f11elemf7.Status = aws.String(string(f11iter.ManagedInstanceScaling.Status))
 				}
 				f11elem.ManagedInstanceScaling = f11elemf7
 			}
 			if f11iter.RoutingConfig != nil {
 				f11elemf8 := &svcapitypes.ProductionVariantRoutingConfig{}
-				if f11iter.RoutingConfig.RoutingStrategy != nil {
-					f11elemf8.RoutingStrategy = f11iter.RoutingConfig.RoutingStrategy
+				if f11iter.RoutingConfig.RoutingStrategy != "" {
+					f11elemf8.RoutingStrategy = aws.String(string(f11iter.RoutingConfig.RoutingStrategy))
 				}
 				f11elem.RoutingConfig = f11elemf8
 			}
@@ -428,8 +462,8 @@ func (rm *resourceManager) sdkFind(
 					if f11elemf10iter.StartTime != nil {
 						f11elemf10elem.StartTime = &metav1.Time{*f11elemf10iter.StartTime}
 					}
-					if f11elemf10iter.Status != nil {
-						f11elemf10elem.Status = f11elemf10iter.Status
+					if f11elemf10iter.Status != "" {
+						f11elemf10elem.Status = aws.String(string(f11elemf10iter.Status))
 					}
 					if f11elemf10iter.StatusMessage != nil {
 						f11elemf10elem.StatusMessage = f11elemf10iter.StatusMessage
@@ -468,7 +502,7 @@ func (rm *resourceManager) newDescribeRequestPayload(
 	res := &svcsdk.DescribeEndpointInput{}
 
 	if r.ko.Spec.EndpointName != nil {
-		res.SetEndpointName(*r.ko.Spec.EndpointName)
+		res.EndpointName = r.ko.Spec.EndpointName
 	}
 
 	return res, nil
@@ -493,7 +527,7 @@ func (rm *resourceManager) sdkCreate(
 
 	var resp *svcsdk.CreateEndpointOutput
 	_ = resp
-	resp, err = rm.sdkapi.CreateEndpointWithContext(ctx, input)
+	resp, err = rm.sdkapi.CreateEndpoint(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateEndpoint", err)
 	if err != nil {
 		return nil, err
@@ -523,113 +557,158 @@ func (rm *resourceManager) newCreateRequestPayload(
 	res := &svcsdk.CreateEndpointInput{}
 
 	if r.ko.Spec.DeploymentConfig != nil {
-		f0 := &svcsdk.DeploymentConfig{}
+		f0 := &svcsdktypes.DeploymentConfig{}
 		if r.ko.Spec.DeploymentConfig.AutoRollbackConfiguration != nil {
-			f0f0 := &svcsdk.AutoRollbackConfig{}
+			f0f0 := &svcsdktypes.AutoRollbackConfig{}
 			if r.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms != nil {
-				f0f0f0 := []*svcsdk.Alarm{}
+				f0f0f0 := []svcsdktypes.Alarm{}
 				for _, f0f0f0iter := range r.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms {
-					f0f0f0elem := &svcsdk.Alarm{}
+					f0f0f0elem := &svcsdktypes.Alarm{}
 					if f0f0f0iter.AlarmName != nil {
-						f0f0f0elem.SetAlarmName(*f0f0f0iter.AlarmName)
+						f0f0f0elem.AlarmName = f0f0f0iter.AlarmName
 					}
-					f0f0f0 = append(f0f0f0, f0f0f0elem)
+					f0f0f0 = append(f0f0f0, *f0f0f0elem)
 				}
-				f0f0.SetAlarms(f0f0f0)
+				f0f0.Alarms = f0f0f0
 			}
-			f0.SetAutoRollbackConfiguration(f0f0)
+			f0.AutoRollbackConfiguration = f0f0
 		}
 		if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy != nil {
-			f0f1 := &svcsdk.BlueGreenUpdatePolicy{}
+			f0f1 := &svcsdktypes.BlueGreenUpdatePolicy{}
 			if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds != nil {
-				f0f1.SetMaximumExecutionTimeoutInSeconds(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds)
+				maximumExecutionTimeoutInSecondsCopy0 := *r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds
+				if maximumExecutionTimeoutInSecondsCopy0 > math.MaxInt32 || maximumExecutionTimeoutInSecondsCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field MaximumExecutionTimeoutInSeconds is of type int32")
+				}
+				maximumExecutionTimeoutInSecondsCopy := int32(maximumExecutionTimeoutInSecondsCopy0)
+				f0f1.MaximumExecutionTimeoutInSeconds = &maximumExecutionTimeoutInSecondsCopy
 			}
 			if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds != nil {
-				f0f1.SetTerminationWaitInSeconds(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds)
+				terminationWaitInSecondsCopy0 := *r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds
+				if terminationWaitInSecondsCopy0 > math.MaxInt32 || terminationWaitInSecondsCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field TerminationWaitInSeconds is of type int32")
+				}
+				terminationWaitInSecondsCopy := int32(terminationWaitInSecondsCopy0)
+				f0f1.TerminationWaitInSeconds = &terminationWaitInSecondsCopy
 			}
 			if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration != nil {
-				f0f1f2 := &svcsdk.TrafficRoutingConfig{}
+				f0f1f2 := &svcsdktypes.TrafficRoutingConfig{}
 				if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize != nil {
-					f0f1f2f0 := &svcsdk.CapacitySize{}
+					f0f1f2f0 := &svcsdktypes.CapacitySize{}
 					if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type != nil {
-						f0f1f2f0.SetType(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type)
+						f0f1f2f0.Type = svcsdktypes.CapacitySizeType(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type)
 					}
 					if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value != nil {
-						f0f1f2f0.SetValue(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value)
+						valueCopy0 := *r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value
+						if valueCopy0 > math.MaxInt32 || valueCopy0 < math.MinInt32 {
+							return nil, fmt.Errorf("error: field Value is of type int32")
+						}
+						valueCopy := int32(valueCopy0)
+						f0f1f2f0.Value = &valueCopy
 					}
-					f0f1f2.SetCanarySize(f0f1f2f0)
+					f0f1f2.CanarySize = f0f1f2f0
 				}
 				if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize != nil {
-					f0f1f2f1 := &svcsdk.CapacitySize{}
+					f0f1f2f1 := &svcsdktypes.CapacitySize{}
 					if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type != nil {
-						f0f1f2f1.SetType(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type)
+						f0f1f2f1.Type = svcsdktypes.CapacitySizeType(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type)
 					}
 					if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value != nil {
-						f0f1f2f1.SetValue(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value)
+						valueCopy0 := *r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value
+						if valueCopy0 > math.MaxInt32 || valueCopy0 < math.MinInt32 {
+							return nil, fmt.Errorf("error: field Value is of type int32")
+						}
+						valueCopy := int32(valueCopy0)
+						f0f1f2f1.Value = &valueCopy
 					}
-					f0f1f2.SetLinearStepSize(f0f1f2f1)
+					f0f1f2.LinearStepSize = f0f1f2f1
 				}
 				if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type != nil {
-					f0f1f2.SetType(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type)
+					f0f1f2.Type = svcsdktypes.TrafficRoutingConfigType(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type)
 				}
 				if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds != nil {
-					f0f1f2.SetWaitIntervalInSeconds(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds)
+					waitIntervalInSecondsCopy0 := *r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds
+					if waitIntervalInSecondsCopy0 > math.MaxInt32 || waitIntervalInSecondsCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field WaitIntervalInSeconds is of type int32")
+					}
+					waitIntervalInSecondsCopy := int32(waitIntervalInSecondsCopy0)
+					f0f1f2.WaitIntervalInSeconds = &waitIntervalInSecondsCopy
 				}
-				f0f1.SetTrafficRoutingConfiguration(f0f1f2)
+				f0f1.TrafficRoutingConfiguration = f0f1f2
 			}
-			f0.SetBlueGreenUpdatePolicy(f0f1)
+			f0.BlueGreenUpdatePolicy = f0f1
 		}
 		if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy != nil {
-			f0f2 := &svcsdk.RollingUpdatePolicy{}
+			f0f2 := &svcsdktypes.RollingUpdatePolicy{}
 			if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize != nil {
-				f0f2f0 := &svcsdk.CapacitySize{}
+				f0f2f0 := &svcsdktypes.CapacitySize{}
 				if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type != nil {
-					f0f2f0.SetType(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type)
+					f0f2f0.Type = svcsdktypes.CapacitySizeType(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type)
 				}
 				if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value != nil {
-					f0f2f0.SetValue(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value)
+					valueCopy0 := *r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value
+					if valueCopy0 > math.MaxInt32 || valueCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field Value is of type int32")
+					}
+					valueCopy := int32(valueCopy0)
+					f0f2f0.Value = &valueCopy
 				}
-				f0f2.SetMaximumBatchSize(f0f2f0)
+				f0f2.MaximumBatchSize = f0f2f0
 			}
 			if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds != nil {
-				f0f2.SetMaximumExecutionTimeoutInSeconds(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds)
+				maximumExecutionTimeoutInSecondsCopy0 := *r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds
+				if maximumExecutionTimeoutInSecondsCopy0 > math.MaxInt32 || maximumExecutionTimeoutInSecondsCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field MaximumExecutionTimeoutInSeconds is of type int32")
+				}
+				maximumExecutionTimeoutInSecondsCopy := int32(maximumExecutionTimeoutInSecondsCopy0)
+				f0f2.MaximumExecutionTimeoutInSeconds = &maximumExecutionTimeoutInSecondsCopy
 			}
 			if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize != nil {
-				f0f2f2 := &svcsdk.CapacitySize{}
+				f0f2f2 := &svcsdktypes.CapacitySize{}
 				if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type != nil {
-					f0f2f2.SetType(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type)
+					f0f2f2.Type = svcsdktypes.CapacitySizeType(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type)
 				}
 				if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value != nil {
-					f0f2f2.SetValue(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value)
+					valueCopy0 := *r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value
+					if valueCopy0 > math.MaxInt32 || valueCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field Value is of type int32")
+					}
+					valueCopy := int32(valueCopy0)
+					f0f2f2.Value = &valueCopy
 				}
-				f0f2.SetRollbackMaximumBatchSize(f0f2f2)
+				f0f2.RollbackMaximumBatchSize = f0f2f2
 			}
 			if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds != nil {
-				f0f2.SetWaitIntervalInSeconds(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds)
+				waitIntervalInSecondsCopy0 := *r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds
+				if waitIntervalInSecondsCopy0 > math.MaxInt32 || waitIntervalInSecondsCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field WaitIntervalInSeconds is of type int32")
+				}
+				waitIntervalInSecondsCopy := int32(waitIntervalInSecondsCopy0)
+				f0f2.WaitIntervalInSeconds = &waitIntervalInSecondsCopy
 			}
-			f0.SetRollingUpdatePolicy(f0f2)
+			f0.RollingUpdatePolicy = f0f2
 		}
-		res.SetDeploymentConfig(f0)
+		res.DeploymentConfig = f0
 	}
 	if r.ko.Spec.EndpointConfigName != nil {
-		res.SetEndpointConfigName(*r.ko.Spec.EndpointConfigName)
+		res.EndpointConfigName = r.ko.Spec.EndpointConfigName
 	}
 	if r.ko.Spec.EndpointName != nil {
-		res.SetEndpointName(*r.ko.Spec.EndpointName)
+		res.EndpointName = r.ko.Spec.EndpointName
 	}
 	if r.ko.Spec.Tags != nil {
-		f3 := []*svcsdk.Tag{}
+		f3 := []svcsdktypes.Tag{}
 		for _, f3iter := range r.ko.Spec.Tags {
-			f3elem := &svcsdk.Tag{}
+			f3elem := &svcsdktypes.Tag{}
 			if f3iter.Key != nil {
-				f3elem.SetKey(*f3iter.Key)
+				f3elem.Key = f3iter.Key
 			}
 			if f3iter.Value != nil {
-				f3elem.SetValue(*f3iter.Value)
+				f3elem.Value = f3iter.Value
 			}
-			f3 = append(f3, f3elem)
+			f3 = append(f3, *f3elem)
 		}
-		res.SetTags(f3)
+		res.Tags = f3
 	}
 
 	return res, nil
@@ -663,7 +742,7 @@ func (rm *resourceManager) sdkUpdate(
 
 	var resp *svcsdk.UpdateEndpointOutput
 	_ = resp
-	resp, err = rm.sdkapi.UpdateEndpointWithContext(ctx, input)
+	resp, err = rm.sdkapi.UpdateEndpoint(ctx, input)
 	rm.metrics.RecordAPICall("UPDATE", "UpdateEndpoint", err)
 	if err != nil {
 		return nil, err
@@ -695,101 +774,146 @@ func (rm *resourceManager) newUpdateRequestPayload(
 	res := &svcsdk.UpdateEndpointInput{}
 
 	if r.ko.Spec.DeploymentConfig != nil {
-		f0 := &svcsdk.DeploymentConfig{}
+		f0 := &svcsdktypes.DeploymentConfig{}
 		if r.ko.Spec.DeploymentConfig.AutoRollbackConfiguration != nil {
-			f0f0 := &svcsdk.AutoRollbackConfig{}
+			f0f0 := &svcsdktypes.AutoRollbackConfig{}
 			if r.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms != nil {
-				f0f0f0 := []*svcsdk.Alarm{}
+				f0f0f0 := []svcsdktypes.Alarm{}
 				for _, f0f0f0iter := range r.ko.Spec.DeploymentConfig.AutoRollbackConfiguration.Alarms {
-					f0f0f0elem := &svcsdk.Alarm{}
+					f0f0f0elem := &svcsdktypes.Alarm{}
 					if f0f0f0iter.AlarmName != nil {
-						f0f0f0elem.SetAlarmName(*f0f0f0iter.AlarmName)
+						f0f0f0elem.AlarmName = f0f0f0iter.AlarmName
 					}
-					f0f0f0 = append(f0f0f0, f0f0f0elem)
+					f0f0f0 = append(f0f0f0, *f0f0f0elem)
 				}
-				f0f0.SetAlarms(f0f0f0)
+				f0f0.Alarms = f0f0f0
 			}
-			f0.SetAutoRollbackConfiguration(f0f0)
+			f0.AutoRollbackConfiguration = f0f0
 		}
 		if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy != nil {
-			f0f1 := &svcsdk.BlueGreenUpdatePolicy{}
+			f0f1 := &svcsdktypes.BlueGreenUpdatePolicy{}
 			if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds != nil {
-				f0f1.SetMaximumExecutionTimeoutInSeconds(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds)
+				maximumExecutionTimeoutInSecondsCopy0 := *r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.MaximumExecutionTimeoutInSeconds
+				if maximumExecutionTimeoutInSecondsCopy0 > math.MaxInt32 || maximumExecutionTimeoutInSecondsCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field MaximumExecutionTimeoutInSeconds is of type int32")
+				}
+				maximumExecutionTimeoutInSecondsCopy := int32(maximumExecutionTimeoutInSecondsCopy0)
+				f0f1.MaximumExecutionTimeoutInSeconds = &maximumExecutionTimeoutInSecondsCopy
 			}
 			if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds != nil {
-				f0f1.SetTerminationWaitInSeconds(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds)
+				terminationWaitInSecondsCopy0 := *r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TerminationWaitInSeconds
+				if terminationWaitInSecondsCopy0 > math.MaxInt32 || terminationWaitInSecondsCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field TerminationWaitInSeconds is of type int32")
+				}
+				terminationWaitInSecondsCopy := int32(terminationWaitInSecondsCopy0)
+				f0f1.TerminationWaitInSeconds = &terminationWaitInSecondsCopy
 			}
 			if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration != nil {
-				f0f1f2 := &svcsdk.TrafficRoutingConfig{}
+				f0f1f2 := &svcsdktypes.TrafficRoutingConfig{}
 				if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize != nil {
-					f0f1f2f0 := &svcsdk.CapacitySize{}
+					f0f1f2f0 := &svcsdktypes.CapacitySize{}
 					if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type != nil {
-						f0f1f2f0.SetType(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type)
+						f0f1f2f0.Type = svcsdktypes.CapacitySizeType(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Type)
 					}
 					if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value != nil {
-						f0f1f2f0.SetValue(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value)
+						valueCopy0 := *r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.CanarySize.Value
+						if valueCopy0 > math.MaxInt32 || valueCopy0 < math.MinInt32 {
+							return nil, fmt.Errorf("error: field Value is of type int32")
+						}
+						valueCopy := int32(valueCopy0)
+						f0f1f2f0.Value = &valueCopy
 					}
-					f0f1f2.SetCanarySize(f0f1f2f0)
+					f0f1f2.CanarySize = f0f1f2f0
 				}
 				if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize != nil {
-					f0f1f2f1 := &svcsdk.CapacitySize{}
+					f0f1f2f1 := &svcsdktypes.CapacitySize{}
 					if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type != nil {
-						f0f1f2f1.SetType(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type)
+						f0f1f2f1.Type = svcsdktypes.CapacitySizeType(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Type)
 					}
 					if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value != nil {
-						f0f1f2f1.SetValue(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value)
+						valueCopy0 := *r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.LinearStepSize.Value
+						if valueCopy0 > math.MaxInt32 || valueCopy0 < math.MinInt32 {
+							return nil, fmt.Errorf("error: field Value is of type int32")
+						}
+						valueCopy := int32(valueCopy0)
+						f0f1f2f1.Value = &valueCopy
 					}
-					f0f1f2.SetLinearStepSize(f0f1f2f1)
+					f0f1f2.LinearStepSize = f0f1f2f1
 				}
 				if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type != nil {
-					f0f1f2.SetType(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type)
+					f0f1f2.Type = svcsdktypes.TrafficRoutingConfigType(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.Type)
 				}
 				if r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds != nil {
-					f0f1f2.SetWaitIntervalInSeconds(*r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds)
+					waitIntervalInSecondsCopy0 := *r.ko.Spec.DeploymentConfig.BlueGreenUpdatePolicy.TrafficRoutingConfiguration.WaitIntervalInSeconds
+					if waitIntervalInSecondsCopy0 > math.MaxInt32 || waitIntervalInSecondsCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field WaitIntervalInSeconds is of type int32")
+					}
+					waitIntervalInSecondsCopy := int32(waitIntervalInSecondsCopy0)
+					f0f1f2.WaitIntervalInSeconds = &waitIntervalInSecondsCopy
 				}
-				f0f1.SetTrafficRoutingConfiguration(f0f1f2)
+				f0f1.TrafficRoutingConfiguration = f0f1f2
 			}
-			f0.SetBlueGreenUpdatePolicy(f0f1)
+			f0.BlueGreenUpdatePolicy = f0f1
 		}
 		if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy != nil {
-			f0f2 := &svcsdk.RollingUpdatePolicy{}
+			f0f2 := &svcsdktypes.RollingUpdatePolicy{}
 			if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize != nil {
-				f0f2f0 := &svcsdk.CapacitySize{}
+				f0f2f0 := &svcsdktypes.CapacitySize{}
 				if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type != nil {
-					f0f2f0.SetType(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type)
+					f0f2f0.Type = svcsdktypes.CapacitySizeType(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Type)
 				}
 				if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value != nil {
-					f0f2f0.SetValue(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value)
+					valueCopy0 := *r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumBatchSize.Value
+					if valueCopy0 > math.MaxInt32 || valueCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field Value is of type int32")
+					}
+					valueCopy := int32(valueCopy0)
+					f0f2f0.Value = &valueCopy
 				}
-				f0f2.SetMaximumBatchSize(f0f2f0)
+				f0f2.MaximumBatchSize = f0f2f0
 			}
 			if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds != nil {
-				f0f2.SetMaximumExecutionTimeoutInSeconds(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds)
+				maximumExecutionTimeoutInSecondsCopy0 := *r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.MaximumExecutionTimeoutInSeconds
+				if maximumExecutionTimeoutInSecondsCopy0 > math.MaxInt32 || maximumExecutionTimeoutInSecondsCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field MaximumExecutionTimeoutInSeconds is of type int32")
+				}
+				maximumExecutionTimeoutInSecondsCopy := int32(maximumExecutionTimeoutInSecondsCopy0)
+				f0f2.MaximumExecutionTimeoutInSeconds = &maximumExecutionTimeoutInSecondsCopy
 			}
 			if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize != nil {
-				f0f2f2 := &svcsdk.CapacitySize{}
+				f0f2f2 := &svcsdktypes.CapacitySize{}
 				if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type != nil {
-					f0f2f2.SetType(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type)
+					f0f2f2.Type = svcsdktypes.CapacitySizeType(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Type)
 				}
 				if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value != nil {
-					f0f2f2.SetValue(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value)
+					valueCopy0 := *r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.RollbackMaximumBatchSize.Value
+					if valueCopy0 > math.MaxInt32 || valueCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field Value is of type int32")
+					}
+					valueCopy := int32(valueCopy0)
+					f0f2f2.Value = &valueCopy
 				}
-				f0f2.SetRollbackMaximumBatchSize(f0f2f2)
+				f0f2.RollbackMaximumBatchSize = f0f2f2
 			}
 			if r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds != nil {
-				f0f2.SetWaitIntervalInSeconds(*r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds)
+				waitIntervalInSecondsCopy0 := *r.ko.Spec.DeploymentConfig.RollingUpdatePolicy.WaitIntervalInSeconds
+				if waitIntervalInSecondsCopy0 > math.MaxInt32 || waitIntervalInSecondsCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field WaitIntervalInSeconds is of type int32")
+				}
+				waitIntervalInSecondsCopy := int32(waitIntervalInSecondsCopy0)
+				f0f2.WaitIntervalInSeconds = &waitIntervalInSecondsCopy
 			}
-			f0.SetRollingUpdatePolicy(f0f2)
+			f0.RollingUpdatePolicy = f0f2
 		}
-		res.SetDeploymentConfig(f0)
+		res.DeploymentConfig = f0
 	}
 	if r.ko.Spec.EndpointConfigName != nil {
-		res.SetEndpointConfigName(*r.ko.Spec.EndpointConfigName)
+		res.EndpointConfigName = r.ko.Spec.EndpointConfigName
 	}
 	if r.ko.Spec.EndpointName != nil {
-		res.SetEndpointName(*r.ko.Spec.EndpointName)
+		res.EndpointName = r.ko.Spec.EndpointName
 	}
-	res.SetRetainAllVariantProperties(true)
+	res.RetainAllVariantProperties = aws.Bool(true)
 
 	return res, nil
 }
@@ -814,7 +938,7 @@ func (rm *resourceManager) sdkDelete(
 	}
 	var resp *svcsdk.DeleteEndpointOutput
 	_ = resp
-	resp, err = rm.sdkapi.DeleteEndpointWithContext(ctx, input)
+	resp, err = rm.sdkapi.DeleteEndpoint(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteEndpoint", err)
 
 	if err == nil {
@@ -838,7 +962,7 @@ func (rm *resourceManager) newDeleteRequestPayload(
 	res := &svcsdk.DeleteEndpointInput{}
 
 	if r.ko.Spec.EndpointName != nil {
-		res.SetEndpointName(*r.ko.Spec.EndpointName)
+		res.EndpointName = r.ko.Spec.EndpointName
 	}
 
 	return res, nil
@@ -953,11 +1077,12 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 	if err == nil {
 		return false
 	}
-	awsErr, ok := ackerr.AWSError(err)
-	if !ok {
+
+	var terminalErr smithy.APIError
+	if !errors.As(err, &terminalErr) {
 		return false
 	}
-	switch awsErr.Code() {
+	switch terminalErr.ErrorCode() {
 	case "InvalidParameterCombination",
 		"InvalidParameterValue",
 		"MissingParameter",

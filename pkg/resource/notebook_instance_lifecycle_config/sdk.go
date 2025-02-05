@@ -28,8 +28,10 @@ import (
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
-	"github.com/aws/aws-sdk-go/aws"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
+	smithy "github.com/aws/smithy-go"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -40,8 +42,7 @@ import (
 var (
 	_ = &metav1.Time{}
 	_ = strings.ToLower("")
-	_ = &aws.JSONValue{}
-	_ = &svcsdk.SageMaker{}
+	_ = &svcsdk.Client{}
 	_ = &svcapitypes.NotebookInstanceLifecycleConfig{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
@@ -49,6 +50,7 @@ var (
 	_ = &reflect.Value{}
 	_ = fmt.Sprintf("")
 	_ = &ackrequeue.NoRequeue{}
+	_ = &aws.Config{}
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -74,13 +76,11 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	var resp *svcsdk.DescribeNotebookInstanceLifecycleConfigOutput
-	resp, err = rm.sdkapi.DescribeNotebookInstanceLifecycleConfigWithContext(ctx, input)
+	resp, err = rm.sdkapi.DescribeNotebookInstanceLifecycleConfig(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeNotebookInstanceLifecycleConfig", err)
 	if err != nil {
-		if reqErr, ok := ackerr.AWSRequestFailure(err); ok && reqErr.StatusCode() == 404 {
-			return nil, ackerr.NotFound
-		}
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ValidationException" && strings.HasPrefix(awsErr.Message(), "Unable to describe Notebook Instance Lifecycle Config") {
+		var awsErr smithy.APIError
+		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ValidationException" && strings.HasPrefix(awsErr.ErrorMessage(), "Unable to describe Notebook Instance Lifecycle Config") {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
@@ -161,7 +161,7 @@ func (rm *resourceManager) newDescribeRequestPayload(
 	res := &svcsdk.DescribeNotebookInstanceLifecycleConfigInput{}
 
 	if r.ko.Spec.NotebookInstanceLifecycleConfigName != nil {
-		res.SetNotebookInstanceLifecycleConfigName(*r.ko.Spec.NotebookInstanceLifecycleConfigName)
+		res.NotebookInstanceLifecycleConfigName = r.ko.Spec.NotebookInstanceLifecycleConfigName
 	}
 
 	return res, nil
@@ -186,7 +186,7 @@ func (rm *resourceManager) sdkCreate(
 
 	var resp *svcsdk.CreateNotebookInstanceLifecycleConfigOutput
 	_ = resp
-	resp, err = rm.sdkapi.CreateNotebookInstanceLifecycleConfigWithContext(ctx, input)
+	resp, err = rm.sdkapi.CreateNotebookInstanceLifecycleConfig(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateNotebookInstanceLifecycleConfig", err)
 	if err != nil {
 		return nil, err
@@ -216,29 +216,29 @@ func (rm *resourceManager) newCreateRequestPayload(
 	res := &svcsdk.CreateNotebookInstanceLifecycleConfigInput{}
 
 	if r.ko.Spec.NotebookInstanceLifecycleConfigName != nil {
-		res.SetNotebookInstanceLifecycleConfigName(*r.ko.Spec.NotebookInstanceLifecycleConfigName)
+		res.NotebookInstanceLifecycleConfigName = r.ko.Spec.NotebookInstanceLifecycleConfigName
 	}
 	if r.ko.Spec.OnCreate != nil {
-		f1 := []*svcsdk.NotebookInstanceLifecycleHook{}
+		f1 := []svcsdktypes.NotebookInstanceLifecycleHook{}
 		for _, f1iter := range r.ko.Spec.OnCreate {
-			f1elem := &svcsdk.NotebookInstanceLifecycleHook{}
+			f1elem := &svcsdktypes.NotebookInstanceLifecycleHook{}
 			if f1iter.Content != nil {
-				f1elem.SetContent(*f1iter.Content)
+				f1elem.Content = f1iter.Content
 			}
-			f1 = append(f1, f1elem)
+			f1 = append(f1, *f1elem)
 		}
-		res.SetOnCreate(f1)
+		res.OnCreate = f1
 	}
 	if r.ko.Spec.OnStart != nil {
-		f2 := []*svcsdk.NotebookInstanceLifecycleHook{}
+		f2 := []svcsdktypes.NotebookInstanceLifecycleHook{}
 		for _, f2iter := range r.ko.Spec.OnStart {
-			f2elem := &svcsdk.NotebookInstanceLifecycleHook{}
+			f2elem := &svcsdktypes.NotebookInstanceLifecycleHook{}
 			if f2iter.Content != nil {
-				f2elem.SetContent(*f2iter.Content)
+				f2elem.Content = f2iter.Content
 			}
-			f2 = append(f2, f2elem)
+			f2 = append(f2, *f2elem)
 		}
-		res.SetOnStart(f2)
+		res.OnStart = f2
 	}
 
 	return res, nil
@@ -264,7 +264,7 @@ func (rm *resourceManager) sdkUpdate(
 
 	var resp *svcsdk.UpdateNotebookInstanceLifecycleConfigOutput
 	_ = resp
-	resp, err = rm.sdkapi.UpdateNotebookInstanceLifecycleConfigWithContext(ctx, input)
+	resp, err = rm.sdkapi.UpdateNotebookInstanceLifecycleConfig(ctx, input)
 	rm.metrics.RecordAPICall("UPDATE", "UpdateNotebookInstanceLifecycleConfig", err)
 	if err != nil {
 		return nil, err
@@ -289,29 +289,29 @@ func (rm *resourceManager) newUpdateRequestPayload(
 	res := &svcsdk.UpdateNotebookInstanceLifecycleConfigInput{}
 
 	if r.ko.Spec.NotebookInstanceLifecycleConfigName != nil {
-		res.SetNotebookInstanceLifecycleConfigName(*r.ko.Spec.NotebookInstanceLifecycleConfigName)
+		res.NotebookInstanceLifecycleConfigName = r.ko.Spec.NotebookInstanceLifecycleConfigName
 	}
 	if r.ko.Spec.OnCreate != nil {
-		f1 := []*svcsdk.NotebookInstanceLifecycleHook{}
+		f1 := []svcsdktypes.NotebookInstanceLifecycleHook{}
 		for _, f1iter := range r.ko.Spec.OnCreate {
-			f1elem := &svcsdk.NotebookInstanceLifecycleHook{}
+			f1elem := &svcsdktypes.NotebookInstanceLifecycleHook{}
 			if f1iter.Content != nil {
-				f1elem.SetContent(*f1iter.Content)
+				f1elem.Content = f1iter.Content
 			}
-			f1 = append(f1, f1elem)
+			f1 = append(f1, *f1elem)
 		}
-		res.SetOnCreate(f1)
+		res.OnCreate = f1
 	}
 	if r.ko.Spec.OnStart != nil {
-		f2 := []*svcsdk.NotebookInstanceLifecycleHook{}
+		f2 := []svcsdktypes.NotebookInstanceLifecycleHook{}
 		for _, f2iter := range r.ko.Spec.OnStart {
-			f2elem := &svcsdk.NotebookInstanceLifecycleHook{}
+			f2elem := &svcsdktypes.NotebookInstanceLifecycleHook{}
 			if f2iter.Content != nil {
-				f2elem.SetContent(*f2iter.Content)
+				f2elem.Content = f2iter.Content
 			}
-			f2 = append(f2, f2elem)
+			f2 = append(f2, *f2elem)
 		}
-		res.SetOnStart(f2)
+		res.OnStart = f2
 	}
 
 	return res, nil
@@ -333,7 +333,7 @@ func (rm *resourceManager) sdkDelete(
 	}
 	var resp *svcsdk.DeleteNotebookInstanceLifecycleConfigOutput
 	_ = resp
-	resp, err = rm.sdkapi.DeleteNotebookInstanceLifecycleConfigWithContext(ctx, input)
+	resp, err = rm.sdkapi.DeleteNotebookInstanceLifecycleConfig(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteNotebookInstanceLifecycleConfig", err)
 	return nil, err
 }
@@ -346,7 +346,7 @@ func (rm *resourceManager) newDeleteRequestPayload(
 	res := &svcsdk.DeleteNotebookInstanceLifecycleConfigInput{}
 
 	if r.ko.Spec.NotebookInstanceLifecycleConfigName != nil {
-		res.SetNotebookInstanceLifecycleConfigName(*r.ko.Spec.NotebookInstanceLifecycleConfigName)
+		res.NotebookInstanceLifecycleConfigName = r.ko.Spec.NotebookInstanceLifecycleConfigName
 	}
 
 	return res, nil
@@ -454,11 +454,12 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 	if err == nil {
 		return false
 	}
-	awsErr, ok := ackerr.AWSError(err)
-	if !ok {
+
+	var terminalErr smithy.APIError
+	if !errors.As(err, &terminalErr) {
 		return false
 	}
-	switch awsErr.Code() {
+	switch terminalErr.ErrorCode() {
 	case "InvalidParameterCombination",
 		"InvalidParameterValue",
 		"MissingParameter":

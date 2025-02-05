@@ -28,8 +28,10 @@ import (
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
-	"github.com/aws/aws-sdk-go/aws"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
+	smithy "github.com/aws/smithy-go"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -40,8 +42,7 @@ import (
 var (
 	_ = &metav1.Time{}
 	_ = strings.ToLower("")
-	_ = &aws.JSONValue{}
-	_ = &svcsdk.SageMaker{}
+	_ = &svcsdk.Client{}
 	_ = &svcapitypes.App{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
@@ -49,6 +50,7 @@ var (
 	_ = &reflect.Value{}
 	_ = fmt.Sprintf("")
 	_ = &ackrequeue.NoRequeue{}
+	_ = &aws.Config{}
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -74,13 +76,11 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	var resp *svcsdk.DescribeAppOutput
-	resp, err = rm.sdkapi.DescribeAppWithContext(ctx, input)
+	resp, err = rm.sdkapi.DescribeApp(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeApp", err)
 	if err != nil {
-		if reqErr, ok := ackerr.AWSRequestFailure(err); ok && reqErr.StatusCode() == 404 {
-			return nil, ackerr.NotFound
-		}
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ResourceNotFound" {
+		var awsErr smithy.APIError
+		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ResourceNotFound" {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
@@ -102,8 +102,8 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.AppName = nil
 	}
-	if resp.AppType != nil {
-		ko.Spec.AppType = resp.AppType
+	if resp.AppType != "" {
+		ko.Spec.AppType = aws.String(string(resp.AppType))
 	} else {
 		ko.Spec.AppType = nil
 	}
@@ -113,28 +113,28 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.DomainID = nil
 	}
 	if resp.ResourceSpec != nil {
-		f8 := &svcapitypes.ResourceSpec{}
-		if resp.ResourceSpec.InstanceType != nil {
-			f8.InstanceType = resp.ResourceSpec.InstanceType
+		f9 := &svcapitypes.ResourceSpec{}
+		if resp.ResourceSpec.InstanceType != "" {
+			f9.InstanceType = aws.String(string(resp.ResourceSpec.InstanceType))
 		}
 		if resp.ResourceSpec.LifecycleConfigArn != nil {
-			f8.LifecycleConfigARN = resp.ResourceSpec.LifecycleConfigArn
+			f9.LifecycleConfigARN = resp.ResourceSpec.LifecycleConfigArn
 		}
 		if resp.ResourceSpec.SageMakerImageArn != nil {
-			f8.SageMakerImageARN = resp.ResourceSpec.SageMakerImageArn
+			f9.SageMakerImageARN = resp.ResourceSpec.SageMakerImageArn
 		}
 		if resp.ResourceSpec.SageMakerImageVersionAlias != nil {
-			f8.SageMakerImageVersionAlias = resp.ResourceSpec.SageMakerImageVersionAlias
+			f9.SageMakerImageVersionAlias = resp.ResourceSpec.SageMakerImageVersionAlias
 		}
 		if resp.ResourceSpec.SageMakerImageVersionArn != nil {
-			f8.SageMakerImageVersionARN = resp.ResourceSpec.SageMakerImageVersionArn
+			f9.SageMakerImageVersionARN = resp.ResourceSpec.SageMakerImageVersionArn
 		}
-		ko.Spec.ResourceSpec = f8
+		ko.Spec.ResourceSpec = f9
 	} else {
 		ko.Spec.ResourceSpec = nil
 	}
-	if resp.Status != nil {
-		ko.Status.Status = resp.Status
+	if resp.Status != "" {
+		ko.Status.Status = aws.String(string(resp.Status))
 	} else {
 		ko.Status.Status = nil
 	}
@@ -155,7 +155,7 @@ func (rm *resourceManager) sdkFind(
 func (rm *resourceManager) requiredFieldsMissingFromReadOneInput(
 	r *resource,
 ) bool {
-	return r.ko.Spec.DomainID == nil || r.ko.Spec.AppType == nil || r.ko.Spec.AppName == nil
+	return r.ko.Spec.AppName == nil || r.ko.Spec.AppType == nil || r.ko.Spec.DomainID == nil
 
 }
 
@@ -167,16 +167,16 @@ func (rm *resourceManager) newDescribeRequestPayload(
 	res := &svcsdk.DescribeAppInput{}
 
 	if r.ko.Spec.AppName != nil {
-		res.SetAppName(*r.ko.Spec.AppName)
+		res.AppName = r.ko.Spec.AppName
 	}
 	if r.ko.Spec.AppType != nil {
-		res.SetAppType(*r.ko.Spec.AppType)
+		res.AppType = svcsdktypes.AppType(*r.ko.Spec.AppType)
 	}
 	if r.ko.Spec.DomainID != nil {
-		res.SetDomainId(*r.ko.Spec.DomainID)
+		res.DomainId = r.ko.Spec.DomainID
 	}
 	if r.ko.Spec.UserProfileName != nil {
-		res.SetUserProfileName(*r.ko.Spec.UserProfileName)
+		res.UserProfileName = r.ko.Spec.UserProfileName
 	}
 
 	return res, nil
@@ -201,7 +201,7 @@ func (rm *resourceManager) sdkCreate(
 
 	var resp *svcsdk.CreateAppOutput
 	_ = resp
-	resp, err = rm.sdkapi.CreateAppWithContext(ctx, input)
+	resp, err = rm.sdkapi.CreateApp(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateApp", err)
 	if err != nil {
 		return nil, err
@@ -231,49 +231,49 @@ func (rm *resourceManager) newCreateRequestPayload(
 	res := &svcsdk.CreateAppInput{}
 
 	if r.ko.Spec.AppName != nil {
-		res.SetAppName(*r.ko.Spec.AppName)
+		res.AppName = r.ko.Spec.AppName
 	}
 	if r.ko.Spec.AppType != nil {
-		res.SetAppType(*r.ko.Spec.AppType)
+		res.AppType = svcsdktypes.AppType(*r.ko.Spec.AppType)
 	}
 	if r.ko.Spec.DomainID != nil {
-		res.SetDomainId(*r.ko.Spec.DomainID)
+		res.DomainId = r.ko.Spec.DomainID
 	}
 	if r.ko.Spec.ResourceSpec != nil {
-		f3 := &svcsdk.ResourceSpec{}
+		f3 := &svcsdktypes.ResourceSpec{}
 		if r.ko.Spec.ResourceSpec.InstanceType != nil {
-			f3.SetInstanceType(*r.ko.Spec.ResourceSpec.InstanceType)
+			f3.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.ResourceSpec.InstanceType)
 		}
 		if r.ko.Spec.ResourceSpec.LifecycleConfigARN != nil {
-			f3.SetLifecycleConfigArn(*r.ko.Spec.ResourceSpec.LifecycleConfigARN)
+			f3.LifecycleConfigArn = r.ko.Spec.ResourceSpec.LifecycleConfigARN
 		}
 		if r.ko.Spec.ResourceSpec.SageMakerImageARN != nil {
-			f3.SetSageMakerImageArn(*r.ko.Spec.ResourceSpec.SageMakerImageARN)
+			f3.SageMakerImageArn = r.ko.Spec.ResourceSpec.SageMakerImageARN
 		}
 		if r.ko.Spec.ResourceSpec.SageMakerImageVersionAlias != nil {
-			f3.SetSageMakerImageVersionAlias(*r.ko.Spec.ResourceSpec.SageMakerImageVersionAlias)
+			f3.SageMakerImageVersionAlias = r.ko.Spec.ResourceSpec.SageMakerImageVersionAlias
 		}
 		if r.ko.Spec.ResourceSpec.SageMakerImageVersionARN != nil {
-			f3.SetSageMakerImageVersionArn(*r.ko.Spec.ResourceSpec.SageMakerImageVersionARN)
+			f3.SageMakerImageVersionArn = r.ko.Spec.ResourceSpec.SageMakerImageVersionARN
 		}
-		res.SetResourceSpec(f3)
+		res.ResourceSpec = f3
 	}
 	if r.ko.Spec.Tags != nil {
-		f4 := []*svcsdk.Tag{}
+		f4 := []svcsdktypes.Tag{}
 		for _, f4iter := range r.ko.Spec.Tags {
-			f4elem := &svcsdk.Tag{}
+			f4elem := &svcsdktypes.Tag{}
 			if f4iter.Key != nil {
-				f4elem.SetKey(*f4iter.Key)
+				f4elem.Key = f4iter.Key
 			}
 			if f4iter.Value != nil {
-				f4elem.SetValue(*f4iter.Value)
+				f4elem.Value = f4iter.Value
 			}
-			f4 = append(f4, f4elem)
+			f4 = append(f4, *f4elem)
 		}
-		res.SetTags(f4)
+		res.Tags = f4
 	}
 	if r.ko.Spec.UserProfileName != nil {
-		res.SetUserProfileName(*r.ko.Spec.UserProfileName)
+		res.UserProfileName = r.ko.Spec.UserProfileName
 	}
 
 	return res, nil
@@ -301,7 +301,7 @@ func (rm *resourceManager) sdkDelete(
 		exit(err)
 	}()
 	latestStatus := r.ko.Status.Status
-	if latestStatus != nil && *latestStatus == svcsdk.AppStatusDeleted {
+	if latestStatus != nil && *latestStatus == string(svcsdktypes.AppStatusDeleted) {
 		return nil, nil
 	}
 
@@ -315,7 +315,7 @@ func (rm *resourceManager) sdkDelete(
 	}
 	var resp *svcsdk.DeleteAppOutput
 	_ = resp
-	resp, err = rm.sdkapi.DeleteAppWithContext(ctx, input)
+	resp, err = rm.sdkapi.DeleteApp(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteApp", err)
 
 	if err == nil {
@@ -339,16 +339,16 @@ func (rm *resourceManager) newDeleteRequestPayload(
 	res := &svcsdk.DeleteAppInput{}
 
 	if r.ko.Spec.AppName != nil {
-		res.SetAppName(*r.ko.Spec.AppName)
+		res.AppName = r.ko.Spec.AppName
 	}
 	if r.ko.Spec.AppType != nil {
-		res.SetAppType(*r.ko.Spec.AppType)
+		res.AppType = svcsdktypes.AppType(*r.ko.Spec.AppType)
 	}
 	if r.ko.Spec.DomainID != nil {
-		res.SetDomainId(*r.ko.Spec.DomainID)
+		res.DomainId = r.ko.Spec.DomainID
 	}
 	if r.ko.Spec.UserProfileName != nil {
-		res.SetUserProfileName(*r.ko.Spec.UserProfileName)
+		res.UserProfileName = r.ko.Spec.UserProfileName
 	}
 
 	return res, nil
@@ -456,11 +456,12 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 	if err == nil {
 		return false
 	}
-	awsErr, ok := ackerr.AWSError(err)
-	if !ok {
+
+	var terminalErr smithy.APIError
+	if !errors.As(err, &terminalErr) {
 		return false
 	}
-	switch awsErr.Code() {
+	switch terminalErr.ErrorCode() {
 	case "ResourceNotFound",
 		"InvalidParameterCombination",
 		"InvalidParameterValue",

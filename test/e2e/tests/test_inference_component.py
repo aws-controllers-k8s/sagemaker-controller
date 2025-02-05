@@ -33,8 +33,7 @@ from e2e import (
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
 
-FAIL_UPDATE_ERROR_MESSAGE = ("InferenceComponentUpdateError: Unable to update inference component. "
-                             "Check FailureReason.")
+FAIL_UPDATE_ERROR_MESSAGE = ("api error InferenceComponentUpdateError: Unable to update inference component. Check FailureReason.")
 
 @pytest.fixture(scope="module")
 def name_suffix():

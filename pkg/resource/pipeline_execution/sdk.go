@@ -19,6 +19,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math"
 	"reflect"
 	"strings"
 
@@ -28,8 +29,10 @@ import (
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
-	"github.com/aws/aws-sdk-go/aws"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
+	smithy "github.com/aws/smithy-go"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -40,8 +43,7 @@ import (
 var (
 	_ = &metav1.Time{}
 	_ = strings.ToLower("")
-	_ = &aws.JSONValue{}
-	_ = &svcsdk.SageMaker{}
+	_ = &svcsdk.Client{}
 	_ = &svcapitypes.PipelineExecution{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
@@ -49,6 +51,7 @@ var (
 	_ = &reflect.Value{}
 	_ = fmt.Sprintf("")
 	_ = &ackrequeue.NoRequeue{}
+	_ = &aws.Config{}
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -74,13 +77,11 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	var resp *svcsdk.DescribePipelineExecutionOutput
-	resp, err = rm.sdkapi.DescribePipelineExecutionWithContext(ctx, input)
+	resp, err = rm.sdkapi.DescribePipelineExecution(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribePipelineExecution", err)
 	if err != nil {
-		if reqErr, ok := ackerr.AWSRequestFailure(err); ok && reqErr.StatusCode() == 404 {
-			return nil, ackerr.NotFound
-		}
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ResourceNotFound" && strings.HasSuffix(awsErr.Message(), "does not exist") {
+		var awsErr smithy.APIError
+		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ResourceNotFound" && strings.HasSuffix(awsErr.ErrorMessage(), "does not exist") {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
@@ -109,7 +110,8 @@ func (rm *resourceManager) sdkFind(
 	if resp.ParallelismConfiguration != nil {
 		f5 := &svcapitypes.ParallelismConfiguration{}
 		if resp.ParallelismConfiguration.MaxParallelExecutionSteps != nil {
-			f5.MaxParallelExecutionSteps = resp.ParallelismConfiguration.MaxParallelExecutionSteps
+			maxParallelExecutionStepsCopy := int64(*resp.ParallelismConfiguration.MaxParallelExecutionSteps)
+			f5.MaxParallelExecutionSteps = &maxParallelExecutionStepsCopy
 		}
 		ko.Spec.ParallelismConfiguration = f5
 	} else {
@@ -132,8 +134,8 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.PipelineExecutionDisplayName = nil
 	}
-	if resp.PipelineExecutionStatus != nil {
-		ko.Status.PipelineExecutionStatus = resp.PipelineExecutionStatus
+	if resp.PipelineExecutionStatus != "" {
+		ko.Status.PipelineExecutionStatus = aws.String(string(resp.PipelineExecutionStatus))
 	} else {
 		ko.Status.PipelineExecutionStatus = nil
 	}
@@ -181,7 +183,7 @@ func (rm *resourceManager) newDescribeRequestPayload(
 	res := &svcsdk.DescribePipelineExecutionInput{}
 
 	if r.ko.Status.ACKResourceMetadata != nil && r.ko.Status.ACKResourceMetadata.ARN != nil {
-		res.SetPipelineExecutionArn(string(*r.ko.Status.ACKResourceMetadata.ARN))
+		res.PipelineExecutionArn = (*string)(r.ko.Status.ACKResourceMetadata.ARN)
 	}
 
 	return res, nil
@@ -206,7 +208,7 @@ func (rm *resourceManager) sdkCreate(
 
 	var resp *svcsdk.StartPipelineExecutionOutput
 	_ = resp
-	resp, err = rm.sdkapi.StartPipelineExecutionWithContext(ctx, input)
+	resp, err = rm.sdkapi.StartPipelineExecution(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "StartPipelineExecution", err)
 	if err != nil {
 		return nil, err
@@ -236,52 +238,57 @@ func (rm *resourceManager) newCreateRequestPayload(
 	res := &svcsdk.StartPipelineExecutionInput{}
 
 	if r.ko.Spec.ParallelismConfiguration != nil {
-		f0 := &svcsdk.ParallelismConfiguration{}
+		f0 := &svcsdktypes.ParallelismConfiguration{}
 		if r.ko.Spec.ParallelismConfiguration.MaxParallelExecutionSteps != nil {
-			f0.SetMaxParallelExecutionSteps(*r.ko.Spec.ParallelismConfiguration.MaxParallelExecutionSteps)
+			maxParallelExecutionStepsCopy0 := *r.ko.Spec.ParallelismConfiguration.MaxParallelExecutionSteps
+			if maxParallelExecutionStepsCopy0 > math.MaxInt32 || maxParallelExecutionStepsCopy0 < math.MinInt32 {
+				return nil, fmt.Errorf("error: field MaxParallelExecutionSteps is of type int32")
+			}
+			maxParallelExecutionStepsCopy := int32(maxParallelExecutionStepsCopy0)
+			f0.MaxParallelExecutionSteps = &maxParallelExecutionStepsCopy
 		}
-		res.SetParallelismConfiguration(f0)
+		res.ParallelismConfiguration = f0
 	}
 	if r.ko.Spec.PipelineExecutionDescription != nil {
-		res.SetPipelineExecutionDescription(*r.ko.Spec.PipelineExecutionDescription)
+		res.PipelineExecutionDescription = r.ko.Spec.PipelineExecutionDescription
 	}
 	if r.ko.Spec.PipelineExecutionDisplayName != nil {
-		res.SetPipelineExecutionDisplayName(*r.ko.Spec.PipelineExecutionDisplayName)
+		res.PipelineExecutionDisplayName = r.ko.Spec.PipelineExecutionDisplayName
 	}
 	if r.ko.Spec.PipelineName != nil {
-		res.SetPipelineName(*r.ko.Spec.PipelineName)
+		res.PipelineName = r.ko.Spec.PipelineName
 	}
 	if r.ko.Spec.PipelineParameters != nil {
-		f4 := []*svcsdk.Parameter{}
+		f4 := []svcsdktypes.Parameter{}
 		for _, f4iter := range r.ko.Spec.PipelineParameters {
-			f4elem := &svcsdk.Parameter{}
+			f4elem := &svcsdktypes.Parameter{}
 			if f4iter.Name != nil {
-				f4elem.SetName(*f4iter.Name)
+				f4elem.Name = f4iter.Name
 			}
 			if f4iter.Value != nil {
-				f4elem.SetValue(*f4iter.Value)
+				f4elem.Value = f4iter.Value
 			}
-			f4 = append(f4, f4elem)
+			f4 = append(f4, *f4elem)
 		}
-		res.SetPipelineParameters(f4)
+		res.PipelineParameters = f4
 	}
 	if r.ko.Spec.SelectiveExecutionConfig != nil {
-		f5 := &svcsdk.SelectiveExecutionConfig{}
+		f5 := &svcsdktypes.SelectiveExecutionConfig{}
 		if r.ko.Spec.SelectiveExecutionConfig.SelectedSteps != nil {
-			f5f0 := []*svcsdk.SelectedStep{}
+			f5f0 := []svcsdktypes.SelectedStep{}
 			for _, f5f0iter := range r.ko.Spec.SelectiveExecutionConfig.SelectedSteps {
-				f5f0elem := &svcsdk.SelectedStep{}
+				f5f0elem := &svcsdktypes.SelectedStep{}
 				if f5f0iter.StepName != nil {
-					f5f0elem.SetStepName(*f5f0iter.StepName)
+					f5f0elem.StepName = f5f0iter.StepName
 				}
-				f5f0 = append(f5f0, f5f0elem)
+				f5f0 = append(f5f0, *f5f0elem)
 			}
-			f5.SetSelectedSteps(f5f0)
+			f5.SelectedSteps = f5f0
 		}
 		if r.ko.Spec.SelectiveExecutionConfig.SourcePipelineExecutionARN != nil {
-			f5.SetSourcePipelineExecutionArn(*r.ko.Spec.SelectiveExecutionConfig.SourcePipelineExecutionARN)
+			f5.SourcePipelineExecutionArn = r.ko.Spec.SelectiveExecutionConfig.SourcePipelineExecutionARN
 		}
-		res.SetSelectiveExecutionConfig(f5)
+		res.SelectiveExecutionConfig = f5
 	}
 
 	return res, nil
@@ -307,7 +314,7 @@ func (rm *resourceManager) sdkUpdate(
 
 	var resp *svcsdk.UpdatePipelineExecutionOutput
 	_ = resp
-	resp, err = rm.sdkapi.UpdatePipelineExecutionWithContext(ctx, input)
+	resp, err = rm.sdkapi.UpdatePipelineExecution(ctx, input)
 	rm.metrics.RecordAPICall("UPDATE", "UpdatePipelineExecution", err)
 	if err != nil {
 		return nil, err
@@ -339,20 +346,25 @@ func (rm *resourceManager) newUpdateRequestPayload(
 	res := &svcsdk.UpdatePipelineExecutionInput{}
 
 	if r.ko.Spec.ParallelismConfiguration != nil {
-		f0 := &svcsdk.ParallelismConfiguration{}
+		f0 := &svcsdktypes.ParallelismConfiguration{}
 		if r.ko.Spec.ParallelismConfiguration.MaxParallelExecutionSteps != nil {
-			f0.SetMaxParallelExecutionSteps(*r.ko.Spec.ParallelismConfiguration.MaxParallelExecutionSteps)
+			maxParallelExecutionStepsCopy0 := *r.ko.Spec.ParallelismConfiguration.MaxParallelExecutionSteps
+			if maxParallelExecutionStepsCopy0 > math.MaxInt32 || maxParallelExecutionStepsCopy0 < math.MinInt32 {
+				return nil, fmt.Errorf("error: field MaxParallelExecutionSteps is of type int32")
+			}
+			maxParallelExecutionStepsCopy := int32(maxParallelExecutionStepsCopy0)
+			f0.MaxParallelExecutionSteps = &maxParallelExecutionStepsCopy
 		}
-		res.SetParallelismConfiguration(f0)
+		res.ParallelismConfiguration = f0
 	}
 	if r.ko.Status.ACKResourceMetadata != nil && r.ko.Status.ACKResourceMetadata.ARN != nil {
-		res.SetPipelineExecutionArn(string(*r.ko.Status.ACKResourceMetadata.ARN))
+		res.PipelineExecutionArn = (*string)(r.ko.Status.ACKResourceMetadata.ARN)
 	}
 	if r.ko.Spec.PipelineExecutionDescription != nil {
-		res.SetPipelineExecutionDescription(*r.ko.Spec.PipelineExecutionDescription)
+		res.PipelineExecutionDescription = r.ko.Spec.PipelineExecutionDescription
 	}
 	if r.ko.Spec.PipelineExecutionDisplayName != nil {
-		res.SetPipelineExecutionDisplayName(*r.ko.Spec.PipelineExecutionDisplayName)
+		res.PipelineExecutionDisplayName = r.ko.Spec.PipelineExecutionDisplayName
 	}
 
 	return res, nil
@@ -370,13 +382,13 @@ func (rm *resourceManager) sdkDelete(
 	}()
 	latestStatus := r.ko.Status.PipelineExecutionStatus
 	if latestStatus != nil {
-		if *latestStatus == svcsdk.PipelineExecutionStatusStopping {
+		if *latestStatus == string(svcsdktypes.PipelineExecutionStatusStopping) {
 			return r, requeueWaitWhileDeleting
 		}
 
 		// Call StopPipelineExecution only if the job is Executing, otherwise just
 		// return nil to mark the resource Unmanaged
-		if *latestStatus != svcsdk.PipelineExecutionStatusExecuting {
+		if *latestStatus != string(svcsdktypes.PipelineExecutionStatusExecuting) {
 			return r, err
 		}
 	}
@@ -386,7 +398,7 @@ func (rm *resourceManager) sdkDelete(
 	}
 	var resp *svcsdk.StopPipelineExecutionOutput
 	_ = resp
-	resp, err = rm.sdkapi.StopPipelineExecutionWithContext(ctx, input)
+	resp, err = rm.sdkapi.StopPipelineExecution(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "StopPipelineExecution", err)
 
 	if err == nil {
@@ -410,7 +422,7 @@ func (rm *resourceManager) newDeleteRequestPayload(
 	res := &svcsdk.StopPipelineExecutionInput{}
 
 	if r.ko.Status.ACKResourceMetadata != nil && r.ko.Status.ACKResourceMetadata.ARN != nil {
-		res.SetPipelineExecutionArn(string(*r.ko.Status.ACKResourceMetadata.ARN))
+		res.PipelineExecutionArn = (*string)(r.ko.Status.ACKResourceMetadata.ARN)
 	}
 
 	return res, nil
@@ -523,11 +535,12 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 	if err == nil {
 		return false
 	}
-	awsErr, ok := ackerr.AWSError(err)
-	if !ok {
+
+	var terminalErr smithy.APIError
+	if !errors.As(err, &terminalErr) {
 		return false
 	}
-	switch awsErr.Code() {
+	switch terminalErr.ErrorCode() {
 	case "InvalidParameterCombination",
 		"InvalidParameterValue",
 		"MissingParameter",

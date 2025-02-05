@@ -19,6 +19,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math"
 	"reflect"
 	"strings"
 
@@ -28,8 +29,10 @@ import (
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
-	"github.com/aws/aws-sdk-go/aws"
-	svcsdk "github.com/aws/aws-sdk-go/service/sagemaker"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/sagemaker"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
+	smithy "github.com/aws/smithy-go"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -40,8 +43,7 @@ import (
 var (
 	_ = &metav1.Time{}
 	_ = strings.ToLower("")
-	_ = &aws.JSONValue{}
-	_ = &svcsdk.SageMaker{}
+	_ = &svcsdk.Client{}
 	_ = &svcapitypes.FeatureGroup{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
@@ -49,6 +51,7 @@ var (
 	_ = &reflect.Value{}
 	_ = fmt.Sprintf("")
 	_ = &ackrequeue.NoRequeue{}
+	_ = &aws.Config{}
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -74,13 +77,11 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	var resp *svcsdk.DescribeFeatureGroupOutput
-	resp, err = rm.sdkapi.DescribeFeatureGroupWithContext(ctx, input)
+	resp, err = rm.sdkapi.DescribeFeatureGroup(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeFeatureGroup", err)
 	if err != nil {
-		if reqErr, ok := ackerr.AWSRequestFailure(err); ok && reqErr.StatusCode() == 404 {
-			return nil, ackerr.NotFound
-		}
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ResourceNotFound" {
+		var awsErr smithy.APIError
+		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ResourceNotFound" {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
@@ -111,23 +112,28 @@ func (rm *resourceManager) sdkFind(
 			f4elem := &svcapitypes.FeatureDefinition{}
 			if f4iter.CollectionConfig != nil {
 				f4elemf0 := &svcapitypes.CollectionConfig{}
-				if f4iter.CollectionConfig.VectorConfig != nil {
-					f4elemf0f0 := &svcapitypes.VectorConfig{}
-					if f4iter.CollectionConfig.VectorConfig.Dimension != nil {
-						f4elemf0f0.Dimension = f4iter.CollectionConfig.VectorConfig.Dimension
+				switch f4iter.CollectionConfig.(type) {
+				case *svcsdktypes.CollectionConfigMemberVectorConfig:
+					f4elemf0f0 := f4iter.CollectionConfig.(*svcsdktypes.CollectionConfigMemberVectorConfig)
+					if f4elemf0f0 != nil {
+						f4elemf0f0f0 := &svcapitypes.VectorConfig{}
+						if f4elemf0f0.Value.Dimension != nil {
+							dimensionCopy := int64(*f4elemf0f0.Value.Dimension)
+							f4elemf0f0f0.Dimension = &dimensionCopy
+						}
+						f4elemf0.VectorConfig = f4elemf0f0f0
 					}
-					f4elemf0.VectorConfig = f4elemf0f0
 				}
 				f4elem.CollectionConfig = f4elemf0
 			}
-			if f4iter.CollectionType != nil {
-				f4elem.CollectionType = f4iter.CollectionType
+			if f4iter.CollectionType != "" {
+				f4elem.CollectionType = aws.String(string(f4iter.CollectionType))
 			}
 			if f4iter.FeatureName != nil {
 				f4elem.FeatureName = f4iter.FeatureName
 			}
-			if f4iter.FeatureType != nil {
-				f4elem.FeatureType = f4iter.FeatureType
+			if f4iter.FeatureType != "" {
+				f4elem.FeatureType = aws.String(string(f4iter.FeatureType))
 			}
 			f4 = append(f4, f4elem)
 		}
@@ -147,8 +153,8 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.FeatureGroupName = nil
 	}
-	if resp.FeatureGroupStatus != nil {
-		ko.Status.FeatureGroupStatus = resp.FeatureGroupStatus
+	if resp.FeatureGroupStatus != "" {
+		ko.Status.FeatureGroupStatus = aws.String(string(resp.FeatureGroupStatus))
 	} else {
 		ko.Status.FeatureGroupStatus = nil
 	}
@@ -199,16 +205,17 @@ func (rm *resourceManager) sdkFind(
 			}
 			f13.SecurityConfig = f13f1
 		}
-		if resp.OnlineStoreConfig.StorageType != nil {
-			f13.StorageType = resp.OnlineStoreConfig.StorageType
+		if resp.OnlineStoreConfig.StorageType != "" {
+			f13.StorageType = aws.String(string(resp.OnlineStoreConfig.StorageType))
 		}
 		if resp.OnlineStoreConfig.TtlDuration != nil {
 			f13f3 := &svcapitypes.TTLDuration{}
-			if resp.OnlineStoreConfig.TtlDuration.Unit != nil {
-				f13f3.Unit = resp.OnlineStoreConfig.TtlDuration.Unit
+			if resp.OnlineStoreConfig.TtlDuration.Unit != "" {
+				f13f3.Unit = aws.String(string(resp.OnlineStoreConfig.TtlDuration.Unit))
 			}
 			if resp.OnlineStoreConfig.TtlDuration.Value != nil {
-				f13f3.Value = resp.OnlineStoreConfig.TtlDuration.Value
+				valueCopy := int64(*resp.OnlineStoreConfig.TtlDuration.Value)
+				f13f3.Value = &valueCopy
 			}
 			f13.TTLDuration = f13f3
 		}
@@ -229,13 +236,15 @@ func (rm *resourceManager) sdkFind(
 	if resp.ThroughputConfig != nil {
 		f17 := &svcapitypes.ThroughputConfig{}
 		if resp.ThroughputConfig.ProvisionedReadCapacityUnits != nil {
-			f17.ProvisionedReadCapacityUnits = resp.ThroughputConfig.ProvisionedReadCapacityUnits
+			provisionedReadCapacityUnitsCopy := int64(*resp.ThroughputConfig.ProvisionedReadCapacityUnits)
+			f17.ProvisionedReadCapacityUnits = &provisionedReadCapacityUnitsCopy
 		}
 		if resp.ThroughputConfig.ProvisionedWriteCapacityUnits != nil {
-			f17.ProvisionedWriteCapacityUnits = resp.ThroughputConfig.ProvisionedWriteCapacityUnits
+			provisionedWriteCapacityUnitsCopy := int64(*resp.ThroughputConfig.ProvisionedWriteCapacityUnits)
+			f17.ProvisionedWriteCapacityUnits = &provisionedWriteCapacityUnitsCopy
 		}
-		if resp.ThroughputConfig.ThroughputMode != nil {
-			f17.ThroughputMode = resp.ThroughputConfig.ThroughputMode
+		if resp.ThroughputConfig.ThroughputMode != "" {
+			f17.ThroughputMode = aws.String(string(resp.ThroughputConfig.ThroughputMode))
 		}
 		ko.Spec.ThroughputConfig = f17
 	} else {
@@ -265,7 +274,7 @@ func (rm *resourceManager) newDescribeRequestPayload(
 	res := &svcsdk.DescribeFeatureGroupInput{}
 
 	if r.ko.Spec.FeatureGroupName != nil {
-		res.SetFeatureGroupName(*r.ko.Spec.FeatureGroupName)
+		res.FeatureGroupName = r.ko.Spec.FeatureGroupName
 	}
 
 	return res, nil
@@ -290,7 +299,7 @@ func (rm *resourceManager) sdkCreate(
 
 	var resp *svcsdk.CreateFeatureGroupOutput
 	_ = resp
-	resp, err = rm.sdkapi.CreateFeatureGroupWithContext(ctx, input)
+	resp, err = rm.sdkapi.CreateFeatureGroup(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateFeatureGroup", err)
 	if err != nil {
 		return nil, err
@@ -320,134 +329,159 @@ func (rm *resourceManager) newCreateRequestPayload(
 	res := &svcsdk.CreateFeatureGroupInput{}
 
 	if r.ko.Spec.Description != nil {
-		res.SetDescription(*r.ko.Spec.Description)
+		res.Description = r.ko.Spec.Description
 	}
 	if r.ko.Spec.EventTimeFeatureName != nil {
-		res.SetEventTimeFeatureName(*r.ko.Spec.EventTimeFeatureName)
+		res.EventTimeFeatureName = r.ko.Spec.EventTimeFeatureName
 	}
 	if r.ko.Spec.FeatureDefinitions != nil {
-		f2 := []*svcsdk.FeatureDefinition{}
+		f2 := []svcsdktypes.FeatureDefinition{}
 		for _, f2iter := range r.ko.Spec.FeatureDefinitions {
-			f2elem := &svcsdk.FeatureDefinition{}
+			f2elem := &svcsdktypes.FeatureDefinition{}
 			if f2iter.CollectionConfig != nil {
-				f2elemf0 := &svcsdk.CollectionConfig{}
+				var f2elemf0 svcsdktypes.CollectionConfig
+				isInterfaceSet := false
 				if f2iter.CollectionConfig.VectorConfig != nil {
-					f2elemf0f0 := &svcsdk.VectorConfig{}
-					if f2iter.CollectionConfig.VectorConfig.Dimension != nil {
-						f2elemf0f0.SetDimension(*f2iter.CollectionConfig.VectorConfig.Dimension)
+					if isInterfaceSet {
+						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for VectorConfig"))
 					}
-					f2elemf0.SetVectorConfig(f2elemf0f0)
+					f2elemf0f0Parent := &svcsdktypes.CollectionConfigMemberVectorConfig{}
+					f2elemf0f0 := &svcsdktypes.VectorConfig{}
+					if f2iter.CollectionConfig.VectorConfig.Dimension != nil {
+						dimensionCopy0 := *f2iter.CollectionConfig.VectorConfig.Dimension
+						if dimensionCopy0 > math.MaxInt32 || dimensionCopy0 < math.MinInt32 {
+							return nil, fmt.Errorf("error: field Dimension is of type int32")
+						}
+						dimensionCopy := int32(dimensionCopy0)
+						f2elemf0f0.Dimension = &dimensionCopy
+					}
+					f2elemf0f0Parent.Value = *f2elemf0f0
 				}
-				f2elem.SetCollectionConfig(f2elemf0)
+				f2elem.CollectionConfig = f2elemf0
 			}
 			if f2iter.CollectionType != nil {
-				f2elem.SetCollectionType(*f2iter.CollectionType)
+				f2elem.CollectionType = svcsdktypes.CollectionType(*f2iter.CollectionType)
 			}
 			if f2iter.FeatureName != nil {
-				f2elem.SetFeatureName(*f2iter.FeatureName)
+				f2elem.FeatureName = f2iter.FeatureName
 			}
 			if f2iter.FeatureType != nil {
-				f2elem.SetFeatureType(*f2iter.FeatureType)
+				f2elem.FeatureType = svcsdktypes.FeatureType(*f2iter.FeatureType)
 			}
-			f2 = append(f2, f2elem)
+			f2 = append(f2, *f2elem)
 		}
-		res.SetFeatureDefinitions(f2)
+		res.FeatureDefinitions = f2
 	}
 	if r.ko.Spec.FeatureGroupName != nil {
-		res.SetFeatureGroupName(*r.ko.Spec.FeatureGroupName)
+		res.FeatureGroupName = r.ko.Spec.FeatureGroupName
 	}
 	if r.ko.Spec.OfflineStoreConfig != nil {
-		f4 := &svcsdk.OfflineStoreConfig{}
+		f4 := &svcsdktypes.OfflineStoreConfig{}
 		if r.ko.Spec.OfflineStoreConfig.DataCatalogConfig != nil {
-			f4f0 := &svcsdk.DataCatalogConfig{}
+			f4f0 := &svcsdktypes.DataCatalogConfig{}
 			if r.ko.Spec.OfflineStoreConfig.DataCatalogConfig.Catalog != nil {
-				f4f0.SetCatalog(*r.ko.Spec.OfflineStoreConfig.DataCatalogConfig.Catalog)
+				f4f0.Catalog = r.ko.Spec.OfflineStoreConfig.DataCatalogConfig.Catalog
 			}
 			if r.ko.Spec.OfflineStoreConfig.DataCatalogConfig.Database != nil {
-				f4f0.SetDatabase(*r.ko.Spec.OfflineStoreConfig.DataCatalogConfig.Database)
+				f4f0.Database = r.ko.Spec.OfflineStoreConfig.DataCatalogConfig.Database
 			}
 			if r.ko.Spec.OfflineStoreConfig.DataCatalogConfig.TableName != nil {
-				f4f0.SetTableName(*r.ko.Spec.OfflineStoreConfig.DataCatalogConfig.TableName)
+				f4f0.TableName = r.ko.Spec.OfflineStoreConfig.DataCatalogConfig.TableName
 			}
-			f4.SetDataCatalogConfig(f4f0)
+			f4.DataCatalogConfig = f4f0
 		}
 		if r.ko.Spec.OfflineStoreConfig.DisableGlueTableCreation != nil {
-			f4.SetDisableGlueTableCreation(*r.ko.Spec.OfflineStoreConfig.DisableGlueTableCreation)
+			f4.DisableGlueTableCreation = r.ko.Spec.OfflineStoreConfig.DisableGlueTableCreation
 		}
 		if r.ko.Spec.OfflineStoreConfig.S3StorageConfig != nil {
-			f4f2 := &svcsdk.S3StorageConfig{}
+			f4f2 := &svcsdktypes.S3StorageConfig{}
 			if r.ko.Spec.OfflineStoreConfig.S3StorageConfig.KMSKeyID != nil {
-				f4f2.SetKmsKeyId(*r.ko.Spec.OfflineStoreConfig.S3StorageConfig.KMSKeyID)
+				f4f2.KmsKeyId = r.ko.Spec.OfflineStoreConfig.S3StorageConfig.KMSKeyID
 			}
 			if r.ko.Spec.OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3URI != nil {
-				f4f2.SetResolvedOutputS3Uri(*r.ko.Spec.OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3URI)
+				f4f2.ResolvedOutputS3Uri = r.ko.Spec.OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3URI
 			}
 			if r.ko.Spec.OfflineStoreConfig.S3StorageConfig.S3URI != nil {
-				f4f2.SetS3Uri(*r.ko.Spec.OfflineStoreConfig.S3StorageConfig.S3URI)
+				f4f2.S3Uri = r.ko.Spec.OfflineStoreConfig.S3StorageConfig.S3URI
 			}
-			f4.SetS3StorageConfig(f4f2)
+			f4.S3StorageConfig = f4f2
 		}
-		res.SetOfflineStoreConfig(f4)
+		res.OfflineStoreConfig = f4
 	}
 	if r.ko.Spec.OnlineStoreConfig != nil {
-		f5 := &svcsdk.OnlineStoreConfig{}
+		f5 := &svcsdktypes.OnlineStoreConfig{}
 		if r.ko.Spec.OnlineStoreConfig.EnableOnlineStore != nil {
-			f5.SetEnableOnlineStore(*r.ko.Spec.OnlineStoreConfig.EnableOnlineStore)
+			f5.EnableOnlineStore = r.ko.Spec.OnlineStoreConfig.EnableOnlineStore
 		}
 		if r.ko.Spec.OnlineStoreConfig.SecurityConfig != nil {
-			f5f1 := &svcsdk.OnlineStoreSecurityConfig{}
+			f5f1 := &svcsdktypes.OnlineStoreSecurityConfig{}
 			if r.ko.Spec.OnlineStoreConfig.SecurityConfig.KMSKeyID != nil {
-				f5f1.SetKmsKeyId(*r.ko.Spec.OnlineStoreConfig.SecurityConfig.KMSKeyID)
+				f5f1.KmsKeyId = r.ko.Spec.OnlineStoreConfig.SecurityConfig.KMSKeyID
 			}
-			f5.SetSecurityConfig(f5f1)
+			f5.SecurityConfig = f5f1
 		}
 		if r.ko.Spec.OnlineStoreConfig.StorageType != nil {
-			f5.SetStorageType(*r.ko.Spec.OnlineStoreConfig.StorageType)
+			f5.StorageType = svcsdktypes.StorageType(*r.ko.Spec.OnlineStoreConfig.StorageType)
 		}
 		if r.ko.Spec.OnlineStoreConfig.TTLDuration != nil {
-			f5f3 := &svcsdk.TtlDuration{}
+			f5f3 := &svcsdktypes.TtlDuration{}
 			if r.ko.Spec.OnlineStoreConfig.TTLDuration.Unit != nil {
-				f5f3.SetUnit(*r.ko.Spec.OnlineStoreConfig.TTLDuration.Unit)
+				f5f3.Unit = svcsdktypes.TtlDurationUnit(*r.ko.Spec.OnlineStoreConfig.TTLDuration.Unit)
 			}
 			if r.ko.Spec.OnlineStoreConfig.TTLDuration.Value != nil {
-				f5f3.SetValue(*r.ko.Spec.OnlineStoreConfig.TTLDuration.Value)
+				valueCopy0 := *r.ko.Spec.OnlineStoreConfig.TTLDuration.Value
+				if valueCopy0 > math.MaxInt32 || valueCopy0 < math.MinInt32 {
+					return nil, fmt.Errorf("error: field Value is of type int32")
+				}
+				valueCopy := int32(valueCopy0)
+				f5f3.Value = &valueCopy
 			}
-			f5.SetTtlDuration(f5f3)
+			f5.TtlDuration = f5f3
 		}
-		res.SetOnlineStoreConfig(f5)
+		res.OnlineStoreConfig = f5
 	}
 	if r.ko.Spec.RecordIdentifierFeatureName != nil {
-		res.SetRecordIdentifierFeatureName(*r.ko.Spec.RecordIdentifierFeatureName)
+		res.RecordIdentifierFeatureName = r.ko.Spec.RecordIdentifierFeatureName
 	}
 	if r.ko.Spec.RoleARN != nil {
-		res.SetRoleArn(*r.ko.Spec.RoleARN)
+		res.RoleArn = r.ko.Spec.RoleARN
 	}
 	if r.ko.Spec.Tags != nil {
-		f8 := []*svcsdk.Tag{}
+		f8 := []svcsdktypes.Tag{}
 		for _, f8iter := range r.ko.Spec.Tags {
-			f8elem := &svcsdk.Tag{}
+			f8elem := &svcsdktypes.Tag{}
 			if f8iter.Key != nil {
-				f8elem.SetKey(*f8iter.Key)
+				f8elem.Key = f8iter.Key
 			}
 			if f8iter.Value != nil {
-				f8elem.SetValue(*f8iter.Value)
+				f8elem.Value = f8iter.Value
 			}
-			f8 = append(f8, f8elem)
+			f8 = append(f8, *f8elem)
 		}
-		res.SetTags(f8)
+		res.Tags = f8
 	}
 	if r.ko.Spec.ThroughputConfig != nil {
-		f9 := &svcsdk.ThroughputConfig{}
+		f9 := &svcsdktypes.ThroughputConfig{}
 		if r.ko.Spec.ThroughputConfig.ProvisionedReadCapacityUnits != nil {
-			f9.SetProvisionedReadCapacityUnits(*r.ko.Spec.ThroughputConfig.ProvisionedReadCapacityUnits)
+			provisionedReadCapacityUnitsCopy0 := *r.ko.Spec.ThroughputConfig.ProvisionedReadCapacityUnits
+			if provisionedReadCapacityUnitsCopy0 > math.MaxInt32 || provisionedReadCapacityUnitsCopy0 < math.MinInt32 {
+				return nil, fmt.Errorf("error: field ProvisionedReadCapacityUnits is of type int32")
+			}
+			provisionedReadCapacityUnitsCopy := int32(provisionedReadCapacityUnitsCopy0)
+			f9.ProvisionedReadCapacityUnits = &provisionedReadCapacityUnitsCopy
 		}
 		if r.ko.Spec.ThroughputConfig.ProvisionedWriteCapacityUnits != nil {
-			f9.SetProvisionedWriteCapacityUnits(*r.ko.Spec.ThroughputConfig.ProvisionedWriteCapacityUnits)
+			provisionedWriteCapacityUnitsCopy0 := *r.ko.Spec.ThroughputConfig.ProvisionedWriteCapacityUnits
+			if provisionedWriteCapacityUnitsCopy0 > math.MaxInt32 || provisionedWriteCapacityUnitsCopy0 < math.MinInt32 {
+				return nil, fmt.Errorf("error: field ProvisionedWriteCapacityUnits is of type int32")
+			}
+			provisionedWriteCapacityUnitsCopy := int32(provisionedWriteCapacityUnitsCopy0)
+			f9.ProvisionedWriteCapacityUnits = &provisionedWriteCapacityUnitsCopy
 		}
 		if r.ko.Spec.ThroughputConfig.ThroughputMode != nil {
-			f9.SetThroughputMode(*r.ko.Spec.ThroughputConfig.ThroughputMode)
+			f9.ThroughputMode = svcsdktypes.ThroughputMode(*r.ko.Spec.ThroughputConfig.ThroughputMode)
 		}
-		res.SetThroughputConfig(f9)
+		res.ThroughputConfig = f9
 	}
 
 	return res, nil
@@ -484,7 +518,7 @@ func (rm *resourceManager) sdkDelete(
 	}
 	var resp *svcsdk.DeleteFeatureGroupOutput
 	_ = resp
-	resp, err = rm.sdkapi.DeleteFeatureGroupWithContext(ctx, input)
+	resp, err = rm.sdkapi.DeleteFeatureGroup(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteFeatureGroup", err)
 
 	if err == nil {
@@ -508,7 +542,7 @@ func (rm *resourceManager) newDeleteRequestPayload(
 	res := &svcsdk.DeleteFeatureGroupInput{}
 
 	if r.ko.Spec.FeatureGroupName != nil {
-		res.SetFeatureGroupName(*r.ko.Spec.FeatureGroupName)
+		res.FeatureGroupName = r.ko.Spec.FeatureGroupName
 	}
 
 	return res, nil
@@ -618,11 +652,12 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 	if err == nil {
 		return false
 	}
-	awsErr, ok := ackerr.AWSError(err)
-	if !ok {
+
+	var terminalErr smithy.APIError
+	if !errors.As(err, &terminalErr) {
 		return false
 	}
-	switch awsErr.Code() {
+	switch terminalErr.ErrorCode() {
 	case "ResourceNotFound",
 		"ResourceInUse",
 		"InvalidParameterCombination",
