@@ -30,14 +30,19 @@ type TrainingJobSpec struct {
 	// about algorithms provided by SageMaker, see Algorithms (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html).
 	// For information about providing your own algorithms, see Using Your Own Algorithms
 	// with Amazon SageMaker (https://docs.aws.amazon.com/sagemaker/latest/dg/your-algorithms.html).
+
 	// +kubebuilder:validation:Required
+
 	AlgorithmSpecification *AlgorithmSpecification `json:"algorithmSpecification"`
 	// Contains information about the output location for managed spot training
 	// checkpoint data.
+
 	CheckpointConfig *CheckpointConfig `json:"checkpointConfig,omitempty"`
-	DebugHookConfig  *DebugHookConfig  `json:"debugHookConfig,omitempty"`
+
+	DebugHookConfig *DebugHookConfig `json:"debugHookConfig,omitempty"`
 	// Configuration information for Amazon SageMaker Debugger rules for debugging
 	// output tensors.
+
 	DebugRuleConfigurations []*DebugRuleConfiguration `json:"debugRuleConfigurations,omitempty"`
 	// To encrypt all communications between ML compute instances in distributed
 	// training, choose True. Encryption provides greater security for distributed
@@ -46,6 +51,7 @@ type TrainingJobSpec struct {
 	// a deep learning algorithm in distributed training. For more information,
 	// see Protect Communications Between ML Compute Instances in a Distributed
 	// Training Job (https://docs.aws.amazon.com/sagemaker/latest/dg/train-encrypt.html).
+
 	EnableInterContainerTrafficEncryption *bool `json:"enableInterContainerTrafficEncryption,omitempty"`
 	// To train models using managed spot training, choose True. Managed spot training
 	// provides a fully managed and scalable infrastructure for training machine
@@ -57,6 +63,7 @@ type TrainingJobSpec struct {
 	// Amazon SageMaker provides metrics and logs in CloudWatch. They can be used
 	// to see when managed spot training jobs are running, interrupted, resumed,
 	// or completed.
+
 	EnableManagedSpotTraining *bool `json:"enableManagedSpotTraining,omitempty"`
 	// Isolates the training container. No inbound or outbound network calls can
 	// be made, except for calls between peers within a training cluster for distributed
@@ -64,10 +71,13 @@ type TrainingJobSpec struct {
 	// to use a VPC, SageMaker downloads and uploads customer data and model artifacts
 	// through the specified VPC, but the training container does not have network
 	// access.
+
 	EnableNetworkIsolation *bool `json:"enableNetworkIsolation,omitempty"`
 	// The environment variables to set in the Docker container.
-	Environment      map[string]*string `json:"environment,omitempty"`
-	ExperimentConfig *ExperimentConfig  `json:"experimentConfig,omitempty"`
+
+	Environment map[string]*string `json:"environment,omitempty"`
+
+	ExperimentConfig *ExperimentConfig `json:"experimentConfig,omitempty"`
 	// Algorithm-specific parameters that influence the quality of the model. You
 	// set hyperparameters before you start the learning process. For a list of
 	// hyperparameters for each training algorithm provided by SageMaker, see Algorithms
@@ -81,9 +91,11 @@ type TrainingJobSpec struct {
 	// IDs, secrets or tokens in any hyperparameter field. If the use of security-sensitive
 	// credentials are detected, SageMaker will reject your training job request
 	// and return an exception error.
+
 	HyperParameters map[string]*string `json:"hyperParameters,omitempty"`
 	// Contains information about the infrastructure health check configuration
 	// for the training job.
+
 	InfraCheckConfig *InfraCheckConfig `json:"infraCheckConfig,omitempty"`
 	// An array of Channel objects. Each channel is a named input source. InputDataConfig
 	// describes the input data and its location.
@@ -103,18 +115,24 @@ type TrainingJobSpec struct {
 	//
 	// Your input must be in the same Amazon Web Services region as your training
 	// job.
+
 	InputDataConfig []*Channel `json:"inputDataConfig,omitempty"`
 	// Specifies the path to the S3 location where you want to store model artifacts.
 	// SageMaker creates subfolders for the artifacts.
+
 	// +kubebuilder:validation:Required
+
 	OutputDataConfig *OutputDataConfig `json:"outputDataConfig"`
-	ProfilerConfig   *ProfilerConfig   `json:"profilerConfig,omitempty"`
+
+	ProfilerConfig *ProfilerConfig `json:"profilerConfig,omitempty"`
 	// Configuration information for Amazon SageMaker Debugger rules for profiling
 	// system and framework metrics.
+
 	ProfilerRuleConfigurations []*ProfilerRuleConfiguration `json:"profilerRuleConfigurations,omitempty"`
 	// Configuration for remote debugging. To learn more about the remote debugging
 	// functionality of SageMaker, see Access a training container through Amazon
 	// Web Services Systems Manager (SSM) for remote debugging (https://docs.aws.amazon.com/sagemaker/latest/dg/train-remote-debugging.html).
+
 	RemoteDebugConfig *RemoteDebugConfig `json:"remoteDebugConfig,omitempty"`
 	// The resources, including the ML compute instances and ML storage volumes,
 	// to use for model training.
@@ -124,9 +142,12 @@ type TrainingJobSpec struct {
 	// SageMaker to use the ML storage volume to store the training data, choose
 	// File as the TrainingInputMode in the algorithm specification. For distributed
 	// training algorithms, specify an instance count greater than 1.
+
 	// +kubebuilder:validation:Required
+
 	ResourceConfig *ResourceConfig `json:"resourceConfig"`
 	// The number of times to retry the job when the job fails due to an InternalServerError.
+
 	RetryStrategy *RetryStrategy `json:"retryStrategy,omitempty"`
 	// The Amazon Resource Name (ARN) of an IAM role that SageMaker can assume to
 	// perform tasks on your behalf.
@@ -139,7 +160,9 @@ type TrainingJobSpec struct {
 	//
 	// To be able to pass this role to SageMaker, the caller of this API must have
 	// the iam:PassRole permission.
+
 	// +kubebuilder:validation:Required
+
 	RoleARN *string `json:"roleARN"`
 	// Specifies a limit to how long a model training job can run. It also specifies
 	// how long a managed Spot training job has to complete. When the job reaches
@@ -149,23 +172,30 @@ type TrainingJobSpec struct {
 	// To stop a job, SageMaker sends the algorithm the SIGTERM signal, which delays
 	// job termination for 120 seconds. Algorithms can use this 120-second window
 	// to save the model artifacts, so the results of training are not lost.
+
 	// +kubebuilder:validation:Required
+
 	StoppingCondition *StoppingCondition `json:"stoppingCondition"`
 	// An array of key-value pairs. You can use tags to categorize your Amazon Web
 	// Services resources in different ways, for example, by purpose, owner, or
 	// environment. For more information, see Tagging Amazon Web Services Resources
 	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
-	Tags                    []*Tag                   `json:"tags,omitempty"`
+
+	Tags []*Tag `json:"tags,omitempty"`
+
 	TensorBoardOutputConfig *TensorBoardOutputConfig `json:"tensorBoardOutputConfig,omitempty"`
 	// The name of the training job. The name must be unique within an Amazon Web
 	// Services Region in an Amazon Web Services account.
+
 	// +kubebuilder:validation:Required
+
 	TrainingJobName *string `json:"trainingJobName"`
 	// A VpcConfig (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_VpcConfig.html)
 	// object that specifies the VPC that you want your training job to connect
 	// to. Control access to and from your training container by configuring the
 	// VPC. For more information, see Protect Training Jobs by Using an Amazon Virtual
 	// Private Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/train-vpc.html).
+
 	VPCConfig *VPCConfig `json:"vpcConfig,omitempty"`
 }
 
@@ -176,7 +206,7 @@ type TrainingJobStatus struct {
 	// constructed ARN for the resource
 	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
-	// All CRS managed by ACK have a common `Status.Conditions` member that
+	// All CRs managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource

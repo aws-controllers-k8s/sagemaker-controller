@@ -28,6 +28,7 @@ type NotebookInstanceSpec struct {
 	//
 	// This parameter was used to specify a list of EI instance types to associate
 	// with this notebook instance.
+
 	AcceleratorTypes []*string `json:"acceleratorTypes,omitempty"`
 	// An array of up to three Git repositories to associate with the notebook instance.
 	// These can be either the names of Git repositories stored as resources in
@@ -36,6 +37,7 @@ type NotebookInstanceSpec struct {
 	// in any other Git repository. These repositories are cloned at the same level
 	// as the default repository of your notebook instance. For more information,
 	// see Associating Git Repositories with SageMaker Notebook Instances (https://docs.aws.amazon.com/sagemaker/latest/dg/nbi-git-repo.html).
+
 	AdditionalCodeRepositories []*string `json:"additionalCodeRepositories,omitempty"`
 	// A Git repository to associate with the notebook instance as its default code
 	// repository. This can be either the name of a Git repository stored as a resource
@@ -44,6 +46,7 @@ type NotebookInstanceSpec struct {
 	// in any other Git repository. When you open a notebook instance, it opens
 	// in the directory that contains this repository. For more information, see
 	// Associating Git Repositories with SageMaker Notebook Instances (https://docs.aws.amazon.com/sagemaker/latest/dg/nbi-git-repo.html).
+
 	DefaultCodeRepository *string `json:"defaultCodeRepository,omitempty"`
 	// Sets whether SageMaker provides internet access to the notebook instance.
 	// If you set this to Disabled this notebook instance is able to access resources
@@ -54,24 +57,32 @@ type NotebookInstanceSpec struct {
 	// (https://docs.aws.amazon.com/sagemaker/latest/dg/appendix-additional-considerations.html#appendix-notebook-and-internet-access).
 	// You can set the value of this parameter to Disabled only if you set a value
 	// for the SubnetId parameter.
+
 	DirectInternetAccess *string `json:"directInternetAccess,omitempty"`
 	// The type of ML compute instance to launch for the notebook instance.
+
 	// +kubebuilder:validation:Required
+
 	InstanceType *string `json:"instanceType"`
 	// The Amazon Resource Name (ARN) of a Amazon Web Services Key Management Service
 	// key that SageMaker uses to encrypt data on the storage volume attached to
 	// your notebook instance. The KMS key you provide must be enabled. For information,
 	// see Enabling and Disabling Keys (https://docs.aws.amazon.com/kms/latest/developerguide/enabling-keys.html)
 	// in the Amazon Web Services Key Management Service Developer Guide.
+
 	KMSKeyID *string `json:"kmsKeyID,omitempty"`
 	// The name of a lifecycle configuration to associate with the notebook instance.
 	// For information about lifestyle configurations, see Step 2.1: (Optional)
 	// Customize a Notebook Instance (https://docs.aws.amazon.com/sagemaker/latest/dg/notebook-lifecycle-config.html).
+
 	LifecycleConfigName *string `json:"lifecycleConfigName,omitempty"`
 	// The name of the new notebook instance.
+
 	// +kubebuilder:validation:Required
+
 	NotebookInstanceName *string `json:"notebookInstanceName"`
 	// The platform identifier of the notebook instance runtime environment.
+
 	PlatformIdentifier *string `json:"platformIdentifier,omitempty"`
 	// When you send any requests to Amazon Web Services resources from the notebook
 	// instance, SageMaker assumes this role to perform tasks on your behalf. You
@@ -82,7 +93,9 @@ type NotebookInstanceSpec struct {
 	//
 	// To be able to pass this role to SageMaker, the caller of this API must have
 	// the iam:PassRole permission.
+
 	// +kubebuilder:validation:Required
+
 	RoleARN *string `json:"roleARN"`
 	// Whether root access is enabled or disabled for users of the notebook instance.
 	// The default value is Enabled.
@@ -91,20 +104,25 @@ type NotebookInstanceSpec struct {
 	// instance. Because of this, lifecycle configurations associated with a notebook
 	// instance always run with root access even if you disable root access for
 	// users.
+
 	RootAccess *string `json:"rootAccess,omitempty"`
 	// The VPC security group IDs, in the form sg-xxxxxxxx. The security groups
 	// must be for the same VPC as specified in the subnet.
+
 	SecurityGroupIDs []*string `json:"securityGroupIDs,omitempty"`
 	// The ID of the subnet in a VPC to which you would like to have a connectivity
 	// from your ML compute instance.
+
 	SubnetID *string `json:"subnetID,omitempty"`
 	// An array of key-value pairs. You can use tags to categorize your Amazon Web
 	// Services resources in different ways, for example, by purpose, owner, or
 	// environment. For more information, see Tagging Amazon Web Services Resources
 	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+
 	Tags []*Tag `json:"tags,omitempty"`
 	// The size, in GB, of the ML storage volume to attach to the notebook instance.
 	// The default value is 5 GB.
+
 	VolumeSizeInGB *int64 `json:"volumeSizeInGB,omitempty"`
 }
 
@@ -115,7 +133,7 @@ type NotebookInstanceStatus struct {
 	// constructed ARN for the resource
 	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
-	// All CRS managed by ACK have a common `Status.Conditions` member that
+	// All CRs managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource

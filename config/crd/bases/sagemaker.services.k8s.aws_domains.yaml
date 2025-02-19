@@ -47,30 +47,16 @@ spec:
             description: DomainSpec defines the desired state of Domain.
             properties:
               appNetworkAccessType:
-                description: |-
-                  Specifies the VPC used for non-EFS traffic. The default value is PublicInternetOnly.
-
-                     * PublicInternetOnly - Non-EFS traffic is through a VPC managed by Amazon
-                     SageMaker, which allows direct internet access
-
-                     * VpcOnly - All traffic is through the specified VPC and subnets
                 type: string
               appSecurityGroupManagement:
-                description: |-
-                  The entity that creates and manages the required security groups for inter-app
-                  communication in VPCOnly mode. Required when CreateDomain.AppNetworkAccessType
-                  is VPCOnly and DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleArn
-                  is provided. If setting up the domain for use with RStudio, this value must
-                  be set to Service.
                 type: string
               authMode:
-                description: The mode of authentication that members use to access
-                  the domain.
                 type: string
               defaultUserSettings:
                 description: |-
-                  The default settings to use to create a user profile when UserSettings isn't
-                  specified in the call to the CreateUserProfile API.
+                  A collection of settings that apply to users in a domain. These settings
+                  are specified when the CreateUserProfile API is called, and as DefaultUserSettings
+                  when the CreateDomain API is called.
 
                   SecurityGroups is aggregated when specified in both calls. For all other
                   settings in UserSettings, the values specified in CreateUserProfile take
@@ -308,10 +294,11 @@ spec:
                     type: object
                 type: object
               domainName:
-                description: A name for the domain.
                 type: string
               domainSettings:
-                description: A collection of Domain settings.
+                description: |-
+                  A collection of settings that apply to the SageMaker Domain. These settings
+                  are specified through the CreateDomain API call.
                 properties:
                   dockerSettings:
                     description: A collection of settings that configure the domain's
@@ -358,27 +345,14 @@ spec:
                     type: array
                 type: object
               homeEFSFileSystemKMSKeyID:
-                description: Use KmsKeyId.
                 type: string
               kmsKeyID:
-                description: |-
-                  SageMaker uses Amazon Web Services KMS to encrypt EFS and EBS volumes attached
-                  to the domain with an Amazon Web Services managed key by default. For more
-                  control, specify a customer managed key.
                 type: string
               subnetIDs:
-                description: The VPC subnets that the domain uses for communication.
                 items:
                   type: string
                 type: array
               tags:
-                description: |-
-                  Tags to associated with the Domain. Each tag consists of a key and an optional
-                  value. Tag keys must be unique per resource. Tags are searchable using the
-                  Search API.
-
-                  Tags that you specify for the Domain are also added to all Apps that the
-                  Domain launches.
                 items:
                   description: |-
                     A tag object that consists of a key and an optional value, used to manage
@@ -402,9 +376,6 @@ spec:
                   type: object
                 type: array
               vpcID:
-                description: |-
-                  The ID of the Amazon Virtual Private Cloud (VPC) that the domain uses for
-                  communication.
                 type: string
             required:
             - authMode
@@ -447,7 +418,7 @@ spec:
                 type: object
               conditions:
                 description: |-
-                  All CRS managed by ACK have a common `Status.Conditions` member that
+                  All CRs managed by ACK have a common `Status.Conditions` member that
                   contains a collection of `ackv1alpha1.Condition` objects that describe
                   the various terminal states of the CR and its backend AWS service API
                   resource

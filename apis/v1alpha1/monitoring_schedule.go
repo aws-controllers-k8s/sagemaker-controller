@@ -28,15 +28,20 @@ type MonitoringScheduleSpec struct {
 
 	// The configuration object that specifies the monitoring schedule and defines
 	// the monitoring job.
+
 	// +kubebuilder:validation:Required
+
 	MonitoringScheduleConfig *MonitoringScheduleConfig `json:"monitoringScheduleConfig"`
 	// The name of the monitoring schedule. The name must be unique within an Amazon
 	// Web Services Region within an Amazon Web Services account.
+
 	// +kubebuilder:validation:Required
+
 	MonitoringScheduleName *string `json:"monitoringScheduleName"`
 	// (Optional) An array of key-value pairs. For more information, see Using Cost
 	// Allocation Tags (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html#allocation-whatURL)
 	// in the Amazon Web Services Billing and Cost Management User Guide.
+
 	Tags []*Tag `json:"tags,omitempty"`
 }
 
@@ -47,7 +52,7 @@ type MonitoringScheduleStatus struct {
 	// constructed ARN for the resource
 	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
-	// All CRS managed by ACK have a common `Status.Conditions` member that
+	// All CRs managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource

@@ -26,16 +26,21 @@ type EndpointConfigSpec struct {
 	// Specifies configuration for how an endpoint performs asynchronous inference.
 	// This is a required field in order for your Endpoint to be invoked using InvokeEndpointAsync
 	// (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpointAsync.html).
+
 	AsyncInferenceConfig *AsyncInferenceConfig `json:"asyncInferenceConfig,omitempty"`
-	DataCaptureConfig    *DataCaptureConfig    `json:"dataCaptureConfig,omitempty"`
+
+	DataCaptureConfig *DataCaptureConfig `json:"dataCaptureConfig,omitempty"`
 	// Sets whether all model containers deployed to the endpoint are isolated.
 	// If they are, no inbound or outbound network calls can be made to or from
 	// the model containers.
+
 	EnableNetworkIsolation *bool `json:"enableNetworkIsolation,omitempty"`
 	// The name of the endpoint configuration. You specify this name in a CreateEndpoint
 	// (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateEndpoint.html)
 	// request.
+
 	// +kubebuilder:validation:Required
+
 	EndpointConfigName *string `json:"endpointConfigName"`
 	// The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
 	// to perform actions on your behalf. For more information, see SageMaker Roles
@@ -43,6 +48,7 @@ type EndpointConfigSpec struct {
 	//
 	// To be able to pass this role to Amazon SageMaker, the caller of this action
 	// must have the iam:PassRole permission.
+
 	ExecutionRoleARN *string `json:"executionRoleARN,omitempty"`
 	// The Amazon Resource Name (ARN) of a Amazon Web Services Key Management Service
 	// key that SageMaker uses to encrypt data on the storage volume attached to
@@ -50,13 +56,13 @@ type EndpointConfigSpec struct {
 	//
 	// The KmsKeyId can be any of the following formats:
 	//
-	//   - Key ID: 1234abcd-12ab-34cd-56ef-1234567890ab
+	//    * Key ID: 1234abcd-12ab-34cd-56ef-1234567890ab
 	//
-	//   - Key ARN: arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
+	//    * Key ARN: arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
 	//
-	//   - Alias name: alias/ExampleAlias
+	//    * Alias name: alias/ExampleAlias
 	//
-	//   - Alias name ARN: arn:aws:kms:us-west-2:111122223333:alias/ExampleAlias
+	//    * Alias name ARN: arn:aws:kms:us-west-2:111122223333:alias/ExampleAlias
 	//
 	// The KMS key policy must grant permission to the IAM role that you specify
 	// in your CreateEndpoint, UpdateEndpoint requests. For more information, refer
@@ -77,16 +83,21 @@ type EndpointConfigSpec struct {
 	//
 	// For more information about local instance storage encryption, see SSD Instance
 	// Store Volumes (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ssd-instance-store.html).
+
 	KMSKeyID *string `json:"kmsKeyID,omitempty"`
 	// An array of ProductionVariant objects, one for each model that you want to
 	// host at this endpoint.
+
 	// +kubebuilder:validation:Required
+
 	ProductionVariants []*ProductionVariant `json:"productionVariants"`
 	// An array of key-value pairs. You can use tags to categorize your Amazon Web
 	// Services resources in different ways, for example, by purpose, owner, or
 	// environment. For more information, see Tagging Amazon Web Services Resources
 	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
-	Tags      []*Tag     `json:"tags,omitempty"`
+
+	Tags []*Tag `json:"tags,omitempty"`
+
 	VPCConfig *VPCConfig `json:"vpcConfig,omitempty"`
 }
 
@@ -97,7 +108,7 @@ type EndpointConfigStatus struct {
 	// constructed ARN for the resource
 	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
-	// All CRS managed by ACK have a common `Status.Conditions` member that
+	// All CRs managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource

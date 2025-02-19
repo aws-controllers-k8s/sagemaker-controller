@@ -53,9 +53,8 @@ spec:
               see Amazon SageMaker Model Monitor (https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor.html).
             properties:
               monitoringScheduleConfig:
-                description: |-
-                  The configuration object that specifies the monitoring schedule and defines
-                  the monitoring job.
+                description: Configures the monitoring schedule and defines the monitoring
+                  job.
                 properties:
                   monitoringJobDefinition:
                     description: Defines the monitoring job.
@@ -237,15 +236,8 @@ spec:
                     type: object
                 type: object
               monitoringScheduleName:
-                description: |-
-                  The name of the monitoring schedule. The name must be unique within an Amazon
-                  Web Services Region within an Amazon Web Services account.
                 type: string
               tags:
-                description: |-
-                  (Optional) An array of key-value pairs. For more information, see Using Cost
-                  Allocation Tags (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html#allocation-whatURL)
-                  in the Amazon Web Services Billing and Cost Management User Guide.
                 items:
                   description: |-
                     A tag object that consists of a key and an optional value, used to manage
@@ -306,7 +298,7 @@ spec:
                 type: object
               conditions:
                 description: |-
-                  All CRS managed by ACK have a common `Status.Conditions` member that
+                  All CRs managed by ACK have a common `Status.Conditions` member that
                   contains a collection of `ackv1alpha1.Condition` objects that describe
                   the various terminal states of the CR and its backend AWS service API
                   resource

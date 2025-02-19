@@ -52,25 +52,21 @@ spec:
             properties:
               parallelismConfiguration:
                 description: |-
-                  This configuration, if specified, overrides the parallelism configuration
-                  of the parent pipeline for this specific run.
+                  Configuration that controls the parallelism of the pipeline. By default,
+                  the parallelism configuration specified applies to all executions of the
+                  pipeline unless overridden.
                 properties:
                   maxParallelExecutionSteps:
                     format: int64
                     type: integer
                 type: object
               pipelineExecutionDescription:
-                description: The description of the pipeline execution.
                 type: string
               pipelineExecutionDisplayName:
-                description: The display name of the pipeline execution.
                 type: string
               pipelineName:
-                description: The name or Amazon Resource Name (ARN) of the pipeline.
                 type: string
               pipelineParameters:
-                description: Contains a list of pipeline parameters. This list can
-                  be empty.
                 items:
                   description: Assigns a value to a named Pipeline parameter.
                   properties:
@@ -132,7 +128,7 @@ spec:
                 type: object
               conditions:
                 description: |-
-                  All CRS managed by ACK have a common `Status.Conditions` member that
+                  All CRs managed by ACK have a common `Status.Conditions` member that
                   contains a collection of `ackv1alpha1.Condition` objects that describe
                   the various terminal states of the CR and its backend AWS service API
                   resource

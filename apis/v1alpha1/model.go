@@ -27,9 +27,11 @@ import (
 type ModelSpec struct {
 
 	// Specifies the containers in the inference pipeline.
+
 	Containers []*ContainerDefinition `json:"containers,omitempty"`
 	// Isolates the model container. No inbound or outbound network calls can be
 	// made to or from the model container.
+
 	EnableNetworkIsolation *bool `json:"enableNetworkIsolation,omitempty"`
 	// The Amazon Resource Name (ARN) of the IAM role that SageMaker can assume
 	// to access model artifacts and docker image for deployment on ML compute instances
@@ -38,20 +40,26 @@ type ModelSpec struct {
 	//
 	// To be able to pass this role to SageMaker, the caller of this API must have
 	// the iam:PassRole permission.
+
 	ExecutionRoleARN *string `json:"executionRoleARN,omitempty"`
 	// Specifies details of how containers in a multi-container endpoint are called.
+
 	InferenceExecutionConfig *InferenceExecutionConfig `json:"inferenceExecutionConfig,omitempty"`
 	// The name of the new model.
+
 	// +kubebuilder:validation:Required
+
 	ModelName *string `json:"modelName"`
 	// The location of the primary docker image containing inference code, associated
 	// artifacts, and custom environment map that the inference code uses when the
 	// model is deployed for predictions.
+
 	PrimaryContainer *ContainerDefinition `json:"primaryContainer,omitempty"`
 	// An array of key-value pairs. You can use tags to categorize your Amazon Web
 	// Services resources in different ways, for example, by purpose, owner, or
 	// environment. For more information, see Tagging Amazon Web Services Resources
 	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+
 	Tags []*Tag `json:"tags,omitempty"`
 	// A VpcConfig (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_VpcConfig.html)
 	// object that specifies the VPC that you want your model to connect to. Control
@@ -60,6 +68,7 @@ type ModelSpec struct {
 	// see Protect Endpoints by Using an Amazon Virtual Private Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/host-vpc.html)
 	// and Protect Data in Batch Transform Jobs by Using an Amazon Virtual Private
 	// Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/batch-vpc.html).
+
 	VPCConfig *VPCConfig `json:"vpcConfig,omitempty"`
 }
 
@@ -70,7 +79,7 @@ type ModelStatus struct {
 	// constructed ARN for the resource
 	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
-	// All CRS managed by ACK have a common `Status.Conditions` member that
+	// All CRs managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource

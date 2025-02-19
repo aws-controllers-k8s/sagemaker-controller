@@ -55,11 +55,13 @@ spec:
             properties:
               algorithmSpecification:
                 description: |-
-                  The registry path of the Docker image that contains the training algorithm
-                  and algorithm-specific metadata, including the input mode. For more information
-                  about algorithms provided by SageMaker, see Algorithms (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html).
-                  For information about providing your own algorithms, see Using Your Own Algorithms
-                  with Amazon SageMaker (https://docs.aws.amazon.com/sagemaker/latest/dg/your-algorithms.html).
+                  Specifies the training algorithm to use in a CreateTrainingJob (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingJob.html)
+                  request.
+
+                  For more information about algorithms provided by SageMaker, see Algorithms
+                  (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html). For information
+                  about using your own algorithms, see Using Your Own Algorithms with Amazon
+                  SageMaker (https://docs.aws.amazon.com/sagemaker/latest/dg/your-algorithms.html).
                 properties:
                   algorithmName:
                     type: string
@@ -166,9 +168,6 @@ spec:
                     type: string
                 type: object
               debugRuleConfigurations:
-                description: |-
-                  Configuration information for Amazon SageMaker Debugger rules for debugging
-                  output tensors.
                 items:
                   description: |-
                     Configuration information for SageMaker Debugger rules for debugging. To
@@ -196,41 +195,14 @@ spec:
                   type: object
                 type: array
               enableInterContainerTrafficEncryption:
-                description: |-
-                  To encrypt all communications between ML compute instances in distributed
-                  training, choose True. Encryption provides greater security for distributed
-                  training, but training might take longer. How long it takes depends on the
-                  amount of communication between compute instances, especially if you use
-                  a deep learning algorithm in distributed training. For more information,
-                  see Protect Communications Between ML Compute Instances in a Distributed
-                  Training Job (https://docs.aws.amazon.com/sagemaker/latest/dg/train-encrypt.html).
                 type: boolean
               enableManagedSpotTraining:
-                description: |-
-                  To train models using managed spot training, choose True. Managed spot training
-                  provides a fully managed and scalable infrastructure for training machine
-                  learning models. this option is useful when training jobs can be interrupted
-                  and when there is flexibility when the training job is run.
-
-                  The complete and intermediate results of jobs are stored in an Amazon S3
-                  bucket, and can be used as a starting point to train models incrementally.
-                  Amazon SageMaker provides metrics and logs in CloudWatch. They can be used
-                  to see when managed spot training jobs are running, interrupted, resumed,
-                  or completed.
                 type: boolean
               enableNetworkIsolation:
-                description: |-
-                  Isolates the training container. No inbound or outbound network calls can
-                  be made, except for calls between peers within a training cluster for distributed
-                  training. If you enable network isolation for training jobs that are configured
-                  to use a VPC, SageMaker downloads and uploads customer data and model artifacts
-                  through the specified VPC, but the training container does not have network
-                  access.
                 type: boolean
               environment:
                 additionalProperties:
                   type: string
-                description: The environment variables to set in the Docker container.
                 type: object
               experimentConfig:
                 description: |-
@@ -253,49 +225,17 @@ spec:
               hyperParameters:
                 additionalProperties:
                   type: string
-                description: |-
-                  Algorithm-specific parameters that influence the quality of the model. You
-                  set hyperparameters before you start the learning process. For a list of
-                  hyperparameters for each training algorithm provided by SageMaker, see Algorithms
-                  (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html).
-
-                  You can specify a maximum of 100 hyperparameters. Each hyperparameter is
-                  a key-value pair. Each key and value is limited to 256 characters, as specified
-                  by the Length Constraint.
-
-                  Do not include any security-sensitive information including account access
-                  IDs, secrets or tokens in any hyperparameter field. If the use of security-sensitive
-                  credentials are detected, SageMaker will reject your training job request
-                  and return an exception error.
                 type: object
               infraCheckConfig:
                 description: |-
-                  Contains information about the infrastructure health check configuration
-                  for the training job.
+                  Configuration information for the infrastructure health check of a training
+                  job. A SageMaker-provided health check tests the health of instance hardware
+                  and cluster network connectivity.
                 properties:
                   enableInfraCheck:
                     type: boolean
                 type: object
               inputDataConfig:
-                description: |-
-                  An array of Channel objects. Each channel is a named input source. InputDataConfig
-                  describes the input data and its location.
-
-                  Algorithms can accept input data from one or more channels. For example,
-                  an algorithm might have two channels of input data, training_data and validation_data.
-                  The configuration for each channel provides the S3, EFS, or FSx location
-                  where the input data is stored. It also provides information about the stored
-                  data: the MIME type, compression method, and whether the data is wrapped
-                  in RecordIO format.
-
-                  Depending on the input mode that the algorithm supports, SageMaker either
-                  copies input data files from an S3 bucket to a local directory in the Docker
-                  container, or makes it available as input streams. For example, if you specify
-                  an EFS location, input data files are available as input streams. They do
-                  not need to be downloaded.
-
-                  Your input must be in the same Amazon Web Services region as your training
-                  job.
                 items:
                   description: A channel is a named input source that training algorithms
                     can consume.
@@ -409,9 +349,8 @@ spec:
                   type: object
                 type: array
               outputDataConfig:
-                description: |-
-                  Specifies the path to the S3 location where you want to store model artifacts.
-                  SageMaker creates subfolders for the artifacts.
+                description: Provides information about how to store model training
+                  results (model artifacts).
                 properties:
                   compressionType:
                     type: string
@@ -436,9 +375,6 @@ spec:
                     type: string
                 type: object
               profilerRuleConfigurations:
-                description: |-
-                  Configuration information for Amazon SageMaker Debugger rules for profiling
-                  system and framework metrics.
                 items:
                   description: Configuration information for profiling rules.
                   properties:
@@ -463,23 +399,18 @@ spec:
                 type: array
               remoteDebugConfig:
                 description: |-
-                  Configuration for remote debugging. To learn more about the remote debugging
-                  functionality of SageMaker, see Access a training container through Amazon
-                  Web Services Systems Manager (SSM) for remote debugging (https://docs.aws.amazon.com/sagemaker/latest/dg/train-remote-debugging.html).
+                  Configuration for remote debugging for the CreateTrainingJob (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingJob.html)
+                  API. To learn more about the remote debugging functionality of SageMaker,
+                  see Access a training container through Amazon Web Services Systems Manager
+                  (SSM) for remote debugging (https://docs.aws.amazon.com/sagemaker/latest/dg/train-remote-debugging.html).
                 properties:
                   enableRemoteDebug:
                     type: boolean
                 type: object
               resourceConfig:
                 description: |-
-                  The resources, including the ML compute instances and ML storage volumes,
-                  to use for model training.
-
-                  ML storage volumes store model artifacts and incremental states. Training
-                  algorithms might also use ML storage volumes for scratch space. If you want
-                  SageMaker to use the ML storage volume to store the training data, choose
-                  File as the TrainingInputMode in the algorithm specification. For distributed
-                  training algorithms, specify an instance count greater than 1.
+                  Describes the resources, including machine learning (ML) compute instances
+                  and ML storage volumes, to use for model training.
                 properties:
                   instanceCount:
                     format: int64
@@ -515,37 +446,37 @@ spec:
                     type: integer
                 type: object
               retryStrategy:
-                description: The number of times to retry the job when the job fails
-                  due to an InternalServerError.
+                description: |-
+                  The retry strategy to use when a training job fails due to an InternalServerError.
+                  RetryStrategy is specified as part of the CreateTrainingJob and CreateHyperParameterTuningJob
+                  requests. You can add the StoppingCondition parameter to the request to limit
+                  the training time for the complete job.
                 properties:
                   maximumRetryAttempts:
                     format: int64
                     type: integer
                 type: object
               roleARN:
-                description: |-
-                  The Amazon Resource Name (ARN) of an IAM role that SageMaker can assume to
-                  perform tasks on your behalf.
-
-                  During model training, SageMaker needs your permission to read input data
-                  from an S3 bucket, download a Docker image that contains training code, write
-                  model artifacts to an S3 bucket, write logs to Amazon CloudWatch Logs, and
-                  publish metrics to Amazon CloudWatch. You grant permissions for all of these
-                  tasks to an IAM role. For more information, see SageMaker Roles (https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-roles.html).
-
-                  To be able to pass this role to SageMaker, the caller of this API must have
-                  the iam:PassRole permission.
                 type: string
               stoppingCondition:
                 description: |-
-                  Specifies a limit to how long a model training job can run. It also specifies
-                  how long a managed Spot training job has to complete. When the job reaches
-                  the time limit, SageMaker ends the training job. Use this API to cap model
-                  training costs.
+                  Specifies a limit to how long a job can run. When the job reaches the time
+                  limit, SageMaker ends the job. Use this API to cap costs.
 
-                  To stop a job, SageMaker sends the algorithm the SIGTERM signal, which delays
-                  job termination for 120 seconds. Algorithms can use this 120-second window
-                  to save the model artifacts, so the results of training are not lost.
+                  To stop a training job, SageMaker sends the algorithm the SIGTERM signal,
+                  which delays job termination for 120 seconds. Algorithms can use this 120-second
+                  window to save the model artifacts, so the results of training are not lost.
+
+                  The training algorithms provided by SageMaker automatically save the intermediate
+                  results of a model training job when possible. This attempt to save artifacts
+                  is only a best effort case as model might not be in a state from which it
+                  can be saved. For example, if training has just started, the model might
+                  not be ready to save. When saved, this intermediate data is a valid model
+                  artifact. You can use it to create a model with CreateModel.
+
+                  The Neural Topic Model (NTM) currently does not support saving intermediate
+                  model artifacts. When training NTMs, make sure that the maximum runtime is
+                  sufficient for the training job to complete.
                 properties:
                   maxPendingTimeInSeconds:
                     description: Maximum job scheduler pending time in seconds.
@@ -559,11 +490,6 @@ spec:
                     type: integer
                 type: object
               tags:
-                description: |-
-                  An array of key-value pairs. You can use tags to categorize your Amazon Web
-                  Services resources in different ways, for example, by purpose, owner, or
-                  environment. For more information, see Tagging Amazon Web Services Resources
-                  (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
                 items:
                   description: |-
                     A tag object that consists of a key and an optional value, used to manage
@@ -597,17 +523,13 @@ spec:
                     type: string
                 type: object
               trainingJobName:
-                description: |-
-                  The name of the training job. The name must be unique within an Amazon Web
-                  Services Region in an Amazon Web Services account.
                 type: string
               vpcConfig:
                 description: |-
-                  A VpcConfig (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_VpcConfig.html)
-                  object that specifies the VPC that you want your training job to connect
-                  to. Control access to and from your training container by configuring the
-                  VPC. For more information, see Protect Training Jobs by Using an Amazon Virtual
-                  Private Cloud (https://docs.aws.amazon.com/sagemaker/latest/dg/train-vpc.html).
+                  Specifies an Amazon Virtual Private Cloud (VPC) that your SageMaker jobs,
+                  hosted models, and compute resources have access to. You can control access
+                  to and from your resources by configuring a VPC. For more information, see
+                  Give SageMaker Access to Resources in your Amazon VPC (https://docs.aws.amazon.com/sagemaker/latest/dg/infrastructure-give-access.html).
                 properties:
                   securityGroupIDs:
                     items:
@@ -660,7 +582,7 @@ spec:
                 type: object
               conditions:
                 description: |-
-                  All CRS managed by ACK have a common `Status.Conditions` member that
+                  All CRs managed by ACK have a common `Status.Conditions` member that
                   contains a collection of `ackv1alpha1.Condition` objects that describe
                   the various terminal states of the CR and its backend AWS service API
                   resource

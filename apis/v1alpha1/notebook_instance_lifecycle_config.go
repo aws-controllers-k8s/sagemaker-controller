@@ -24,14 +24,18 @@ import (
 type NotebookInstanceLifecycleConfigSpec struct {
 
 	// The name of the lifecycle configuration.
+
 	// +kubebuilder:validation:Required
+
 	NotebookInstanceLifecycleConfigName *string `json:"notebookInstanceLifecycleConfigName"`
 	// A shell script that runs only once, when you create a notebook instance.
 	// The shell script must be a base64-encoded string.
+
 	OnCreate []*NotebookInstanceLifecycleHook `json:"onCreate,omitempty"`
 	// A shell script that runs every time you start a notebook instance, including
 	// when you create the notebook instance. The shell script must be a base64-encoded
 	// string.
+
 	OnStart []*NotebookInstanceLifecycleHook `json:"onStart,omitempty"`
 }
 
@@ -42,7 +46,7 @@ type NotebookInstanceLifecycleConfigStatus struct {
 	// constructed ARN for the resource
 	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
-	// All CRS managed by ACK have a common `Status.Conditions` member that
+	// All CRs managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource

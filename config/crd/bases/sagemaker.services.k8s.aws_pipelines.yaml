@@ -48,34 +48,25 @@ spec:
             properties:
               parallelismConfiguration:
                 description: |-
-                  This is the configuration that controls the parallelism of the pipeline.
-                  If specified, it applies to all runs of this pipeline by default.
+                  Configuration that controls the parallelism of the pipeline. By default,
+                  the parallelism configuration specified applies to all executions of the
+                  pipeline unless overridden.
                 properties:
                   maxParallelExecutionSteps:
                     format: int64
                     type: integer
                 type: object
               pipelineDefinition:
-                description: |-
-                  The JSON pipeline definition (https://aws-sagemaker-mlops.github.io/sagemaker-model-building-pipeline-definition-JSON-schema/)
-                  of the pipeline.
                 type: string
               pipelineDescription:
-                description: A description of the pipeline.
                 type: string
               pipelineDisplayName:
-                description: The display name of the pipeline.
                 type: string
               pipelineName:
-                description: The name of the pipeline.
                 type: string
               roleARN:
-                description: |-
-                  The Amazon Resource Name (ARN) of the role used by the pipeline to access
-                  and create resources.
                 type: string
               tags:
-                description: A list of tags to apply to the created pipeline.
                 items:
                   description: |-
                     A tag object that consists of a key and an optional value, used to manage
@@ -136,7 +127,7 @@ spec:
                 type: object
               conditions:
                 description: |-
-                  All CRS managed by ACK have a common `Status.Conditions` member that
+                  All CRs managed by ACK have a common `Status.Conditions` member that
                   contains a collection of `ackv1alpha1.Condition` objects that describe
                   the various terminal states of the CR and its backend AWS service API
                   resource

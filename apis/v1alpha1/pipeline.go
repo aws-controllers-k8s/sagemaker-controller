@@ -27,22 +27,31 @@ type PipelineSpec struct {
 
 	// This is the configuration that controls the parallelism of the pipeline.
 	// If specified, it applies to all runs of this pipeline by default.
+
 	ParallelismConfiguration *ParallelismConfiguration `json:"parallelismConfiguration,omitempty"`
 	// The JSON pipeline definition (https://aws-sagemaker-mlops.github.io/sagemaker-model-building-pipeline-definition-JSON-schema/)
 	// of the pipeline.
+
 	PipelineDefinition *string `json:"pipelineDefinition,omitempty"`
 	// A description of the pipeline.
+
 	PipelineDescription *string `json:"pipelineDescription,omitempty"`
 	// The display name of the pipeline.
+
 	PipelineDisplayName *string `json:"pipelineDisplayName,omitempty"`
 	// The name of the pipeline.
+
 	// +kubebuilder:validation:Required
+
 	PipelineName *string `json:"pipelineName"`
 	// The Amazon Resource Name (ARN) of the role used by the pipeline to access
 	// and create resources.
+
 	// +kubebuilder:validation:Required
+
 	RoleARN *string `json:"roleARN"`
 	// A list of tags to apply to the created pipeline.
+
 	Tags []*Tag `json:"tags,omitempty"`
 }
 
@@ -53,7 +62,7 @@ type PipelineStatus struct {
 	// constructed ARN for the resource
 	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
-	// All CRS managed by ACK have a common `Status.Conditions` member that
+	// All CRs managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource

@@ -25,19 +25,23 @@ type DomainSpec struct {
 
 	// Specifies the VPC used for non-EFS traffic. The default value is PublicInternetOnly.
 	//
-	//   - PublicInternetOnly - Non-EFS traffic is through a VPC managed by Amazon
-	//     SageMaker, which allows direct internet access
+	//    * PublicInternetOnly - Non-EFS traffic is through a VPC managed by Amazon
+	//    SageMaker, which allows direct internet access
 	//
-	//   - VpcOnly - All traffic is through the specified VPC and subnets
+	//    * VpcOnly - All traffic is through the specified VPC and subnets
+
 	AppNetworkAccessType *string `json:"appNetworkAccessType,omitempty"`
 	// The entity that creates and manages the required security groups for inter-app
 	// communication in VPCOnly mode. Required when CreateDomain.AppNetworkAccessType
 	// is VPCOnly and DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleArn
 	// is provided. If setting up the domain for use with RStudio, this value must
 	// be set to Service.
+
 	AppSecurityGroupManagement *string `json:"appSecurityGroupManagement,omitempty"`
 	// The mode of authentication that members use to access the domain.
+
 	// +kubebuilder:validation:Required
+
 	AuthMode *string `json:"authMode"`
 	// The default settings to use to create a user profile when UserSettings isn't
 	// specified in the call to the CreateUserProfile API.
@@ -45,21 +49,30 @@ type DomainSpec struct {
 	// SecurityGroups is aggregated when specified in both calls. For all other
 	// settings in UserSettings, the values specified in CreateUserProfile take
 	// precedence over those specified in CreateDomain.
+
 	// +kubebuilder:validation:Required
+
 	DefaultUserSettings *UserSettings `json:"defaultUserSettings"`
 	// A name for the domain.
+
 	// +kubebuilder:validation:Required
+
 	DomainName *string `json:"domainName"`
 	// A collection of Domain settings.
+
 	DomainSettings *DomainSettings `json:"domainSettings,omitempty"`
 	// Use KmsKeyId.
+
 	HomeEFSFileSystemKMSKeyID *string `json:"homeEFSFileSystemKMSKeyID,omitempty"`
 	// SageMaker uses Amazon Web Services KMS to encrypt EFS and EBS volumes attached
 	// to the domain with an Amazon Web Services managed key by default. For more
 	// control, specify a customer managed key.
+
 	KMSKeyID *string `json:"kmsKeyID,omitempty"`
 	// The VPC subnets that the domain uses for communication.
+
 	// +kubebuilder:validation:Required
+
 	SubnetIDs []*string `json:"subnetIDs"`
 	// Tags to associated with the Domain. Each tag consists of a key and an optional
 	// value. Tag keys must be unique per resource. Tags are searchable using the
@@ -67,10 +80,13 @@ type DomainSpec struct {
 	//
 	// Tags that you specify for the Domain are also added to all Apps that the
 	// Domain launches.
+
 	Tags []*Tag `json:"tags,omitempty"`
 	// The ID of the Amazon Virtual Private Cloud (VPC) that the domain uses for
 	// communication.
+
 	// +kubebuilder:validation:Required
+
 	VPCID *string `json:"vpcID"`
 }
 
@@ -81,7 +97,7 @@ type DomainStatus struct {
 	// constructed ARN for the resource
 	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
-	// All CRS managed by ACK have a common `Status.Conditions` member that
+	// All CRs managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource

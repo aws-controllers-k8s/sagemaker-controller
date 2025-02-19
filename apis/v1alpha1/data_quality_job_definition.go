@@ -24,31 +24,47 @@ import (
 type DataQualityJobDefinitionSpec struct {
 
 	// Specifies the container that runs the monitoring job.
+
 	// +kubebuilder:validation:Required
+
 	DataQualityAppSpecification *DataQualityAppSpecification `json:"dataQualityAppSpecification"`
 	// Configures the constraints and baselines for the monitoring job.
+
 	DataQualityBaselineConfig *DataQualityBaselineConfig `json:"dataQualityBaselineConfig,omitempty"`
 	// A list of inputs for the monitoring job. Currently endpoints are supported
 	// as monitoring inputs.
+
 	// +kubebuilder:validation:Required
+
 	DataQualityJobInput *DataQualityJobInput `json:"dataQualityJobInput"`
+
 	// +kubebuilder:validation:Required
+
 	DataQualityJobOutputConfig *MonitoringOutputConfig `json:"dataQualityJobOutputConfig"`
 	// The name for the monitoring job definition.
+
 	// +kubebuilder:validation:Required
+
 	JobDefinitionName *string `json:"jobDefinitionName"`
+
 	// +kubebuilder:validation:Required
+
 	JobResources *MonitoringResources `json:"jobResources"`
 	// Specifies networking configuration for the monitoring job.
+
 	NetworkConfig *MonitoringNetworkConfig `json:"networkConfig,omitempty"`
 	// The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
 	// to perform tasks on your behalf.
+
 	// +kubebuilder:validation:Required
-	RoleARN           *string                      `json:"roleARN"`
+
+	RoleARN *string `json:"roleARN"`
+
 	StoppingCondition *MonitoringStoppingCondition `json:"stoppingCondition,omitempty"`
 	// (Optional) An array of key-value pairs. For more information, see Using Cost
 	// Allocation Tags (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html#allocation-whatURL)
 	// in the Amazon Web Services Billing and Cost Management User Guide.
+
 	Tags []*Tag `json:"tags,omitempty"`
 }
 
@@ -59,7 +75,7 @@ type DataQualityJobDefinitionStatus struct {
 	// constructed ARN for the resource
 	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
-	// All CRS managed by ACK have a common `Status.Conditions` member that
+	// All CRs managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource

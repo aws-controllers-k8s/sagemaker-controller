@@ -25,31 +25,47 @@ type ModelExplainabilityJobDefinitionSpec struct {
 
 	// The name of the model explainability job definition. The name must be unique
 	// within an Amazon Web Services Region in the Amazon Web Services account.
+
 	// +kubebuilder:validation:Required
+
 	JobDefinitionName *string `json:"jobDefinitionName"`
+
 	// +kubebuilder:validation:Required
+
 	JobResources *MonitoringResources `json:"jobResources"`
 	// Configures the model explainability job to run a specified Docker container
 	// image.
+
 	// +kubebuilder:validation:Required
+
 	ModelExplainabilityAppSpecification *ModelExplainabilityAppSpecification `json:"modelExplainabilityAppSpecification"`
 	// The baseline configuration for a model explainability job.
+
 	ModelExplainabilityBaselineConfig *ModelExplainabilityBaselineConfig `json:"modelExplainabilityBaselineConfig,omitempty"`
 	// Inputs for the model explainability job.
+
 	// +kubebuilder:validation:Required
+
 	ModelExplainabilityJobInput *ModelExplainabilityJobInput `json:"modelExplainabilityJobInput"`
+
 	// +kubebuilder:validation:Required
+
 	ModelExplainabilityJobOutputConfig *MonitoringOutputConfig `json:"modelExplainabilityJobOutputConfig"`
 	// Networking options for a model explainability job.
+
 	NetworkConfig *MonitoringNetworkConfig `json:"networkConfig,omitempty"`
 	// The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
 	// to perform tasks on your behalf.
+
 	// +kubebuilder:validation:Required
-	RoleARN           *string                      `json:"roleARN"`
+
+	RoleARN *string `json:"roleARN"`
+
 	StoppingCondition *MonitoringStoppingCondition `json:"stoppingCondition,omitempty"`
 	// (Optional) An array of key-value pairs. For more information, see Using Cost
 	// Allocation Tags (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html#allocation-whatURL)
 	// in the Amazon Web Services Billing and Cost Management User Guide.
+
 	Tags []*Tag `json:"tags,omitempty"`
 }
 
@@ -60,7 +76,7 @@ type ModelExplainabilityJobDefinitionStatus struct {
 	// constructed ARN for the resource
 	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
-	// All CRS managed by ACK have a common `Status.Conditions` member that
+	// All CRs managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource

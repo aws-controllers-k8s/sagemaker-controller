@@ -38,6 +38,7 @@ type TransformJobSpec struct {
 	//
 	// To fit as many records in a mini-batch as can fit within the MaxPayloadInMB
 	// limit, set BatchStrategy to MultiRecord and SplitType to Line.
+
 	BatchStrategy *string `json:"batchStrategy,omitempty"`
 	// The data structure used to specify the data to be used for inference in a
 	// batch transform job and to associate the data that is relevant to the prediction
@@ -46,12 +47,15 @@ type TransformJobSpec struct {
 	// filter provided allows you to include input data relevant to interpreting
 	// the predictions in the output from the job. For more information, see Associate
 	// Prediction Results with their Corresponding Input Records (https://docs.aws.amazon.com/sagemaker/latest/dg/batch-transform-data-processing.html).
+
 	DataProcessing *DataProcessing `json:"dataProcessing,omitempty"`
 	// The environment variables to set in the Docker container. Don't include any
 	// sensitive data in your environment variables. We support up to 16 key and
 	// values entries in the map.
-	Environment      map[string]*string `json:"environment,omitempty"`
-	ExperimentConfig *ExperimentConfig  `json:"experimentConfig,omitempty"`
+
+	Environment map[string]*string `json:"environment,omitempty"`
+
+	ExperimentConfig *ExperimentConfig `json:"experimentConfig,omitempty"`
 	// The maximum number of parallel requests that can be sent to each instance
 	// in a transform job. If MaxConcurrentTransforms is set to 0 or left unset,
 	// Amazon SageMaker checks the optional execution-parameters to determine the
@@ -59,6 +63,7 @@ type TransformJobSpec struct {
 	// is not enabled, the default value is 1. For more information on execution-parameters,
 	// see How Containers Serve Requests (https://docs.aws.amazon.com/sagemaker/latest/dg/your-algorithms-batch-code.html#your-algorithms-batch-code-how-containe-serves-requests).
 	// For built-in algorithms, you don't need to set a value for MaxConcurrentTransforms.
+
 	MaxConcurrentTransforms *int64 `json:"maxConcurrentTransforms,omitempty"`
 	// The maximum allowed size of the payload, in MB. A payload is the data portion
 	// of a record (without metadata). The value in MaxPayloadInMB must be greater
@@ -75,32 +80,45 @@ type TransformJobSpec struct {
 	// using HTTP chunked encoding, set the value to 0. This feature works only
 	// in supported algorithms. Currently, Amazon SageMaker built-in algorithms
 	// do not support HTTP chunked encoding.
+
 	MaxPayloadInMB *int64 `json:"maxPayloadInMB,omitempty"`
 	// Configures the timeout and maximum number of retries for processing a transform
 	// job invocation.
+
 	ModelClientConfig *ModelClientConfig `json:"modelClientConfig,omitempty"`
 	// The name of the model that you want to use for the transform job. ModelName
 	// must be the name of an existing Amazon SageMaker model within an Amazon Web
 	// Services Region in an Amazon Web Services account.
+
 	// +kubebuilder:validation:Required
+
 	ModelName *string `json:"modelName"`
 	// (Optional) An array of key-value pairs. For more information, see Using Cost
 	// Allocation Tags (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html#allocation-what)
 	// in the Amazon Web Services Billing and Cost Management User Guide.
+
 	Tags []*Tag `json:"tags,omitempty"`
 	// Describes the input source and the way the transform job consumes it.
+
 	// +kubebuilder:validation:Required
+
 	TransformInput *TransformInput `json:"transformInput"`
 	// The name of the transform job. The name must be unique within an Amazon Web
 	// Services Region in an Amazon Web Services account.
+
 	// +kubebuilder:validation:Required
+
 	TransformJobName *string `json:"transformJobName"`
 	// Describes the results of the transform job.
+
 	// +kubebuilder:validation:Required
+
 	TransformOutput *TransformOutput `json:"transformOutput"`
 	// Describes the resources, including ML instance types and ML instance count,
 	// to use for the transform job.
+
 	// +kubebuilder:validation:Required
+
 	TransformResources *TransformResources `json:"transformResources"`
 }
 
@@ -111,7 +129,7 @@ type TransformJobStatus struct {
 	// constructed ARN for the resource
 	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
-	// All CRS managed by ACK have a common `Status.Conditions` member that
+	// All CRs managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource

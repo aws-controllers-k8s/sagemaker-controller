@@ -24,22 +24,31 @@ import (
 type InferenceComponentSpec struct {
 
 	// The name of an existing endpoint where you host the inference component.
+
 	// +kubebuilder:validation:Required
+
 	EndpointName *string `json:"endpointName,omitempty"`
 	// A unique name to assign to the inference component.
+
 	// +kubebuilder:validation:Required
+
 	InferenceComponentName *string `json:"inferenceComponentName"`
 	// Runtime settings for a model that is deployed with an inference component.
+
 	RuntimeConfig *InferenceComponentRuntimeConfig `json:"runtimeConfig,omitempty"`
 	// Details about the resources to deploy with this inference component, including
 	// the model, container, and compute resources.
+
 	// +kubebuilder:validation:Required
+
 	Specification *InferenceComponentSpecification `json:"specification"`
 	// A list of key-value pairs associated with the model. For more information,
 	// see Tagging Amazon Web Services resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html)
 	// in the Amazon Web Services General Reference.
+
 	Tags []*Tag `json:"tags,omitempty"`
 	// The name of an existing production variant where you host the inference component.
+
 	VariantName *string `json:"variantName,omitempty"`
 }
 
@@ -50,7 +59,7 @@ type InferenceComponentStatus struct {
 	// constructed ARN for the resource
 	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
-	// All CRS managed by ACK have a common `Status.Conditions` member that
+	// All CRs managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource

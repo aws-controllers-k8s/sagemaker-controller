@@ -26,13 +26,17 @@ import (
 type ModelPackageGroupSpec struct {
 
 	// A description for the model group.
+
 	ModelPackageGroupDescription *string `json:"modelPackageGroupDescription,omitempty"`
 	// The name of the model group.
+
 	// +kubebuilder:validation:Required
+
 	ModelPackageGroupName *string `json:"modelPackageGroupName"`
 	// A list of key value pairs associated with the model group. For more information,
 	// see Tagging Amazon Web Services resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html)
 	// in the Amazon Web Services General Reference Guide.
+
 	Tags []*Tag `json:"tags,omitempty"`
 }
 
@@ -43,7 +47,7 @@ type ModelPackageGroupStatus struct {
 	// constructed ARN for the resource
 	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
-	// All CRS managed by ACK have a common `Status.Conditions` member that
+	// All CRs managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource

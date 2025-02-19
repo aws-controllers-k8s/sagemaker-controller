@@ -27,18 +27,23 @@ type EndpointSpec struct {
 	DeploymentConfig *DeploymentConfig `json:"deploymentConfig,omitempty"`
 	// The name of an endpoint configuration. For more information, see CreateEndpointConfig
 	// (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateEndpointConfig.html).
+
 	// +kubebuilder:validation:Required
+
 	EndpointConfigName *string `json:"endpointConfigName"`
 	// The name of the endpoint.The name must be unique within an Amazon Web Services
 	// Region in your Amazon Web Services account. The name is case-insensitive
 	// in CreateEndpoint, but the case is preserved and must be matched in InvokeEndpoint
 	// (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpoint.html).
+
 	// +kubebuilder:validation:Required
+
 	EndpointName *string `json:"endpointName"`
 	// An array of key-value pairs. You can use tags to categorize your Amazon Web
 	// Services resources in different ways, for example, by purpose, owner, or
 	// environment. For more information, see Tagging Amazon Web Services Resources
 	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+
 	Tags []*Tag `json:"tags,omitempty"`
 }
 
@@ -49,7 +54,7 @@ type EndpointStatus struct {
 	// constructed ARN for the resource
 	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
-	// All CRS managed by ACK have a common `Status.Conditions` member that
+	// All CRs managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource

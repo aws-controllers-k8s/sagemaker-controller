@@ -29,39 +29,48 @@ type ModelPackageSpec struct {
 	// Specification specifies artifacts based on this model package that can be
 	// used on inference endpoints. Generally used with SageMaker Neo to store the
 	// compiled artifacts.
+
 	AdditionalInferenceSpecifications []*AdditionalInferenceSpecificationDefinition `json:"additionalInferenceSpecifications,omitempty"`
 	// A description for the approval status of the model.
+
 	ApprovalDescription *string `json:"approvalDescription,omitempty"`
 	// Whether to certify the model package for listing on Amazon Web Services Marketplace.
 	//
 	// This parameter is optional for unversioned models, and does not apply to
 	// versioned models.
+
 	CertifyForMarketplace *bool `json:"certifyForMarketplace,omitempty"`
 	// A unique token that guarantees that the call to this API is idempotent.
+
 	ClientToken *string `json:"clientToken,omitempty"`
 	// The metadata properties associated with the model package versions.
+
 	CustomerMetadataProperties map[string]*string `json:"customerMetadataProperties,omitempty"`
 	// The machine learning domain of your model package and its components. Common
 	// machine learning domains include computer vision and natural language processing.
+
 	Domain *string `json:"domain,omitempty"`
 	// Represents the drift check baselines that can be used when the model monitor
 	// is set using the model package. For more information, see the topic on Drift
 	// Detection against Previous Baselines in SageMaker Pipelines (https://docs.aws.amazon.com/sagemaker/latest/dg/pipelines-quality-clarify-baseline-lifecycle.html#pipelines-quality-clarify-baseline-drift-detection)
 	// in the Amazon SageMaker Developer Guide.
+
 	DriftCheckBaselines *DriftCheckBaselines `json:"driftCheckBaselines,omitempty"`
 	// Specifies details about inference jobs that you can run with models based
 	// on this model package, including the following information:
 	//
-	//   - The Amazon ECR paths of containers that contain the inference code and
-	//     model artifacts.
+	//    * The Amazon ECR paths of containers that contain the inference code and
+	//    model artifacts.
 	//
-	//   - The instance types that the model package supports for transform jobs
-	//     and real-time endpoints used for inference.
+	//    * The instance types that the model package supports for transform jobs
+	//    and real-time endpoints used for inference.
 	//
-	//   - The input and output content formats that the model package supports
-	//     for inference.
+	//    * The input and output content formats that the model package supports
+	//    for inference.
+
 	InferenceSpecification *InferenceSpecification `json:"inferenceSpecification,omitempty"`
-	MetadataProperties     *MetadataProperties     `json:"metadataProperties,omitempty"`
+
+	MetadataProperties *MetadataProperties `json:"metadataProperties,omitempty"`
 	// Whether the model is approved for deployment.
 	//
 	// This parameter is optional for versioned models, and does not apply to unversioned
@@ -69,22 +78,27 @@ type ModelPackageSpec struct {
 	//
 	// For versioned models, the value of this parameter must be set to Approved
 	// to deploy the model.
+
 	ModelApprovalStatus *string `json:"modelApprovalStatus,omitempty"`
 	// A structure that contains model metrics reports.
+
 	ModelMetrics *ModelMetrics `json:"modelMetrics,omitempty"`
 	// A description of the model package.
+
 	ModelPackageDescription *string `json:"modelPackageDescription,omitempty"`
 	// The name or Amazon Resource Name (ARN) of the model package group that this
 	// model version belongs to.
 	//
 	// This parameter is required for versioned models, and does not apply to unversioned
 	// models.
+
 	ModelPackageGroupName *string `json:"modelPackageGroupName,omitempty"`
 	// The name of the model package. The name must have 1 to 63 characters. Valid
 	// characters are a-z, A-Z, 0-9, and - (hyphen).
 	//
 	// This parameter is required for unversioned models. It is not applicable to
 	// versioned models.
+
 	ModelPackageName *string `json:"modelPackageName,omitempty"`
 	// The Amazon Simple Storage Service (Amazon S3) path where the sample payload
 	// is stored. This path must point to a single gzip compressed tar archive (.tar.gz
@@ -92,10 +106,13 @@ type ModelPackageSpec struct {
 	// the load test. Each file in the archive must satisfy the size constraints
 	// of the InvokeEndpoint (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpoint.html#API_runtime_InvokeEndpoint_RequestSyntax)
 	// call.
+
 	SamplePayloadURL *string `json:"samplePayloadURL,omitempty"`
 	// Indicates if you want to skip model validation.
+
 	SkipModelValidation *string `json:"skipModelValidation,omitempty"`
 	// Details about the algorithm that was used to create the model package.
+
 	SourceAlgorithmSpecification *SourceAlgorithmSpecification `json:"sourceAlgorithmSpecification,omitempty"`
 	// A list of key value pairs associated with the model. For more information,
 	// see Tagging Amazon Web Services resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html)
@@ -104,6 +121,7 @@ type ModelPackageSpec struct {
 	// If you supply ModelPackageGroupName, your model package belongs to the model
 	// group you specify and uses the tags associated with the model group. In this
 	// case, you cannot supply a tag argument.
+
 	Tags []*Tag `json:"tags,omitempty"`
 	// The machine learning task your model package accomplishes. Common machine
 	// learning tasks include object detection and image classification. The following
@@ -112,9 +130,11 @@ type ModelPackageSpec struct {
 	// | "REGRESSION" | "OTHER".
 	//
 	// Specify "OTHER" if none of the tasks listed fit your use case.
+
 	Task *string `json:"task,omitempty"`
 	// Specifies configurations for one or more transform jobs that SageMaker runs
 	// to test the model package.
+
 	ValidationSpecification *ModelPackageValidationSpecification `json:"validationSpecification,omitempty"`
 }
 
@@ -125,7 +145,7 @@ type ModelPackageStatus struct {
 	// constructed ARN for the resource
 	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
-	// All CRS managed by ACK have a common `Status.Conditions` member that
+	// All CRs managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource

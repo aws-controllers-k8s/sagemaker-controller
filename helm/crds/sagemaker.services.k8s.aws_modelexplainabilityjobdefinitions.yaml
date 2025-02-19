@@ -42,9 +42,6 @@ spec:
               state of ModelExplainabilityJobDefinition.
             properties:
               jobDefinitionName:
-                description: |-
-                  The name of the model explainability job definition. The name must be unique
-                  within an Amazon Web Services Region in the Amazon Web Services account.
                 type: string
               jobResources:
                 description: Identifies the resources to deploy for a monitoring job.
@@ -67,8 +64,8 @@ spec:
                 type: object
               modelExplainabilityAppSpecification:
                 description: |-
-                  Configures the model explainability job to run a specified Docker container
-                  image.
+                  Docker container image configuration object for the model explainability
+                  job.
                 properties:
                   configURI:
                     type: string
@@ -80,7 +77,7 @@ spec:
                     type: string
                 type: object
               modelExplainabilityBaselineConfig:
-                description: The baseline configuration for a model explainability
+                description: The configuration for a baseline model explainability
                   job.
                 properties:
                   baseliningJobName:
@@ -147,7 +144,7 @@ spec:
                     type: array
                 type: object
               networkConfig:
-                description: Networking options for a model explainability job.
+                description: The networking configuration for the monitoring job.
                 properties:
                   enableInterContainerTrafficEncryption:
                     type: boolean
@@ -171,9 +168,6 @@ spec:
                     type: object
                 type: object
               roleARN:
-                description: |-
-                  The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
-                  to perform tasks on your behalf.
                 type: string
               stoppingCondition:
                 description: A time limit for how long the monitoring job is allowed
@@ -184,10 +178,6 @@ spec:
                     type: integer
                 type: object
               tags:
-                description: |-
-                  (Optional) An array of key-value pairs. For more information, see Using Cost
-                  Allocation Tags (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html#allocation-whatURL)
-                  in the Amazon Web Services Billing and Cost Management User Guide.
                 items:
                   description: |-
                     A tag object that consists of a key and an optional value, used to manage
@@ -253,7 +243,7 @@ spec:
                 type: object
               conditions:
                 description: |-
-                  All CRS managed by ACK have a common `Status.Conditions` member that
+                  All CRs managed by ACK have a common `Status.Conditions` member that
                   contains a collection of `ackv1alpha1.Condition` objects that describe
                   the various terminal states of the CR and its backend AWS service API
                   resource

@@ -52,19 +52,6 @@ spec:
               Use Batch Transform (https://docs.aws.amazon.com/sagemaker/latest/dg/batch-transform.html).
             properties:
               batchStrategy:
-                description: |-
-                  Specifies the number of records to include in a mini-batch for an HTTP inference
-                  request. A record is a single unit of input data that inference can be made
-                  on. For example, a single line in a CSV file is a record.
-
-                  To enable the batch strategy, you must set the SplitType property to Line,
-                  RecordIO, or TFRecord.
-
-                  To use only one record when making an HTTP invocation request to a container,
-                  set BatchStrategy to SingleRecord and SplitType to Line.
-
-                  To fit as many records in a mini-batch as can fit within the MaxPayloadInMB
-                  limit, set BatchStrategy to MultiRecord and SplitType to Line.
                 type: string
               dataProcessing:
                 description: |-
@@ -86,10 +73,6 @@ spec:
               environment:
                 additionalProperties:
                   type: string
-                description: |-
-                  The environment variables to set in the Docker container. Don't include any
-                  sensitive data in your environment variables. We support up to 16 key and
-                  values entries in the map.
                 type: object
               experimentConfig:
                 description: |-
@@ -110,33 +93,9 @@ spec:
                     type: string
                 type: object
               maxConcurrentTransforms:
-                description: |-
-                  The maximum number of parallel requests that can be sent to each instance
-                  in a transform job. If MaxConcurrentTransforms is set to 0 or left unset,
-                  Amazon SageMaker checks the optional execution-parameters to determine the
-                  settings for your chosen algorithm. If the execution-parameters endpoint
-                  is not enabled, the default value is 1. For more information on execution-parameters,
-                  see How Containers Serve Requests (https://docs.aws.amazon.com/sagemaker/latest/dg/your-algorithms-batch-code.html#your-algorithms-batch-code-how-containe-serves-requests).
-                  For built-in algorithms, you don't need to set a value for MaxConcurrentTransforms.
                 format: int64
                 type: integer
               maxPayloadInMB:
-                description: |-
-                  The maximum allowed size of the payload, in MB. A payload is the data portion
-                  of a record (without metadata). The value in MaxPayloadInMB must be greater
-                  than, or equal to, the size of a single record. To estimate the size of a
-                  record in MB, divide the size of your dataset by the number of records. To
-                  ensure that the records fit within the maximum payload size, we recommend
-                  using a slightly larger value. The default value is 6 MB.
-
-                  The value of MaxPayloadInMB cannot be greater than 100 MB. If you specify
-                  the MaxConcurrentTransforms parameter, the value of (MaxConcurrentTransforms
-                  * MaxPayloadInMB) also cannot exceed 100 MB.
-
-                  For cases where the payload might be arbitrarily large and is transmitted
-                  using HTTP chunked encoding, set the value to 0. This feature works only
-                  in supported algorithms. Currently, Amazon SageMaker built-in algorithms
-                  do not support HTTP chunked encoding.
                 format: int64
                 type: integer
               modelClientConfig:
@@ -152,16 +111,8 @@ spec:
                     type: integer
                 type: object
               modelName:
-                description: |-
-                  The name of the model that you want to use for the transform job. ModelName
-                  must be the name of an existing Amazon SageMaker model within an Amazon Web
-                  Services Region in an Amazon Web Services account.
                 type: string
               tags:
-                description: |-
-                  (Optional) An array of key-value pairs. For more information, see Using Cost
-                  Allocation Tags (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html#allocation-what)
-                  in the Amazon Web Services Billing and Cost Management User Guide.
                 items:
                   description: |-
                     A tag object that consists of a key and an optional value, used to manage
@@ -185,8 +136,9 @@ spec:
                   type: object
                 type: array
               transformInput:
-                description: Describes the input source and the way the transform
-                  job consumes it.
+                description: |-
+                  Describes the input source of a transform job and the way the transform job
+                  consumes it.
                 properties:
                   compressionType:
                     type: string
@@ -208,12 +160,9 @@ spec:
                     type: string
                 type: object
               transformJobName:
-                description: |-
-                  The name of the transform job. The name must be unique within an Amazon Web
-                  Services Region in an Amazon Web Services account.
                 type: string
               transformOutput:
-                description: Describes the results of the transform job.
+                description: Describes the results of a transform job.
                 properties:
                   accept:
                     type: string
@@ -227,7 +176,7 @@ spec:
               transformResources:
                 description: |-
                   Describes the resources, including ML instance types and ML instance count,
-                  to use for the transform job.
+                  to use for transform job.
                 properties:
                   instanceCount:
                     format: int64
@@ -278,7 +227,7 @@ spec:
                 type: object
               conditions:
                 description: |-
-                  All CRS managed by ACK have a common `Status.Conditions` member that
+                  All CRs managed by ACK have a common `Status.Conditions` member that
                   contains a collection of `ackv1alpha1.Condition` objects that describe
                   the various terminal states of the CR and its backend AWS service API
                   resource

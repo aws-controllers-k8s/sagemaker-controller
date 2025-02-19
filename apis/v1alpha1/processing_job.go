@@ -27,38 +27,53 @@ import (
 type ProcessingJobSpec struct {
 
 	// Configures the processing job to run a specified Docker container image.
+
 	// +kubebuilder:validation:Required
+
 	AppSpecification *AppSpecification `json:"appSpecification"`
 	// The environment variables to set in the Docker container. Up to 100 key and
 	// values entries in the map are supported.
-	Environment      map[string]*string `json:"environment,omitempty"`
-	ExperimentConfig *ExperimentConfig  `json:"experimentConfig,omitempty"`
+
+	Environment map[string]*string `json:"environment,omitempty"`
+
+	ExperimentConfig *ExperimentConfig `json:"experimentConfig,omitempty"`
 	// Networking options for a processing job, such as whether to allow inbound
 	// and outbound network calls to and from processing containers, and the VPC
 	// subnets and security groups to use for VPC-enabled processing jobs.
+
 	NetworkConfig *NetworkConfig `json:"networkConfig,omitempty"`
 	// An array of inputs configuring the data to download into the processing container.
+
 	ProcessingInputs []*ProcessingInput `json:"processingInputs,omitempty"`
 	// The name of the processing job. The name must be unique within an Amazon
 	// Web Services Region in the Amazon Web Services account.
+
 	// +kubebuilder:validation:Required
+
 	ProcessingJobName *string `json:"processingJobName"`
 	// Output configuration for the processing job.
+
 	ProcessingOutputConfig *ProcessingOutputConfig `json:"processingOutputConfig,omitempty"`
 	// Identifies the resources, ML compute instances, and ML storage volumes to
 	// deploy for a processing job. In distributed training, you specify more than
 	// one instance.
+
 	// +kubebuilder:validation:Required
+
 	ProcessingResources *ProcessingResources `json:"processingResources"`
 	// The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
 	// to perform tasks on your behalf.
+
 	// +kubebuilder:validation:Required
+
 	RoleARN *string `json:"roleARN"`
 	// The time limit for how long the processing job is allowed to run.
+
 	StoppingCondition *ProcessingStoppingCondition `json:"stoppingCondition,omitempty"`
 	// (Optional) An array of key-value pairs. For more information, see Using Cost
 	// Allocation Tags (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html#allocation-whatURL)
 	// in the Amazon Web Services Billing and Cost Management User Guide.
+
 	Tags []*Tag `json:"tags,omitempty"`
 }
 
@@ -69,7 +84,7 @@ type ProcessingJobStatus struct {
 	// constructed ARN for the resource
 	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
-	// All CRS managed by ACK have a common `Status.Conditions` member that
+	// All CRs managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource

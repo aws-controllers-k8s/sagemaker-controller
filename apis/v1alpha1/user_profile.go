@@ -24,29 +24,37 @@ import (
 type UserProfileSpec struct {
 
 	// The ID of the associated Domain.
+
 	// +kubebuilder:validation:Required
+
 	DomainID *string `json:"domainID"`
 	// A specifier for the type of value specified in SingleSignOnUserValue. Currently,
 	// the only supported value is "UserName". If the Domain's AuthMode is IAM Identity
 	// Center, this field is required. If the Domain's AuthMode is not IAM Identity
 	// Center, this field cannot be specified.
+
 	SingleSignOnUserIdentifier *string `json:"singleSignOnUserIdentifier,omitempty"`
 	// The username of the associated Amazon Web Services Single Sign-On User for
 	// this UserProfile. If the Domain's AuthMode is IAM Identity Center, this field
 	// is required, and must match a valid username of a user in your directory.
 	// If the Domain's AuthMode is not IAM Identity Center, this field cannot be
 	// specified.
+
 	SingleSignOnUserValue *string `json:"singleSignOnUserValue,omitempty"`
 	// Each tag consists of a key and an optional value. Tag keys must be unique
 	// per resource.
 	//
 	// Tags that you specify for the User Profile are also added to all Apps that
 	// the User Profile launches.
+
 	Tags []*Tag `json:"tags,omitempty"`
 	// A name for the UserProfile. This value is not case sensitive.
+
 	// +kubebuilder:validation:Required
+
 	UserProfileName *string `json:"userProfileName"`
 	// A collection of settings.
+
 	UserSettings *UserSettings `json:"userSettings,omitempty"`
 }
 
@@ -57,7 +65,7 @@ type UserProfileStatus struct {
 	// constructed ARN for the resource
 	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
-	// All CRS managed by ACK have a common `Status.Conditions` member that
+	// All CRs managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource

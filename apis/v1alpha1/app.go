@@ -24,13 +24,19 @@ import (
 type AppSpec struct {
 
 	// The name of the app.
+
 	// +kubebuilder:validation:Required
+
 	AppName *string `json:"appName"`
 	// The type of app.
+
 	// +kubebuilder:validation:Required
+
 	AppType *string `json:"appType"`
 	// The domain ID.
+
 	// +kubebuilder:validation:Required
+
 	DomainID *string `json:"domainID"`
 	// The instance type and the Amazon Resource Name (ARN) of the SageMaker image
 	// created on the instance.
@@ -40,11 +46,14 @@ type AppSpec struct {
 	// the user profile or the domain. If InstanceType is not specified in any of
 	// those three ResourceSpec values for a KernelGateway app, the CreateApp call
 	// fails with a request validation error.
+
 	ResourceSpec *ResourceSpec `json:"resourceSpec,omitempty"`
 	// Each tag consists of a key and an optional value. Tag keys must be unique
 	// per resource.
+
 	Tags []*Tag `json:"tags,omitempty"`
 	// The user profile name. If this value is not set, then SpaceName must be set.
+
 	UserProfileName *string `json:"userProfileName,omitempty"`
 }
 
@@ -55,7 +64,7 @@ type AppStatus struct {
 	// constructed ARN for the resource
 	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
-	// All CRS managed by ACK have a common `Status.Conditions` member that
+	// All CRs managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource

@@ -44,30 +44,12 @@ spec:
             description: UserProfileSpec defines the desired state of UserProfile.
             properties:
               domainID:
-                description: The ID of the associated Domain.
                 type: string
               singleSignOnUserIdentifier:
-                description: |-
-                  A specifier for the type of value specified in SingleSignOnUserValue. Currently,
-                  the only supported value is "UserName". If the Domain's AuthMode is IAM Identity
-                  Center, this field is required. If the Domain's AuthMode is not IAM Identity
-                  Center, this field cannot be specified.
                 type: string
               singleSignOnUserValue:
-                description: |-
-                  The username of the associated Amazon Web Services Single Sign-On User for
-                  this UserProfile. If the Domain's AuthMode is IAM Identity Center, this field
-                  is required, and must match a valid username of a user in your directory.
-                  If the Domain's AuthMode is not IAM Identity Center, this field cannot be
-                  specified.
                 type: string
               tags:
-                description: |-
-                  Each tag consists of a key and an optional value. Tag keys must be unique
-                  per resource.
-
-                  Tags that you specify for the User Profile are also added to all Apps that
-                  the User Profile launches.
                 items:
                   description: |-
                     A tag object that consists of a key and an optional value, used to manage
@@ -91,10 +73,16 @@ spec:
                   type: object
                 type: array
               userProfileName:
-                description: A name for the UserProfile. This value is not case sensitive.
                 type: string
               userSettings:
-                description: A collection of settings.
+                description: |-
+                  A collection of settings that apply to users in a domain. These settings
+                  are specified when the CreateUserProfile API is called, and as DefaultUserSettings
+                  when the CreateDomain API is called.
+
+                  SecurityGroups is aggregated when specified in both calls. For all other
+                  settings in UserSettings, the values specified in CreateUserProfile take
+                  precedence over those specified in CreateDomain.
                 properties:
                   codeEditorAppSettings:
                     description: |-
@@ -365,7 +353,7 @@ spec:
                 type: object
               conditions:
                 description: |-
-                  All CRS managed by ACK have a common `Status.Conditions` member that
+                  All CRs managed by ACK have a common `Status.Conditions` member that
                   contains a collection of `ackv1alpha1.Condition` objects that describe
                   the various terminal states of the CR and its backend AWS service API
                   resource
