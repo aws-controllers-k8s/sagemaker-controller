@@ -90,3 +90,5 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )
+
+replace github.com/aws-controllers-k8s/runtime => github.com/michaelhtm/ack-runtime v0.42.1-0.20250220221620-5f0b3445785e
