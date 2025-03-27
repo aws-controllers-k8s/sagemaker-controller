@@ -30,69 +30,38 @@ var (
 	ACKSystemTags = []string{"services.k8s.aws/namespace", "services.k8s.aws/controller-version"}
 )
 
-// ToACKTags converts the tags parameter into 'acktags.Tags' shape.
+// convertToOrderedACKTags converts the tags parameter into 'acktags.Tags' shape.
 // This method helps in creating the hub(acktags.Tags) for merging
-// default controller tags with existing resource tags.
-func ToACKTags(tags []*svcapitypes.Tag) acktags.Tags {
+// default controller tags with existing resource tags. It also returns a slice
+// of keys maintaining the original key Order when the tags are a list
+func convertToOrderedACKTags(tags []*svcapitypes.Tag) (acktags.Tags, []string) {
 	result := acktags.NewTags()
-	if tags == nil || len(tags) == 0 {
-		return result
-	}
+	keyOrder := []string{}
 
+	if len(tags) == 0 {
+		return result, keyOrder
+	}
 	for _, t := range tags {
 		if t.Key != nil {
-			if t.Value == nil {
-				result[*t.Key] = ""
-			} else {
+			keyOrder = append(keyOrder, *t.Key)
+			if t.Value != nil {
 				result[*t.Key] = *t.Value
+			} else {
+				result[*t.Key] = ""
 			}
 		}
 	}
 
-	return result
-}
-
-// toACKTagsWithKeyOrder converts the tags parameter into 'acktags.Tags' shape.
-// This method helps in creating the hub(acktags.Tags) for merging
-// default controller tags with existing resource tags. It also returns a slice
-// of keys maintaining the original key Order when the tags are a list
-func toACKTagsWithKeyOrder(tags []*svcapitypes.Tag) (acktags.Tags, []string) {
-	result := acktags.NewTags()
-	keyOrder := []string{}
-	if tags == nil || len(tags) == 0 {
-		return result, keyOrder
-	}
-
-	for _, t := range tags {
-		if t.Key != nil {
-			keyOrder = append(keyOrder, *t.Key)
-		}
-	}
-	result = ToACKTags(tags)
-
 	return result, keyOrder
 }
 
-// FromACKTags converts the tags parameter into []*svcapitypes.Tag shape.
-// This method helps in setting the tags back inside AWSResource after merging
-// default controller tags with existing resource tags.
-func FromACKTags(tags acktags.Tags) []*svcapitypes.Tag {
-	result := []*svcapitypes.Tag{}
-	for k, v := range tags {
-		kCopy := k
-		vCopy := v
-		tag := svcapitypes.Tag{Key: &kCopy, Value: &vCopy}
-		result = append(result, &tag)
-	}
-	return result
-}
-
-// fromACKTagsWithTagKeys converts the tags parameter into []*svcapitypes.Tag shape.
+// fromACKTags converts the tags parameter into []*svcapitypes.Tag shape.
 // This method helps in setting the tags back inside AWSResource after merging
 // default controller tags with existing resource tags. When a list,
 // it maintains the order from original
-func fromACKTagsWithKeyOrder(tags acktags.Tags, keyOrder []string) []*svcapitypes.Tag {
+func fromACKTags(tags acktags.Tags, keyOrder []string) []*svcapitypes.Tag {
 	result := []*svcapitypes.Tag{}
+
 	for _, k := range keyOrder {
 		v, ok := tags[k]
 		if ok {
@@ -101,7 +70,11 @@ func fromACKTagsWithKeyOrder(tags acktags.Tags, keyOrder []string) []*svcapitype
 			delete(tags, k)
 		}
 	}
-	result = append(result, FromACKTags(tags)...)
+	for k, v := range tags {
+		tag := svcapitypes.Tag{Key: &k, Value: &v}
+		result = append(result, &tag)
+	}
+
 	return result
 }
 
