@@ -129,7 +129,7 @@ resources:
         compare:
           is_ignored: true
   Endpoint:
-    reconcile: 
+    reconcile:
       requeue_on_success_seconds: 30
     update_conditions_custom_method_name: CustomUpdateConditions
     exceptions:
@@ -199,7 +199,7 @@ resources:
         compare:
           is_ignored: true
   TrainingJob:
-    reconcile: 
+    reconcile:
       requeue_on_success_seconds: 300
     exceptions:
       errors:
@@ -272,7 +272,7 @@ resources:
           path: WarmPoolStatus
       ProfilingStatus:
         is_read_only: true
-        from: 
+        from:
           operation: DescribeTrainingJob
           path: ProfilingStatus
       LastModifiedTime:
@@ -348,7 +348,7 @@ resources:
           priority: 1
         from:
           operation: DescribeProcessingJob
-          path: FailureReason      
+          path: FailureReason
       Tags:
         compare:
           is_ignored: true
@@ -391,10 +391,10 @@ resources:
           path: FailureReason
       TransformInput.SplitType:
         late_initialize:
-          min_backoff_seconds: 5   
-      TransformInput.CompressionType: 
+          min_backoff_seconds: 5
+      TransformInput.CompressionType:
         late_initialize:
-          min_backoff_seconds: 5  
+          min_backoff_seconds: 5
       Tags:
         compare:
           is_ignored: true
@@ -543,7 +543,7 @@ resources:
         compare:
           is_ignored: true
   MonitoringSchedule:
-    reconcile: 
+    reconcile:
       requeue_on_success_seconds: 30
     update_conditions_custom_method_name: CustomUpdateConditions
     exceptions:
@@ -642,7 +642,7 @@ resources:
           name: STATUS
         from:
           operation: DescribeModelPackage
-          path: ModelPackageStatus 
+          path: ModelPackageStatus
       CreationTime:
         is_read_only: true
         from:
@@ -719,7 +719,7 @@ resources:
   NotebookInstance:
     # Resource state/status can be modified in Sagemaker Console
     # Need to reconcile to catch these state/status changes
-    reconcile: 
+    reconcile:
       requeue_on_success_seconds: 60
     exceptions:
       errors:
@@ -731,7 +731,7 @@ resources:
         - InvalidParameterValue
         - MissingParameter
     hooks:
-      sdk_read_one_post_set_output: 
+      sdk_read_one_post_set_output:
         template_path: notebook_instance/sdk_read_one_post_set_output.go.tpl
       delta_pre_compare:
         code: customSetDefaults(a, b)
@@ -779,7 +779,7 @@ resources:
           is_ignored: true
       VolumeSizeInGB:
         late_initialize:
-          min_backoff_seconds: 5        
+          min_backoff_seconds: 5
   ModelPackageGroup:
       exceptions:
         errors:
@@ -790,7 +790,7 @@ resources:
           - InvalidParameterCombination
           - InvalidParameterValue
           - MissingParameter
-          - ConflictException   
+          - ConflictException
       fields:
         ModelPackageGroupStatus:
           is_read_only: true
@@ -798,13 +798,13 @@ resources:
             name: STATUS
           from:
             operation: DescribeModelPackageGroup
-            path: ModelPackageGroupStatus    
+            path: ModelPackageGroupStatus
         Tags:
           compare:
-            is_ignored: true       
+            is_ignored: true
       hooks:
         sdk_read_one_post_set_output:
-          code: rm.customSetOutput(&resource{ko})  
+          code: rm.customSetOutput(&resource{ko})
         sdk_delete_pre_build_request:
           template_path: common/sdk_delete_pre_build_request.go.tpl
         sdk_delete_post_request:
@@ -845,7 +845,7 @@ resources:
       # Custom code is implemented for these fields delta comparison
       OnCreate:
         compare:
-          is_ignored: true  
+          is_ignored: true
       OnStart:
         compare:
           is_ignored: true
@@ -861,7 +861,7 @@ resources:
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
-    hooks: 
+    hooks:
       sdk_create_post_set_output:
         template_path: domain/sdk_create_post_set_output.go.tpl
       sdk_read_one_post_set_output:
@@ -886,7 +886,7 @@ resources:
           name: STATUS
         from:
           operation: DescribeDomain
-          path: Status 
+          path: Status
       AppNetworkAccessType:
         late_initialize:
           min_backoff_seconds: 5
@@ -901,7 +901,7 @@ resources:
           min_backoff_seconds: 5
       Tags:
         compare:
-          is_ignored: true   
+          is_ignored: true
   UserProfile:
     exceptions:
       errors:
@@ -912,7 +912,7 @@ resources:
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
-    hooks: 
+    hooks:
       sdk_read_one_post_set_output:
         code: rm.customDescribeUserProfileSetOutput(ko)
       sdk_update_pre_build_request:
@@ -934,7 +934,7 @@ resources:
           min_backoff_seconds: 5
       Tags:
         compare:
-          is_ignored: true  
+          is_ignored: true
   App:
     exceptions:
       errors:
@@ -945,7 +945,7 @@ resources:
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
-    hooks: 
+    hooks:
       sdk_read_one_post_set_output:
         code: rm.customDescribeAppSetOutput(ko)
       sdk_delete_pre_build_request:
@@ -959,7 +959,7 @@ resources:
           name: STATUS
         from:
           operation: DescribeApp
-          path: Status 
+          path: Status
       ResourceSpec:
         late_initialize:
           min_backoff_seconds: 5
@@ -1001,7 +1001,7 @@ resources:
   PipelineExecution:
     # Resource state/status can have automatic retry-policy
     # Need to reconcile to catch these state/status changes
-    reconcile: 
+    reconcile:
       requeue_on_success_seconds: 60
     hooks:
       sdk_read_one_pre_set_output:
@@ -1085,7 +1085,7 @@ ignore:
       - Image
       - ImageVersion
       - InferenceExperiment
-      - LabelingJob
+      # - LabelingJob
       # - Model
       - MlflowTrackingServer
       - ModelCard
@@ -1171,5 +1171,3 @@ ignore:
       - ModelPackageContainerDefinition.ModelDataSource
       - S3ModelDataSource.HubAccessConfig
       - S3ModelDataSource.ManifestS3Uri
-
-      

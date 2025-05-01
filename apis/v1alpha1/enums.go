@@ -1542,15 +1542,15 @@ const (
 	JoinSource_None  JoinSource = "None"
 )
 
-type LabelingJobStatus string
+type LabelingJobStatus_SDK string
 
 const (
-	LabelingJobStatus_Completed    LabelingJobStatus = "Completed"
-	LabelingJobStatus_Failed       LabelingJobStatus = "Failed"
-	LabelingJobStatus_InProgress   LabelingJobStatus = "InProgress"
-	LabelingJobStatus_Initializing LabelingJobStatus = "Initializing"
-	LabelingJobStatus_Stopped      LabelingJobStatus = "Stopped"
-	LabelingJobStatus_Stopping     LabelingJobStatus = "Stopping"
+	LabelingJobStatus_SDK_Completed    LabelingJobStatus_SDK = "Completed"
+	LabelingJobStatus_SDK_Failed       LabelingJobStatus_SDK = "Failed"
+	LabelingJobStatus_SDK_InProgress   LabelingJobStatus_SDK = "InProgress"
+	LabelingJobStatus_SDK_Initializing LabelingJobStatus_SDK = "Initializing"
+	LabelingJobStatus_SDK_Stopped      LabelingJobStatus_SDK = "Stopped"
+	LabelingJobStatus_SDK_Stopping     LabelingJobStatus_SDK = "Stopping"
 )
 
 type LastUpdateStatusValue string
