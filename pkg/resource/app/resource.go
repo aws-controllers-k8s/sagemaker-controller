@@ -16,6 +16,8 @@
 package app
 
 import (
+	"fmt"
+
 	ackv1alpha1 "github.com/aws-controllers-k8s/runtime/apis/core/v1alpha1"
 	ackerrors "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	acktypes "github.com/aws-controllers-k8s/runtime/pkg/types"
@@ -111,7 +113,7 @@ func (r *resource) SetIdentifiers(identifier *ackv1alpha1.AWSIdentifiers) error 
 func (r *resource) PopulateResourceFromAnnotation(fields map[string]string) error {
 	tmp, ok := fields["appName"]
 	if !ok {
-		return ackerrors.MissingNameIdentifier
+		return ackerrors.NewTerminalError(fmt.Errorf("required field missing: appName"))
 	}
 	r.ko.Spec.AppName = &tmp
 
