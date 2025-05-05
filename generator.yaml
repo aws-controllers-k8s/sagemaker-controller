@@ -1085,7 +1085,7 @@ ignore:
       - Image
       - ImageVersion
       - InferenceExperiment
-      # - LabelingJob
+      - LabelingJob
       # - Model
       - MlflowTrackingServer
       - ModelCard
