@@ -626,9 +626,29 @@ func (rm *resourceManager) sdkDelete(
 	defer func() {
 		exit(err)
 	}()
-	// TODO(jaypipes): Figure this out...
-	return nil, nil
+	input, err := rm.newDeleteRequestPayload(r)
+	if err != nil {
+		return nil, err
+	}
+	var resp *svcsdk.StopLabelingJobOutput
+	_ = resp
+	resp, err = rm.sdkapi.StopLabelingJob(ctx, input)
+	rm.metrics.RecordAPICall("DELETE", "StopLabelingJob", err)
+	return nil, err
+}
 
+// newDeleteRequestPayload returns an SDK-specific struct for the HTTP request
+// payload of the Delete API call for the resource
+func (rm *resourceManager) newDeleteRequestPayload(
+	r *resource,
+) (*svcsdk.StopLabelingJobInput, error) {
+	res := &svcsdk.StopLabelingJobInput{}
+
+	if r.ko.Spec.LabelingJobName != nil {
+		res.LabelingJobName = r.ko.Spec.LabelingJobName
+	}
+
+	return res, nil
 }
 
 // setStatusDefaults sets default properties into supplied custom resource
