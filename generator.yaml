@@ -1,27 +1,27 @@
 operations:
-  StopTrainingJob:
+  DescribeModelPackage:
+    custom_check_required_fields_missing_method: customCheckRequiredFieldsMissingMethod
+  StartPipelineExecution:
+    operation_type: Create
+    resource_name: PipelineExecution
+  StopHyperParameterTuningJob:
     operation_type: Delete
-    resource_name: TrainingJob
+    resource_name: HyperParameterTuningJob
+  StopPipelineExecution:
+    operation_type: Delete
+    resource_name: PipelineExecution
   StopProcessingJob:
     operation_type: Delete
     resource_name: ProcessingJob
+  StopTrainingJob:
+    operation_type: Delete
+    resource_name: TrainingJob
   StopTransformJob:
     operation_type: Delete
     resource_name: TransformJob
   UpdateEndpoint:
     override_values:
       RetainAllVariantProperties: aws.Bool(true)
-  DescribeModelPackage:
-    custom_check_required_fields_missing_method: customCheckRequiredFieldsMissingMethod
-  StopHyperParameterTuningJob:
-    operation_type: Delete
-    resource_name: HyperParameterTuningJob
-  StartPipelineExecution:
-    operation_type: Create
-    resource_name: PipelineExecution
-  StopPipelineExecution:
-    operation_type: Delete
-    resource_name: PipelineExecution
 resources:
   App:
     exceptions:
