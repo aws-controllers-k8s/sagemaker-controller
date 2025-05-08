@@ -394,17 +394,19 @@ resources:
         compare:
           is_ignored: true
   LabelingJob:
-    # exceptions:
-    #   errors:
-    #       404:
-    #         code: ValidationException
-    #         message_prefix: Could not find requested job
-    #   terminal_codes:
-    #     - ResourceNotFound
-    #     - ResourceInUse
-    #     - InvalidParameterCombination
-    #     - InvalidParameterValue
-    #     - MissingParameter
+    # reconcile:
+    #   requeue_on_success_seconds: 30
+    exceptions:
+      errors:
+          404:
+            code: ValidationException
+            message_prefix: Could not find requested job
+      terminal_codes:
+        - ResourceNotFound
+        - ResourceInUse
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
     # hooks:
     #   delta_pre_compare:
     #     code: customSetDefaults(a, b)
