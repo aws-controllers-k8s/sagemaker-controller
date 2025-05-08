@@ -394,26 +394,23 @@ resources:
         compare:
           is_ignored: true
   LabelingJob:
-    # reconcile:
-    #   requeue_on_success_seconds: 30
     exceptions:
       errors:
-          404:
-            code: ValidationException
-            message_prefix: Could not find requested job
+        404:
+          code: ValidationException
       terminal_codes:
         - ResourceNotFound
         - ResourceInUse
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
-    # hooks:
+    hooks:
     #   delta_pre_compare:
     #     code: customSetDefaults(a, b)
     #   sdk_read_one_post_set_output:
     #     code: rm.customSetOutput(&resource{ko})
     #   sdk_delete_pre_build_request:
-    #     template_path: processing_job/sdk_delete_pre_build_request.go.tpl
+    #     template_path: labeling_job/sdk_delete_pre_build_request.go.tpl
     #   sdk_delete_post_request:
     #     template_path: common/sdk_delete_post_request.go.tpl
     fields:

@@ -81,7 +81,7 @@ func (rm *resourceManager) sdkFind(
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeLabelingJob", err)
 	if err != nil {
 		var awsErr smithy.APIError
-		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ValidationException" && strings.HasPrefix(awsErr.ErrorMessage(), "Could not find requested job") {
+		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ValidationException" {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
