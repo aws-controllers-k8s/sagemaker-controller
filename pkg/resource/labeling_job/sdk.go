@@ -91,6 +91,11 @@ func (rm *resourceManager) sdkFind(
 	// the original Kubernetes object we passed to the function
 	ko := r.ko.DeepCopy()
 
+	if resp.FailureReason != nil {
+		ko.Status.FailureReason = resp.FailureReason
+	} else {
+		ko.Status.FailureReason = nil
+	}
 	if resp.HumanTaskConfig != nil {
 		f2 := &svcapitypes.HumanTaskConfig{}
 		if resp.HumanTaskConfig.AnnotationConsolidationConfig != nil {
@@ -252,6 +257,11 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.LabelingJobName = resp.LabelingJobName
 	} else {
 		ko.Spec.LabelingJobName = nil
+	}
+	if resp.LabelingJobStatus != "" {
+		ko.Status.LabelingJobStatus = aws.String(string(resp.LabelingJobStatus))
+	} else {
+		ko.Status.LabelingJobStatus = nil
 	}
 	if resp.OutputConfig != nil {
 		f14 := &svcapitypes.LabelingJobOutputConfig{}

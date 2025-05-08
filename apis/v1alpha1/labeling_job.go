@@ -163,11 +163,19 @@ type LabelingJobStatus struct {
 	// resource
 	// +kubebuilder:validation:Optional
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	// If the job failed, the reason that it failed.
+	// +kubebuilder:validation:Optional
+	FailureReason *string `json:"failureReason,omitempty"`
+	// The processing status of the labeling job.
+	// +kubebuilder:validation:Optional
+	LabelingJobStatus *string `json:"labelingJobStatus,omitempty"`
 }
 
 // LabelingJob is the Schema for the LabelingJobs API
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="FAILURE-REASON",type=string,priority=1,JSONPath=`.status.failureReason`
+// +kubebuilder:printcolumn:name="STATUS",type=string,priority=0,JSONPath=`.status.labelingJobStatus`
 type LabelingJob struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

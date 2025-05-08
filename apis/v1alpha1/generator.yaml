@@ -393,7 +393,46 @@ resources:
       Tags:
         compare:
           is_ignored: true
-  # LabelingJob:
+  LabelingJob:
+    # exceptions:
+    #   errors:
+    #       404:
+    #         code: ValidationException
+    #         message_prefix: Could not find requested job
+    #   terminal_codes:
+    #     - ResourceNotFound
+    #     - ResourceInUse
+    #     - InvalidParameterCombination
+    #     - InvalidParameterValue
+    #     - MissingParameter
+    # hooks:
+    #   delta_pre_compare:
+    #     code: customSetDefaults(a, b)
+    #   sdk_read_one_post_set_output:
+    #     code: rm.customSetOutput(&resource{ko})
+    #   sdk_delete_pre_build_request:
+    #     template_path: processing_job/sdk_delete_pre_build_request.go.tpl
+    #   sdk_delete_post_request:
+    #     template_path: common/sdk_delete_post_request.go.tpl
+    fields:
+      LabelingJobStatus:
+        is_read_only: true
+        print:
+          name: STATUS
+        from:
+          operation: DescribeLabelingJob
+          path: LabelingJobStatus
+      FailureReason:
+        is_read_only: true
+        print:
+          name: FAILURE-REASON
+          priority: 1
+        from:
+          operation: DescribeLabelingJob
+          path: FailureReason
+      Tags:
+        compare:
+          is_ignored: true
   Model:
     hooks:
       delta_pre_compare:
