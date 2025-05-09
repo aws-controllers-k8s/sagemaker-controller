@@ -404,15 +404,15 @@ resources:
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
-    # hooks:
+    hooks:
     #   delta_pre_compare:
     #     code: customSetDefaults(a, b)
-    #   sdk_read_one_post_set_output:
-    #     code: rm.customSetOutput(&resource{ko})
-    #   sdk_delete_pre_build_request:
-    #     template_path: processing_job/sdk_delete_pre_build_request.go.tpl
-    #   sdk_delete_post_request:
-    #     template_path: common/sdk_delete_post_request.go.tpl
+      sdk_read_one_post_set_output:
+        code: rm.customSetOutput(&resource{ko})
+      sdk_delete_pre_build_request:
+        template_path: labeling_job/sdk_delete_pre_build_request.go.tpl
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
     fields:
       LabelingJobStatus:
         is_read_only: true

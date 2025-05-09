@@ -315,6 +315,7 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
+	rm.customSetOutput(&resource{ko})
 	return &resource{ko}, nil
 }
 
@@ -636,6 +637,19 @@ func (rm *resourceManager) sdkDelete(
 	defer func() {
 		exit(err)
 	}()
+	latestStatus := r.ko.Status.LabelingJobStatus
+	if latestStatus != nil {
+		if *latestStatus == string(svcsdktypes.LabelingJobStatusStopping) {
+			return r, requeueWaitWhileDeleting
+		}
+
+		// Call StopLabelingJob only if the job is InProgress, otherwise just
+		// return nil to mark the resource Unmanaged
+		if *latestStatus != string(svcsdktypes.LabelingJobStatusInProgress) {
+			return r, err
+		}
+	}
+
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
 		return nil, err
@@ -644,6 +658,17 @@ func (rm *resourceManager) sdkDelete(
 	_ = resp
 	resp, err = rm.sdkapi.StopLabelingJob(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "StopLabelingJob", err)
+
+	if err == nil {
+		if observed, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
+			if err != nil {
+				return nil, err
+			}
+			r.SetStatus(observed)
+			return r, requeueWaitWhileDeleting
+		}
+	}
+
 	return nil, err
 }
 
