@@ -4,7 +4,7 @@
 
 image:
   repository: public.ecr.aws/aws-controllers-k8s/sagemaker-controller
-  tag: 1.2.17
+  tag: 1.2.18
   pullPolicy: IfNotPresent
   pullSecrets: []
 
@@ -137,6 +137,34 @@ reconcile:
   # An object representing the reconcile max concurrent syncs configuration for each specific
   # resource.
   resourceMaxConcurrentSyncs: {}
+  
+  # Set the value of resources to specify which resource kinds to reconcile.
+  # If empty, all resources will be reconciled.
+  # If specified, only the listed resource kinds will be reconciled.
+  resources:
+    - App
+    - DataQualityJobDefinition
+    - Domain
+    - Endpoint
+    - EndpointConfig
+    - FeatureGroup
+    - HyperParameterTuningJob
+    - InferenceComponent
+    - Model
+    - ModelBiasJobDefinition
+    - ModelExplainabilityJobDefinition
+    - ModelPackage
+    - ModelPackageGroup
+    - ModelQualityJobDefinition
+    - MonitoringSchedule
+    - NotebookInstance
+    - NotebookInstanceLifecycleConfig
+    - Pipeline
+    - PipelineExecution
+    - ProcessingJob
+    - TrainingJob
+    - TransformJob
+    - UserProfile
 
 serviceAccount:
   # Specifies whether a service account should be created
