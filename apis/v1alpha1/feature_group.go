@@ -46,6 +46,7 @@ type FeatureGroupSpec struct {
 	//     and HH, mm, ss, and if applicable, SSS represent the hour, month, second
 	//     and milliseconds respsectively. 'T' and Z are constants.
 	//
+	// Regex Pattern: `^[a-zA-Z0-9]([-_]*[a-zA-Z0-9]){0,63}$`
 	// +kubebuilder:validation:Required
 	EventTimeFeatureName *string `json:"eventTimeFeatureName"`
 	// A list of Feature names and types. Name and Type is compulsory per Feature.
@@ -67,6 +68,7 @@ type FeatureGroupSpec struct {
 	//   - Can only include alphanumeric characters, underscores, and hyphens.
 	//     Spaces are not allowed.
 	//
+	// Regex Pattern: `^[a-zA-Z0-9]([_-]*[a-zA-Z0-9]){0,63}$`
 	// +kubebuilder:validation:Required
 	FeatureGroupName *string `json:"featureGroupName"`
 	// Use this to configure an OfflineFeatureStore. This parameter allows you to
@@ -111,10 +113,13 @@ type FeatureGroupSpec struct {
 	//   - Can only contains alphanumeric characters, hyphens, underscores. Spaces
 	//     are not allowed.
 	//
+	// Regex Pattern: `^[a-zA-Z0-9]([-_]*[a-zA-Z0-9]){0,63}$`
 	// +kubebuilder:validation:Required
 	RecordIdentifierFeatureName *string `json:"recordIdentifierFeatureName"`
 	// The Amazon Resource Name (ARN) of the IAM execution role used to persist
 	// data into the OfflineStore if an OfflineStoreConfig is provided.
+	//
+	// Regex Pattern: `^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$`
 	RoleARN *string `json:"roleARN,omitempty"`
 	// Tags used to identify Features in each FeatureGroup.
 	Tags             []*Tag            `json:"tags,omitempty"`

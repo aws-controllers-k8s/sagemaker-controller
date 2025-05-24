@@ -35,6 +35,8 @@ type EndpointConfigSpec struct {
 	// The name of the endpoint configuration. You specify this name in a CreateEndpoint
 	// (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateEndpoint.html)
 	// request.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
 	// +kubebuilder:validation:Required
 	EndpointConfigName *string `json:"endpointConfigName"`
 	// The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
@@ -43,6 +45,8 @@ type EndpointConfigSpec struct {
 	//
 	// To be able to pass this role to Amazon SageMaker, the caller of this action
 	// must have the iam:PassRole permission.
+	//
+	// Regex Pattern: `^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$`
 	ExecutionRoleARN *string `json:"executionRoleARN,omitempty"`
 	// The Amazon Resource Name (ARN) of a Amazon Web Services Key Management Service
 	// key that SageMaker uses to encrypt data on the storage volume attached to
@@ -77,6 +81,8 @@ type EndpointConfigSpec struct {
 	//
 	// For more information about local instance storage encryption, see SSD Instance
 	// Store Volumes (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ssd-instance-store.html).
+	//
+	// Regex Pattern: `^[a-zA-Z0-9:/_-]*$`
 	KMSKeyID *string `json:"kmsKeyID,omitempty"`
 	// An array of ProductionVariant objects, one for each model that you want to
 	// host at this endpoint.

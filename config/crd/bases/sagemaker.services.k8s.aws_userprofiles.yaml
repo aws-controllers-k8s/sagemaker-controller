@@ -44,7 +44,10 @@ spec:
             description: UserProfileSpec defines the desired state of UserProfile.
             properties:
               domainID:
-                description: The ID of the associated Domain.
+                description: |-
+                  The ID of the associated Domain.
+
+                  Regex Pattern: `^d-(-*[a-z0-9]){1,61}$`
                 type: string
               singleSignOnUserIdentifier:
                 description: |-
@@ -52,6 +55,8 @@ spec:
                   the only supported value is "UserName". If the Domain's AuthMode is IAM Identity
                   Center, this field is required. If the Domain's AuthMode is not IAM Identity
                   Center, this field cannot be specified.
+
+                  Regex Pattern: `^UserName$`
                 type: string
               singleSignOnUserValue:
                 description: |-
@@ -91,7 +96,10 @@ spec:
                   type: object
                 type: array
               userProfileName:
-                description: A name for the UserProfile. This value is not case sensitive.
+                description: |-
+                  A name for the UserProfile. This value is not case sensitive.
+
+                  Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
                 type: string
               userSettings:
                 description: A collection of settings.

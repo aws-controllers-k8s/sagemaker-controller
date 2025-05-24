@@ -29,10 +29,16 @@ type PipelineExecutionSpec struct {
 	// of the parent pipeline for this specific run.
 	ParallelismConfiguration *ParallelismConfiguration `json:"parallelismConfiguration,omitempty"`
 	// The description of the pipeline execution.
+	//
+	// Regex Pattern: `.*`
 	PipelineExecutionDescription *string `json:"pipelineExecutionDescription,omitempty"`
 	// The display name of the pipeline execution.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,81}$`
 	PipelineExecutionDisplayName *string `json:"pipelineExecutionDisplayName,omitempty"`
 	// The name or Amazon Resource Name (ARN) of the pipeline.
+	//
+	// Regex Pattern: `^(arn:aws[a-z\-]*:sagemaker:[a-z0-9\-]*:[0-9]{12}:pipeline/.*)?([a-zA-Z0-9](-*[a-zA-Z0-9]){0,255})$`
 	// +kubebuilder:validation:Required
 	PipelineName *string `json:"pipelineName"`
 	// Contains a list of pipeline parameters. This list can be empty.
@@ -58,6 +64,8 @@ type PipelineExecutionStatus struct {
 	// +kubebuilder:validation:Optional
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	// If the execution failed, a message describing why.
+	//
+	// Regex Pattern: `.*`
 	// +kubebuilder:validation:Optional
 	FailureReason *string `json:"failureReason,omitempty"`
 	// The time when the pipeline execution was modified last.

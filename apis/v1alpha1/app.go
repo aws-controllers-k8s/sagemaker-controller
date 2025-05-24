@@ -24,12 +24,16 @@ import (
 type AppSpec struct {
 
 	// The name of the app.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
 	// +kubebuilder:validation:Required
 	AppName *string `json:"appName"`
 	// The type of app.
 	// +kubebuilder:validation:Required
 	AppType *string `json:"appType"`
 	// The domain ID.
+	//
+	// Regex Pattern: `^d-(-*[a-z0-9]){1,61}$`
 	// +kubebuilder:validation:Required
 	DomainID *string `json:"domainID"`
 	// The instance type and the Amazon Resource Name (ARN) of the SageMaker image
@@ -45,6 +49,8 @@ type AppSpec struct {
 	// per resource.
 	Tags []*Tag `json:"tags,omitempty"`
 	// The user profile name. If this value is not set, then SpaceName must be set.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
 	UserProfileName *string `json:"userProfileName,omitempty"`
 }
 

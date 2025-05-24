@@ -59,20 +59,33 @@ spec:
                 description: |-
                   The JSON pipeline definition (https://aws-sagemaker-mlops.github.io/sagemaker-model-building-pipeline-definition-JSON-schema/)
                   of the pipeline.
+
+                  Regex Pattern: `(?:[ \r\n\t].*)*$`
                 type: string
               pipelineDescription:
-                description: A description of the pipeline.
+                description: |-
+                  A description of the pipeline.
+
+                  Regex Pattern: `.*`
                 type: string
               pipelineDisplayName:
-                description: The display name of the pipeline.
+                description: |-
+                  The display name of the pipeline.
+
+                  Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,255}$`
                 type: string
               pipelineName:
-                description: The name of the pipeline.
+                description: |-
+                  The name of the pipeline.
+
+                  Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,255}$`
                 type: string
               roleARN:
                 description: |-
                   The Amazon Resource Name (ARN) of the role used by the pipeline to access
                   and create resources.
+
+                  Regex Pattern: `^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$`
                 type: string
               tags:
                 description: A list of tags to apply to the created pipeline.

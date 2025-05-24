@@ -526,7 +526,7 @@ func (rm *resourceManager) newCreateRequestPayload(
 			}
 			if f6iter.InitialVariantWeight != nil {
 				initialVariantWeightCopy0 := *f6iter.InitialVariantWeight
-				if initialVariantWeightCopy0 > math.MaxFloat32 || initialVariantWeightCopy0 < math.SmallestNonzeroFloat32 {
+				if initialVariantWeightCopy0 > math.MaxFloat32 || initialVariantWeightCopy0 < -math.MaxFloat32 || (initialVariantWeightCopy0 < math.SmallestNonzeroFloat32 && !(initialVariantWeightCopy0 <= 0)) || (initialVariantWeightCopy0 > -math.SmallestNonzeroFloat32 && !(initialVariantWeightCopy0 >= 0)) {
 					return nil, fmt.Errorf("error: field InitialVariantWeight is of type float32")
 				}
 				initialVariantWeightCopy := float32(initialVariantWeightCopy0)

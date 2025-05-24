@@ -48,15 +48,21 @@ type DomainSpec struct {
 	// +kubebuilder:validation:Required
 	DefaultUserSettings *UserSettings `json:"defaultUserSettings"`
 	// A name for the domain.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
 	// +kubebuilder:validation:Required
 	DomainName *string `json:"domainName"`
 	// A collection of Domain settings.
 	DomainSettings *DomainSettings `json:"domainSettings,omitempty"`
 	// Use KmsKeyId.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9:/_-]*$`
 	HomeEFSFileSystemKMSKeyID *string `json:"homeEFSFileSystemKMSKeyID,omitempty"`
 	// SageMaker uses Amazon Web Services KMS to encrypt EFS and EBS volumes attached
 	// to the domain with an Amazon Web Services managed key by default. For more
 	// control, specify a customer managed key.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9:/_-]*$`
 	KMSKeyID *string `json:"kmsKeyID,omitempty"`
 	// The VPC subnets that the domain uses for communication.
 	// +kubebuilder:validation:Required
@@ -70,6 +76,8 @@ type DomainSpec struct {
 	Tags []*Tag `json:"tags,omitempty"`
 	// The ID of the Amazon Virtual Private Cloud (VPC) that the domain uses for
 	// communication.
+	//
+	// Regex Pattern: `^[-0-9a-zA-Z]+$`
 	// +kubebuilder:validation:Required
 	VPCID *string `json:"vpcID"`
 }
@@ -88,6 +96,8 @@ type DomainStatus struct {
 	// +kubebuilder:validation:Optional
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
 	// The domain ID.
+	//
+	// Regex Pattern: `^d-(-*[a-z0-9]){1,61}$`
 	// +kubebuilder:validation:Optional
 	DomainID *string `json:"domainID,omitempty"`
 	// The status.

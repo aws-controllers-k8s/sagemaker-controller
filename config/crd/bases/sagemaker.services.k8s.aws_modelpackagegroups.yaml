@@ -47,10 +47,16 @@ spec:
               A group of versioned models in the model registry.
             properties:
               modelPackageGroupDescription:
-                description: A description for the model group.
+                description: |-
+                  A description for the model group.
+
+                  Regex Pattern: `^[\p{L}\p{M}\p{Z}\p{S}\p{N}\p{P}]*$`
                 type: string
               modelPackageGroupName:
-                description: The name of the model group.
+                description: |-
+                  The name of the model group.
+
+                  Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
                 type: string
               tags:
                 description: |-

@@ -49,11 +49,16 @@ spec:
             description: InferenceComponentSpec defines the desired state of InferenceComponent.
             properties:
               endpointName:
-                description: The name of an existing endpoint where you host the inference
-                  component.
+                description: |-
+                  The name of an existing endpoint where you host the inference component.
+
+                  Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
                 type: string
               inferenceComponentName:
-                description: A unique name to assign to the inference component.
+                description: |-
+                  A unique name to assign to the inference component.
+
+                  Regex Pattern: `^[a-zA-Z0-9]([\-a-zA-Z0-9]*[a-zA-Z0-9])?$`
                 type: string
               runtimeConfig:
                 description: Runtime settings for a model that is deployed with an
@@ -141,8 +146,10 @@ spec:
                   type: object
                 type: array
               variantName:
-                description: The name of an existing production variant where you
-                  host the inference component.
+                description: |-
+                  The name of an existing production variant where you host the inference component.
+
+                  Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
                 type: string
             required:
             - endpointName
@@ -221,7 +228,10 @@ spec:
                 format: date-time
                 type: string
               endpointName:
-                description: The name of the endpoint that hosts the inference component.
+                description: |-
+                  The name of the endpoint that hosts the inference component.
+
+                  Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
                 type: string
               failureReason:
                 description: If the inference component status is Failed, the reason
@@ -235,8 +245,10 @@ spec:
                 format: date-time
                 type: string
               variantName:
-                description: The name of the production variant that hosts the inference
-                  component.
+                description: |-
+                  The name of the production variant that hosts the inference component.
+
+                  Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
                 type: string
             type: object
         type: object

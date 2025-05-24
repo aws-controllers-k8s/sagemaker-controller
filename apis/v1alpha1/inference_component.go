@@ -24,9 +24,13 @@ import (
 type InferenceComponentSpec struct {
 
 	// The name of an existing endpoint where you host the inference component.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
 	// +kubebuilder:validation:Required
 	EndpointName *string `json:"endpointName,omitempty"`
 	// A unique name to assign to the inference component.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9]([\-a-zA-Z0-9]*[a-zA-Z0-9])?$`
 	// +kubebuilder:validation:Required
 	InferenceComponentName *string `json:"inferenceComponentName"`
 	// Runtime settings for a model that is deployed with an inference component.
@@ -40,6 +44,8 @@ type InferenceComponentSpec struct {
 	// in the Amazon Web Services General Reference.
 	Tags []*Tag `json:"tags,omitempty"`
 	// The name of an existing production variant where you host the inference component.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
 	VariantName *string `json:"variantName,omitempty"`
 }
 
@@ -60,6 +66,8 @@ type InferenceComponentStatus struct {
 	// +kubebuilder:validation:Optional
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	// The name of the endpoint that hosts the inference component.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
 	// +kubebuilder:validation:Optional
 	EndpointName *string `json:"endpointName,omitempty"`
 	// If the inference component status is Failed, the reason for the failure.
@@ -72,6 +80,8 @@ type InferenceComponentStatus struct {
 	// +kubebuilder:validation:Optional
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	// The name of the production variant that hosts the inference component.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
 	// +kubebuilder:validation:Optional
 	VariantName *string `json:"variantName,omitempty"`
 }

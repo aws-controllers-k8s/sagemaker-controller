@@ -24,12 +24,16 @@ import (
 type UserProfileSpec struct {
 
 	// The ID of the associated Domain.
+	//
+	// Regex Pattern: `^d-(-*[a-z0-9]){1,61}$`
 	// +kubebuilder:validation:Required
 	DomainID *string `json:"domainID"`
 	// A specifier for the type of value specified in SingleSignOnUserValue. Currently,
 	// the only supported value is "UserName". If the Domain's AuthMode is IAM Identity
 	// Center, this field is required. If the Domain's AuthMode is not IAM Identity
 	// Center, this field cannot be specified.
+	//
+	// Regex Pattern: `^UserName$`
 	SingleSignOnUserIdentifier *string `json:"singleSignOnUserIdentifier,omitempty"`
 	// The username of the associated Amazon Web Services Single Sign-On User for
 	// this UserProfile. If the Domain's AuthMode is IAM Identity Center, this field
@@ -44,6 +48,8 @@ type UserProfileSpec struct {
 	// the User Profile launches.
 	Tags []*Tag `json:"tags,omitempty"`
 	// A name for the UserProfile. This value is not case sensitive.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
 	// +kubebuilder:validation:Required
 	UserProfileName *string `json:"userProfileName"`
 	// A collection of settings.

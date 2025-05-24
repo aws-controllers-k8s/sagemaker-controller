@@ -128,6 +128,8 @@ spec:
                   The name of the endpoint configuration. You specify this name in a CreateEndpoint
                   (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateEndpoint.html)
                   request.
+
+                  Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
                 type: string
               executionRoleARN:
                 description: |-
@@ -137,6 +139,8 @@ spec:
 
                   To be able to pass this role to Amazon SageMaker, the caller of this action
                   must have the iam:PassRole permission.
+
+                  Regex Pattern: `^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$`
                 type: string
               kmsKeyID:
                 description: |-
@@ -173,6 +177,8 @@ spec:
 
                   For more information about local instance storage encryption, see SSD Instance
                   Store Volumes (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ssd-instance-store.html).
+
+                  Regex Pattern: `^[a-zA-Z0-9:/_-]*$`
                 type: string
               productionVariants:
                 description: |-

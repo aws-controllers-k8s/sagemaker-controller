@@ -26,8 +26,12 @@ import (
 type ModelPackageGroupSpec struct {
 
 	// A description for the model group.
+	//
+	// Regex Pattern: `^[\p{L}\p{M}\p{Z}\p{S}\p{N}\p{P}]*$`
 	ModelPackageGroupDescription *string `json:"modelPackageGroupDescription,omitempty"`
 	// The name of the model group.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
 	// +kubebuilder:validation:Required
 	ModelPackageGroupName *string `json:"modelPackageGroupName"`
 	// A list of key value pairs associated with the model group. For more information,

@@ -24,6 +24,8 @@ import (
 type NotebookInstanceLifecycleConfigSpec struct {
 
 	// The name of the lifecycle configuration.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9])*$`
 	// +kubebuilder:validation:Required
 	NotebookInstanceLifecycleConfigName *string `json:"notebookInstanceLifecycleConfigName"`
 	// A shell script that runs only once, when you create a notebook instance.

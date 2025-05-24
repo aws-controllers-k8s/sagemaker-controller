@@ -63,6 +63,8 @@ type HyperParameterTuningJobSpec struct {
 	// the same Amazon Web Services account and Amazon Web Services Region. The
 	// name must have 1 to 32 characters. Valid characters are a-z, A-Z, 0-9, and
 	// : + = @ _ % - (hyphen). The name is not case sensitive.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,31}$`
 	// +kubebuilder:validation:Required
 	HyperParameterTuningJobName *string `json:"hyperParameterTuningJobName"`
 	// An array of key-value pairs. You can use tags to categorize your Amazon Web

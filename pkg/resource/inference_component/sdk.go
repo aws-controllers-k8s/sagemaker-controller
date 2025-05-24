@@ -315,7 +315,7 @@ func (rm *resourceManager) newCreateRequestPayload(
 			}
 			if r.ko.Spec.Specification.ComputeResourceRequirements.NumberOfAcceleratorDevicesRequired != nil {
 				numberOfAcceleratorDevicesRequiredCopy0 := *r.ko.Spec.Specification.ComputeResourceRequirements.NumberOfAcceleratorDevicesRequired
-				if numberOfAcceleratorDevicesRequiredCopy0 > math.MaxFloat32 || numberOfAcceleratorDevicesRequiredCopy0 < math.SmallestNonzeroFloat32 {
+				if numberOfAcceleratorDevicesRequiredCopy0 > math.MaxFloat32 || numberOfAcceleratorDevicesRequiredCopy0 < -math.MaxFloat32 || (numberOfAcceleratorDevicesRequiredCopy0 < math.SmallestNonzeroFloat32 && !(numberOfAcceleratorDevicesRequiredCopy0 <= 0)) || (numberOfAcceleratorDevicesRequiredCopy0 > -math.SmallestNonzeroFloat32 && !(numberOfAcceleratorDevicesRequiredCopy0 >= 0)) {
 					return nil, fmt.Errorf("error: field NumberOfAcceleratorDevicesRequired is of type float32")
 				}
 				numberOfAcceleratorDevicesRequiredCopy := float32(numberOfAcceleratorDevicesRequiredCopy0)
@@ -323,7 +323,7 @@ func (rm *resourceManager) newCreateRequestPayload(
 			}
 			if r.ko.Spec.Specification.ComputeResourceRequirements.NumberOfCPUCoresRequired != nil {
 				numberOfCPUCoresRequiredCopy0 := *r.ko.Spec.Specification.ComputeResourceRequirements.NumberOfCPUCoresRequired
-				if numberOfCPUCoresRequiredCopy0 > math.MaxFloat32 || numberOfCPUCoresRequiredCopy0 < math.SmallestNonzeroFloat32 {
+				if numberOfCPUCoresRequiredCopy0 > math.MaxFloat32 || numberOfCPUCoresRequiredCopy0 < -math.MaxFloat32 || (numberOfCPUCoresRequiredCopy0 < math.SmallestNonzeroFloat32 && !(numberOfCPUCoresRequiredCopy0 <= 0)) || (numberOfCPUCoresRequiredCopy0 > -math.SmallestNonzeroFloat32 && !(numberOfCPUCoresRequiredCopy0 >= 0)) {
 					return nil, fmt.Errorf("error: field NumberOfCpuCoresRequired is of type float32")
 				}
 				numberOfCPUCoresRequiredCopy := float32(numberOfCPUCoresRequiredCopy0)
@@ -488,7 +488,7 @@ func (rm *resourceManager) newUpdateRequestPayload(
 			}
 			if r.ko.Spec.Specification.ComputeResourceRequirements.NumberOfAcceleratorDevicesRequired != nil {
 				numberOfAcceleratorDevicesRequiredCopy0 := *r.ko.Spec.Specification.ComputeResourceRequirements.NumberOfAcceleratorDevicesRequired
-				if numberOfAcceleratorDevicesRequiredCopy0 > math.MaxFloat32 || numberOfAcceleratorDevicesRequiredCopy0 < math.SmallestNonzeroFloat32 {
+				if numberOfAcceleratorDevicesRequiredCopy0 > math.MaxFloat32 || numberOfAcceleratorDevicesRequiredCopy0 < -math.MaxFloat32 || (numberOfAcceleratorDevicesRequiredCopy0 < math.SmallestNonzeroFloat32 && !(numberOfAcceleratorDevicesRequiredCopy0 <= 0)) || (numberOfAcceleratorDevicesRequiredCopy0 > -math.SmallestNonzeroFloat32 && !(numberOfAcceleratorDevicesRequiredCopy0 >= 0)) {
 					return nil, fmt.Errorf("error: field NumberOfAcceleratorDevicesRequired is of type float32")
 				}
 				numberOfAcceleratorDevicesRequiredCopy := float32(numberOfAcceleratorDevicesRequiredCopy0)
@@ -496,7 +496,7 @@ func (rm *resourceManager) newUpdateRequestPayload(
 			}
 			if r.ko.Spec.Specification.ComputeResourceRequirements.NumberOfCPUCoresRequired != nil {
 				numberOfCPUCoresRequiredCopy0 := *r.ko.Spec.Specification.ComputeResourceRequirements.NumberOfCPUCoresRequired
-				if numberOfCPUCoresRequiredCopy0 > math.MaxFloat32 || numberOfCPUCoresRequiredCopy0 < math.SmallestNonzeroFloat32 {
+				if numberOfCPUCoresRequiredCopy0 > math.MaxFloat32 || numberOfCPUCoresRequiredCopy0 < -math.MaxFloat32 || (numberOfCPUCoresRequiredCopy0 < math.SmallestNonzeroFloat32 && !(numberOfCPUCoresRequiredCopy0 <= 0)) || (numberOfCPUCoresRequiredCopy0 > -math.SmallestNonzeroFloat32 && !(numberOfCPUCoresRequiredCopy0 >= 0)) {
 					return nil, fmt.Errorf("error: field NumberOfCpuCoresRequired is of type float32")
 				}
 				numberOfCPUCoresRequiredCopy := float32(numberOfCPUCoresRequiredCopy0)

@@ -27,12 +27,16 @@ type EndpointSpec struct {
 	DeploymentConfig *DeploymentConfig `json:"deploymentConfig,omitempty"`
 	// The name of an endpoint configuration. For more information, see CreateEndpointConfig
 	// (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateEndpointConfig.html).
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
 	// +kubebuilder:validation:Required
 	EndpointConfigName *string `json:"endpointConfigName"`
 	// The name of the endpoint.The name must be unique within an Amazon Web Services
 	// Region in your Amazon Web Services account. The name is case-insensitive
 	// in CreateEndpoint, but the case is preserved and must be matched in InvokeEndpoint
 	// (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpoint.html).
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
 	// +kubebuilder:validation:Required
 	EndpointName *string `json:"endpointName"`
 	// An array of key-value pairs. You can use tags to categorize your Amazon Web
