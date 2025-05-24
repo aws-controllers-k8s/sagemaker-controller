@@ -139,6 +139,8 @@ type TrainingJobSpec struct {
 	//
 	// To be able to pass this role to SageMaker, the caller of this API must have
 	// the iam:PassRole permission.
+	//
+	// Regex Pattern: `^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$`
 	// +kubebuilder:validation:Required
 	RoleARN *string `json:"roleARN"`
 	// Specifies a limit to how long a model training job can run. It also specifies
@@ -159,6 +161,8 @@ type TrainingJobSpec struct {
 	TensorBoardOutputConfig *TensorBoardOutputConfig `json:"tensorBoardOutputConfig,omitempty"`
 	// The name of the training job. The name must be unique within an Amazon Web
 	// Services Region in an Amazon Web Services account.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
 	// +kubebuilder:validation:Required
 	TrainingJobName *string `json:"trainingJobName"`
 	// A VpcConfig (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_VpcConfig.html)

@@ -60,13 +60,22 @@ spec:
                     type: integer
                 type: object
               pipelineExecutionDescription:
-                description: The description of the pipeline execution.
+                description: |-
+                  The description of the pipeline execution.
+
+                  Regex Pattern: `.*`
                 type: string
               pipelineExecutionDisplayName:
-                description: The display name of the pipeline execution.
+                description: |-
+                  The display name of the pipeline execution.
+
+                  Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,81}$`
                 type: string
               pipelineName:
-                description: The name or Amazon Resource Name (ARN) of the pipeline.
+                description: |-
+                  The name or Amazon Resource Name (ARN) of the pipeline.
+
+                  Regex Pattern: `^(arn:aws[a-z\-]*:sagemaker:[a-z0-9\-]*:[0-9]{12}:pipeline/.*)?([a-zA-Z0-9](-*[a-zA-Z0-9]){0,255})$`
                 type: string
               pipelineParameters:
                 description: Contains a list of pipeline parameters. This list can
@@ -170,7 +179,10 @@ spec:
                 format: date-time
                 type: string
               failureReason:
-                description: If the execution failed, a message describing why.
+                description: |-
+                  If the execution failed, a message describing why.
+
+                  Regex Pattern: `.*`
                 type: string
               lastModifiedTime:
                 description: The time when the pipeline execution was modified last.

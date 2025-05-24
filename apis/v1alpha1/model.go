@@ -38,10 +38,14 @@ type ModelSpec struct {
 	//
 	// To be able to pass this role to SageMaker, the caller of this API must have
 	// the iam:PassRole permission.
+	//
+	// Regex Pattern: `^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$`
 	ExecutionRoleARN *string `json:"executionRoleARN,omitempty"`
 	// Specifies details of how containers in a multi-container endpoint are called.
 	InferenceExecutionConfig *InferenceExecutionConfig `json:"inferenceExecutionConfig,omitempty"`
 	// The name of the new model.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9]([\-a-zA-Z0-9]*[a-zA-Z0-9])?$`
 	// +kubebuilder:validation:Required
 	ModelName *string `json:"modelName"`
 	// The location of the primary docker image containing inference code, associated

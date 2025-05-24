@@ -25,6 +25,8 @@ type ModelBiasJobDefinitionSpec struct {
 
 	// The name of the bias job definition. The name must be unique within an Amazon
 	// Web Services Region in the Amazon Web Services account.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
 	// +kubebuilder:validation:Required
 	JobDefinitionName *string `json:"jobDefinitionName"`
 	// +kubebuilder:validation:Required
@@ -43,6 +45,8 @@ type ModelBiasJobDefinitionSpec struct {
 	NetworkConfig *MonitoringNetworkConfig `json:"networkConfig,omitempty"`
 	// The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
 	// to perform tasks on your behalf.
+	//
+	// Regex Pattern: `^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$`
 	// +kubebuilder:validation:Required
 	RoleARN           *string                      `json:"roleARN"`
 	StoppingCondition *MonitoringStoppingCondition `json:"stoppingCondition,omitempty"`
