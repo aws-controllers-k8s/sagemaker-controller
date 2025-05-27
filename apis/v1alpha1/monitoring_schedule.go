@@ -32,6 +32,8 @@ type MonitoringScheduleSpec struct {
 	MonitoringScheduleConfig *MonitoringScheduleConfig `json:"monitoringScheduleConfig"`
 	// The name of the monitoring schedule. The name must be unique within an Amazon
 	// Web Services Region within an Amazon Web Services account.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
 	// +kubebuilder:validation:Required
 	MonitoringScheduleName *string `json:"monitoringScheduleName"`
 	// (Optional) An array of key-value pairs. For more information, see Using Cost

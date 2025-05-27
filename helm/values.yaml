@@ -150,6 +150,7 @@ reconcile:
     - FeatureGroup
     - HyperParameterTuningJob
     - InferenceComponent
+    - LabelingJob
     - Model
     - ModelBiasJobDefinition
     - ModelExplainabilityJobDefinition

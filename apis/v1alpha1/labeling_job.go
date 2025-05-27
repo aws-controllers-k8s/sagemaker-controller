@@ -73,6 +73,8 @@ type LabelingJobSpec struct {
 	// job. The original labeling job is the Ground Truth labeling job that produced
 	// the labels that you want verified or adjusted. To learn more about adjustment
 	// and verification labeling jobs, see Verify and Adjust Labels (https://docs.aws.amazon.com/sagemaker/latest/dg/sms-verification-data.html).
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,126}$`
 	// +kubebuilder:validation:Required
 	LabelAttributeName *string `json:"labelAttributeName"`
 	// The S3 URI of the file, referred to as a label category configuration file,
@@ -121,6 +123,8 @@ type LabelingJobSpec struct {
 	//     labeling job, you must include auditLabelAttributeName in the label category
 	//     configuration. Use this parameter to enter the LabelAttributeName (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateLabelingJob.html#sagemaker-CreateLabelingJob-request-LabelAttributeName)
 	//     of the labeling job you want to adjust or verify annotations of.
+	//
+	// Regex Pattern: `^(https|s3)://([^/]+)/?(.*)$`
 	LabelCategoryConfigS3URI *string `json:"labelCategoryConfigS3URI,omitempty"`
 	// Configures the information required to perform automated data labeling.
 	LabelingJobAlgorithmsConfig *LabelingJobAlgorithmsConfig `json:"labelingJobAlgorithmsConfig,omitempty"`
@@ -129,6 +133,8 @@ type LabelingJobSpec struct {
 	// Web Services account and region. LabelingJobName is not case sensitive. For
 	// example, Example-job and example-job are considered the same labeling job
 	// name by Ground Truth.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
 	// +kubebuilder:validation:Required
 	LabelingJobName *string `json:"labelingJobName"`
 	// The location of the output data and the Amazon Web Services Key Management
@@ -138,6 +144,8 @@ type LabelingJobSpec struct {
 	// The Amazon Resource Number (ARN) that Amazon SageMaker assumes to perform
 	// tasks on your behalf during data labeling. You must grant this role the necessary
 	// permissions so that Amazon SageMaker can successfully complete data labeling.
+	//
+	// Regex Pattern: `^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$`
 	// +kubebuilder:validation:Required
 	RoleARN *string `json:"roleARN"`
 	// A set of conditions for stopping the labeling job. If any of the conditions

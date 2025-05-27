@@ -308,7 +308,10 @@ spec:
                     type: object
                 type: object
               domainName:
-                description: A name for the domain.
+                description: |-
+                  A name for the domain.
+
+                  Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
                 type: string
               domainSettings:
                 description: A collection of Domain settings.
@@ -358,13 +361,18 @@ spec:
                     type: array
                 type: object
               homeEFSFileSystemKMSKeyID:
-                description: Use KmsKeyId.
+                description: |-
+                  Use KmsKeyId.
+
+                  Regex Pattern: `^[a-zA-Z0-9:/_-]*$`
                 type: string
               kmsKeyID:
                 description: |-
                   SageMaker uses Amazon Web Services KMS to encrypt EFS and EBS volumes attached
                   to the domain with an Amazon Web Services managed key by default. For more
                   control, specify a customer managed key.
+
+                  Regex Pattern: `^[a-zA-Z0-9:/_-]*$`
                 type: string
               subnetIDs:
                 description: The VPC subnets that the domain uses for communication.
@@ -405,6 +413,8 @@ spec:
                 description: |-
                   The ID of the Amazon Virtual Private Cloud (VPC) that the domain uses for
                   communication.
+
+                  Regex Pattern: `^[-0-9a-zA-Z]+$`
                 type: string
             required:
             - authMode
@@ -481,7 +491,10 @@ spec:
                   type: object
                 type: array
               domainID:
-                description: The domain ID.
+                description: |-
+                  The domain ID.
+
+                  Regex Pattern: `^d-(-*[a-z0-9]){1,61}$`
                 type: string
               status:
                 description: The status.

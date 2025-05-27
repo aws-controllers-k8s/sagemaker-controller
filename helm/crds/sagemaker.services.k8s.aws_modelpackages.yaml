@@ -126,7 +126,10 @@ spec:
                   type: object
                 type: array
               approvalDescription:
-                description: A description for the approval status of the model.
+                description: |-
+                  A description for the approval status of the model.
+
+                  Regex Pattern: `.*`
                 type: string
               certifyForMarketplace:
                 description: |-
@@ -136,8 +139,10 @@ spec:
                   versioned models.
                 type: boolean
               clientToken:
-                description: A unique token that guarantees that the call to this
-                  API is idempotent.
+                description: |-
+                  A unique token that guarantees that the call to this API is idempotent.
+
+                  Regex Pattern: `^[a-zA-Z0-9-]+$`
                 type: string
               customerMetadataProperties:
                 additionalProperties:
@@ -471,7 +476,10 @@ spec:
                     type: object
                 type: object
               modelPackageDescription:
-                description: A description of the model package.
+                description: |-
+                  A description of the model package.
+
+                  Regex Pattern: `^[\p{L}\p{M}\p{Z}\p{S}\p{N}\p{P}]*$`
                 type: string
               modelPackageGroupName:
                 description: |-
@@ -480,6 +488,8 @@ spec:
 
                   This parameter is required for versioned models, and does not apply to unversioned
                   models.
+
+                  Regex Pattern: `^(arn:aws[a-z\-]*:sagemaker:[a-z0-9\-]*:[0-9]{12}:[a-z\-]*\/)?([a-zA-Z0-9]([a-zA-Z0-9-]){0,62})(?<!-)$`
                 type: string
               modelPackageName:
                 description: |-
@@ -488,6 +498,8 @@ spec:
 
                   This parameter is required for unversioned models. It is not applicable to
                   versioned models.
+
+                  Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
                 type: string
               samplePayloadURL:
                 description: |-
@@ -497,6 +509,8 @@ spec:
                   the load test. Each file in the archive must satisfy the size constraints
                   of the InvokeEndpoint (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpoint.html#API_runtime_InvokeEndpoint_RequestSyntax)
                   call.
+
+                  Regex Pattern: `^(https|s3)://([^/]+)/?(.*)$`
                 type: string
               skipModelValidation:
                 description: Indicates if you want to skip model validation.

@@ -41,6 +41,8 @@ type ProcessingJobSpec struct {
 	ProcessingInputs []*ProcessingInput `json:"processingInputs,omitempty"`
 	// The name of the processing job. The name must be unique within an Amazon
 	// Web Services Region in the Amazon Web Services account.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
 	// +kubebuilder:validation:Required
 	ProcessingJobName *string `json:"processingJobName"`
 	// Output configuration for the processing job.
@@ -52,6 +54,8 @@ type ProcessingJobSpec struct {
 	ProcessingResources *ProcessingResources `json:"processingResources"`
 	// The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
 	// to perform tasks on your behalf.
+	//
+	// Regex Pattern: `^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$`
 	// +kubebuilder:validation:Required
 	RoleARN *string `json:"roleARN"`
 	// The time limit for how long the processing job is allowed to run.
