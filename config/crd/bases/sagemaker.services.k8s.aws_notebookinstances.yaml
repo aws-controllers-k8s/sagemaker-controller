@@ -78,6 +78,8 @@ spec:
                   in any other Git repository. When you open a notebook instance, it opens
                   in the directory that contains this repository. For more information, see
                   Associating Git Repositories with SageMaker Notebook Instances (https://docs.aws.amazon.com/sagemaker/latest/dg/nbi-git-repo.html).
+
+                  Regex Pattern: `^https://([^/]+)/?(.*)$|^[a-zA-Z0-9](-*[a-zA-Z0-9])*$`
                 type: string
               directInternetAccess:
                 description: |-
@@ -102,19 +104,28 @@ spec:
                   your notebook instance. The KMS key you provide must be enabled. For information,
                   see Enabling and Disabling Keys (https://docs.aws.amazon.com/kms/latest/developerguide/enabling-keys.html)
                   in the Amazon Web Services Key Management Service Developer Guide.
+
+                  Regex Pattern: `^[a-zA-Z0-9:/_-]*$`
                 type: string
               lifecycleConfigName:
                 description: |-
                   The name of a lifecycle configuration to associate with the notebook instance.
                   For information about lifestyle configurations, see Step 2.1: (Optional)
                   Customize a Notebook Instance (https://docs.aws.amazon.com/sagemaker/latest/dg/notebook-lifecycle-config.html).
+
+                  Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9])*$`
                 type: string
               notebookInstanceName:
-                description: The name of the new notebook instance.
+                description: |-
+                  The name of the new notebook instance.
+
+                  Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9])*$`
                 type: string
               platformIdentifier:
-                description: The platform identifier of the notebook instance runtime
-                  environment.
+                description: |-
+                  The platform identifier of the notebook instance runtime environment.
+
+                  Regex Pattern: `^(notebook-al1-v1|notebook-al2-v1|notebook-al2-v2|notebook-al2-v3)$`
                 type: string
               roleARN:
                 description: |-
@@ -127,6 +138,8 @@ spec:
 
                   To be able to pass this role to SageMaker, the caller of this API must have
                   the iam:PassRole permission.
+
+                  Regex Pattern: `^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$`
                 type: string
               rootAccess:
                 description: |-
@@ -149,6 +162,8 @@ spec:
                 description: |-
                   The ID of the subnet in a VPC to which you would like to have a connectivity
                   from your ML compute instance.
+
+                  Regex Pattern: `^[-0-9a-zA-Z]+$`
                 type: string
               tags:
                 description: |-

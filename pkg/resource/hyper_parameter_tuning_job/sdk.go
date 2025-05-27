@@ -1163,7 +1163,7 @@ func (rm *resourceManager) newCreateRequestPayload(
 			f1f5 := &svcsdktypes.TuningJobCompletionCriteria{}
 			if r.ko.Spec.HyperParameterTuningJobConfig.TuningJobCompletionCriteria.TargetObjectiveMetricValue != nil {
 				targetObjectiveMetricValueCopy0 := *r.ko.Spec.HyperParameterTuningJobConfig.TuningJobCompletionCriteria.TargetObjectiveMetricValue
-				if targetObjectiveMetricValueCopy0 > math.MaxFloat32 || targetObjectiveMetricValueCopy0 < math.SmallestNonzeroFloat32 {
+				if targetObjectiveMetricValueCopy0 > math.MaxFloat32 || targetObjectiveMetricValueCopy0 < -math.MaxFloat32 || (targetObjectiveMetricValueCopy0 < math.SmallestNonzeroFloat32 && !(targetObjectiveMetricValueCopy0 <= 0)) || (targetObjectiveMetricValueCopy0 > -math.SmallestNonzeroFloat32 && !(targetObjectiveMetricValueCopy0 >= 0)) {
 					return nil, fmt.Errorf("error: field TargetObjectiveMetricValue is of type float32")
 				}
 				targetObjectiveMetricValueCopy := float32(targetObjectiveMetricValueCopy0)

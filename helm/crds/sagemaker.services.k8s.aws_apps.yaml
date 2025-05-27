@@ -44,13 +44,19 @@ spec:
             description: AppSpec defines the desired state of App.
             properties:
               appName:
-                description: The name of the app.
+                description: |-
+                  The name of the app.
+
+                  Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
                 type: string
               appType:
                 description: The type of app.
                 type: string
               domainID:
-                description: The domain ID.
+                description: |-
+                  The domain ID.
+
+                  Regex Pattern: `^d-(-*[a-z0-9]){1,61}$`
                 type: string
               resourceSpec:
                 description: |-
@@ -101,8 +107,10 @@ spec:
                   type: object
                 type: array
               userProfileName:
-                description: The user profile name. If this value is not set, then
-                  SpaceName must be set.
+                description: |-
+                  The user profile name. If this value is not set, then SpaceName must be set.
+
+                  Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
                 type: string
             required:
             - appName

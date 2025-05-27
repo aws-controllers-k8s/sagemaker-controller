@@ -30,16 +30,26 @@ type PipelineSpec struct {
 	ParallelismConfiguration *ParallelismConfiguration `json:"parallelismConfiguration,omitempty"`
 	// The JSON pipeline definition (https://aws-sagemaker-mlops.github.io/sagemaker-model-building-pipeline-definition-JSON-schema/)
 	// of the pipeline.
+	//
+	// Regex Pattern: `(?:[ \r\n\t].*)*$`
 	PipelineDefinition *string `json:"pipelineDefinition,omitempty"`
 	// A description of the pipeline.
+	//
+	// Regex Pattern: `.*`
 	PipelineDescription *string `json:"pipelineDescription,omitempty"`
 	// The display name of the pipeline.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,255}$`
 	PipelineDisplayName *string `json:"pipelineDisplayName,omitempty"`
 	// The name of the pipeline.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,255}$`
 	// +kubebuilder:validation:Required
 	PipelineName *string `json:"pipelineName"`
 	// The Amazon Resource Name (ARN) of the role used by the pipeline to access
 	// and create resources.
+	//
+	// Regex Pattern: `^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$`
 	// +kubebuilder:validation:Required
 	RoleARN *string `json:"roleARN"`
 	// A list of tags to apply to the created pipeline.
