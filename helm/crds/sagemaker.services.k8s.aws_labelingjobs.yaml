@@ -648,6 +648,28 @@ spec:
               failureReason:
                 description: If the job failed, the reason that it failed.
                 type: string
+              labelCounters:
+                description: |-
+                  Provides a breakdown of the number of data objects labeled by humans, the
+                  number of objects labeled by machine, the number of objects than couldn't
+                  be labeled, and the total number of objects labeled.
+                properties:
+                  failedNonRetryableError:
+                    format: int64
+                    type: integer
+                  humanLabeled:
+                    format: int64
+                    type: integer
+                  machineLabeled:
+                    format: int64
+                    type: integer
+                  totalLabeled:
+                    format: int64
+                    type: integer
+                  unlabeled:
+                    format: int64
+                    type: integer
+                type: object
               labelingJobStatus:
                 description: The processing status of the labeling job.
                 type: string

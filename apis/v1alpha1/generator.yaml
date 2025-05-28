@@ -405,8 +405,8 @@ resources:
         - InvalidParameterValue
         - MissingParameter
     hooks:
-    #   delta_pre_compare:
-    #     code: customSetDefaults(a, b)
+      delta_pre_compare:
+        code: customSetDefaults(a, b)
       sdk_read_one_post_set_output:
         code: rm.customSetOutput(&resource{ko})
       sdk_delete_pre_build_request:
@@ -414,6 +414,15 @@ resources:
       sdk_delete_post_request:
         template_path: common/sdk_delete_post_request.go.tpl
     fields:
+      OutputConfig.KMSKeyID:
+        late_initialize:
+          min_backoff_seconds: 5
+      HumanTaskConfig.MaxConcurrentTaskCount:
+        late_initialize:
+          min_backoff_seconds: 5
+      HumanTaskConfig.TaskAvailabilityLifetimeInSeconds:
+        late_initialize:
+          min_backoff_seconds: 5
       LabelingJobStatus:
         is_read_only: true
         print:
@@ -429,6 +438,11 @@ resources:
         from:
           operation: DescribeLabelingJob
           path: FailureReason
+      LabelCounters:
+        is_read_only: true
+        from:
+          operation: DescribeLabelingJob
+          path: LabelCounters
       Tags:
         compare:
           is_ignored: true

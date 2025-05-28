@@ -42,6 +42,7 @@ func newResourceDelta(
 		delta.Add("", a, b)
 		return delta
 	}
+	customSetDefaults(a, b)
 
 	if ackcompare.HasNilDifference(a.ko.Spec.HumanTaskConfig, b.ko.Spec.HumanTaskConfig) {
 		delta.Add("Spec.HumanTaskConfig", a.ko.Spec.HumanTaskConfig, b.ko.Spec.HumanTaskConfig)

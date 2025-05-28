@@ -8476,6 +8476,11 @@ func (in *LabelingJobStatus) DeepCopyInto(out *LabelingJobStatus) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.LabelCounters != nil {
+		in, out := &in.LabelCounters, &out.LabelCounters
+		*out = new(LabelCounters)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.LabelingJobStatus != nil {
 		in, out := &in.LabelingJobStatus, &out.LabelingJobStatus
 		*out = new(string)

@@ -174,6 +174,11 @@ type LabelingJobStatus struct {
 	// If the job failed, the reason that it failed.
 	// +kubebuilder:validation:Optional
 	FailureReason *string `json:"failureReason,omitempty"`
+	// Provides a breakdown of the number of data objects labeled by humans, the
+	// number of objects labeled by machine, the number of objects than couldn't
+	// be labeled, and the total number of objects labeled.
+	// +kubebuilder:validation:Optional
+	LabelCounters *LabelCounters `json:"labelCounters,omitempty"`
 	// The processing status of the labeling job.
 	// +kubebuilder:validation:Optional
 	LabelingJobStatus *string `json:"labelingJobStatus,omitempty"`

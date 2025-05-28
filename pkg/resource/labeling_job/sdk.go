@@ -217,6 +217,32 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.LabelCategoryConfigS3URI = nil
 	}
+	if resp.LabelCounters != nil {
+		f7 := &svcapitypes.LabelCounters{}
+		if resp.LabelCounters.FailedNonRetryableError != nil {
+			failedNonRetryableErrorCopy := int64(*resp.LabelCounters.FailedNonRetryableError)
+			f7.FailedNonRetryableError = &failedNonRetryableErrorCopy
+		}
+		if resp.LabelCounters.HumanLabeled != nil {
+			humanLabeledCopy := int64(*resp.LabelCounters.HumanLabeled)
+			f7.HumanLabeled = &humanLabeledCopy
+		}
+		if resp.LabelCounters.MachineLabeled != nil {
+			machineLabeledCopy := int64(*resp.LabelCounters.MachineLabeled)
+			f7.MachineLabeled = &machineLabeledCopy
+		}
+		if resp.LabelCounters.TotalLabeled != nil {
+			totalLabeledCopy := int64(*resp.LabelCounters.TotalLabeled)
+			f7.TotalLabeled = &totalLabeledCopy
+		}
+		if resp.LabelCounters.Unlabeled != nil {
+			unlabeledCopy := int64(*resp.LabelCounters.Unlabeled)
+			f7.Unlabeled = &unlabeledCopy
+		}
+		ko.Status.LabelCounters = f7
+	} else {
+		ko.Status.LabelCounters = nil
+	}
 	if resp.LabelingJobAlgorithmsConfig != nil {
 		f8 := &svcapitypes.LabelingJobAlgorithmsConfig{}
 		if resp.LabelingJobAlgorithmsConfig.InitialActiveLearningModelArn != nil {

@@ -50,7 +50,7 @@ var (
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=labelingjobs,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=labelingjobs/status,verbs=get;update;patch
 
-var lateInitializeFieldNames = []string{}
+var lateInitializeFieldNames = []string{"HumanTaskConfig.MaxConcurrentTaskCount", "HumanTaskConfig.TaskAvailabilityLifetimeInSeconds", "OutputConfig.KMSKeyID"}
 
 // resourceManager is responsible for providing a consistent way to perform
 // CRUD operations in a backend AWS service API for Book custom resources.
@@ -248,6 +248,22 @@ func (rm *resourceManager) LateInitialize(
 func (rm *resourceManager) incompleteLateInitialization(
 	res acktypes.AWSResource,
 ) bool {
+	ko := rm.concreteResource(res).ko.DeepCopy()
+	if ko.Spec.HumanTaskConfig != nil {
+		if ko.Spec.HumanTaskConfig.MaxConcurrentTaskCount == nil {
+			return true
+		}
+	}
+	if ko.Spec.HumanTaskConfig != nil {
+		if ko.Spec.HumanTaskConfig.TaskAvailabilityLifetimeInSeconds == nil {
+			return true
+		}
+	}
+	if ko.Spec.OutputConfig != nil {
+		if ko.Spec.OutputConfig.KMSKeyID == nil {
+			return true
+		}
+	}
 	return false
 }
 
@@ -257,7 +273,24 @@ func (rm *resourceManager) lateInitializeFromReadOneOutput(
 	observed acktypes.AWSResource,
 	latest acktypes.AWSResource,
 ) acktypes.AWSResource {
-	return latest
+	observedKo := rm.concreteResource(observed).ko.DeepCopy()
+	latestKo := rm.concreteResource(latest).ko.DeepCopy()
+	if observedKo.Spec.HumanTaskConfig != nil && latestKo.Spec.HumanTaskConfig != nil {
+		if observedKo.Spec.HumanTaskConfig.MaxConcurrentTaskCount != nil && latestKo.Spec.HumanTaskConfig.MaxConcurrentTaskCount == nil {
+			latestKo.Spec.HumanTaskConfig.MaxConcurrentTaskCount = observedKo.Spec.HumanTaskConfig.MaxConcurrentTaskCount
+		}
+	}
+	if observedKo.Spec.HumanTaskConfig != nil && latestKo.Spec.HumanTaskConfig != nil {
+		if observedKo.Spec.HumanTaskConfig.TaskAvailabilityLifetimeInSeconds != nil && latestKo.Spec.HumanTaskConfig.TaskAvailabilityLifetimeInSeconds == nil {
+			latestKo.Spec.HumanTaskConfig.TaskAvailabilityLifetimeInSeconds = observedKo.Spec.HumanTaskConfig.TaskAvailabilityLifetimeInSeconds
+		}
+	}
+	if observedKo.Spec.OutputConfig != nil && latestKo.Spec.OutputConfig != nil {
+		if observedKo.Spec.OutputConfig.KMSKeyID != nil && latestKo.Spec.OutputConfig.KMSKeyID == nil {
+			latestKo.Spec.OutputConfig.KMSKeyID = observedKo.Spec.OutputConfig.KMSKeyID
+		}
+	}
+	return &resource{latestKo}
 }
 
 // IsSynced returns true if the resource is synced.
