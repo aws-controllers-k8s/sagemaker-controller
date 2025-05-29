@@ -39,13 +39,15 @@ def get_default_vpc():
         Filters=[
             {"Name": "isDefault", "Values": ["true"]},
         ]
-    )["Vpcs"][0]["VpcId"]
+    )[
+        "Vpcs"
+    ][0]["VpcId"]
 
 
 def get_subnet(vpc_id):
-    return boto3.client("ec2").describe_subnets(
-        Filters=[{"Name": "vpcId", "Values": [vpc_id]}]
-    )["Subnets"][0]["SubnetId"]
+    return boto3.client("ec2").describe_subnets(Filters=[{"Name": "vpcId", "Values": [vpc_id]}])[
+        "Subnets"
+    ][0]["SubnetId"]
 
 
 def get_domain_sagemaker_status(domain_id):
@@ -118,18 +120,12 @@ def apply_app_yaml(domain_id, user_profile_name):
 
 
 def assert_domain_status_in_sync(domain_id, reference, expected_status):
-    sm_status = wait_for_status(
-        expected_status, 10, 30, get_domain_sagemaker_status, domain_id
-    )
-    k8s_status = wait_for_status(
-        expected_status, 10, 30, get_k8s_resource_status, reference
-    )
+    sm_status = wait_for_status(expected_status, 10, 30, get_domain_sagemaker_status, domain_id)
+    k8s_status = wait_for_status(expected_status, 10, 30, get_k8s_resource_status, reference)
     assert sm_status == k8s_status == expected_status
 
 
-def assert_user_profile_status_in_sync(
-    domain_id, user_profile_name, reference, expected_status
-):
+def assert_user_profile_status_in_sync(domain_id, user_profile_name, reference, expected_status):
     sm_status = wait_for_status(
         expected_status,
         10,
@@ -138,9 +134,7 @@ def assert_user_profile_status_in_sync(
         domain_id,
         user_profile_name,
     )
-    k8s_status = wait_for_status(
-        expected_status, 10, 30, get_k8s_resource_status, reference
-    )
+    k8s_status = wait_for_status(expected_status, 10, 30, get_k8s_resource_status, reference)
     assert sm_status == k8s_status == expected_status
 
 
@@ -157,16 +151,14 @@ def assert_app_status_in_sync(
         app_type,
         app_name,
     )
-    k8s_status = wait_for_status(
-        expected_status, 10, 30, get_k8s_resource_status, reference
-    )
+    k8s_status = wait_for_status(expected_status, 10, 30, get_k8s_resource_status, reference)
     assert sm_status == k8s_status == expected_status
 
 
 def patch_domain_kernel_instance(reference, spec, instance_type):
-    spec["spec"]["defaultUserSettings"]["kernelGatewayAppSettings"][
-        "defaultResourceSpec"
-    ]["instanceType"] = instance_type
+    spec["spec"]["defaultUserSettings"]["kernelGatewayAppSettings"]["defaultResourceSpec"][
+        "instanceType"
+    ] = instance_type
     resource = k8s.patch_custom_resource(reference, spec)
     assert resource is not None
     return resource
@@ -183,9 +175,9 @@ def patch_user_profile_kernel_instance(reference, spec, instance_type):
 
 def get_domain_kernel_instance(domain_id):
     response = boto3.client("sagemaker").describe_domain(DomainId=domain_id)
-    return response["DefaultUserSettings"]["KernelGatewayAppSettings"][
-        "DefaultResourceSpec"
-    ]["InstanceType"]
+    return response["DefaultUserSettings"]["KernelGatewayAppSettings"]["DefaultResourceSpec"][
+        "InstanceType"
+    ]
 
 
 def get_user_profile_kernel_instance(domain_id, user_profile_name):
@@ -204,9 +196,7 @@ def domain_fixture():
 
     assert resource is not None
     if k8s.get_resource_arn(resource) is None:
-        logging.error(
-            f"ARN for this resource is None, resource status is: {resource['status']}"
-        )
+        logging.error(f"ARN for this resource is None, resource status is: {resource['status']}")
     assert k8s.get_resource_arn(resource) is not None
 
     yield (reference, resource, spec)
@@ -226,9 +216,7 @@ def user_profile_fixture(domain_fixture):
 
     assert_domain_status_in_sync(domain_id, domain_reference, "InService")
 
-    domain_resource = patch_domain_kernel_instance(
-        domain_reference, domain_spec, "ml.t3.large"
-    )
+    domain_resource = patch_domain_kernel_instance(domain_reference, domain_spec, "ml.t3.large")
     wait_for_status("ml.t3.large", 10, 30, get_domain_kernel_instance, domain_id)
     assert_domain_status_in_sync(domain_id, domain_reference, "InService")
 
@@ -296,9 +284,7 @@ def app_fixture(user_profile_fixture):
         domain_id, user_profile_name, user_profile_reference, "InService"
     )
 
-    (app_reference, app_resource, app_spec) = apply_app_yaml(
-        domain_id, user_profile_name
-    )
+    (app_reference, app_resource, app_spec) = apply_app_yaml(domain_id, user_profile_name)
 
     assert app_resource is not None
     if k8s.get_resource_arn(app_resource) is None:

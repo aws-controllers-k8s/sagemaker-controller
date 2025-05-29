@@ -49,9 +49,7 @@ def kmeans_processing_job():
 
     assert resource is not None
     if k8s.get_resource_arn(resource) is None:
-        logging.error(
-            f"ARN for this resource is None, resource status is: {resource['status']}"
-        )
+        logging.error(f"ARN for this resource is None, resource status is: {resource['status']}")
     assert k8s.get_resource_arn(resource) is not None
 
     yield (reference, resource)
@@ -117,9 +115,7 @@ class TestProcessingJob:
             processing_job_name,
         )
 
-    def _assert_processing_status_in_sync(
-        self, processing_job_name, reference, expected_status
-    ):
+    def _assert_processing_status_in_sync(self, processing_job_name, reference, expected_status):
         assert (
             self._wait_sagemaker_processing_status(processing_job_name, expected_status)
             == self._wait_resource_processing_status(reference, expected_status)

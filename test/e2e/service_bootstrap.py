@@ -60,9 +60,7 @@ def sync_data_bucket(bucket) -> str:
                 "--quiet",
             ]
         )
-        subprocess.call(
-            ["aws", "s3", "sync", f"./{temp_dir}/", f"s3://{bucket_name}", "--quiet"]
-        )
+        subprocess.call(["aws", "s3", "sync", f"./{temp_dir}/", f"s3://{bucket_name}", "--quiet"])
 
     logging.info(f"Synced data bucket")
 

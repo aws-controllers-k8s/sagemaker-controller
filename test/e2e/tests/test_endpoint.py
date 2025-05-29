@@ -35,9 +35,7 @@ from e2e.common import config as cfg
 
 FAIL_UPDATE_ERROR_MESSAGE = "api error EndpointUpdateError: unable to update endpoint. check FailureReason. latest EndpointConfigName is "
 # annontation key for last endpoint config name used for update
-LAST_ENDPOINTCONFIG_UPDATE_ANNOTATION = (
-    "sagemaker.services.k8s.aws/last-endpoint-config-for-update"
-)
+LAST_ENDPOINTCONFIG_UPDATE_ANNOTATION = "sagemaker.services.k8s.aws/last-endpoint-config-for-update"
 
 
 @pytest.fixture(scope="module")
@@ -211,9 +209,7 @@ def faulty_config(name_suffix, single_container_model):
     yield (config_reference, config_resource)
 
     for cr in (model_reference, config_reference):
-        _, deleted = k8s.delete_custom_resource(
-            cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
-        )
+        _, deleted = k8s.delete_custom_resource(cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
         assert deleted
 
 
@@ -234,27 +230,19 @@ class TestEndpoint:
         assert k8s.get_resource_arn(resource) == endpoint_arn
 
         # endpoint transitions Creating -> InService state
-        assert_endpoint_status_in_sync(
-            endpoint_name, reference, cfg.ENDPOINT_STATUS_CREATING
-        )
+        assert_endpoint_status_in_sync(endpoint_name, reference, cfg.ENDPOINT_STATUS_CREATING)
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
-        assert_endpoint_status_in_sync(
-            endpoint_name, reference, cfg.ENDPOINT_STATUS_INSERVICE
-        )
+        assert_endpoint_status_in_sync(endpoint_name, reference, cfg.ENDPOINT_STATUS_INSERVICE)
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(endpoint_arn, resource_tags)
 
-    def update_endpoint_failed_test(
-        self, single_variant_config, faulty_config, xgboost_endpoint
-    ):
+    def update_endpoint_failed_test(self, single_variant_config, faulty_config, xgboost_endpoint):
         (endpoint_reference, _, endpoint_spec) = xgboost_endpoint
         (_, faulty_config_resource) = faulty_config
-        faulty_config_name = faulty_config_resource["spec"].get(
-            "endpointConfigName", None
-        )
+        faulty_config_name = faulty_config_resource["spec"].get("endpointConfigName", None)
         endpoint_spec["spec"]["endpointConfigName"] = faulty_config_name
         endpoint_resource = k8s.patch_custom_resource(endpoint_reference, endpoint_spec)
         endpoint_resource = k8s.wait_resource_consumed_by_controller(endpoint_reference)
@@ -281,9 +269,7 @@ class TestEndpoint:
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "False")
 
         (_, old_config_resource) = single_variant_config
-        current_config_name = old_config_resource["spec"].get(
-            "endpointConfigName", None
-        )
+        current_config_name = old_config_resource["spec"].get("endpointConfigName", None)
         assert k8s.assert_condition_state_message(
             endpoint_reference,
             "ACK.Terminal",
@@ -298,9 +284,7 @@ class TestEndpoint:
         (endpoint_reference, endpoint_resource, endpoint_spec) = xgboost_endpoint
 
         endpoint_name = endpoint_resource["spec"].get("endpointName", None)
-        production_variants = get_sagemaker_endpoint(endpoint_name)[
-            "ProductionVariants"
-        ]
+        production_variants = get_sagemaker_endpoint(endpoint_name)["ProductionVariants"]
         old_variant_instance_count = production_variants[0]["CurrentInstanceCount"]
         old_variant_name = production_variants[0]["VariantName"]
 
@@ -336,9 +320,7 @@ class TestEndpoint:
         assert endpoint_resource["status"].get("failureReason", None) is None
 
         # RetainAllVariantProperties - variant properties were retained + is a multi-variant endpoint
-        new_production_variants = get_sagemaker_endpoint(endpoint_name)[
-            "ProductionVariants"
-        ]
+        new_production_variants = get_sagemaker_endpoint(endpoint_name)["ProductionVariants"]
         assert len(new_production_variants) > 1
         new_variant_instance_count = None
         for variant in new_production_variants:
@@ -351,9 +333,7 @@ class TestEndpoint:
         (reference, resource, _) = xgboost_endpoint
         endpoint_name = resource["spec"].get("endpointName", None)
 
-        assert delete_custom_resource(
-            reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
-        )
+        assert delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
 
         assert get_sagemaker_endpoint(endpoint_name) is None
 
@@ -366,9 +346,7 @@ class TestEndpoint:
         xgboost_endpoint,
     ):
         self.create_endpoint_test(xgboost_endpoint)
-        self.update_endpoint_failed_test(
-            single_variant_config, faulty_config, xgboost_endpoint
-        )
+        self.update_endpoint_failed_test(single_variant_config, faulty_config, xgboost_endpoint)
         # Note: the test has been intentionally ordered to run a successful update after a failed update
         # check that controller updates the endpoint, removes the terminal condition and clears the failure reason
         self.update_endpoint_successful_test(multi_variant_config, xgboost_endpoint)

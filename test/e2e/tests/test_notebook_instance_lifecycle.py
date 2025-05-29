@@ -75,18 +75,14 @@ def get_notebook_instance_lifecycle_config(notebook_instance_lfc_name: str):
 @service_marker
 @pytest.mark.canary
 class TestNotebookInstanceLifecycleConfig:
-    def wait_until_update(
-        self, reference, previous_modified_time, wait_period=30, wait_time=5
-    ):
+    def wait_until_update(self, reference, previous_modified_time, wait_period=30, wait_time=5):
         for i in range(wait_period):
             resource = k8s.get_resource(reference)
             assert resource is not None
             assert "lastModifiedTime" in resource["status"]
             last_modified_time = resource["status"]["lastModifiedTime"]
             d1 = datetime.datetime.strptime(last_modified_time, "%Y-%m-%dT%H:%M:%SZ")
-            d2 = datetime.datetime.strptime(
-                previous_modified_time, "%Y-%m-%dT%H:%M:%SZ"
-            )
+            d2 = datetime.datetime.strptime(previous_modified_time, "%Y-%m-%dT%H:%M:%SZ")
             if d1 > d2:
                 return True
             sleep(wait_time)
@@ -132,10 +128,6 @@ class TestNotebookInstanceLifecycleConfig:
         assert notebook_instance_lfc_desc["OnStart"][0]["Content"] == update_content
 
         # Deleting the resource
-        _, deleted = k8s.delete_custom_resource(
-            reference, DELETE_WAIT_PERIOD, DELETE_PERIOD_LENGTH
-        )
+        _, deleted = k8s.delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_PERIOD_LENGTH)
         assert deleted is True
-        assert (
-            get_notebook_instance_lifecycle_config(notebook_instance_lfc_name) is None
-        )
+        assert get_notebook_instance_lifecycle_config(notebook_instance_lfc_name) is None

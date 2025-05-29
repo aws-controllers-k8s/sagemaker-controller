@@ -66,9 +66,7 @@ def feature_group():
 def get_sagemaker_feature_group(feature_group_name: str):
     """Used to check if there is an existing feature group with a given feature_group_name."""
     try:
-        return sagemaker_client().describe_feature_group(
-            FeatureGroupName=feature_group_name
-        )
+        return sagemaker_client().describe_feature_group(FeatureGroupName=feature_group_name)
     except botocore.exceptions.ClientError as error:
         logging.error(
             f"SageMaker could not find a feature group with the name {feature_group_name}. Error {error}"
@@ -120,9 +118,7 @@ class TestFeatureGroup:
             reference,
         )
 
-    def _assert_feature_group_status_in_sync(
-        self, feature_group_name, reference, expected_status
-    ):
+    def _assert_feature_group_status_in_sync(self, feature_group_name, reference, expected_status):
         assert (
             self._wait_feature_group_status(feature_group_name, expected_status)
             == self._wait_resource_feature_group_status(reference, expected_status)

@@ -28,12 +28,13 @@ from e2e import (
     assert_endpoint_status_in_sync,
     assert_tags_in_sync,
     get_sagemaker_inference_component,
-    get_sagemaker_endpoint
+    get_sagemaker_endpoint,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
 
-FAIL_UPDATE_ERROR_MESSAGE = ("api error InferenceComponentUpdateError: Unable to update inference component. Check FailureReason.")
+FAIL_UPDATE_ERROR_MESSAGE = "api error InferenceComponentUpdateError: Unable to update inference component. Check FailureReason."
+
 
 @pytest.fixture(scope="module")
 def name_suffix():
@@ -123,14 +124,10 @@ def endpoint(name_suffix, endpoint_config):
     assert k8s.get_resource_arn(endpoint_resource) == endpoint_arn
 
     # endpoint transitions Creating -> InService state
-    assert_endpoint_status_in_sync(
-        endpoint_name, endpoint_reference, cfg.ENDPOINT_STATUS_CREATING
-    )
+    assert_endpoint_status_in_sync(endpoint_name, endpoint_reference, cfg.ENDPOINT_STATUS_CREATING)
     assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "False")
 
-    assert_endpoint_status_in_sync(
-        endpoint_name, endpoint_reference, cfg.ENDPOINT_STATUS_INSERVICE
-    )
+    assert_endpoint_status_in_sync(endpoint_name, endpoint_reference, cfg.ENDPOINT_STATUS_INSERVICE)
     assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "True")
 
     yield (endpoint_reference, endpoint_resource)
@@ -236,9 +233,7 @@ class TestInferenceComponent:
     def update_inference_component_failed_test(self, inference_component, faulty_model):
         (reference, _, spec) = inference_component
         (_, faulty_model_resource) = faulty_model
-        faulty_model_name = faulty_model_resource["spec"].get(
-            "modelName", None
-        )
+        faulty_model_name = faulty_model_resource["spec"].get("modelName", None)
         spec["spec"]["specification"]["modelName"] = faulty_model_name
         resource = k8s.patch_custom_resource(reference, spec)
         resource = k8s.wait_resource_consumed_by_controller(reference)
@@ -268,7 +263,7 @@ class TestInferenceComponent:
             "ACK.Terminal",
             "True",
             FAIL_UPDATE_ERROR_MESSAGE,
-            )
+        )
 
         resource = k8s.get_resource(reference)
         assert resource["status"].get("failureReason", None) is not None
@@ -277,13 +272,13 @@ class TestInferenceComponent:
         (reference, resource, spec) = inference_component
         inference_component_name = resource["spec"].get("inferenceComponentName", None)
         (_, model_resource) = xgboost_model
-        model_name = model_resource["spec"].get(
-            "modelName", None
-        )
+        model_name = model_resource["spec"].get("modelName", None)
         spec["spec"]["specification"]["modelName"] = model_name
 
         desired_memory_required = 2024
-        spec["spec"]["specification"]["computeResourceRequirements"]["minMemoryRequiredInMb"] = desired_memory_required
+        spec["spec"]["specification"]["computeResourceRequirements"][
+            "minMemoryRequiredInMb"
+        ] = desired_memory_required
 
         resource = k8s.patch_custom_resource(reference, spec)
         resource = k8s.wait_resource_consumed_by_controller(reference)
@@ -313,7 +308,8 @@ class TestInferenceComponent:
         # Instead, we rely on resource synced and no terminal status.
         # assert resource["status"].get("failureReason", None) is None
         new_memory_required = get_sagemaker_inference_component(inference_component_name)[
-            "Specification"]["ComputeResourceRequirements"]["MinMemoryRequiredInMb"]
+            "Specification"
+        ]["ComputeResourceRequirements"]["MinMemoryRequiredInMb"]
 
         assert desired_memory_required == new_memory_required
 
@@ -322,17 +318,14 @@ class TestInferenceComponent:
         inference_component_name = resource["spec"].get("inferenceComponentName", None)
 
         assert delete_custom_resource(
-            reference, cfg.INFERENCE_COMPONENT_DELETE_WAIT_PERIODS, cfg.INFERENCE_COMPONENT_DELETE_WAIT_LENGTH
+            reference,
+            cfg.INFERENCE_COMPONENT_DELETE_WAIT_PERIODS,
+            cfg.INFERENCE_COMPONENT_DELETE_WAIT_LENGTH,
         )
 
         assert get_sagemaker_inference_component(inference_component_name) is None
 
-    def test_driver(
-            self,
-            inference_component,
-            faulty_model,
-            xgboost_model
-    ):
+    def test_driver(self, inference_component, faulty_model, xgboost_model):
         self.create_inference_component_test(inference_component)
         self.update_inference_component_failed_test(inference_component, faulty_model)
         self.update_inference_component_successful_test(inference_component, xgboost_model)

@@ -158,20 +158,14 @@ class TestmodelPackage:
             model_package_name,
         )
 
-    def _assert_model_package_status_in_sync(
-        self, model_package_name, reference, expected_status
-    ):
+    def _assert_model_package_status_in_sync(self, model_package_name, reference, expected_status):
         assert (
-            self._wait_sagemaker_model_package_status(
-                model_package_name, expected_status
-            )
+            self._wait_sagemaker_model_package_status(model_package_name, expected_status)
             == self._wait_resource_model_package_status(reference, expected_status)
             == expected_status
         )
 
-    def test_unversioned_model_package_completed(
-        self, xgboost_unversioned_model_package
-    ):
+    def test_unversioned_model_package_completed(self, xgboost_unversioned_model_package):
         (reference, resource) = xgboost_unversioned_model_package
         assert k8s.get_resource_exists(reference)
 
@@ -252,10 +246,7 @@ class TestmodelPackage:
         assert model_package_desc["ModelApprovalStatus"] == new_model_approval_status
         assert model_package_desc["ApprovalDescription"] == approval_description
 
-        assert (
-            resource["spec"].get("modelApprovalStatus", None)
-            == new_model_approval_status
-        )
+        assert resource["spec"].get("modelApprovalStatus", None) == new_model_approval_status
         assert resource["spec"].get("approvalDescription", None) == approval_description
         # Check that you can delete a completed resource from k8s
         assert delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)

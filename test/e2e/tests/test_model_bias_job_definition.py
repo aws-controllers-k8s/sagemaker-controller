@@ -56,9 +56,7 @@ def xgboost_churn_model_bias_job_definition(xgboost_churn_endpoint):
 
     yield (reference, resource)
 
-    assert delete_custom_resource(
-        reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
-    )
+    assert delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
 
 
 def get_sagemaker_model_bias_job_definition(sagemaker_client, job_definition_name):
@@ -92,12 +90,7 @@ class TestModelBiasJobDefinition:
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(job_definition_arn, resource_tags)
         # Delete the k8s resource.
-        assert delete_custom_resource(
-            reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
-        )
+        assert delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
         assert (
-            get_sagemaker_model_bias_job_definition(
-                sagemaker_client, job_definition_name
-            )
-            is None
+            get_sagemaker_model_bias_job_definition(sagemaker_client, job_definition_name) is None
         )

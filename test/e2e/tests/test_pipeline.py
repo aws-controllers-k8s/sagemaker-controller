@@ -40,7 +40,11 @@ def pipeline():
     resource_name = random_suffix_name("pipeline", 28)
     replacements = REPLACEMENT_VALUES.copy()
     replacements["PIPELINE_NAME"] = resource_name
-    (pipeline_reference, pipeline_spec, pipeline_resource,) = create_sagemaker_resource(
+    (
+        pipeline_reference,
+        pipeline_spec,
+        pipeline_resource,
+    ) = create_sagemaker_resource(
         resource_plural=RESOURCE_PLURAL,
         resource_name=resource_name,
         spec_file="pipeline",
@@ -149,15 +153,9 @@ class TestPipeline:
         pipeline_desc = get_sagemaker_pipeline(pipeline_name)
 
         assert pipeline_desc["PipelineDisplayName"] == new_pipeline_display_name
-        assert (
-            resource["spec"].get("pipelineDisplayName", None)
-            == new_pipeline_display_name
-        )
+        assert resource["spec"].get("pipelineDisplayName", None) == new_pipeline_display_name
         assert old_pipeline_last_modified_time != pipeline_desc["LastModifiedTime"]
-        assert (
-            resource["status"].get("lastModifiedTime")
-            != old_pipeline_last_modified_time
-        )
+        assert resource["status"].get("lastModifiedTime") != old_pipeline_last_modified_time
 
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(pipeline_arn, resource_tags)

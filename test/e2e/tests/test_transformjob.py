@@ -57,9 +57,7 @@ def xgboost_model_for_transform(generate_job_names):
     )
     assert resource is not None
     if k8s.get_resource_arn(resource) is None:
-        logging.error(
-            f"ARN for this resource is None, resource status is: {resource['status']}"
-        )
+        logging.error(f"ARN for this resource is None, resource status is: {resource['status']}")
     assert k8s.get_resource_arn(resource) is not None
 
     yield (transform_resource_name, model_resource_name)
@@ -86,9 +84,7 @@ def xgboost_transformjob(xgboost_model_for_transform):
 
     assert resource is not None
     if k8s.get_resource_arn(resource) is None:
-        logging.error(
-            f"ARN for this resource is None, resource status is: {resource['status']}"
-        )
+        logging.error(f"ARN for this resource is None, resource status is: {resource['status']}")
     assert k8s.get_resource_arn(resource) is not None
 
     yield (reference, resource)
@@ -154,9 +150,7 @@ class TestTransformJob:
             transform_job_name,
         )
 
-    def _assert_transform_status_in_sync(
-        self, transform_job_name, reference, expected_status
-    ):
+    def _assert_transform_status_in_sync(self, transform_job_name, reference, expected_status):
         assert (
             self._wait_sagemaker_transform_status(transform_job_name, expected_status)
             == self._wait_resource_transform_status(reference, expected_status)

@@ -72,9 +72,7 @@ def sdk_make_endpoint_config(model_name, endpoint_config_name):
         ],
     }
 
-    endpoint_config_response = sagemaker_client().create_endpoint_config(
-        **endpoint_config_input
-    )
+    endpoint_config_response = sagemaker_client().create_endpoint_config(**endpoint_config_input)
     assert endpoint_config_response.get("EndpointConfigArn", None) is not None
     return endpoint_config_input, endpoint_config_response
 
@@ -100,9 +98,7 @@ def sdk_endpoint(name_suffix):
     endpoint_config_input, endpoint_config_response = sdk_make_endpoint_config(
         model_name, endpoint_config_name
     )
-    endpoint_input, endpoint_response = sdk_make_endpoint(
-        endpoint_name, endpoint_config_name
-    )
+    endpoint_input, endpoint_response = sdk_make_endpoint(endpoint_name, endpoint_config_name)
 
     yield (
         model_input,
@@ -117,9 +113,7 @@ def sdk_endpoint(name_suffix):
         wait_sagemaker_endpoint_status(endpoint_name, cfg.ENDPOINT_STATUS_INSERVICE)
         sagemaker_client().delete_endpoint(EndpointName=endpoint_name)
     if get_sagemaker_endpoint_config(endpoint_config_name) is not None:
-        sagemaker_client().delete_endpoint_config(
-            EndpointConfigName=endpoint_config_name
-        )
+        sagemaker_client().delete_endpoint_config(EndpointConfigName=endpoint_config_name)
     if get_sagemaker_model(model_name) is not None:
         sagemaker_client().delete_model(ModelName=model_name)
 
@@ -131,9 +125,9 @@ def adopted_endpoint(sdk_endpoint):
     replacements = REPLACEMENT_VALUES.copy()
     # adopt model
     replacements["ADOPTED_RESOURCE_NAME"] = "adopt-" + model_input["ModelName"]
-    replacements["TARGET_RESOURCE_AWS"] = replacements[
-        "TARGET_RESOURCE_K8S"
-    ] = model_input["ModelName"]
+    replacements["TARGET_RESOURCE_AWS"] = replacements["TARGET_RESOURCE_K8S"] = model_input[
+        "ModelName"
+    ]
     replacements["RESOURCE_KIND"] = "Model"
 
     adopt_model_reference, _, adopt_model_resource = create_adopted_resource(
@@ -142,9 +136,7 @@ def adopted_endpoint(sdk_endpoint):
     assert adopt_model_resource is not None
 
     # adopt endpoint config
-    replacements["ADOPTED_RESOURCE_NAME"] = (
-        "adopt-" + endpoint_config_input["EndpointConfigName"]
-    )
+    replacements["ADOPTED_RESOURCE_NAME"] = "adopt-" + endpoint_config_input["EndpointConfigName"]
     replacements["TARGET_RESOURCE_AWS"] = replacements[
         "TARGET_RESOURCE_K8S"
     ] = endpoint_config_input["EndpointConfigName"]
@@ -157,9 +149,9 @@ def adopted_endpoint(sdk_endpoint):
 
     # adopt endpoint
     replacements["ADOPTED_RESOURCE_NAME"] = "adopt-" + endpoint_input["EndpointName"]
-    replacements["TARGET_RESOURCE_AWS"] = replacements[
-        "TARGET_RESOURCE_K8S"
-    ] = endpoint_input["EndpointName"]
+    replacements["TARGET_RESOURCE_AWS"] = replacements["TARGET_RESOURCE_K8S"] = endpoint_input[
+        "EndpointName"
+    ]
     replacements["RESOURCE_KIND"] = "Endpoint"
 
     adopt_endpoint_reference, _, adopt_endpoint_resource = create_adopted_resource(
@@ -170,9 +162,7 @@ def adopted_endpoint(sdk_endpoint):
     yield (adopt_model_reference, adopt_config_reference, adopt_endpoint_reference)
 
     for cr in (adopt_model_reference, adopt_config_reference, adopt_endpoint_reference):
-        assert delete_custom_resource(
-            cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
-        )
+        assert delete_custom_resource(cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
 
 
 @service_marker
@@ -195,12 +185,8 @@ class TestAdoptedEndpoint:
 
         namespace = "default"
         model_name = k8s.get_resource(adopt_model_reference)["spec"]["aws"]["nameOrID"]
-        endpoint_config_name = k8s.get_resource(adopt_config_reference)["spec"]["aws"][
-            "nameOrID"
-        ]
-        endpoint_name = k8s.get_resource(adopt_endpoint_reference)["spec"]["aws"][
-            "nameOrID"
-        ]
+        endpoint_config_name = k8s.get_resource(adopt_config_reference)["spec"]["aws"]["nameOrID"]
+        endpoint_name = k8s.get_resource(adopt_endpoint_reference)["spec"]["aws"]["nameOrID"]
 
         for reference in (
             adopt_model_reference,
@@ -218,12 +204,9 @@ class TestAdoptedEndpoint:
         assert model_resource["spec"].get("modelName", None) == model_name
         assert model_resource["spec"].get("containers", None) is not None
         assert (
-            model_resource["spec"].get("executionRoleARN", None)
-            == model_input["ExecutionRoleArn"]
+            model_resource["spec"].get("executionRoleARN", None) == model_input["ExecutionRoleArn"]
         )
-        assert k8s.get_resource_arn(model_resource) == model_response.get(
-            "ModelArn", None
-        )
+        assert k8s.get_resource_arn(model_resource) == model_response.get("ModelArn", None)
 
         config_reference = k8s.create_reference(
             CRD_GROUP,
@@ -235,10 +218,7 @@ class TestAdoptedEndpoint:
         config_resource = k8s.wait_resource_consumed_by_controller(config_reference)
         assert config_resource is not None
 
-        assert (
-            config_resource["spec"].get("endpointConfigName", None)
-            == endpoint_config_name
-        )
+        assert config_resource["spec"].get("endpointConfigName", None) == endpoint_config_name
         assert config_resource["spec"].get("productionVariants", None) is not None
         assert k8s.get_resource_arn(config_resource) == endpoint_config_response.get(
             "EndpointConfigArn", None
@@ -255,13 +235,8 @@ class TestAdoptedEndpoint:
         assert endpoint_resource is not None
 
         assert endpoint_resource["spec"].get("endpointName", None) == endpoint_name
-        assert (
-            endpoint_resource["spec"].get("endpointConfigName", None)
-            == endpoint_config_name
-        )
-        assert k8s.get_resource_arn(endpoint_resource) == endpoint_response.get(
-            "EndpointArn", None
-        )
+        assert endpoint_resource["spec"].get("endpointConfigName", None) == endpoint_config_name
+        assert k8s.get_resource_arn(endpoint_resource) == endpoint_response.get("EndpointArn", None)
 
         assert_endpoint_status_in_sync(
             endpoint_name,
@@ -271,6 +246,4 @@ class TestAdoptedEndpoint:
         assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "True")
 
         for cr in (model_reference, config_reference, endpoint_reference):
-            assert delete_custom_resource(
-                cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
-            )
+            assert delete_custom_resource(cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)

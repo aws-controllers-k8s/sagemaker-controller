@@ -46,9 +46,7 @@ def xgboost_training_job():
 
     assert resource is not None
     if k8s.get_resource_arn(resource) is None:
-        logging.error(
-            f"ARN for this resource is None, resource status is: {resource['status']}"
-        )
+        logging.error(f"ARN for this resource is None, resource status is: {resource['status']}")
     assert k8s.get_resource_arn(resource) is not None
 
     yield (reference, resource)
@@ -73,9 +71,7 @@ class TestTrainingJob:
         assert training_job_desc["TrainingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
-        assert_training_status_in_sync(
-            training_job_name, reference, cfg.JOB_STATUS_INPROGRESS
-        )
+        assert_training_status_in_sync(training_job_name, reference, cfg.JOB_STATUS_INPROGRESS)
 
         # Delete the k8s resource.
         assert delete_custom_resource(
@@ -101,9 +97,7 @@ class TestTrainingJob:
         assert training_job_desc["TrainingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
-        assert_training_status_in_sync(
-            training_job_name, reference, cfg.JOB_STATUS_COMPLETED
-        )
+        assert_training_status_in_sync(training_job_name, reference, cfg.JOB_STATUS_COMPLETED)
         assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
         # model artifact URL is populated
