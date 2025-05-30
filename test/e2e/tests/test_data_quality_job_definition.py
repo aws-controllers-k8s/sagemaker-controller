@@ -18,14 +18,14 @@ import logging
 import botocore
 import time
 
-from e2e import service_marker, assert_tags_in_sync
+from acktest.k8s import resource as k8s
+
+from e2e import service_marker, assert_tags_in_sync, delete_custom_resource
+from e2e.common import config as cfg
 from e2e.common.fixtures import (
     xgboost_churn_data_quality_job_definition,
     xgboost_churn_endpoint,
 )
-from e2e.common import config as cfg
-from acktest.k8s import resource as k8s
-from e2e import delete_custom_resource
 
 # Access variable so it is loaded as a fixture
 _accessed = xgboost_churn_data_quality_job_definition, xgboost_churn_endpoint

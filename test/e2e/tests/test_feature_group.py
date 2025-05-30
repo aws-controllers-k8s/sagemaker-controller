@@ -10,17 +10,16 @@
 # on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
 # express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
-"""Integration tests for the SageMaker Endpoint API.  
+"""Integration tests for the SageMaker Endpoint API.
 """
 
-import boto3
 import botocore
 import pytest
 import logging
-from typing import Dict
 
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
+from acktest.k8s import condition as ack_condition
 
 from e2e import (
     service_marker,
@@ -144,7 +143,7 @@ class TestFeatureGroup:
             feature_group_name, reference, FEATURE_GROUP_STATUS_CREATED
         )
 
-        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
 
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(feature_group_arn, resource_tags)

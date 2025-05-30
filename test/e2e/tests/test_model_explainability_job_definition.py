@@ -18,6 +18,9 @@ import pytest
 import logging
 import time
 
+from acktest.resources import random_suffix_name
+from acktest.k8s import resource as k8s
+
 from e2e import (
     service_marker,
     create_sagemaker_resource,
@@ -27,8 +30,6 @@ from e2e import (
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common.fixtures import xgboost_churn_endpoint
 from e2e.common import config as cfg
-from acktest.resources import random_suffix_name
-from acktest.k8s import resource as k8s
 
 RESOURCE_PLURAL = "modelexplainabilityjobdefinitions"
 

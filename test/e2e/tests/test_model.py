@@ -15,10 +15,10 @@
 
 import pytest
 import time
-from typing import Dict
 
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
+
 from e2e import (
     service_marker,
     create_sagemaker_resource,

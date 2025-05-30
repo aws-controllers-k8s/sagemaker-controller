@@ -13,14 +13,13 @@
 """Integration test for ACKs Cross Region Support.
 """
 
-import logging
-from acktest.aws.identity import get_region
 import pytest
-import time
-from typing import Dict
+import logging
 
+from acktest.aws.identity import get_region
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
+
 from e2e import (
     service_marker,
     create_sagemaker_resource,

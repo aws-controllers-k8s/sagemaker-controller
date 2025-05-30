@@ -14,9 +14,12 @@
 """
 
 import botocore
-import time
 import pytest
 import logging
+
+from acktest.resources import random_suffix_name
+from acktest.k8s import resource as k8s
+from acktest.k8s import condition as ack_condition
 
 from e2e import (
     service_marker,
@@ -31,8 +34,6 @@ from e2e.common.fixtures import (
     xgboost_churn_data_quality_job_definition,
     xgboost_churn_endpoint,
 )
-from acktest.k8s import resource as k8s
-from acktest.resources import random_suffix_name
 
 RESOURCE_PLURAL = "monitoringschedules"
 
@@ -162,7 +163,7 @@ class TestMonitoringSchedule:
         self._assert_monitoring_schedule_status_in_sync(
             sagemaker_client, monitoring_schedule_name, reference, self.STATUS_SCHEDULED
         )
-        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
 
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(monitoring_schedule_arn, resource_tags)
@@ -179,7 +180,7 @@ class TestMonitoringSchedule:
         self._assert_monitoring_schedule_status_in_sync(
             sagemaker_client, monitoring_schedule_name, reference, self.STATUS_SCHEDULED
         )
-        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
 
         latest_schedule = get_sagemaker_monitoring_schedule(
             sagemaker_client, monitoring_schedule_name

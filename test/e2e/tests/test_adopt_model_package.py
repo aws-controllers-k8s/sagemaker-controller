@@ -17,6 +17,7 @@ import pytest
 
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
+from acktest.k8s import condition as ack_condition
 
 from e2e import (
     service_marker,
@@ -181,7 +182,7 @@ class TestAdoptedModelPackage:
             adopt_model_package_group_reference,
             adopt_model_package_reference,
         ):
-            assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_ADOPTED, "True")
+            assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_ADOPTED, "True")
 
         model_package_group_reference = k8s.create_reference(
             CRD_GROUP,
@@ -232,7 +233,7 @@ class TestAdoptedModelPackage:
             cfg.JOB_STATUS_COMPLETED,
         )
         assert k8s.wait_on_condition(
-            model_package_reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+            model_package_reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
         )
 
         for cr in (model_package_reference, model_package_group_reference):

@@ -13,13 +13,13 @@
 """Integration tests for the SageMaker modelPackage API.
 """
 
-import botocore
 import pytest
 import logging
-from typing import Dict
 
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
+from acktest.k8s import condition as ack_condition
+
 from e2e import (
     service_marker,
     wait_for_status,
@@ -185,12 +185,12 @@ class TestmodelPackage:
         self._assert_model_package_status_in_sync(
             model_package_name, reference, cfg.JOB_STATUS_INPROGRESS
         )
-        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
 
         self._assert_model_package_status_in_sync(
             model_package_name, reference, cfg.JOB_STATUS_COMPLETED
         )
-        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
 
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(model_package_arn, resource_tags)
@@ -221,12 +221,12 @@ class TestmodelPackage:
         self._assert_model_package_status_in_sync(
             model_package_name, reference, cfg.JOB_STATUS_INPROGRESS
         )
-        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
 
         self._assert_model_package_status_in_sync(
             model_package_name, reference, cfg.JOB_STATUS_COMPLETED
         )
-        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
 
         # Update the resource
         new_model_approval_status = "Approved"
@@ -240,7 +240,7 @@ class TestmodelPackage:
         self._assert_model_package_status_in_sync(
             model_package_name, reference, cfg.JOB_STATUS_COMPLETED
         )
-        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
 
         model_package_desc = get_sagemaker_model_package(model_package_name)
         assert model_package_desc["ModelApprovalStatus"] == new_model_approval_status

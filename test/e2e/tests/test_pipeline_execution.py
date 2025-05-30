@@ -18,6 +18,8 @@ import logging
 
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
+from acktest.k8s import condition as ack_condition
+
 from e2e import (
     service_marker,
     wait_for_status,
@@ -177,7 +179,7 @@ class TestPipelineExecution:
             pipeline_execution_arn, reference, cfg.JOB_STATUS_EXECUTING
         )
 
-        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
 
         # Update the resource
         new_pipeline_execution_display_name = random_suffix_name("updated-display-name", 38)
@@ -189,7 +191,7 @@ class TestPipelineExecution:
         self._assert_pipeline_execution_status_in_sync(
             pipeline_execution_arn, reference, cfg.JOB_STATUS_EXECUTING
         )
-        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
 
         pipeline_execution_desc = get_sagemaker_pipeline_execution(pipeline_execution_arn)
 
@@ -208,7 +210,7 @@ class TestPipelineExecution:
         self._assert_pipeline_execution_status_in_sync(
             pipeline_execution_arn, reference, cfg.JOB_STATUS_SUCCEEDED
         )
-        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
 
         # Check that you can delete a completed resource from k8s
         assert delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)

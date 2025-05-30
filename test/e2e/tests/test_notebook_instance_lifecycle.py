@@ -17,22 +17,18 @@ import pytest
 import logging
 import botocore
 import datetime
+from time import sleep
 
-from acktest.k8s import resource as k8s
 from acktest.resources import random_suffix_name
+from acktest.k8s import resource as k8s
+
 from e2e import (
     service_marker,
-    wait_for_status,
     create_sagemaker_resource,
     delete_custom_resource,
     sagemaker_client,
 )
-
-from e2e.bootstrap_resources import get_bootstrap_resources
-import random
-
 from e2e.replacement_values import REPLACEMENT_VALUES
-from time import sleep
 from e2e.common import config as cfg
 
 DELETE_WAIT_PERIOD = 16

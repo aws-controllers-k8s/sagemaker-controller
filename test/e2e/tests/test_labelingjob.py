@@ -19,6 +19,8 @@ import logging
 
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
+from acktest.k8s import condition as ack_condition
+
 from e2e import (
     service_marker,
     create_sagemaker_resource,
@@ -131,14 +133,14 @@ class TestLabelingJob:
 
         assert k8s.get_resource_arn(resource) == labeling_job_desc["LabelingJobArn"]
         assert labeling_job_desc["LabelingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
-        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
 
         self._assert_labeling_status_in_sync(
             labeling_job_name, reference, cfg.JOB_STATUS_INPROGRESS
         )
 
         # Ensure resource is not in terminal state
-        assert k8s.get_resource_condition(reference, k8s.CONDITION_TYPE_TERMINAL) is None
+        assert k8s.get_resource_condition(reference, ack_condition.CONDITION_TYPE_TERMINAL) is None
         # Delete the k8s resource.
         assert delete_custom_resource(
             reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH

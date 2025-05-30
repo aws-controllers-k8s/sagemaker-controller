@@ -16,11 +16,10 @@
 import pytest
 import logging
 
-from typing import Dict
-
 from acktest.aws import s3
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
+from acktest.k8s import condition as ack_condition
 
 from e2e import (
     service_marker,
@@ -231,10 +230,10 @@ class TestEndpoint:
 
         # endpoint transitions Creating -> InService state
         assert_endpoint_status_in_sync(endpoint_name, reference, cfg.ENDPOINT_STATUS_CREATING)
-        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
 
         assert_endpoint_status_in_sync(endpoint_name, reference, cfg.ENDPOINT_STATUS_INSERVICE)
-        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
 
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(endpoint_arn, resource_tags)
@@ -255,7 +254,7 @@ class TestEndpoint:
             cfg.ENDPOINT_STATUS_UPDATING,
         )
         assert k8s.wait_on_condition(
-            endpoint_reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+            endpoint_reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
         )
         endpoint_resource = k8s.get_resource(endpoint_reference)
         annotations = endpoint_resource["metadata"].get("annotations", None)
@@ -269,14 +268,14 @@ class TestEndpoint:
         )
 
         assert k8s.wait_on_condition(
-            endpoint_reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+            endpoint_reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
         )
 
         (_, old_config_resource) = single_variant_config
         current_config_name = old_config_resource["spec"].get("endpointConfigName", None)
         assert k8s.assert_condition_state_message(
             endpoint_reference,
-            k8s.CONDITION_TYPE_TERMINAL,
+            ack_condition.CONDITION_TYPE_TERMINAL,
             "True",
             FAIL_UPDATE_ERROR_MESSAGE + current_config_name,
         )
@@ -307,9 +306,9 @@ class TestEndpoint:
         )
 
         assert k8s.wait_on_condition(
-            endpoint_reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+            endpoint_reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
         )
-        assert k8s.get_resource_condition(endpoint_reference, k8s.CONDITION_TYPE_TERMINAL) is None
+        assert k8s.get_resource_condition(endpoint_reference, ack_condition.CONDITION_TYPE_TERMINAL) is None
         endpoint_resource = k8s.get_resource(endpoint_reference)
         annotations = endpoint_resource["metadata"].get("annotations", None)
         assert annotations is not None
@@ -320,8 +319,8 @@ class TestEndpoint:
             endpoint_reference,
             cfg.ENDPOINT_STATUS_INSERVICE,
         )
-        assert k8s.wait_on_condition(endpoint_reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True")
-        assert k8s.get_resource_condition(endpoint_reference, k8s.CONDITION_TYPE_TERMINAL) is None
+        assert k8s.wait_on_condition(endpoint_reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.get_resource_condition(endpoint_reference, ack_condition.CONDITION_TYPE_TERMINAL) is None
         endpoint_resource = k8s.get_resource(endpoint_reference)
         assert endpoint_resource["status"].get("failureReason", None) is None
 

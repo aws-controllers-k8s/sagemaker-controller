@@ -17,15 +17,14 @@ import pytest
 import logging
 import botocore
 
-from acktest.k8s import resource as k8s
 from acktest.resources import random_suffix_name
+from acktest.k8s import resource as k8s
+
 from e2e import (
     service_marker,
     create_sagemaker_resource,
     sagemaker_client,
 )
-
-
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
 

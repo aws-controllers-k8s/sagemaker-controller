@@ -16,10 +16,12 @@
 import botocore
 import pytest
 import logging
-from typing import Dict
+from flaky import flaky
 
-from acktest.k8s import resource as k8s
 from acktest.resources import random_suffix_name
+from acktest.k8s import resource as k8s
+from acktest.k8s import condition as ack_condition
+
 from e2e import (
     service_marker,
     wait_for_status,
@@ -28,8 +30,6 @@ from e2e import (
     sagemaker_client,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
-import random
-from flaky import flaky
 
 
 DELETE_WAIT_PERIOD = 16
@@ -147,12 +147,12 @@ class TestNotebookInstance:
         notebook_description = get_notebook_instance(notebook_instance_name)
         assert notebook_description["NotebookInstanceStatus"] == "Pending"
 
-        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
         self._assert_notebook_status_in_sync(notebook_instance_name, reference, "Pending")
 
         # wait for the resource to go to the InService state and make sure the operator is synced with sagemaker.
         self._assert_notebook_status_in_sync(notebook_instance_name, reference, "InService")
-        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
 
     def update_notebook_test(self, notebook_instance):
         (reference, resource, spec) = notebook_instance
@@ -180,7 +180,7 @@ class TestNotebookInstance:
 
         # wait for the resource to go to the InService state and make sure the operator is synced with sagemaker.
         self._assert_notebook_status_in_sync(notebook_instance_name, reference, "InService")
-        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
 
         notebook_instance_desc = get_notebook_instance(notebook_instance_name)
         assert notebook_instance_desc["VolumeSizeInGB"] == volumeSizeInGB

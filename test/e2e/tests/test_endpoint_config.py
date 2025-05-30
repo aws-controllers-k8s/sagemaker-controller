@@ -15,7 +15,6 @@
 
 import pytest
 import logging
-from typing import Dict
 import time
 
 from acktest.resources import random_suffix_name

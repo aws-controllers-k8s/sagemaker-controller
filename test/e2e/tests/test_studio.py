@@ -13,24 +13,19 @@
 """Integration tests for the SageMaker Studio.
 """
 
-import botocore
 import pytest
 import logging
 import boto3
-from typing import Dict
 
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
+
 from e2e import (
-    service_marker,
     create_sagemaker_resource,
     delete_custom_resource,
     wait_for_status,
-    sagemaker_client,
-    assert_tags_in_sync,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
-from e2e.bootstrap_resources import get_bootstrap_resources
 from e2e.common import config as cfg
 
 
