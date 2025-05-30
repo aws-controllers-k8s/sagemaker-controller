@@ -50,7 +50,7 @@ var (
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=labelingjobs,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=labelingjobs/status,verbs=get;update;patch
 
-var lateInitializeFieldNames = []string{"HumanTaskConfig.MaxConcurrentTaskCount", "HumanTaskConfig.TaskAvailabilityLifetimeInSeconds", "OutputConfig.KMSKeyID"}
+var lateInitializeFieldNames = []string{"HumanTaskConfig.MaxConcurrentTaskCount", "HumanTaskConfig.TaskAvailabilityLifetimeInSeconds", "LabelingJobAlgorithmsConfig.LabelingJobResourceConfig", "OutputConfig.KMSKeyID"}
 
 // resourceManager is responsible for providing a consistent way to perform
 // CRUD operations in a backend AWS service API for Book custom resources.
@@ -259,6 +259,11 @@ func (rm *resourceManager) incompleteLateInitialization(
 			return true
 		}
 	}
+	if ko.Spec.LabelingJobAlgorithmsConfig != nil {
+		if ko.Spec.LabelingJobAlgorithmsConfig.LabelingJobResourceConfig == nil {
+			return true
+		}
+	}
 	if ko.Spec.OutputConfig != nil {
 		if ko.Spec.OutputConfig.KMSKeyID == nil {
 			return true
@@ -283,6 +288,11 @@ func (rm *resourceManager) lateInitializeFromReadOneOutput(
 	if observedKo.Spec.HumanTaskConfig != nil && latestKo.Spec.HumanTaskConfig != nil {
 		if observedKo.Spec.HumanTaskConfig.TaskAvailabilityLifetimeInSeconds != nil && latestKo.Spec.HumanTaskConfig.TaskAvailabilityLifetimeInSeconds == nil {
 			latestKo.Spec.HumanTaskConfig.TaskAvailabilityLifetimeInSeconds = observedKo.Spec.HumanTaskConfig.TaskAvailabilityLifetimeInSeconds
+		}
+	}
+	if observedKo.Spec.LabelingJobAlgorithmsConfig != nil && latestKo.Spec.LabelingJobAlgorithmsConfig != nil {
+		if observedKo.Spec.LabelingJobAlgorithmsConfig.LabelingJobResourceConfig != nil && latestKo.Spec.LabelingJobAlgorithmsConfig.LabelingJobResourceConfig == nil {
+			latestKo.Spec.LabelingJobAlgorithmsConfig.LabelingJobResourceConfig = observedKo.Spec.LabelingJobAlgorithmsConfig.LabelingJobResourceConfig
 		}
 	}
 	if observedKo.Spec.OutputConfig != nil && latestKo.Spec.OutputConfig != nil {

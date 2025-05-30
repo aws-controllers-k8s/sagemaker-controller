@@ -1085,6 +1085,9 @@ resources:
       HumanTaskConfig.TaskAvailabilityLifetimeInSeconds:
         late_initialize:
           min_backoff_seconds: 5
+      LabelingJobAlgorithmsConfig.LabelingJobResourceConfig:
+        late_initialize:
+          min_backoff_seconds: 5
       LabelingJobStatus:
         is_read_only: true
         print:
