@@ -1,0 +1,43 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: LabelingJob
+metadata:
+  name: $LABELING_JOB_NAME
+spec:
+  labelingJobName: $LABELING_JOB_NAME
+  roleARN: $SAGEMAKER_EXECUTION_ROLE_ARN
+  labelAttributeName: category
+  labelCategoryConfigS3URI: s3://$SAGEMAKER_DATA_BUCKET/sagemaker/labeling/class_labels.json
+  inputConfig:
+    dataSource:
+      s3DataSource:
+        manifestS3URI: s3://$SAGEMAKER_DATA_BUCKET/labeling/input.manifest
+    dataAttributes:
+      contentClassifiers:
+        - "FreeOfPersonallyIdentifiableInformation"
+        - "FreeOfAdultContent"
+  outputConfig:
+    s3OutputPath: s3://$SAGEMAKER_DATA_BUCKET/labeling/output/
+  humanTaskConfig:
+    annotationConsolidationConfig:
+      annotationConsolidationLambdaARN: arn:aws:lambda:us-west-2:081040173940:function:ACS-BoundingBox
+    maxConcurrentTaskCount: 10 # Number of images that will be sent at a time to the workteam.
+    numberOfHumanWorkersPerDataObject: 1 # We will obtain and consolidate at this many human annotations for each image.
+    preHumanTaskLambdaARN: arn:aws:lambda:us-west-2:081040173940:function:PRE-BoundingBox
+    taskAvailabilityLifetimeInSeconds: 21600 # Your workteam has 6 hours to complete all pending tasks.
+    taskDescription: "Dear Annotator, please draw a box around each Logo. Thank you!"
+    taskKeywords:
+      - image
+      - object
+      - detection
+    taskTimeLimitInSeconds: 300 # Each image must be labeled within 5 minutes.
+    taskTitle: "Please draw a box around each Logos"
+    uiConfig:
+      uiTemplateS3URI: s3://$SAGEMAKER_DATA_BUCKET/labeling/instructions.template # Replace with your UI template path
+    workteamARN: arn:aws:sagemaker:us-west-2:897880167187:workteam/private-crowd/sagemaker-controller-labeling-job # WARN: may need to relocate private work team
+  tags:
+    - key: confidentiality
+      value: public
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user
