@@ -231,10 +231,10 @@ class TestEndpoint:
 
         # endpoint transitions Creating -> InService state
         assert_endpoint_status_in_sync(endpoint_name, reference, cfg.ENDPOINT_STATUS_CREATING)
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
+        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "False")
 
         assert_endpoint_status_in_sync(endpoint_name, reference, cfg.ENDPOINT_STATUS_INSERVICE)
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True")
 
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(endpoint_arn, resource_tags)
@@ -254,7 +254,7 @@ class TestEndpoint:
             endpoint_reference,
             cfg.ENDPOINT_STATUS_UPDATING,
         )
-        assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "False")
+        assert k8s.wait_on_condition(endpoint_reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "False")
         endpoint_resource = k8s.get_resource(endpoint_reference)
         annotations = endpoint_resource["metadata"].get("annotations", None)
         assert annotations is not None
@@ -266,13 +266,13 @@ class TestEndpoint:
             cfg.ENDPOINT_STATUS_INSERVICE,
         )
 
-        assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "False")
+        assert k8s.wait_on_condition(endpoint_reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "False")
 
         (_, old_config_resource) = single_variant_config
         current_config_name = old_config_resource["spec"].get("endpointConfigName", None)
         assert k8s.assert_condition_state_message(
             endpoint_reference,
-            "ACK.Terminal",
+            k8s.CONDITION_TYPE_TERMINAL,
             "True",
             FAIL_UPDATE_ERROR_MESSAGE + current_config_name,
         )
@@ -302,8 +302,8 @@ class TestEndpoint:
             cfg.ENDPOINT_STATUS_UPDATING,
         )
 
-        assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "False")
-        assert k8s.get_resource_condition(endpoint_reference, "ACK.Terminal") is None
+        assert k8s.wait_on_condition(endpoint_reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.get_resource_condition(endpoint_reference, k8s.CONDITION_TYPE_TERMINAL) is None
         endpoint_resource = k8s.get_resource(endpoint_reference)
         annotations = endpoint_resource["metadata"].get("annotations", None)
         assert annotations is not None
@@ -314,8 +314,8 @@ class TestEndpoint:
             endpoint_reference,
             cfg.ENDPOINT_STATUS_INSERVICE,
         )
-        assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "True")
-        assert k8s.get_resource_condition(endpoint_reference, "ACK.Terminal") is None
+        assert k8s.wait_on_condition(endpoint_reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.get_resource_condition(endpoint_reference, k8s.CONDITION_TYPE_TERMINAL) is None
         endpoint_resource = k8s.get_resource(endpoint_reference)
         assert endpoint_resource["status"].get("failureReason", None) is None
 

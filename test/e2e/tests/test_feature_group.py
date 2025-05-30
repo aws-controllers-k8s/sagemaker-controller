@@ -144,7 +144,7 @@ class TestFeatureGroup:
             feature_group_name, reference, FEATURE_GROUP_STATUS_CREATED
         )
 
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True")
 
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(feature_group_arn, resource_tags)

@@ -125,7 +125,7 @@ class TestModelPackageGroup:
         self._assert_model_package_group_status_in_sync(
             model_package_group_name, reference, cfg.JOB_STATUS_COMPLETED
         )
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True")
 
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(model_package_group_arn, resource_tags)

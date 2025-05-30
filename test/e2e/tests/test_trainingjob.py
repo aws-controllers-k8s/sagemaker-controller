@@ -69,7 +69,7 @@ class TestTrainingJob:
 
         assert k8s.get_resource_arn(resource) == training_job_desc["TrainingJobArn"]
         assert training_job_desc["TrainingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
+        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "False")
 
         assert_training_status_in_sync(training_job_name, reference, cfg.JOB_STATUS_INPROGRESS)
 
@@ -95,10 +95,10 @@ class TestTrainingJob:
         assert k8s.get_resource_arn(resource) == training_job_arn
 
         assert training_job_desc["TrainingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
+        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "False")
 
         assert_training_status_in_sync(training_job_name, reference, cfg.JOB_STATUS_COMPLETED)
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True")
 
         # model artifact URL is populated
         resource = k8s.get_resource(reference)

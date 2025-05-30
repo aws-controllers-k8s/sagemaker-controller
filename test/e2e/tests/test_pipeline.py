@@ -138,7 +138,7 @@ class TestPipeline:
         assert k8s.get_resource_arn(resource) == pipeline_arn
 
         self._assert_pipeline_status_in_sync(pipeline_arn, reference, "Active")
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True")
 
         # Update the resource
         new_pipeline_display_name = random_suffix_name("updated-display-name", 38)
@@ -148,7 +148,7 @@ class TestPipeline:
         assert resource is not None
 
         self._assert_pipeline_status_in_sync(pipeline_arn, reference, "Active")
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+        assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True")
 
         pipeline_desc = get_sagemaker_pipeline(pipeline_name)
 

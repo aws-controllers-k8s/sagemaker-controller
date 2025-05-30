@@ -193,7 +193,7 @@ class TestAdoptedEndpoint:
             adopt_config_reference,
             adopt_endpoint_reference,
         ):
-            assert k8s.wait_on_condition(reference, "ACK.Adopted", "True")
+            assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_ADOPTED, "True")
 
         model_reference = k8s.create_reference(
             CRD_GROUP, CRD_VERSION, cfg.MODEL_RESOURCE_PLURAL, model_name, namespace
@@ -243,7 +243,7 @@ class TestAdoptedEndpoint:
             endpoint_reference,
             cfg.ENDPOINT_STATUS_INSERVICE,
         )
-        assert k8s.wait_on_condition(endpoint_reference, "ACK.ResourceSynced", "True")
+        assert k8s.wait_on_condition(endpoint_reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True")
 
         for cr in (model_reference, config_reference, endpoint_reference):
             assert delete_custom_resource(cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)

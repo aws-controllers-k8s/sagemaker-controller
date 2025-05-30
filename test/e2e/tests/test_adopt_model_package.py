@@ -181,7 +181,7 @@ class TestAdoptedModelPackage:
             adopt_model_package_group_reference,
             adopt_model_package_reference,
         ):
-            assert k8s.wait_on_condition(reference, "ACK.Adopted", "True")
+            assert k8s.wait_on_condition(reference, k8s.CONDITION_TYPE_ADOPTED, "True")
 
         model_package_group_reference = k8s.create_reference(
             CRD_GROUP,
@@ -231,7 +231,7 @@ class TestAdoptedModelPackage:
             model_package_reference,
             cfg.JOB_STATUS_COMPLETED,
         )
-        assert k8s.wait_on_condition(model_package_reference, "ACK.ResourceSynced", "True")
+        assert k8s.wait_on_condition(model_package_reference, k8s.CONDITION_TYPE_RESOURCE_SYNCED, "True")
 
         for cr in (model_package_reference, model_package_group_reference):
             assert delete_custom_resource(cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
