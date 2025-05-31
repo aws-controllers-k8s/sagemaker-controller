@@ -246,9 +246,7 @@ REPLACEMENT_VALUES = {
     "MODEL_MONITOR_ANALYZER_IMAGE_URI": f"{MODEL_MONITOR_IMAGE_URIS[get_region()]}/sagemaker-model-monitor-analyzer",
     "CLARIFY_IMAGE_URI": f"{CLARIFY_IMAGE_URIS[get_region()]}/sagemaker-clarify-processing:1.0",
     "ENDPOINT_INSTANCE_TYPE": ENDPOINT_INSTANCE_TYPES.get(get_region(), "ml.c5.large"),
-    "TRAINING_JOB_INSTANCE_TYPE": TRAINING_JOB_INSTANCE_TYPES.get(
-        get_region(), "ml.m4.xlarge"
-    ),
+    "TRAINING_JOB_INSTANCE_TYPE": TRAINING_JOB_INSTANCE_TYPES.get(get_region(), "ml.m4.xlarge"),
     "NOTEBOOK_INSTANCE_INSTANCE_TYPES": NOTEBOOK_INSTANCE_INSTANCE_TYPES.get(
         get_region(), "ml.t3.medium"
     ),

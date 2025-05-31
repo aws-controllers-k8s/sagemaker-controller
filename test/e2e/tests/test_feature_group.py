@@ -10,17 +10,16 @@
 # on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
 # express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
-"""Integration tests for the SageMaker Endpoint API.  
+"""Integration tests for the SageMaker Endpoint API.
 """
 
-import boto3
 import botocore
 import pytest
 import logging
-from typing import Dict
 
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
+from acktest.k8s import condition as ack_condition
 
 from e2e import (
     service_marker,
@@ -66,9 +65,7 @@ def feature_group():
 def get_sagemaker_feature_group(feature_group_name: str):
     """Used to check if there is an existing feature group with a given feature_group_name."""
     try:
-        return sagemaker_client().describe_feature_group(
-            FeatureGroupName=feature_group_name
-        )
+        return sagemaker_client().describe_feature_group(FeatureGroupName=feature_group_name)
     except botocore.exceptions.ClientError as error:
         logging.error(
             f"SageMaker could not find a feature group with the name {feature_group_name}. Error {error}"
@@ -120,9 +117,7 @@ class TestFeatureGroup:
             reference,
         )
 
-    def _assert_feature_group_status_in_sync(
-        self, feature_group_name, reference, expected_status
-    ):
+    def _assert_feature_group_status_in_sync(self, feature_group_name, reference, expected_status):
         assert (
             self._wait_feature_group_status(feature_group_name, expected_status)
             == self._wait_resource_feature_group_status(reference, expected_status)
@@ -148,7 +143,7 @@ class TestFeatureGroup:
             feature_group_name, reference, FEATURE_GROUP_STATUS_CREATED
         )
 
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
 
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(feature_group_arn, resource_tags)

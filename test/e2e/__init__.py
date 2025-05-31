@@ -76,9 +76,7 @@ def create_sagemaker_resource(
     return reference, spec, resource
 
 
-def create_adopted_resource(
-    replacements, namespace="default", spec_file="adopted_resource_base"
-):
+def create_adopted_resource(replacements, namespace="default", spec_file="adopted_resource_base"):
     """
     Wrapper around k8s.load_and_create_resource to create a Adopoted resource
     """
@@ -169,7 +167,8 @@ def assert_endpoint_status_in_sync(endpoint_name, reference, expected_status):
 
 def get_inference_component_sagemaker_status(inference_component_name):
     response = sagemaker_client().describe_inference_component(
-        InferenceComponentName=inference_component_name)
+        InferenceComponentName=inference_component_name
+    )
     return response["InferenceComponentStatus"]
 
 
@@ -180,10 +179,10 @@ def get_inference_component_resource_status(reference: k8s.CustomResourceReferen
 
 
 def wait_sagemaker_inference_component_status(
-        endpoint_name,
-        expected_status: str,
-        wait_periods: int = 60,
-        period_length: int = 30,
+    endpoint_name,
+    expected_status: str,
+    wait_periods: int = 60,
+    period_length: int = 30,
 ):
     return wait_for_status(
         expected_status,
@@ -195,10 +194,10 @@ def wait_sagemaker_inference_component_status(
 
 
 def wait_resource_inference_component_status(
-        reference: k8s.CustomResourceReference,
-        expected_status: str,
-        wait_periods: int = 30,
-        period_length: int = 30,
+    reference: k8s.CustomResourceReference,
+    expected_status: str,
+    wait_periods: int = 30,
+    period_length: int = 30,
 ):
     return wait_for_status(
         expected_status,
@@ -211,16 +210,14 @@ def wait_resource_inference_component_status(
 
 def assert_inference_component_status_in_sync(inference_component_name, reference, expected_status):
     assert (
-            wait_sagemaker_inference_component_status(inference_component_name, expected_status)
-            == wait_resource_inference_component_status(reference, expected_status, 2)
-            == expected_status
+        wait_sagemaker_inference_component_status(inference_component_name, expected_status)
+        == wait_resource_inference_component_status(reference, expected_status, 2)
+        == expected_status
     )
 
 
 def get_model_package_sagemaker_status(model_package_arn):
-    response = sagemaker_client().describe_model_package(
-        ModelPackageName=model_package_arn
-    )
+    response = sagemaker_client().describe_model_package(ModelPackageName=model_package_arn)
     return response["ModelPackageStatus"]
 
 
@@ -310,9 +307,7 @@ def assert_tags_in_sync(resource_arn, resource_tags):
 
 def get_sagemaker_training_job(training_job_name: str):
     try:
-        training_job = sagemaker_client().describe_training_job(
-            TrainingJobName=training_job_name
-        )
+        training_job = sagemaker_client().describe_training_job(TrainingJobName=training_job_name)
         return training_job
     except botocore.exceptions.ClientError as error:
         logging.error(
@@ -382,7 +377,9 @@ def get_sagemaker_endpoint(endpoint_name: str):
 
 def get_sagemaker_inference_component(inference_component_name: str):
     try:
-        return sagemaker_client().describe_inference_component(InferenceComponentName=inference_component_name)
+        return sagemaker_client().describe_inference_component(
+            InferenceComponentName=inference_component_name
+        )
     except botocore.exceptions.ClientError as error:
         logging.error(
             f"SageMaker could not find an inference component_name with the name {inference_component_name}. Error {error}"
@@ -395,17 +392,13 @@ def get_sagemaker_model(model_name: str, sm_client=None):
     try:
         return sm_client.describe_model(ModelName=model_name)
     except botocore.exceptions.ClientError as error:
-        logging.error(
-            f"SageMaker could not find a model with the name {model_name}. Error {error}"
-        )
+        logging.error(f"SageMaker could not find a model with the name {model_name}. Error {error}")
         return None
 
 
 def get_sagemaker_endpoint_config(config_name: str):
     try:
-        return sagemaker_client().describe_endpoint_config(
-            EndpointConfigName=config_name
-        )
+        return sagemaker_client().describe_endpoint_config(EndpointConfigName=config_name)
     except botocore.exceptions.ClientError as error:
         logging.error(
             f"SageMaker could not find an endpoint config with the name {config_name}. Error {error}"
@@ -443,6 +436,6 @@ def delete_custom_resource(
 ):
     deleted = True
 
-    if k8s.get_resource_exists(reference): 
+    if k8s.get_resource_exists(reference):
         _, deleted = k8s.delete_custom_resource(reference, wait_period, wait_length)
     return deleted

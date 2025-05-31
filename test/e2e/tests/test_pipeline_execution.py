@@ -18,6 +18,8 @@ import logging
 
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
+from acktest.k8s import condition as ack_condition
+
 from e2e import (
     service_marker,
     wait_for_status,
@@ -40,7 +42,11 @@ def pipeline():
     resource_name = random_suffix_name("pipeline", 28)
     replacements = REPLACEMENT_VALUES.copy()
     replacements["PIPELINE_NAME"] = resource_name
-    (pipeline_reference, pipeline_spec, pipeline_resource,) = create_sagemaker_resource(
+    (
+        pipeline_reference,
+        pipeline_spec,
+        pipeline_resource,
+    ) = create_sagemaker_resource(
         resource_plural="pipelines",
         resource_name=resource_name,
         spec_file="pipeline_processing",
@@ -56,9 +62,7 @@ def pipeline():
     yield pipeline_resource
 
     # Delete the k8s resource if not already deleted by tests
-    assert delete_custom_resource(
-        pipeline_reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH
-    )
+    assert delete_custom_resource(pipeline_reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)
 
 
 @pytest.fixture(scope="function")
@@ -99,9 +103,7 @@ def pipeline_execution(pipeline):
 
 
 def get_sagemaker_pipeline_execution_status(pipeline_execution_arn: str):
-    sm_pipeline_execution_desc = get_sagemaker_pipeline_execution(
-        pipeline_execution_arn
-    )
+    sm_pipeline_execution_desc = get_sagemaker_pipeline_execution(pipeline_execution_arn)
     return sm_pipeline_execution_desc["PipelineExecutionStatus"]
 
 
@@ -148,9 +150,7 @@ class TestPipelineExecution:
         self, pipeline_execution_arn, reference, expected_status
     ):
         assert (
-            self._wait_sagemaker_pipeline_execution_status(
-                pipeline_execution_arn, expected_status
-            )
+            self._wait_sagemaker_pipeline_execution_status(pipeline_execution_arn, expected_status)
             == self._wait_resource_pipeline_execution_status(reference, expected_status)
             == expected_status
         )
@@ -165,9 +165,7 @@ class TestPipelineExecution:
             PipelineName=pipeline_name
         )["PipelineExecutionSummaries"][0]["PipelineExecutionArn"]
 
-        pipeline_execution_desc = get_sagemaker_pipeline_execution(
-            pipeline_execution_arn
-        )
+        pipeline_execution_desc = get_sagemaker_pipeline_execution(pipeline_execution_arn)
         if k8s.get_resource_arn(resource) is None:
             logging.error(
                 f"ARN for this resource is None, resource status is: {resource['status']}"
@@ -181,15 +179,11 @@ class TestPipelineExecution:
             pipeline_execution_arn, reference, cfg.JOB_STATUS_EXECUTING
         )
 
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
 
         # Update the resource
-        new_pipeline_execution_display_name = random_suffix_name(
-            "updated-display-name", 38
-        )
-        spec["spec"][
-            "pipelineExecutionDisplayName"
-        ] = new_pipeline_execution_display_name
+        new_pipeline_execution_display_name = random_suffix_name("updated-display-name", 38)
+        spec["spec"]["pipelineExecutionDisplayName"] = new_pipeline_execution_display_name
         resource = k8s.patch_custom_resource(reference, spec)
         resource = k8s.wait_resource_consumed_by_controller(reference)
         assert resource is not None
@@ -197,11 +191,9 @@ class TestPipelineExecution:
         self._assert_pipeline_execution_status_in_sync(
             pipeline_execution_arn, reference, cfg.JOB_STATUS_EXECUTING
         )
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
 
-        pipeline_execution_desc = get_sagemaker_pipeline_execution(
-            pipeline_execution_arn
-        )
+        pipeline_execution_desc = get_sagemaker_pipeline_execution(pipeline_execution_arn)
 
         assert (
             pipeline_execution_desc["PipelineExecutionDisplayName"]
@@ -212,19 +204,13 @@ class TestPipelineExecution:
             == new_pipeline_execution_display_name
         )
 
-        assert (
-            old_pipeline_last_modified_time
-            != pipeline_execution_desc["LastModifiedTime"]
-        )
-        assert (
-            resource["status"].get("lastModifiedTime")
-            != old_pipeline_last_modified_time
-        )
+        assert old_pipeline_last_modified_time != pipeline_execution_desc["LastModifiedTime"]
+        assert resource["status"].get("lastModifiedTime") != old_pipeline_last_modified_time
 
         self._assert_pipeline_execution_status_in_sync(
             pipeline_execution_arn, reference, cfg.JOB_STATUS_SUCCEEDED
         )
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
 
         # Check that you can delete a completed resource from k8s
         assert delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_WAIT_LENGTH)

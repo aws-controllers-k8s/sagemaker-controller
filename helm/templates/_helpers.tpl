@@ -80,6 +80,7 @@ rules:
   - featuregroups
   - hyperparametertuningjobs
   - inferencecomponents
+  - labelingjobs
   - modelbiasjobdefinitions
   - modelexplainabilityjobdefinitions
   - modelpackagegroups
@@ -114,6 +115,7 @@ rules:
   - featuregroups/status
   - hyperparametertuningjobs/status
   - inferencecomponents/status
+  - labelingjobs/status
   - modelbiasjobdefinitions/status
   - modelexplainabilityjobdefinitions/status
   - modelpackagegroups/status

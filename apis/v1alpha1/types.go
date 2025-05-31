@@ -165,6 +165,12 @@ type AmazonQSettings struct {
 	Status      *string `json:"status,omitempty"`
 }
 
+// Configures how labels are consolidated across human workers and processes
+// output data.
+type AnnotationConsolidationConfig struct {
+	AnnotationConsolidationLambdaARN *string `json:"annotationConsolidationLambdaARN,omitempty"`
+}
+
 // Details about an Amazon SageMaker app.
 type AppDetails struct {
 	AppName      *string      `json:"appName,omitempty"`
@@ -1493,9 +1499,454 @@ type HubInfo struct {
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 }
 
+// Describes the work to be performed by human workers.
+type HumanLoopConfig struct {
+	HumanTaskUiARN *string `json:"humanTaskUiARN,omitempty"`
+	// Defines the amount of money paid to an Amazon Mechanical Turk worker for
+	// each task performed.
+	//
+	// Use one of the following prices for bounding box tasks. Prices are in US
+	// dollars and should be based on the complexity of the task; the longer it
+	// takes in your initial testing, the more you should offer.
+	//
+	//    * 0.036
+	//
+	//    * 0.048
+	//
+	//    * 0.060
+	//
+	//    * 0.072
+	//
+	//    * 0.120
+	//
+	//    * 0.240
+	//
+	//    * 0.360
+	//
+	//    * 0.480
+	//
+	//    * 0.600
+	//
+	//    * 0.720
+	//
+	//    * 0.840
+	//
+	//    * 0.960
+	//
+	//    * 1.080
+	//
+	//    * 1.200
+	//
+	// Use one of the following prices for image classification, text classification,
+	// and custom tasks. Prices are in US dollars.
+	//
+	//    * 0.012
+	//
+	//    * 0.024
+	//
+	//    * 0.036
+	//
+	//    * 0.048
+	//
+	//    * 0.060
+	//
+	//    * 0.072
+	//
+	//    * 0.120
+	//
+	//    * 0.240
+	//
+	//    * 0.360
+	//
+	//    * 0.480
+	//
+	//    * 0.600
+	//
+	//    * 0.720
+	//
+	//    * 0.840
+	//
+	//    * 0.960
+	//
+	//    * 1.080
+	//
+	//    * 1.200
+	//
+	// Use one of the following prices for semantic segmentation tasks. Prices are
+	// in US dollars.
+	//
+	//    * 0.840
+	//
+	//    * 0.960
+	//
+	//    * 1.080
+	//
+	//    * 1.200
+	//
+	// Use one of the following prices for Textract AnalyzeDocument Important Form
+	// Key Amazon Augmented AI review tasks. Prices are in US dollars.
+	//
+	//    * 2.400
+	//
+	//    * 2.280
+	//
+	//    * 2.160
+	//
+	//    * 2.040
+	//
+	//    * 1.920
+	//
+	//    * 1.800
+	//
+	//    * 1.680
+	//
+	//    * 1.560
+	//
+	//    * 1.440
+	//
+	//    * 1.320
+	//
+	//    * 1.200
+	//
+	//    * 1.080
+	//
+	//    * 0.960
+	//
+	//    * 0.840
+	//
+	//    * 0.720
+	//
+	//    * 0.600
+	//
+	//    * 0.480
+	//
+	//    * 0.360
+	//
+	//    * 0.240
+	//
+	//    * 0.120
+	//
+	//    * 0.072
+	//
+	//    * 0.060
+	//
+	//    * 0.048
+	//
+	//    * 0.036
+	//
+	//    * 0.024
+	//
+	//    * 0.012
+	//
+	// Use one of the following prices for Rekognition DetectModerationLabels Amazon
+	// Augmented AI review tasks. Prices are in US dollars.
+	//
+	//    * 1.200
+	//
+	//    * 1.080
+	//
+	//    * 0.960
+	//
+	//    * 0.840
+	//
+	//    * 0.720
+	//
+	//    * 0.600
+	//
+	//    * 0.480
+	//
+	//    * 0.360
+	//
+	//    * 0.240
+	//
+	//    * 0.120
+	//
+	//    * 0.072
+	//
+	//    * 0.060
+	//
+	//    * 0.048
+	//
+	//    * 0.036
+	//
+	//    * 0.024
+	//
+	//    * 0.012
+	//
+	// Use one of the following prices for Amazon Augmented AI custom human review
+	// tasks. Prices are in US dollars.
+	//
+	//    * 1.200
+	//
+	//    * 1.080
+	//
+	//    * 0.960
+	//
+	//    * 0.840
+	//
+	//    * 0.720
+	//
+	//    * 0.600
+	//
+	//    * 0.480
+	//
+	//    * 0.360
+	//
+	//    * 0.240
+	//
+	//    * 0.120
+	//
+	//    * 0.072
+	//
+	//    * 0.060
+	//
+	//    * 0.048
+	//
+	//    * 0.036
+	//
+	//    * 0.024
+	//
+	//    * 0.012
+	PublicWorkforceTaskPrice *PublicWorkforceTaskPrice `json:"publicWorkforceTaskPrice,omitempty"`
+	WorkteamARN              *string                   `json:"workteamARN,omitempty"`
+}
+
+// Information required for human workers to complete a labeling task.
+type HumanTaskConfig struct {
+	// Configures how labels are consolidated across human workers and processes
+	// output data.
+	AnnotationConsolidationConfig     *AnnotationConsolidationConfig `json:"annotationConsolidationConfig,omitempty"`
+	MaxConcurrentTaskCount            *int64                         `json:"maxConcurrentTaskCount,omitempty"`
+	NumberOfHumanWorkersPerDataObject *int64                         `json:"numberOfHumanWorkersPerDataObject,omitempty"`
+	PreHumanTaskLambdaARN             *string                        `json:"preHumanTaskLambdaARN,omitempty"`
+	// Defines the amount of money paid to an Amazon Mechanical Turk worker for
+	// each task performed.
+	//
+	// Use one of the following prices for bounding box tasks. Prices are in US
+	// dollars and should be based on the complexity of the task; the longer it
+	// takes in your initial testing, the more you should offer.
+	//
+	//    * 0.036
+	//
+	//    * 0.048
+	//
+	//    * 0.060
+	//
+	//    * 0.072
+	//
+	//    * 0.120
+	//
+	//    * 0.240
+	//
+	//    * 0.360
+	//
+	//    * 0.480
+	//
+	//    * 0.600
+	//
+	//    * 0.720
+	//
+	//    * 0.840
+	//
+	//    * 0.960
+	//
+	//    * 1.080
+	//
+	//    * 1.200
+	//
+	// Use one of the following prices for image classification, text classification,
+	// and custom tasks. Prices are in US dollars.
+	//
+	//    * 0.012
+	//
+	//    * 0.024
+	//
+	//    * 0.036
+	//
+	//    * 0.048
+	//
+	//    * 0.060
+	//
+	//    * 0.072
+	//
+	//    * 0.120
+	//
+	//    * 0.240
+	//
+	//    * 0.360
+	//
+	//    * 0.480
+	//
+	//    * 0.600
+	//
+	//    * 0.720
+	//
+	//    * 0.840
+	//
+	//    * 0.960
+	//
+	//    * 1.080
+	//
+	//    * 1.200
+	//
+	// Use one of the following prices for semantic segmentation tasks. Prices are
+	// in US dollars.
+	//
+	//    * 0.840
+	//
+	//    * 0.960
+	//
+	//    * 1.080
+	//
+	//    * 1.200
+	//
+	// Use one of the following prices for Textract AnalyzeDocument Important Form
+	// Key Amazon Augmented AI review tasks. Prices are in US dollars.
+	//
+	//    * 2.400
+	//
+	//    * 2.280
+	//
+	//    * 2.160
+	//
+	//    * 2.040
+	//
+	//    * 1.920
+	//
+	//    * 1.800
+	//
+	//    * 1.680
+	//
+	//    * 1.560
+	//
+	//    * 1.440
+	//
+	//    * 1.320
+	//
+	//    * 1.200
+	//
+	//    * 1.080
+	//
+	//    * 0.960
+	//
+	//    * 0.840
+	//
+	//    * 0.720
+	//
+	//    * 0.600
+	//
+	//    * 0.480
+	//
+	//    * 0.360
+	//
+	//    * 0.240
+	//
+	//    * 0.120
+	//
+	//    * 0.072
+	//
+	//    * 0.060
+	//
+	//    * 0.048
+	//
+	//    * 0.036
+	//
+	//    * 0.024
+	//
+	//    * 0.012
+	//
+	// Use one of the following prices for Rekognition DetectModerationLabels Amazon
+	// Augmented AI review tasks. Prices are in US dollars.
+	//
+	//    * 1.200
+	//
+	//    * 1.080
+	//
+	//    * 0.960
+	//
+	//    * 0.840
+	//
+	//    * 0.720
+	//
+	//    * 0.600
+	//
+	//    * 0.480
+	//
+	//    * 0.360
+	//
+	//    * 0.240
+	//
+	//    * 0.120
+	//
+	//    * 0.072
+	//
+	//    * 0.060
+	//
+	//    * 0.048
+	//
+	//    * 0.036
+	//
+	//    * 0.024
+	//
+	//    * 0.012
+	//
+	// Use one of the following prices for Amazon Augmented AI custom human review
+	// tasks. Prices are in US dollars.
+	//
+	//    * 1.200
+	//
+	//    * 1.080
+	//
+	//    * 0.960
+	//
+	//    * 0.840
+	//
+	//    * 0.720
+	//
+	//    * 0.600
+	//
+	//    * 0.480
+	//
+	//    * 0.360
+	//
+	//    * 0.240
+	//
+	//    * 0.120
+	//
+	//    * 0.072
+	//
+	//    * 0.060
+	//
+	//    * 0.048
+	//
+	//    * 0.036
+	//
+	//    * 0.024
+	//
+	//    * 0.012
+	PublicWorkforceTaskPrice          *PublicWorkforceTaskPrice `json:"publicWorkforceTaskPrice,omitempty"`
+	TaskAvailabilityLifetimeInSeconds *int64                    `json:"taskAvailabilityLifetimeInSeconds,omitempty"`
+	TaskDescription                   *string                   `json:"taskDescription,omitempty"`
+	TaskKeywords                      []*string                 `json:"taskKeywords,omitempty"`
+	TaskTimeLimitInSeconds            *int64                    `json:"taskTimeLimitInSeconds,omitempty"`
+	TaskTitle                         *string                   `json:"taskTitle,omitempty"`
+	// Provided configuration information for the worker UI for a labeling job.
+	// Provide either HumanTaskUiArn or UiTemplateS3Uri.
+	//
+	// For named entity recognition, 3D point cloud and video frame labeling jobs,
+	// use HumanTaskUiArn.
+	//
+	// For all other Ground Truth built-in task types and custom task types, use
+	// UiTemplateS3Uri to specify the location of a worker task template in Amazon
+	// S3.
+	UiConfig    *UiConfig `json:"uiConfig,omitempty"`
+	WorkteamARN *string   `json:"workteamARN,omitempty"`
+}
+
 // Container for human task user interface information.
 type HumanTaskUiSummary struct {
-	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	CreationTime   *metav1.Time `json:"creationTime,omitempty"`
+	HumanTaskUiARN *string      `json:"humanTaskUiARN,omitempty"`
 }
 
 // Specifies which training algorithm to use for training jobs that a hyperparameter
@@ -2077,16 +2528,82 @@ type KernelGatewayAppSettings struct {
 	LifecycleConfigARNs []*string     `json:"lifecycleConfigARNs,omitempty"`
 }
 
+// Provides a breakdown of the number of objects labeled.
+type LabelCounters struct {
+	FailedNonRetryableError *int64 `json:"failedNonRetryableError,omitempty"`
+	HumanLabeled            *int64 `json:"humanLabeled,omitempty"`
+	MachineLabeled          *int64 `json:"machineLabeled,omitempty"`
+	TotalLabeled            *int64 `json:"totalLabeled,omitempty"`
+	Unlabeled               *int64 `json:"unlabeled,omitempty"`
+}
+
+// Provides counts for human-labeled tasks in the labeling job.
+type LabelCountersForWorkteam struct {
+	HumanLabeled *int64 `json:"humanLabeled,omitempty"`
+	PendingHuman *int64 `json:"pendingHuman,omitempty"`
+	Total        *int64 `json:"total,omitempty"`
+}
+
 // Provides configuration information for auto-labeling of your data objects.
 // A LabelingJobAlgorithmsConfig object must be supplied in order to use auto-labeling.
 type LabelingJobAlgorithmsConfig struct {
-	InitialActiveLearningModelARN *string `json:"initialActiveLearningModelARN,omitempty"`
+	InitialActiveLearningModelARN        *string `json:"initialActiveLearningModelARN,omitempty"`
+	LabelingJobAlgorithmSpecificationARN *string `json:"labelingJobAlgorithmSpecificationARN,omitempty"`
+	// Configure encryption on the storage volume attached to the ML compute instance
+	// used to run automated data labeling model training and inference.
+	LabelingJobResourceConfig *LabelingJobResourceConfig `json:"labelingJobResourceConfig,omitempty"`
+}
+
+// Attributes of the data specified by the customer. Use these to describe the
+// data to be labeled.
+type LabelingJobDataAttributes struct {
+	ContentClassifiers []*string `json:"contentClassifiers,omitempty"`
+}
+
+// Provides information about the location of input data.
+//
+// You must specify at least one of the following: S3DataSource or SnsDataSource.
+//
+// Use SnsDataSource to specify an SNS input topic for a streaming labeling
+// job. If you do not specify and SNS input topic ARN, Ground Truth will create
+// a one-time labeling job.
+//
+// Use S3DataSource to specify an input manifest file for both streaming and
+// one-time labeling jobs. Adding an S3DataSource is optional if you use SnsDataSource
+// to create a streaming labeling job.
+type LabelingJobDataSource struct {
+	// The Amazon S3 location of the input data objects.
+	S3DataSource *LabelingJobS3DataSource `json:"s3DataSource,omitempty"`
+	// An Amazon SNS data source used for streaming labeling jobs.
+	SNSDataSource *LabelingJobSNSDataSource `json:"snsDataSource,omitempty"`
 }
 
 // Provides summary information for a work team.
 type LabelingJobForWorkteamSummary struct {
-	CreationTime           *metav1.Time `json:"creationTime,omitempty"`
-	WorkRequesterAccountID *string      `json:"workRequesterAccountID,omitempty"`
+	CreationTime                      *metav1.Time `json:"creationTime,omitempty"`
+	JobReferenceCode                  *string      `json:"jobReferenceCode,omitempty"`
+	LabelingJobName                   *string      `json:"labelingJobName,omitempty"`
+	NumberOfHumanWorkersPerDataObject *int64       `json:"numberOfHumanWorkersPerDataObject,omitempty"`
+	WorkRequesterAccountID            *string      `json:"workRequesterAccountID,omitempty"`
+}
+
+// Input configuration information for a labeling job.
+type LabelingJobInputConfig struct {
+	// Attributes of the data specified by the customer. Use these to describe the
+	// data to be labeled.
+	DataAttributes *LabelingJobDataAttributes `json:"dataAttributes,omitempty"`
+	// Provides information about the location of input data.
+	//
+	// You must specify at least one of the following: S3DataSource or SnsDataSource.
+	//
+	// Use SnsDataSource to specify an SNS input topic for a streaming labeling
+	// job. If you do not specify and SNS input topic ARN, Ground Truth will create
+	// a one-time labeling job.
+	//
+	// Use S3DataSource to specify an input manifest file for both streaming and
+	// one-time labeling jobs. Adding an S3DataSource is optional if you use SnsDataSource
+	// to create a streaming labeling job.
+	DataSource *LabelingJobDataSource `json:"dataSource,omitempty"`
 }
 
 // Specifies the location of the output produced by the labeling job.
@@ -2123,12 +2640,33 @@ type LabelingJobSNSDataSource struct {
 	SNSTopicARN *string `json:"snsTopicARN,omitempty"`
 }
 
+// A set of conditions for stopping a labeling job. If any of the conditions
+// are met, the job is automatically stopped. You can use these conditions to
+// control the cost of data labeling.
+//
+// Labeling jobs fail after 30 days with an appropriate client error message.
+type LabelingJobStoppingConditions struct {
+	MaxHumanLabeledObjectCount         *int64 `json:"maxHumanLabeledObjectCount,omitempty"`
+	MaxPercentageOfInputDatasetLabeled *int64 `json:"maxPercentageOfInputDatasetLabeled,omitempty"`
+}
+
 // Provides summary information about a labeling job.
 type LabelingJobSummary struct {
-	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
-	FailureReason    *string      `json:"failureReason,omitempty"`
-	LabelingJobARN   *string      `json:"labelingJobARN,omitempty"`
-	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	AnnotationConsolidationLambdaARN *string      `json:"annotationConsolidationLambdaARN,omitempty"`
+	CreationTime                     *metav1.Time `json:"creationTime,omitempty"`
+	FailureReason                    *string      `json:"failureReason,omitempty"`
+	// Input configuration information for a labeling job.
+	InputConfig *LabelingJobInputConfig `json:"inputConfig,omitempty"`
+	// Provides a breakdown of the number of objects labeled.
+	LabelCounters   *LabelCounters `json:"labelCounters,omitempty"`
+	LabelingJobARN  *string        `json:"labelingJobARN,omitempty"`
+	LabelingJobName *string        `json:"labelingJobName,omitempty"`
+	// Specifies the location of the output produced by the labeling job.
+	LabelingJobOutput     *LabelingJobOutput `json:"labelingJobOutput,omitempty"`
+	LabelingJobStatus     *string            `json:"labelingJobStatus,omitempty"`
+	LastModifiedTime      *metav1.Time       `json:"lastModifiedTime,omitempty"`
+	PreHumanTaskLambdaARN *string            `json:"preHumanTaskLambdaARN,omitempty"`
+	WorkteamARN           *string            `json:"workteamARN,omitempty"`
 }
 
 // Metadata for a Lambda step.
@@ -3565,6 +4103,216 @@ type ProjectSummary struct {
 	ProjectDescription *string      `json:"projectDescription,omitempty"`
 }
 
+// Defines the amount of money paid to an Amazon Mechanical Turk worker for
+// each task performed.
+//
+// Use one of the following prices for bounding box tasks. Prices are in US
+// dollars and should be based on the complexity of the task; the longer it
+// takes in your initial testing, the more you should offer.
+//
+//   - 0.036
+//
+//   - 0.048
+//
+//   - 0.060
+//
+//   - 0.072
+//
+//   - 0.120
+//
+//   - 0.240
+//
+//   - 0.360
+//
+//   - 0.480
+//
+//   - 0.600
+//
+//   - 0.720
+//
+//   - 0.840
+//
+//   - 0.960
+//
+//   - 1.080
+//
+//   - 1.200
+//
+// Use one of the following prices for image classification, text classification,
+// and custom tasks. Prices are in US dollars.
+//
+//   - 0.012
+//
+//   - 0.024
+//
+//   - 0.036
+//
+//   - 0.048
+//
+//   - 0.060
+//
+//   - 0.072
+//
+//   - 0.120
+//
+//   - 0.240
+//
+//   - 0.360
+//
+//   - 0.480
+//
+//   - 0.600
+//
+//   - 0.720
+//
+//   - 0.840
+//
+//   - 0.960
+//
+//   - 1.080
+//
+//   - 1.200
+//
+// Use one of the following prices for semantic segmentation tasks. Prices are
+// in US dollars.
+//
+//   - 0.840
+//
+//   - 0.960
+//
+//   - 1.080
+//
+//   - 1.200
+//
+// Use one of the following prices for Textract AnalyzeDocument Important Form
+// Key Amazon Augmented AI review tasks. Prices are in US dollars.
+//
+//   - 2.400
+//
+//   - 2.280
+//
+//   - 2.160
+//
+//   - 2.040
+//
+//   - 1.920
+//
+//   - 1.800
+//
+//   - 1.680
+//
+//   - 1.560
+//
+//   - 1.440
+//
+//   - 1.320
+//
+//   - 1.200
+//
+//   - 1.080
+//
+//   - 0.960
+//
+//   - 0.840
+//
+//   - 0.720
+//
+//   - 0.600
+//
+//   - 0.480
+//
+//   - 0.360
+//
+//   - 0.240
+//
+//   - 0.120
+//
+//   - 0.072
+//
+//   - 0.060
+//
+//   - 0.048
+//
+//   - 0.036
+//
+//   - 0.024
+//
+//   - 0.012
+//
+// Use one of the following prices for Rekognition DetectModerationLabels Amazon
+// Augmented AI review tasks. Prices are in US dollars.
+//
+//   - 1.200
+//
+//   - 1.080
+//
+//   - 0.960
+//
+//   - 0.840
+//
+//   - 0.720
+//
+//   - 0.600
+//
+//   - 0.480
+//
+//   - 0.360
+//
+//   - 0.240
+//
+//   - 0.120
+//
+//   - 0.072
+//
+//   - 0.060
+//
+//   - 0.048
+//
+//   - 0.036
+//
+//   - 0.024
+//
+//   - 0.012
+//
+// Use one of the following prices for Amazon Augmented AI custom human review
+// tasks. Prices are in US dollars.
+//
+//   - 1.200
+//
+//   - 1.080
+//
+//   - 0.960
+//
+//   - 0.840
+//
+//   - 0.720
+//
+//   - 0.600
+//
+//   - 0.480
+//
+//   - 0.360
+//
+//   - 0.240
+//
+//   - 0.120
+//
+//   - 0.072
+//
+//   - 0.060
+//
+//   - 0.048
+//
+//   - 0.036
+//
+//   - 0.024
+//
+//   - 0.012
+type PublicWorkforceTaskPrice struct {
+	// Represents an amount of money in United States dollars.
+	AmountInUsd *USD `json:"amountInUsd,omitempty"`
+}
+
 // Container for the metadata for a Quality check step. For more information,
 // see the topic on QualityCheck step (https://docs.aws.amazon.com/sagemaker/latest/dg/build-and-manage-steps.html#step-type-quality-check)
 // in the Amazon SageMaker Developer Guide.
@@ -4015,8 +4763,9 @@ type StudioLifecycleConfigDetails struct {
 
 // Describes a work team of a vendor that does the labelling job.
 type SubscribedWorkteam struct {
-	ListingID  *string `json:"listingID,omitempty"`
-	SellerName *string `json:"sellerName,omitempty"`
+	ListingID   *string `json:"listingID,omitempty"`
+	SellerName  *string `json:"sellerName,omitempty"`
+	WorkteamARN *string `json:"workteamARN,omitempty"`
 }
 
 // Time to live duration, where the record is hard deleted after the expiration
@@ -4600,6 +5349,13 @@ type TuningJobStepMetaData struct {
 	ARN *string `json:"arn,omitempty"`
 }
 
+// Represents an amount of money in United States dollars.
+type USD struct {
+	Cents                 *int64 `json:"cents,omitempty"`
+	Dollars               *int64 `json:"dollars,omitempty"`
+	TenthFractionsOfACent *int64 `json:"tenthFractionsOfACent,omitempty"`
+}
+
 // Provided configuration information for the worker UI for a labeling job.
 // Provide either HumanTaskUiArn or UiTemplateS3Uri.
 //
@@ -4610,6 +5366,7 @@ type TuningJobStepMetaData struct {
 // UiTemplateS3Uri to specify the location of a worker task template in Amazon
 // S3.
 type UiConfig struct {
+	HumanTaskUiARN  *string `json:"humanTaskUiARN,omitempty"`
 	UiTemplateS3URI *string `json:"uiTemplateS3URI,omitempty"`
 }
 
@@ -4731,4 +5488,5 @@ type Workteam struct {
 	CreateDate      *metav1.Time `json:"createDate,omitempty"`
 	LastUpdatedDate *metav1.Time `json:"lastUpdatedDate,omitempty"`
 	SubDomain       *string      `json:"subDomain,omitempty"`
+	WorkteamARN     *string      `json:"workteamARN,omitempty"`
 }

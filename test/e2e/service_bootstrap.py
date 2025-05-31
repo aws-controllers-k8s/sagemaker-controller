@@ -60,9 +60,15 @@ def sync_data_bucket(bucket) -> str:
                 "--quiet",
             ]
         )
-        subprocess.call(
-            ["aws", "s3", "sync", f"./{temp_dir}/", f"s3://{bucket_name}", "--quiet"]
-        )
+        subprocess.call(["aws", "s3", "sync", f"./{temp_dir}/", f"s3://{bucket_name}", "--quiet"])
+
+    # NOTE: Temp logging
+    logging.info(f"PRINT DESTINATION BUCKET {bucket_name}")
+    for o in destination_bucket.objects.all():
+        if o.key.startswith("sagemaker/labeling"):
+            logging.info(f"IMPORTANT {o.key}")
+        else:
+            logging.info(f"UNRELATED {o.key}")
 
     logging.info(f"Synced data bucket")
 
