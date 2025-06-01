@@ -6,7 +6,6 @@ import os
 
 xml_path = "../integration_tests.xml"
 
-
 def readXML_and_publish_metrics_to_cw():
     if os.path.isfile(xml_path):
         tree = ET.parse(xml_path)
@@ -14,7 +13,7 @@ def readXML_and_publish_metrics_to_cw():
         failures = testsuite.attrib["failures"]
         tests = testsuite.attrib["tests"]
         successes = int(tests) - int(failures)
-        success_rate = (successes / int(tests)) * 100
+        success_rate = (successes/int(tests))*100
     else:
         print("f{xml_path} does not exists.")
         print(os.getcwd())
@@ -75,7 +74,9 @@ def readXML_and_publish_metrics_to_cw():
 
     # Use the put_metric_data method to push the metric data to CloudWatch
     try:
-        response = cw_client.put_metric_data(Namespace="Canary_Metrics", MetricData=metric_data)
+        response = cw_client.put_metric_data(
+            Namespace="Canary_Metrics", MetricData=metric_data
+        )
         if response["ResponseMetadata"]["HTTPStatusCode"] == 200:
             print("Successfully pushed data to CloudWatch")
             # return 200 status code if successful

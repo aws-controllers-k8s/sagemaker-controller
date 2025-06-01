@@ -16,11 +16,10 @@
 import botocore
 import pytest
 import logging
+from typing import Dict
 
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
-from acktest.k8s import condition as ack_condition
-
 from e2e import (
     service_marker,
     create_sagemaker_resource,
@@ -30,6 +29,7 @@ from e2e import (
     assert_tags_in_sync,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
+from e2e.bootstrap_resources import get_bootstrap_resources
 from e2e.common import config as cfg
 
 RESOURCE_PLURAL = "transformjobs"
@@ -57,7 +57,9 @@ def xgboost_model_for_transform(generate_job_names):
     )
     assert resource is not None
     if k8s.get_resource_arn(resource) is None:
-        logging.error(f"ARN for this resource is None, resource status is: {resource['status']}")
+        logging.error(
+            f"ARN for this resource is None, resource status is: {resource['status']}"
+        )
     assert k8s.get_resource_arn(resource) is not None
 
     yield (transform_resource_name, model_resource_name)
@@ -84,7 +86,9 @@ def xgboost_transformjob(xgboost_model_for_transform):
 
     assert resource is not None
     if k8s.get_resource_arn(resource) is None:
-        logging.error(f"ARN for this resource is None, resource status is: {resource['status']}")
+        logging.error(
+            f"ARN for this resource is None, resource status is: {resource['status']}"
+        )
     assert k8s.get_resource_arn(resource) is not None
 
     yield (reference, resource)
@@ -150,7 +154,9 @@ class TestTransformJob:
             transform_job_name,
         )
 
-    def _assert_transform_status_in_sync(self, transform_job_name, reference, expected_status):
+    def _assert_transform_status_in_sync(
+        self, transform_job_name, reference, expected_status
+    ):
         assert (
             self._wait_sagemaker_transform_status(transform_job_name, expected_status)
             == self._wait_resource_transform_status(reference, expected_status)
@@ -167,7 +173,7 @@ class TestTransformJob:
         transform_sm_desc = get_sagemaker_transform_job(transform_job_name)
         assert k8s.get_resource_arn(resource) == transform_sm_desc["TransformJobArn"]
         assert transform_sm_desc["TransformJobStatus"] == cfg.JOB_STATUS_INPROGRESS
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
         self._assert_transform_status_in_sync(
             transform_job_name, reference, cfg.JOB_STATUS_INPROGRESS
@@ -194,12 +200,12 @@ class TestTransformJob:
         assert k8s.get_resource_arn(resource) == transform_arn
 
         assert transform_sm_desc["TransformJobStatus"] == cfg.JOB_STATUS_INPROGRESS
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
         self._assert_transform_status_in_sync(
             transform_job_name, reference, cfg.JOB_STATUS_COMPLETED
         )
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(transform_arn, resource_tags)

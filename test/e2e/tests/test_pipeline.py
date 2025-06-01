@@ -18,8 +18,6 @@ import logging
 
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
-from acktest.k8s import condition as ack_condition
-
 from e2e import (
     service_marker,
     wait_for_status,
@@ -42,11 +40,7 @@ def pipeline():
     resource_name = random_suffix_name("pipeline", 28)
     replacements = REPLACEMENT_VALUES.copy()
     replacements["PIPELINE_NAME"] = resource_name
-    (
-        pipeline_reference,
-        pipeline_spec,
-        pipeline_resource,
-    ) = create_sagemaker_resource(
+    (pipeline_reference, pipeline_spec, pipeline_resource,) = create_sagemaker_resource(
         resource_plural=RESOURCE_PLURAL,
         resource_name=resource_name,
         spec_file="pipeline",
@@ -140,7 +134,7 @@ class TestPipeline:
         assert k8s.get_resource_arn(resource) == pipeline_arn
 
         self._assert_pipeline_status_in_sync(pipeline_arn, reference, "Active")
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
         # Update the resource
         new_pipeline_display_name = random_suffix_name("updated-display-name", 38)
@@ -150,14 +144,20 @@ class TestPipeline:
         assert resource is not None
 
         self._assert_pipeline_status_in_sync(pipeline_arn, reference, "Active")
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
         pipeline_desc = get_sagemaker_pipeline(pipeline_name)
 
         assert pipeline_desc["PipelineDisplayName"] == new_pipeline_display_name
-        assert resource["spec"].get("pipelineDisplayName", None) == new_pipeline_display_name
+        assert (
+            resource["spec"].get("pipelineDisplayName", None)
+            == new_pipeline_display_name
+        )
         assert old_pipeline_last_modified_time != pipeline_desc["LastModifiedTime"]
-        assert resource["status"].get("lastModifiedTime") != old_pipeline_last_modified_time
+        assert (
+            resource["status"].get("lastModifiedTime")
+            != old_pipeline_last_modified_time
+        )
 
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(pipeline_arn, resource_tags)

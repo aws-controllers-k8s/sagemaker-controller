@@ -18,20 +18,22 @@ import logging
 import botocore
 import time
 
-from acktest.k8s import resource as k8s
-
-from e2e import service_marker, assert_tags_in_sync, delete_custom_resource
-from e2e.common import config as cfg
+from e2e import service_marker, assert_tags_in_sync
 from e2e.common.fixtures import (
     xgboost_churn_data_quality_job_definition,
     xgboost_churn_endpoint,
 )
+from e2e.common import config as cfg
+from acktest.k8s import resource as k8s
+from e2e import delete_custom_resource
 
 # Access variable so it is loaded as a fixture
 _accessed = xgboost_churn_data_quality_job_definition, xgboost_churn_endpoint
 
 
-def describe_sagemaker_data_quality_job_definition(sagemaker_client, job_definition_name):
+def describe_sagemaker_data_quality_job_definition(
+    sagemaker_client, job_definition_name
+):
     try:
         return sagemaker_client.describe_data_quality_job_definition(
             JobDefinitionName=job_definition_name
@@ -62,8 +64,12 @@ class TestDataQualityJobDefinition:
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(job_definition_arn, resource_tags)
         # Delete the k8s resource.
-        assert delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
+        assert delete_custom_resource(
+            reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+        )
         assert (
-            describe_sagemaker_data_quality_job_definition(sagemaker_client, job_definition_name)
+            describe_sagemaker_data_quality_job_definition(
+                sagemaker_client, job_definition_name
+            )
             is None
         )

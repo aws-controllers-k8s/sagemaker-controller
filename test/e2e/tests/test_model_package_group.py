@@ -13,18 +13,19 @@
 """Integration tests for the SageMaker ModelPackageGroup API.
 """
 
+import botocore
 import pytest
 import logging
+from typing import Dict
 
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
-from acktest.k8s import condition as ack_condition
-
 from e2e import (
     service_marker,
     create_sagemaker_resource,
     delete_custom_resource,
     wait_for_status,
+    sagemaker_client,
     get_sagemaker_model_package_group,
     assert_tags_in_sync,
 )
@@ -52,11 +53,15 @@ def xgboost_model_package_group():
     yield (reference, resource)
 
     # Delete the k8s resource if not already deleted by tests
-    assert delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
+    assert delete_custom_resource(
+        reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+    )
 
 
 def get_model_package_group_sagemaker_status(model_package_group_name: str):
-    model_package_group_sm_desc = get_sagemaker_model_package_group(model_package_group_name)
+    model_package_group_sm_desc = get_sagemaker_model_package_group(
+        model_package_group_name
+    )
     return model_package_group_sm_desc["ModelPackageGroupStatus"]
 
 
@@ -106,7 +111,9 @@ class TestModelPackageGroup:
             self._wait_sagemaker_model_package_group_status(
                 model_package_group_name, expected_status
             )
-            == self._wait_resource_model_package_group_status(reference, expected_status)
+            == self._wait_resource_model_package_group_status(
+                reference, expected_status
+            )
             == expected_status
         )
 
@@ -117,19 +124,23 @@ class TestModelPackageGroup:
         model_package_group_name = resource["spec"].get("modelPackageGroupName", None)
 
         assert model_package_group_name is not None
-        model_package_group_sm_desc = get_sagemaker_model_package_group(model_package_group_name)
+        model_package_group_sm_desc = get_sagemaker_model_package_group(
+            model_package_group_name
+        )
         model_package_group_arn = model_package_group_sm_desc["ModelPackageGroupArn"]
         assert k8s.get_resource_arn(resource) == model_package_group_arn
 
         self._assert_model_package_group_status_in_sync(
             model_package_group_name, reference, cfg.JOB_STATUS_COMPLETED
         )
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(model_package_group_arn, resource_tags)
 
         # Check that you can delete a completed resource from k8s
-        assert delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
+        assert delete_custom_resource(
+            reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+        )
 
         assert get_sagemaker_model_package_group(model_package_group_name) is None

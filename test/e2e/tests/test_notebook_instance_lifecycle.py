@@ -17,18 +17,22 @@ import pytest
 import logging
 import botocore
 import datetime
-from time import sleep
 
-from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
-
+from acktest.resources import random_suffix_name
 from e2e import (
     service_marker,
+    wait_for_status,
     create_sagemaker_resource,
     delete_custom_resource,
     sagemaker_client,
 )
+
+from e2e.bootstrap_resources import get_bootstrap_resources
+import random
+
 from e2e.replacement_values import REPLACEMENT_VALUES
+from time import sleep
 from e2e.common import config as cfg
 
 DELETE_WAIT_PERIOD = 16
@@ -71,14 +75,18 @@ def get_notebook_instance_lifecycle_config(notebook_instance_lfc_name: str):
 @service_marker
 @pytest.mark.canary
 class TestNotebookInstanceLifecycleConfig:
-    def wait_until_update(self, reference, previous_modified_time, wait_period=30, wait_time=5):
+    def wait_until_update(
+        self, reference, previous_modified_time, wait_period=30, wait_time=5
+    ):
         for i in range(wait_period):
             resource = k8s.get_resource(reference)
             assert resource is not None
             assert "lastModifiedTime" in resource["status"]
             last_modified_time = resource["status"]["lastModifiedTime"]
             d1 = datetime.datetime.strptime(last_modified_time, "%Y-%m-%dT%H:%M:%SZ")
-            d2 = datetime.datetime.strptime(previous_modified_time, "%Y-%m-%dT%H:%M:%SZ")
+            d2 = datetime.datetime.strptime(
+                previous_modified_time, "%Y-%m-%dT%H:%M:%SZ"
+            )
             if d1 > d2:
                 return True
             sleep(wait_time)
@@ -124,6 +132,10 @@ class TestNotebookInstanceLifecycleConfig:
         assert notebook_instance_lfc_desc["OnStart"][0]["Content"] == update_content
 
         # Deleting the resource
-        _, deleted = k8s.delete_custom_resource(reference, DELETE_WAIT_PERIOD, DELETE_PERIOD_LENGTH)
+        _, deleted = k8s.delete_custom_resource(
+            reference, DELETE_WAIT_PERIOD, DELETE_PERIOD_LENGTH
+        )
         assert deleted is True
-        assert get_notebook_instance_lifecycle_config(notebook_instance_lfc_name) is None
+        assert (
+            get_notebook_instance_lifecycle_config(notebook_instance_lfc_name) is None
+        )

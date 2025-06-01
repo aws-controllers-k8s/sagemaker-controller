@@ -14,12 +14,9 @@
 """
 
 import botocore
+import time
 import pytest
 import logging
-
-from acktest.resources import random_suffix_name
-from acktest.k8s import resource as k8s
-from acktest.k8s import condition as ack_condition
 
 from e2e import (
     service_marker,
@@ -34,6 +31,8 @@ from e2e.common.fixtures import (
     xgboost_churn_data_quality_job_definition,
     xgboost_churn_endpoint,
 )
+from acktest.k8s import resource as k8s
+from acktest.resources import random_suffix_name
 
 RESOURCE_PLURAL = "monitoringschedules"
 
@@ -66,7 +65,9 @@ def xgboost_churn_data_quality_monitoring_schedule(
 
     yield (reference, resource, spec)
 
-    assert delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
+    assert delete_custom_resource(
+        reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+    )
 
 
 def get_sagemaker_monitoring_schedule(sagemaker_client, monitoring_schedule_name):
@@ -82,7 +83,9 @@ def get_sagemaker_monitoring_schedule(sagemaker_client, monitoring_schedule_name
         return None
 
 
-def get_monitoring_schedule_sagemaker_status(sagemaker_client, monitoring_schedule_name):
+def get_monitoring_schedule_sagemaker_status(
+    sagemaker_client, monitoring_schedule_name
+):
     return sagemaker_client.describe_monitoring_schedule(
         MonitoringScheduleName=monitoring_schedule_name
     )["MonitoringScheduleStatus"]
@@ -149,7 +152,9 @@ class TestMonitoringSchedule:
             == expected_status
         )
 
-    def test_smoke(self, sagemaker_client, xgboost_churn_data_quality_monitoring_schedule):
+    def test_smoke(
+        self, sagemaker_client, xgboost_churn_data_quality_monitoring_schedule
+    ):
         (reference, resource, spec) = xgboost_churn_data_quality_monitoring_schedule
         assert k8s.get_resource_exists(reference)
 
@@ -160,10 +165,11 @@ class TestMonitoringSchedule:
         monitoring_schedule_arn = monitoring_schedule_desc["MonitoringScheduleArn"]
         assert k8s.get_resource_arn(resource) == monitoring_schedule_arn
 
+
         self._assert_monitoring_schedule_status_in_sync(
             sagemaker_client, monitoring_schedule_name, reference, self.STATUS_SCHEDULED
         )
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(monitoring_schedule_arn, resource_tags)
@@ -180,16 +186,25 @@ class TestMonitoringSchedule:
         self._assert_monitoring_schedule_status_in_sync(
             sagemaker_client, monitoring_schedule_name, reference, self.STATUS_SCHEDULED
         )
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
         latest_schedule = get_sagemaker_monitoring_schedule(
             sagemaker_client, monitoring_schedule_name
         )
         assert (
-            latest_schedule["MonitoringScheduleConfig"]["ScheduleConfig"]["ScheduleExpression"]
+            latest_schedule["MonitoringScheduleConfig"]["ScheduleConfig"][
+                "ScheduleExpression"
+            ]
             == new_cron_expression
         )
 
         # Delete the k8s resource.
-        assert delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
-        assert get_sagemaker_monitoring_schedule(sagemaker_client, monitoring_schedule_name) is None
+        assert delete_custom_resource(
+            reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+        )
+        assert (
+            get_sagemaker_monitoring_schedule(
+                sagemaker_client, monitoring_schedule_name
+            )
+            is None
+        )

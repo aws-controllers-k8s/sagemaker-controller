@@ -13,13 +13,14 @@
 """Integration test for ACKs Cross Region Support.
 """
 
-import pytest
 import logging
-
 from acktest.aws.identity import get_region
+import pytest
+import time
+from typing import Dict
+
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
-
 from e2e import (
     service_marker,
     create_sagemaker_resource,
@@ -39,7 +40,9 @@ def cross_region_model():
     replacements = REPLACEMENT_VALUES.copy()
     replacements["MODEL_NAME"] = resource_name
     replacements["REGION"] = region
-    replacements["XGBOOST_V1_IMAGE_URI"] = f"{XGBOOST_V1_IMAGE_URIS[region]}/xgboost:latest"
+    replacements[
+        "XGBOOST_V1_IMAGE_URI"
+    ] = f"{XGBOOST_V1_IMAGE_URIS[region]}/xgboost:latest"
 
     reference, spec, resource = create_sagemaker_resource(
         resource_plural=cfg.MODEL_RESOURCE_PLURAL,
@@ -52,7 +55,9 @@ def cross_region_model():
     yield (reference, resource)
 
     # Delete the k8s resource if not already deleted by tests
-    assert delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
+    assert delete_custom_resource(
+        reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+    )
 
 
 def get_cross_region():
@@ -75,6 +80,8 @@ class TestCrossRegionModel:
         assert k8s.get_resource_arn(resource) == cross_region_model_arn
 
         # Delete the k8s resource.
-        assert delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
+        assert delete_custom_resource(
+            reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+        )
 
         assert get_sagemaker_model(model_name, sm_client) is None

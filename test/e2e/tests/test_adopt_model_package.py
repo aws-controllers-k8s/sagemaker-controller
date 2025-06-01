@@ -17,7 +17,6 @@ import pytest
 
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
-from acktest.k8s import condition as ack_condition
 
 from e2e import (
     service_marker,
@@ -73,7 +72,9 @@ def sdk_make_model_package(model_package_group_name):
         },
     }
 
-    model_package_response = sagemaker_client().create_model_package(**model_package_input)
+    model_package_response = sagemaker_client().create_model_package(
+        **model_package_input
+    )
     assert model_package_response.get("ModelPackageArn", None) is not None
 
     return model_package_input, model_package_response
@@ -87,7 +88,9 @@ def sdk_model_package(name_suffix):
         model_package_group_input,
         model_package_group_response,
     ) = sdk_make_model_package_group(model_package_group_name)
-    model_package_input, model_package_response = sdk_make_model_package(model_package_group_name)
+    model_package_input, model_package_response = sdk_make_model_package(
+        model_package_group_name
+    )
 
     yield (
         model_package_group_input,
@@ -138,7 +141,9 @@ def adopted_model_package(sdk_model_package):
         "adopt-" + model_package_input["ModelPackageGroupName"] + "-child"
     )
     replacements["TARGET_RESOURCE_AWS"] = model_package_response.get("ModelPackageArn")
-    replacements["TARGET_RESOURCE_K8S"] = model_package_input["ModelPackageGroupName"] + "-child"
+    replacements["TARGET_RESOURCE_K8S"] = (
+        model_package_input["ModelPackageGroupName"] + "-child"
+    )
     replacements["RESOURCE_KIND"] = "ModelPackage"
 
     (
@@ -154,7 +159,9 @@ def adopted_model_package(sdk_model_package):
     yield (adopt_model_package_group_reference, adopt_model_package_reference)
 
     for cr in (adopt_model_package_group_reference, adopt_model_package_reference):
-        assert delete_custom_resource(cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
+        assert delete_custom_resource(
+            cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+        )
 
 
 @service_marker
@@ -173,16 +180,18 @@ class TestAdoptedModelPackage:
         ) = sdk_model_package
 
         namespace = "default"
-        model_package_group_name = k8s.get_resource(adopt_model_package_group_reference)["spec"][
+        model_package_group_name = k8s.get_resource(
+            adopt_model_package_group_reference
+        )["spec"]["aws"]["nameOrID"]
+        model_package_arn = k8s.get_resource(adopt_model_package_reference)["spec"][
             "aws"
-        ]["nameOrID"]
-        model_package_arn = k8s.get_resource(adopt_model_package_reference)["spec"]["aws"]["arn"]
+        ]["arn"]
 
         for reference in (
             adopt_model_package_group_reference,
             adopt_model_package_reference,
         ):
-            assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_ADOPTED, "True")
+            assert k8s.wait_on_condition(reference, "ACK.Adopted", "True")
 
         model_package_group_reference = k8s.create_reference(
             CRD_GROUP,
@@ -201,7 +210,9 @@ class TestAdoptedModelPackage:
             == model_package_group_name
         )
         assert (
-            model_package_group_resource["spec"].get("modelPackageGroupDescription", None)
+            model_package_group_resource["spec"].get(
+                "modelPackageGroupDescription", None
+            )
             is not None
         )
         assert k8s.get_resource_arn(
@@ -215,17 +226,22 @@ class TestAdoptedModelPackage:
             model_package_input["ModelPackageGroupName"] + "-child",
             namespace,
         )
-        model_package_resource = k8s.wait_resource_consumed_by_controller(model_package_reference)
+        model_package_resource = k8s.wait_resource_consumed_by_controller(
+            model_package_reference
+        )
         assert model_package_resource is not None
 
         assert (
             model_package_resource["spec"].get("modelPackageGroupName", None)
             == model_package_group_name
         )
-        assert model_package_resource["spec"].get("inferenceSpecification", None) is not None
-        assert k8s.get_resource_arn(model_package_resource) == model_package_response.get(
-            "ModelPackageArn", None
+        assert (
+            model_package_resource["spec"].get("inferenceSpecification", None)
+            is not None
         )
+        assert k8s.get_resource_arn(
+            model_package_resource
+        ) == model_package_response.get("ModelPackageArn", None)
 
         assert_model_package_status_in_sync(
             model_package_arn,
@@ -233,8 +249,10 @@ class TestAdoptedModelPackage:
             cfg.JOB_STATUS_COMPLETED,
         )
         assert k8s.wait_on_condition(
-            model_package_reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+            model_package_reference, "ACK.ResourceSynced", "True"
         )
 
         for cr in (model_package_reference, model_package_group_reference):
-            assert delete_custom_resource(cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
+            assert delete_custom_resource(
+                cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+            )

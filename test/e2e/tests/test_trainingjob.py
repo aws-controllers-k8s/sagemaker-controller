@@ -18,8 +18,6 @@ import logging
 
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
-from acktest.k8s import condition as ack_condition
-
 from e2e import (
     service_marker,
     create_sagemaker_resource,
@@ -48,7 +46,9 @@ def xgboost_training_job():
 
     assert resource is not None
     if k8s.get_resource_arn(resource) is None:
-        logging.error(f"ARN for this resource is None, resource status is: {resource['status']}")
+        logging.error(
+            f"ARN for this resource is None, resource status is: {resource['status']}"
+        )
     assert k8s.get_resource_arn(resource) is not None
 
     yield (reference, resource)
@@ -71,9 +71,11 @@ class TestTrainingJob:
 
         assert k8s.get_resource_arn(resource) == training_job_desc["TrainingJobArn"]
         assert training_job_desc["TrainingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
-        assert_training_status_in_sync(training_job_name, reference, cfg.JOB_STATUS_INPROGRESS)
+        assert_training_status_in_sync(
+            training_job_name, reference, cfg.JOB_STATUS_INPROGRESS
+        )
 
         # Delete the k8s resource.
         assert delete_custom_resource(
@@ -97,10 +99,12 @@ class TestTrainingJob:
         assert k8s.get_resource_arn(resource) == training_job_arn
 
         assert training_job_desc["TrainingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
-        assert_training_status_in_sync(training_job_name, reference, cfg.JOB_STATUS_COMPLETED)
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert_training_status_in_sync(
+            training_job_name, reference, cfg.JOB_STATUS_COMPLETED
+        )
+        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
         # model artifact URL is populated
         resource = k8s.get_resource(reference)

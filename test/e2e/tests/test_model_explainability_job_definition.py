@@ -18,9 +18,6 @@ import pytest
 import logging
 import time
 
-from acktest.resources import random_suffix_name
-from acktest.k8s import resource as k8s
-
 from e2e import (
     service_marker,
     create_sagemaker_resource,
@@ -30,6 +27,8 @@ from e2e import (
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common.fixtures import xgboost_churn_endpoint
 from e2e.common import config as cfg
+from acktest.resources import random_suffix_name
+from acktest.k8s import resource as k8s
 
 RESOURCE_PLURAL = "modelexplainabilityjobdefinitions"
 
@@ -57,10 +56,14 @@ def xgboost_churn_model_explainability_job_definition(xgboost_churn_endpoint):
 
     yield (reference, resource)
 
-    assert delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
+    assert delete_custom_resource(
+        reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+    )
 
 
-def get_sagemaker_model_explainability_job_definition(sagemaker_client, job_definition_name):
+def get_sagemaker_model_explainability_job_definition(
+    sagemaker_client, job_definition_name
+):
     try:
         return sagemaker_client.describe_model_explainability_job_definition(
             JobDefinitionName=job_definition_name
@@ -75,7 +78,9 @@ def get_sagemaker_model_explainability_job_definition(sagemaker_client, job_defi
 @service_marker
 @pytest.mark.canary
 class TestModelExplainabilityJobDefinition:
-    def test_smoke(self, sagemaker_client, xgboost_churn_model_explainability_job_definition):
+    def test_smoke(
+        self, sagemaker_client, xgboost_churn_model_explainability_job_definition
+    ):
         (reference, resource) = xgboost_churn_model_explainability_job_definition
         assert k8s.get_resource_exists(reference)
 
@@ -91,8 +96,12 @@ class TestModelExplainabilityJobDefinition:
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(job_definition_arn, resource_tags)
         # Delete the k8s resource.
-        assert delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
+        assert delete_custom_resource(
+            reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
+        )
         assert (
-            get_sagemaker_model_explainability_job_definition(sagemaker_client, job_definition_name)
+            get_sagemaker_model_explainability_job_definition(
+                sagemaker_client, job_definition_name
+            )
             is None
         )
