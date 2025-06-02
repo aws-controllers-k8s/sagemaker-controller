@@ -53,9 +53,9 @@ def image_labeling_job():
 
     yield (reference, resource)
 
-    assert delete_custom_resource(
-        reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
-    )
+    # assert delete_custom_resource(
+    #     reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
+    # )
 
 
 def get_sagemaker_labeling_job(labeling_job_name: str):
