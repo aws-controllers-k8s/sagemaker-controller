@@ -33,7 +33,7 @@ spec:
     taskTitle: "Please draw a box around each Logos"
     uiConfig:
       uiTemplateS3URI: s3://$SAGEMAKER_DATA_BUCKET/sagemaker/labeling/instructions.template # Replace with your UI template path
-    workteamARN: arn:aws:sagemaker:us-west-2:897880167187:workteam/private-crowd/sagemaker-controller-labeling-job # WARN: may need to relocate private work team
+    workteamARN: arn:aws:sagemaker:us-west-2:108782066590:workteam/private-crowd/ack-sagemaker-operator-pr-test-manual
   tags:
     - key: confidentiality
       value: public
