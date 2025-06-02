@@ -1,6 +1,6 @@
 # Labeling Job Sample
 
-This sample demonstrates how to start processing jobs using your own labeling artifacts, packaged in a SageMaker-compatible container, using the Amazon AWS Controllers for Kubernetes (ACK) service controller for Amazon SageMaker.
+This sample demonstrates how to start labeling jobs using your own labeling artifacts, packaged in a SageMaker-compatible container, using the Amazon AWS Controllers for Kubernetes (ACK) service controller for Amazon SageMaker.
 
 ## Prerequisites
 
@@ -29,34 +29,34 @@ s3.put_bucket_cors(Bucket=<BUCKET_NAME>,
                    CORSConfiguration=cors_configuration)
 ```
 
-### Updating the Processing Job Specification
+### Updating the Labeling Job Specification
 
 In the `my-labeling-job.yaml` file, modify the placeholder values with those associated with your account and labeling job.
 
-## Submitting your Processing Job
+## Submitting your Labeling Job
 
-### Create a Processing Job
+### Create a Labeling Job
 
-To submit your prepared processing job specification, apply the specification to your Kubernetes cluster as such:
+To submit your prepared labeling job specification, apply the specification to your Kubernetes cluster as such:
 ```
 $ kubectl apply -f my-labeling-job.yaml
-processingjob.sagemaker.services.k8s.aws.amazon.com/my-labeling-job created
+labeling.sagemaker.services.k8s.aws.amazon.com/my-labeling-job created
 ```
 
-### List Processing Jobs
-To list all processing jobs created using the ACK controller use the following command:
+### List Labeling Jobs
+To list all labeling jobs created using the ACK controller use the following command:
 ```
 $ kubectl get labelingjobs
 ```
 
-### Describe a Processing Job
-To get more details about the processing job once it's submitted, like checking the status, errors or parameters of the processing job use the following command:
+### Describe a Labeling Job
+To get more details about the labeling job once it's submitted, like checking the status, errors or parameters of the labeling job use the following command:
 ```
 $ kubectl describe labelingjobs my-labeling-job
 ```
 
-### Delete a Processing Job
-To delete the processing job, use the following command:
+### Delete a Labeling Job
+To delete the labeling job, use the following command:
 ```
 $ kubectl delete labelingjobs my-labeling-job
 ```
