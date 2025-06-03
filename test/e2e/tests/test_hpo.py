@@ -133,7 +133,9 @@ class TestHPO:
         hpo_sm_desc = get_sagemaker_hpo_job(hpo_job_name)
         assert k8s.get_resource_arn(resource) == hpo_sm_desc["HyperParameterTuningJobArn"]
         assert hpo_sm_desc["HyperParameterTuningJobStatus"] == cfg.JOB_STATUS_INPROGRESS
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+        )
 
         self._assert_hpo_status_in_sync(hpo_job_name, reference, cfg.JOB_STATUS_INPROGRESS)
 
@@ -158,10 +160,14 @@ class TestHPO:
         assert k8s.get_resource_arn(resource) == hpo_arn
 
         assert hpo_sm_desc["HyperParameterTuningJobStatus"] == cfg.JOB_STATUS_INPROGRESS
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+        )
 
         self._assert_hpo_status_in_sync(hpo_job_name, reference, cfg.JOB_STATUS_COMPLETED)
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+        )
 
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(hpo_arn, resource_tags)

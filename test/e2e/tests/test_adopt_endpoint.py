@@ -243,7 +243,9 @@ class TestAdoptedEndpoint:
             endpoint_reference,
             cfg.ENDPOINT_STATUS_INSERVICE,
         )
-        assert k8s.wait_on_condition(endpoint_reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(
+            endpoint_reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+        )
 
         for cr in (model_reference, config_reference, endpoint_reference):
             assert delete_custom_resource(cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)

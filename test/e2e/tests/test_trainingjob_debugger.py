@@ -147,13 +147,17 @@ class TestTrainingDebuggerJob:
         training_job_desc = get_sagemaker_training_job(training_job_name)
 
         assert training_job_desc["TrainingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+        )
 
         spec["spec"]["profilerConfig"]["profilingIntervalInMilliseconds"] = NEW_PROFILER_INTERVAL
         k8s.patch_custom_resource(reference, spec)
 
         assert_training_status_in_sync(training_job_name, reference, cfg.JOB_STATUS_COMPLETED)
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+        )
 
         # Assert debugger rule evaluation completed
         self._assert_training_rule_eval_status_in_sync(
@@ -164,7 +168,9 @@ class TestTrainingDebuggerJob:
         self._assert_training_rule_eval_status_in_sync(
             training_job_name, "ProfilerRule", reference, cfg.RULE_STATUS_COMPLETED
         )
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+        )
 
         # Check if the update worked.
         training_sm_desc = get_sagemaker_training_job(training_job_name)

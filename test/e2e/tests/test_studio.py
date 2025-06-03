@@ -301,7 +301,9 @@ def app_fixture(user_profile_fixture):
     )
 
     assert delete_custom_resource(
-        app_reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
+        app_reference,
+        cfg.LONG_JOB_DELETE_WAIT_PERIODS,
+        cfg.LONG_JOB_DELETE_WAIT_LENGTH,
     )
 
 
