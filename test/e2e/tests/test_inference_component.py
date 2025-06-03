@@ -126,10 +126,14 @@ def endpoint(name_suffix, endpoint_config):
 
     # endpoint transitions Creating -> InService state
     assert_endpoint_status_in_sync(endpoint_name, endpoint_reference, cfg.ENDPOINT_STATUS_CREATING)
-    assert k8s.wait_on_condition(endpoint_reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+    assert k8s.wait_on_condition(
+        endpoint_reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+    )
 
     assert_endpoint_status_in_sync(endpoint_name, endpoint_reference, cfg.ENDPOINT_STATUS_INSERVICE)
-    assert k8s.wait_on_condition(endpoint_reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+    assert k8s.wait_on_condition(
+        endpoint_reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+    )
 
     yield (endpoint_reference, endpoint_resource)
 
@@ -221,12 +225,16 @@ class TestInferenceComponent:
         assert_inference_component_status_in_sync(
             inference_component_name, reference, cfg.INFERENCE_COMPONENT_STATUS_CREATING
         )
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+        )
 
         assert_inference_component_status_in_sync(
             inference_component_name, reference, cfg.INFERENCE_COMPONENT_STATUS_INSERVICE
         )
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+        )
 
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(inference_component_arn, resource_tags)
@@ -247,7 +255,9 @@ class TestInferenceComponent:
             cfg.INFERENCE_COMPONENT_STATUS_UPDATING,
         )
 
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+        )
         assert k8s.get_resource_condition(reference, ack_condition.CONDITION_TYPE_TERMINAL) is None
         resource = k8s.get_resource(reference)
 
@@ -257,7 +267,9 @@ class TestInferenceComponent:
             cfg.INFERENCE_COMPONENT_STATUS_INSERVICE,
         )
 
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+        )
 
         assert k8s.assert_condition_state_message(
             reference,
@@ -292,7 +304,9 @@ class TestInferenceComponent:
             cfg.INFERENCE_COMPONENT_STATUS_UPDATING,
         )
 
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+        )
         assert k8s.get_resource_condition(reference, ack_condition.CONDITION_TYPE_TERMINAL) is None
         resource = k8s.get_resource(reference)
 
@@ -301,7 +315,9 @@ class TestInferenceComponent:
             reference,
             cfg.INFERENCE_COMPONENT_STATUS_INSERVICE,
         )
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+        )
         assert k8s.get_resource_condition(reference, ack_condition.CONDITION_TYPE_TERMINAL) is None
         resource = k8s.get_resource(reference)
         # We will not check for failureReason is None, since the InferenceComponent has
@@ -320,8 +336,8 @@ class TestInferenceComponent:
 
         assert delete_custom_resource(
             reference,
-            cfg.INFERENCE_COMPONENT_DELETE_WAIT_PERIODS,
-            cfg.INFERENCE_COMPONENT_DELETE_WAIT_LENGTH,
+            cfg.LONG_JOB_DELETE_WAIT_PERIODS,
+            cfg.LONG_JOB_DELETE_WAIT_LENGTH,
         )
 
         assert get_sagemaker_inference_component(inference_component_name) is None

@@ -167,7 +167,9 @@ class TestTransformJob:
         transform_sm_desc = get_sagemaker_transform_job(transform_job_name)
         assert k8s.get_resource_arn(resource) == transform_sm_desc["TransformJobArn"]
         assert transform_sm_desc["TransformJobStatus"] == cfg.JOB_STATUS_INPROGRESS
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+        )
 
         self._assert_transform_status_in_sync(
             transform_job_name, reference, cfg.JOB_STATUS_INPROGRESS
@@ -194,12 +196,16 @@ class TestTransformJob:
         assert k8s.get_resource_arn(resource) == transform_arn
 
         assert transform_sm_desc["TransformJobStatus"] == cfg.JOB_STATUS_INPROGRESS
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False")
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+        )
 
         self._assert_transform_status_in_sync(
             transform_job_name, reference, cfg.JOB_STATUS_COMPLETED
         )
-        assert k8s.wait_on_condition(reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True")
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+        )
 
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(transform_arn, resource_tags)
