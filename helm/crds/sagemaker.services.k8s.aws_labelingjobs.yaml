@@ -648,6 +648,12 @@ spec:
               failureReason:
                 description: If the job failed, the reason that it failed.
                 type: string
+              jobReferenceCode:
+                description: |-
+                  A unique identifier for work done as part of a labeling job.
+
+                  Regex Pattern: `^.+$`
+                type: string
               labelCounters:
                 description: |-
                   Provides a breakdown of the number of data objects labeled by humans, the
@@ -669,6 +675,14 @@ spec:
                   unlabeled:
                     format: int64
                     type: integer
+                type: object
+              labelingJobOutput:
+                description: The location of the output produced by the labeling job.
+                properties:
+                  finalActiveLearningModelARN:
+                    type: string
+                  outputDatasetS3URI:
+                    type: string
                 type: object
               labelingJobStatus:
                 description: The processing status of the labeling job.

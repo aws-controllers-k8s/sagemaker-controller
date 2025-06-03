@@ -207,6 +207,11 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.InputConfig = nil
 	}
+	if resp.JobReferenceCode != nil {
+		ko.Status.JobReferenceCode = resp.JobReferenceCode
+	} else {
+		ko.Status.JobReferenceCode = nil
+	}
 	if resp.LabelAttributeName != nil {
 		ko.Spec.LabelAttributeName = resp.LabelAttributeName
 	} else {
@@ -283,6 +288,18 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.LabelingJobName = resp.LabelingJobName
 	} else {
 		ko.Spec.LabelingJobName = nil
+	}
+	if resp.LabelingJobOutput != nil {
+		f11 := &svcapitypes.LabelingJobOutput{}
+		if resp.LabelingJobOutput.FinalActiveLearningModelArn != nil {
+			f11.FinalActiveLearningModelARN = resp.LabelingJobOutput.FinalActiveLearningModelArn
+		}
+		if resp.LabelingJobOutput.OutputDatasetS3Uri != nil {
+			f11.OutputDatasetS3URI = resp.LabelingJobOutput.OutputDatasetS3Uri
+		}
+		ko.Status.LabelingJobOutput = f11
+	} else {
+		ko.Status.LabelingJobOutput = nil
 	}
 	if resp.LabelingJobStatus != "" {
 		ko.Status.LabelingJobStatus = aws.String(string(resp.LabelingJobStatus))

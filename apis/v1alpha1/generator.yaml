@@ -1108,6 +1108,16 @@ resources:
         from:
           operation: DescribeLabelingJob
           path: LabelCounters
+      LabelingJobOutput:
+        is_read_only: true
+        from:
+          operation: DescribeLabelingJob
+          path: LabelingJobOutput
+      JobReferenceCode:
+        is_read_only: true
+        from:
+          operation: DescribeLabelingJob
+          path: JobReferenceCode
       Tags:
         compare:
           is_ignored: true
