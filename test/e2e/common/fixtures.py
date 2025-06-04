@@ -92,9 +92,7 @@ def xgboost_churn_endpoint(sagemaker_client):
     yield endpoint_spec
 
     for cr in (model_reference, endpoint_config_reference, endpoint_reference):
-        assert delete_custom_resource(
-            cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
-        )
+        assert delete_custom_resource(cr, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
 
 
 @pytest.fixture(scope="module")

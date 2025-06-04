@@ -1,0 +1,43 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: LabelingJob
+metadata:
+  name: <YOUR JOB NAME>
+spec:
+  labelingJobName: <YOUR JOB NAME>
+  # A role with SageMaker and S3 access
+  # example arn:aws:iam::1234567890:role/service-role/AmazonSageMaker-ExecutionRole
+  roleARN: <YOUR SAGEMAKER ROLE ARN>
+  labelAttributeName: category
+  labelCategoryConfigS3URI: <YOUR S3 PATH / class_labels.json> # Replace with your class label json path
+  labelingJobAlgorithmsConfig:
+    labelingJobAlgorithmSpecificationARN: arn:aws:sagemaker:us-west-2:027400017018:labeling-job-algorithm-specification/object-detection # Replace region with your desired region
+  inputConfig:
+    dataSource:
+      s3DataSource:
+        manifestS3URI: <YOUR S3 PATH / input.manifest>
+    dataAttributes:
+      contentClassifiers:
+        - "FreeOfPersonallyIdentifiableInformation"
+        - "FreeOfAdultContent"
+  outputConfig:
+    s3OutputPath: <YOUR S3 PATH / output> # Replace with your desired output path
+  humanTaskConfig:
+    annotationConsolidationConfig:
+      annotationConsolidationLambdaARN: arn:aws:lambda:us-west-2:081040173940:function:ACS-BoundingBox # Replace region and account id according to https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/sagemaker/client/create_labeling_job.html
+    maxConcurrentTaskCount: 10 # Number of images that will be sent at a time to the workteam.
+    numberOfHumanWorkersPerDataObject: 1 # We will obtain and consolidate at this many human annotations for each image.
+    preHumanTaskLambdaARN: arn:aws:lambda:us-west-2:081040173940:function:PRE-BoundingBox # Replace region and account id according to https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/sagemaker/client/create_labeling_job.html
+    taskAvailabilityLifetimeInSeconds: 21600 # Your workteam has 6 hours to complete all pending tasks.
+    taskDescription: "Dear Annotator, please draw a box around each Logo. Thank you!"
+    taskKeywords:
+      - image
+      - object
+      - detection
+    taskTimeLimitInSeconds: 300 # Each image must be labeled within 5 minutes.
+    taskTitle: "Please draw a box around each Logos"
+    uiConfig:
+      uiTemplateS3URI: <YOUR S3 PATH / instructions.template> # Replace with your UI template path
+    workteamARN: <YOUR WORKTEAM ARN> # For testing, we recommend creating a private workteam
+  tags:
+    - key: env
+      value: dev

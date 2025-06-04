@@ -24,6 +24,7 @@ rules:
   - featuregroups
   - hyperparametertuningjobs
   - inferencecomponents
+  - labelingjobs
   - models
   - modelbiasjobdefinitions
   - modelexplainabilityjobdefinitions

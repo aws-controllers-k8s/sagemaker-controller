@@ -18,6 +18,8 @@ import logging
 
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
+from acktest.k8s import condition as ack_condition
+
 from e2e import (
     service_marker,
     create_sagemaker_resource,
@@ -49,9 +51,7 @@ def xgboost_training_job_debugger():
 
     yield (reference, resource, spec)
 
-    assert delete_custom_resource(
-        reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
-    )
+    assert delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
 
 
 def get_training_rule_eval_sagemaker_status(training_job_name: str, rule_type: str):
@@ -59,9 +59,7 @@ def get_training_rule_eval_sagemaker_status(training_job_name: str, rule_type: s
     return training_sm_desc[rule_type + "EvaluationStatuses"][0]["RuleEvaluationStatus"]
 
 
-def get_training_rule_eval_resource_status(
-    reference: k8s.CustomResourceReference, rule_type: str
-):
+def get_training_rule_eval_resource_status(reference: k8s.CustomResourceReference, rule_type: str):
     resource = k8s.get_resource(reference)
     resource_status = resource["status"][rule_type + "EvaluationStatuses"][0][
         "ruleEvaluationStatus"
@@ -149,17 +147,17 @@ class TestTrainingDebuggerJob:
         training_job_desc = get_sagemaker_training_job(training_job_name)
 
         assert training_job_desc["TrainingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+        )
 
-        spec["spec"]["profilerConfig"][
-            "profilingIntervalInMilliseconds"
-        ] = NEW_PROFILER_INTERVAL
+        spec["spec"]["profilerConfig"]["profilingIntervalInMilliseconds"] = NEW_PROFILER_INTERVAL
         k8s.patch_custom_resource(reference, spec)
 
-        assert_training_status_in_sync(
-            training_job_name, reference, cfg.JOB_STATUS_COMPLETED
+        assert_training_status_in_sync(training_job_name, reference, cfg.JOB_STATUS_COMPLETED)
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
         )
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
 
         # Assert debugger rule evaluation completed
         self._assert_training_rule_eval_status_in_sync(
@@ -170,7 +168,9 @@ class TestTrainingDebuggerJob:
         self._assert_training_rule_eval_status_in_sync(
             training_job_name, "ProfilerRule", reference, cfg.RULE_STATUS_COMPLETED
         )
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+        )
 
         # Check if the update worked.
         training_sm_desc = get_sagemaker_training_job(training_job_name)
@@ -184,9 +184,7 @@ class TestTrainingDebuggerJob:
             == NEW_PROFILER_INTERVAL
         )
 
-        assert (
-            resource["status"]["lastModifiedTime"] != resource["status"]["creationTime"]
-        )
+        assert resource["status"]["lastModifiedTime"] != resource["status"]["creationTime"]
         assert training_sm_desc["LastModifiedTime"] != training_sm_desc["CreationTime"]
 
     def delete_debugger_trainingjob(self, xgboost_training_job_debugger):

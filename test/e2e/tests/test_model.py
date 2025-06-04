@@ -15,10 +15,10 @@
 
 import pytest
 import time
-from typing import Dict
 
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
+
 from e2e import (
     service_marker,
     create_sagemaker_resource,
@@ -48,9 +48,7 @@ def xgboost_model():
     yield (reference, resource)
 
     # Delete the k8s resource if not already deleted by tests
-    assert delete_custom_resource(
-        reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
-    )
+    assert delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
 
 
 @service_marker
@@ -71,8 +69,6 @@ class TestModel:
         assert_tags_in_sync(model_arn, resource_tags)
 
         # Delete the k8s resource.
-        assert delete_custom_resource(
-            reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH
-        )
+        assert delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
 
         assert get_sagemaker_model(model_name) is None

@@ -16,10 +16,12 @@
 import botocore
 import pytest
 import logging
-from typing import Dict
+from flaky import flaky
 
-from acktest.k8s import resource as k8s
 from acktest.resources import random_suffix_name
+from acktest.k8s import resource as k8s
+from acktest.k8s import condition as ack_condition
+
 from e2e import (
     service_marker,
     wait_for_status,
@@ -28,8 +30,6 @@ from e2e import (
     sagemaker_client,
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
-import random
-from flaky import flaky
 
 
 DELETE_WAIT_PERIOD = 16
@@ -147,16 +147,16 @@ class TestNotebookInstance:
         notebook_description = get_notebook_instance(notebook_instance_name)
         assert notebook_description["NotebookInstanceStatus"] == "Pending"
 
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "False")
-        self._assert_notebook_status_in_sync(
-            notebook_instance_name, reference, "Pending"
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
         )
+        self._assert_notebook_status_in_sync(notebook_instance_name, reference, "Pending")
 
         # wait for the resource to go to the InService state and make sure the operator is synced with sagemaker.
-        self._assert_notebook_status_in_sync(
-            notebook_instance_name, reference, "InService"
+        self._assert_notebook_status_in_sync(notebook_instance_name, reference, "InService")
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
         )
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
     def update_notebook_test(self, notebook_instance):
         (reference, resource, spec) = notebook_instance
@@ -171,9 +171,7 @@ class TestNotebookInstance:
         spec["spec"]["additionalCodeRepositories"] = additionalCodeRepositories
         k8s.patch_custom_resource(reference, spec)
 
-        self._assert_notebook_status_in_sync(
-            notebook_instance_name, reference, "Stopping"
-        )
+        self._assert_notebook_status_in_sync(notebook_instance_name, reference, "Stopping")
         # TODO: Replace with annotations once runtime can update annotations in readOne.
         resource = k8s.get_resource(reference)
         # Test is flakey as this field can get changed before we get resource
@@ -185,10 +183,10 @@ class TestNotebookInstance:
         )
 
         # wait for the resource to go to the InService state and make sure the operator is synced with sagemaker.
-        self._assert_notebook_status_in_sync(
-            notebook_instance_name, reference, "InService"
+        self._assert_notebook_status_in_sync(notebook_instance_name, reference, "InService")
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
         )
-        assert k8s.wait_on_condition(reference, "ACK.ResourceSynced", "True")
 
         notebook_instance_desc = get_notebook_instance(notebook_instance_name)
         assert notebook_instance_desc["VolumeSizeInGB"] == volumeSizeInGB
@@ -199,13 +197,8 @@ class TestNotebookInstance:
         assert "DefaultCodeRepository" not in notebook_instance_desc
         assert "defaultCodeRepository" not in resource["spec"]
 
-        assert (
-            resource["spec"]["additionalCodeRepositories"] == additionalCodeRepositories
-        )
-        assert (
-            notebook_instance_desc["AdditionalCodeRepositories"]
-            == additionalCodeRepositories
-        )
+        assert resource["spec"]["additionalCodeRepositories"] == additionalCodeRepositories
+        assert notebook_instance_desc["AdditionalCodeRepositories"] == additionalCodeRepositories
 
         assert "stoppedByControllerMetadata" not in resource["status"]
 

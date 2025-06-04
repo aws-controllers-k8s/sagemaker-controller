@@ -17,15 +17,14 @@ import pytest
 import logging
 import botocore
 
-from acktest.k8s import resource as k8s
 from acktest.resources import random_suffix_name
+from acktest.k8s import resource as k8s
+
 from e2e import (
     service_marker,
     create_sagemaker_resource,
     sagemaker_client,
 )
-
-
 from e2e.replacement_values import REPLACEMENT_VALUES
 from e2e.common import config as cfg
 
@@ -48,9 +47,7 @@ def retained_notebook_instance_lifecycle_config():
     assert resource is not None
     yield (reference, resource, spec)
 
-    deletion_resp = delete_notebook_instance_lifecycle_config(
-        notebook_instance_lfc_name
-    )
+    deletion_resp = delete_notebook_instance_lifecycle_config(notebook_instance_lfc_name)
     assert deletion_resp is not None
 
 
@@ -82,9 +79,7 @@ def delete_notebook_instance_lifecycle_config(notebook_instance_lfc_name: str):
 
 @service_marker
 class TestRetainPolicy:
-    def test_retain_notebook_instance_lifecycle(
-        self, retained_notebook_instance_lifecycle_config
-    ):
+    def test_retain_notebook_instance_lifecycle(self, retained_notebook_instance_lifecycle_config):
         (reference, resource, _) = retained_notebook_instance_lifecycle_config
         assert k8s.get_resource_exists(reference)
 
@@ -107,7 +102,4 @@ class TestRetainPolicy:
         assert deleted
 
         # Verify that the resource was not deleted on SageMaker
-        assert (
-            get_notebook_instance_lifecycle_config(notebook_instance_lfc_name)
-            is not None
-        )
+        assert get_notebook_instance_lifecycle_config(notebook_instance_lfc_name) is not None
