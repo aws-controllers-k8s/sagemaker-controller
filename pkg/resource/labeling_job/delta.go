@@ -143,21 +143,21 @@ func newResourceDelta(
 				delta.Add("Spec.HumanTaskConfig.TaskTitle", a.ko.Spec.HumanTaskConfig.TaskTitle, b.ko.Spec.HumanTaskConfig.TaskTitle)
 			}
 		}
-		if ackcompare.HasNilDifference(a.ko.Spec.HumanTaskConfig.UiConfig, b.ko.Spec.HumanTaskConfig.UiConfig) {
-			delta.Add("Spec.HumanTaskConfig.UiConfig", a.ko.Spec.HumanTaskConfig.UiConfig, b.ko.Spec.HumanTaskConfig.UiConfig)
-		} else if a.ko.Spec.HumanTaskConfig.UiConfig != nil && b.ko.Spec.HumanTaskConfig.UiConfig != nil {
-			if ackcompare.HasNilDifference(a.ko.Spec.HumanTaskConfig.UiConfig.HumanTaskUiARN, b.ko.Spec.HumanTaskConfig.UiConfig.HumanTaskUiARN) {
-				delta.Add("Spec.HumanTaskConfig.UiConfig.HumanTaskUiARN", a.ko.Spec.HumanTaskConfig.UiConfig.HumanTaskUiARN, b.ko.Spec.HumanTaskConfig.UiConfig.HumanTaskUiARN)
-			} else if a.ko.Spec.HumanTaskConfig.UiConfig.HumanTaskUiARN != nil && b.ko.Spec.HumanTaskConfig.UiConfig.HumanTaskUiARN != nil {
-				if *a.ko.Spec.HumanTaskConfig.UiConfig.HumanTaskUiARN != *b.ko.Spec.HumanTaskConfig.UiConfig.HumanTaskUiARN {
-					delta.Add("Spec.HumanTaskConfig.UiConfig.HumanTaskUiARN", a.ko.Spec.HumanTaskConfig.UiConfig.HumanTaskUiARN, b.ko.Spec.HumanTaskConfig.UiConfig.HumanTaskUiARN)
+		if ackcompare.HasNilDifference(a.ko.Spec.HumanTaskConfig.UIConfig, b.ko.Spec.HumanTaskConfig.UIConfig) {
+			delta.Add("Spec.HumanTaskConfig.UIConfig", a.ko.Spec.HumanTaskConfig.UIConfig, b.ko.Spec.HumanTaskConfig.UIConfig)
+		} else if a.ko.Spec.HumanTaskConfig.UIConfig != nil && b.ko.Spec.HumanTaskConfig.UIConfig != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.HumanTaskConfig.UIConfig.HumanTaskUIARN, b.ko.Spec.HumanTaskConfig.UIConfig.HumanTaskUIARN) {
+				delta.Add("Spec.HumanTaskConfig.UIConfig.HumanTaskUIARN", a.ko.Spec.HumanTaskConfig.UIConfig.HumanTaskUIARN, b.ko.Spec.HumanTaskConfig.UIConfig.HumanTaskUIARN)
+			} else if a.ko.Spec.HumanTaskConfig.UIConfig.HumanTaskUIARN != nil && b.ko.Spec.HumanTaskConfig.UIConfig.HumanTaskUIARN != nil {
+				if *a.ko.Spec.HumanTaskConfig.UIConfig.HumanTaskUIARN != *b.ko.Spec.HumanTaskConfig.UIConfig.HumanTaskUIARN {
+					delta.Add("Spec.HumanTaskConfig.UIConfig.HumanTaskUIARN", a.ko.Spec.HumanTaskConfig.UIConfig.HumanTaskUIARN, b.ko.Spec.HumanTaskConfig.UIConfig.HumanTaskUIARN)
 				}
 			}
-			if ackcompare.HasNilDifference(a.ko.Spec.HumanTaskConfig.UiConfig.UiTemplateS3URI, b.ko.Spec.HumanTaskConfig.UiConfig.UiTemplateS3URI) {
-				delta.Add("Spec.HumanTaskConfig.UiConfig.UiTemplateS3URI", a.ko.Spec.HumanTaskConfig.UiConfig.UiTemplateS3URI, b.ko.Spec.HumanTaskConfig.UiConfig.UiTemplateS3URI)
-			} else if a.ko.Spec.HumanTaskConfig.UiConfig.UiTemplateS3URI != nil && b.ko.Spec.HumanTaskConfig.UiConfig.UiTemplateS3URI != nil {
-				if *a.ko.Spec.HumanTaskConfig.UiConfig.UiTemplateS3URI != *b.ko.Spec.HumanTaskConfig.UiConfig.UiTemplateS3URI {
-					delta.Add("Spec.HumanTaskConfig.UiConfig.UiTemplateS3URI", a.ko.Spec.HumanTaskConfig.UiConfig.UiTemplateS3URI, b.ko.Spec.HumanTaskConfig.UiConfig.UiTemplateS3URI)
+			if ackcompare.HasNilDifference(a.ko.Spec.HumanTaskConfig.UIConfig.UITemplateS3URI, b.ko.Spec.HumanTaskConfig.UIConfig.UITemplateS3URI) {
+				delta.Add("Spec.HumanTaskConfig.UIConfig.UITemplateS3URI", a.ko.Spec.HumanTaskConfig.UIConfig.UITemplateS3URI, b.ko.Spec.HumanTaskConfig.UIConfig.UITemplateS3URI)
+			} else if a.ko.Spec.HumanTaskConfig.UIConfig.UITemplateS3URI != nil && b.ko.Spec.HumanTaskConfig.UIConfig.UITemplateS3URI != nil {
+				if *a.ko.Spec.HumanTaskConfig.UIConfig.UITemplateS3URI != *b.ko.Spec.HumanTaskConfig.UIConfig.UITemplateS3URI {
+					delta.Add("Spec.HumanTaskConfig.UIConfig.UITemplateS3URI", a.ko.Spec.HumanTaskConfig.UIConfig.UITemplateS3URI, b.ko.Spec.HumanTaskConfig.UIConfig.UITemplateS3URI)
 				}
 			}
 		}

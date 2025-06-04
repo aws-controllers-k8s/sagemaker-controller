@@ -317,7 +317,7 @@ spec:
                       UiTemplateS3Uri to specify the location of a worker task template in Amazon
                       S3.
                     properties:
-                      humanTaskUiARN:
+                      humanTaskUIARN:
                         type: string
                       uiTemplateS3URI:
                         type: string

@@ -154,14 +154,14 @@ func (rm *resourceManager) sdkFind(
 			f2.TaskTitle = resp.HumanTaskConfig.TaskTitle
 		}
 		if resp.HumanTaskConfig.UiConfig != nil {
-			f2f10 := &svcapitypes.UiConfig{}
+			f2f10 := &svcapitypes.UIConfig{}
 			if resp.HumanTaskConfig.UiConfig.HumanTaskUiArn != nil {
-				f2f10.HumanTaskUiARN = resp.HumanTaskConfig.UiConfig.HumanTaskUiArn
+				f2f10.HumanTaskUIARN = resp.HumanTaskConfig.UiConfig.HumanTaskUiArn
 			}
 			if resp.HumanTaskConfig.UiConfig.UiTemplateS3Uri != nil {
-				f2f10.UiTemplateS3URI = resp.HumanTaskConfig.UiConfig.UiTemplateS3Uri
+				f2f10.UITemplateS3URI = resp.HumanTaskConfig.UiConfig.UiTemplateS3Uri
 			}
-			f2.UiConfig = f2f10
+			f2.UIConfig = f2f10
 		}
 		if resp.HumanTaskConfig.WorkteamArn != nil {
 			f2.WorkteamARN = resp.HumanTaskConfig.WorkteamArn
@@ -519,13 +519,13 @@ func (rm *resourceManager) newCreateRequestPayload(
 		if r.ko.Spec.HumanTaskConfig.TaskTitle != nil {
 			f0.TaskTitle = r.ko.Spec.HumanTaskConfig.TaskTitle
 		}
-		if r.ko.Spec.HumanTaskConfig.UiConfig != nil {
+		if r.ko.Spec.HumanTaskConfig.UIConfig != nil {
 			f0f10 := &svcsdktypes.UiConfig{}
-			if r.ko.Spec.HumanTaskConfig.UiConfig.HumanTaskUiARN != nil {
-				f0f10.HumanTaskUiArn = r.ko.Spec.HumanTaskConfig.UiConfig.HumanTaskUiARN
+			if r.ko.Spec.HumanTaskConfig.UIConfig.HumanTaskUIARN != nil {
+				f0f10.HumanTaskUiArn = r.ko.Spec.HumanTaskConfig.UIConfig.HumanTaskUIARN
 			}
-			if r.ko.Spec.HumanTaskConfig.UiConfig.UiTemplateS3URI != nil {
-				f0f10.UiTemplateS3Uri = r.ko.Spec.HumanTaskConfig.UiConfig.UiTemplateS3URI
+			if r.ko.Spec.HumanTaskConfig.UIConfig.UITemplateS3URI != nil {
+				f0f10.UiTemplateS3Uri = r.ko.Spec.HumanTaskConfig.UIConfig.UITemplateS3URI
 			}
 			f0.UiConfig = f0f10
 		}

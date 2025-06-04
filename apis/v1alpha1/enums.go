@@ -1168,11 +1168,11 @@ const (
 	HubStatus_Updating     HubStatus = "Updating"
 )
 
-type HumanTaskUiStatus string
+type HumanTaskUIStatus string
 
 const (
-	HumanTaskUiStatus_Active   HumanTaskUiStatus = "Active"
-	HumanTaskUiStatus_Deleting HumanTaskUiStatus = "Deleting"
+	HumanTaskUIStatus_Active   HumanTaskUIStatus = "Active"
+	HumanTaskUIStatus_Deleting HumanTaskUIStatus = "Deleting"
 )
 
 type HyperParameterScalingType string

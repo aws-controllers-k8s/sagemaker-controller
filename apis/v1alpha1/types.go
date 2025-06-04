@@ -1501,7 +1501,7 @@ type HubInfo struct {
 
 // Describes the work to be performed by human workers.
 type HumanLoopConfig struct {
-	HumanTaskUiARN *string `json:"humanTaskUiARN,omitempty"`
+	HumanTaskUIARN *string `json:"humanTaskUIARN,omitempty"`
 	// Defines the amount of money paid to an Amazon Mechanical Turk worker for
 	// each task performed.
 	//
@@ -1939,14 +1939,14 @@ type HumanTaskConfig struct {
 	// For all other Ground Truth built-in task types and custom task types, use
 	// UiTemplateS3Uri to specify the location of a worker task template in Amazon
 	// S3.
-	UiConfig    *UiConfig `json:"uiConfig,omitempty"`
+	UIConfig    *UIConfig `json:"uiConfig,omitempty"`
 	WorkteamARN *string   `json:"workteamARN,omitempty"`
 }
 
 // Container for human task user interface information.
-type HumanTaskUiSummary struct {
+type HumanTaskUISummary struct {
 	CreationTime   *metav1.Time `json:"creationTime,omitempty"`
-	HumanTaskUiARN *string      `json:"humanTaskUiARN,omitempty"`
+	HumanTaskUIARN *string      `json:"humanTaskUIARN,omitempty"`
 }
 
 // Specifies which training algorithm to use for training jobs that a hyperparameter
@@ -5349,13 +5349,6 @@ type TuningJobStepMetaData struct {
 	ARN *string `json:"arn,omitempty"`
 }
 
-// Represents an amount of money in United States dollars.
-type USD struct {
-	Cents                 *int64 `json:"cents,omitempty"`
-	Dollars               *int64 `json:"dollars,omitempty"`
-	TenthFractionsOfACent *int64 `json:"tenthFractionsOfACent,omitempty"`
-}
-
 // Provided configuration information for the worker UI for a labeling job.
 // Provide either HumanTaskUiArn or UiTemplateS3Uri.
 //
@@ -5365,9 +5358,16 @@ type USD struct {
 // For all other Ground Truth built-in task types and custom task types, use
 // UiTemplateS3Uri to specify the location of a worker task template in Amazon
 // S3.
-type UiConfig struct {
-	HumanTaskUiARN  *string `json:"humanTaskUiARN,omitempty"`
-	UiTemplateS3URI *string `json:"uiTemplateS3URI,omitempty"`
+type UIConfig struct {
+	HumanTaskUIARN  *string `json:"humanTaskUIARN,omitempty"`
+	UITemplateS3URI *string `json:"uiTemplateS3URI,omitempty"`
+}
+
+// Represents an amount of money in United States dollars.
+type USD struct {
+	Cents                 *int64 `json:"cents,omitempty"`
+	Dollars               *int64 `json:"dollars,omitempty"`
+	TenthFractionsOfACent *int64 `json:"tenthFractionsOfACent,omitempty"`
 }
 
 // Information about the user who created or modified an experiment, trial,
