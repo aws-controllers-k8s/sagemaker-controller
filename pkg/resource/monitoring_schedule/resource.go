@@ -97,11 +97,11 @@ func (r *resource) SetIdentifiers(identifier *ackv1alpha1.AWSIdentifiers) error 
 
 // PopulateResourceFromAnnotation populates the fields passed from adoption annotation
 func (r *resource) PopulateResourceFromAnnotation(fields map[string]string) error {
-	tmp, ok := fields["monitoringScheduleName"]
+	f0, ok := fields["monitoringScheduleName"]
 	if !ok {
 		return ackerrors.NewTerminalError(fmt.Errorf("required field missing: monitoringScheduleName"))
 	}
-	r.ko.Spec.MonitoringScheduleName = &tmp
+	r.ko.Spec.MonitoringScheduleName = &f0
 
 	return nil
 }

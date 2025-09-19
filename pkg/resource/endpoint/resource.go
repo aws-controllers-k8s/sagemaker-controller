@@ -97,11 +97,11 @@ func (r *resource) SetIdentifiers(identifier *ackv1alpha1.AWSIdentifiers) error 
 
 // PopulateResourceFromAnnotation populates the fields passed from adoption annotation
 func (r *resource) PopulateResourceFromAnnotation(fields map[string]string) error {
-	tmp, ok := fields["endpointName"]
+	f0, ok := fields["endpointName"]
 	if !ok {
 		return ackerrors.NewTerminalError(fmt.Errorf("required field missing: endpointName"))
 	}
-	r.ko.Spec.EndpointName = &tmp
+	r.ko.Spec.EndpointName = &f0
 
 	return nil
 }
