@@ -97,11 +97,11 @@ func (r *resource) SetIdentifiers(identifier *ackv1alpha1.AWSIdentifiers) error 
 
 // PopulateResourceFromAnnotation populates the fields passed from adoption annotation
 func (r *resource) PopulateResourceFromAnnotation(fields map[string]string) error {
-	tmp, ok := fields["jobDefinitionName"]
+	primaryKey, ok := fields["jobDefinitionName"]
 	if !ok {
 		return ackerrors.NewTerminalError(fmt.Errorf("required field missing: jobDefinitionName"))
 	}
-	r.ko.Spec.JobDefinitionName = &tmp
+	r.ko.Spec.JobDefinitionName = &primaryKey
 
 	return nil
 }
