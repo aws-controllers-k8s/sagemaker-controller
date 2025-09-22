@@ -111,20 +111,22 @@ func (r *resource) SetIdentifiers(identifier *ackv1alpha1.AWSIdentifiers) error 
 
 // PopulateResourceFromAnnotation populates the fields passed from adoption annotation
 func (r *resource) PopulateResourceFromAnnotation(fields map[string]string) error {
-	tmp, ok := fields["appName"]
+	f0, ok := fields["appName"]
 	if !ok {
 		return ackerrors.NewTerminalError(fmt.Errorf("required field missing: appName"))
 	}
-	r.ko.Spec.AppName = &tmp
+	r.ko.Spec.AppName = &f0
+	f1, ok := fields["appType"]
+	if !ok {
+		return ackerrors.NewTerminalError(fmt.Errorf("required field missing: appType"))
+	}
+	r.ko.Spec.AppType = &f1
+	f2, ok := fields["domainID"]
+	if !ok {
+		return ackerrors.NewTerminalError(fmt.Errorf("required field missing: domainID"))
+	}
+	r.ko.Spec.DomainID = &f2
 
-	f1, f1ok := fields["appType"]
-	if f1ok {
-		r.ko.Spec.AppType = aws.String(f1)
-	}
-	f2, f2ok := fields["domainID"]
-	if f2ok {
-		r.ko.Spec.DomainID = aws.String(f2)
-	}
 	f3, f3ok := fields["userProfileName"]
 	if f3ok {
 		r.ko.Spec.UserProfileName = aws.String(f3)
