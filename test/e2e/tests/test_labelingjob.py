@@ -134,7 +134,7 @@ class TestLabelingJob:
         assert k8s.get_resource_arn(resource) == labeling_job_desc["LabelingJobArn"]
         assert labeling_job_desc["LabelingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_READY, "False"
         )
 
         self._assert_labeling_status_in_sync(

@@ -186,14 +186,14 @@ class TestmodelPackage:
             model_package_name, reference, cfg.JOB_STATUS_INPROGRESS
         )
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_READY, "False"
         )
 
         self._assert_model_package_status_in_sync(
             model_package_name, reference, cfg.JOB_STATUS_COMPLETED
         )
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_READY, "True"
         )
 
         resource_tags = resource["spec"].get("tags", None)
@@ -226,14 +226,14 @@ class TestmodelPackage:
             model_package_name, reference, cfg.JOB_STATUS_INPROGRESS
         )
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_READY, "False"
         )
 
         self._assert_model_package_status_in_sync(
             model_package_name, reference, cfg.JOB_STATUS_COMPLETED
         )
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_READY, "True"
         )
 
         # Update the resource
@@ -249,7 +249,7 @@ class TestmodelPackage:
             model_package_name, reference, cfg.JOB_STATUS_COMPLETED
         )
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_READY, "True"
         )
 
         model_package_desc = get_sagemaker_model_package(model_package_name)

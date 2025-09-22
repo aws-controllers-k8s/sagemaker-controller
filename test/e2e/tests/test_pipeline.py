@@ -141,7 +141,7 @@ class TestPipeline:
 
         self._assert_pipeline_status_in_sync(pipeline_arn, reference, "Active")
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_READY, "True"
         )
 
         # Update the resource
@@ -153,7 +153,7 @@ class TestPipeline:
 
         self._assert_pipeline_status_in_sync(pipeline_arn, reference, "Active")
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_READY, "True"
         )
 
         pipeline_desc = get_sagemaker_pipeline(pipeline_name)

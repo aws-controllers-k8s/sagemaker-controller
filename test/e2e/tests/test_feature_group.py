@@ -144,7 +144,7 @@ class TestFeatureGroup:
         )
 
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_READY, "True"
         )
 
         resource_tags = resource["spec"].get("tags", None)
