@@ -180,7 +180,7 @@ class TestPipelineExecution:
         )
 
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+            reference, ack_condition.CONDITION_TYPE_READY, "False"
         )
 
         # Update the resource
@@ -194,7 +194,7 @@ class TestPipelineExecution:
             pipeline_execution_arn, reference, cfg.JOB_STATUS_EXECUTING
         )
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+            reference, ack_condition.CONDITION_TYPE_READY, "False"
         )
 
         pipeline_execution_desc = get_sagemaker_pipeline_execution(pipeline_execution_arn)
@@ -215,7 +215,7 @@ class TestPipelineExecution:
             pipeline_execution_arn, reference, cfg.JOB_STATUS_SUCCEEDED
         )
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+            reference, ack_condition.CONDITION_TYPE_READY, "True"
         )
 
         # Check that you can delete a completed resource from k8s
