@@ -148,7 +148,7 @@ class TestTrainingDebuggerJob:
 
         assert training_job_desc["TrainingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+            reference, ack_condition.CONDITION_TYPE_READY, "False"
         )
 
         spec["spec"]["profilerConfig"]["profilingIntervalInMilliseconds"] = NEW_PROFILER_INTERVAL
@@ -156,7 +156,7 @@ class TestTrainingDebuggerJob:
 
         assert_training_status_in_sync(training_job_name, reference, cfg.JOB_STATUS_COMPLETED)
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+            reference, ack_condition.CONDITION_TYPE_READY, "False"
         )
 
         # Assert debugger rule evaluation completed
@@ -169,7 +169,7 @@ class TestTrainingDebuggerJob:
             training_job_name, "ProfilerRule", reference, cfg.RULE_STATUS_COMPLETED
         )
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+            reference, ack_condition.CONDITION_TYPE_READY, "True"
         )
 
         # Check if the update worked.

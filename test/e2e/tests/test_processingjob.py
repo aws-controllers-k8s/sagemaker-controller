@@ -134,7 +134,7 @@ class TestProcessingJob:
         assert k8s.get_resource_arn(resource) == processing_job_desc["ProcessingJobArn"]
         assert processing_job_desc["ProcessingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+            reference, ack_condition.CONDITION_TYPE_READY, "False"
         )
 
         self._assert_processing_status_in_sync(
@@ -163,14 +163,14 @@ class TestProcessingJob:
 
         assert processing_job_desc["ProcessingJobStatus"] == cfg.JOB_STATUS_INPROGRESS
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+            reference, ack_condition.CONDITION_TYPE_READY, "False"
         )
 
         self._assert_processing_status_in_sync(
             processing_job_name, reference, cfg.JOB_STATUS_COMPLETED
         )
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+            reference, ack_condition.CONDITION_TYPE_READY, "True"
         )
 
         resource_tags = resource["spec"].get("tags", None)
