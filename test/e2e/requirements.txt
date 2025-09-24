@@ -1,4 +1,4 @@
-acktest @ git+https://github.com/gustavodiaz7722/ack-test-infra.git@77f6bc5602557fe48e0dd157fefbd97a6aa3e54b
+acktest @ git+https://github.com/gustavodiaz7722/ack-test-infra.git@4a5c296da0fe386eadf95c242591ae4724cd0428
 pytest==8.0.2
 black==20.8b1
 flaky==3.7.0
