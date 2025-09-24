@@ -271,12 +271,7 @@ class TestInferenceComponent:
             reference, ack_condition.CONDITION_TYPE_READY, "False"
         )
 
-        assert k8s.assert_condition_state_message(
-            reference,
-            ack_condition.CONDITION_TYPE_TERMINAL,
-            "True",
-            FAIL_UPDATE_ERROR_MESSAGE,
-        )
+        ack_condition.assert_terminal(reference, FAIL_UPDATE_ERROR_MESSAGE)
 
         resource = k8s.get_resource(reference)
         assert resource["status"].get("failureReason", None) is not None

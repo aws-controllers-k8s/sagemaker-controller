@@ -277,12 +277,7 @@ class TestEndpoint:
 
         (_, old_config_resource) = single_variant_config
         current_config_name = old_config_resource["spec"].get("endpointConfigName", None)
-        assert k8s.assert_condition_state_message(
-            endpoint_reference,
-            ack_condition.CONDITION_TYPE_TERMINAL,
-            "True",
-            FAIL_UPDATE_ERROR_MESSAGE + current_config_name,
-        )
+        ack_condition.assert_terminal(endpoint_reference, FAIL_UPDATE_ERROR_MESSAGE + current_config_name)
 
         endpoint_resource = k8s.get_resource(endpoint_reference)
         assert endpoint_resource["status"].get("failureReason", None) is not None
