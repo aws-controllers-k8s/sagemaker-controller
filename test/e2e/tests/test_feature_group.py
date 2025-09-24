@@ -16,6 +16,7 @@
 import botocore
 import pytest
 import logging
+import time
 
 from acktest.resources import random_suffix_name
 from acktest.k8s import resource as k8s
@@ -142,10 +143,19 @@ class TestFeatureGroup:
         self._assert_feature_group_status_in_sync(
             feature_group_name, reference, FEATURE_GROUP_STATUS_CREATED
         )
+        
+        max_wait_seconds = 120
+        interval_seconds = 10
+        start_time = time.time()
 
-        assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_READY, "True"
-        )
+        while time.time() - start_time < max_wait_seconds:
+            try:
+                ack_condition.assert_ready(reference)
+                break
+            except:
+                time.sleep(interval_seconds)
+
+        ack_condition.assert_ready(reference)
 
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(feature_group_arn, resource_tags)
