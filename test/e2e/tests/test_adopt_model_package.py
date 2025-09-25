@@ -233,7 +233,7 @@ class TestAdoptedModelPackage:
             cfg.JOB_STATUS_COMPLETED,
         )
         assert k8s.wait_on_condition(
-            model_package_reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+            model_package_reference, ack_condition.CONDITION_TYPE_READY, "True"
         )
 
         for cr in (model_package_reference, model_package_group_reference):
