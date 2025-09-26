@@ -62,11 +62,42 @@ type SpaceStatus struct {
 	// resource
 	// +kubebuilder:validation:Optional
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
+	// The creation time.
+	// +kubebuilder:validation:Optional
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+	// The failure reason.
+	// +kubebuilder:validation:Optional
+	FailureReason *string `json:"failureReason,omitempty"`
+	// The ID of the space's profile in the Amazon EFS volume.
+	//
+	// Regex Pattern: `^\d+$`
+	// +kubebuilder:validation:Optional
+	HomeEFSFileSystemUID *string `json:"homeEFSFileSystemUID,omitempty"`
+	// The status.
+	// +kubebuilder:validation:Optional
+	Status *string `json:"status,omitempty"`
+	// Returns the URL of the space. If the space is created with Amazon Web Services
+	// IAM Identity Center (Successor to Amazon Web Services Single Sign-On) authentication,
+	// users can navigate to the URL after appending the respective redirect parameter
+	// for the application type to be federated through Amazon Web Services IAM
+	// Identity Center.
+	//
+	// The following application types are supported:
+	//
+	//    * Studio Classic: &redirect=JupyterServer
+	//
+	//    * JupyterLab: &redirect=JupyterLab
+	//
+	//    * Code Editor, based on Code-OSS, Visual Studio Code - Open Source: &redirect=CodeEditor
+	// +kubebuilder:validation:Optional
+	URL *string `json:"url,omitempty"`
 }
 
 // Space is the Schema for the Spaces API
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="FAILURE-REASON",type=string,priority=1,JSONPath=`.status.failureReason`
+// +kubebuilder:printcolumn:name="STATUS",type=string,priority=0,JSONPath=`.status.status`
 type Space struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

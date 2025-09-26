@@ -14,7 +14,15 @@ spec:
     singular: space
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .status.failureReason
+      name: FAILURE-REASON
+      priority: 1
+      type: string
+    - jsonPath: .status.status
+      name: STATUS
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: Space is the Schema for the Spaces API
@@ -356,6 +364,38 @@ spec:
                   - type
                   type: object
                 type: array
+              creationTime:
+                description: The creation time.
+                format: date-time
+                type: string
+              failureReason:
+                description: The failure reason.
+                type: string
+              homeEFSFileSystemUID:
+                description: |-
+                  The ID of the space's profile in the Amazon EFS volume.
+
+                  Regex Pattern: `^\d+$`
+                type: string
+              status:
+                description: The status.
+                type: string
+              url:
+                description: |-
+                  Returns the URL of the space. If the space is created with Amazon Web Services
+                  IAM Identity Center (Successor to Amazon Web Services Single Sign-On) authentication,
+                  users can navigate to the URL after appending the respective redirect parameter
+                  for the application type to be federated through Amazon Web Services IAM
+                  Identity Center.
+
+                  The following application types are supported:
+
+                     * Studio Classic: &redirect=JupyterServer
+
+                     * JupyterLab: &redirect=JupyterLab
+
+                     * Code Editor, based on Code-OSS, Visual Studio Code - Open Source: &redirect=CodeEditor
+                type: string
             type: object
         type: object
     served: true

@@ -81,7 +81,7 @@ func (rm *resourceManager) sdkFind(
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeSpace", err)
 	if err != nil {
 		var awsErr smithy.APIError
-		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "UNKNOWN" {
+		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ResourceNotFound" {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
@@ -91,10 +91,25 @@ func (rm *resourceManager) sdkFind(
 	// the original Kubernetes object we passed to the function
 	ko := r.ko.DeepCopy()
 
+	if resp.CreationTime != nil {
+		ko.Status.CreationTime = &metav1.Time{*resp.CreationTime}
+	} else {
+		ko.Status.CreationTime = nil
+	}
 	if resp.DomainId != nil {
 		ko.Spec.DomainID = resp.DomainId
 	} else {
 		ko.Spec.DomainID = nil
+	}
+	if resp.FailureReason != nil {
+		ko.Status.FailureReason = resp.FailureReason
+	} else {
+		ko.Status.FailureReason = nil
+	}
+	if resp.HomeEfsFileSystemUid != nil {
+		ko.Status.HomeEFSFileSystemUID = resp.HomeEfsFileSystemUid
+	} else {
+		ko.Status.HomeEFSFileSystemUID = nil
 	}
 	if resp.OwnershipSettings != nil {
 		f5 := &svcapitypes.OwnershipSettings{}
@@ -333,8 +348,19 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.SpaceSharingSettings = nil
 	}
+	if resp.Status != "" {
+		ko.Status.Status = aws.String(string(resp.Status))
+	} else {
+		ko.Status.Status = nil
+	}
+	if resp.Url != nil {
+		ko.Status.URL = resp.Url
+	} else {
+		ko.Status.URL = nil
+	}
 
 	rm.setStatusDefaults(ko)
+	rm.customDescribeSpaceSetOutput(ko)
 	return &resource{ko}, nil
 }
 
@@ -684,6 +710,9 @@ func (rm *resourceManager) sdkUpdate(
 	defer func() {
 		exit(err)
 	}()
+	if err = rm.requeueUntilCanModify(ctx, latest); err != nil {
+		return nil, err
+	}
 	input, err := rm.newUpdateRequestPayload(ctx, desired, delta)
 	if err != nil {
 		return nil, err
@@ -961,6 +990,10 @@ func (rm *resourceManager) sdkDelete(
 	defer func() {
 		exit(err)
 	}()
+	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
+		return r, err
+	}
+
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
 		return nil, err
@@ -969,6 +1002,17 @@ func (rm *resourceManager) sdkDelete(
 	_ = resp
 	resp, err = rm.sdkapi.DeleteSpace(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteSpace", err)
+
+	if err == nil {
+		if observed, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
+			if err != nil {
+				return nil, err
+			}
+			r.SetStatus(observed)
+			return r, requeueWaitWhileDeleting
+		}
+	}
+
 	return nil, err
 }
 
@@ -1088,6 +1132,20 @@ func (rm *resourceManager) updateConditions(
 // and if the exception indicates that it is a Terminal exception
 // 'Terminal' exception are specified in generator configuration
 func (rm *resourceManager) terminalAWSError(err error) bool {
-	// No terminal_errors specified for this resource in generator config
-	return false
+	if err == nil {
+		return false
+	}
+
+	var terminalErr smithy.APIError
+	if !errors.As(err, &terminalErr) {
+		return false
+	}
+	switch terminalErr.ErrorCode() {
+	case "ResourceNotFound",
+		"ResourceInUse",
+		"ResourceLimitExceeded":
+		return true
+	default:
+		return false
+	}
 }
