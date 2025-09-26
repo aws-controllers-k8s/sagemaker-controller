@@ -125,7 +125,7 @@ class TestModelPackageGroup:
             model_package_group_name, reference, cfg.JOB_STATUS_COMPLETED
         )
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+            reference, ack_condition.CONDITION_TYPE_READY, "True"
         )
 
         resource_tags = resource["spec"].get("tags", None)

@@ -164,7 +164,7 @@ class TestMonitoringSchedule:
             sagemaker_client, monitoring_schedule_name, reference, self.STATUS_SCHEDULED
         )
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+            reference, ack_condition.CONDITION_TYPE_READY, "True"
         )
 
         resource_tags = resource["spec"].get("tags", None)
@@ -183,7 +183,7 @@ class TestMonitoringSchedule:
             sagemaker_client, monitoring_schedule_name, reference, self.STATUS_SCHEDULED
         )
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+            reference, ack_condition.CONDITION_TYPE_READY, "True"
         )
 
         latest_schedule = get_sagemaker_monitoring_schedule(

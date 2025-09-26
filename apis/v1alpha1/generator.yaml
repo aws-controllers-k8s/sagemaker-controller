@@ -255,6 +255,12 @@ resources:
         from:
           operation: DescribeFeatureGroup
           path: FeatureGroupStatus
+      ThroughputConfig:
+        from:
+          operation: DescribeFeatureGroup
+          path: ThroughputConfig
+        compare:
+          is_ignored: true
       OfflineStoreConfig.DisableGlueTableCreation:
         late_initialize:
           min_backoff_seconds: 5

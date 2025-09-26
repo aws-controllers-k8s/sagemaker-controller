@@ -122,8 +122,8 @@ type FeatureGroupSpec struct {
 	// Regex Pattern: `^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$`
 	RoleARN *string `json:"roleARN,omitempty"`
 	// Tags used to identify Features in each FeatureGroup.
-	Tags             []*Tag            `json:"tags,omitempty"`
-	ThroughputConfig *ThroughputConfig `json:"throughputConfig,omitempty"`
+	Tags             []*Tag                       `json:"tags,omitempty"`
+	ThroughputConfig *ThroughputConfigDescription `json:"throughputConfig,omitempty"`
 }
 
 // FeatureGroupStatus defines the observed state of FeatureGroup

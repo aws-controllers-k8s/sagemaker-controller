@@ -127,12 +127,12 @@ def endpoint(name_suffix, endpoint_config):
     # endpoint transitions Creating -> InService state
     assert_endpoint_status_in_sync(endpoint_name, endpoint_reference, cfg.ENDPOINT_STATUS_CREATING)
     assert k8s.wait_on_condition(
-        endpoint_reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+        endpoint_reference, ack_condition.CONDITION_TYPE_READY, "False"
     )
 
     assert_endpoint_status_in_sync(endpoint_name, endpoint_reference, cfg.ENDPOINT_STATUS_INSERVICE)
     assert k8s.wait_on_condition(
-        endpoint_reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+        endpoint_reference, ack_condition.CONDITION_TYPE_READY, "True"
     )
 
     yield (endpoint_reference, endpoint_resource)
@@ -226,14 +226,14 @@ class TestInferenceComponent:
             inference_component_name, reference, cfg.INFERENCE_COMPONENT_STATUS_CREATING
         )
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+            reference, ack_condition.CONDITION_TYPE_READY, "False"
         )
 
         assert_inference_component_status_in_sync(
             inference_component_name, reference, cfg.INFERENCE_COMPONENT_STATUS_INSERVICE
         )
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+            reference, ack_condition.CONDITION_TYPE_READY, "True"
         )
 
         resource_tags = resource["spec"].get("tags", None)
@@ -256,7 +256,7 @@ class TestInferenceComponent:
         )
 
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+            reference, ack_condition.CONDITION_TYPE_READY, "False"
         )
         assert k8s.get_resource_condition(reference, ack_condition.CONDITION_TYPE_TERMINAL) is None
         resource = k8s.get_resource(reference)
@@ -268,15 +268,10 @@ class TestInferenceComponent:
         )
 
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+            reference, ack_condition.CONDITION_TYPE_READY, "False"
         )
 
-        assert k8s.assert_condition_state_message(
-            reference,
-            ack_condition.CONDITION_TYPE_TERMINAL,
-            "True",
-            FAIL_UPDATE_ERROR_MESSAGE,
-        )
+        ack_condition.assert_terminal(reference, FAIL_UPDATE_ERROR_MESSAGE)
 
         resource = k8s.get_resource(reference)
         assert resource["status"].get("failureReason", None) is not None
@@ -305,7 +300,7 @@ class TestInferenceComponent:
         )
 
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "False"
+            reference, ack_condition.CONDITION_TYPE_READY, "False"
         )
         assert k8s.get_resource_condition(reference, ack_condition.CONDITION_TYPE_TERMINAL) is None
         resource = k8s.get_resource(reference)
@@ -316,7 +311,7 @@ class TestInferenceComponent:
             cfg.INFERENCE_COMPONENT_STATUS_INSERVICE,
         )
         assert k8s.wait_on_condition(
-            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+            reference, ack_condition.CONDITION_TYPE_READY, "True"
         )
         assert k8s.get_resource_condition(reference, ack_condition.CONDITION_TYPE_TERMINAL) is None
         resource = k8s.get_resource(reference)
