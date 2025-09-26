@@ -5403,7 +5403,7 @@ func (in *FeatureGroupSpec) DeepCopyInto(out *FeatureGroupSpec) {
 	}
 	if in.ThroughputConfig != nil {
 		in, out := &in.ThroughputConfig, &out.ThroughputConfig
-		*out = new(ThroughputConfig)
+		*out = new(ThroughputConfigDescription)
 		(*in).DeepCopyInto(*out)
 	}
 }

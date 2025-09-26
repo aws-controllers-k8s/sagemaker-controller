@@ -234,7 +234,7 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.RoleARN = nil
 	}
 	if resp.ThroughputConfig != nil {
-		f17 := &svcapitypes.ThroughputConfig{}
+		f17 := &svcapitypes.ThroughputConfigDescription{}
 		if resp.ThroughputConfig.ProvisionedReadCapacityUnits != nil {
 			provisionedReadCapacityUnitsCopy := int64(*resp.ThroughputConfig.ProvisionedReadCapacityUnits)
 			f17.ProvisionedReadCapacityUnits = &provisionedReadCapacityUnitsCopy

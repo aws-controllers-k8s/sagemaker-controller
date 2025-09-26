@@ -256,7 +256,7 @@ spec:
                 type: array
               throughputConfig:
                 description: |-
-                  Used to set feature group throughput configuration. There are two modes:
+                  Active throughput configuration of the feature group. There are two modes:
                   ON_DEMAND and PROVISIONED. With on-demand mode, you are charged for data
                   reads and writes that your application performs on your feature group. You
                   do not need to specify read and write throughput because Feature Store accommodates
