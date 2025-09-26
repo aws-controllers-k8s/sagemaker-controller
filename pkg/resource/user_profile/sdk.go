@@ -191,42 +191,53 @@ func (rm *resourceManager) sdkFind(
 		}
 		if resp.UserSettings.JupyterLabAppSettings != nil {
 			f10f5 := &svcapitypes.JupyterLabAppSettings{}
-			if resp.UserSettings.JupyterLabAppSettings.CustomImages != nil {
-				f10f5f0 := []*svcapitypes.CustomImage{}
-				for _, f10f5f0iter := range resp.UserSettings.JupyterLabAppSettings.CustomImages {
-					f10f5f0elem := &svcapitypes.CustomImage{}
-					if f10f5f0iter.AppImageConfigName != nil {
-						f10f5f0elem.AppImageConfigName = f10f5f0iter.AppImageConfigName
-					}
-					if f10f5f0iter.ImageName != nil {
-						f10f5f0elem.ImageName = f10f5f0iter.ImageName
-					}
-					if f10f5f0iter.ImageVersionNumber != nil {
-						imageVersionNumberCopy := int64(*f10f5f0iter.ImageVersionNumber)
-						f10f5f0elem.ImageVersionNumber = &imageVersionNumberCopy
+			if resp.UserSettings.JupyterLabAppSettings.CodeRepositories != nil {
+				f10f5f0 := []*svcapitypes.CodeRepository{}
+				for _, f10f5f0iter := range resp.UserSettings.JupyterLabAppSettings.CodeRepositories {
+					f10f5f0elem := &svcapitypes.CodeRepository{}
+					if f10f5f0iter.RepositoryUrl != nil {
+						f10f5f0elem.RepositoryURL = f10f5f0iter.RepositoryUrl
 					}
 					f10f5f0 = append(f10f5f0, f10f5f0elem)
 				}
-				f10f5.CustomImages = f10f5f0
+				f10f5.CodeRepositories = f10f5f0
+			}
+			if resp.UserSettings.JupyterLabAppSettings.CustomImages != nil {
+				f10f5f1 := []*svcapitypes.CustomImage{}
+				for _, f10f5f1iter := range resp.UserSettings.JupyterLabAppSettings.CustomImages {
+					f10f5f1elem := &svcapitypes.CustomImage{}
+					if f10f5f1iter.AppImageConfigName != nil {
+						f10f5f1elem.AppImageConfigName = f10f5f1iter.AppImageConfigName
+					}
+					if f10f5f1iter.ImageName != nil {
+						f10f5f1elem.ImageName = f10f5f1iter.ImageName
+					}
+					if f10f5f1iter.ImageVersionNumber != nil {
+						imageVersionNumberCopy := int64(*f10f5f1iter.ImageVersionNumber)
+						f10f5f1elem.ImageVersionNumber = &imageVersionNumberCopy
+					}
+					f10f5f1 = append(f10f5f1, f10f5f1elem)
+				}
+				f10f5.CustomImages = f10f5f1
 			}
 			if resp.UserSettings.JupyterLabAppSettings.DefaultResourceSpec != nil {
-				f10f5f1 := &svcapitypes.ResourceSpec{}
+				f10f5f2 := &svcapitypes.ResourceSpec{}
 				if resp.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType != "" {
-					f10f5f1.InstanceType = aws.String(string(resp.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType))
+					f10f5f2.InstanceType = aws.String(string(resp.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType))
 				}
 				if resp.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigArn != nil {
-					f10f5f1.LifecycleConfigARN = resp.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigArn
+					f10f5f2.LifecycleConfigARN = resp.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigArn
 				}
 				if resp.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageArn != nil {
-					f10f5f1.SageMakerImageARN = resp.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageArn
+					f10f5f2.SageMakerImageARN = resp.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageArn
 				}
 				if resp.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f10f5f1.SageMakerImageVersionAlias = resp.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+					f10f5f2.SageMakerImageVersionAlias = resp.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
 				}
 				if resp.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionArn != nil {
-					f10f5f1.SageMakerImageVersionARN = resp.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionArn
+					f10f5f2.SageMakerImageVersionARN = resp.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionArn
 				}
-				f10f5.DefaultResourceSpec = f10f5f1
+				f10f5.DefaultResourceSpec = f10f5f2
 			}
 			if resp.UserSettings.JupyterLabAppSettings.LifecycleConfigArns != nil {
 				f10f5.LifecycleConfigARNs = aws.StringSlice(resp.UserSettings.JupyterLabAppSettings.LifecycleConfigArns)
@@ -235,24 +246,35 @@ func (rm *resourceManager) sdkFind(
 		}
 		if resp.UserSettings.JupyterServerAppSettings != nil {
 			f10f6 := &svcapitypes.JupyterServerAppSettings{}
+			if resp.UserSettings.JupyterServerAppSettings.CodeRepositories != nil {
+				f10f6f0 := []*svcapitypes.CodeRepository{}
+				for _, f10f6f0iter := range resp.UserSettings.JupyterServerAppSettings.CodeRepositories {
+					f10f6f0elem := &svcapitypes.CodeRepository{}
+					if f10f6f0iter.RepositoryUrl != nil {
+						f10f6f0elem.RepositoryURL = f10f6f0iter.RepositoryUrl
+					}
+					f10f6f0 = append(f10f6f0, f10f6f0elem)
+				}
+				f10f6.CodeRepositories = f10f6f0
+			}
 			if resp.UserSettings.JupyterServerAppSettings.DefaultResourceSpec != nil {
-				f10f6f0 := &svcapitypes.ResourceSpec{}
+				f10f6f1 := &svcapitypes.ResourceSpec{}
 				if resp.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType != "" {
-					f10f6f0.InstanceType = aws.String(string(resp.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType))
+					f10f6f1.InstanceType = aws.String(string(resp.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType))
 				}
 				if resp.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigArn != nil {
-					f10f6f0.LifecycleConfigARN = resp.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigArn
+					f10f6f1.LifecycleConfigARN = resp.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigArn
 				}
 				if resp.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageArn != nil {
-					f10f6f0.SageMakerImageARN = resp.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageArn
+					f10f6f1.SageMakerImageARN = resp.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageArn
 				}
 				if resp.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f10f6f0.SageMakerImageVersionAlias = resp.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+					f10f6f1.SageMakerImageVersionAlias = resp.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
 				}
 				if resp.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionArn != nil {
-					f10f6f0.SageMakerImageVersionARN = resp.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionArn
+					f10f6f1.SageMakerImageVersionARN = resp.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionArn
 				}
-				f10f6.DefaultResourceSpec = f10f6f0
+				f10f6.DefaultResourceSpec = f10f6f1
 			}
 			if resp.UserSettings.JupyterServerAppSettings.LifecycleConfigArns != nil {
 				f10f6.LifecycleConfigARNs = aws.StringSlice(resp.UserSettings.JupyterServerAppSettings.LifecycleConfigArns)
@@ -551,46 +573,57 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		if r.ko.Spec.UserSettings.JupyterLabAppSettings != nil {
 			f5f5 := &svcsdktypes.JupyterLabAppSettings{}
+			if r.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories != nil {
+				f5f5f0 := []svcsdktypes.CodeRepository{}
+				for _, f5f5f0iter := range r.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories {
+					f5f5f0elem := &svcsdktypes.CodeRepository{}
+					if f5f5f0iter.RepositoryURL != nil {
+						f5f5f0elem.RepositoryUrl = f5f5f0iter.RepositoryURL
+					}
+					f5f5f0 = append(f5f5f0, *f5f5f0elem)
+				}
+				f5f5.CodeRepositories = f5f5f0
+			}
 			if r.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages != nil {
-				f5f5f0 := []svcsdktypes.CustomImage{}
-				for _, f5f5f0iter := range r.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages {
-					f5f5f0elem := &svcsdktypes.CustomImage{}
-					if f5f5f0iter.AppImageConfigName != nil {
-						f5f5f0elem.AppImageConfigName = f5f5f0iter.AppImageConfigName
+				f5f5f1 := []svcsdktypes.CustomImage{}
+				for _, f5f5f1iter := range r.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages {
+					f5f5f1elem := &svcsdktypes.CustomImage{}
+					if f5f5f1iter.AppImageConfigName != nil {
+						f5f5f1elem.AppImageConfigName = f5f5f1iter.AppImageConfigName
 					}
-					if f5f5f0iter.ImageName != nil {
-						f5f5f0elem.ImageName = f5f5f0iter.ImageName
+					if f5f5f1iter.ImageName != nil {
+						f5f5f1elem.ImageName = f5f5f1iter.ImageName
 					}
-					if f5f5f0iter.ImageVersionNumber != nil {
-						imageVersionNumberCopy0 := *f5f5f0iter.ImageVersionNumber
+					if f5f5f1iter.ImageVersionNumber != nil {
+						imageVersionNumberCopy0 := *f5f5f1iter.ImageVersionNumber
 						if imageVersionNumberCopy0 > math.MaxInt32 || imageVersionNumberCopy0 < math.MinInt32 {
 							return nil, fmt.Errorf("error: field ImageVersionNumber is of type int32")
 						}
 						imageVersionNumberCopy := int32(imageVersionNumberCopy0)
-						f5f5f0elem.ImageVersionNumber = &imageVersionNumberCopy
+						f5f5f1elem.ImageVersionNumber = &imageVersionNumberCopy
 					}
-					f5f5f0 = append(f5f5f0, *f5f5f0elem)
+					f5f5f1 = append(f5f5f1, *f5f5f1elem)
 				}
-				f5f5.CustomImages = f5f5f0
+				f5f5.CustomImages = f5f5f1
 			}
 			if r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec != nil {
-				f5f5f1 := &svcsdktypes.ResourceSpec{}
+				f5f5f2 := &svcsdktypes.ResourceSpec{}
 				if r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType != nil {
-					f5f5f1.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType)
+					f5f5f2.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType)
 				}
 				if r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
-					f5f5f1.LifecycleConfigArn = r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN
+					f5f5f2.LifecycleConfigArn = r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN
 				}
 				if r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
-					f5f5f1.SageMakerImageArn = r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN
+					f5f5f2.SageMakerImageArn = r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN
 				}
 				if r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f5f5f1.SageMakerImageVersionAlias = r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+					f5f5f2.SageMakerImageVersionAlias = r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
 				}
 				if r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
-					f5f5f1.SageMakerImageVersionArn = r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
+					f5f5f2.SageMakerImageVersionArn = r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
 				}
-				f5f5.DefaultResourceSpec = f5f5f1
+				f5f5.DefaultResourceSpec = f5f5f2
 			}
 			if r.ko.Spec.UserSettings.JupyterLabAppSettings.LifecycleConfigARNs != nil {
 				f5f5.LifecycleConfigArns = aws.ToStringSlice(r.ko.Spec.UserSettings.JupyterLabAppSettings.LifecycleConfigARNs)
@@ -599,24 +632,35 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		if r.ko.Spec.UserSettings.JupyterServerAppSettings != nil {
 			f5f6 := &svcsdktypes.JupyterServerAppSettings{}
+			if r.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories != nil {
+				f5f6f0 := []svcsdktypes.CodeRepository{}
+				for _, f5f6f0iter := range r.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories {
+					f5f6f0elem := &svcsdktypes.CodeRepository{}
+					if f5f6f0iter.RepositoryURL != nil {
+						f5f6f0elem.RepositoryUrl = f5f6f0iter.RepositoryURL
+					}
+					f5f6f0 = append(f5f6f0, *f5f6f0elem)
+				}
+				f5f6.CodeRepositories = f5f6f0
+			}
 			if r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec != nil {
-				f5f6f0 := &svcsdktypes.ResourceSpec{}
+				f5f6f1 := &svcsdktypes.ResourceSpec{}
 				if r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType != nil {
-					f5f6f0.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType)
+					f5f6f1.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType)
 				}
 				if r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
-					f5f6f0.LifecycleConfigArn = r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN
+					f5f6f1.LifecycleConfigArn = r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN
 				}
 				if r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
-					f5f6f0.SageMakerImageArn = r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN
+					f5f6f1.SageMakerImageArn = r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN
 				}
 				if r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f5f6f0.SageMakerImageVersionAlias = r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+					f5f6f1.SageMakerImageVersionAlias = r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
 				}
 				if r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
-					f5f6f0.SageMakerImageVersionArn = r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
+					f5f6f1.SageMakerImageVersionArn = r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
 				}
-				f5f6.DefaultResourceSpec = f5f6f0
+				f5f6.DefaultResourceSpec = f5f6f1
 			}
 			if r.ko.Spec.UserSettings.JupyterServerAppSettings.LifecycleConfigARNs != nil {
 				f5f6.LifecycleConfigArns = aws.ToStringSlice(r.ko.Spec.UserSettings.JupyterServerAppSettings.LifecycleConfigARNs)
@@ -881,46 +925,57 @@ func (rm *resourceManager) newUpdateRequestPayload(
 		}
 		if r.ko.Spec.UserSettings.JupyterLabAppSettings != nil {
 			f2f5 := &svcsdktypes.JupyterLabAppSettings{}
+			if r.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories != nil {
+				f2f5f0 := []svcsdktypes.CodeRepository{}
+				for _, f2f5f0iter := range r.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories {
+					f2f5f0elem := &svcsdktypes.CodeRepository{}
+					if f2f5f0iter.RepositoryURL != nil {
+						f2f5f0elem.RepositoryUrl = f2f5f0iter.RepositoryURL
+					}
+					f2f5f0 = append(f2f5f0, *f2f5f0elem)
+				}
+				f2f5.CodeRepositories = f2f5f0
+			}
 			if r.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages != nil {
-				f2f5f0 := []svcsdktypes.CustomImage{}
-				for _, f2f5f0iter := range r.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages {
-					f2f5f0elem := &svcsdktypes.CustomImage{}
-					if f2f5f0iter.AppImageConfigName != nil {
-						f2f5f0elem.AppImageConfigName = f2f5f0iter.AppImageConfigName
+				f2f5f1 := []svcsdktypes.CustomImage{}
+				for _, f2f5f1iter := range r.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages {
+					f2f5f1elem := &svcsdktypes.CustomImage{}
+					if f2f5f1iter.AppImageConfigName != nil {
+						f2f5f1elem.AppImageConfigName = f2f5f1iter.AppImageConfigName
 					}
-					if f2f5f0iter.ImageName != nil {
-						f2f5f0elem.ImageName = f2f5f0iter.ImageName
+					if f2f5f1iter.ImageName != nil {
+						f2f5f1elem.ImageName = f2f5f1iter.ImageName
 					}
-					if f2f5f0iter.ImageVersionNumber != nil {
-						imageVersionNumberCopy0 := *f2f5f0iter.ImageVersionNumber
+					if f2f5f1iter.ImageVersionNumber != nil {
+						imageVersionNumberCopy0 := *f2f5f1iter.ImageVersionNumber
 						if imageVersionNumberCopy0 > math.MaxInt32 || imageVersionNumberCopy0 < math.MinInt32 {
 							return nil, fmt.Errorf("error: field ImageVersionNumber is of type int32")
 						}
 						imageVersionNumberCopy := int32(imageVersionNumberCopy0)
-						f2f5f0elem.ImageVersionNumber = &imageVersionNumberCopy
+						f2f5f1elem.ImageVersionNumber = &imageVersionNumberCopy
 					}
-					f2f5f0 = append(f2f5f0, *f2f5f0elem)
+					f2f5f1 = append(f2f5f1, *f2f5f1elem)
 				}
-				f2f5.CustomImages = f2f5f0
+				f2f5.CustomImages = f2f5f1
 			}
 			if r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec != nil {
-				f2f5f1 := &svcsdktypes.ResourceSpec{}
+				f2f5f2 := &svcsdktypes.ResourceSpec{}
 				if r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType != nil {
-					f2f5f1.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType)
+					f2f5f2.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType)
 				}
 				if r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
-					f2f5f1.LifecycleConfigArn = r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN
+					f2f5f2.LifecycleConfigArn = r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN
 				}
 				if r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
-					f2f5f1.SageMakerImageArn = r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN
+					f2f5f2.SageMakerImageArn = r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN
 				}
 				if r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f2f5f1.SageMakerImageVersionAlias = r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+					f2f5f2.SageMakerImageVersionAlias = r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
 				}
 				if r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
-					f2f5f1.SageMakerImageVersionArn = r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
+					f2f5f2.SageMakerImageVersionArn = r.ko.Spec.UserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
 				}
-				f2f5.DefaultResourceSpec = f2f5f1
+				f2f5.DefaultResourceSpec = f2f5f2
 			}
 			if r.ko.Spec.UserSettings.JupyterLabAppSettings.LifecycleConfigARNs != nil {
 				f2f5.LifecycleConfigArns = aws.ToStringSlice(r.ko.Spec.UserSettings.JupyterLabAppSettings.LifecycleConfigARNs)
@@ -929,24 +984,35 @@ func (rm *resourceManager) newUpdateRequestPayload(
 		}
 		if r.ko.Spec.UserSettings.JupyterServerAppSettings != nil {
 			f2f6 := &svcsdktypes.JupyterServerAppSettings{}
+			if r.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories != nil {
+				f2f6f0 := []svcsdktypes.CodeRepository{}
+				for _, f2f6f0iter := range r.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories {
+					f2f6f0elem := &svcsdktypes.CodeRepository{}
+					if f2f6f0iter.RepositoryURL != nil {
+						f2f6f0elem.RepositoryUrl = f2f6f0iter.RepositoryURL
+					}
+					f2f6f0 = append(f2f6f0, *f2f6f0elem)
+				}
+				f2f6.CodeRepositories = f2f6f0
+			}
 			if r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec != nil {
-				f2f6f0 := &svcsdktypes.ResourceSpec{}
+				f2f6f1 := &svcsdktypes.ResourceSpec{}
 				if r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType != nil {
-					f2f6f0.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType)
+					f2f6f1.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType)
 				}
 				if r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
-					f2f6f0.LifecycleConfigArn = r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN
+					f2f6f1.LifecycleConfigArn = r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN
 				}
 				if r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
-					f2f6f0.SageMakerImageArn = r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN
+					f2f6f1.SageMakerImageArn = r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN
 				}
 				if r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f2f6f0.SageMakerImageVersionAlias = r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+					f2f6f1.SageMakerImageVersionAlias = r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
 				}
 				if r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
-					f2f6f0.SageMakerImageVersionArn = r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
+					f2f6f1.SageMakerImageVersionArn = r.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
 				}
-				f2f6.DefaultResourceSpec = f2f6f0
+				f2f6.DefaultResourceSpec = f2f6f1
 			}
 			if r.ko.Spec.UserSettings.JupyterServerAppSettings.LifecycleConfigARNs != nil {
 				f2f6.LifecycleConfigArns = aws.ToStringSlice(r.ko.Spec.UserSettings.JupyterServerAppSettings.LifecycleConfigARNs)
