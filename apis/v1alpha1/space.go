@@ -20,47 +20,37 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// AppSpec defines the desired state of App.
-type AppSpec struct {
+// SpaceSpec defines the desired state of Space.
+type SpaceSpec struct {
 
-	// The name of the app.
-	//
-	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
-	// +kubebuilder:validation:Required
-	AppName *string `json:"appName"`
-	// The type of app.
-	// +kubebuilder:validation:Required
-	AppType *string `json:"appType"`
-	// The domain ID.
+	// The ID of the associated domain.
 	//
 	// Regex Pattern: `^d-(-*[a-z0-9]){1,61}$`
 	// +kubebuilder:validation:Required
 	DomainID *string `json:"domainID"`
-	// The instance type and the Amazon Resource Name (ARN) of the SageMaker image
-	// created on the instance.
+	// A collection of ownership settings.
+	OwnershipSettings *OwnershipSettings `json:"ownershipSettings,omitempty"`
+	// The name of the space that appears in the SageMaker Studio UI.
 	//
-	// The value of InstanceType passed as part of the ResourceSpec in the CreateApp
-	// call overrides the value passed as part of the ResourceSpec configured for
-	// the user profile or the domain. If InstanceType is not specified in any of
-	// those three ResourceSpec values for a KernelGateway app, the CreateApp call
-	// fails with a request validation error.
-	ResourceSpec *ResourceSpec `json:"resourceSpec,omitempty"`
-	// The name of the space. If this value is not set, then UserProfileName must
-	// be set.
+	// Regex Pattern: `^(?!\s*$).+$`
+	SpaceDisplayName *string `json:"spaceDisplayName,omitempty"`
+	// The name of the space.
 	//
 	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
-	SpaceName *string `json:"spaceName,omitempty"`
-	// Each tag consists of a key and an optional value. Tag keys must be unique
-	// per resource.
+	// +kubebuilder:validation:Required
+	SpaceName *string `json:"spaceName"`
+	// A collection of space settings.
+	SpaceSettings *SpaceSettings `json:"spaceSettings,omitempty"`
+	// A collection of space sharing settings.
+	SpaceSharingSettings *SpaceSharingSettings `json:"spaceSharingSettings,omitempty"`
+	// Tags to associated with the space. Each tag consists of a key and an optional
+	// value. Tag keys must be unique for each resource. Tags are searchable using
+	// the Search API.
 	Tags []*Tag `json:"tags,omitempty"`
-	// The user profile name. If this value is not set, then SpaceName must be set.
-	//
-	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
-	UserProfileName *string `json:"userProfileName,omitempty"`
 }
 
-// AppStatus defines the observed state of App
-type AppStatus struct {
+// SpaceStatus defines the observed state of Space
+type SpaceStatus struct {
 	// All CRs managed by ACK have a common `Status.ACKResourceMetadata` member
 	// that is used to contain resource sync state, account ownership,
 	// constructed ARN for the resource
@@ -72,30 +62,26 @@ type AppStatus struct {
 	// resource
 	// +kubebuilder:validation:Optional
 	Conditions []*ackv1alpha1.Condition `json:"conditions"`
-	// The status.
-	// +kubebuilder:validation:Optional
-	Status *string `json:"status,omitempty"`
 }
 
-// App is the Schema for the Apps API
+// Space is the Schema for the Spaces API
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:printcolumn:name="STATUS",type=string,priority=0,JSONPath=`.status.status`
-type App struct {
+type Space struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              AppSpec   `json:"spec,omitempty"`
-	Status            AppStatus `json:"status,omitempty"`
+	Spec              SpaceSpec   `json:"spec,omitempty"`
+	Status            SpaceStatus `json:"status,omitempty"`
 }
 
-// AppList contains a list of App
+// SpaceList contains a list of Space
 // +kubebuilder:object:root=true
-type AppList struct {
+type SpaceList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []App `json:"items"`
+	Items           []Space `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&App{}, &AppList{})
+	SchemeBuilder.Register(&Space{}, &SpaceList{})
 }

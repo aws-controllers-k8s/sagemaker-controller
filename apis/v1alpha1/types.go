@@ -180,6 +180,7 @@ type AppDetails struct {
 	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
 	// the instance type that the version runs on.
 	ResourceSpec    *ResourceSpec `json:"resourceSpec,omitempty"`
+	SpaceName       *string       `json:"spaceName,omitempty"`
 	Status          *string       `json:"status,omitempty"`
 	UserProfileName *string       `json:"userProfileName,omitempty"`
 }
@@ -664,6 +665,12 @@ type CodeEditorAppSettings struct {
 	LifecycleConfigARNs []*string     `json:"lifecycleConfigARNs,omitempty"`
 }
 
+// A Git repository that SageMaker automatically displays to users for cloning
+// in the JupyterServer application.
+type CodeRepository struct {
+	RepositoryURL *string `json:"repositoryURL,omitempty"`
+}
+
 // Specifies summary information about a Git repository.
 type CodeRepositorySummary struct {
 	CodeRepositoryName *string      `json:"codeRepositoryName,omitempty"`
@@ -738,6 +745,16 @@ type ContinuousParameterRange struct {
 type ContinuousParameterRangeSpecification struct {
 	MaxValue *string `json:"maxValue,omitempty"`
 	MinValue *string `json:"minValue,omitempty"`
+}
+
+// A file system, created by you, that you assign to a user profile or space
+// for an Amazon SageMaker Domain. Permitted users can access this file system
+// in Amazon SageMaker Studio.
+type CustomFileSystem struct {
+	// A file system, created by you in Amazon EFS, that you assign to a user profile
+	// or space for an Amazon SageMaker Domain. Permitted users can access this
+	// file system in Amazon SageMaker Studio.
+	EFSFileSystem *EFSFileSystem `json:"efsFileSystem,omitempty"`
 }
 
 // The settings for assigning a custom file system to a user profile or space
@@ -2264,6 +2281,13 @@ type IdentityProviderOAuthSetting struct {
 	Status *string `json:"status,omitempty"`
 }
 
+// Settings related to idle shutdown of Studio applications.
+type IdleSettings struct {
+	IdleTimeoutInMinutes    *int64 `json:"idleTimeoutInMinutes,omitempty"`
+	MaxIdleTimeoutInMinutes *int64 `json:"maxIdleTimeoutInMinutes,omitempty"`
+	MinIdleTimeoutInMinutes *int64 `json:"minIdleTimeoutInMinutes,omitempty"`
+}
+
 // A SageMaker image. A SageMaker image represents a set of container images
 // that are derived from a common base container image. Each of these container
 // images is represented by a SageMaker ImageVersion.
@@ -2498,7 +2522,8 @@ type IntegerParameterRangeSpecification struct {
 
 // The settings for the JupyterLab application.
 type JupyterLabAppSettings struct {
-	CustomImages []*CustomImage `json:"customImages,omitempty"`
+	CodeRepositories []*CodeRepository `json:"codeRepositories,omitempty"`
+	CustomImages     []*CustomImage    `json:"customImages,omitempty"`
 	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
 	// the instance type that the version runs on.
 	DefaultResourceSpec *ResourceSpec `json:"defaultResourceSpec,omitempty"`
@@ -2507,6 +2532,7 @@ type JupyterLabAppSettings struct {
 
 // The JupyterServer app settings.
 type JupyterServerAppSettings struct {
+	CodeRepositories []*CodeRepository `json:"codeRepositories,omitempty"`
 	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
 	// the instance type that the version runs on.
 	DefaultResourceSpec *ResourceSpec `json:"defaultResourceSpec,omitempty"`
@@ -4695,8 +4721,18 @@ type SourceAlgorithmSpecification struct {
 	SourceAlgorithms []*SourceAlgorithm `json:"sourceAlgorithms,omitempty"`
 }
 
+// Settings that are used to configure and manage the lifecycle of Amazon SageMaker
+// Studio applications in a space.
+type SpaceAppLifecycleManagement struct {
+	// Settings related to idle shutdown of Studio applications in a space.
+	IdleSettings *SpaceIdleSettings `json:"idleSettings,omitempty"`
+}
+
 // The application settings for a Code Editor space.
 type SpaceCodeEditorAppSettings struct {
+	// Settings that are used to configure and manage the lifecycle of Amazon SageMaker
+	// Studio applications in a space.
+	AppLifecycleManagement *SpaceAppLifecycleManagement `json:"appLifecycleManagement,omitempty"`
 	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
 	// the instance type that the version runs on.
 	DefaultResourceSpec *ResourceSpec `json:"defaultResourceSpec,omitempty"`
@@ -4707,10 +4743,28 @@ type SpaceDetails struct {
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
 	DomainID         *string      `json:"domainID,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
+	// Specifies summary information about the ownership settings.
+	OwnershipSettingsSummary *OwnershipSettingsSummary `json:"ownershipSettingsSummary,omitempty"`
+	SpaceDisplayName         *string                   `json:"spaceDisplayName,omitempty"`
+	SpaceName                *string                   `json:"spaceName,omitempty"`
+	// Specifies summary information about the space settings.
+	SpaceSettingsSummary *SpaceSettingsSummary `json:"spaceSettingsSummary,omitempty"`
+	// Specifies summary information about the space sharing settings.
+	SpaceSharingSettingsSummary *SpaceSharingSettingsSummary `json:"spaceSharingSettingsSummary,omitempty"`
+	Status                      *string                      `json:"status,omitempty"`
+}
+
+// Settings related to idle shutdown of Studio applications in a space.
+type SpaceIdleSettings struct {
+	IdleTimeoutInMinutes *int64 `json:"idleTimeoutInMinutes,omitempty"`
 }
 
 // The settings for the JupyterLab application within a space.
 type SpaceJupyterLabAppSettings struct {
+	// Settings that are used to configure and manage the lifecycle of Amazon SageMaker
+	// Studio applications in a space.
+	AppLifecycleManagement *SpaceAppLifecycleManagement `json:"appLifecycleManagement,omitempty"`
+	CodeRepositories       []*CodeRepository            `json:"codeRepositories,omitempty"`
 	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
 	// the instance type that the version runs on.
 	DefaultResourceSpec *ResourceSpec `json:"defaultResourceSpec,omitempty"`
@@ -4719,15 +4773,41 @@ type SpaceJupyterLabAppSettings struct {
 // A collection of space settings.
 type SpaceSettings struct {
 	AppType *string `json:"appType,omitempty"`
+	// The application settings for a Code Editor space.
+	CodeEditorAppSettings *SpaceCodeEditorAppSettings `json:"codeEditorAppSettings,omitempty"`
+	CustomFileSystems     []*CustomFileSystem         `json:"customFileSystems,omitempty"`
+	// The settings for the JupyterLab application within a space.
+	JupyterLabAppSettings *SpaceJupyterLabAppSettings `json:"jupyterLabAppSettings,omitempty"`
 	// The JupyterServer app settings.
 	JupyterServerAppSettings *JupyterServerAppSettings `json:"jupyterServerAppSettings,omitempty"`
 	// The KernelGateway app settings.
 	KernelGatewayAppSettings *KernelGatewayAppSettings `json:"kernelGatewayAppSettings,omitempty"`
+	// The storage settings for a space.
+	SpaceStorageSettings *SpaceStorageSettings `json:"spaceStorageSettings,omitempty"`
 }
 
 // Specifies summary information about the space settings.
 type SpaceSettingsSummary struct {
 	AppType *string `json:"appType,omitempty"`
+	// The storage settings for a space.
+	SpaceStorageSettings *SpaceStorageSettings `json:"spaceStorageSettings,omitempty"`
+}
+
+// A collection of space sharing settings.
+type SpaceSharingSettings struct {
+	SharingType *string `json:"sharingType,omitempty"`
+}
+
+// Specifies summary information about the space sharing settings.
+type SpaceSharingSettingsSummary struct {
+	SharingType *string `json:"sharingType,omitempty"`
+}
+
+// The storage settings for a space.
+type SpaceStorageSettings struct {
+	// A collection of EBS storage settings that apply to both private and shared
+	// spaces.
+	EBSStorageSettings *EBSStorageSettings `json:"ebsStorageSettings,omitempty"`
 }
 
 // Specifies a limit to how long a job can run. When the job reaches the time

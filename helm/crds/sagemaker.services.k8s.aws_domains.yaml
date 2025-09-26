@@ -141,6 +141,16 @@ spec:
                   jupyterLabAppSettings:
                     description: The settings for the JupyterLab application.
                     properties:
+                      codeRepositories:
+                        items:
+                          description: |-
+                            A Git repository that SageMaker automatically displays to users for cloning
+                            in the JupyterServer application.
+                          properties:
+                            repositoryURL:
+                              type: string
+                          type: object
+                        type: array
                       customImages:
                         items:
                           description: |-
@@ -180,6 +190,16 @@ spec:
                   jupyterServerAppSettings:
                     description: The JupyterServer app settings.
                     properties:
+                      codeRepositories:
+                        items:
+                          description: |-
+                            A Git repository that SageMaker automatically displays to users for cloning
+                            in the JupyterServer application.
+                          properties:
+                            repositoryURL:
+                              type: string
+                          type: object
+                        type: array
                       defaultResourceSpec:
                         description: |-
                           Specifies the ARN's of a SageMaker image and SageMaker image version, and

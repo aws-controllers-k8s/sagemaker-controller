@@ -60,6 +60,7 @@ import (
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/pipeline"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/pipeline_execution"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/processing_job"
+	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/space"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/training_job"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/transform_job"
 	_ "github.com/aws-controllers-k8s/sagemaker-controller/pkg/resource/user_profile"

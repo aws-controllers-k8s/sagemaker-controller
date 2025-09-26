@@ -1174,7 +1174,7 @@ ignore:
       - PresignedMlflowTrackingServerUrl
       # - ProcessingJob
       - Project
-      - Space
+      # - Space
       - StudioLifecycleConfig
       # - TrainingJob
       # - TransformJob
@@ -1197,10 +1197,8 @@ ignore:
       - DisableProfiler
       - BatchTransformInput_
       - MonitoringParquetDatasetFormat
-      - SpaceName
       - DefaultSpaceSettings
       - BatchDataCaptureConfig
-      - CodeRepositories
       - TableFormat
       - RandomSeed
       - TrainingImageConfig

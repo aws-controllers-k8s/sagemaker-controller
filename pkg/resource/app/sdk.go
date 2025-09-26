@@ -133,6 +133,11 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.ResourceSpec = nil
 	}
+	if resp.SpaceName != nil {
+		ko.Spec.SpaceName = resp.SpaceName
+	} else {
+		ko.Spec.SpaceName = nil
+	}
 	if resp.Status != "" {
 		ko.Status.Status = aws.String(string(resp.Status))
 	} else {
@@ -174,6 +179,9 @@ func (rm *resourceManager) newDescribeRequestPayload(
 	}
 	if r.ko.Spec.DomainID != nil {
 		res.DomainId = r.ko.Spec.DomainID
+	}
+	if r.ko.Spec.SpaceName != nil {
+		res.SpaceName = r.ko.Spec.SpaceName
 	}
 	if r.ko.Spec.UserProfileName != nil {
 		res.UserProfileName = r.ko.Spec.UserProfileName
@@ -258,19 +266,22 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.ResourceSpec = f3
 	}
+	if r.ko.Spec.SpaceName != nil {
+		res.SpaceName = r.ko.Spec.SpaceName
+	}
 	if r.ko.Spec.Tags != nil {
-		f4 := []svcsdktypes.Tag{}
-		for _, f4iter := range r.ko.Spec.Tags {
-			f4elem := &svcsdktypes.Tag{}
-			if f4iter.Key != nil {
-				f4elem.Key = f4iter.Key
+		f5 := []svcsdktypes.Tag{}
+		for _, f5iter := range r.ko.Spec.Tags {
+			f5elem := &svcsdktypes.Tag{}
+			if f5iter.Key != nil {
+				f5elem.Key = f5iter.Key
 			}
-			if f4iter.Value != nil {
-				f4elem.Value = f4iter.Value
+			if f5iter.Value != nil {
+				f5elem.Value = f5iter.Value
 			}
-			f4 = append(f4, *f4elem)
+			f5 = append(f5, *f5elem)
 		}
-		res.Tags = f4
+		res.Tags = f5
 	}
 	if r.ko.Spec.UserProfileName != nil {
 		res.UserProfileName = r.ko.Spec.UserProfileName
@@ -346,6 +357,9 @@ func (rm *resourceManager) newDeleteRequestPayload(
 	}
 	if r.ko.Spec.DomainID != nil {
 		res.DomainId = r.ko.Spec.DomainID
+	}
+	if r.ko.Spec.SpaceName != nil {
+		res.SpaceName = r.ko.Spec.SpaceName
 	}
 	if r.ko.Spec.UserProfileName != nil {
 		res.UserProfileName = r.ko.Spec.UserProfileName
