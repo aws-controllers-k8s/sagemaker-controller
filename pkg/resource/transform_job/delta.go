@@ -250,6 +250,13 @@ func newResourceDelta(
 				delta.Add("Spec.TransformResources.InstanceType", a.ko.Spec.TransformResources.InstanceType, b.ko.Spec.TransformResources.InstanceType)
 			}
 		}
+		if ackcompare.HasNilDifference(a.ko.Spec.TransformResources.TransformAMIVersion, b.ko.Spec.TransformResources.TransformAMIVersion) {
+			delta.Add("Spec.TransformResources.TransformAMIVersion", a.ko.Spec.TransformResources.TransformAMIVersion, b.ko.Spec.TransformResources.TransformAMIVersion)
+		} else if a.ko.Spec.TransformResources.TransformAMIVersion != nil && b.ko.Spec.TransformResources.TransformAMIVersion != nil {
+			if *a.ko.Spec.TransformResources.TransformAMIVersion != *b.ko.Spec.TransformResources.TransformAMIVersion {
+				delta.Add("Spec.TransformResources.TransformAMIVersion", a.ko.Spec.TransformResources.TransformAMIVersion, b.ko.Spec.TransformResources.TransformAMIVersion)
+			}
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.TransformResources.VolumeKMSKeyID, b.ko.Spec.TransformResources.VolumeKMSKeyID) {
 			delta.Add("Spec.TransformResources.VolumeKMSKeyID", a.ko.Spec.TransformResources.VolumeKMSKeyID, b.ko.Spec.TransformResources.VolumeKMSKeyID)
 		} else if a.ko.Spec.TransformResources.VolumeKMSKeyID != nil && b.ko.Spec.TransformResources.VolumeKMSKeyID != nil {

@@ -36,8 +36,10 @@ type AppSpec struct {
 	// Regex Pattern: `^d-(-*[a-z0-9]){1,61}$`
 	// +kubebuilder:validation:Required
 	DomainID *string `json:"domainID"`
-	// The instance type and the Amazon Resource Name (ARN) of the SageMaker image
-	// created on the instance.
+	// Indicates whether the application is launched in recovery mode.
+	RecoveryMode *bool `json:"recoveryMode,omitempty"`
+	// The instance type and the Amazon Resource Name (ARN) of the SageMaker AI
+	// image created on the instance.
 	//
 	// The value of InstanceType passed as part of the ResourceSpec in the CreateApp
 	// call overrides the value passed as part of the ResourceSpec configured for

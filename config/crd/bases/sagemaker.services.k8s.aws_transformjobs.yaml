@@ -238,6 +238,8 @@ spec:
                     type: integer
                   instanceType:
                     type: string
+                  transformAMIVersion:
+                    type: string
                   volumeKMSKeyID:
                     type: string
                 type: object

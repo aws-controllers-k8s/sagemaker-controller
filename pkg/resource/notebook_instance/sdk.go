@@ -127,6 +127,11 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.InstanceType = nil
 	}
+	if resp.IpAddressType != "" {
+		ko.Spec.IPAddressType = aws.String(string(resp.IpAddressType))
+	} else {
+		ko.Spec.IPAddressType = nil
+	}
 	if resp.KmsKeyId != nil {
 		ko.Spec.KMSKeyID = resp.KmsKeyId
 	} else {
@@ -294,6 +299,9 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.InstanceType != nil {
 		res.InstanceType = svcsdktypes.InstanceType(*r.ko.Spec.InstanceType)
 	}
+	if r.ko.Spec.IPAddressType != nil {
+		res.IpAddressType = svcsdktypes.IPAddressType(*r.ko.Spec.IPAddressType)
+	}
 	if r.ko.Spec.KMSKeyID != nil {
 		res.KmsKeyId = r.ko.Spec.KMSKeyID
 	}
@@ -319,18 +327,18 @@ func (rm *resourceManager) newCreateRequestPayload(
 		res.SubnetId = r.ko.Spec.SubnetID
 	}
 	if r.ko.Spec.Tags != nil {
-		f13 := []svcsdktypes.Tag{}
-		for _, f13iter := range r.ko.Spec.Tags {
-			f13elem := &svcsdktypes.Tag{}
-			if f13iter.Key != nil {
-				f13elem.Key = f13iter.Key
+		f14 := []svcsdktypes.Tag{}
+		for _, f14iter := range r.ko.Spec.Tags {
+			f14elem := &svcsdktypes.Tag{}
+			if f14iter.Key != nil {
+				f14elem.Key = f14iter.Key
 			}
-			if f13iter.Value != nil {
-				f13elem.Value = f13iter.Value
+			if f14iter.Value != nil {
+				f14elem.Value = f14iter.Value
 			}
-			f13 = append(f13, *f13elem)
+			f14 = append(f14, *f14elem)
 		}
-		res.Tags = f13
+		res.Tags = f14
 	}
 	if r.ko.Spec.VolumeSizeInGB != nil {
 		volumeSizeInGBCopy0 := *r.ko.Spec.VolumeSizeInGB
@@ -421,6 +429,9 @@ func (rm *resourceManager) newUpdateRequestPayload(
 	}
 	if r.ko.Spec.InstanceType != nil {
 		res.InstanceType = svcsdktypes.InstanceType(*r.ko.Spec.InstanceType)
+	}
+	if r.ko.Spec.IPAddressType != nil {
+		res.IpAddressType = svcsdktypes.IPAddressType(*r.ko.Spec.IPAddressType)
 	}
 	if r.ko.Spec.LifecycleConfigName != nil {
 		res.LifecycleConfigName = r.ko.Spec.LifecycleConfigName

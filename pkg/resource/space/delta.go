@@ -329,6 +329,20 @@ func newResourceDelta(
 				}
 			}
 		}
+		if ackcompare.HasNilDifference(a.ko.Spec.SpaceSettings.RemoteAccess, b.ko.Spec.SpaceSettings.RemoteAccess) {
+			delta.Add("Spec.SpaceSettings.RemoteAccess", a.ko.Spec.SpaceSettings.RemoteAccess, b.ko.Spec.SpaceSettings.RemoteAccess)
+		} else if a.ko.Spec.SpaceSettings.RemoteAccess != nil && b.ko.Spec.SpaceSettings.RemoteAccess != nil {
+			if *a.ko.Spec.SpaceSettings.RemoteAccess != *b.ko.Spec.SpaceSettings.RemoteAccess {
+				delta.Add("Spec.SpaceSettings.RemoteAccess", a.ko.Spec.SpaceSettings.RemoteAccess, b.ko.Spec.SpaceSettings.RemoteAccess)
+			}
+		}
+		if ackcompare.HasNilDifference(a.ko.Spec.SpaceSettings.SpaceManagedResources, b.ko.Spec.SpaceSettings.SpaceManagedResources) {
+			delta.Add("Spec.SpaceSettings.SpaceManagedResources", a.ko.Spec.SpaceSettings.SpaceManagedResources, b.ko.Spec.SpaceSettings.SpaceManagedResources)
+		} else if a.ko.Spec.SpaceSettings.SpaceManagedResources != nil && b.ko.Spec.SpaceSettings.SpaceManagedResources != nil {
+			if *a.ko.Spec.SpaceSettings.SpaceManagedResources != *b.ko.Spec.SpaceSettings.SpaceManagedResources {
+				delta.Add("Spec.SpaceSettings.SpaceManagedResources", a.ko.Spec.SpaceSettings.SpaceManagedResources, b.ko.Spec.SpaceSettings.SpaceManagedResources)
+			}
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.SpaceSettings.SpaceStorageSettings, b.ko.Spec.SpaceSettings.SpaceStorageSettings) {
 			delta.Add("Spec.SpaceSettings.SpaceStorageSettings", a.ko.Spec.SpaceSettings.SpaceStorageSettings, b.ko.Spec.SpaceSettings.SpaceStorageSettings)
 		} else if a.ko.Spec.SpaceSettings.SpaceStorageSettings != nil && b.ko.Spec.SpaceSettings.SpaceStorageSettings != nil {

@@ -35,6 +35,11 @@ type NotebookInstanceLifecycleConfigSpec struct {
 	// when you create the notebook instance. The shell script must be a base64-encoded
 	// string.
 	OnStart []*NotebookInstanceLifecycleHook `json:"onStart,omitempty"`
+	// An array of key-value pairs. You can use tags to categorize your Amazon Web
+	// Services resources in different ways, for example, by purpose, owner, or
+	// environment. For more information, see Tagging Amazon Web Services Resources
+	// (https://docs.aws.amazon.com/tag-editor/latest/userguide/tagging.html).
+	Tags []*Tag `json:"tags,omitempty"`
 }
 
 // NotebookInstanceLifecycleConfigStatus defines the observed state of NotebookInstanceLifecycleConfig

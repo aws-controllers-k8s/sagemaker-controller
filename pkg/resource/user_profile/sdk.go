@@ -168,6 +168,30 @@ func (rm *resourceManager) sdkFind(
 						}
 						f10f1elem.EFSFileSystemConfig = f10f1elemf0f0
 					}
+				case *svcsdktypes.CustomFileSystemConfigMemberFSxLustreFileSystemConfig:
+					f10f1elemf1 := f10f1iter.(*svcsdktypes.CustomFileSystemConfigMemberFSxLustreFileSystemConfig)
+					if f10f1elemf1 != nil {
+						f10f1elemf1f1 := &svcapitypes.FSxLustreFileSystemConfig{}
+						if f10f1elemf1.Value.FileSystemId != nil {
+							f10f1elemf1f1.FileSystemID = f10f1elemf1.Value.FileSystemId
+						}
+						if f10f1elemf1.Value.FileSystemPath != nil {
+							f10f1elemf1f1.FileSystemPath = f10f1elemf1.Value.FileSystemPath
+						}
+						f10f1elem.FSxLustreFileSystemConfig = f10f1elemf1f1
+					}
+				case *svcsdktypes.CustomFileSystemConfigMemberS3FileSystemConfig:
+					f10f1elemf2 := f10f1iter.(*svcsdktypes.CustomFileSystemConfigMemberS3FileSystemConfig)
+					if f10f1elemf2 != nil {
+						f10f1elemf2f2 := &svcapitypes.S3FileSystemConfig{}
+						if f10f1elemf2.Value.MountPath != nil {
+							f10f1elemf2f2.MountPath = f10f1elemf2.Value.MountPath
+						}
+						if f10f1elemf2.Value.S3Uri != nil {
+							f10f1elemf2f2.S3URI = f10f1elemf2.Value.S3Uri
+						}
+						f10f1elem.S3FileSystemConfig = f10f1elemf2f2
+					}
 				}
 				f10f1 = append(f10f1, f10f1elem)
 			}
@@ -551,6 +575,34 @@ func (rm *resourceManager) newCreateRequestPayload(
 					}
 					f5f1elemf0Parent.Value = *f5f1elemf0
 				}
+				if f5f1iter.FSxLustreFileSystemConfig != nil {
+					if isInterfaceSet {
+						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for FSxLustreFileSystemConfig"))
+					}
+					f5f1elemf1Parent := &svcsdktypes.CustomFileSystemConfigMemberFSxLustreFileSystemConfig{}
+					f5f1elemf1 := &svcsdktypes.FSxLustreFileSystemConfig{}
+					if f5f1iter.FSxLustreFileSystemConfig.FileSystemID != nil {
+						f5f1elemf1.FileSystemId = f5f1iter.FSxLustreFileSystemConfig.FileSystemID
+					}
+					if f5f1iter.FSxLustreFileSystemConfig.FileSystemPath != nil {
+						f5f1elemf1.FileSystemPath = f5f1iter.FSxLustreFileSystemConfig.FileSystemPath
+					}
+					f5f1elemf1Parent.Value = *f5f1elemf1
+				}
+				if f5f1iter.S3FileSystemConfig != nil {
+					if isInterfaceSet {
+						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for S3FileSystemConfig"))
+					}
+					f5f1elemf2Parent := &svcsdktypes.CustomFileSystemConfigMemberS3FileSystemConfig{}
+					f5f1elemf2 := &svcsdktypes.S3FileSystemConfig{}
+					if f5f1iter.S3FileSystemConfig.MountPath != nil {
+						f5f1elemf2.MountPath = f5f1iter.S3FileSystemConfig.MountPath
+					}
+					if f5f1iter.S3FileSystemConfig.S3URI != nil {
+						f5f1elemf2.S3Uri = f5f1iter.S3FileSystemConfig.S3URI
+					}
+					f5f1elemf2Parent.Value = *f5f1elemf2
+				}
 				f5f1 = append(f5f1, f5f1elem)
 			}
 			f5.CustomFileSystemConfigs = f5f1
@@ -902,6 +954,34 @@ func (rm *resourceManager) newUpdateRequestPayload(
 						f2f1elemf0.FileSystemPath = f2f1iter.EFSFileSystemConfig.FileSystemPath
 					}
 					f2f1elemf0Parent.Value = *f2f1elemf0
+				}
+				if f2f1iter.FSxLustreFileSystemConfig != nil {
+					if isInterfaceSet {
+						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for FSxLustreFileSystemConfig"))
+					}
+					f2f1elemf1Parent := &svcsdktypes.CustomFileSystemConfigMemberFSxLustreFileSystemConfig{}
+					f2f1elemf1 := &svcsdktypes.FSxLustreFileSystemConfig{}
+					if f2f1iter.FSxLustreFileSystemConfig.FileSystemID != nil {
+						f2f1elemf1.FileSystemId = f2f1iter.FSxLustreFileSystemConfig.FileSystemID
+					}
+					if f2f1iter.FSxLustreFileSystemConfig.FileSystemPath != nil {
+						f2f1elemf1.FileSystemPath = f2f1iter.FSxLustreFileSystemConfig.FileSystemPath
+					}
+					f2f1elemf1Parent.Value = *f2f1elemf1
+				}
+				if f2f1iter.S3FileSystemConfig != nil {
+					if isInterfaceSet {
+						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for S3FileSystemConfig"))
+					}
+					f2f1elemf2Parent := &svcsdktypes.CustomFileSystemConfigMemberS3FileSystemConfig{}
+					f2f1elemf2 := &svcsdktypes.S3FileSystemConfig{}
+					if f2f1iter.S3FileSystemConfig.MountPath != nil {
+						f2f1elemf2.MountPath = f2f1iter.S3FileSystemConfig.MountPath
+					}
+					if f2f1iter.S3FileSystemConfig.S3URI != nil {
+						f2f1elemf2.S3Uri = f2f1iter.S3FileSystemConfig.S3URI
+					}
+					f2f1elemf2Parent.Value = *f2f1elemf2
 				}
 				f2f1 = append(f2f1, f2f1elem)
 			}

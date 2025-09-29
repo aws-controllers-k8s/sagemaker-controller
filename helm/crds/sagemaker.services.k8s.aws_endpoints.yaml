@@ -476,6 +476,41 @@ spec:
                     API and the endpoint status is Updating, you get different desired and current
                     values.
                   properties:
+                    capacityReservationConfig:
+                      description: Details about an ML capacity reservation.
+                      properties:
+                        availableInstanceCount:
+                          format: int64
+                          type: integer
+                        capacityReservationPreference:
+                          type: string
+                        ec2CapacityReservations:
+                          items:
+                            description: The EC2 capacity reservations that are shared
+                              to an ML capacity reservation.
+                            properties:
+                              availableInstanceCount:
+                                format: int64
+                                type: integer
+                              ec2CapacityReservationID:
+                                type: string
+                              totalInstanceCount:
+                                format: int64
+                                type: integer
+                              usedByCurrentEndpoint:
+                                format: int64
+                                type: integer
+                            type: object
+                          type: array
+                        mlReservationARN:
+                          type: string
+                        totalInstanceCount:
+                          format: int64
+                          type: integer
+                        usedByCurrentEndpoint:
+                          format: int64
+                          type: integer
+                      type: object
                     currentInstanceCount:
                       format: int64
                       type: integer

@@ -1186,8 +1186,10 @@ ignore:
       - AppImageConfig
       - Artifact
       - Cluster
+      - ClusterSchedulerConfig
       - CodeRepository
       - CompilationJob
+      - ComputeQuota
       - Context
       # - DataQualityJobDefinition
       - DeviceFleet
@@ -1222,8 +1224,10 @@ ignore:
       # - MonitoringSchedule
       # - NotebookInstanceLifecycleConfig
       # - NotebookInstance
-      # - Pipeline
       - OptimizationJob
+      - PartnerAppPresignedUrl
+      - PartnerApp
+      # - Pipeline
       - PresignedDomainUrl
       - PresignedNotebookInstanceUrl
       - PresignedMlflowTrackingServerUrl
@@ -1232,6 +1236,7 @@ ignore:
       # - Space
       - StudioLifecycleConfig
       # - TrainingJob
+      - TrainingPlan
       # - TransformJob
       - TrialComponent
       - Trial

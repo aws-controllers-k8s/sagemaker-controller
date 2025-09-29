@@ -95,8 +95,14 @@ spec:
                         type: object
                       defaultResourceSpec:
                         description: |-
-                          Specifies the ARN's of a SageMaker image and SageMaker image version, and
-                          the instance type that the version runs on.
+                          Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+                          and the instance type that the version runs on.
+
+                          When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+                          is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+                          already exists in the ResourceSpec because SageMakerImageVersionArn always
+                          takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+                          None as the value.
                         properties:
                           instanceType:
                             type: string
@@ -114,16 +120,30 @@ spec:
                     items:
                       description: |-
                         A file system, created by you, that you assign to a user profile or space
-                        for an Amazon SageMaker Domain. Permitted users can access this file system
-                        in Amazon SageMaker Studio.
+                        for an Amazon SageMaker AI Domain. Permitted users can access this file system
+                        in Amazon SageMaker AI Studio.
                       properties:
                         efsFileSystem:
                           description: |-
                             A file system, created by you in Amazon EFS, that you assign to a user profile
-                            or space for an Amazon SageMaker Domain. Permitted users can access this
-                            file system in Amazon SageMaker Studio.
+                            or space for an Amazon SageMaker AI Domain. Permitted users can access this
+                            file system in Amazon SageMaker AI Studio.
                           properties:
                             fileSystemID:
+                              type: string
+                          type: object
+                        fSxLustreFileSystem:
+                          description: A custom file system in Amazon FSx for Lustre.
+                          properties:
+                            fileSystemID:
+                              type: string
+                          type: object
+                        s3FileSystem:
+                          description: |-
+                            A custom file system in Amazon S3. This is only supported in Amazon SageMaker
+                            Unified Studio.
+                          properties:
+                            s3URI:
                               type: string
                           type: object
                       type: object
@@ -149,7 +169,7 @@ spec:
                       codeRepositories:
                         items:
                           description: |-
-                            A Git repository that SageMaker automatically displays to users for cloning
+                            A Git repository that SageMaker AI automatically displays to users for cloning
                             in the JupyterServer application.
                           properties:
                             repositoryURL:
@@ -158,8 +178,14 @@ spec:
                         type: array
                       defaultResourceSpec:
                         description: |-
-                          Specifies the ARN's of a SageMaker image and SageMaker image version, and
-                          the instance type that the version runs on.
+                          Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+                          and the instance type that the version runs on.
+
+                          When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+                          is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+                          already exists in the ResourceSpec because SageMakerImageVersionArn always
+                          takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+                          None as the value.
                         properties:
                           instanceType:
                             type: string
@@ -179,7 +205,7 @@ spec:
                       codeRepositories:
                         items:
                           description: |-
-                            A Git repository that SageMaker automatically displays to users for cloning
+                            A Git repository that SageMaker AI automatically displays to users for cloning
                             in the JupyterServer application.
                           properties:
                             repositoryURL:
@@ -188,8 +214,14 @@ spec:
                         type: array
                       defaultResourceSpec:
                         description: |-
-                          Specifies the ARN's of a SageMaker image and SageMaker image version, and
-                          the instance type that the version runs on.
+                          Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+                          and the instance type that the version runs on.
+
+                          When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+                          is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+                          already exists in the ResourceSpec because SageMakerImageVersionArn always
+                          takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+                          None as the value.
                         properties:
                           instanceType:
                             type: string
@@ -213,8 +245,8 @@ spec:
                       customImages:
                         items:
                           description: |-
-                            A custom SageMaker image. For more information, see Bring your own SageMaker
-                            image (https://docs.aws.amazon.com/sagemaker/latest/dg/studio-byoi.html).
+                            A custom SageMaker AI image. For more information, see Bring your own SageMaker
+                            AI image (https://docs.aws.amazon.com/sagemaker/latest/dg/studio-byoi.html).
                           properties:
                             appImageConfigName:
                               type: string
@@ -227,8 +259,14 @@ spec:
                         type: array
                       defaultResourceSpec:
                         description: |-
-                          Specifies the ARN's of a SageMaker image and SageMaker image version, and
-                          the instance type that the version runs on.
+                          Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+                          and the instance type that the version runs on.
+
+                          When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+                          is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+                          already exists in the ResourceSpec because SageMakerImageVersionArn always
+                          takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+                          None as the value.
                         properties:
                           instanceType:
                             type: string
@@ -246,6 +284,10 @@ spec:
                           type: string
                         type: array
                     type: object
+                  remoteAccess:
+                    type: string
+                  spaceManagedResources:
+                    type: string
                   spaceStorageSettings:
                     description: The storage settings for a space.
                     properties:

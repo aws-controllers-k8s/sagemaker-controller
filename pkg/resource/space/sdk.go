@@ -191,6 +191,24 @@ func (rm *resourceManager) sdkFind(
 						}
 						f9f2elem.EFSFileSystem = f9f2elemf0f0
 					}
+				case *svcsdktypes.CustomFileSystemMemberFSxLustreFileSystem:
+					f9f2elemf1 := f9f2iter.(*svcsdktypes.CustomFileSystemMemberFSxLustreFileSystem)
+					if f9f2elemf1 != nil {
+						f9f2elemf1f1 := &svcapitypes.FSxLustreFileSystem{}
+						if f9f2elemf1.Value.FileSystemId != nil {
+							f9f2elemf1f1.FileSystemID = f9f2elemf1.Value.FileSystemId
+						}
+						f9f2elem.FSxLustreFileSystem = f9f2elemf1f1
+					}
+				case *svcsdktypes.CustomFileSystemMemberS3FileSystem:
+					f9f2elemf2 := f9f2iter.(*svcsdktypes.CustomFileSystemMemberS3FileSystem)
+					if f9f2elemf2 != nil {
+						f9f2elemf2f2 := &svcapitypes.S3FileSystem{}
+						if f9f2elemf2.Value.S3Uri != nil {
+							f9f2elemf2f2.S3URI = f9f2elemf2.Value.S3Uri
+						}
+						f9f2elem.S3FileSystem = f9f2elemf2f2
+					}
 				}
 				f9f2 = append(f9f2, f9f2elem)
 			}
@@ -323,17 +341,23 @@ func (rm *resourceManager) sdkFind(
 			}
 			f9.KernelGatewayAppSettings = f9f5
 		}
+		if resp.SpaceSettings.RemoteAccess != "" {
+			f9.RemoteAccess = aws.String(string(resp.SpaceSettings.RemoteAccess))
+		}
+		if resp.SpaceSettings.SpaceManagedResources != "" {
+			f9.SpaceManagedResources = aws.String(string(resp.SpaceSettings.SpaceManagedResources))
+		}
 		if resp.SpaceSettings.SpaceStorageSettings != nil {
-			f9f6 := &svcapitypes.SpaceStorageSettings{}
+			f9f8 := &svcapitypes.SpaceStorageSettings{}
 			if resp.SpaceSettings.SpaceStorageSettings.EbsStorageSettings != nil {
-				f9f6f0 := &svcapitypes.EBSStorageSettings{}
+				f9f8f0 := &svcapitypes.EBSStorageSettings{}
 				if resp.SpaceSettings.SpaceStorageSettings.EbsStorageSettings.EbsVolumeSizeInGb != nil {
 					ebsVolumeSizeInGbCopy := int64(*resp.SpaceSettings.SpaceStorageSettings.EbsStorageSettings.EbsVolumeSizeInGb)
-					f9f6f0.EBSVolumeSizeInGb = &ebsVolumeSizeInGbCopy
+					f9f8f0.EBSVolumeSizeInGb = &ebsVolumeSizeInGbCopy
 				}
-				f9f6.EBSStorageSettings = f9f6f0
+				f9f8.EBSStorageSettings = f9f8f0
 			}
-			f9.SpaceStorageSettings = f9f6
+			f9.SpaceStorageSettings = f9f8
 		}
 		ko.Spec.SpaceSettings = f9
 	} else {
@@ -515,6 +539,28 @@ func (rm *resourceManager) newCreateRequestPayload(
 					}
 					f4f2elemf0Parent.Value = *f4f2elemf0
 				}
+				if f4f2iter.FSxLustreFileSystem != nil {
+					if isInterfaceSet {
+						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for FSxLustreFileSystem"))
+					}
+					f4f2elemf1Parent := &svcsdktypes.CustomFileSystemMemberFSxLustreFileSystem{}
+					f4f2elemf1 := &svcsdktypes.FSxLustreFileSystem{}
+					if f4f2iter.FSxLustreFileSystem.FileSystemID != nil {
+						f4f2elemf1.FileSystemId = f4f2iter.FSxLustreFileSystem.FileSystemID
+					}
+					f4f2elemf1Parent.Value = *f4f2elemf1
+				}
+				if f4f2iter.S3FileSystem != nil {
+					if isInterfaceSet {
+						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for S3FileSystem"))
+					}
+					f4f2elemf2Parent := &svcsdktypes.CustomFileSystemMemberS3FileSystem{}
+					f4f2elemf2 := &svcsdktypes.S3FileSystem{}
+					if f4f2iter.S3FileSystem.S3URI != nil {
+						f4f2elemf2.S3Uri = f4f2iter.S3FileSystem.S3URI
+					}
+					f4f2elemf2Parent.Value = *f4f2elemf2
+				}
 				f4f2 = append(f4f2, f4f2elem)
 			}
 			f4.CustomFileSystems = f4f2
@@ -654,21 +700,27 @@ func (rm *resourceManager) newCreateRequestPayload(
 			}
 			f4.KernelGatewayAppSettings = f4f5
 		}
+		if r.ko.Spec.SpaceSettings.RemoteAccess != nil {
+			f4.RemoteAccess = svcsdktypes.FeatureStatus(*r.ko.Spec.SpaceSettings.RemoteAccess)
+		}
+		if r.ko.Spec.SpaceSettings.SpaceManagedResources != nil {
+			f4.SpaceManagedResources = svcsdktypes.FeatureStatus(*r.ko.Spec.SpaceSettings.SpaceManagedResources)
+		}
 		if r.ko.Spec.SpaceSettings.SpaceStorageSettings != nil {
-			f4f6 := &svcsdktypes.SpaceStorageSettings{}
+			f4f8 := &svcsdktypes.SpaceStorageSettings{}
 			if r.ko.Spec.SpaceSettings.SpaceStorageSettings.EBSStorageSettings != nil {
-				f4f6f0 := &svcsdktypes.EbsStorageSettings{}
+				f4f8f0 := &svcsdktypes.EbsStorageSettings{}
 				if r.ko.Spec.SpaceSettings.SpaceStorageSettings.EBSStorageSettings.EBSVolumeSizeInGb != nil {
 					ebsVolumeSizeInGbCopy0 := *r.ko.Spec.SpaceSettings.SpaceStorageSettings.EBSStorageSettings.EBSVolumeSizeInGb
 					if ebsVolumeSizeInGbCopy0 > math.MaxInt32 || ebsVolumeSizeInGbCopy0 < math.MinInt32 {
 						return nil, fmt.Errorf("error: field EbsVolumeSizeInGb is of type int32")
 					}
 					ebsVolumeSizeInGbCopy := int32(ebsVolumeSizeInGbCopy0)
-					f4f6f0.EbsVolumeSizeInGb = &ebsVolumeSizeInGbCopy
+					f4f8f0.EbsVolumeSizeInGb = &ebsVolumeSizeInGbCopy
 				}
-				f4f6.EbsStorageSettings = f4f6f0
+				f4f8.EbsStorageSettings = f4f8f0
 			}
-			f4.SpaceStorageSettings = f4f6
+			f4.SpaceStorageSettings = f4f8
 		}
 		res.SpaceSettings = f4
 	}
@@ -819,6 +871,28 @@ func (rm *resourceManager) newUpdateRequestPayload(
 					}
 					f3f2elemf0Parent.Value = *f3f2elemf0
 				}
+				if f3f2iter.FSxLustreFileSystem != nil {
+					if isInterfaceSet {
+						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for FSxLustreFileSystem"))
+					}
+					f3f2elemf1Parent := &svcsdktypes.CustomFileSystemMemberFSxLustreFileSystem{}
+					f3f2elemf1 := &svcsdktypes.FSxLustreFileSystem{}
+					if f3f2iter.FSxLustreFileSystem.FileSystemID != nil {
+						f3f2elemf1.FileSystemId = f3f2iter.FSxLustreFileSystem.FileSystemID
+					}
+					f3f2elemf1Parent.Value = *f3f2elemf1
+				}
+				if f3f2iter.S3FileSystem != nil {
+					if isInterfaceSet {
+						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for S3FileSystem"))
+					}
+					f3f2elemf2Parent := &svcsdktypes.CustomFileSystemMemberS3FileSystem{}
+					f3f2elemf2 := &svcsdktypes.S3FileSystem{}
+					if f3f2iter.S3FileSystem.S3URI != nil {
+						f3f2elemf2.S3Uri = f3f2iter.S3FileSystem.S3URI
+					}
+					f3f2elemf2Parent.Value = *f3f2elemf2
+				}
 				f3f2 = append(f3f2, f3f2elem)
 			}
 			f3.CustomFileSystems = f3f2
@@ -958,21 +1032,27 @@ func (rm *resourceManager) newUpdateRequestPayload(
 			}
 			f3.KernelGatewayAppSettings = f3f5
 		}
+		if r.ko.Spec.SpaceSettings.RemoteAccess != nil {
+			f3.RemoteAccess = svcsdktypes.FeatureStatus(*r.ko.Spec.SpaceSettings.RemoteAccess)
+		}
+		if r.ko.Spec.SpaceSettings.SpaceManagedResources != nil {
+			f3.SpaceManagedResources = svcsdktypes.FeatureStatus(*r.ko.Spec.SpaceSettings.SpaceManagedResources)
+		}
 		if r.ko.Spec.SpaceSettings.SpaceStorageSettings != nil {
-			f3f6 := &svcsdktypes.SpaceStorageSettings{}
+			f3f8 := &svcsdktypes.SpaceStorageSettings{}
 			if r.ko.Spec.SpaceSettings.SpaceStorageSettings.EBSStorageSettings != nil {
-				f3f6f0 := &svcsdktypes.EbsStorageSettings{}
+				f3f8f0 := &svcsdktypes.EbsStorageSettings{}
 				if r.ko.Spec.SpaceSettings.SpaceStorageSettings.EBSStorageSettings.EBSVolumeSizeInGb != nil {
 					ebsVolumeSizeInGbCopy0 := *r.ko.Spec.SpaceSettings.SpaceStorageSettings.EBSStorageSettings.EBSVolumeSizeInGb
 					if ebsVolumeSizeInGbCopy0 > math.MaxInt32 || ebsVolumeSizeInGbCopy0 < math.MinInt32 {
 						return nil, fmt.Errorf("error: field EbsVolumeSizeInGb is of type int32")
 					}
 					ebsVolumeSizeInGbCopy := int32(ebsVolumeSizeInGbCopy0)
-					f3f6f0.EbsVolumeSizeInGb = &ebsVolumeSizeInGbCopy
+					f3f8f0.EbsVolumeSizeInGb = &ebsVolumeSizeInGbCopy
 				}
-				f3f6.EbsStorageSettings = f3f6f0
+				f3f8.EbsStorageSettings = f3f8f0
 			}
-			f3.SpaceStorageSettings = f3f6
+			f3.SpaceStorageSettings = f3f8
 		}
 		res.SpaceSettings = f3
 	}

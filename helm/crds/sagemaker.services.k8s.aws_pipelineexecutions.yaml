@@ -89,6 +89,10 @@ spec:
                       type: string
                   type: object
                 type: array
+              pipelineVersionID:
+                description: The ID of the pipeline version to start execution from.
+                format: int64
+                type: integer
               selectiveExecutionConfig:
                 description: The selective execution configuration applied to the
                   pipeline run.
