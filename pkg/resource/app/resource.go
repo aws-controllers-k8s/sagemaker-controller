@@ -124,7 +124,7 @@ func (r *resource) PopulateResourceFromAnnotation(fields map[string]string) erro
 	if !ok {
 		return ackerrors.NewTerminalError(fmt.Errorf("required field missing: appType"))
 	}
-	r.ko.Spec.AppType = aws.String(string(&f1))
+	r.ko.Spec.AppType = &f1
 	f2, ok := fields["domainID"]
 	if !ok {
 		return ackerrors.NewTerminalError(fmt.Errorf("required field missing: domainID"))
