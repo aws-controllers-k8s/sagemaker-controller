@@ -148,7 +148,7 @@ def apply_app_yaml(domain_id, app_association, app_association_resource_name, re
 
     reference, spec, resource = create_sagemaker_resource(
         resource_plural="apps",
-        resource_name="default",
+        resource_name=resource_name,
         spec_file=f"app_{app_association}",
         replacements=replacements,
     )
