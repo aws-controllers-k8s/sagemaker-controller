@@ -14,7 +14,7 @@ spec:
       ebsStorageSettings:
         ebsVolumeSizeInGb: 5
   ownershipSettings:
-    ownerUserProfileName: $USER_PRODILE_NAME
+    ownerUserProfileName: $USER_PROFILE_NAME
   spaceSharingSettings:
     sharingType: Private
   tags:
