@@ -935,11 +935,10 @@ resources:
             code: ResourceNotFound
       terminal_codes:
         - ResourceNotFound
-        - ResourceInUse
         - ResourceLimitExceeded
-        # - InvalidParameterCombination
-        # - InvalidParameterValue
-        # - MissingParameter
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
     hooks:
       sdk_read_one_post_set_output:
         code: rm.customDescribeSpaceSetOutput(ko)

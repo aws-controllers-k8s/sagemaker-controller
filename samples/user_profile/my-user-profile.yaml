@@ -1,0 +1,12 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: UserProfile
+metadata:
+  name: <YOUR USER PROFILE NAME>
+spec:
+  domainID: <YOUR DOMAIN ID>
+  userProfileName: <YOUR USER PROFILE NAME>
+  userSettings:
+    executionRole: <YOU EXECUTION ROLE ARN>
+  tags:
+    - key: env
+      value: dev
