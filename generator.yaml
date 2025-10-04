@@ -933,6 +933,7 @@ resources:
       errors:
           404:
             code: ResourceNotFound
+
       terminal_codes:
         - ResourceNotFound
         - ResourceLimitExceeded
@@ -1256,7 +1257,6 @@ ignore:
       - DisableProfiler
       - BatchTransformInput_
       - MonitoringParquetDatasetFormat
-      - DefaultSpaceSettings
       - BatchDataCaptureConfig
       - TableFormat
       - RandomSeed

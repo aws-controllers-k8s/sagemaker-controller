@@ -1063,6 +1063,26 @@ type DefaultEBSStorageSettings struct {
 	MaximumEBSVolumeSizeInGb *int64 `json:"maximumEBSVolumeSizeInGb,omitempty"`
 }
 
+// The default settings for shared spaces that users create in the domain.
+//
+// SageMaker applies these settings only to shared spaces. It doesn't apply
+// them to private spaces.
+type DefaultSpaceSettings struct {
+	CustomFileSystemConfigs []*CustomFileSystemConfig `json:"customFileSystemConfigs,omitempty"`
+	// Details about the POSIX identity that is used for file system operations.
+	CustomPosixUserConfig *CustomPosixUserConfig `json:"customPosixUserConfig,omitempty"`
+	ExecutionRole         *string                `json:"executionRole,omitempty"`
+	// The settings for the JupyterLab application.
+	JupyterLabAppSettings *JupyterLabAppSettings `json:"jupyterLabAppSettings,omitempty"`
+	// The JupyterServer app settings.
+	JupyterServerAppSettings *JupyterServerAppSettings `json:"jupyterServerAppSettings,omitempty"`
+	// The KernelGateway app settings.
+	KernelGatewayAppSettings *KernelGatewayAppSettings `json:"kernelGatewayAppSettings,omitempty"`
+	SecurityGroups           []*string                 `json:"securityGroups,omitempty"`
+	// The default storage settings for a space.
+	SpaceStorageSettings *DefaultSpaceStorageSettings `json:"spaceStorageSettings,omitempty"`
+}
+
 // The default storage settings for a space.
 type DefaultSpaceStorageSettings struct {
 	// A collection of default EBS storage settings that apply to spaces created

@@ -268,7 +268,7 @@ def get_space_jupyter_lab_instance(domain_id, space_name):
 
 @pytest.fixture(scope="module")
 def domain_fixture():
-    resource_name = random_suffix_name("sm-domain", 15)
+    resource_name = random_suffix_name("sm-domain", 20)
     reference, resource, spec = apply_domain_yaml(resource_name)
 
     assert resource is not None
@@ -298,7 +298,7 @@ def user_profile_fixture(domain_fixture):
     )
     assert_domain_status_in_sync(domain_id, domain_reference, "InService")
 
-    resource_name = random_suffix_name("profile", 15)
+    resource_name = random_suffix_name("profile", 20)
     (
         user_profile_reference,
         user_profile_resource,
@@ -347,7 +347,7 @@ def private_space_fixture(user_profile_fixture):
         domain_id, user_profile_name, user_profile_reference, "InService"
     )
 
-    resource_name = random_suffix_name("private-space", 15)
+    resource_name = random_suffix_name("private-space", 20)
     (
         space_reference,
         space_resource,
@@ -411,7 +411,7 @@ def shared_space_fixture(user_profile_fixture):
         domain_id, user_profile_name, user_profile_reference, "InService"
     )
 
-    resource_name = random_suffix_name("shared-space", 15)
+    resource_name = random_suffix_name("shared-space", 20)
     (
         space_reference,
         space_resource,
@@ -475,8 +475,9 @@ def app_user_profile_fixture(user_profile_fixture):
         domain_id, user_profile_name, user_profile_reference, "InService"
     )
 
+    app_association = "user_profile"
     (app_reference, app_resource, app_spec) = apply_app_yaml(
-        domain_id, "user_profile", user_profile_name
+        domain_id, app_association, user_profile_name
     )
 
     assert app_resource is not None
@@ -522,7 +523,8 @@ def app_space_fixture(shared_space_fixture):
     space_name = space_resource["spec"]["spaceName"]
     assert_space_status_in_sync(domain_id, space_name, space_reference, "InService")
 
-    (app_reference, app_resource, app_spec) = apply_app_yaml(domain_id, "space", space_name)
+    app_association = "space"
+    (app_reference, app_resource, app_spec) = apply_app_yaml(domain_id, app_association, space_name)
 
     assert app_resource is not None
     if k8s.get_resource_arn(app_resource) is None:
