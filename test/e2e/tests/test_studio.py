@@ -22,6 +22,9 @@ from e2e import create_sagemaker_resource, delete_custom_resource, wait_for_stat
 from e2e.common import config as cfg
 from e2e.replacement_values import REPLACEMENT_VALUES
 
+STUDIO_WAIT_PERIOD = 10
+STUDIO_WAIT_LENGTH = 30
+
 
 def get_default_vpc():
     return boto3.client("ec2").describe_vpcs(
@@ -124,7 +127,7 @@ def apply_space_yaml(domain_id, user_profile_name, resource_name, share_type):
     reference, spec, resource = create_sagemaker_resource(
         resource_plural="spaces",
         resource_name=resource_name,
-        spec_file=f"{share_type}-space",
+        spec_file=f"{share_type}_space",
         replacements=replacements,
     )
     return reference, resource, spec
@@ -152,34 +155,46 @@ def apply_app_yaml(domain_id, app_association, resource_name):
 
 
 def assert_domain_status_in_sync(domain_id, reference, expected_status):
-    sm_status = wait_for_status(expected_status, 10, 30, get_domain_sagemaker_status, domain_id)
-    k8s_status = wait_for_status(expected_status, 10, 30, get_k8s_resource_status, reference)
+    sm_status = wait_for_status(
+        expected_status,
+        STUDIO_WAIT_PERIOD,
+        STUDIO_WAIT_LENGTH,
+        get_domain_sagemaker_status,
+        domain_id,
+    )
+    k8s_status = wait_for_status(
+        expected_status, STUDIO_WAIT_PERIOD, STUDIO_WAIT_LENGTH, get_k8s_resource_status, reference
+    )
     assert sm_status == k8s_status == expected_status
 
 
 def assert_user_profile_status_in_sync(domain_id, user_profile_name, reference, expected_status):
     sm_status = wait_for_status(
         expected_status,
-        10,
-        30,
+        STUDIO_WAIT_PERIOD,
+        STUDIO_WAIT_LENGTH,
         get_user_profile_sagemaker_status,
         domain_id,
         user_profile_name,
     )
-    k8s_status = wait_for_status(expected_status, 10, 30, get_k8s_resource_status, reference)
+    k8s_status = wait_for_status(
+        expected_status, STUDIO_WAIT_PERIOD, STUDIO_WAIT_LENGTH, get_k8s_resource_status, reference
+    )
     assert sm_status == k8s_status == expected_status
 
 
 def assert_space_status_in_sync(domain_id, space_name, reference, expected_status):
     sm_status = wait_for_status(
         expected_status,
-        10,
-        30,
+        STUDIO_WAIT_PERIOD,
+        STUDIO_WAIT_LENGTH,
         get_space_sagemaker_status,
         domain_id,
         space_name,
     )
-    k8s_status = wait_for_status(expected_status, 10, 30, get_k8s_resource_status, reference)
+    k8s_status = wait_for_status(
+        expected_status, STUDIO_WAIT_PERIOD, STUDIO_WAIT_LENGTH, get_k8s_resource_status, reference
+    )
     assert sm_status == k8s_status == expected_status
 
 
@@ -188,8 +203,8 @@ def assert_app_status_in_sync(
 ):
     sm_status = wait_for_status(
         expected_status,
-        10,
-        30,
+        STUDIO_WAIT_PERIOD,
+        STUDIO_WAIT_LENGTH,
         get_app_sagemaker_status,
         domain_id,
         app_association,
@@ -197,7 +212,9 @@ def assert_app_status_in_sync(
         app_type,
         app_name,
     )
-    k8s_status = wait_for_status(expected_status, 10, 30, get_k8s_resource_status, reference)
+    k8s_status = wait_for_status(
+        expected_status, STUDIO_WAIT_PERIOD, STUDIO_WAIT_LENGTH, get_k8s_resource_status, reference
+    )
     assert sm_status == k8s_status == expected_status
 
 
@@ -276,7 +293,9 @@ def user_profile_fixture(domain_fixture):
     assert_domain_status_in_sync(domain_id, domain_reference, "InService")
 
     domain_resource = patch_domain_kernel_instance(domain_reference, domain_spec, "ml.t3.large")
-    wait_for_status("ml.t3.large", 10, 30, get_domain_kernel_instance, domain_id)
+    wait_for_status(
+        "ml.t3.large", STUDIO_WAIT_PERIOD, STUDIO_WAIT_LENGTH, get_domain_kernel_instance, domain_id
+    )
     assert_domain_status_in_sync(domain_id, domain_reference, "InService")
 
     resource_name = random_suffix_name("profile", 15)
@@ -344,7 +363,14 @@ def private_space_fixture(user_profile_fixture):
 
     space_name = space_resource["spec"]["spaceName"]
     space_resource = patch_space_jupyter_lab_instance(space_reference, space_spec, "ml.t3.large")
-    wait_for_status("ml.t3.large", 10, 30, get_space_jupyter_lab_instance, domain_id, space_name)
+    wait_for_status(
+        "ml.t3.large",
+        STUDIO_WAIT_PERIOD,
+        STUDIO_WAIT_LENGTH,
+        get_space_jupyter_lab_instance,
+        domain_id,
+        space_name,
+    )
     assert_space_status_in_sync(domain_id, space_name, space_reference, "InService")
 
     yield (
@@ -439,8 +465,8 @@ def app_user_profile_fixture(user_profile_fixture):
     )
     wait_for_status(
         "ml.t3.large",
-        10,
-        30,
+        STUDIO_WAIT_PERIOD,
+        STUDIO_WAIT_LENGTH,
         get_user_profile_kernel_instance,
         domain_id,
         user_profile_name,
@@ -496,9 +522,7 @@ def app_space_fixture(shared_space_fixture):
     space_name = space_resource["spec"]["spaceName"]
     assert_space_status_in_sync(domain_id, space_name, space_reference, "InService")
 
-    (app_reference, app_resource, app_spec) = apply_app_yaml(
-        domain_id, "space", space_name
-    )
+    (app_reference, app_resource, app_spec) = apply_app_yaml(domain_id, "space", space_name)
 
     assert app_resource is not None
     if k8s.get_resource_arn(app_resource) is None:
