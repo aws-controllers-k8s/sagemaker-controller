@@ -133,17 +133,18 @@ def apply_space_yaml(domain_id, user_profile_name, resource_name, share_type):
     return reference, resource, spec
 
 
-def apply_app_yaml(domain_id, app_association, resource_name):
+def apply_app_yaml(domain_id,app_association, app_association_resource_name, resource_name):
     app_association = app_association.lower()
     assert app_association in ["user_profile", "space"]
 
     replacements = REPLACEMENT_VALUES.copy()
     replacements["DOMAIN_ID"] = domain_id
+    replacements["APP_NAME"] = resource_name
     if app_association == "user_profile":
-        replacements["USER_PROFILE_NAME"] = resource_name
+        replacements["USER_PROFILE_NAME"] = app_association_resource_name
 
     elif app_association == "space":
-        replacements["SPACE_NAME"] = resource_name
+        replacements["SPACE_NAME"] = app_association_resource_name
 
     reference, spec, resource = create_sagemaker_resource(
         resource_plural="apps",
