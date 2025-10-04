@@ -284,7 +284,7 @@ def user_profile_fixture(domain_fixture):
         user_profile_reference,
         user_profile_resource,
         user_profile_spec,
-    ) = apply_user_profile_yaml(resource_name, domain_id)
+    ) = apply_user_profile_yaml(domain_id, resource_name)
 
     assert user_profile_resource is not None
     if k8s.get_resource_arn(user_profile_resource) is None:
