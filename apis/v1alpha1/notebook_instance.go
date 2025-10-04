@@ -35,7 +35,7 @@ type NotebookInstanceSpec struct {
 	// (https://docs.aws.amazon.com/codecommit/latest/userguide/welcome.html) or
 	// in any other Git repository. These repositories are cloned at the same level
 	// as the default repository of your notebook instance. For more information,
-	// see Associating Git Repositories with SageMaker Notebook Instances (https://docs.aws.amazon.com/sagemaker/latest/dg/nbi-git-repo.html).
+	// see Associating Git Repositories with SageMaker AI Notebook Instances (https://docs.aws.amazon.com/sagemaker/latest/dg/nbi-git-repo.html).
 	AdditionalCodeRepositories []*string `json:"additionalCodeRepositories,omitempty"`
 	// A Git repository to associate with the notebook instance as its default code
 	// repository. This can be either the name of a Git repository stored as a resource
@@ -43,14 +43,14 @@ type NotebookInstanceSpec struct {
 	// (https://docs.aws.amazon.com/codecommit/latest/userguide/welcome.html) or
 	// in any other Git repository. When you open a notebook instance, it opens
 	// in the directory that contains this repository. For more information, see
-	// Associating Git Repositories with SageMaker Notebook Instances (https://docs.aws.amazon.com/sagemaker/latest/dg/nbi-git-repo.html).
+	// Associating Git Repositories with SageMaker AI Notebook Instances (https://docs.aws.amazon.com/sagemaker/latest/dg/nbi-git-repo.html).
 	//
 	// Regex Pattern: `^https://([^/]+)/?(.*)$|^[a-zA-Z0-9](-*[a-zA-Z0-9])*$`
 	DefaultCodeRepository *string `json:"defaultCodeRepository,omitempty"`
-	// Sets whether SageMaker provides internet access to the notebook instance.
+	// Sets whether SageMaker AI provides internet access to the notebook instance.
 	// If you set this to Disabled this notebook instance is able to access resources
-	// only in your VPC, and is not be able to connect to SageMaker training and
-	// endpoint services unless you configure a NAT Gateway in your VPC.
+	// only in your VPC, and is not be able to connect to SageMaker AI training
+	// and endpoint services unless you configure a NAT Gateway in your VPC.
 	//
 	// For more information, see Notebook Instances Are Internet-Enabled by Default
 	// (https://docs.aws.amazon.com/sagemaker/latest/dg/appendix-additional-considerations.html#appendix-notebook-and-internet-access).
@@ -60,9 +60,14 @@ type NotebookInstanceSpec struct {
 	// The type of ML compute instance to launch for the notebook instance.
 	// +kubebuilder:validation:Required
 	InstanceType *string `json:"instanceType"`
+	// The IP address type for the notebook instance. Specify ipv4 for IPv4-only
+	// connectivity or dualstack for both IPv4 and IPv6 connectivity. When you specify
+	// dualstack, the subnet must support IPv6 CIDR blocks. If not specified, defaults
+	// to ipv4.
+	IPAddressType *string `json:"ipAddressType,omitempty"`
 	// The Amazon Resource Name (ARN) of a Amazon Web Services Key Management Service
-	// key that SageMaker uses to encrypt data on the storage volume attached to
-	// your notebook instance. The KMS key you provide must be enabled. For information,
+	// key that SageMaker AI uses to encrypt data on the storage volume attached
+	// to your notebook instance. The KMS key you provide must be enabled. For information,
 	// see Enabling and Disabling Keys (https://docs.aws.amazon.com/kms/latest/developerguide/enabling-keys.html)
 	// in the Amazon Web Services Key Management Service Developer Guide.
 	//
@@ -81,17 +86,17 @@ type NotebookInstanceSpec struct {
 	NotebookInstanceName *string `json:"notebookInstanceName"`
 	// The platform identifier of the notebook instance runtime environment.
 	//
-	// Regex Pattern: `^(notebook-al1-v1|notebook-al2-v1|notebook-al2-v2|notebook-al2-v3)$`
+	// Regex Pattern: `^(notebook-al1-v1|notebook-al2-v1|notebook-al2-v2|notebook-al2-v3|notebook-al2023-v1)$`
 	PlatformIdentifier *string `json:"platformIdentifier,omitempty"`
 	// When you send any requests to Amazon Web Services resources from the notebook
-	// instance, SageMaker assumes this role to perform tasks on your behalf. You
-	// must grant this role necessary permissions so SageMaker can perform these
-	// tasks. The policy must allow the SageMaker service principal (sagemaker.amazonaws.com)
-	// permissions to assume this role. For more information, see SageMaker Roles
+	// instance, SageMaker AI assumes this role to perform tasks on your behalf.
+	// You must grant this role necessary permissions so SageMaker AI can perform
+	// these tasks. The policy must allow the SageMaker AI service principal (sagemaker.amazonaws.com)
+	// permissions to assume this role. For more information, see SageMaker AI Roles
 	// (https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-roles.html).
 	//
-	// To be able to pass this role to SageMaker, the caller of this API must have
-	// the iam:PassRole permission.
+	// To be able to pass this role to SageMaker AI, the caller of this API must
+	// have the iam:PassRole permission.
 	//
 	// Regex Pattern: `^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$`
 	// +kubebuilder:validation:Required

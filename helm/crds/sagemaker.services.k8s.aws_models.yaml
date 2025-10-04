@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.16.2
+    controller-gen.kubebuilder.io/version: v0.19.0
   name: models.sagemaker.services.k8s.aws
 spec:
   group: sagemaker.services.k8s.aws
@@ -89,6 +89,10 @@ spec:
                             to deploy.
                           properties:
                             compressionType:
+                              type: string
+                            eTag:
+                              type: string
+                            manifestEtag:
                               type: string
                             modelAccessConfig:
                               description: |-
@@ -203,6 +207,10 @@ spec:
                           deploy.
                         properties:
                           compressionType:
+                            type: string
+                          eTag:
+                            type: string
+                          manifestEtag:
                             type: string
                           modelAccessConfig:
                             description: |-

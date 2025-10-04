@@ -129,59 +129,59 @@ func (rm *resourceManager) sdkFind(
 		ko.Status.LastModifiedTime = nil
 	}
 	if resp.RuntimeConfig != nil {
-		f8 := &svcapitypes.InferenceComponentRuntimeConfig{}
-		ko.Spec.RuntimeConfig = f8
+		f9 := &svcapitypes.InferenceComponentRuntimeConfig{}
+		ko.Spec.RuntimeConfig = f9
 	} else {
 		ko.Spec.RuntimeConfig = nil
 	}
 	if resp.Specification != nil {
-		f9 := &svcapitypes.InferenceComponentSpecification{}
+		f10 := &svcapitypes.InferenceComponentSpecification{}
 		if resp.Specification.ComputeResourceRequirements != nil {
-			f9f1 := &svcapitypes.InferenceComponentComputeResourceRequirements{}
+			f10f1 := &svcapitypes.InferenceComponentComputeResourceRequirements{}
 			if resp.Specification.ComputeResourceRequirements.MaxMemoryRequiredInMb != nil {
 				maxMemoryRequiredInMbCopy := int64(*resp.Specification.ComputeResourceRequirements.MaxMemoryRequiredInMb)
-				f9f1.MaxMemoryRequiredInMb = &maxMemoryRequiredInMbCopy
+				f10f1.MaxMemoryRequiredInMb = &maxMemoryRequiredInMbCopy
 			}
 			if resp.Specification.ComputeResourceRequirements.MinMemoryRequiredInMb != nil {
 				minMemoryRequiredInMbCopy := int64(*resp.Specification.ComputeResourceRequirements.MinMemoryRequiredInMb)
-				f9f1.MinMemoryRequiredInMb = &minMemoryRequiredInMbCopy
+				f10f1.MinMemoryRequiredInMb = &minMemoryRequiredInMbCopy
 			}
 			if resp.Specification.ComputeResourceRequirements.NumberOfAcceleratorDevicesRequired != nil {
 				numberOfAcceleratorDevicesRequiredCopy := float64(*resp.Specification.ComputeResourceRequirements.NumberOfAcceleratorDevicesRequired)
-				f9f1.NumberOfAcceleratorDevicesRequired = &numberOfAcceleratorDevicesRequiredCopy
+				f10f1.NumberOfAcceleratorDevicesRequired = &numberOfAcceleratorDevicesRequiredCopy
 			}
 			if resp.Specification.ComputeResourceRequirements.NumberOfCpuCoresRequired != nil {
 				numberOfCPUCoresRequiredCopy := float64(*resp.Specification.ComputeResourceRequirements.NumberOfCpuCoresRequired)
-				f9f1.NumberOfCPUCoresRequired = &numberOfCPUCoresRequiredCopy
+				f10f1.NumberOfCPUCoresRequired = &numberOfCPUCoresRequiredCopy
 			}
-			f9.ComputeResourceRequirements = f9f1
+			f10.ComputeResourceRequirements = f10f1
 		}
 		if resp.Specification.Container != nil {
-			f9f2 := &svcapitypes.InferenceComponentContainerSpecification{}
+			f10f2 := &svcapitypes.InferenceComponentContainerSpecification{}
 			if resp.Specification.Container.ArtifactUrl != nil {
-				f9f2.ArtifactURL = resp.Specification.Container.ArtifactUrl
+				f10f2.ArtifactURL = resp.Specification.Container.ArtifactUrl
 			}
 			if resp.Specification.Container.Environment != nil {
-				f9f2.Environment = aws.StringMap(resp.Specification.Container.Environment)
+				f10f2.Environment = aws.StringMap(resp.Specification.Container.Environment)
 			}
-			f9.Container = f9f2
+			f10.Container = f10f2
 		}
 		if resp.Specification.ModelName != nil {
-			f9.ModelName = resp.Specification.ModelName
+			f10.ModelName = resp.Specification.ModelName
 		}
 		if resp.Specification.StartupParameters != nil {
-			f9f4 := &svcapitypes.InferenceComponentStartupParameters{}
+			f10f4 := &svcapitypes.InferenceComponentStartupParameters{}
 			if resp.Specification.StartupParameters.ContainerStartupHealthCheckTimeoutInSeconds != nil {
 				containerStartupHealthCheckTimeoutInSecondsCopy := int64(*resp.Specification.StartupParameters.ContainerStartupHealthCheckTimeoutInSeconds)
-				f9f4.ContainerStartupHealthCheckTimeoutInSeconds = &containerStartupHealthCheckTimeoutInSecondsCopy
+				f10f4.ContainerStartupHealthCheckTimeoutInSeconds = &containerStartupHealthCheckTimeoutInSecondsCopy
 			}
 			if resp.Specification.StartupParameters.ModelDataDownloadTimeoutInSeconds != nil {
 				modelDataDownloadTimeoutInSecondsCopy := int64(*resp.Specification.StartupParameters.ModelDataDownloadTimeoutInSeconds)
-				f9f4.ModelDataDownloadTimeoutInSeconds = &modelDataDownloadTimeoutInSecondsCopy
+				f10f4.ModelDataDownloadTimeoutInSeconds = &modelDataDownloadTimeoutInSecondsCopy
 			}
-			f9.StartupParameters = f9f4
+			f10.StartupParameters = f10f4
 		}
-		ko.Spec.Specification = f9
+		ko.Spec.Specification = f10
 	} else {
 		ko.Spec.Specification = nil
 	}
@@ -455,28 +455,28 @@ func (rm *resourceManager) newUpdateRequestPayload(
 		res.InferenceComponentName = r.ko.Spec.InferenceComponentName
 	}
 	if r.ko.Spec.RuntimeConfig != nil {
-		f1 := &svcsdktypes.InferenceComponentRuntimeConfig{}
+		f2 := &svcsdktypes.InferenceComponentRuntimeConfig{}
 		if r.ko.Spec.RuntimeConfig.CopyCount != nil {
 			copyCountCopy0 := *r.ko.Spec.RuntimeConfig.CopyCount
 			if copyCountCopy0 > math.MaxInt32 || copyCountCopy0 < math.MinInt32 {
 				return nil, fmt.Errorf("error: field CopyCount is of type int32")
 			}
 			copyCountCopy := int32(copyCountCopy0)
-			f1.CopyCount = &copyCountCopy
+			f2.CopyCount = &copyCountCopy
 		}
-		res.RuntimeConfig = f1
+		res.RuntimeConfig = f2
 	}
 	if r.ko.Spec.Specification != nil {
-		f2 := &svcsdktypes.InferenceComponentSpecification{}
+		f3 := &svcsdktypes.InferenceComponentSpecification{}
 		if r.ko.Spec.Specification.ComputeResourceRequirements != nil {
-			f2f0 := &svcsdktypes.InferenceComponentComputeResourceRequirements{}
+			f3f0 := &svcsdktypes.InferenceComponentComputeResourceRequirements{}
 			if r.ko.Spec.Specification.ComputeResourceRequirements.MaxMemoryRequiredInMb != nil {
 				maxMemoryRequiredInMbCopy0 := *r.ko.Spec.Specification.ComputeResourceRequirements.MaxMemoryRequiredInMb
 				if maxMemoryRequiredInMbCopy0 > math.MaxInt32 || maxMemoryRequiredInMbCopy0 < math.MinInt32 {
 					return nil, fmt.Errorf("error: field MaxMemoryRequiredInMb is of type int32")
 				}
 				maxMemoryRequiredInMbCopy := int32(maxMemoryRequiredInMbCopy0)
-				f2f0.MaxMemoryRequiredInMb = &maxMemoryRequiredInMbCopy
+				f3f0.MaxMemoryRequiredInMb = &maxMemoryRequiredInMbCopy
 			}
 			if r.ko.Spec.Specification.ComputeResourceRequirements.MinMemoryRequiredInMb != nil {
 				minMemoryRequiredInMbCopy0 := *r.ko.Spec.Specification.ComputeResourceRequirements.MinMemoryRequiredInMb
@@ -484,7 +484,7 @@ func (rm *resourceManager) newUpdateRequestPayload(
 					return nil, fmt.Errorf("error: field MinMemoryRequiredInMb is of type int32")
 				}
 				minMemoryRequiredInMbCopy := int32(minMemoryRequiredInMbCopy0)
-				f2f0.MinMemoryRequiredInMb = &minMemoryRequiredInMbCopy
+				f3f0.MinMemoryRequiredInMb = &minMemoryRequiredInMbCopy
 			}
 			if r.ko.Spec.Specification.ComputeResourceRequirements.NumberOfAcceleratorDevicesRequired != nil {
 				numberOfAcceleratorDevicesRequiredCopy0 := *r.ko.Spec.Specification.ComputeResourceRequirements.NumberOfAcceleratorDevicesRequired
@@ -492,7 +492,7 @@ func (rm *resourceManager) newUpdateRequestPayload(
 					return nil, fmt.Errorf("error: field NumberOfAcceleratorDevicesRequired is of type float32")
 				}
 				numberOfAcceleratorDevicesRequiredCopy := float32(numberOfAcceleratorDevicesRequiredCopy0)
-				f2f0.NumberOfAcceleratorDevicesRequired = &numberOfAcceleratorDevicesRequiredCopy
+				f3f0.NumberOfAcceleratorDevicesRequired = &numberOfAcceleratorDevicesRequiredCopy
 			}
 			if r.ko.Spec.Specification.ComputeResourceRequirements.NumberOfCPUCoresRequired != nil {
 				numberOfCPUCoresRequiredCopy0 := *r.ko.Spec.Specification.ComputeResourceRequirements.NumberOfCPUCoresRequired
@@ -500,35 +500,35 @@ func (rm *resourceManager) newUpdateRequestPayload(
 					return nil, fmt.Errorf("error: field NumberOfCpuCoresRequired is of type float32")
 				}
 				numberOfCPUCoresRequiredCopy := float32(numberOfCPUCoresRequiredCopy0)
-				f2f0.NumberOfCpuCoresRequired = &numberOfCPUCoresRequiredCopy
+				f3f0.NumberOfCpuCoresRequired = &numberOfCPUCoresRequiredCopy
 			}
-			f2.ComputeResourceRequirements = f2f0
+			f3.ComputeResourceRequirements = f3f0
 		}
 		if r.ko.Spec.Specification.Container != nil {
-			f2f1 := &svcsdktypes.InferenceComponentContainerSpecification{}
+			f3f1 := &svcsdktypes.InferenceComponentContainerSpecification{}
 			if r.ko.Spec.Specification.Container.ArtifactURL != nil {
-				f2f1.ArtifactUrl = r.ko.Spec.Specification.Container.ArtifactURL
+				f3f1.ArtifactUrl = r.ko.Spec.Specification.Container.ArtifactURL
 			}
 			if r.ko.Spec.Specification.Container.Environment != nil {
-				f2f1.Environment = aws.ToStringMap(r.ko.Spec.Specification.Container.Environment)
+				f3f1.Environment = aws.ToStringMap(r.ko.Spec.Specification.Container.Environment)
 			}
 			if r.ko.Spec.Specification.Container.Image != nil {
-				f2f1.Image = r.ko.Spec.Specification.Container.Image
+				f3f1.Image = r.ko.Spec.Specification.Container.Image
 			}
-			f2.Container = f2f1
+			f3.Container = f3f1
 		}
 		if r.ko.Spec.Specification.ModelName != nil {
-			f2.ModelName = r.ko.Spec.Specification.ModelName
+			f3.ModelName = r.ko.Spec.Specification.ModelName
 		}
 		if r.ko.Spec.Specification.StartupParameters != nil {
-			f2f3 := &svcsdktypes.InferenceComponentStartupParameters{}
+			f3f3 := &svcsdktypes.InferenceComponentStartupParameters{}
 			if r.ko.Spec.Specification.StartupParameters.ContainerStartupHealthCheckTimeoutInSeconds != nil {
 				containerStartupHealthCheckTimeoutInSecondsCopy0 := *r.ko.Spec.Specification.StartupParameters.ContainerStartupHealthCheckTimeoutInSeconds
 				if containerStartupHealthCheckTimeoutInSecondsCopy0 > math.MaxInt32 || containerStartupHealthCheckTimeoutInSecondsCopy0 < math.MinInt32 {
 					return nil, fmt.Errorf("error: field ContainerStartupHealthCheckTimeoutInSeconds is of type int32")
 				}
 				containerStartupHealthCheckTimeoutInSecondsCopy := int32(containerStartupHealthCheckTimeoutInSecondsCopy0)
-				f2f3.ContainerStartupHealthCheckTimeoutInSeconds = &containerStartupHealthCheckTimeoutInSecondsCopy
+				f3f3.ContainerStartupHealthCheckTimeoutInSeconds = &containerStartupHealthCheckTimeoutInSecondsCopy
 			}
 			if r.ko.Spec.Specification.StartupParameters.ModelDataDownloadTimeoutInSeconds != nil {
 				modelDataDownloadTimeoutInSecondsCopy0 := *r.ko.Spec.Specification.StartupParameters.ModelDataDownloadTimeoutInSeconds
@@ -536,11 +536,11 @@ func (rm *resourceManager) newUpdateRequestPayload(
 					return nil, fmt.Errorf("error: field ModelDataDownloadTimeoutInSeconds is of type int32")
 				}
 				modelDataDownloadTimeoutInSecondsCopy := int32(modelDataDownloadTimeoutInSecondsCopy0)
-				f2f3.ModelDataDownloadTimeoutInSeconds = &modelDataDownloadTimeoutInSecondsCopy
+				f3f3.ModelDataDownloadTimeoutInSeconds = &modelDataDownloadTimeoutInSecondsCopy
 			}
-			f2.StartupParameters = f2f3
+			f3.StartupParameters = f3f3
 		}
-		res.Specification = f2
+		res.Specification = f3
 	}
 
 	return res, nil

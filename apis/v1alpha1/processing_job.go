@@ -31,6 +31,12 @@ type ProcessingJobSpec struct {
 	AppSpecification *AppSpecification `json:"appSpecification"`
 	// The environment variables to set in the Docker container. Up to 100 key and
 	// values entries in the map are supported.
+	//
+	// Do not include any security-sensitive information including account access
+	// IDs, secrets, or tokens in any environment fields. As part of the shared
+	// responsibility model, you are responsible for any potential exposure, unauthorized
+	// access, or compromise of your sensitive data if caused by security-sensitive
+	// information included in the request environment variable or plain text fields.
 	Environment      map[string]*string `json:"environment,omitempty"`
 	ExperimentConfig *ExperimentConfig  `json:"experimentConfig,omitempty"`
 	// Networking options for a processing job, such as whether to allow inbound
@@ -63,6 +69,12 @@ type ProcessingJobSpec struct {
 	// (Optional) An array of key-value pairs. For more information, see Using Cost
 	// Allocation Tags (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html#allocation-whatURL)
 	// in the Amazon Web Services Billing and Cost Management User Guide.
+	//
+	// Do not include any security-sensitive information including account access
+	// IDs, secrets, or tokens in any tags. As part of the shared responsibility
+	// model, you are responsible for any potential exposure, unauthorized access,
+	// or compromise of your sensitive data if caused by security-sensitive information
+	// included in the request tag variable or plain text fields.
 	Tags []*Tag `json:"tags,omitempty"`
 }
 

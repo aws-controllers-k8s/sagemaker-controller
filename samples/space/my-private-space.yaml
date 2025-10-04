@@ -1,0 +1,14 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: Space
+metadata:
+  name: <YOUR SPACE NAME>
+spec:
+  domainID: <YOUR DOMAIN ID>
+  spaceName: <YOUR SPACE NAME>
+  ownershipSettings:
+    ownerUserProfileName: <YOUR USER PROFILE NAME>
+  spaceSharingSettings:
+    sharingType: Private
+  tags:
+    - key: env
+      value: dev

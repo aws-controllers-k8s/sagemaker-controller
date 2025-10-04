@@ -130,12 +130,18 @@ func (rm *resourceManager) sdkFind(
 					if f0iter.ModelDataSource.S3DataSource.CompressionType != "" {
 						f0elemf6f0.CompressionType = aws.String(string(f0iter.ModelDataSource.S3DataSource.CompressionType))
 					}
+					if f0iter.ModelDataSource.S3DataSource.ETag != nil {
+						f0elemf6f0.ETag = f0iter.ModelDataSource.S3DataSource.ETag
+					}
+					if f0iter.ModelDataSource.S3DataSource.ManifestEtag != nil {
+						f0elemf6f0.ManifestEtag = f0iter.ModelDataSource.S3DataSource.ManifestEtag
+					}
 					if f0iter.ModelDataSource.S3DataSource.ModelAccessConfig != nil {
-						f0elemf6f0f1 := &svcapitypes.ModelAccessConfig{}
+						f0elemf6f0f3 := &svcapitypes.ModelAccessConfig{}
 						if f0iter.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula != nil {
-							f0elemf6f0f1.AcceptEula = f0iter.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula
+							f0elemf6f0f3.AcceptEula = f0iter.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula
 						}
-						f0elemf6f0.ModelAccessConfig = f0elemf6f0f1
+						f0elemf6f0.ModelAccessConfig = f0elemf6f0f3
 					}
 					if f0iter.ModelDataSource.S3DataSource.S3DataType != "" {
 						f0elemf6f0.S3DataType = aws.String(string(f0iter.ModelDataSource.S3DataSource.S3DataType))
@@ -235,12 +241,18 @@ func (rm *resourceManager) sdkFind(
 				if resp.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType != "" {
 					f8f6f0.CompressionType = aws.String(string(resp.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType))
 				}
+				if resp.PrimaryContainer.ModelDataSource.S3DataSource.ETag != nil {
+					f8f6f0.ETag = resp.PrimaryContainer.ModelDataSource.S3DataSource.ETag
+				}
+				if resp.PrimaryContainer.ModelDataSource.S3DataSource.ManifestEtag != nil {
+					f8f6f0.ManifestEtag = resp.PrimaryContainer.ModelDataSource.S3DataSource.ManifestEtag
+				}
 				if resp.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig != nil {
-					f8f6f0f1 := &svcapitypes.ModelAccessConfig{}
+					f8f6f0f3 := &svcapitypes.ModelAccessConfig{}
 					if resp.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula != nil {
-						f8f6f0f1.AcceptEula = resp.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula
+						f8f6f0f3.AcceptEula = resp.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula
 					}
-					f8f6f0.ModelAccessConfig = f8f6f0f1
+					f8f6f0.ModelAccessConfig = f8f6f0f3
 				}
 				if resp.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType != "" {
 					f8f6f0.S3DataType = aws.String(string(resp.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType))
@@ -398,12 +410,18 @@ func (rm *resourceManager) newCreateRequestPayload(
 					if f0iter.ModelDataSource.S3DataSource.CompressionType != nil {
 						f0elemf6f0.CompressionType = svcsdktypes.ModelCompressionType(*f0iter.ModelDataSource.S3DataSource.CompressionType)
 					}
+					if f0iter.ModelDataSource.S3DataSource.ETag != nil {
+						f0elemf6f0.ETag = f0iter.ModelDataSource.S3DataSource.ETag
+					}
+					if f0iter.ModelDataSource.S3DataSource.ManifestEtag != nil {
+						f0elemf6f0.ManifestEtag = f0iter.ModelDataSource.S3DataSource.ManifestEtag
+					}
 					if f0iter.ModelDataSource.S3DataSource.ModelAccessConfig != nil {
-						f0elemf6f0f1 := &svcsdktypes.ModelAccessConfig{}
+						f0elemf6f0f3 := &svcsdktypes.ModelAccessConfig{}
 						if f0iter.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula != nil {
-							f0elemf6f0f1.AcceptEula = f0iter.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula
+							f0elemf6f0f3.AcceptEula = f0iter.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula
 						}
-						f0elemf6f0.ModelAccessConfig = f0elemf6f0f1
+						f0elemf6f0.ModelAccessConfig = f0elemf6f0f3
 					}
 					if f0iter.ModelDataSource.S3DataSource.S3DataType != nil {
 						f0elemf6f0.S3DataType = svcsdktypes.S3ModelDataType(*f0iter.ModelDataSource.S3DataSource.S3DataType)
@@ -486,12 +504,18 @@ func (rm *resourceManager) newCreateRequestPayload(
 				if r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType != nil {
 					f5f6f0.CompressionType = svcsdktypes.ModelCompressionType(*r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.CompressionType)
 				}
+				if r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ETag != nil {
+					f5f6f0.ETag = r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ETag
+				}
+				if r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ManifestEtag != nil {
+					f5f6f0.ManifestEtag = r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ManifestEtag
+				}
 				if r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig != nil {
-					f5f6f0f1 := &svcsdktypes.ModelAccessConfig{}
+					f5f6f0f3 := &svcsdktypes.ModelAccessConfig{}
 					if r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula != nil {
-						f5f6f0f1.AcceptEula = r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula
+						f5f6f0f3.AcceptEula = r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ModelAccessConfig.AcceptEula
 					}
-					f5f6f0.ModelAccessConfig = f5f6f0f1
+					f5f6f0.ModelAccessConfig = f5f6f0f3
 				}
 				if r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType != nil {
 					f5f6f0.S3DataType = svcsdktypes.S3ModelDataType(*r.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.S3DataType)

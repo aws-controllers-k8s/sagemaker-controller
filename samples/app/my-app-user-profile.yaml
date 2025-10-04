@@ -1,0 +1,12 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: App
+metadata:
+  name: <YOUR APP NAME>
+spec:
+  domainID: <YOUR DOMAIN ID>
+  appName: <YOUR APP NAME>
+  appType: <YOUR APP TYPE>
+  userProfileName: <YOUR USER PROFILE NAME>
+  tags:
+    - key: env
+      value: dev

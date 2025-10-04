@@ -82,6 +82,13 @@ func newResourceDelta(
 			delta.Add("Spec.PipelineParameters", a.ko.Spec.PipelineParameters, b.ko.Spec.PipelineParameters)
 		}
 	}
+	if ackcompare.HasNilDifference(a.ko.Spec.PipelineVersionID, b.ko.Spec.PipelineVersionID) {
+		delta.Add("Spec.PipelineVersionID", a.ko.Spec.PipelineVersionID, b.ko.Spec.PipelineVersionID)
+	} else if a.ko.Spec.PipelineVersionID != nil && b.ko.Spec.PipelineVersionID != nil {
+		if *a.ko.Spec.PipelineVersionID != *b.ko.Spec.PipelineVersionID {
+			delta.Add("Spec.PipelineVersionID", a.ko.Spec.PipelineVersionID, b.ko.Spec.PipelineVersionID)
+		}
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.SelectiveExecutionConfig, b.ko.Spec.SelectiveExecutionConfig) {
 		delta.Add("Spec.SelectiveExecutionConfig", a.ko.Spec.SelectiveExecutionConfig, b.ko.Spec.SelectiveExecutionConfig)
 	} else if a.ko.Spec.SelectiveExecutionConfig != nil && b.ko.Spec.SelectiveExecutionConfig != nil {

@@ -139,23 +139,28 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Status.PipelineExecutionStatus = nil
 	}
+	if resp.PipelineVersionId != nil {
+		ko.Spec.PipelineVersionID = resp.PipelineVersionId
+	} else {
+		ko.Spec.PipelineVersionID = nil
+	}
 	if resp.SelectiveExecutionConfig != nil {
-		f12 := &svcapitypes.SelectiveExecutionConfig{}
+		f13 := &svcapitypes.SelectiveExecutionConfig{}
 		if resp.SelectiveExecutionConfig.SelectedSteps != nil {
-			f12f0 := []*svcapitypes.SelectedStep{}
-			for _, f12f0iter := range resp.SelectiveExecutionConfig.SelectedSteps {
-				f12f0elem := &svcapitypes.SelectedStep{}
-				if f12f0iter.StepName != nil {
-					f12f0elem.StepName = f12f0iter.StepName
+			f13f0 := []*svcapitypes.SelectedStep{}
+			for _, f13f0iter := range resp.SelectiveExecutionConfig.SelectedSteps {
+				f13f0elem := &svcapitypes.SelectedStep{}
+				if f13f0iter.StepName != nil {
+					f13f0elem.StepName = f13f0iter.StepName
 				}
-				f12f0 = append(f12f0, f12f0elem)
+				f13f0 = append(f13f0, f13f0elem)
 			}
-			f12.SelectedSteps = f12f0
+			f13.SelectedSteps = f13f0
 		}
 		if resp.SelectiveExecutionConfig.SourcePipelineExecutionArn != nil {
-			f12.SourcePipelineExecutionARN = resp.SelectiveExecutionConfig.SourcePipelineExecutionArn
+			f13.SourcePipelineExecutionARN = resp.SelectiveExecutionConfig.SourcePipelineExecutionArn
 		}
-		ko.Spec.SelectiveExecutionConfig = f12
+		ko.Spec.SelectiveExecutionConfig = f13
 	} else {
 		ko.Spec.SelectiveExecutionConfig = nil
 	}
@@ -272,23 +277,26 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.PipelineParameters = f4
 	}
+	if r.ko.Spec.PipelineVersionID != nil {
+		res.PipelineVersionId = r.ko.Spec.PipelineVersionID
+	}
 	if r.ko.Spec.SelectiveExecutionConfig != nil {
-		f5 := &svcsdktypes.SelectiveExecutionConfig{}
+		f6 := &svcsdktypes.SelectiveExecutionConfig{}
 		if r.ko.Spec.SelectiveExecutionConfig.SelectedSteps != nil {
-			f5f0 := []svcsdktypes.SelectedStep{}
-			for _, f5f0iter := range r.ko.Spec.SelectiveExecutionConfig.SelectedSteps {
-				f5f0elem := &svcsdktypes.SelectedStep{}
-				if f5f0iter.StepName != nil {
-					f5f0elem.StepName = f5f0iter.StepName
+			f6f0 := []svcsdktypes.SelectedStep{}
+			for _, f6f0iter := range r.ko.Spec.SelectiveExecutionConfig.SelectedSteps {
+				f6f0elem := &svcsdktypes.SelectedStep{}
+				if f6f0iter.StepName != nil {
+					f6f0elem.StepName = f6f0iter.StepName
 				}
-				f5f0 = append(f5f0, *f5f0elem)
+				f6f0 = append(f6f0, *f6f0elem)
 			}
-			f5.SelectedSteps = f5f0
+			f6.SelectedSteps = f6f0
 		}
 		if r.ko.Spec.SelectiveExecutionConfig.SourcePipelineExecutionARN != nil {
-			f5.SourcePipelineExecutionArn = r.ko.Spec.SelectiveExecutionConfig.SourcePipelineExecutionARN
+			f6.SourcePipelineExecutionArn = r.ko.Spec.SelectiveExecutionConfig.SourcePipelineExecutionARN
 		}
-		res.SelectiveExecutionConfig = f5
+		res.SelectiveExecutionConfig = f6
 	}
 
 	return res, nil

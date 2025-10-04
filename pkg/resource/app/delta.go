@@ -64,6 +64,13 @@ func newResourceDelta(
 			delta.Add("Spec.DomainID", a.ko.Spec.DomainID, b.ko.Spec.DomainID)
 		}
 	}
+	if ackcompare.HasNilDifference(a.ko.Spec.RecoveryMode, b.ko.Spec.RecoveryMode) {
+		delta.Add("Spec.RecoveryMode", a.ko.Spec.RecoveryMode, b.ko.Spec.RecoveryMode)
+	} else if a.ko.Spec.RecoveryMode != nil && b.ko.Spec.RecoveryMode != nil {
+		if *a.ko.Spec.RecoveryMode != *b.ko.Spec.RecoveryMode {
+			delta.Add("Spec.RecoveryMode", a.ko.Spec.RecoveryMode, b.ko.Spec.RecoveryMode)
+		}
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.ResourceSpec, b.ko.Spec.ResourceSpec) {
 		delta.Add("Spec.ResourceSpec", a.ko.Spec.ResourceSpec, b.ko.Spec.ResourceSpec)
 	} else if a.ko.Spec.ResourceSpec != nil && b.ko.Spec.ResourceSpec != nil {
@@ -101,6 +108,13 @@ func newResourceDelta(
 			if *a.ko.Spec.ResourceSpec.SageMakerImageVersionARN != *b.ko.Spec.ResourceSpec.SageMakerImageVersionARN {
 				delta.Add("Spec.ResourceSpec.SageMakerImageVersionARN", a.ko.Spec.ResourceSpec.SageMakerImageVersionARN, b.ko.Spec.ResourceSpec.SageMakerImageVersionARN)
 			}
+		}
+	}
+	if ackcompare.HasNilDifference(a.ko.Spec.SpaceName, b.ko.Spec.SpaceName) {
+		delta.Add("Spec.SpaceName", a.ko.Spec.SpaceName, b.ko.Spec.SpaceName)
+	} else if a.ko.Spec.SpaceName != nil && b.ko.Spec.SpaceName != nil {
+		if *a.ko.Spec.SpaceName != *b.ko.Spec.SpaceName {
+			delta.Add("Spec.SpaceName", a.ko.Spec.SpaceName, b.ko.Spec.SpaceName)
 		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.UserProfileName, b.ko.Spec.UserProfileName) {

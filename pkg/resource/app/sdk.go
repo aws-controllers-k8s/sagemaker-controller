@@ -112,26 +112,36 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.DomainID = nil
 	}
+	if resp.RecoveryMode != nil {
+		ko.Spec.RecoveryMode = resp.RecoveryMode
+	} else {
+		ko.Spec.RecoveryMode = nil
+	}
 	if resp.ResourceSpec != nil {
-		f9 := &svcapitypes.ResourceSpec{}
+		f11 := &svcapitypes.ResourceSpec{}
 		if resp.ResourceSpec.InstanceType != "" {
-			f9.InstanceType = aws.String(string(resp.ResourceSpec.InstanceType))
+			f11.InstanceType = aws.String(string(resp.ResourceSpec.InstanceType))
 		}
 		if resp.ResourceSpec.LifecycleConfigArn != nil {
-			f9.LifecycleConfigARN = resp.ResourceSpec.LifecycleConfigArn
+			f11.LifecycleConfigARN = resp.ResourceSpec.LifecycleConfigArn
 		}
 		if resp.ResourceSpec.SageMakerImageArn != nil {
-			f9.SageMakerImageARN = resp.ResourceSpec.SageMakerImageArn
+			f11.SageMakerImageARN = resp.ResourceSpec.SageMakerImageArn
 		}
 		if resp.ResourceSpec.SageMakerImageVersionAlias != nil {
-			f9.SageMakerImageVersionAlias = resp.ResourceSpec.SageMakerImageVersionAlias
+			f11.SageMakerImageVersionAlias = resp.ResourceSpec.SageMakerImageVersionAlias
 		}
 		if resp.ResourceSpec.SageMakerImageVersionArn != nil {
-			f9.SageMakerImageVersionARN = resp.ResourceSpec.SageMakerImageVersionArn
+			f11.SageMakerImageVersionARN = resp.ResourceSpec.SageMakerImageVersionArn
 		}
-		ko.Spec.ResourceSpec = f9
+		ko.Spec.ResourceSpec = f11
 	} else {
 		ko.Spec.ResourceSpec = nil
+	}
+	if resp.SpaceName != nil {
+		ko.Spec.SpaceName = resp.SpaceName
+	} else {
+		ko.Spec.SpaceName = nil
 	}
 	if resp.Status != "" {
 		ko.Status.Status = aws.String(string(resp.Status))
@@ -174,6 +184,9 @@ func (rm *resourceManager) newDescribeRequestPayload(
 	}
 	if r.ko.Spec.DomainID != nil {
 		res.DomainId = r.ko.Spec.DomainID
+	}
+	if r.ko.Spec.SpaceName != nil {
+		res.SpaceName = r.ko.Spec.SpaceName
 	}
 	if r.ko.Spec.UserProfileName != nil {
 		res.UserProfileName = r.ko.Spec.UserProfileName
@@ -239,38 +252,44 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.DomainID != nil {
 		res.DomainId = r.ko.Spec.DomainID
 	}
+	if r.ko.Spec.RecoveryMode != nil {
+		res.RecoveryMode = r.ko.Spec.RecoveryMode
+	}
 	if r.ko.Spec.ResourceSpec != nil {
-		f3 := &svcsdktypes.ResourceSpec{}
+		f4 := &svcsdktypes.ResourceSpec{}
 		if r.ko.Spec.ResourceSpec.InstanceType != nil {
-			f3.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.ResourceSpec.InstanceType)
+			f4.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.ResourceSpec.InstanceType)
 		}
 		if r.ko.Spec.ResourceSpec.LifecycleConfigARN != nil {
-			f3.LifecycleConfigArn = r.ko.Spec.ResourceSpec.LifecycleConfigARN
+			f4.LifecycleConfigArn = r.ko.Spec.ResourceSpec.LifecycleConfigARN
 		}
 		if r.ko.Spec.ResourceSpec.SageMakerImageARN != nil {
-			f3.SageMakerImageArn = r.ko.Spec.ResourceSpec.SageMakerImageARN
+			f4.SageMakerImageArn = r.ko.Spec.ResourceSpec.SageMakerImageARN
 		}
 		if r.ko.Spec.ResourceSpec.SageMakerImageVersionAlias != nil {
-			f3.SageMakerImageVersionAlias = r.ko.Spec.ResourceSpec.SageMakerImageVersionAlias
+			f4.SageMakerImageVersionAlias = r.ko.Spec.ResourceSpec.SageMakerImageVersionAlias
 		}
 		if r.ko.Spec.ResourceSpec.SageMakerImageVersionARN != nil {
-			f3.SageMakerImageVersionArn = r.ko.Spec.ResourceSpec.SageMakerImageVersionARN
+			f4.SageMakerImageVersionArn = r.ko.Spec.ResourceSpec.SageMakerImageVersionARN
 		}
-		res.ResourceSpec = f3
+		res.ResourceSpec = f4
+	}
+	if r.ko.Spec.SpaceName != nil {
+		res.SpaceName = r.ko.Spec.SpaceName
 	}
 	if r.ko.Spec.Tags != nil {
-		f4 := []svcsdktypes.Tag{}
-		for _, f4iter := range r.ko.Spec.Tags {
-			f4elem := &svcsdktypes.Tag{}
-			if f4iter.Key != nil {
-				f4elem.Key = f4iter.Key
+		f6 := []svcsdktypes.Tag{}
+		for _, f6iter := range r.ko.Spec.Tags {
+			f6elem := &svcsdktypes.Tag{}
+			if f6iter.Key != nil {
+				f6elem.Key = f6iter.Key
 			}
-			if f4iter.Value != nil {
-				f4elem.Value = f4iter.Value
+			if f6iter.Value != nil {
+				f6elem.Value = f6iter.Value
 			}
-			f4 = append(f4, *f4elem)
+			f6 = append(f6, *f6elem)
 		}
-		res.Tags = f4
+		res.Tags = f6
 	}
 	if r.ko.Spec.UserProfileName != nil {
 		res.UserProfileName = r.ko.Spec.UserProfileName
@@ -346,6 +365,9 @@ func (rm *resourceManager) newDeleteRequestPayload(
 	}
 	if r.ko.Spec.DomainID != nil {
 		res.DomainId = r.ko.Spec.DomainID
+	}
+	if r.ko.Spec.SpaceName != nil {
+		res.SpaceName = r.ko.Spec.SpaceName
 	}
 	if r.ko.Spec.UserProfileName != nil {
 		res.UserProfileName = r.ko.Spec.UserProfileName

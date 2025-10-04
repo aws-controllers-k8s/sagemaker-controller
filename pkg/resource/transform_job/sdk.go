@@ -240,6 +240,9 @@ func (rm *resourceManager) sdkFind(
 		if resp.TransformResources.InstanceType != "" {
 			f18.InstanceType = aws.String(string(resp.TransformResources.InstanceType))
 		}
+		if resp.TransformResources.TransformAmiVersion != nil {
+			f18.TransformAMIVersion = resp.TransformResources.TransformAmiVersion
+		}
 		if resp.TransformResources.VolumeKmsKeyId != nil {
 			f18.VolumeKMSKeyID = resp.TransformResources.VolumeKmsKeyId
 		}
@@ -468,6 +471,9 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		if r.ko.Spec.TransformResources.InstanceType != nil {
 			f12.InstanceType = svcsdktypes.TransformInstanceType(*r.ko.Spec.TransformResources.InstanceType)
+		}
+		if r.ko.Spec.TransformResources.TransformAMIVersion != nil {
+			f12.TransformAmiVersion = r.ko.Spec.TransformResources.TransformAMIVersion
 		}
 		if r.ko.Spec.TransformResources.VolumeKMSKeyID != nil {
 			f12.VolumeKmsKeyId = r.ko.Spec.TransformResources.VolumeKMSKeyID

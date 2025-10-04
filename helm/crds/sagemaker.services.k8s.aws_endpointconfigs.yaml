@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.16.2
+    controller-gen.kubebuilder.io/version: v0.19.0
   name: endpointconfigs.sagemaker.services.k8s.aws
 spec:
   group: sagemaker.services.k8s.aws
@@ -81,14 +81,14 @@ spec:
                     type: object
                 type: object
               dataCaptureConfig:
-                description: Configuration to control how SageMaker captures inference
+                description: Configuration to control how SageMaker AI captures inference
                   data.
                 properties:
                   captureContentTypeHeader:
                     description: |-
                       Configuration specifying how to treat different headers. If no headers are
-                      specified Amazon SageMaker will by default base64 encode when capturing the
-                      data.
+                      specified Amazon SageMaker AI will by default base64 encode when capturing
+                      the data.
                     properties:
                       csvContentTypes:
                         items:
@@ -133,11 +133,11 @@ spec:
                 type: string
               executionRoleARN:
                 description: |-
-                  The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
-                  to perform actions on your behalf. For more information, see SageMaker Roles
-                  (https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-roles.html).
+                  The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker AI can
+                  assume to perform actions on your behalf. For more information, see SageMaker
+                  AI Roles (https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-roles.html).
 
-                  To be able to pass this role to Amazon SageMaker, the caller of this action
+                  To be able to pass this role to Amazon SageMaker AI, the caller of this action
                   must have the iam:PassRole permission.
 
                   Regex Pattern: `^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$`
@@ -193,6 +193,16 @@ spec:
                   properties:
                     acceleratorType:
                       type: string
+                    capacityReservationConfig:
+                      description: |-
+                        Settings for the capacity reservation for the compute instances that SageMaker
+                        AI reserves for an endpoint.
+                      properties:
+                        capacityReservationPreference:
+                          type: string
+                        mlReservationARN:
+                          type: string
+                      type: object
                     containerStartupHealthCheckTimeoutInSeconds:
                       format: int64
                       type: integer

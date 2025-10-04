@@ -43,6 +43,8 @@ type PipelineExecutionSpec struct {
 	PipelineName *string `json:"pipelineName"`
 	// Contains a list of pipeline parameters. This list can be empty.
 	PipelineParameters []*Parameter `json:"pipelineParameters,omitempty"`
+	// The ID of the pipeline version to start execution from.
+	PipelineVersionID *int64 `json:"pipelineVersionID,omitempty"`
 	// The selective execution configuration applied to the pipeline run.
 	SelectiveExecutionConfig *SelectiveExecutionConfig `json:"selectiveExecutionConfig,omitempty"`
 }
