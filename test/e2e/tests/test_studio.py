@@ -133,7 +133,7 @@ def apply_space_yaml(domain_id, user_profile_name, resource_name, share_type):
     return reference, resource, spec
 
 
-def apply_app_yaml(domain_id,app_association, app_association_resource_name, resource_name):
+def apply_app_yaml(domain_id, app_association, app_association_resource_name, resource_name):
     app_association = app_association.lower()
     assert app_association in ["user_profile", "space"]
 
@@ -477,8 +477,9 @@ def app_user_profile_fixture(user_profile_fixture):
     )
 
     app_association = "user_profile"
+    resource_name = random_suffix_name("app-user-profile", 20)
     (app_reference, app_resource, app_spec) = apply_app_yaml(
-        domain_id, app_association, user_profile_name
+        domain_id, app_association, user_profile_name, resource_name
     )
 
     assert app_resource is not None
@@ -525,7 +526,8 @@ def app_space_fixture(shared_space_fixture):
     assert_space_status_in_sync(domain_id, space_name, space_reference, "InService")
 
     app_association = "space"
-    (app_reference, app_resource, app_spec) = apply_app_yaml(domain_id, app_association, space_name)
+    resource_name = random_suffix_name("app-space", 20)
+    (app_reference, app_resource, app_spec) = apply_app_yaml(domain_id, app_association, space_name, resource_name)
 
     assert app_resource is not None
     if k8s.get_resource_arn(app_resource) is None:
