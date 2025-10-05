@@ -10,20 +10,23 @@
 # on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
 # express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
-"""Integration tests for the SageMaker Studio."""
+"""Integration tests for the SageMaker Studio.
+"""
 
-import logging
-
-import boto3
 import pytest
-from acktest.k8s import resource as k8s
-from acktest.resources import random_suffix_name
-from e2e import create_sagemaker_resource, delete_custom_resource, wait_for_status
-from e2e.common import config as cfg
-from e2e.replacement_values import REPLACEMENT_VALUES
+import logging
+import boto3
 
-STUDIO_WAIT_PERIOD = 30
-STUDIO_WAIT_LENGTH = 30
+from acktest.resources import random_suffix_name
+from acktest.k8s import resource as k8s
+
+from e2e import (
+    create_sagemaker_resource,
+    delete_custom_resource,
+    wait_for_status,
+)
+from e2e.replacement_values import REPLACEMENT_VALUES
+from e2e.common import config as cfg
 
 
 def get_default_vpc():
@@ -54,31 +57,13 @@ def get_user_profile_sagemaker_status(domain_id, user_profile_name):
     return response["Status"]
 
 
-def get_space_sagemaker_status(domain_id, space_name):
-    response = boto3.client("sagemaker").describe_space(DomainId=domain_id, SpaceName=space_name)
-    return response["Status"]
-
-
-def get_app_sagemaker_status(domain_id, app_association, resource_name, app_type, app_name):
-    app_association = app_association.lower()
-    assert app_association in ["user_profile", "space"]
-
-    response = {}
-    if app_association == "user_profile":
-        response = boto3.client("sagemaker").describe_app(
-            DomainId=domain_id,
-            UserProfileName=resource_name,
-            AppType=app_type,
-            AppName=app_name,
-        )
-    elif app_association == "space":
-        response = boto3.client("sagemaker").describe_app(
-            DomainId=domain_id,
-            SpaceName=resource_name,
-            AppType=app_type,
-            AppName=app_name,
-        )
-
+def get_app_sagemaker_status(domain_id, user_profile_name, app_type, app_name):
+    response = boto3.client("sagemaker").describe_app(
+        DomainId=domain_id,
+        UserProfileName=user_profile_name,
+        AppType=app_type,
+        AppName=app_name,
+    )
     return response["Status"]
 
 
@@ -103,10 +88,10 @@ def apply_domain_yaml(resource_name):
     return reference, resource, spec
 
 
-def apply_user_profile_yaml(domain_id, resource_name):
+def apply_user_profile_yaml(resource_name, domain_id):
     replacements = REPLACEMENT_VALUES.copy()
-    replacements["DOMAIN_ID"] = domain_id
     replacements["USER_PROFILE_NAME"] = resource_name
+    replacements["DOMAIN_ID"] = domain_id
     reference, spec, resource = create_sagemaker_resource(
         resource_plural="userprofiles",
         resource_name=resource_name,
@@ -116,106 +101,52 @@ def apply_user_profile_yaml(domain_id, resource_name):
     return reference, resource, spec
 
 
-def apply_space_yaml(domain_id, user_profile_name, resource_name, share_type):
-    share_type = share_type.lower()
-    assert share_type in ["shared", "private"]
-
+def apply_app_yaml(domain_id, user_profile_name):
     replacements = REPLACEMENT_VALUES.copy()
     replacements["DOMAIN_ID"] = domain_id
-    replacements["SPACE_NAME"] = resource_name
     replacements["USER_PROFILE_NAME"] = user_profile_name
     reference, spec, resource = create_sagemaker_resource(
-        resource_plural="spaces",
-        resource_name=resource_name,
-        spec_file=f"{share_type}_space",
-        replacements=replacements,
-    )
-    return reference, resource, spec
-
-
-def apply_app_yaml(domain_id, app_association, app_association_resource_name, resource_name):
-    app_association = app_association.lower()
-    assert app_association in ["user_profile", "space"]
-
-    replacements = REPLACEMENT_VALUES.copy()
-    replacements["DOMAIN_ID"] = domain_id
-    replacements["APP_NAME"] = resource_name
-    if app_association == "user_profile":
-        replacements["USER_PROFILE_NAME"] = app_association_resource_name
-
-    elif app_association == "space":
-        replacements["SPACE_NAME"] = app_association_resource_name
-
-    reference, spec, resource = create_sagemaker_resource(
         resource_plural="apps",
-        resource_name=resource_name,
-        spec_file=f"app_{app_association}",
+        resource_name="default",
+        spec_file="app",
         replacements=replacements,
     )
     return reference, resource, spec
 
 
 def assert_domain_status_in_sync(domain_id, reference, expected_status):
-    sm_status = wait_for_status(
-        expected_status,
-        STUDIO_WAIT_PERIOD,
-        STUDIO_WAIT_LENGTH,
-        get_domain_sagemaker_status,
-        domain_id,
-    )
-    k8s_status = wait_for_status(
-        expected_status, STUDIO_WAIT_PERIOD, STUDIO_WAIT_LENGTH, get_k8s_resource_status, reference
-    )
+    sm_status = wait_for_status(expected_status, 10, 30, get_domain_sagemaker_status, domain_id)
+    k8s_status = wait_for_status(expected_status, 10, 30, get_k8s_resource_status, reference)
     assert sm_status == k8s_status == expected_status
 
 
 def assert_user_profile_status_in_sync(domain_id, user_profile_name, reference, expected_status):
     sm_status = wait_for_status(
         expected_status,
-        STUDIO_WAIT_PERIOD,
-        STUDIO_WAIT_LENGTH,
+        10,
+        30,
         get_user_profile_sagemaker_status,
         domain_id,
         user_profile_name,
     )
-    k8s_status = wait_for_status(
-        expected_status, STUDIO_WAIT_PERIOD, STUDIO_WAIT_LENGTH, get_k8s_resource_status, reference
-    )
-    assert sm_status == k8s_status == expected_status
-
-
-def assert_space_status_in_sync(domain_id, space_name, reference, expected_status):
-    sm_status = wait_for_status(
-        expected_status,
-        STUDIO_WAIT_PERIOD,
-        STUDIO_WAIT_LENGTH,
-        get_space_sagemaker_status,
-        domain_id,
-        space_name,
-    )
-    k8s_status = wait_for_status(
-        expected_status, STUDIO_WAIT_PERIOD, STUDIO_WAIT_LENGTH, get_k8s_resource_status, reference
-    )
+    k8s_status = wait_for_status(expected_status, 10, 30, get_k8s_resource_status, reference)
     assert sm_status == k8s_status == expected_status
 
 
 def assert_app_status_in_sync(
-    domain_id, app_association, resource_name, app_type, app_name, reference, expected_status
+    domain_id, user_profile_name, app_type, app_name, reference, expected_status
 ):
     sm_status = wait_for_status(
         expected_status,
-        STUDIO_WAIT_PERIOD,
-        STUDIO_WAIT_LENGTH,
+        10,
+        30,
         get_app_sagemaker_status,
         domain_id,
-        app_association,
-        resource_name,
+        user_profile_name,
         app_type,
         app_name,
     )
-    k8s_status = wait_for_status(
-        expected_status, STUDIO_WAIT_PERIOD, STUDIO_WAIT_LENGTH, get_k8s_resource_status, reference
-    )
+    k8s_status = wait_for_status(expected_status, 10, 30, get_k8s_resource_status, reference)
     assert sm_status == k8s_status == expected_status
 
 
@@ -230,15 +161,6 @@ def patch_domain_kernel_instance(reference, spec, instance_type):
 
 def patch_user_profile_kernel_instance(reference, spec, instance_type):
     spec["spec"]["userSettings"]["kernelGatewayAppSettings"]["defaultResourceSpec"][
-        "instanceType"
-    ] = instance_type
-    resource = k8s.patch_custom_resource(reference, spec)
-    assert resource is not None
-    return resource
-
-
-def patch_space_jupyter_lab_instance(reference, spec, instance_type):
-    spec["spec"]["spaceSettings"]["jupyterLabAppSettings"]["defaultResourceSpec"][
         "instanceType"
     ] = instance_type
     resource = k8s.patch_custom_resource(reference, spec)
@@ -262,14 +184,9 @@ def get_user_profile_kernel_instance(domain_id, user_profile_name):
     ]
 
 
-def get_space_jupyter_lab_instance(domain_id, space_name):
-    response = boto3.client("sagemaker").describe_space(DomainId=domain_id, SpaceName=space_name)
-    return response["SpaceSettings"]["JupyterLabAppSettings"]["DefaultResourceSpec"]["InstanceType"]
-
-
 @pytest.fixture(scope="function")
 def domain_fixture():
-    resource_name = random_suffix_name("sm-domain", 20)
+    resource_name = random_suffix_name("sm-domain", 15)
     reference, resource, spec = apply_domain_yaml(resource_name)
 
     assert resource is not None
@@ -291,20 +208,19 @@ def user_profile_fixture(domain_fixture):
 
     domain_id = domain_resource["status"].get("domainID", None)
     assert domain_id is not None
+
     assert_domain_status_in_sync(domain_id, domain_reference, "InService")
 
     domain_resource = patch_domain_kernel_instance(domain_reference, domain_spec, "ml.t3.large")
-    wait_for_status(
-        "ml.t3.large", STUDIO_WAIT_PERIOD, STUDIO_WAIT_LENGTH, get_domain_kernel_instance, domain_id
-    )
+    wait_for_status("ml.t3.large", 10, 30, get_domain_kernel_instance, domain_id)
     assert_domain_status_in_sync(domain_id, domain_reference, "InService")
 
-    resource_name = random_suffix_name("profile", 20)
+    resource_name = random_suffix_name("profile", 15)
     (
         user_profile_reference,
         user_profile_resource,
         user_profile_spec,
-    ) = apply_user_profile_yaml(domain_id, resource_name)
+    ) = apply_user_profile_yaml(resource_name, domain_id)
 
     assert user_profile_resource is not None
     if k8s.get_resource_arn(user_profile_resource) is None:
@@ -330,120 +246,7 @@ def user_profile_fixture(domain_fixture):
 
 
 @pytest.fixture(scope="function")
-def private_space_fixture(user_profile_fixture):
-    (
-        domain_reference,
-        domain_resource,
-        domain_spec,
-        user_profile_reference,
-        user_profile_resource,
-        user_profile_spec,
-    ) = user_profile_fixture
-    assert k8s.get_resource_exists(domain_reference)
-    assert k8s.get_resource_exists(user_profile_reference)
-
-    domain_id = domain_resource["status"].get("domainID", None)
-    user_profile_name = user_profile_resource["spec"]["userProfileName"]
-    assert_user_profile_status_in_sync(
-        domain_id, user_profile_name, user_profile_reference, "InService"
-    )
-
-    resource_name = random_suffix_name("private-space", 20)
-    (
-        space_reference,
-        space_resource,
-        space_spec,
-    ) = apply_space_yaml(domain_id, user_profile_name, resource_name, share_type="private")
-
-    assert space_resource is not None
-    if k8s.get_resource_arn(space_resource) is None:
-        logging.error(
-            f"ARN for this resource is None, resource status is: {space_resource['status']}"
-        )
-    assert k8s.get_resource_arn(space_resource) is not None
-
-    space_name = space_resource["spec"]["spaceName"]
-    space_resource = patch_space_jupyter_lab_instance(space_reference, space_spec, "ml.t3.large")
-    wait_for_status(
-        "ml.t3.large",
-        STUDIO_WAIT_PERIOD,
-        STUDIO_WAIT_LENGTH,
-        get_space_jupyter_lab_instance,
-        domain_id,
-        space_name,
-    )
-    assert_space_status_in_sync(domain_id, space_name, space_reference, "InService")
-
-    yield (
-        domain_reference,
-        domain_resource,
-        domain_spec,
-        user_profile_reference,
-        user_profile_resource,
-        user_profile_spec,
-        space_reference,
-        space_resource,
-        space_spec,
-    )
-
-    assert delete_custom_resource(
-        space_reference,
-        cfg.LONG_JOB_DELETE_WAIT_PERIODS,
-        cfg.LONG_JOB_DELETE_WAIT_LENGTH,
-    )
-
-
-@pytest.fixture(scope="function")
-def shared_space_fixture(user_profile_fixture):
-    (
-        domain_reference,
-        domain_resource,
-        domain_spec,
-        user_profile_reference,
-        user_profile_resource,
-        user_profile_spec,
-    ) = user_profile_fixture
-    assert k8s.get_resource_exists(domain_reference)
-    assert k8s.get_resource_exists(user_profile_reference)
-
-    domain_id = domain_resource["status"].get("domainID", None)
-    user_profile_name = user_profile_resource["spec"]["userProfileName"]
-    assert_user_profile_status_in_sync(
-        domain_id, user_profile_name, user_profile_reference, "InService"
-    )
-
-    resource_name = random_suffix_name("shared-space", 20)
-    (
-        space_reference,
-        space_resource,
-        space_spec,
-    ) = apply_space_yaml(domain_id, user_profile_name, resource_name, share_type="shared")
-
-    assert space_resource is not None
-    if k8s.get_resource_arn(space_resource) is None:
-        logging.error(
-            f"ARN for this resource is None, resource status is: {space_resource['status']}"
-        )
-    assert k8s.get_resource_arn(space_resource) is not None
-
-    yield (
-        domain_reference,
-        domain_resource,
-        domain_spec,
-        space_reference,
-        space_resource,
-        space_spec,
-    )
-
-    assert delete_custom_resource(
-        space_reference,
-        cfg.LONG_JOB_DELETE_WAIT_PERIODS,
-        cfg.LONG_JOB_DELETE_WAIT_LENGTH,
-    )
-
-
-@pytest.fixture(scope="function")
-def app_user_profile_fixture(user_profile_fixture):
+def app_fixture(user_profile_fixture):
     (
         domain_reference,
         domain_resource,
@@ -466,8 +269,8 @@ def app_user_profile_fixture(user_profile_fixture):
     )
     wait_for_status(
         "ml.t3.large",
-        STUDIO_WAIT_PERIOD,
-        STUDIO_WAIT_LENGTH,
+        10,
+        30,
         get_user_profile_kernel_instance,
         domain_id,
         user_profile_name,
@@ -476,11 +279,7 @@ def app_user_profile_fixture(user_profile_fixture):
         domain_id, user_profile_name, user_profile_reference, "InService"
     )
 
-    app_association = "user_profile"
-    resource_name = random_suffix_name("app-user-profile", 20)
-    (app_reference, app_resource, app_spec) = apply_app_yaml(
-        domain_id, app_association, user_profile_name, resource_name
-    )
+    (app_reference, app_resource, app_spec) = apply_app_yaml(domain_id, user_profile_name)
 
     assert app_resource is not None
     if k8s.get_resource_arn(app_resource) is None:
@@ -508,83 +307,8 @@ def app_user_profile_fixture(user_profile_fixture):
     )
 
 
-@pytest.fixture(scope="function")
-def app_space_fixture(shared_space_fixture):
-    (
-        domain_reference,
-        domain_resource,
-        domain_spec,
-        space_reference,
-        space_resource,
-        space_spec,
-    ) = shared_space_fixture
-    assert k8s.get_resource_exists(domain_reference)
-    assert k8s.get_resource_exists(space_reference)
-
-    domain_id = domain_resource["status"].get("domainID", None)
-    space_name = space_resource["spec"]["spaceName"]
-    assert_space_status_in_sync(domain_id, space_name, space_reference, "InService")
-
-    app_association = "space"
-    resource_name = "default"
-    (app_reference, app_resource, app_spec) = apply_app_yaml(
-        domain_id, app_association, space_name, resource_name
-    )
-
-    assert app_resource is not None
-    if k8s.get_resource_arn(app_resource) is None:
-        logging.error(
-            f"ARN for this resource is None, resource status is: {app_resource['status']}"
-        )
-    assert k8s.get_resource_arn(app_resource) is not None
-
-    yield (
-        domain_reference,
-        domain_resource,
-        domain_spec,
-        space_reference,
-        space_resource,
-        space_spec,
-        app_reference,
-        app_resource,
-        app_spec,
-    )
-
-    assert delete_custom_resource(
-        app_reference,
-        cfg.LONG_JOB_DELETE_WAIT_PERIODS,
-        cfg.LONG_JOB_DELETE_WAIT_LENGTH,
-    )
-
-
 class TestDomain:
-    def create_private_space(self, private_space_fixture):
-        (
-            domain_reference,
-            domain_resource,
-            domain_spec,
-            user_profile_reference,
-            user_profile_resource,
-            user_profile_spec,
-            space_reference,
-            space_resource,
-            space_spec,
-        ) = private_space_fixture
-
-        assert k8s.get_resource_exists(domain_reference)
-        assert k8s.get_resource_exists(space_reference)
-
-        domain_id = domain_resource["status"].get("domainID", None)
-        space_name = space_resource["spec"]["spaceName"]
-
-        assert_space_status_in_sync(
-            domain_id,
-            space_name,
-            space_reference,
-            "InService",
-        )
-
-    def create_app_user_profile(self, app_user_profile_fixture):
+    def test_studio(self, app_fixture):
         (
             domain_reference,
             domain_resource,
@@ -595,7 +319,7 @@ class TestDomain:
             app_reference,
             app_resource,
             app_spec,
-        ) = app_user_profile_fixture
+        ) = app_fixture
 
         assert k8s.get_resource_exists(domain_reference)
         assert k8s.get_resource_exists(user_profile_reference)
@@ -605,52 +329,12 @@ class TestDomain:
         user_profile_name = user_profile_resource["spec"]["userProfileName"]
         app_type = app_resource["spec"]["appType"]
         app_name = app_resource["spec"]["appName"]
-        app_association = "user_profile"
 
         assert_app_status_in_sync(
             domain_id,
-            app_association,
             user_profile_name,
             app_type,
             app_name,
             app_reference,
             "InService",
         )
-
-    def create_app_space(self, app_space_fixture):
-        (
-            domain_reference,
-            domain_resource,
-            domain_spec,
-            space_reference,
-            space_resource,
-            space_spec,
-            app_reference,
-            app_resource,
-            app_spec,
-        ) = app_space_fixture
-
-        assert k8s.get_resource_exists(domain_reference)
-        assert k8s.get_resource_exists(space_reference)
-        assert k8s.get_resource_exists(app_reference)
-
-        domain_id = domain_resource["status"].get("domainID", None)
-        space_name = space_resource["spec"]["spaceName"]
-        app_type = app_resource["spec"]["appType"]
-        app_name = app_resource["spec"]["appName"]
-        app_association = "space"
-
-        assert_app_status_in_sync(
-            domain_id,
-            app_association,
-            space_name,
-            app_type,
-            app_name,
-            app_reference,
-            "InService",
-        )
-
-    def test_studio(self, private_space_fixture, app_user_profile_fixture, app_space_fixture):
-        self.create_private_space(private_space_fixture)
-        self.create_app_user_profile(app_user_profile_fixture)
-        # self.create_app_space(app_space_fixture)
