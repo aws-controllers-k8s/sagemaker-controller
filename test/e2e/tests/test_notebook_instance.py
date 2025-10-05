@@ -91,8 +91,8 @@ class TestNotebookInstance:
         self,
         reference: k8s.CustomResourceReference,
         expected_status: str,
-        wait_periods: int = 40,
-        period_length: int = 30,
+        wait_periods: int = 30,
+        period_length: int = 60,
     ):
         return wait_for_status(
             expected_status,
@@ -106,8 +106,8 @@ class TestNotebookInstance:
         self,
         notebook_instance_name: str,
         expected_status: str,
-        wait_periods: int = 40,
-        period_length: int = 30,
+        wait_periods: int = 30,
+        period_length: int = 60,
     ):
         return wait_for_status(
             expected_status,

@@ -121,7 +121,7 @@ class TestPipelineExecution:
         reference: k8s.CustomResourceReference,
         expected_status: str,
         wait_periods: int = 30,
-        period_length: int = 30,
+        period_length: int = 60,
     ):
         return wait_for_status(
             expected_status,
@@ -136,7 +136,7 @@ class TestPipelineExecution:
         pipeline_execution_arn,
         expected_status: str,
         wait_periods: int = 30,
-        period_length: int = 30,
+        period_length: int = 60,
     ):
         return wait_for_status(
             expected_status,

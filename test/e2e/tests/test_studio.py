@@ -527,7 +527,9 @@ def app_space_fixture(shared_space_fixture):
 
     app_association = "space"
     resource_name = random_suffix_name("app-space", 20)
-    (app_reference, app_resource, app_spec) = apply_app_yaml(domain_id, app_association, space_name, resource_name)
+    (app_reference, app_resource, app_spec) = apply_app_yaml(
+        domain_id, app_association, space_name, resource_name
+    )
 
     assert app_resource is not None
     if k8s.get_resource_arn(app_resource) is None:
@@ -561,6 +563,9 @@ class TestDomain:
             domain_reference,
             domain_resource,
             domain_spec,
+            user_profile_reference,
+            user_profile_resource,
+            user_profile_spec,
             space_reference,
             space_resource,
             space_spec,
