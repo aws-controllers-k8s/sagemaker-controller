@@ -526,7 +526,7 @@ def app_space_fixture(shared_space_fixture):
     assert_space_status_in_sync(domain_id, space_name, space_reference, "InService")
 
     app_association = "space"
-    resource_name = random_suffix_name("app-space", 20)
+    resource_name = "default"
     (app_reference, app_resource, app_spec) = apply_app_yaml(
         domain_id, app_association, space_name, resource_name
     )
