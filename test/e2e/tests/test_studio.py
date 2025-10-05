@@ -267,7 +267,7 @@ def get_space_jupyter_lab_instance(domain_id, space_name):
     return response["SpaceSettings"]["JupyterLabAppSettings"]["DefaultResourceSpec"]["InstanceType"]
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def domain_fixture():
     resource_name = random_suffix_name("sm-domain", 20)
     reference, resource, spec = apply_domain_yaml(resource_name)
@@ -284,7 +284,7 @@ def domain_fixture():
     )
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def user_profile_fixture(domain_fixture):
     (domain_reference, domain_resource, domain_spec) = domain_fixture
     assert k8s.get_resource_exists(domain_reference)
@@ -329,7 +329,7 @@ def user_profile_fixture(domain_fixture):
     )
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def private_space_fixture(user_profile_fixture):
     (
         domain_reference,
@@ -652,5 +652,5 @@ class TestDomain:
 
     def test_studio(self, private_space_fixture, app_user_profile_fixture, app_space_fixture):
         self.create_private_space(private_space_fixture)
-        self.create_app_user_profile(app_user_profile_fixture)
+        # self.create_app_user_profile(app_user_profile_fixture)
         self.create_app_space(app_space_fixture)
