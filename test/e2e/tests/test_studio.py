@@ -652,5 +652,5 @@ class TestDomain:
 
     def test_studio(self, private_space_fixture, app_user_profile_fixture, app_space_fixture):
         self.create_private_space(private_space_fixture)
-        # self.create_app_user_profile(app_user_profile_fixture)
+        self.create_app_user_profile(app_user_profile_fixture)
         # self.create_app_space(app_space_fixture)
