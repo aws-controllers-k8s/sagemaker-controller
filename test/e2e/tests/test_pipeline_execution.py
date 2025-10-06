@@ -33,7 +33,7 @@ from e2e.common import config as cfg
 
 RESOURCE_PLURAL = "pipelineexecutions"
 
-DELETE_WAIT_PERIOD = 20
+DELETE_WAIT_PERIOD = 60
 DELETE_WAIT_LENGTH = 30
 
 
@@ -120,8 +120,8 @@ class TestPipelineExecution:
         self,
         reference: k8s.CustomResourceReference,
         expected_status: str,
-        wait_periods: int = 30,
-        period_length: int = 60,
+        wait_periods: int = 60,
+        period_length: int = 30,
     ):
         return wait_for_status(
             expected_status,
@@ -135,8 +135,8 @@ class TestPipelineExecution:
         self,
         pipeline_execution_arn,
         expected_status: str,
-        wait_periods: int = 30,
-        period_length: int = 60,
+        wait_periods: int = 60,
+        period_length: int = 30,
     ):
         return wait_for_status(
             expected_status,

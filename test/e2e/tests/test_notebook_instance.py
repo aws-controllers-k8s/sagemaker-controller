@@ -32,8 +32,8 @@ from e2e import (
 from e2e.replacement_values import REPLACEMENT_VALUES
 
 
-DELETE_WAIT_PERIOD = 16
-DELETE_WAIT_LENGTH = 30
+DELETE_WAIT_PERIOD = 20
+DELETE_WAIT_LENGTH = 60
 
 
 @pytest.fixture(scope="module")
@@ -91,8 +91,8 @@ class TestNotebookInstance:
         self,
         reference: k8s.CustomResourceReference,
         expected_status: str,
-        wait_periods: int = 30,
-        period_length: int = 60,
+        wait_periods: int = 60,
+        period_length: int = 30,
     ):
         return wait_for_status(
             expected_status,
@@ -106,8 +106,8 @@ class TestNotebookInstance:
         self,
         notebook_instance_name: str,
         expected_status: str,
-        wait_periods: int = 30,
-        period_length: int = 60,
+        wait_periods: int = 60,
+        period_length: int = 30,
     ):
         return wait_for_status(
             expected_status,
@@ -122,7 +122,7 @@ class TestNotebookInstance:
         notebook_instance_name,
         reference,
         expected_status,
-        wait_periods=40,
+        wait_periods=60,
         period_length=30,
     ):
         assert (

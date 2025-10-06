@@ -22,7 +22,7 @@ from e2e import create_sagemaker_resource, delete_custom_resource, wait_for_stat
 from e2e.common import config as cfg
 from e2e.replacement_values import REPLACEMENT_VALUES
 
-STUDIO_WAIT_PERIOD = 30
+STUDIO_WAIT_PERIOD = 60
 STUDIO_WAIT_LENGTH = 30
 
 
@@ -653,4 +653,4 @@ class TestDomain:
     def test_studio(self, private_space_fixture, app_user_profile_fixture, app_space_fixture):
         self.create_private_space(private_space_fixture)
         self.create_app_user_profile(app_user_profile_fixture)
-        # self.create_app_space(app_space_fixture)
+        self.create_app_space(app_space_fixture)
