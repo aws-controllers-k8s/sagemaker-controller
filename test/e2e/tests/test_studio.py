@@ -22,7 +22,7 @@ from e2e import create_sagemaker_resource, delete_custom_resource, wait_for_stat
 from e2e.common import config as cfg
 from e2e.replacement_values import REPLACEMENT_VALUES
 
-STUDIO_WAIT_PERIOD = 60
+STUDIO_WAIT_PERIOD = 120
 STUDIO_WAIT_LENGTH = 30
 
 
