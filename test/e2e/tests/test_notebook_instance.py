@@ -32,7 +32,7 @@ from e2e import (
 from e2e.replacement_values import REPLACEMENT_VALUES
 
 
-DELETE_WAIT_PERIOD = 120
+DELETE_WAIT_PERIOD = 180
 DELETE_WAIT_LENGTH = 30
 
 
@@ -91,7 +91,7 @@ class TestNotebookInstance:
         self,
         reference: k8s.CustomResourceReference,
         expected_status: str,
-        wait_periods: int = 120,
+        wait_periods: int = 180,
         period_length: int = 30,
     ):
         return wait_for_status(
@@ -106,7 +106,7 @@ class TestNotebookInstance:
         self,
         notebook_instance_name: str,
         expected_status: str,
-        wait_periods: int = 120,
+        wait_periods: int = 180,
         period_length: int = 30,
     ):
         return wait_for_status(
@@ -122,7 +122,7 @@ class TestNotebookInstance:
         notebook_instance_name,
         reference,
         expected_status,
-        wait_periods: int = 120,
+        wait_periods: int = 180,
         period_length: int = 30,
     ):
         assert (
