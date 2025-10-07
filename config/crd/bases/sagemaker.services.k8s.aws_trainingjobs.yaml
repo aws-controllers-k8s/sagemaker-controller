@@ -565,8 +565,6 @@ spec:
                       is kept alive after the job is finished.
                     format: int64
                     type: integer
-                  trainingPlanARN:
-                    type: string
                   volumeKMSKeyID:
                     type: string
                   volumeSizeInGB:

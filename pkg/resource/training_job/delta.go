@@ -328,13 +328,6 @@ func newResourceDelta(
 				delta.Add("Spec.ResourceConfig.KeepAlivePeriodInSeconds", a.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds, b.ko.Spec.ResourceConfig.KeepAlivePeriodInSeconds)
 			}
 		}
-		if ackcompare.HasNilDifference(a.ko.Spec.ResourceConfig.TrainingPlanARN, b.ko.Spec.ResourceConfig.TrainingPlanARN) {
-			delta.Add("Spec.ResourceConfig.TrainingPlanARN", a.ko.Spec.ResourceConfig.TrainingPlanARN, b.ko.Spec.ResourceConfig.TrainingPlanARN)
-		} else if a.ko.Spec.ResourceConfig.TrainingPlanARN != nil && b.ko.Spec.ResourceConfig.TrainingPlanARN != nil {
-			if *a.ko.Spec.ResourceConfig.TrainingPlanARN != *b.ko.Spec.ResourceConfig.TrainingPlanARN {
-				delta.Add("Spec.ResourceConfig.TrainingPlanARN", a.ko.Spec.ResourceConfig.TrainingPlanARN, b.ko.Spec.ResourceConfig.TrainingPlanARN)
-			}
-		}
 		if ackcompare.HasNilDifference(a.ko.Spec.ResourceConfig.VolumeKMSKeyID, b.ko.Spec.ResourceConfig.VolumeKMSKeyID) {
 			delta.Add("Spec.ResourceConfig.VolumeKMSKeyID", a.ko.Spec.ResourceConfig.VolumeKMSKeyID, b.ko.Spec.ResourceConfig.VolumeKMSKeyID)
 		} else if a.ko.Spec.ResourceConfig.VolumeKMSKeyID != nil && b.ko.Spec.ResourceConfig.VolumeKMSKeyID != nil {

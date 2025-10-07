@@ -683,7 +683,6 @@ type ClusterInstanceGroupDetails struct {
 	// to and from your resources by configuring a VPC. For more information, see
 	// Give SageMaker Access to Resources in your Amazon VPC (https://docs.aws.amazon.com/sagemaker/latest/dg/infrastructure-give-access.html).
 	OverrideVPCConfig *VPCConfig `json:"overrideVPCConfig,omitempty"`
-	TrainingPlanARN   *string    `json:"trainingPlanARN,omitempty"`
 }
 
 // The specifications of an instance group that you need to define.
@@ -694,7 +693,6 @@ type ClusterInstanceGroupSpecification struct {
 	// to and from your resources by configuring a VPC. For more information, see
 	// Give SageMaker Access to Resources in your Amazon VPC (https://docs.aws.amazon.com/sagemaker/latest/dg/infrastructure-give-access.html).
 	OverrideVPCConfig *VPCConfig `json:"overrideVPCConfig,omitempty"`
-	TrainingPlanARN   *string    `json:"trainingPlanARN,omitempty"`
 }
 
 // Details of an instance in a SageMaker HyperPod cluster.
@@ -744,7 +742,6 @@ type ClusterRestrictedInstanceGroupDetails struct {
 	// to and from your resources by configuring a VPC. For more information, see
 	// Give SageMaker Access to Resources in your Amazon VPC (https://docs.aws.amazon.com/sagemaker/latest/dg/infrastructure-give-access.html).
 	OverrideVPCConfig *VPCConfig `json:"overrideVPCConfig,omitempty"`
-	TrainingPlanARN   *string    `json:"trainingPlanARN,omitempty"`
 }
 
 // The specifications of a restricted instance group that you need to define.
@@ -755,7 +752,6 @@ type ClusterRestrictedInstanceGroupSpecification struct {
 	// to and from your resources by configuring a VPC. For more information, see
 	// Give SageMaker Access to Resources in your Amazon VPC (https://docs.aws.amazon.com/sagemaker/latest/dg/infrastructure-give-access.html).
 	OverrideVPCConfig *VPCConfig `json:"overrideVPCConfig,omitempty"`
-	TrainingPlanARN   *string    `json:"trainingPlanARN,omitempty"`
 }
 
 // Summary of the cluster policy.
@@ -4960,7 +4956,6 @@ type ResourceConfig struct {
 	// Optional. Customer requested period in seconds for which the Training cluster
 	// is kept alive after the job is finished.
 	KeepAlivePeriodInSeconds *int64  `json:"keepAlivePeriodInSeconds,omitempty"`
-	TrainingPlanARN          *string `json:"trainingPlanARN,omitempty"`
 	VolumeKMSKeyID           *string `json:"volumeKMSKeyID,omitempty"`
 	VolumeSizeInGB           *int64  `json:"volumeSizeInGB,omitempty"`
 }
@@ -5589,7 +5584,6 @@ type TrainingJobSummary struct {
 	TrainingJobARN    *string      `json:"trainingJobARN,omitempty"`
 	TrainingJobName   *string      `json:"trainingJobName,omitempty"`
 	TrainingJobStatus *string      `json:"trainingJobStatus,omitempty"`
-	TrainingPlanARN   *string      `json:"trainingPlanARN,omitempty"`
 	// Status and billing information about the warm pool.
 	WarmPoolStatus *WarmPoolStatus `json:"warmPoolStatus,omitempty"`
 }
@@ -5722,10 +5716,9 @@ type TrainingPlanOffering struct {
 // HyperPod clusters using Amazon SageMaker Training Plan, see CreateTrainingPlan
 // (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingPlan.html) .
 type TrainingPlanSummary struct {
-	EndTime         *metav1.Time `json:"endTime,omitempty"`
-	StartTime       *metav1.Time `json:"startTime,omitempty"`
-	TrainingPlanARN *string      `json:"trainingPlanARN,omitempty"`
-	UpfrontFee      *string      `json:"upfrontFee,omitempty"`
+	EndTime    *metav1.Time `json:"endTime,omitempty"`
+	StartTime  *metav1.Time `json:"startTime,omitempty"`
+	UpfrontFee *string      `json:"upfrontFee,omitempty"`
 }
 
 // Defines how the algorithm is used for a training job.

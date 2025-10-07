@@ -614,9 +614,6 @@ func (rm *resourceManager) sdkFind(
 				keepAlivePeriodInSecondsCopy := int64(*resp.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds)
 				f13f9.KeepAlivePeriodInSeconds = &keepAlivePeriodInSecondsCopy
 			}
-			if resp.TrainingJobDefinition.ResourceConfig.TrainingPlanArn != nil {
-				f13f9.TrainingPlanARN = resp.TrainingJobDefinition.ResourceConfig.TrainingPlanArn
-			}
 			if resp.TrainingJobDefinition.ResourceConfig.VolumeKmsKeyId != nil {
 				f13f9.VolumeKMSKeyID = resp.TrainingJobDefinition.ResourceConfig.VolumeKmsKeyId
 			}
@@ -953,9 +950,6 @@ func (rm *resourceManager) sdkFind(
 				if f14iter.ResourceConfig.KeepAlivePeriodInSeconds != nil {
 					keepAlivePeriodInSecondsCopy := int64(*f14iter.ResourceConfig.KeepAlivePeriodInSeconds)
 					f14elemf9.KeepAlivePeriodInSeconds = &keepAlivePeriodInSecondsCopy
-				}
-				if f14iter.ResourceConfig.TrainingPlanArn != nil {
-					f14elemf9.TrainingPlanARN = f14iter.ResourceConfig.TrainingPlanArn
 				}
 				if f14iter.ResourceConfig.VolumeKmsKeyId != nil {
 					f14elemf9.VolumeKMSKeyID = f14iter.ResourceConfig.VolumeKmsKeyId
@@ -1556,9 +1550,6 @@ func (rm *resourceManager) newCreateRequestPayload(
 				keepAlivePeriodInSecondsCopy := int32(keepAlivePeriodInSecondsCopy0)
 				f4f9.KeepAlivePeriodInSeconds = &keepAlivePeriodInSecondsCopy
 			}
-			if r.ko.Spec.TrainingJobDefinition.ResourceConfig.TrainingPlanARN != nil {
-				f4f9.TrainingPlanArn = r.ko.Spec.TrainingJobDefinition.ResourceConfig.TrainingPlanARN
-			}
 			if r.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID != nil {
 				f4f9.VolumeKmsKeyId = r.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID
 			}
@@ -1929,9 +1920,6 @@ func (rm *resourceManager) newCreateRequestPayload(
 					}
 					keepAlivePeriodInSecondsCopy := int32(keepAlivePeriodInSecondsCopy0)
 					f5elemf9.KeepAlivePeriodInSeconds = &keepAlivePeriodInSecondsCopy
-				}
-				if f5iter.ResourceConfig.TrainingPlanARN != nil {
-					f5elemf9.TrainingPlanArn = f5iter.ResourceConfig.TrainingPlanARN
 				}
 				if f5iter.ResourceConfig.VolumeKMSKeyID != nil {
 					f5elemf9.VolumeKmsKeyId = f5iter.ResourceConfig.VolumeKMSKeyID

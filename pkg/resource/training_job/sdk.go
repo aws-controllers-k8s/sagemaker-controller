@@ -533,9 +533,6 @@ func (rm *resourceManager) sdkFind(
 			keepAlivePeriodInSecondsCopy := int64(*resp.ResourceConfig.KeepAlivePeriodInSeconds)
 			f27.KeepAlivePeriodInSeconds = &keepAlivePeriodInSecondsCopy
 		}
-		if resp.ResourceConfig.TrainingPlanArn != nil {
-			f27.TrainingPlanARN = resp.ResourceConfig.TrainingPlanArn
-		}
 		if resp.ResourceConfig.VolumeKmsKeyId != nil {
 			f27.VolumeKMSKeyID = resp.ResourceConfig.VolumeKmsKeyId
 		}
@@ -1074,9 +1071,6 @@ func (rm *resourceManager) newCreateRequestPayload(
 			}
 			keepAlivePeriodInSecondsCopy := int32(keepAlivePeriodInSecondsCopy0)
 			f16.KeepAlivePeriodInSeconds = &keepAlivePeriodInSecondsCopy
-		}
-		if r.ko.Spec.ResourceConfig.TrainingPlanARN != nil {
-			f16.TrainingPlanArn = r.ko.Spec.ResourceConfig.TrainingPlanARN
 		}
 		if r.ko.Spec.ResourceConfig.VolumeKMSKeyID != nil {
 			f16.VolumeKmsKeyId = r.ko.Spec.ResourceConfig.VolumeKMSKeyID

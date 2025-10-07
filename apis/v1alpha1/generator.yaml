@@ -1261,6 +1261,7 @@ ignore:
       - TableFormat
       - RandomSeed
       - TrainingImageConfig
+      - TrainingPlanArn
       - ShadowProductionVariants
     field_paths:
       - StartPipelineExecutionInput.ClientRequestToken

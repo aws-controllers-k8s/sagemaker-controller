@@ -353,13 +353,6 @@ func newResourceDelta(
 					delta.Add("Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds", a.ko.Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds, b.ko.Spec.TrainingJobDefinition.ResourceConfig.KeepAlivePeriodInSeconds)
 				}
 			}
-			if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.ResourceConfig.TrainingPlanARN, b.ko.Spec.TrainingJobDefinition.ResourceConfig.TrainingPlanARN) {
-				delta.Add("Spec.TrainingJobDefinition.ResourceConfig.TrainingPlanARN", a.ko.Spec.TrainingJobDefinition.ResourceConfig.TrainingPlanARN, b.ko.Spec.TrainingJobDefinition.ResourceConfig.TrainingPlanARN)
-			} else if a.ko.Spec.TrainingJobDefinition.ResourceConfig.TrainingPlanARN != nil && b.ko.Spec.TrainingJobDefinition.ResourceConfig.TrainingPlanARN != nil {
-				if *a.ko.Spec.TrainingJobDefinition.ResourceConfig.TrainingPlanARN != *b.ko.Spec.TrainingJobDefinition.ResourceConfig.TrainingPlanARN {
-					delta.Add("Spec.TrainingJobDefinition.ResourceConfig.TrainingPlanARN", a.ko.Spec.TrainingJobDefinition.ResourceConfig.TrainingPlanARN, b.ko.Spec.TrainingJobDefinition.ResourceConfig.TrainingPlanARN)
-				}
-			}
 			if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID, b.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID) {
 				delta.Add("Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID", a.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID, b.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID)
 			} else if a.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID != nil && b.ko.Spec.TrainingJobDefinition.ResourceConfig.VolumeKMSKeyID != nil {
