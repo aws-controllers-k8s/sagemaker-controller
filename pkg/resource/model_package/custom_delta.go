@@ -22,7 +22,7 @@ func customSetDefaults(
 	a *resource,
 	b *resource,
 ) {
-	// Default is for ImageDigest and ModelDataETag to be generated automatically by Sagemaker if not specified
+	// Defaults for InferenceSpecification to be generated automatically by Sagemaker if not specified
 	if ackcompare.IsNotNil(a.ko.Spec.InferenceSpecification) && ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification) {
 		if ackcompare.IsNotNil(a.ko.Spec.InferenceSpecification.Containers) && ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification.Containers) {
 			for index := range a.ko.Spec.InferenceSpecification.Containers {
@@ -40,13 +40,26 @@ func customSetDefaults(
 					a.ko.Spec.InferenceSpecification.Containers[index].ModelDataETag =
 						b.ko.Spec.InferenceSpecification.Containers[index].ModelDataETag
 				}
+
+				// Set Default for S3Source ETag
+				if ackcompare.IsNotNil(a.ko.Spec.InferenceSpecification.Containers[index].AdditionalS3DataSource) &&
+					ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification.Containers[index].AdditionalS3DataSource) {
+
+					// ETag default if not specified
+					if ackcompare.IsNil(a.ko.Spec.InferenceSpecification.Containers[index].AdditionalS3DataSource.ETag) &&
+						ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification.Containers[index].AdditionalS3DataSource.ETag) {
+						a.ko.Spec.InferenceSpecification.Containers[index].AdditionalS3DataSource.ETag =
+							b.ko.Spec.InferenceSpecification.Containers[index].AdditionalS3DataSource.ETag
+					}
+				}
 			}
 		}
 	}
 
-	// Defaults for AdditionalInferenceSpecifications Containers
+	// Defaults for AdditionalInferenceSpecifications
 	if ackcompare.IsNotNil(a.ko.Spec.AdditionalInferenceSpecifications) && ackcompare.IsNotNil(b.ko.Spec.AdditionalInferenceSpecifications) {
 		for index := range a.ko.Spec.AdditionalInferenceSpecifications {
+
 			if ackcompare.IsNotNil(a.ko.Spec.AdditionalInferenceSpecifications[index].Containers) &&
 				ackcompare.IsNotNil(b.ko.Spec.AdditionalInferenceSpecifications[index].Containers) {
 				for jIndex := range a.ko.Spec.AdditionalInferenceSpecifications[index].Containers {
@@ -63,6 +76,39 @@ func customSetDefaults(
 						a.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ModelDataETag =
 							b.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ModelDataETag
 					}
+
+					// Set Default for S3Source ETag
+					if ackcompare.IsNotNil(a.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].AdditionalS3DataSource) &&
+						ackcompare.IsNotNil(b.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].AdditionalS3DataSource) {
+
+						// ETag default if not specified
+						if ackcompare.IsNil(a.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].AdditionalS3DataSource.ETag) &&
+							ackcompare.IsNotNil(b.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].AdditionalS3DataSource.ETag) {
+							a.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].AdditionalS3DataSource.ETag =
+								b.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].AdditionalS3DataSource.ETag
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// Defaults for SourceAlgorithmSpecification
+	if ackcompare.IsNotNil(a.ko.Spec.SourceAlgorithmSpecification) && ackcompare.IsNotNil(b.ko.Spec.SourceAlgorithmSpecification) {
+		if ackcompare.IsNotNil(a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms) &&
+			ackcompare.IsNotNil(b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms) {
+
+			// Set ModelDataETag default for each source algorithms
+			if ackcompare.IsNotNil(a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms) &&
+				ackcompare.IsNotNil(b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms) {
+				for index := range a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms {
+
+					// ModelDataETag default if not specified
+					if ackcompare.IsNil(a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms[index].ModelDataETag) &&
+						ackcompare.IsNotNil(b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms[index].ModelDataETag) {
+						a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms[index].ModelDataETag =
+							b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms[index].ModelDataETag
+					}
 				}
 			}
 		}
@@ -70,7 +116,7 @@ func customSetDefaults(
 
 	// Default is for KMSKeyID to be ""
 	defaultKMSKeyID := aws.String("")
-
+	// Defaults for ValidationSpecification
 	if ackcompare.IsNotNil(a.ko.Spec.ValidationSpecification) && ackcompare.IsNotNil(b.ko.Spec.ValidationSpecification) {
 		for index := range a.ko.Spec.ValidationSpecification.ValidationProfiles {
 
