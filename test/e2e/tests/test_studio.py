@@ -22,7 +22,7 @@ from e2e import create_sagemaker_resource, delete_custom_resource, wait_for_stat
 from e2e.common import config as cfg
 from e2e.replacement_values import REPLACEMENT_VALUES
 
-STUDIO_WAIT_PERIOD = 120
+STUDIO_WAIT_PERIOD = 150
 STUDIO_WAIT_LENGTH = 30
 STUDIO_STATUS_INSERVICE = "InService"
 
@@ -270,7 +270,6 @@ def get_space_jupyter_lab_instance(domain_id, space_name):
 
 @pytest.fixture(scope="module")
 def domain_fixture():
-    logging.info("[FIXTURE LOG] Creating domain...")
     resource_name = random_suffix_name("sm-domain", 20)
     reference, resource, spec = apply_domain_yaml(resource_name)
 
@@ -281,7 +280,6 @@ def domain_fixture():
 
     yield (reference, resource, spec)
 
-    logging.info("[FIXTURE LOG] Destroying domain...")
     assert delete_custom_resource(
         reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
     )
@@ -289,7 +287,6 @@ def domain_fixture():
 
 @pytest.fixture(scope="module")
 def user_profile_fixture(domain_fixture):
-    logging.info("[FIXTURE LOG] Creating user profile...")
     (domain_reference, domain_resource, domain_spec) = domain_fixture
     assert k8s.get_resource_exists(domain_reference)
 
@@ -326,7 +323,6 @@ def user_profile_fixture(domain_fixture):
         user_profile_spec,
     )
 
-    logging.info("[FIXTURE LOG] Destroying user profile...")
     assert delete_custom_resource(
         user_profile_reference,
         cfg.JOB_DELETE_WAIT_PERIODS,
@@ -336,7 +332,6 @@ def user_profile_fixture(domain_fixture):
 
 @pytest.fixture(scope="module")
 def private_space_fixture(user_profile_fixture):
-    logging.info("[FIXTURE LOG] Creating private space...")
     (
         domain_reference,
         domain_resource,
@@ -389,7 +384,6 @@ def private_space_fixture(user_profile_fixture):
         space_spec,
     )
 
-    logging.info("[FIXTURE LOG] Destroying private space...")
     assert delete_custom_resource(
         space_reference,
         cfg.LONG_JOB_DELETE_WAIT_PERIODS,
@@ -399,7 +393,6 @@ def private_space_fixture(user_profile_fixture):
 
 @pytest.fixture(scope="module")
 def shared_space_fixture(user_profile_fixture):
-    logging.info("[FIXTURE LOG] Creating shared space...")
     (
         domain_reference,
         domain_resource,
@@ -440,7 +433,6 @@ def shared_space_fixture(user_profile_fixture):
         space_spec,
     )
 
-    logging.info("[FIXTURE LOG] Destorying shared space...")
     assert delete_custom_resource(
         space_reference,
         cfg.LONG_JOB_DELETE_WAIT_PERIODS,
@@ -450,7 +442,6 @@ def shared_space_fixture(user_profile_fixture):
 
 @pytest.fixture(scope="module")
 def app_user_profile_fixture(user_profile_fixture):
-    logging.info("[FIXTURE LOG] Creating app user profile...")
     (
         domain_reference,
         domain_resource,
@@ -508,7 +499,6 @@ def app_user_profile_fixture(user_profile_fixture):
         app_spec,
     )
 
-    logging.info("[FIXTURE LOG] Destroying app user profile...")
     assert delete_custom_resource(
         app_reference,
         cfg.LONG_JOB_DELETE_WAIT_PERIODS,
@@ -518,7 +508,6 @@ def app_user_profile_fixture(user_profile_fixture):
 
 @pytest.fixture(scope="module")
 def app_space_fixture(shared_space_fixture):
-    logging.info("[FIXTURE LOG] Creating app space...")
     (
         domain_reference,
         domain_resource,
@@ -559,7 +548,6 @@ def app_space_fixture(shared_space_fixture):
         app_spec,
     )
 
-    logging.info("[FIXTURE LOG] Destroying app space...")
     assert delete_custom_resource(
         app_reference,
         cfg.LONG_JOB_DELETE_WAIT_PERIODS,

@@ -32,7 +32,7 @@ from e2e import (
 from e2e.replacement_values import REPLACEMENT_VALUES
 
 
-DELETE_WAIT_PERIOD = 20
+DELETE_WAIT_PERIOD = 60
 DELETE_WAIT_LENGTH = 30
 
 
