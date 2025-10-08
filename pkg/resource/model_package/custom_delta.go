@@ -27,14 +27,14 @@ func customSetDefaults(
 		if ackcompare.IsNotNil(a.ko.Spec.InferenceSpecification.Containers) && ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification.Containers) {
 			for index := range a.ko.Spec.InferenceSpecification.Containers {
 
-				// Set default for ImageDigest
+				// ImageDigest default if not specified
 				if ackcompare.IsNil(a.ko.Spec.InferenceSpecification.Containers[index].ImageDigest) &&
 					ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification.Containers[index].ImageDigest) {
 					a.ko.Spec.InferenceSpecification.Containers[index].ImageDigest =
 						b.ko.Spec.InferenceSpecification.Containers[index].ImageDigest
 				}
 
-				// Set default for ModelDataETag
+				// ModelDataETag default if not specified
 				if ackcompare.IsNil(a.ko.Spec.InferenceSpecification.Containers[index].ModelDataETag) &&
 					ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification.Containers[index].ModelDataETag) {
 					a.ko.Spec.InferenceSpecification.Containers[index].ModelDataETag =
@@ -43,11 +43,38 @@ func customSetDefaults(
 			}
 		}
 	}
+
+	// Defaults for AdditionalInferenceSpecifications Containers
+	if ackcompare.IsNotNil(a.ko.Spec.AdditionalInferenceSpecifications) && ackcompare.IsNotNil(b.ko.Spec.AdditionalInferenceSpecifications) {
+		for index := range a.ko.Spec.AdditionalInferenceSpecifications {
+			if ackcompare.IsNotNil(a.ko.Spec.AdditionalInferenceSpecifications[index].Containers) &&
+				ackcompare.IsNotNil(b.ko.Spec.AdditionalInferenceSpecifications[index].Containers) {
+				for jIndex := range a.ko.Spec.AdditionalInferenceSpecifications[index].Containers {
+
+					// ImageDigest default if not specified
+					if ackcompare.IsNil(a.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ImageDigest) &&
+						ackcompare.IsNotNil(b.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ImageDigest) {
+						a.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ImageDigest =
+							b.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ImageDigest
+					}
+					// ModelDataETag default if not specified
+					if ackcompare.IsNil(a.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ModelDataETag) &&
+						ackcompare.IsNotNil(b.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ModelDataETag) {
+						a.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ModelDataETag =
+							b.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ModelDataETag
+					}
+				}
+			}
+		}
+	}
+
 	// Default is for KMSKeyID to be ""
 	defaultKMSKeyID := aws.String("")
 
 	if ackcompare.IsNotNil(a.ko.Spec.ValidationSpecification) && ackcompare.IsNotNil(b.ko.Spec.ValidationSpecification) {
 		for index := range a.ko.Spec.ValidationSpecification.ValidationProfiles {
+
+			// KMSKeyID default to empty string
 			if ackcompare.IsNil(a.ko.Spec.ValidationSpecification.ValidationProfiles[index].TransformJobDefinition.TransformOutput.KMSKeyID) &&
 				ackcompare.IsNotNil(b.ko.Spec.ValidationSpecification.ValidationProfiles[index].TransformJobDefinition.TransformOutput.KMSKeyID) {
 				a.ko.Spec.ValidationSpecification.ValidationProfiles[index].TransformJobDefinition.TransformOutput.KMSKeyID = defaultKMSKeyID
