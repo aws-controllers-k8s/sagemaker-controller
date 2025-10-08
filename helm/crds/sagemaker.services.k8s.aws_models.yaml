@@ -90,10 +90,6 @@ spec:
                           properties:
                             compressionType:
                               type: string
-                            eTag:
-                              type: string
-                            manifestEtag:
-                              type: string
                             modelAccessConfig:
                               description: |-
                                 The access configuration file to control access to the ML model. You can
@@ -207,10 +203,6 @@ spec:
                           deploy.
                         properties:
                           compressionType:
-                            type: string
-                          eTag:
-                            type: string
-                          manifestEtag:
                             type: string
                           modelAccessConfig:
                             description: |-

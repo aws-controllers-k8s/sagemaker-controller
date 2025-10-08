@@ -185,11 +185,6 @@ func (in *AdditionalS3DataSource) DeepCopyInto(out *AdditionalS3DataSource) {
 		*out = new(string)
 		**out = **in
 	}
-	if in.ETag != nil {
-		in, out := &in.ETag, &out.ETag
-		*out = new(string)
-		**out = **in
-	}
 	if in.S3DataType != nil {
 		in, out := &in.S3DataType, &out.S3DataType
 		*out = new(string)
@@ -11228,11 +11223,6 @@ func (in *ModelPackageContainerDefinition) DeepCopyInto(out *ModelPackageContain
 		*out = new(string)
 		**out = **in
 	}
-	if in.ModelDataETag != nil {
-		in, out := &in.ModelDataETag, &out.ModelDataETag
-		*out = new(string)
-		**out = **in
-	}
 	if in.ModelDataURL != nil {
 		in, out := &in.ModelDataURL, &out.ModelDataURL
 		*out = new(string)
@@ -18092,16 +18082,6 @@ func (in *S3ModelDataSource) DeepCopyInto(out *S3ModelDataSource) {
 		*out = new(string)
 		**out = **in
 	}
-	if in.ETag != nil {
-		in, out := &in.ETag, &out.ETag
-		*out = new(string)
-		**out = **in
-	}
-	if in.ManifestEtag != nil {
-		in, out := &in.ManifestEtag, &out.ManifestEtag
-		*out = new(string)
-		**out = **in
-	}
 	if in.ModelAccessConfig != nil {
 		in, out := &in.ModelAccessConfig, &out.ModelAccessConfig
 		*out = new(ModelAccessConfig)
@@ -18398,11 +18378,6 @@ func (in *SourceAlgorithm) DeepCopyInto(out *SourceAlgorithm) {
 	*out = *in
 	if in.AlgorithmName != nil {
 		in, out := &in.AlgorithmName, &out.AlgorithmName
-		*out = new(string)
-		**out = **in
-	}
-	if in.ModelDataETag != nil {
-		in, out := &in.ModelDataETag, &out.ModelDataETag
 		*out = new(string)
 		**out = **in
 	}

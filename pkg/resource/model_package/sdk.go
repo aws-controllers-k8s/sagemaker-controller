@@ -113,9 +113,6 @@ func (rm *resourceManager) sdkFind(
 						if f0elemf0iter.AdditionalS3DataSource.CompressionType != "" {
 							f0elemf0elemf0.CompressionType = aws.String(string(f0elemf0iter.AdditionalS3DataSource.CompressionType))
 						}
-						if f0elemf0iter.AdditionalS3DataSource.ETag != nil {
-							f0elemf0elemf0.ETag = f0elemf0iter.AdditionalS3DataSource.ETag
-						}
 						if f0elemf0iter.AdditionalS3DataSource.S3DataType != "" {
 							f0elemf0elemf0.S3DataType = aws.String(string(f0elemf0iter.AdditionalS3DataSource.S3DataType))
 						}
@@ -142,18 +139,15 @@ func (rm *resourceManager) sdkFind(
 					if f0elemf0iter.ImageDigest != nil {
 						f0elemf0elem.ImageDigest = f0elemf0iter.ImageDigest
 					}
-					if f0elemf0iter.ModelDataETag != nil {
-						f0elemf0elem.ModelDataETag = f0elemf0iter.ModelDataETag
-					}
 					if f0elemf0iter.ModelDataUrl != nil {
 						f0elemf0elem.ModelDataURL = f0elemf0iter.ModelDataUrl
 					}
 					if f0elemf0iter.ModelInput != nil {
-						f0elemf0elemf9 := &svcapitypes.ModelInput{}
+						f0elemf0elemf8 := &svcapitypes.ModelInput{}
 						if f0elemf0iter.ModelInput.DataInputConfig != nil {
-							f0elemf0elemf9.DataInputConfig = f0elemf0iter.ModelInput.DataInputConfig
+							f0elemf0elemf8.DataInputConfig = f0elemf0iter.ModelInput.DataInputConfig
 						}
-						f0elemf0elem.ModelInput = f0elemf0elemf9
+						f0elemf0elem.ModelInput = f0elemf0elemf8
 					}
 					if f0elemf0iter.NearestModelName != nil {
 						f0elemf0elem.NearestModelName = f0elemf0iter.NearestModelName
@@ -376,9 +370,6 @@ func (rm *resourceManager) sdkFind(
 					if f8f0iter.AdditionalS3DataSource.CompressionType != "" {
 						f8f0elemf0.CompressionType = aws.String(string(f8f0iter.AdditionalS3DataSource.CompressionType))
 					}
-					if f8f0iter.AdditionalS3DataSource.ETag != nil {
-						f8f0elemf0.ETag = f8f0iter.AdditionalS3DataSource.ETag
-					}
 					if f8f0iter.AdditionalS3DataSource.S3DataType != "" {
 						f8f0elemf0.S3DataType = aws.String(string(f8f0iter.AdditionalS3DataSource.S3DataType))
 					}
@@ -405,18 +396,15 @@ func (rm *resourceManager) sdkFind(
 				if f8f0iter.ImageDigest != nil {
 					f8f0elem.ImageDigest = f8f0iter.ImageDigest
 				}
-				if f8f0iter.ModelDataETag != nil {
-					f8f0elem.ModelDataETag = f8f0iter.ModelDataETag
-				}
 				if f8f0iter.ModelDataUrl != nil {
 					f8f0elem.ModelDataURL = f8f0iter.ModelDataUrl
 				}
 				if f8f0iter.ModelInput != nil {
-					f8f0elemf9 := &svcapitypes.ModelInput{}
+					f8f0elemf8 := &svcapitypes.ModelInput{}
 					if f8f0iter.ModelInput.DataInputConfig != nil {
-						f8f0elemf9.DataInputConfig = f8f0iter.ModelInput.DataInputConfig
+						f8f0elemf8.DataInputConfig = f8f0iter.ModelInput.DataInputConfig
 					}
-					f8f0elem.ModelInput = f8f0elemf9
+					f8f0elem.ModelInput = f8f0elemf8
 				}
 				if f8f0iter.NearestModelName != nil {
 					f8f0elem.NearestModelName = f8f0iter.NearestModelName
@@ -696,9 +684,6 @@ func (rm *resourceManager) sdkFind(
 				if f26f0iter.AlgorithmName != nil {
 					f26f0elem.AlgorithmName = f26f0iter.AlgorithmName
 				}
-				if f26f0iter.ModelDataETag != nil {
-					f26f0elem.ModelDataETag = f26f0iter.ModelDataETag
-				}
 				if f26f0iter.ModelDataUrl != nil {
 					f26f0elem.ModelDataURL = f26f0iter.ModelDataUrl
 				}
@@ -903,9 +888,6 @@ func (rm *resourceManager) newCreateRequestPayload(
 						if f0elemf0iter.AdditionalS3DataSource.CompressionType != nil {
 							f0elemf0elemf0.CompressionType = svcsdktypes.CompressionType(*f0elemf0iter.AdditionalS3DataSource.CompressionType)
 						}
-						if f0elemf0iter.AdditionalS3DataSource.ETag != nil {
-							f0elemf0elemf0.ETag = f0elemf0iter.AdditionalS3DataSource.ETag
-						}
 						if f0elemf0iter.AdditionalS3DataSource.S3DataType != nil {
 							f0elemf0elemf0.S3DataType = svcsdktypes.AdditionalS3DataSourceDataType(*f0elemf0iter.AdditionalS3DataSource.S3DataType)
 						}
@@ -932,18 +914,15 @@ func (rm *resourceManager) newCreateRequestPayload(
 					if f0elemf0iter.ImageDigest != nil {
 						f0elemf0elem.ImageDigest = f0elemf0iter.ImageDigest
 					}
-					if f0elemf0iter.ModelDataETag != nil {
-						f0elemf0elem.ModelDataETag = f0elemf0iter.ModelDataETag
-					}
 					if f0elemf0iter.ModelDataURL != nil {
 						f0elemf0elem.ModelDataUrl = f0elemf0iter.ModelDataURL
 					}
 					if f0elemf0iter.ModelInput != nil {
-						f0elemf0elemf9 := &svcsdktypes.ModelInput{}
+						f0elemf0elemf8 := &svcsdktypes.ModelInput{}
 						if f0elemf0iter.ModelInput.DataInputConfig != nil {
-							f0elemf0elemf9.DataInputConfig = f0elemf0iter.ModelInput.DataInputConfig
+							f0elemf0elemf8.DataInputConfig = f0elemf0iter.ModelInput.DataInputConfig
 						}
-						f0elemf0elem.ModelInput = f0elemf0elemf9
+						f0elemf0elem.ModelInput = f0elemf0elemf8
 					}
 					if f0elemf0iter.NearestModelName != nil {
 						f0elemf0elem.NearestModelName = f0elemf0iter.NearestModelName
@@ -1149,9 +1128,6 @@ func (rm *resourceManager) newCreateRequestPayload(
 					if f6f0iter.AdditionalS3DataSource.CompressionType != nil {
 						f6f0elemf0.CompressionType = svcsdktypes.CompressionType(*f6f0iter.AdditionalS3DataSource.CompressionType)
 					}
-					if f6f0iter.AdditionalS3DataSource.ETag != nil {
-						f6f0elemf0.ETag = f6f0iter.AdditionalS3DataSource.ETag
-					}
 					if f6f0iter.AdditionalS3DataSource.S3DataType != nil {
 						f6f0elemf0.S3DataType = svcsdktypes.AdditionalS3DataSourceDataType(*f6f0iter.AdditionalS3DataSource.S3DataType)
 					}
@@ -1178,18 +1154,15 @@ func (rm *resourceManager) newCreateRequestPayload(
 				if f6f0iter.ImageDigest != nil {
 					f6f0elem.ImageDigest = f6f0iter.ImageDigest
 				}
-				if f6f0iter.ModelDataETag != nil {
-					f6f0elem.ModelDataETag = f6f0iter.ModelDataETag
-				}
 				if f6f0iter.ModelDataURL != nil {
 					f6f0elem.ModelDataUrl = f6f0iter.ModelDataURL
 				}
 				if f6f0iter.ModelInput != nil {
-					f6f0elemf9 := &svcsdktypes.ModelInput{}
+					f6f0elemf8 := &svcsdktypes.ModelInput{}
 					if f6f0iter.ModelInput.DataInputConfig != nil {
-						f6f0elemf9.DataInputConfig = f6f0iter.ModelInput.DataInputConfig
+						f6f0elemf8.DataInputConfig = f6f0iter.ModelInput.DataInputConfig
 					}
-					f6f0elem.ModelInput = f6f0elemf9
+					f6f0elem.ModelInput = f6f0elemf8
 				}
 				if f6f0iter.NearestModelName != nil {
 					f6f0elem.NearestModelName = f6f0iter.NearestModelName
@@ -1393,9 +1366,6 @@ func (rm *resourceManager) newCreateRequestPayload(
 				f15f0elem := &svcsdktypes.SourceAlgorithm{}
 				if f15f0iter.AlgorithmName != nil {
 					f15f0elem.AlgorithmName = f15f0iter.AlgorithmName
-				}
-				if f15f0iter.ModelDataETag != nil {
-					f15f0elem.ModelDataETag = f15f0iter.ModelDataETag
 				}
 				if f15f0iter.ModelDataURL != nil {
 					f15f0elem.ModelDataUrl = f15f0iter.ModelDataURL

@@ -67,7 +67,6 @@ type AdditionalModelDataSource struct {
 // dataset or model data.
 type AdditionalS3DataSource struct {
 	CompressionType *string `json:"compressionType,omitempty"`
-	ETag            *string `json:"eTag,omitempty"`
 	S3DataType      *string `json:"s3DataType,omitempty"`
 	S3URI           *string `json:"s3URI,omitempty"`
 }
@@ -3351,7 +3350,6 @@ type ModelPackageContainerDefinition struct {
 	FrameworkVersion       *string                 `json:"frameworkVersion,omitempty"`
 	Image                  *string                 `json:"image,omitempty"`
 	ImageDigest            *string                 `json:"imageDigest,omitempty"`
-	ModelDataETag          *string                 `json:"modelDataETag,omitempty"`
 	ModelDataURL           *string                 `json:"modelDataURL,omitempty"`
 	// Input object for the model.
 	ModelInput       *ModelInput `json:"modelInput,omitempty"`
@@ -5071,8 +5069,6 @@ type S3FileSystemConfig struct {
 // Specifies the S3 location of ML model data to deploy.
 type S3ModelDataSource struct {
 	CompressionType *string `json:"compressionType,omitempty"`
-	ETag            *string `json:"eTag,omitempty"`
-	ManifestEtag    *string `json:"manifestEtag,omitempty"`
 	// The access configuration file to control access to the ML model. You can
 	// explicitly accept the model end-user license agreement (EULA) within the
 	// ModelAccessConfig.
@@ -5180,7 +5176,6 @@ type ShuffleConfig struct {
 // in Amazon Web Services Marketplace that you are subscribed to.
 type SourceAlgorithm struct {
 	AlgorithmName *string `json:"algorithmName,omitempty"`
-	ModelDataETag *string `json:"modelDataETag,omitempty"`
 	ModelDataURL  *string `json:"modelDataURL,omitempty"`
 }
 

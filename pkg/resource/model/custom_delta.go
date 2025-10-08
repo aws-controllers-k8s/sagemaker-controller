@@ -33,28 +33,6 @@ func customSetDefaults(
 		if ackcompare.IsNil(a.ko.Spec.PrimaryContainer.Mode) && ackcompare.IsNotNil(b.ko.Spec.PrimaryContainer.Mode) {
 			a.ko.Spec.PrimaryContainer.Mode = b.ko.Spec.PrimaryContainer.Mode
 		}
-
-		// Set ETag and ManifestETag defaults
-		if ackcompare.IsNotNil(a.ko.Spec.PrimaryContainer.ModelDataSource) &&
-			ackcompare.IsNotNil(b.ko.Spec.PrimaryContainer.ModelDataSource) {
-			if ackcompare.IsNotNil(a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource) &&
-				ackcompare.IsNotNil(b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource) {
-
-				// ETag default if not specified
-				if ackcompare.IsNil(a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ETag) &&
-					ackcompare.IsNotNil(b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ETag) {
-					a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ETag =
-						b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ETag
-				}
-
-				// ManifestETag default if not specified
-				if ackcompare.IsNil(a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ManifestEtag) &&
-					ackcompare.IsNotNil(b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ManifestEtag) {
-					a.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ManifestEtag =
-						b.ko.Spec.PrimaryContainer.ModelDataSource.S3DataSource.ManifestEtag
-				}
-			}
-		}
 	}
 
 	// Default value of Mode is SingleModel
@@ -75,28 +53,6 @@ func customSetDefaults(
 				if ackcompare.IsNil(a.ko.Spec.Containers[index].ImageConfig.RepositoryAuthConfig) &&
 					ackcompare.IsNotNil(b.ko.Spec.Containers[index].ImageConfig.RepositoryAuthConfig) {
 					a.ko.Spec.Containers[index].ImageConfig.RepositoryAuthConfig = &svcapitypes.RepositoryAuthConfig{}
-				}
-			}
-
-			// Set ETag and ManifestETag defaults
-			if ackcompare.IsNotNil(a.ko.Spec.Containers[index].ModelDataSource) &&
-				ackcompare.IsNotNil(b.ko.Spec.Containers[index].ModelDataSource) {
-				if ackcompare.IsNotNil(a.ko.Spec.Containers[index].ModelDataSource.S3DataSource) &&
-					ackcompare.IsNotNil(b.ko.Spec.Containers[index].ModelDataSource.S3DataSource) {
-
-					// ETag default if not specified
-					if ackcompare.IsNil(a.ko.Spec.Containers[index].ModelDataSource.S3DataSource.ETag) &&
-						ackcompare.IsNotNil(b.ko.Spec.Containers[index].ModelDataSource.S3DataSource.ETag) {
-						a.ko.Spec.Containers[index].ModelDataSource.S3DataSource.ETag =
-							b.ko.Spec.Containers[index].ModelDataSource.S3DataSource.ETag
-					}
-
-					// ManifestETag default if not specified
-					if ackcompare.IsNil(a.ko.Spec.Containers[index].ModelDataSource.S3DataSource.ManifestEtag) &&
-						ackcompare.IsNotNil(b.ko.Spec.Containers[index].ModelDataSource.S3DataSource.ManifestEtag) {
-						a.ko.Spec.Containers[index].ModelDataSource.S3DataSource.ManifestEtag =
-							b.ko.Spec.Containers[index].ModelDataSource.S3DataSource.ManifestEtag
-					}
 				}
 			}
 		}

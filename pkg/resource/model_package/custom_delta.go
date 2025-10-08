@@ -33,25 +33,6 @@ func customSetDefaults(
 					a.ko.Spec.InferenceSpecification.Containers[index].ImageDigest =
 						b.ko.Spec.InferenceSpecification.Containers[index].ImageDigest
 				}
-
-				// ModelDataETag default if not specified
-				if ackcompare.IsNil(a.ko.Spec.InferenceSpecification.Containers[index].ModelDataETag) &&
-					ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification.Containers[index].ModelDataETag) {
-					a.ko.Spec.InferenceSpecification.Containers[index].ModelDataETag =
-						b.ko.Spec.InferenceSpecification.Containers[index].ModelDataETag
-				}
-
-				// Set Default for S3Source ETag
-				if ackcompare.IsNotNil(a.ko.Spec.InferenceSpecification.Containers[index].AdditionalS3DataSource) &&
-					ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification.Containers[index].AdditionalS3DataSource) {
-
-					// ETag default if not specified
-					if ackcompare.IsNil(a.ko.Spec.InferenceSpecification.Containers[index].AdditionalS3DataSource.ETag) &&
-						ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification.Containers[index].AdditionalS3DataSource.ETag) {
-						a.ko.Spec.InferenceSpecification.Containers[index].AdditionalS3DataSource.ETag =
-							b.ko.Spec.InferenceSpecification.Containers[index].AdditionalS3DataSource.ETag
-					}
-				}
 			}
 		}
 	}
@@ -69,45 +50,6 @@ func customSetDefaults(
 						ackcompare.IsNotNil(b.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ImageDigest) {
 						a.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ImageDigest =
 							b.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ImageDigest
-					}
-					// ModelDataETag default if not specified
-					if ackcompare.IsNil(a.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ModelDataETag) &&
-						ackcompare.IsNotNil(b.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ModelDataETag) {
-						a.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ModelDataETag =
-							b.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ModelDataETag
-					}
-
-					// Set Default for S3Source ETag
-					if ackcompare.IsNotNil(a.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].AdditionalS3DataSource) &&
-						ackcompare.IsNotNil(b.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].AdditionalS3DataSource) {
-
-						// ETag default if not specified
-						if ackcompare.IsNil(a.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].AdditionalS3DataSource.ETag) &&
-							ackcompare.IsNotNil(b.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].AdditionalS3DataSource.ETag) {
-							a.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].AdditionalS3DataSource.ETag =
-								b.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].AdditionalS3DataSource.ETag
-						}
-					}
-				}
-			}
-		}
-	}
-
-	// Defaults for SourceAlgorithmSpecification
-	if ackcompare.IsNotNil(a.ko.Spec.SourceAlgorithmSpecification) && ackcompare.IsNotNil(b.ko.Spec.SourceAlgorithmSpecification) {
-		if ackcompare.IsNotNil(a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms) &&
-			ackcompare.IsNotNil(b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms) {
-
-			// Set ModelDataETag default for each source algorithms
-			if ackcompare.IsNotNil(a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms) &&
-				ackcompare.IsNotNil(b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms) {
-				for index := range a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms {
-
-					// ModelDataETag default if not specified
-					if ackcompare.IsNil(a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms[index].ModelDataETag) &&
-						ackcompare.IsNotNil(b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms[index].ModelDataETag) {
-						a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms[index].ModelDataETag =
-							b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms[index].ModelDataETag
 					}
 				}
 			}

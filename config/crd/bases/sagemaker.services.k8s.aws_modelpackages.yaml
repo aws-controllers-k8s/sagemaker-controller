@@ -79,8 +79,6 @@ spec:
                             properties:
                               compressionType:
                                 type: string
-                              eTag:
-                                type: string
                               s3DataType:
                                 type: string
                               s3URI:
@@ -99,8 +97,6 @@ spec:
                           image:
                             type: string
                           imageDigest:
-                            type: string
-                          modelDataETag:
                             type: string
                           modelDataURL:
                             type: string
@@ -315,8 +311,6 @@ spec:
                           properties:
                             compressionType:
                               type: string
-                            eTag:
-                              type: string
                             s3DataType:
                               type: string
                             s3URI:
@@ -335,8 +329,6 @@ spec:
                         image:
                           type: string
                         imageDigest:
-                          type: string
-                        modelDataETag:
                           type: string
                         modelDataURL:
                           type: string
@@ -544,8 +536,6 @@ spec:
                         in Amazon Web Services Marketplace that you are subscribed to.
                       properties:
                         algorithmName:
-                          type: string
-                        modelDataETag:
                           type: string
                         modelDataURL:
                           type: string
