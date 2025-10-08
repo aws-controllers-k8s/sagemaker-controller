@@ -768,9 +768,9 @@ resources:
       sdk_delete_post_request:
         template_path: common/sdk_delete_post_request.go.tpl
     fields:
-      IPAddressType:
-        late_initialize:
-          min_backoff_seconds: 5
+      # IPAddressType:
+      #   late_initialize:
+      #     min_backoff_seconds: 5
       PlatformIdentifier:
         late_initialize:
           min_backoff_seconds: 5
@@ -843,6 +843,8 @@ resources:
     reconcile:
       requeue_on_success_seconds: 60
     hooks:
+      delta_pre_compare:
+        code: customSetDefaults(a, b)
       sdk_read_one_pre_set_output:
         code: rm.customSetSpec(ko,resp)
       sdk_read_one_post_set_output:
@@ -854,9 +856,9 @@ resources:
       sdk_update_post_set_output:
         code: rm.customSetOutput(&resource{ko})
     fields:
-      PipelineVersionID:
-        late_initialize:
-          min_backoff_seconds: 5
+      # PipelineVersionID:
+      #   late_initialize:
+      #     min_backoff_seconds: 5
       PipelineExecutionStatus:
         is_read_only: true
         print:

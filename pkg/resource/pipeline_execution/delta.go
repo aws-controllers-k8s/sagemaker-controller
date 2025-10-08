@@ -42,6 +42,7 @@ func newResourceDelta(
 		delta.Add("", a, b)
 		return delta
 	}
+	customSetDefaults(a, b)
 
 	if ackcompare.HasNilDifference(a.ko.Spec.ParallelismConfiguration, b.ko.Spec.ParallelismConfiguration) {
 		delta.Add("Spec.ParallelismConfiguration", a.ko.Spec.ParallelismConfiguration, b.ko.Spec.ParallelismConfiguration)
