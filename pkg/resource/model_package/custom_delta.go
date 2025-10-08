@@ -22,14 +22,23 @@ func customSetDefaults(
 	a *resource,
 	b *resource,
 ) {
-	// Default is for ImageDigest to be generated automatically by Sagemaker if not specified
+	// Default is for ImageDigest and ModelDataETag to be generated automatically by Sagemaker if not specified
 	if ackcompare.IsNotNil(a.ko.Spec.InferenceSpecification) && ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification) {
 		if ackcompare.IsNotNil(a.ko.Spec.InferenceSpecification.Containers) && ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification.Containers) {
 			for index := range a.ko.Spec.InferenceSpecification.Containers {
+
+				// Set default for ImageDigest
 				if ackcompare.IsNil(a.ko.Spec.InferenceSpecification.Containers[index].ImageDigest) &&
 					ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification.Containers[index].ImageDigest) {
 					a.ko.Spec.InferenceSpecification.Containers[index].ImageDigest =
 						b.ko.Spec.InferenceSpecification.Containers[index].ImageDigest
+				}
+
+				// Set default for ModelDataETag
+				if ackcompare.IsNil(a.ko.Spec.InferenceSpecification.Containers[index].ModelDataETag) &&
+					ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification.Containers[index].ModelDataETag) {
+					a.ko.Spec.InferenceSpecification.Containers[index].ModelDataETag =
+						b.ko.Spec.InferenceSpecification.Containers[index].ModelDataETag
 				}
 			}
 		}
