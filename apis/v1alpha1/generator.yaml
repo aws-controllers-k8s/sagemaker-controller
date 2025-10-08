@@ -768,6 +768,15 @@ resources:
       sdk_delete_post_request:
         template_path: common/sdk_delete_post_request.go.tpl
     fields:
+      IPAddressType:
+        late_initialize:
+          min_backoff_seconds: 5
+      PlatformIdentifier:
+        late_initialize:
+          min_backoff_seconds: 5
+      VolumeSizeInGB:
+        late_initialize:
+          min_backoff_seconds: 5
       NotebookInstanceStatus:
         is_read_only: true
         print:
@@ -775,9 +784,6 @@ resources:
         from:
           operation: DescribeNotebookInstance
           path: NotebookInstanceStatus
-      PlatformIdentifier:
-        late_initialize:
-          min_backoff_seconds: 5
       Url:
         is_read_only: true
         from:
@@ -799,9 +805,6 @@ resources:
       Tags:
         compare:
           is_ignored: true
-      VolumeSizeInGB:
-        late_initialize:
-          min_backoff_seconds: 5
   Pipeline:
     fields:
       PipelineStatus:
@@ -851,6 +854,9 @@ resources:
       sdk_update_post_set_output:
         code: rm.customSetOutput(&resource{ko})
     fields:
+      PipelineVersionID:
+        late_initialize:
+          min_backoff_seconds: 5
       PipelineExecutionStatus:
         is_read_only: true
         print:
