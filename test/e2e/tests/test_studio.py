@@ -19,9 +19,7 @@ import pytest
 from acktest.k8s import resource as k8s
 from acktest.resources import random_suffix_name
 from e2e import create_sagemaker_resource, delete_custom_resource, wait_for_status
-from e2e.common import config as cfg
 from e2e.replacement_values import REPLACEMENT_VALUES
-from tests.test_feature_group import WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH
 
 STUDIO_WAIT_PERIOD = 150
 STUDIO_WAIT_LENGTH = 30
@@ -114,21 +112,21 @@ def apply_app_yaml(domain_id, user_profile_name):
 
 
 def assert_domain_status_in_sync(domain_id, reference, expected_status):
-    sm_status = wait_for_status(expected_status, WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH, get_domain_sagemaker_status, domain_id)
-    k8s_status = wait_for_status(expected_status, WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH, get_k8s_resource_status, reference)
+    sm_status = wait_for_status(expected_status, STUDIO_WAIT_PERIOD, STUDIO_WAIT_LENGTH, get_domain_sagemaker_status, domain_id)
+    k8s_status = wait_for_status(expected_status, STUDIO_WAIT_PERIOD, STUDIO_WAIT_LENGTH, get_k8s_resource_status, reference)
     assert sm_status == k8s_status == expected_status
 
 
 def assert_user_profile_status_in_sync(domain_id, user_profile_name, reference, expected_status):
     sm_status = wait_for_status(
         expected_status,
-        WAIT_PERIOD_COUNT,
-        WAIT_PERIOD_LENGTH,
+        STUDIO_WAIT_PERIOD,
+        STUDIO_WAIT_LENGTH,
         get_user_profile_sagemaker_status,
         domain_id,
         user_profile_name,
     )
-    k8s_status = wait_for_status(expected_status, WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH, get_k8s_resource_status, reference)
+    k8s_status = wait_for_status(expected_status, STUDIO_WAIT_PERIOD, STUDIO_WAIT_LENGTH, get_k8s_resource_status, reference)
     assert sm_status == k8s_status == expected_status
 
 
@@ -137,15 +135,15 @@ def assert_app_status_in_sync(
 ):
     sm_status = wait_for_status(
         expected_status,
-        WAIT_PERIOD_COUNT,
-        WAIT_PERIOD_LENGTH,
+        STUDIO_WAIT_PERIOD,
+        STUDIO_WAIT_LENGTH,
         get_app_sagemaker_status,
         domain_id,
         user_profile_name,
         app_type,
         app_name,
     )
-    k8s_status = wait_for_status(expected_status, WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH, get_k8s_resource_status, reference)
+    k8s_status = wait_for_status(expected_status, STUDIO_WAIT_PERIOD, STUDIO_WAIT_LENGTH, get_k8s_resource_status, reference)
     assert sm_status == k8s_status == expected_status
 
 
@@ -196,7 +194,7 @@ def domain_fixture():
     yield (reference, resource, spec)
 
     assert delete_custom_resource(
-        reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
+        reference, STUDIO_WAIT_PERIOD, STUDIO_WAIT_LENGTH
     )
 
 
@@ -211,7 +209,7 @@ def user_profile_fixture(domain_fixture):
     assert_domain_status_in_sync(domain_id, domain_reference, STUDIO_STATUS_INSERVICE)
 
     domain_resource = patch_domain_kernel_instance(domain_reference, domain_spec, "ml.t3.large")
-    wait_for_status("ml.t3.large", WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH, get_domain_kernel_instance, domain_id)
+    wait_for_status("ml.t3.large", STUDIO_WAIT_PERIOD, STUDIO_WAIT_LENGTH, get_domain_kernel_instance, domain_id)
     assert_domain_status_in_sync(domain_id, domain_reference, STUDIO_STATUS_INSERVICE)
 
     resource_name = random_suffix_name("profile", 15)
@@ -239,8 +237,8 @@ def user_profile_fixture(domain_fixture):
 
     assert delete_custom_resource(
         user_profile_reference,
-        cfg.JOB_DELETE_WAIT_PERIODS,
-        cfg.JOB_DELETE_WAIT_LENGTH,
+        STUDIO_WAIT_PERIOD,
+        STUDIO_WAIT_LENGTH,
     )
 
 
@@ -268,8 +266,8 @@ def app_fixture(user_profile_fixture):
     )
     wait_for_status(
         "ml.t3.large",
-        WAIT_PERIOD_COUNT,
-        WAIT_PERIOD_LENGTH,
+        STUDIO_WAIT_PERIOD,
+        STUDIO_WAIT_LENGTH,
         get_user_profile_kernel_instance,
         domain_id,
         user_profile_name,
@@ -301,8 +299,8 @@ def app_fixture(user_profile_fixture):
 
     assert delete_custom_resource(
         app_reference,
-        cfg.LONG_JOB_DELETE_WAIT_PERIODS,
-        cfg.LONG_JOB_DELETE_WAIT_LENGTH,
+        STUDIO_WAIT_PERIOD,
+        STUDIO_WAIT_LENGTH,
     )
 
 
