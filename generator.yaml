@@ -29,8 +29,8 @@ resources:
   App:
     exceptions:
       errors:
-          404:
-            code: ResourceNotFound
+        404:
+          code: ResourceNotFound
       terminal_codes:
         - ResourceNotFound
         - InvalidParameterCombination
@@ -60,8 +60,8 @@ resources:
   DataQualityJobDefinition:
     exceptions:
       errors:
-          404:
-            code: ResourceNotFound
+        404:
+          code: ResourceNotFound
       terminal_codes:
         - ResourceNotFound
         - ResourceInUse
@@ -80,8 +80,8 @@ resources:
   Domain:
     exceptions:
       errors:
-          404:
-            code: ResourceNotFound
+        404:
+          code: ValidationException
       terminal_codes:
         - ResourceNotFound
         - InvalidParameterCombination
@@ -222,8 +222,8 @@ resources:
     update_conditions_custom_method_name: CustomUpdateConditions
     exceptions:
       errors:
-          404:
-            code: ResourceNotFound
+        404:
+          code: ResourceNotFound
       terminal_codes:
         - ResourceNotFound
         - ResourceInUse
@@ -267,8 +267,8 @@ resources:
   HyperParameterTuningJob:
     exceptions:
       errors:
-          404:
-            code: ResourceNotFound
+        404:
+          code: ResourceNotFound
       terminal_codes:
         - ResourceNotFound
         - ResourceInUse
@@ -482,8 +482,8 @@ resources:
   ModelBiasJobDefinition:
     exceptions:
       errors:
-          404:
-            code: ResourceNotFound
+        404:
+          code: ResourceNotFound
       terminal_codes:
         - ResourceNotFound
         - ResourceInUse
@@ -502,8 +502,8 @@ resources:
   ModelExplainabilityJobDefinition:
     exceptions:
       errors:
-          404:
-            code: ResourceNotFound
+        404:
+          code: ResourceNotFound
       terminal_codes:
         - ResourceNotFound
         - ResourceInUse
@@ -524,9 +524,9 @@ resources:
     is_arn_primary_key: true
     exceptions:
       errors:
-          404:
-            code: ValidationException
-            message_suffix: does not exist.
+        404:
+          code: ValidationException
+          message_suffix: does not exist.
       terminal_codes:
         - InvalidParameterCombination
         - InvalidParameterValue
@@ -589,39 +589,39 @@ resources:
     tags:
       ignore: true
   ModelPackageGroup:
-      exceptions:
-        errors:
-            404:
-              code: ValidationException
-              message_suffix: does not exist.
-        terminal_codes:
-          - InvalidParameterCombination
-          - InvalidParameterValue
-          - MissingParameter
-          - ConflictException
-      fields:
-        ModelPackageGroupStatus:
-          is_read_only: true
-          print:
-            name: STATUS
-          from:
-            operation: DescribeModelPackageGroup
-            path: ModelPackageGroupStatus
-        Tags:
-          compare:
-            is_ignored: true
-      hooks:
-        sdk_read_one_post_set_output:
-          code: rm.customSetOutput(&resource{ko})
-        sdk_delete_pre_build_request:
-          template_path: common/sdk_delete_pre_build_request.go.tpl
-        sdk_delete_post_request:
-          template_path: common/sdk_delete_post_request.go.tpl
+    exceptions:
+      errors:
+        404:
+          code: ValidationException
+          message_suffix: does not exist.
+      terminal_codes:
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+        - ConflictException
+    fields:
+      ModelPackageGroupStatus:
+        is_read_only: true
+        print:
+          name: STATUS
+        from:
+          operation: DescribeModelPackageGroup
+          path: ModelPackageGroupStatus
+      Tags:
+        compare:
+          is_ignored: true
+    hooks:
+      sdk_read_one_post_set_output:
+        code: rm.customSetOutput(&resource{ko})
+      sdk_delete_pre_build_request:
+        template_path: common/sdk_delete_pre_build_request.go.tpl
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
   ModelQualityJobDefinition:
     exceptions:
       errors:
-          404:
-            code: ResourceNotFound
+        404:
+          code: ResourceNotFound
       terminal_codes:
         - ResourceNotFound
         - ResourceInUse
@@ -643,8 +643,8 @@ resources:
     update_conditions_custom_method_name: CustomUpdateConditions
     exceptions:
       errors:
-          404:
-            code: ResourceNotFound
+        404:
+          code: ResourceNotFound
       terminal_codes:
         - ResourceNotFound
         - ResourceInUse
@@ -699,9 +699,9 @@ resources:
   NotebookInstanceLifecycleConfig:
     exceptions:
       errors:
-          404:
-            code: ValidationException
-            message_prefix: Unable to describe Notebook Instance Lifecycle Config
+        404:
+          code: ValidationException
+          message_prefix: Unable to describe Notebook Instance Lifecycle Config
       terminal_codes:
         - InvalidParameterCombination
         - InvalidParameterValue
@@ -729,7 +729,7 @@ resources:
       Tags:
         compare:
           is_ignored: true
-      # Custom code is implemented for these fields delta comparison
+          # Custom code is implemented for these fields delta comparison
       OnCreate:
         compare:
           is_ignored: true
@@ -745,9 +745,9 @@ resources:
       requeue_on_success_seconds: 60
     exceptions:
       errors:
-          404:
-            code: ValidationException
-            message_prefix: RecordNotFound
+        404:
+          code: ValidationException
+          message_prefix: RecordNotFound
       terminal_codes:
         - InvalidParameterCombination
         - InvalidParameterValue
@@ -893,9 +893,9 @@ resources:
   ProcessingJob:
     exceptions:
       errors:
-          404:
-            code: ValidationException
-            message_prefix: Could not find requested job
+        404:
+          code: ValidationException
+          message_prefix: Could not find requested job
       terminal_codes:
         - ResourceNotFound
         - ResourceInUse
@@ -935,9 +935,9 @@ resources:
       requeue_on_success_seconds: 300
     exceptions:
       errors:
-          404:
-            code: ValidationException
-            message_prefix: Requested resource not found
+        404:
+          code: ValidationException
+          message_prefix: Requested resource not found
       terminal_codes:
         - ResourceNotFound
         - ResourceInUse
@@ -1047,9 +1047,9 @@ resources:
   TransformJob:
     exceptions:
       errors:
-          404:
-            code: ValidationException
-            message_prefix: Could not find requested job with name
+        404:
+          code: ValidationException
+          message_prefix: Could not find requested job with name
       terminal_codes:
         - ResourceNotFound
         - ResourceInUse
@@ -1093,8 +1093,8 @@ resources:
   UserProfile:
     exceptions:
       errors:
-          404:
-            code: ResourceNotFound
+        404:
+          code: ResourceNotFound
       terminal_codes:
         - ResourceNotFound
         - InvalidParameterCombination
