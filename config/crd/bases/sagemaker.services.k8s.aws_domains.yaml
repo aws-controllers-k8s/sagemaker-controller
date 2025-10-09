@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.16.2
+    controller-gen.kubebuilder.io/version: v0.19.0
   name: domains.sagemaker.services.k8s.aws
 spec:
   group: sagemaker.services.k8s.aws
@@ -15,6 +15,9 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
+    - jsonPath: .status.domainID
+      name: DOMAIN-ID
+      type: string
     - jsonPath: .status.domainID
       name: DOMAIN-ID
       type: string
@@ -51,7 +54,7 @@ spec:
                   Specifies the VPC used for non-EFS traffic. The default value is PublicInternetOnly.
 
                      * PublicInternetOnly - Non-EFS traffic is through a VPC managed by Amazon
-                     SageMaker, which allows direct internet access
+                     SageMaker AI, which allows direct internet access
 
                      * VpcOnly - All traffic is through the specified VPC and subnets
                 type: string
@@ -85,8 +88,14 @@ spec:
                     properties:
                       defaultResourceSpec:
                         description: |-
-                          Specifies the ARN's of a SageMaker image and SageMaker image version, and
-                          the instance type that the version runs on.
+                          Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+                          and the instance type that the version runs on.
+
+                          When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+                          is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+                          already exists in the ResourceSpec because SageMakerImageVersionArn always
+                          takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+                          None as the value.
                         properties:
                           instanceType:
                             type: string
@@ -108,17 +117,36 @@ spec:
                     items:
                       description: |-
                         The settings for assigning a custom file system to a user profile or space
-                        for an Amazon SageMaker Domain. Permitted users can access this file system
-                        in Amazon SageMaker Studio.
+                        for an Amazon SageMaker AI Domain. Permitted users can access this file system
+                        in Amazon SageMaker AI Studio.
                       properties:
                         efsFileSystemConfig:
                           description: |-
                             The settings for assigning a custom Amazon EFS file system to a user profile
-                            or space for an Amazon SageMaker Domain.
+                            or space for an Amazon SageMaker AI Domain.
                           properties:
                             fileSystemID:
                               type: string
                             fileSystemPath:
+                              type: string
+                          type: object
+                        fSxLustreFileSystemConfig:
+                          description: |-
+                            The settings for assigning a custom Amazon FSx for Lustre file system to
+                            a user profile or space for an Amazon SageMaker Domain.
+                          properties:
+                            fileSystemID:
+                              type: string
+                            fileSystemPath:
+                              type: string
+                          type: object
+                        s3FileSystemConfig:
+                          description: Configuration for the custom Amazon S3 file
+                            system.
+                          properties:
+                            mountPath:
+                              type: string
+                            s3URI:
                               type: string
                           type: object
                       type: object
@@ -144,8 +172,8 @@ spec:
                       customImages:
                         items:
                           description: |-
-                            A custom SageMaker image. For more information, see Bring your own SageMaker
-                            image (https://docs.aws.amazon.com/sagemaker/latest/dg/studio-byoi.html).
+                            A custom SageMaker AI image. For more information, see Bring your own SageMaker
+                            AI image (https://docs.aws.amazon.com/sagemaker/latest/dg/studio-byoi.html).
                           properties:
                             appImageConfigName:
                               type: string
@@ -158,8 +186,14 @@ spec:
                         type: array
                       defaultResourceSpec:
                         description: |-
-                          Specifies the ARN's of a SageMaker image and SageMaker image version, and
-                          the instance type that the version runs on.
+                          Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+                          and the instance type that the version runs on.
+
+                          When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+                          is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+                          already exists in the ResourceSpec because SageMakerImageVersionArn always
+                          takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+                          None as the value.
                         properties:
                           instanceType:
                             type: string
@@ -182,8 +216,14 @@ spec:
                     properties:
                       defaultResourceSpec:
                         description: |-
-                          Specifies the ARN's of a SageMaker image and SageMaker image version, and
-                          the instance type that the version runs on.
+                          Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+                          and the instance type that the version runs on.
+
+                          When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+                          is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+                          already exists in the ResourceSpec because SageMakerImageVersionArn always
+                          takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+                          None as the value.
                         properties:
                           instanceType:
                             type: string
@@ -207,8 +247,8 @@ spec:
                       customImages:
                         items:
                           description: |-
-                            A custom SageMaker image. For more information, see Bring your own SageMaker
-                            image (https://docs.aws.amazon.com/sagemaker/latest/dg/studio-byoi.html).
+                            A custom SageMaker AI image. For more information, see Bring your own SageMaker
+                            AI image (https://docs.aws.amazon.com/sagemaker/latest/dg/studio-byoi.html).
                           properties:
                             appImageConfigName:
                               type: string
@@ -221,8 +261,14 @@ spec:
                         type: array
                       defaultResourceSpec:
                         description: |-
-                          Specifies the ARN's of a SageMaker image and SageMaker image version, and
-                          the instance type that the version runs on.
+                          Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+                          and the instance type that the version runs on.
+
+                          When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+                          is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+                          already exists in the ResourceSpec because SageMakerImageVersionArn always
+                          takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+                          None as the value.
                         properties:
                           instanceType:
                             type: string
@@ -256,10 +302,11 @@ spec:
                     type: array
                   sharingSettings:
                     description: |-
-                      Specifies options for sharing Amazon SageMaker Studio notebooks. These settings
-                      are specified as part of DefaultUserSettings when the CreateDomain API is
-                      called, and as part of UserSettings when the CreateUserProfile API is called.
-                      When SharingSettings is not specified, notebook sharing isn't allowed.
+                      Specifies options for sharing Amazon SageMaker AI Studio notebooks. These
+                      settings are specified as part of DefaultUserSettings when the CreateDomain
+                      API is called, and as part of UserSettings when the CreateUserProfile API
+                      is called. When SharingSettings is not specified, notebook sharing isn't
+                      allowed.
                     properties:
                       notebookOutputOption:
                         type: string
@@ -291,8 +338,14 @@ spec:
                     properties:
                       defaultResourceSpec:
                         description: |-
-                          Specifies the ARN's of a SageMaker image and SageMaker image version, and
-                          the instance type that the version runs on.
+                          Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+                          and the instance type that the version runs on.
+
+                          When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+                          is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+                          already exists in the ResourceSpec because SageMakerImageVersionArn always
+                          takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+                          None as the value.
                         properties:
                           instanceType:
                             type: string
@@ -322,11 +375,15 @@ spec:
                     properties:
                       enableDockerAccess:
                         type: string
+                      rootlessDocker:
+                        type: string
                       vpcOnlyTrustedAccounts:
                         items:
                           type: string
                         type: array
                     type: object
+                  ipAddressType:
+                    type: string
                   rStudioServerProDomainSettings:
                     description: |-
                       A collection of settings that configure the RStudioServerPro Domain-level
@@ -334,8 +391,14 @@ spec:
                     properties:
                       defaultResourceSpec:
                         description: |-
-                          Specifies the ARN's of a SageMaker image and SageMaker image version, and
-                          the instance type that the version runs on.
+                          Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+                          and the instance type that the version runs on.
+
+                          When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+                          is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+                          already exists in the ResourceSpec because SageMakerImageVersionArn always
+                          takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+                          None as the value.
                         properties:
                           instanceType:
                             type: string
@@ -359,6 +422,37 @@ spec:
                     items:
                       type: string
                     type: array
+                  trustedIdentityPropagationSettings:
+                    description: |-
+                      The Trusted Identity Propagation (TIP) settings for the SageMaker domain.
+                      These settings determine how user identities from IAM Identity Center are
+                      propagated through the domain to TIP enabled Amazon Web Services services.
+                    properties:
+                      status:
+                        type: string
+                    type: object
+                  unifiedStudioSettings:
+                    description: |-
+                      The settings that apply to an Amazon SageMaker AI domain when you use it
+                      in Amazon SageMaker Unified Studio.
+                    properties:
+                      domainAccountID:
+                        type: string
+                      domainID:
+                        type: string
+                      domainRegion:
+                        type: string
+                      environmentID:
+                        type: string
+                      projectID:
+                        type: string
+                      projectS3Path:
+                        type: string
+                      singleSignOnApplicationARN:
+                        type: string
+                      studioWebPortalAccess:
+                        type: string
+                    type: object
                 type: object
               homeEFSFileSystemKMSKeyID:
                 description: |-
@@ -368,14 +462,18 @@ spec:
                 type: string
               kmsKeyID:
                 description: |-
-                  SageMaker uses Amazon Web Services KMS to encrypt EFS and EBS volumes attached
-                  to the domain with an Amazon Web Services managed key by default. For more
-                  control, specify a customer managed key.
+                  SageMaker AI uses Amazon Web Services KMS to encrypt EFS and EBS volumes
+                  attached to the domain with an Amazon Web Services managed key by default.
+                  For more control, specify a customer managed key.
 
                   Regex Pattern: `^[a-zA-Z0-9:/_-]*$`
                 type: string
               subnetIDs:
-                description: The VPC subnets that the domain uses for communication.
+                description: |-
+                  The VPC subnets that the domain uses for communication.
+
+                  The field is optional when the AppNetworkAccessType parameter is set to PublicInternetOnly
+                  for domains created from Amazon SageMaker Unified Studio.
                 items:
                   type: string
                 type: array
@@ -414,14 +512,15 @@ spec:
                   The ID of the Amazon Virtual Private Cloud (VPC) that the domain uses for
                   communication.
 
+                  The field is optional when the AppNetworkAccessType parameter is set to PublicInternetOnly
+                  for domains created from Amazon SageMaker Unified Studio.
+
                   Regex Pattern: `^[-0-9a-zA-Z]+$`
                 type: string
             required:
             - authMode
             - defaultUserSettings
             - domainName
-            - subnetIDs
-            - vpcID
             type: object
           status:
             description: DomainStatus defines the observed state of Domain

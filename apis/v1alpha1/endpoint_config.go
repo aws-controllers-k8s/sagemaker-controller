@@ -39,11 +39,11 @@ type EndpointConfigSpec struct {
 	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
 	// +kubebuilder:validation:Required
 	EndpointConfigName *string `json:"endpointConfigName"`
-	// The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
-	// to perform actions on your behalf. For more information, see SageMaker Roles
-	// (https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-roles.html).
+	// The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker AI can
+	// assume to perform actions on your behalf. For more information, see SageMaker
+	// AI Roles (https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-roles.html).
 	//
-	// To be able to pass this role to Amazon SageMaker, the caller of this action
+	// To be able to pass this role to Amazon SageMaker AI, the caller of this action
 	// must have the iam:PassRole permission.
 	//
 	// Regex Pattern: `^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$`

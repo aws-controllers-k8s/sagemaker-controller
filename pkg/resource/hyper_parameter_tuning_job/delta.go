@@ -321,6 +321,24 @@ func newResourceDelta(
 					delta.Add("Spec.TrainingJobDefinition.ResourceConfig.InstanceGroups", a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceGroups, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceGroups)
 				}
 			}
+			if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig) {
+				delta.Add("Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig", a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig)
+			} else if a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig != nil && b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig != nil {
+				if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs) {
+					delta.Add("Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs", a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs)
+				} else if a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs != nil && b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs != nil {
+					if *a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs != *b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs {
+						delta.Add("Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs", a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs)
+					}
+				}
+				if len(a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.PlacementSpecifications) != len(b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.PlacementSpecifications) {
+					delta.Add("Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.PlacementSpecifications", a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.PlacementSpecifications, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.PlacementSpecifications)
+				} else if len(a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.PlacementSpecifications) > 0 {
+					if !reflect.DeepEqual(a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.PlacementSpecifications, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.PlacementSpecifications) {
+						delta.Add("Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.PlacementSpecifications", a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.PlacementSpecifications, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.PlacementSpecifications)
+					}
+				}
+			}
 			if ackcompare.HasNilDifference(a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType) {
 				delta.Add("Spec.TrainingJobDefinition.ResourceConfig.InstanceType", a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType, b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType)
 			} else if a.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType != nil && b.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType != nil {

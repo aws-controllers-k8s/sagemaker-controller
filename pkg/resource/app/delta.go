@@ -64,6 +64,13 @@ func newResourceDelta(
 			delta.Add("Spec.DomainID", a.ko.Spec.DomainID, b.ko.Spec.DomainID)
 		}
 	}
+	if ackcompare.HasNilDifference(a.ko.Spec.RecoveryMode, b.ko.Spec.RecoveryMode) {
+		delta.Add("Spec.RecoveryMode", a.ko.Spec.RecoveryMode, b.ko.Spec.RecoveryMode)
+	} else if a.ko.Spec.RecoveryMode != nil && b.ko.Spec.RecoveryMode != nil {
+		if *a.ko.Spec.RecoveryMode != *b.ko.Spec.RecoveryMode {
+			delta.Add("Spec.RecoveryMode", a.ko.Spec.RecoveryMode, b.ko.Spec.RecoveryMode)
+		}
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.ResourceSpec, b.ko.Spec.ResourceSpec) {
 		delta.Add("Spec.ResourceSpec", a.ko.Spec.ResourceSpec, b.ko.Spec.ResourceSpec)
 	} else if a.ko.Spec.ResourceSpec != nil && b.ko.Spec.ResourceSpec != nil {

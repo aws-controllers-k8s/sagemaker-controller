@@ -777,6 +777,9 @@ func (rm *resourceManager) sdkFind(
 						if f29f0iter.TransformJobDefinition.TransformResources.InstanceType != "" {
 							f29f0elemf1f6.InstanceType = aws.String(string(f29f0iter.TransformJobDefinition.TransformResources.InstanceType))
 						}
+						if f29f0iter.TransformJobDefinition.TransformResources.TransformAmiVersion != nil {
+							f29f0elemf1f6.TransformAMIVersion = f29f0iter.TransformJobDefinition.TransformResources.TransformAmiVersion
+						}
 						if f29f0iter.TransformJobDefinition.TransformResources.VolumeKmsKeyId != nil {
 							f29f0elemf1f6.VolumeKMSKeyID = f29f0iter.TransformJobDefinition.TransformResources.VolumeKmsKeyId
 						}
@@ -1478,6 +1481,9 @@ func (rm *resourceManager) newCreateRequestPayload(
 						}
 						if f18f0iter.TransformJobDefinition.TransformResources.InstanceType != nil {
 							f18f0elemf1f6.InstanceType = svcsdktypes.TransformInstanceType(*f18f0iter.TransformJobDefinition.TransformResources.InstanceType)
+						}
+						if f18f0iter.TransformJobDefinition.TransformResources.TransformAMIVersion != nil {
+							f18f0elemf1f6.TransformAmiVersion = f18f0iter.TransformJobDefinition.TransformResources.TransformAMIVersion
 						}
 						if f18f0iter.TransformJobDefinition.TransformResources.VolumeKMSKeyID != nil {
 							f18f0elemf1f6.VolumeKmsKeyId = f18f0iter.TransformJobDefinition.TransformResources.VolumeKMSKeyID

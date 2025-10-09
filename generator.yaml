@@ -768,6 +768,12 @@ resources:
       sdk_delete_post_request:
         template_path: common/sdk_delete_post_request.go.tpl
     fields:
+      PlatformIdentifier:
+        late_initialize:
+          min_backoff_seconds: 5
+      VolumeSizeInGB:
+        late_initialize:
+          min_backoff_seconds: 5
       NotebookInstanceStatus:
         is_read_only: true
         print:
@@ -775,9 +781,6 @@ resources:
         from:
           operation: DescribeNotebookInstance
           path: NotebookInstanceStatus
-      PlatformIdentifier:
-        late_initialize:
-          min_backoff_seconds: 5
       Url:
         is_read_only: true
         from:
@@ -799,9 +802,6 @@ resources:
       Tags:
         compare:
           is_ignored: true
-      VolumeSizeInGB:
-        late_initialize:
-          min_backoff_seconds: 5
   Pipeline:
     fields:
       PipelineStatus:
@@ -840,6 +840,8 @@ resources:
     reconcile:
       requeue_on_success_seconds: 60
     hooks:
+      delta_pre_compare:
+        code: customSetDefaults(a, b)
       sdk_read_one_pre_set_output:
         code: rm.customSetSpec(ko,resp)
       sdk_read_one_post_set_output:
@@ -1122,121 +1124,132 @@ resources:
         compare:
           is_ignored: true
 ignore:
-    resource_names:
-      - Algorithm
-      # - App
-      - AutoMLJob
-      - AutoMLJobV2
-      - Action
-      - AppImageConfig
-      - Artifact
-      - Cluster
-      - CodeRepository
-      - CompilationJob
-      - Context
-      # - DataQualityJobDefinition
-      - DeviceFleet
-      # - Domain
-      - EdgePackagingJob
-      - EdgeDeploymentPlan
-      - EdgeDeploymentStage
-      # - EndpointConfig
-      # - Endpoint
-      - Experiment
-      # - FeatureGroup
-      - FlowDefinition
-      - Hub
-      - HubContentReference
-      - HumanTaskUi
-      # - HyperParameterTuningJob
-      # - InferenceComponent
-      - InferenceRecommendationsJob
-      - Image
-      - ImageVersion
-      - InferenceExperiment
-      # - LabelingJob
-      # - Model
-      - MlflowTrackingServer
-      - ModelCard
-      - ModelCardExportJob
-      # - ModelBiasJobDefinition
-      # - ModelExplainabilityJobDefinition
-      # - ModelPackage
-      # - ModelPackageGroup
-      # - ModelQualityJobDefinition
-      # - MonitoringSchedule
-      # - NotebookInstanceLifecycleConfig
-      # - NotebookInstance
-      # - Pipeline
-      - OptimizationJob
-      - PresignedDomainUrl
-      - PresignedNotebookInstanceUrl
-      - PresignedMlflowTrackingServerUrl
-      # - ProcessingJob
-      - Project
-      - Space
-      - StudioLifecycleConfig
-      # - TrainingJob
-      # - TransformJob
-      - TrialComponent
-      - Trial
-      # - UserProfile
-      - Workforce
-      - Workteam
-    operations:
-      - UpdateFeatureGroup
-    shape_names:
-      # RSessionAppSettings is an empty struct that causes generation errors
-      - RSessionAppSettings
-      - ExecutionRoleIdentityConfig
-      - HyperParameterTuningResourceConfig
-      - InstanceMetadataServiceConfiguration
-      - CanvasAppSettings
-      - ExplainerConfig
-      - HyperParameterTuningJobStrategyConfig
-      - DisableProfiler
-      - BatchTransformInput_
-      - MonitoringParquetDatasetFormat
-      - SpaceName
-      - DefaultSpaceSettings
-      - BatchDataCaptureConfig
-      - CodeRepositories
-      - TableFormat
-      - RandomSeed
-      - TrainingImageConfig
-      - ShadowProductionVariants
-    field_paths:
-      - StartPipelineExecutionInput.ClientRequestToken
-      - CreatePipelineInput.ClientRequestToken
-      - CreatePipelineInput.PipelineDefinitionS3Location
-      - CreateEndpointConfigInput.ShadowProductionVariants
-      - DescribeEndpointOutput.PendingDeploymentSummary.ShadowProductionVariants
-      - CreateTrainingJobInput.AlgorithmSpecification.ContainerArguments
-      - CreateTrainingJobInput.AlgorithmSpecification.ContainerEntrypoint
-      - CreateTrainingJobInput.ExperimentConfig.RunName
-      - CreateHyperParameterTuningJobInput.TrainingJobDefinition.Environment
-      - CreateHyperParameterTuningJobInput.HyperParameterTuningJobConfig.ResourceLimits.MaxRuntimeInSeconds
-      - CreateHyperParameterTuningJobInput.HyperParameterTuningJobConfig.TuningJobCompletionCriteria.BestObjectiveNotImproving
-      - CreateHyperParameterTuningJobInput.HyperParameterTuningJobConfig.TuningJobCompletionCriteria.ConvergenceDetected
-      - CreateDomainInput.TagPropagation
-      - CreateModelPackageInput.ModelCard
-      - CreateModelPackageInput.ModelLifeCycle
-      - CreateModelPackageInput.SecurityConfig
-      - CreateModelPackageInput.SourceUri
-      - CreateTrainingJobInput.SessionChainingConfig
-      - ContainerDefinition.AdditionalModelDataSources
-      - CreateDomainInput.DomainSettings.AmazonQSettings
-      - CreateUserProfileInput.UserSettings.CodeEditorAppSettings.AppLifecycleManagement
-      - CreateUserProfileInput.UserSettings.CodeEditorAppSettings.BuiltInLifecycleConfigArn
-      - CreateUserProfileInput.UserSettings.CodeEditorAppSettings.CustomImages
-      - CreateDomainInput.DefaultUserSettings.JupyterLabAppSettings.AppLifecycleManagement
-      - CreateDomainInput.DefaultUserSettings.JupyterLabAppSettings.BuiltInLifecycleConfigArn
-      - CreateDomainInput.DefaultUserSettings.JupyterLabAppSettings.EmrSettings
-      - CreateDomainInput.DefaultUserSettings.StudioWebPortalSettings
-      - CreateInferenceComponentInput.Specification.BaseInferenceComponentName
-      - ProductionVariant.InferenceAmiVersion
-      - CreateDomainInput.DefaultUserSettings.AutoMountHomeEFS
-      - SourceAlgorithm.ModelDataSource
-      - ModelPackageContainerDefinition.ModelDataSource
-      - S3ModelDataSource.HubAccessConfig
-      - S3ModelDataSource.ManifestS3Uri
+  resource_names:
+    - Algorithm
+    # - App
+    - AutoMLJob
+    - AutoMLJobV2
+    - Action
+    - AppImageConfig
+    - Artifact
+    - Cluster
+    - ClusterSchedulerConfig
+    - CodeRepository
+    - CompilationJob
+    - ComputeQuota
+    - Context
+    # - DataQualityJobDefinition
+    - DeviceFleet
+    # - Domain
+    - EdgePackagingJob
+    - EdgeDeploymentPlan
+    - EdgeDeploymentStage
+    # - EndpointConfig
+    # - Endpoint
+    - Experiment
+    # - FeatureGroup
+    - FlowDefinition
+    - Hub
+    - HubContentReference
+    - HumanTaskUi
+    # - HyperParameterTuningJob
+    # - InferenceComponent
+    - InferenceRecommendationsJob
+    - Image
+    - ImageVersion
+    - InferenceExperiment
+    # - LabelingJob
+    # - Model
+    - MlflowTrackingServer
+    - ModelCard
+    - ModelCardExportJob
+    # - ModelBiasJobDefinition
+    # - ModelExplainabilityJobDefinition
+    # - ModelPackage
+    # - ModelPackageGroup
+    # - ModelQualityJobDefinition
+    # - MonitoringSchedule
+    # - NotebookInstanceLifecycleConfig
+    # - NotebookInstance
+    - OptimizationJob
+    - PartnerAppPresignedUrl
+    - PartnerApp
+    # - Pipeline
+    - PresignedDomainUrl
+    - PresignedNotebookInstanceUrl
+    - PresignedMlflowTrackingServerUrl
+    # - ProcessingJob
+    - Project
+    - Space
+    - StudioLifecycleConfig
+    # - TrainingJob
+    - TrainingPlan
+    # - TransformJob
+    - TrialComponent
+    - Trial
+    # - UserProfile
+    - Workforce
+    - Workteam
+  operations:
+    - UpdateFeatureGroup
+  shape_names:
+    # RSessionAppSettings is an empty struct that causes generation errors
+    - RSessionAppSettings
+    - ExecutionRoleIdentityConfig
+    - HyperParameterTuningResourceConfig
+    - InstanceMetadataServiceConfiguration
+    - CanvasAppSettings
+    - ExplainerConfig
+    - HyperParameterTuningJobStrategyConfig
+    - DisableProfiler
+    - BatchTransformInput_
+    - MonitoringParquetDatasetFormat
+    - SpaceName
+    - DefaultSpaceSettings
+    - BatchDataCaptureConfig
+    - CodeRepositories
+    - TableFormat
+    - RandomSeed
+    - TrainingImageConfig
+    - TrainingPlanArn
+    - ShadowProductionVariants
+  field_paths:
+    - StartPipelineExecutionInput.ClientRequestToken
+    - CreatePipelineInput.ClientRequestToken
+    - CreatePipelineInput.PipelineDefinitionS3Location
+    - CreateEndpointConfigInput.ShadowProductionVariants
+    - DescribeEndpointOutput.PendingDeploymentSummary.ShadowProductionVariants
+    - CreateTrainingJobInput.AlgorithmSpecification.ContainerArguments
+    - CreateTrainingJobInput.AlgorithmSpecification.ContainerEntrypoint
+    - CreateTrainingJobInput.ExperimentConfig.RunName
+    - CreateHyperParameterTuningJobInput.TrainingJobDefinition.Environment
+    - CreateHyperParameterTuningJobInput.HyperParameterTuningJobConfig.ResourceLimits.MaxRuntimeInSeconds
+    - CreateHyperParameterTuningJobInput.HyperParameterTuningJobConfig.TuningJobCompletionCriteria.BestObjectiveNotImproving
+    - CreateHyperParameterTuningJobInput.HyperParameterTuningJobConfig.TuningJobCompletionCriteria.ConvergenceDetected
+    - CreateDomainInput.TagPropagation
+    - CreateModelPackageInput.ModelCard
+    - CreateModelPackageInput.ModelLifeCycle
+    - CreateModelPackageInput.SecurityConfig
+    - CreateModelPackageInput.SourceUri
+    - CreateTrainingJobInput.SessionChainingConfig
+    - ContainerDefinition.AdditionalModelDataSources
+    - CreateDomainInput.DomainSettings.AmazonQSettings
+    - CreateUserProfileInput.UserSettings.CodeEditorAppSettings.AppLifecycleManagement
+    - CreateUserProfileInput.UserSettings.CodeEditorAppSettings.BuiltInLifecycleConfigArn
+    - CreateUserProfileInput.UserSettings.CodeEditorAppSettings.CustomImages
+    - CreateDomainInput.DefaultUserSettings.JupyterLabAppSettings.AppLifecycleManagement
+    - CreateDomainInput.DefaultUserSettings.JupyterLabAppSettings.BuiltInLifecycleConfigArn
+    - CreateDomainInput.DefaultUserSettings.JupyterLabAppSettings.EmrSettings
+    - CreateDomainInput.DefaultUserSettings.StudioWebPortalSettings
+    - CreateInferenceComponentInput.Specification.BaseInferenceComponentName
+    - ProductionVariant.InferenceAmiVersion
+    - CreateDomainInput.DefaultUserSettings.AutoMountHomeEFS
+    - SourceAlgorithm.ModelDataSource
+    - ModelPackageContainerDefinition.ModelDataSource
+    - S3ModelDataSource.HubAccessConfig
+    - S3ModelDataSource.ManifestS3Uri
+    - S3ModelDataSource.ETag
+    - S3ModelDataSource.ManifestEtag
+    - AdditionalS3DataSource.ETag
+    - ModelPackageContainerDefinition.ModelDataETag
+    - SourceAlgorithm.ModelDataETag

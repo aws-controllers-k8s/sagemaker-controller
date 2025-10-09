@@ -35,7 +35,7 @@ from e2e.common import config as cfg
 
 RESOURCE_PLURAL = "modelpackages"
 
-DELETE_WAIT_PERIOD = 20
+DELETE_WAIT_PERIOD = 60
 DELETE_WAIT_LENGTH = 30
 
 
@@ -132,7 +132,7 @@ class TestmodelPackage:
         self,
         reference: k8s.CustomResourceReference,
         expected_status: str,
-        wait_periods: int = 32,
+        wait_periods: int = 40,
         period_length: int = 30,
     ):
         return wait_for_status(
@@ -147,7 +147,7 @@ class TestmodelPackage:
         self,
         model_package_name,
         expected_status: str,
-        wait_periods: int = 32,
+        wait_periods: int = 40,
         period_length: int = 30,
     ):
         return wait_for_status(

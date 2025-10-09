@@ -463,12 +463,26 @@ func newResourceDelta(
 					delta.Add("Spec.DomainSettings.DockerSettings.EnableDockerAccess", a.ko.Spec.DomainSettings.DockerSettings.EnableDockerAccess, b.ko.Spec.DomainSettings.DockerSettings.EnableDockerAccess)
 				}
 			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.DockerSettings.RootlessDocker, b.ko.Spec.DomainSettings.DockerSettings.RootlessDocker) {
+				delta.Add("Spec.DomainSettings.DockerSettings.RootlessDocker", a.ko.Spec.DomainSettings.DockerSettings.RootlessDocker, b.ko.Spec.DomainSettings.DockerSettings.RootlessDocker)
+			} else if a.ko.Spec.DomainSettings.DockerSettings.RootlessDocker != nil && b.ko.Spec.DomainSettings.DockerSettings.RootlessDocker != nil {
+				if *a.ko.Spec.DomainSettings.DockerSettings.RootlessDocker != *b.ko.Spec.DomainSettings.DockerSettings.RootlessDocker {
+					delta.Add("Spec.DomainSettings.DockerSettings.RootlessDocker", a.ko.Spec.DomainSettings.DockerSettings.RootlessDocker, b.ko.Spec.DomainSettings.DockerSettings.RootlessDocker)
+				}
+			}
 			if len(a.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts) != len(b.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts) {
 				delta.Add("Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts", a.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts, b.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts)
 			} else if len(a.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts) > 0 {
 				if !ackcompare.SliceStringPEqual(a.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts, b.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts) {
 					delta.Add("Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts", a.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts, b.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts)
 				}
+			}
+		}
+		if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.IPAddressType, b.ko.Spec.DomainSettings.IPAddressType) {
+			delta.Add("Spec.DomainSettings.IPAddressType", a.ko.Spec.DomainSettings.IPAddressType, b.ko.Spec.DomainSettings.IPAddressType)
+		} else if a.ko.Spec.DomainSettings.IPAddressType != nil && b.ko.Spec.DomainSettings.IPAddressType != nil {
+			if *a.ko.Spec.DomainSettings.IPAddressType != *b.ko.Spec.DomainSettings.IPAddressType {
+				delta.Add("Spec.DomainSettings.IPAddressType", a.ko.Spec.DomainSettings.IPAddressType, b.ko.Spec.DomainSettings.IPAddressType)
 			}
 		}
 		if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.RStudioServerProDomainSettings, b.ko.Spec.DomainSettings.RStudioServerProDomainSettings) {
@@ -540,6 +554,77 @@ func newResourceDelta(
 		} else if len(a.ko.Spec.DomainSettings.SecurityGroupIDs) > 0 {
 			if !ackcompare.SliceStringPEqual(a.ko.Spec.DomainSettings.SecurityGroupIDs, b.ko.Spec.DomainSettings.SecurityGroupIDs) {
 				delta.Add("Spec.DomainSettings.SecurityGroupIDs", a.ko.Spec.DomainSettings.SecurityGroupIDs, b.ko.Spec.DomainSettings.SecurityGroupIDs)
+			}
+		}
+		if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings, b.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings) {
+			delta.Add("Spec.DomainSettings.TrustedIdentityPropagationSettings", a.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings, b.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings)
+		} else if a.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings != nil && b.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings.Status, b.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings.Status) {
+				delta.Add("Spec.DomainSettings.TrustedIdentityPropagationSettings.Status", a.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings.Status, b.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings.Status)
+			} else if a.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings.Status != nil && b.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings.Status != nil {
+				if *a.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings.Status != *b.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings.Status {
+					delta.Add("Spec.DomainSettings.TrustedIdentityPropagationSettings.Status", a.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings.Status, b.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings.Status)
+				}
+			}
+		}
+		if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.UnifiedStudioSettings, b.ko.Spec.DomainSettings.UnifiedStudioSettings) {
+			delta.Add("Spec.DomainSettings.UnifiedStudioSettings", a.ko.Spec.DomainSettings.UnifiedStudioSettings, b.ko.Spec.DomainSettings.UnifiedStudioSettings)
+		} else if a.ko.Spec.DomainSettings.UnifiedStudioSettings != nil && b.ko.Spec.DomainSettings.UnifiedStudioSettings != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainAccountID, b.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainAccountID) {
+				delta.Add("Spec.DomainSettings.UnifiedStudioSettings.DomainAccountID", a.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainAccountID, b.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainAccountID)
+			} else if a.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainAccountID != nil && b.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainAccountID != nil {
+				if *a.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainAccountID != *b.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainAccountID {
+					delta.Add("Spec.DomainSettings.UnifiedStudioSettings.DomainAccountID", a.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainAccountID, b.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainAccountID)
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainID, b.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainID) {
+				delta.Add("Spec.DomainSettings.UnifiedStudioSettings.DomainID", a.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainID, b.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainID)
+			} else if a.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainID != nil && b.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainID != nil {
+				if *a.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainID != *b.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainID {
+					delta.Add("Spec.DomainSettings.UnifiedStudioSettings.DomainID", a.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainID, b.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainID)
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainRegion, b.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainRegion) {
+				delta.Add("Spec.DomainSettings.UnifiedStudioSettings.DomainRegion", a.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainRegion, b.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainRegion)
+			} else if a.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainRegion != nil && b.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainRegion != nil {
+				if *a.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainRegion != *b.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainRegion {
+					delta.Add("Spec.DomainSettings.UnifiedStudioSettings.DomainRegion", a.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainRegion, b.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainRegion)
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.UnifiedStudioSettings.EnvironmentID, b.ko.Spec.DomainSettings.UnifiedStudioSettings.EnvironmentID) {
+				delta.Add("Spec.DomainSettings.UnifiedStudioSettings.EnvironmentID", a.ko.Spec.DomainSettings.UnifiedStudioSettings.EnvironmentID, b.ko.Spec.DomainSettings.UnifiedStudioSettings.EnvironmentID)
+			} else if a.ko.Spec.DomainSettings.UnifiedStudioSettings.EnvironmentID != nil && b.ko.Spec.DomainSettings.UnifiedStudioSettings.EnvironmentID != nil {
+				if *a.ko.Spec.DomainSettings.UnifiedStudioSettings.EnvironmentID != *b.ko.Spec.DomainSettings.UnifiedStudioSettings.EnvironmentID {
+					delta.Add("Spec.DomainSettings.UnifiedStudioSettings.EnvironmentID", a.ko.Spec.DomainSettings.UnifiedStudioSettings.EnvironmentID, b.ko.Spec.DomainSettings.UnifiedStudioSettings.EnvironmentID)
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectID, b.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectID) {
+				delta.Add("Spec.DomainSettings.UnifiedStudioSettings.ProjectID", a.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectID, b.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectID)
+			} else if a.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectID != nil && b.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectID != nil {
+				if *a.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectID != *b.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectID {
+					delta.Add("Spec.DomainSettings.UnifiedStudioSettings.ProjectID", a.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectID, b.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectID)
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectS3Path, b.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectS3Path) {
+				delta.Add("Spec.DomainSettings.UnifiedStudioSettings.ProjectS3Path", a.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectS3Path, b.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectS3Path)
+			} else if a.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectS3Path != nil && b.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectS3Path != nil {
+				if *a.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectS3Path != *b.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectS3Path {
+					delta.Add("Spec.DomainSettings.UnifiedStudioSettings.ProjectS3Path", a.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectS3Path, b.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectS3Path)
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationARN, b.ko.Spec.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationARN) {
+				delta.Add("Spec.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationARN", a.ko.Spec.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationARN, b.ko.Spec.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationARN)
+			} else if a.ko.Spec.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationARN != nil && b.ko.Spec.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationARN != nil {
+				if *a.ko.Spec.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationARN != *b.ko.Spec.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationARN {
+					delta.Add("Spec.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationARN", a.ko.Spec.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationARN, b.ko.Spec.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationARN)
+				}
+			}
+			if ackcompare.HasNilDifference(a.ko.Spec.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess, b.ko.Spec.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess) {
+				delta.Add("Spec.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess", a.ko.Spec.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess, b.ko.Spec.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess)
+			} else if a.ko.Spec.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess != nil && b.ko.Spec.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess != nil {
+				if *a.ko.Spec.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess != *b.ko.Spec.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess {
+					delta.Add("Spec.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess", a.ko.Spec.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess, b.ko.Spec.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess)
+				}
 			}
 		}
 	}

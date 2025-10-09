@@ -240,6 +240,20 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		res.OnStart = f2
 	}
+	if r.ko.Spec.Tags != nil {
+		f3 := []svcsdktypes.Tag{}
+		for _, f3iter := range r.ko.Spec.Tags {
+			f3elem := &svcsdktypes.Tag{}
+			if f3iter.Key != nil {
+				f3elem.Key = f3iter.Key
+			}
+			if f3iter.Value != nil {
+				f3elem.Value = f3iter.Value
+			}
+			f3 = append(f3, *f3elem)
+		}
+		res.Tags = f3
+	}
 
 	return res, nil
 }

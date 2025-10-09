@@ -76,8 +76,19 @@ type Alarm struct {
 	AlarmName *string `json:"alarmName,omitempty"`
 }
 
+// The details of the alarm to monitor during the AMI update.
+type AlarmDetails struct {
+	AlarmName *string `json:"alarmName,omitempty"`
+}
+
 // Specifies the training algorithm to use in a CreateTrainingJob (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingJob.html)
 // request.
+//
+// SageMaker uses its own SageMaker account credentials to pull and access built-in
+// algorithms so built-in algorithms are universally accessible across all Amazon
+// Web Services accounts. As a result, built-in algorithms have standard, unrestricted
+// access. You cannot restrict built-in algorithms using IAM roles. Use custom
+// algorithms if you require specific access controls.
 //
 // For more information about algorithms provided by SageMaker, see Algorithms
 // (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html). For information
@@ -171,20 +182,26 @@ type AnnotationConsolidationConfig struct {
 	AnnotationConsolidationLambdaARN *string `json:"annotationConsolidationLambdaARN,omitempty"`
 }
 
-// Details about an Amazon SageMaker app.
+// Details about an Amazon SageMaker AI app.
 type AppDetails struct {
 	AppName      *string      `json:"appName,omitempty"`
 	AppType      *string      `json:"appType,omitempty"`
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	DomainID     *string      `json:"domainID,omitempty"`
-	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
-	// the instance type that the version runs on.
+	// Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+	// and the instance type that the version runs on.
+	//
+	// When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+	// is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+	// already exists in the ResourceSpec because SageMakerImageVersionArn always
+	// takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+	// None as the value.
 	ResourceSpec    *ResourceSpec `json:"resourceSpec,omitempty"`
 	Status          *string       `json:"status,omitempty"`
 	UserProfileName *string       `json:"userProfileName,omitempty"`
 }
 
-// The configuration for running a SageMaker image as a KernelGateway app.
+// The configuration for running a SageMaker AI image as a KernelGateway app.
 type AppImageConfigDetails struct {
 	AppImageConfigName *string      `json:"appImageConfigName,omitempty"`
 	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
@@ -216,8 +233,7 @@ type ArtifactSummary struct {
 // entity that links other lineage or experiment entities. An example would
 // be an association between a training job and a model.
 type AssociationSummary struct {
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	CreatedBy       *UserContext `json:"createdBy,omitempty"`
 	CreationTime    *metav1.Time `json:"creationTime,omitempty"`
 	DestinationName *string      `json:"destinationName,omitempty"`
@@ -399,6 +415,18 @@ type Autotune struct {
 	Mode *string `json:"mode,omitempty"`
 }
 
+// Information about an error that occurred during the node addition operation.
+type BatchAddClusterNodesError struct {
+	InstanceGroupName *string `json:"instanceGroupName,omitempty"`
+	Message           *string `json:"message,omitempty"`
+}
+
+// Information about an error that occurred when attempting to delete a node
+// identified by its NodeLogicalId.
+type BatchDeleteClusterNodeLogicalIDsError struct {
+	Message *string `json:"message,omitempty"`
+}
+
 // Represents an error encountered when deleting a node from a SageMaker HyperPod
 // cluster.
 type BatchDeleteClusterNodesError struct {
@@ -458,6 +486,12 @@ type CallbackStepMetadata struct {
 	SQSQueueURL *string `json:"sqsQueueURL,omitempty"`
 }
 
+// Information about the Capacity Reservation used by an instance or instance
+// group.
+type CapacityReservation struct {
+	ARN *string `json:"arn,omitempty"`
+}
+
 // Specifies the type and size of the endpoint capacity to activate for a blue/green
 // deployment, a rolling deployment, or a rollback strategy. You can specify
 // your batches as either instance count or the overall percentage or your fleet.
@@ -471,8 +505,8 @@ type CapacitySize struct {
 }
 
 // Configuration specifying how to treat different headers. If no headers are
-// specified Amazon SageMaker will by default base64 encode when capturing the
-// data.
+// specified Amazon SageMaker AI will by default base64 encode when capturing
+// the data.
 type CaptureContentTypeHeader struct {
 	CsvContentTypes  []*string `json:"csvContentTypes,omitempty"`
 	JSONContentTypes []*string `json:"jsonContentTypes,omitempty"`
@@ -492,6 +526,18 @@ type CategoricalParameterRange struct {
 // Defines the possible values for a categorical hyperparameter.
 type CategoricalParameterRangeSpecification struct {
 	Values []*string `json:"values,omitempty"`
+}
+
+// The CloudFormation template provider configuration for creating infrastructure
+// resources.
+type CfnCreateTemplateProvider struct {
+	RoleARN *string `json:"roleARN,omitempty"`
+}
+
+// Details about a CloudFormation template provider configuration and associated
+// provisioning information.
+type CfnTemplateProviderDetail struct {
+	RoleARN *string `json:"roleARN,omitempty"`
 }
 
 // A channel is a named input source that training algorithms can consume.
@@ -599,6 +645,34 @@ type ClarifyShapBaselineConfig struct {
 	ShapBaselineURI *string `json:"shapBaselineURI,omitempty"`
 }
 
+// The autoscaling configuration and status information for a HyperPod cluster.
+type ClusterAutoScalingConfigOutput struct {
+	FailureMessage *string `json:"failureMessage,omitempty"`
+}
+
+// Defines the configuration for attaching an additional Amazon Elastic Block
+// Store (EBS) volume to each instance of the SageMaker HyperPod cluster instance
+// group. To learn more, see SageMaker HyperPod release notes: June 20, 2024
+// (https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod-release-notes.html#sagemaker-hyperpod-release-notes-20240620).
+type ClusterEBSVolumeConfig struct {
+	RootVolume     *bool   `json:"rootVolume,omitempty"`
+	VolumeKMSKeyID *string `json:"volumeKMSKeyID,omitempty"`
+}
+
+// Detailed information about a specific event in a HyperPod cluster.
+type ClusterEventDetail struct {
+	Description *string      `json:"description,omitempty"`
+	EventTime   *metav1.Time `json:"eventTime,omitempty"`
+	InstanceID  *string      `json:"instanceID,omitempty"`
+}
+
+// A summary of an event in a HyperPod cluster.
+type ClusterEventSummary struct {
+	Description *string      `json:"description,omitempty"`
+	EventTime   *metav1.Time `json:"eventTime,omitempty"`
+	InstanceID  *string      `json:"instanceID,omitempty"`
+}
+
 // Details of an instance group in a SageMaker HyperPod cluster.
 type ClusterInstanceGroupDetails struct {
 	ExecutionRole *string `json:"executionRole,omitempty"`
@@ -629,11 +703,19 @@ type ClusterLifeCycleConfig struct {
 	SourceS3URI *string `json:"sourceS3URI,omitempty"`
 }
 
+// Metadata information about a HyperPod cluster showing information about the
+// cluster level operations, such as creating, updating, and deleting.
+type ClusterMetadata struct {
+	FailureMessage *string `json:"failureMessage,omitempty"`
+	SlrAccessEntry *string `json:"slrAccessEntry,omitempty"`
+}
+
 // Details of an instance (also called a node interchangeably) in a SageMaker
 // HyperPod cluster.
 type ClusterNodeDetails struct {
-	InstanceID *string      `json:"instanceID,omitempty"`
-	LaunchTime *metav1.Time `json:"launchTime,omitempty"`
+	InstanceID             *string      `json:"instanceID,omitempty"`
+	LastSoftwareUpdateTime *metav1.Time `json:"lastSoftwareUpdateTime,omitempty"`
+	LaunchTime             *metav1.Time `json:"launchTime,omitempty"`
 	// Specifies an Amazon Virtual Private Cloud (VPC) that your SageMaker jobs,
 	// hosted models, and compute resources have access to. You can control access
 	// to and from your resources by configuring a VPC. For more information, see
@@ -644,8 +726,38 @@ type ClusterNodeDetails struct {
 // Lists a summary of the properties of an instance (also called a node interchangeably)
 // of a SageMaker HyperPod cluster.
 type ClusterNodeSummary struct {
-	InstanceID *string      `json:"instanceID,omitempty"`
-	LaunchTime *metav1.Time `json:"launchTime,omitempty"`
+	InstanceID             *string      `json:"instanceID,omitempty"`
+	LastSoftwareUpdateTime *metav1.Time `json:"lastSoftwareUpdateTime,omitempty"`
+	LaunchTime             *metav1.Time `json:"launchTime,omitempty"`
+	NodeLogicalID          *string      `json:"nodeLogicalID,omitempty"`
+}
+
+// The instance group details of the restricted instance group (RIG).
+type ClusterRestrictedInstanceGroupDetails struct {
+	ExecutionRole *string `json:"executionRole,omitempty"`
+	// Specifies an Amazon Virtual Private Cloud (VPC) that your SageMaker jobs,
+	// hosted models, and compute resources have access to. You can control access
+	// to and from your resources by configuring a VPC. For more information, see
+	// Give SageMaker Access to Resources in your Amazon VPC (https://docs.aws.amazon.com/sagemaker/latest/dg/infrastructure-give-access.html).
+	OverrideVPCConfig *VPCConfig `json:"overrideVPCConfig,omitempty"`
+}
+
+// The specifications of a restricted instance group that you need to define.
+type ClusterRestrictedInstanceGroupSpecification struct {
+	ExecutionRole *string `json:"executionRole,omitempty"`
+	// Specifies an Amazon Virtual Private Cloud (VPC) that your SageMaker jobs,
+	// hosted models, and compute resources have access to. You can control access
+	// to and from your resources by configuring a VPC. For more information, see
+	// Give SageMaker Access to Resources in your Amazon VPC (https://docs.aws.amazon.com/sagemaker/latest/dg/infrastructure-give-access.html).
+	OverrideVPCConfig *VPCConfig `json:"overrideVPCConfig,omitempty"`
+}
+
+// Summary of the cluster policy.
+type ClusterSchedulerConfigSummary struct {
+	ClusterSchedulerConfigVersion *int64       `json:"clusterSchedulerConfigVersion,omitempty"`
+	CreationTime                  *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime              *metav1.Time `json:"lastModifiedTime,omitempty"`
+	Name                          *string      `json:"name,omitempty"`
 }
 
 // Lists a summary of the properties of a SageMaker HyperPod cluster.
@@ -658,8 +770,14 @@ type ClusterSummary struct {
 // For more information about Code Editor, see Get started with Code Editor
 // in Amazon SageMaker (https://docs.aws.amazon.com/sagemaker/latest/dg/code-editor.html).
 type CodeEditorAppSettings struct {
-	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
-	// the instance type that the version runs on.
+	// Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+	// and the instance type that the version runs on.
+	//
+	// When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+	// is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+	// already exists in the ResourceSpec because SageMakerImageVersionArn always
+	// takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+	// None as the value.
 	DefaultResourceSpec *ResourceSpec `json:"defaultResourceSpec,omitempty"`
 	LifecycleConfigARNs []*string     `json:"lifecycleConfigARNs,omitempty"`
 }
@@ -691,6 +809,14 @@ type CompilationJobSummary struct {
 	CompilationStartTime *metav1.Time `json:"compilationStartTime,omitempty"`
 	CreationTime         *metav1.Time `json:"creationTime,omitempty"`
 	LastModifiedTime     *metav1.Time `json:"lastModifiedTime,omitempty"`
+}
+
+// Summary of the compute allocation definition.
+type ComputeQuotaSummary struct {
+	ComputeQuotaVersion *int64       `json:"computeQuotaVersion,omitempty"`
+	CreationTime        *metav1.Time `json:"creationTime,omitempty"`
+	LastModifiedTime    *metav1.Time `json:"lastModifiedTime,omitempty"`
+	Name                *string      `json:"name,omitempty"`
 }
 
 // Describes the container, as part of model definition.
@@ -741,16 +867,21 @@ type ContinuousParameterRangeSpecification struct {
 }
 
 // The settings for assigning a custom file system to a user profile or space
-// for an Amazon SageMaker Domain. Permitted users can access this file system
-// in Amazon SageMaker Studio.
+// for an Amazon SageMaker AI Domain. Permitted users can access this file system
+// in Amazon SageMaker AI Studio.
 type CustomFileSystemConfig struct {
 	// The settings for assigning a custom Amazon EFS file system to a user profile
-	// or space for an Amazon SageMaker Domain.
+	// or space for an Amazon SageMaker AI Domain.
 	EFSFileSystemConfig *EFSFileSystemConfig `json:"efsFileSystemConfig,omitempty"`
+	// The settings for assigning a custom Amazon FSx for Lustre file system to
+	// a user profile or space for an Amazon SageMaker Domain.
+	FSxLustreFileSystemConfig *FSxLustreFileSystemConfig `json:"fSxLustreFileSystemConfig,omitempty"`
+	// Configuration for the custom Amazon S3 file system.
+	S3FileSystemConfig *S3FileSystemConfig `json:"s3FileSystemConfig,omitempty"`
 }
 
-// A custom SageMaker image. For more information, see Bring your own SageMaker
-// image (https://docs.aws.amazon.com/sagemaker/latest/dg/studio-byoi.html).
+// A custom SageMaker AI image. For more information, see Bring your own SageMaker
+// AI image (https://docs.aws.amazon.com/sagemaker/latest/dg/studio-byoi.html).
 type CustomImage struct {
 	AppImageConfigName *string `json:"appImageConfigName,omitempty"`
 	ImageName          *string `json:"imageName,omitempty"`
@@ -769,11 +900,11 @@ type CustomizedMetricSpecification struct {
 	Namespace  *string `json:"namespace,omitempty"`
 }
 
-// Configuration to control how SageMaker captures inference data.
+// Configuration to control how SageMaker AI captures inference data.
 type DataCaptureConfig struct {
 	// Configuration specifying how to treat different headers. If no headers are
-	// specified Amazon SageMaker will by default base64 encode when capturing the
-	// data.
+	// specified Amazon SageMaker AI will by default base64 encode when capturing
+	// the data.
 	CaptureContentTypeHeader  *CaptureContentTypeHeader `json:"captureContentTypeHeader,omitempty"`
 	CaptureOptions            []*CaptureOption          `json:"captureOptions,omitempty"`
 	DestinationS3URI          *string                   `json:"destinationS3URI,omitempty"`
@@ -1012,6 +1143,7 @@ type DirectDeploySettings struct {
 // A collection of settings that configure the domain's Docker interaction.
 type DockerSettings struct {
 	EnableDockerAccess     *string   `json:"enableDockerAccess,omitempty"`
+	RootlessDocker         *string   `json:"rootlessDocker,omitempty"`
 	VPCOnlyTrustedAccounts []*string `json:"vpcOnlyTrustedAccounts,omitempty"`
 }
 
@@ -1031,10 +1163,18 @@ type DomainDetails struct {
 type DomainSettings struct {
 	// A collection of settings that configure the domain's Docker interaction.
 	DockerSettings *DockerSettings `json:"dockerSettings,omitempty"`
+	IPAddressType  *string         `json:"ipAddressType,omitempty"`
 	// A collection of settings that configure the RStudioServerPro Domain-level
 	// app.
 	RStudioServerProDomainSettings *RStudioServerProDomainSettings `json:"rStudioServerProDomainSettings,omitempty"`
 	SecurityGroupIDs               []*string                       `json:"securityGroupIDs,omitempty"`
+	// The Trusted Identity Propagation (TIP) settings for the SageMaker domain.
+	// These settings determine how user identities from IAM Identity Center are
+	// propagated through the domain to TIP enabled Amazon Web Services services.
+	TrustedIdentityPropagationSettings *TrustedIdentityPropagationSettings `json:"trustedIdentityPropagationSettings,omitempty"`
+	// The settings that apply to an Amazon SageMaker AI domain when you use it
+	// in Amazon SageMaker Unified Studio.
+	UnifiedStudioSettings *UnifiedStudioSettings `json:"unifiedStudioSettings,omitempty"`
 }
 
 // A collection of Domain configuration settings to update.
@@ -1044,10 +1184,18 @@ type DomainSettingsForUpdate struct {
 	AmazonQSettings *AmazonQSettings `json:"amazonQSettings,omitempty"`
 	// A collection of settings that configure the domain's Docker interaction.
 	DockerSettings *DockerSettings `json:"dockerSettings,omitempty"`
+	IPAddressType  *string         `json:"ipAddressType,omitempty"`
 	// A collection of settings that update the current configuration for the RStudioServerPro
 	// Domain-level app.
 	RStudioServerProDomainSettingsForUpdate *RStudioServerProDomainSettingsForUpdate `json:"rStudioServerProDomainSettingsForUpdate,omitempty"`
 	SecurityGroupIDs                        []*string                                `json:"securityGroupIDs,omitempty"`
+	// The Trusted Identity Propagation (TIP) settings for the SageMaker domain.
+	// These settings determine how user identities from IAM Identity Center are
+	// propagated through the domain to TIP enabled Amazon Web Services services.
+	TrustedIdentityPropagationSettings *TrustedIdentityPropagationSettings `json:"trustedIdentityPropagationSettings,omitempty"`
+	// The settings that apply to an Amazon SageMaker AI domain when you use it
+	// in Amazon SageMaker Unified Studio.
+	UnifiedStudioSettings *UnifiedStudioSettings `json:"unifiedStudioSettings,omitempty"`
 }
 
 // Represents the drift check baselines that can be used when the model monitor
@@ -1120,15 +1268,23 @@ type EBSStorageSettings struct {
 	EBSVolumeSizeInGb *int64 `json:"ebsVolumeSizeInGb,omitempty"`
 }
 
+// The EC2 capacity reservations that are shared to an ML capacity reservation.
+type EC2CapacityReservation struct {
+	AvailableInstanceCount   *int64  `json:"availableInstanceCount,omitempty"`
+	EC2CapacityReservationID *string `json:"ec2CapacityReservationID,omitempty"`
+	TotalInstanceCount       *int64  `json:"totalInstanceCount,omitempty"`
+	UsedByCurrentEndpoint    *int64  `json:"usedByCurrentEndpoint,omitempty"`
+}
+
 // A file system, created by you in Amazon EFS, that you assign to a user profile
-// or space for an Amazon SageMaker Domain. Permitted users can access this
-// file system in Amazon SageMaker Studio.
+// or space for an Amazon SageMaker AI Domain. Permitted users can access this
+// file system in Amazon SageMaker AI Studio.
 type EFSFileSystem struct {
 	FileSystemID *string `json:"fileSystemID,omitempty"`
 }
 
 // The settings for assigning a custom Amazon EFS file system to a user profile
-// or space for an Amazon SageMaker Domain.
+// or space for an Amazon SageMaker AI Domain.
 type EFSFileSystemConfig struct {
 	FileSystemID   *string `json:"fileSystemID,omitempty"`
 	FileSystemPath *string `json:"fileSystemPath,omitempty"`
@@ -1309,6 +1465,11 @@ type Endpoint_SDK struct {
 	Tags                     []*Tag                      `json:"tags,omitempty"`
 }
 
+// The configuration details for the restricted instance groups (RIG) environment.
+type EnvironmentConfigDetails struct {
+	S3OutputPath *string `json:"s3OutputPath,omitempty"`
+}
+
 // A list of environment parameters suggested by the Amazon SageMaker Inference
 // Recommender.
 type EnvironmentParameter struct {
@@ -1318,16 +1479,15 @@ type EnvironmentParameter struct {
 }
 
 // The properties of an experiment as returned by the Search (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_Search.html)
+// API. For information about experiments, see the CreateExperiment (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateExperiment.html)
 // API.
 type Experiment struct {
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	CreatedBy      *UserContext `json:"createdBy,omitempty"`
 	CreationTime   *metav1.Time `json:"creationTime,omitempty"`
 	DisplayName    *string      `json:"displayName,omitempty"`
 	ExperimentName *string      `json:"experimentName,omitempty"`
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	Tags             []*Tag       `json:"tags,omitempty"`
@@ -1361,6 +1521,18 @@ type ExperimentSummary struct {
 type Explainability struct {
 	// Details about the metrics source.
 	Report *MetricsSource `json:"report,omitempty"`
+}
+
+// A custom file system in Amazon FSx for Lustre.
+type FSxLustreFileSystem struct {
+	FileSystemID *string `json:"fileSystemID,omitempty"`
+}
+
+// The settings for assigning a custom Amazon FSx for Lustre file system to
+// a user profile or space for an Amazon SageMaker Domain.
+type FSxLustreFileSystemConfig struct {
+	FileSystemID   *string `json:"fileSystemID,omitempty"`
+	FileSystemPath *string `json:"fileSystemPath,omitempty"`
 }
 
 // The container for the metadata for Fail step.
@@ -1487,9 +1659,19 @@ type GenerativeAiSettings struct {
 	AmazonBedrockRoleARN *string `json:"amazonBedrockRoleARN,omitempty"`
 }
 
+// The configuration for a private hub model reference that points to a public
+// SageMaker JumpStart model.
+//
+// For more information about private hubs, see Private curated hubs for foundation
+// model access control in JumpStart (https://docs.aws.amazon.com/sagemaker/latest/dg/jumpstart-curated-hubs.html).
+type HubAccessConfig struct {
+	HubContentARN *string `json:"hubContentARN,omitempty"`
+}
+
 // Information about hub content.
 type HubContentInfo struct {
 	CreationTime         *metav1.Time `json:"creationTime,omitempty"`
+	HubContentARN        *string      `json:"hubContentARN,omitempty"`
 	OriginalCreationTime *metav1.Time `json:"originalCreationTime,omitempty"`
 }
 
@@ -2264,9 +2446,9 @@ type IdentityProviderOAuthSetting struct {
 	Status *string `json:"status,omitempty"`
 }
 
-// A SageMaker image. A SageMaker image represents a set of container images
-// that are derived from a common base container image. Each of these container
-// images is represented by a SageMaker ImageVersion.
+// A SageMaker AI image. A SageMaker AI image represents a set of container
+// images that are derived from a common base container image. Each of these
+// container images is represented by a SageMaker AI ImageVersion.
 type Image struct {
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
 	FailureReason    *string      `json:"failureReason,omitempty"`
@@ -2287,7 +2469,7 @@ type ImageConfig struct {
 	RepositoryAuthConfig *RepositoryAuthConfig `json:"repositoryAuthConfig,omitempty"`
 }
 
-// A version of a SageMaker Image. A version represents an existing container
+// A version of a SageMaker AI Image. A version represents an existing container
 // image.
 type ImageVersion struct {
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
@@ -2296,6 +2478,22 @@ type ImageVersion struct {
 	ImageVersionARN  *string      `json:"imageVersionARN,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	Version          *int64       `json:"version,omitempty"`
+}
+
+// Specifies the type and size of the endpoint capacity to activate for a rolling
+// deployment or a rollback strategy. You can specify your batches as either
+// of the following:
+//
+//   - A count of inference component copies
+//
+//   - The overall percentage or your fleet
+//
+// For a rollback strategy, if you don't specify the fields in this object,
+// or if you set the Value parameter to 100%, then SageMaker AI uses a blue/green
+// rollback strategy and rolls all traffic back to the blue fleet.
+type InferenceComponentCapacitySize struct {
+	Type  *string `json:"type_,omitempty"`
+	Value *int64  `json:"value,omitempty"`
 }
 
 // Defines the compute resources to allocate to run a model, plus any adapter
@@ -2330,6 +2528,48 @@ type InferenceComponentContainerSpecificationSummary struct {
 	// in the Amazon ECR User Guide.
 	DeployedImage *DeployedImage     `json:"deployedImage,omitempty"`
 	Environment   map[string]*string `json:"environment,omitempty"`
+}
+
+// The deployment configuration for an endpoint that hosts inference components.
+// The configuration includes the desired deployment strategy and rollback settings.
+type InferenceComponentDeploymentConfig struct {
+	// Automatic rollback configuration for handling endpoint deployment failures
+	// and recovery.
+	AutoRollbackConfiguration *AutoRollbackConfig `json:"autoRollbackConfiguration,omitempty"`
+	// Specifies a rolling deployment strategy for updating a SageMaker AI inference
+	// component.
+	RollingUpdatePolicy *InferenceComponentRollingUpdatePolicy `json:"rollingUpdatePolicy,omitempty"`
+}
+
+// Specifies a rolling deployment strategy for updating a SageMaker AI inference
+// component.
+type InferenceComponentRollingUpdatePolicy struct {
+	// Specifies the type and size of the endpoint capacity to activate for a rolling
+	// deployment or a rollback strategy. You can specify your batches as either
+	// of the following:
+	//
+	//    * A count of inference component copies
+	//
+	//    * The overall percentage or your fleet
+	//
+	// For a rollback strategy, if you don't specify the fields in this object,
+	// or if you set the Value parameter to 100%, then SageMaker AI uses a blue/green
+	// rollback strategy and rolls all traffic back to the blue fleet.
+	MaximumBatchSize                 *InferenceComponentCapacitySize `json:"maximumBatchSize,omitempty"`
+	MaximumExecutionTimeoutInSeconds *int64                          `json:"maximumExecutionTimeoutInSeconds,omitempty"`
+	// Specifies the type and size of the endpoint capacity to activate for a rolling
+	// deployment or a rollback strategy. You can specify your batches as either
+	// of the following:
+	//
+	//    * A count of inference component copies
+	//
+	//    * The overall percentage or your fleet
+	//
+	// For a rollback strategy, if you don't specify the fields in this object,
+	// or if you set the Value parameter to 100%, then SageMaker AI uses a blue/green
+	// rollback strategy and rolls all traffic back to the blue fleet.
+	RollbackMaximumBatchSize *InferenceComponentCapacitySize `json:"rollbackMaximumBatchSize,omitempty"`
+	WaitIntervalInSeconds    *int64                          `json:"waitIntervalInSeconds,omitempty"`
 }
 
 // Runtime settings for a model that is deployed with an inference component.
@@ -2401,8 +2641,8 @@ type InferenceExecutionConfig struct {
 // response data.
 type InferenceExperimentDataStorageConfig struct {
 	// Configuration specifying how to treat different headers. If no headers are
-	// specified Amazon SageMaker will by default base64 encode when capturing the
-	// data.
+	// specified Amazon SageMaker AI will by default base64 encode when capturing
+	// the data.
 	ContentType *CaptureContentTypeHeader `json:"contentType,omitempty"`
 	Destination *string                   `json:"destination,omitempty"`
 	KMSKey      *string                   `json:"kmsKey,omitempty"`
@@ -2422,6 +2662,12 @@ type InferenceExperimentSummary struct {
 	CreationTime     *metav1.Time `json:"creationTime,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	RoleARN          *string      `json:"roleARN,omitempty"`
+}
+
+// Configuration information specifying which hub contents have accessible deployment
+// options.
+type InferenceHubAccessConfig struct {
+	HubContentARN *string `json:"hubContentARN,omitempty"`
 }
 
 // The metrics for an existing endpoint compared in an Inference Recommender
@@ -2481,6 +2727,34 @@ type InstanceGroup struct {
 	InstanceType      *string `json:"instanceType,omitempty"`
 }
 
+// Metadata information about an instance group in a HyperPod cluster.
+type InstanceGroupMetadata struct {
+	AMIOverride        *string   `json:"amiOverride,omitempty"`
+	AvailabilityZoneID *string   `json:"availabilityZoneID,omitempty"`
+	FailureMessage     *string   `json:"failureMessage,omitempty"`
+	SecurityGroupIDs   []*string `json:"securityGroupIDs,omitempty"`
+	SubnetID           *string   `json:"subnetID,omitempty"`
+}
+
+// Metadata information about scaling operations for an instance group.
+type InstanceGroupScalingMetadata struct {
+	FailureMessage *string `json:"failureMessage,omitempty"`
+}
+
+// Metadata information about an instance in a HyperPod cluster.
+type InstanceMetadata struct {
+	CustomerEni       *string `json:"customerEni,omitempty"`
+	FailureMessage    *string `json:"failureMessage,omitempty"`
+	LcsExecutionState *string `json:"lcsExecutionState,omitempty"`
+}
+
+// Configuration for how instances are placed and allocated within UltraServers.
+// This is only applicable for UltraServer capacity.
+type InstancePlacementConfig struct {
+	EnableMultipleJobs      *bool                     `json:"enableMultipleJobs,omitempty"`
+	PlacementSpecifications []*PlacementSpecification `json:"placementSpecifications,omitempty"`
+}
+
 // For a hyperparameter of the integer type, specifies the range that a hyperparameter
 // tuning job searches.
 type IntegerParameterRange struct {
@@ -2499,16 +2773,28 @@ type IntegerParameterRangeSpecification struct {
 // The settings for the JupyterLab application.
 type JupyterLabAppSettings struct {
 	CustomImages []*CustomImage `json:"customImages,omitempty"`
-	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
-	// the instance type that the version runs on.
+	// Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+	// and the instance type that the version runs on.
+	//
+	// When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+	// is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+	// already exists in the ResourceSpec because SageMakerImageVersionArn always
+	// takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+	// None as the value.
 	DefaultResourceSpec *ResourceSpec `json:"defaultResourceSpec,omitempty"`
 	LifecycleConfigARNs []*string     `json:"lifecycleConfigARNs,omitempty"`
 }
 
 // The JupyterServer app settings.
 type JupyterServerAppSettings struct {
-	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
-	// the instance type that the version runs on.
+	// Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+	// and the instance type that the version runs on.
+	//
+	// When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+	// is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+	// already exists in the ResourceSpec because SageMakerImageVersionArn always
+	// takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+	// None as the value.
 	DefaultResourceSpec *ResourceSpec `json:"defaultResourceSpec,omitempty"`
 	LifecycleConfigARNs []*string     `json:"lifecycleConfigARNs,omitempty"`
 }
@@ -2522,8 +2808,14 @@ type KendraSettings struct {
 // The KernelGateway app settings.
 type KernelGatewayAppSettings struct {
 	CustomImages []*CustomImage `json:"customImages,omitempty"`
-	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
-	// the instance type that the version runs on.
+	// Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+	// and the instance type that the version runs on.
+	//
+	// When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+	// is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+	// already exists in the ResourceSpec because SageMakerImageVersionArn always
+	// takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+	// None as the value.
 	DefaultResourceSpec *ResourceSpec `json:"defaultResourceSpec,omitempty"`
 	LifecycleConfigARNs []*string     `json:"lifecycleConfigARNs,omitempty"`
 }
@@ -2782,12 +3074,10 @@ type ModelBiasJobInput struct {
 // An Amazon SageMaker Model Card.
 type ModelCard struct {
 	Content *string `json:"content,omitempty"`
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	CreatedBy    *UserContext `json:"createdBy,omitempty"`
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	LastModifiedBy        *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime      *metav1.Time `json:"lastModifiedTime,omitempty"`
 	ModelCardName         *string      `json:"modelCardName,omitempty"`
@@ -2870,12 +3160,10 @@ type ModelDashboardIndicatorAction struct {
 
 // The model card for a model displayed in the Amazon SageMaker Model Dashboard.
 type ModelDashboardModelCard struct {
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	CreatedBy    *UserContext `json:"createdBy,omitempty"`
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	ModelCardName    *string      `json:"modelCardName,omitempty"`
@@ -3021,10 +3309,9 @@ type ModelPackageGroupSummary struct {
 	ModelPackageGroupStatus      *string      `json:"modelPackageGroupStatus,omitempty"`
 }
 
-// A group of versioned models in the model registry.
+// A group of versioned models in the Model Registry.
 type ModelPackageGroup_SDK struct {
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	CreatedBy                    *UserContext `json:"createdBy,omitempty"`
 	CreationTime                 *metav1.Time `json:"creationTime,omitempty"`
 	ModelPackageGroupARN         *string      `json:"modelPackageGroupARN,omitempty"`
@@ -3069,14 +3356,16 @@ type ModelPackageStatusItem struct {
 
 // Provides summary information about a model package.
 type ModelPackageSummary struct {
-	CreationTime            *metav1.Time `json:"creationTime,omitempty"`
-	ModelApprovalStatus     *string      `json:"modelApprovalStatus,omitempty"`
-	ModelPackageARN         *string      `json:"modelPackageARN,omitempty"`
-	ModelPackageDescription *string      `json:"modelPackageDescription,omitempty"`
-	ModelPackageGroupName   *string      `json:"modelPackageGroupName,omitempty"`
-	ModelPackageName        *string      `json:"modelPackageName,omitempty"`
-	ModelPackageStatus      *string      `json:"modelPackageStatus,omitempty"`
-	ModelPackageVersion     *int64       `json:"modelPackageVersion,omitempty"`
+	CreationTime        *metav1.Time `json:"creationTime,omitempty"`
+	ModelApprovalStatus *string      `json:"modelApprovalStatus,omitempty"`
+	// A structure describing the current state of the model in its life cycle.
+	ModelLifeCycle          *ModelLifeCycle `json:"modelLifeCycle,omitempty"`
+	ModelPackageARN         *string         `json:"modelPackageARN,omitempty"`
+	ModelPackageDescription *string         `json:"modelPackageDescription,omitempty"`
+	ModelPackageGroupName   *string         `json:"modelPackageGroupName,omitempty"`
+	ModelPackageName        *string         `json:"modelPackageName,omitempty"`
+	ModelPackageStatus      *string         `json:"modelPackageStatus,omitempty"`
+	ModelPackageVersion     *int64          `json:"modelPackageVersion,omitempty"`
 }
 
 // Contains data, such as the inputs and targeted instance types that are used
@@ -3098,13 +3387,21 @@ type ModelPackageValidationSpecification struct {
 	ValidationRole     *string                          `json:"validationRole,omitempty"`
 }
 
-// A versioned model that can be deployed for SageMaker inference.
+// A container for your trained model that can be deployed for SageMaker inference.
+// This can include inference code, artifacts, and metadata. The model package
+// type can be one of the following.
+//
+//   - Versioned model: A part of a model package group in Model Registry.
+//
+//   - Unversioned model: Not part of a model package group and used in Amazon
+//     Web Services Marketplace.
+//
+// For more information, see CreateModelPackage (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateModelPackage.html).
 type ModelPackage_SDK struct {
 	AdditionalInferenceSpecifications []*AdditionalInferenceSpecificationDefinition `json:"additionalInferenceSpecifications,omitempty"`
 	ApprovalDescription               *string                                       `json:"approvalDescription,omitempty"`
 	CertifyForMarketplace             *bool                                         `json:"certifyForMarketplace,omitempty"`
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	CreatedBy                  *UserContext       `json:"createdBy,omitempty"`
 	CreationTime               *metav1.Time       `json:"creationTime,omitempty"`
 	CustomerMetadataProperties map[string]*string `json:"customerMetadataProperties,omitempty"`
@@ -3114,8 +3411,7 @@ type ModelPackage_SDK struct {
 	DriftCheckBaselines *DriftCheckBaselines `json:"driftCheckBaselines,omitempty"`
 	// Defines how to perform inference generation after a training job is run.
 	InferenceSpecification *InferenceSpecification `json:"inferenceSpecification,omitempty"`
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	// Metadata properties of the tracking entity, trial, or trial component.
@@ -3496,7 +3792,7 @@ type NotebookInstanceLifecycleHook struct {
 	Content *string `json:"content,omitempty"`
 }
 
-// Provides summary information for an SageMaker notebook instance.
+// Provides summary information for an SageMaker AI notebook instance.
 type NotebookInstanceSummary struct {
 	AdditionalCodeRepositories          []*string    `json:"additionalCodeRepositories,omitempty"`
 	CreationTime                        *metav1.Time `json:"creationTime,omitempty"`
@@ -3676,6 +3972,12 @@ type ParentHyperParameterTuningJob struct {
 	HyperParameterTuningJobName *string `json:"hyperParameterTuningJobName,omitempty"`
 }
 
+// A subset of information related to a SageMaker Partner AI App. This information
+// is used as part of the ListPartnerApps API response.
+type PartnerAppSummary struct {
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
+}
+
 // The summary of an in-progress deployment when an endpoint is creating or
 // updating with a new endpoint configuration.
 type PendingDeploymentSummary struct {
@@ -3738,13 +4040,11 @@ type PipelineExecutionSummary struct {
 
 // An execution of a pipeline.
 type PipelineExecution_SDK struct {
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	CreatedBy     *UserContext `json:"createdBy,omitempty"`
 	CreationTime  *metav1.Time `json:"creationTime,omitempty"`
 	FailureReason *string      `json:"failureReason,omitempty"`
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	// Configuration that controls the parallelism of the pipeline. By default,
@@ -3757,8 +4057,10 @@ type PipelineExecution_SDK struct {
 	PipelineExecutionDisplayName *string                   `json:"pipelineExecutionDisplayName,omitempty"`
 	PipelineExecutionStatus      *string                   `json:"pipelineExecutionStatus,omitempty"`
 	// Specifies the names of the experiment and trial created by a pipeline.
-	PipelineExperimentConfig *PipelineExperimentConfig `json:"pipelineExperimentConfig,omitempty"`
-	PipelineParameters       []*Parameter              `json:"pipelineParameters,omitempty"`
+	PipelineExperimentConfig   *PipelineExperimentConfig `json:"pipelineExperimentConfig,omitempty"`
+	PipelineParameters         []*Parameter              `json:"pipelineParameters,omitempty"`
+	PipelineVersionDisplayName *string                   `json:"pipelineVersionDisplayName,omitempty"`
+	PipelineVersionID          *int64                    `json:"pipelineVersionID,omitempty"`
 	// The selective execution configuration applied to the pipeline run.
 	SelectiveExecutionConfig *SelectiveExecutionConfig `json:"selectiveExecutionConfig,omitempty"`
 }
@@ -3781,14 +4083,39 @@ type PipelineSummary struct {
 	RoleARN             *string      `json:"roleARN,omitempty"`
 }
 
+// The version of the pipeline.
+type PipelineVersion struct {
+	// Information about the user who created or modified a SageMaker resource.
+	CreatedBy                                *UserContext `json:"createdBy,omitempty"`
+	CreationTime                             *metav1.Time `json:"creationTime,omitempty"`
+	LastExecutedPipelineExecutionARN         *string      `json:"lastExecutedPipelineExecutionARN,omitempty"`
+	LastExecutedPipelineExecutionDisplayName *string      `json:"lastExecutedPipelineExecutionDisplayName,omitempty"`
+	LastExecutedPipelineExecutionStatus      *string      `json:"lastExecutedPipelineExecutionStatus,omitempty"`
+	// Information about the user who created or modified a SageMaker resource.
+	LastModifiedBy             *UserContext `json:"lastModifiedBy,omitempty"`
+	LastModifiedTime           *metav1.Time `json:"lastModifiedTime,omitempty"`
+	PipelineARN                *string      `json:"pipelineARN,omitempty"`
+	PipelineVersionDescription *string      `json:"pipelineVersionDescription,omitempty"`
+	PipelineVersionDisplayName *string      `json:"pipelineVersionDisplayName,omitempty"`
+	PipelineVersionID          *int64       `json:"pipelineVersionID,omitempty"`
+}
+
+// The summary of the pipeline version.
+type PipelineVersionSummary struct {
+	CreationTime                      *metav1.Time `json:"creationTime,omitempty"`
+	LastExecutionPipelineExecutionARN *string      `json:"lastExecutionPipelineExecutionARN,omitempty"`
+	PipelineARN                       *string      `json:"pipelineARN,omitempty"`
+	PipelineVersionDescription        *string      `json:"pipelineVersionDescription,omitempty"`
+	PipelineVersionDisplayName        *string      `json:"pipelineVersionDisplayName,omitempty"`
+	PipelineVersionID                 *int64       `json:"pipelineVersionID,omitempty"`
+}
+
 // A SageMaker Model Building Pipeline instance.
 type Pipeline_SDK struct {
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	CreatedBy    *UserContext `json:"createdBy,omitempty"`
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	LastRunTime      *metav1.Time `json:"lastRunTime,omitempty"`
@@ -3805,9 +4132,22 @@ type Pipeline_SDK struct {
 	Tags                     []*Tag                    `json:"tags,omitempty"`
 }
 
+// Specifies how instances should be placed on a specific UltraServer.
+type PlacementSpecification struct {
+	InstanceCount *int64  `json:"instanceCount,omitempty"`
+	UltraServerID *string `json:"ultraServerID,omitempty"`
+}
+
 // A specification for a predefined metric.
 type PredefinedMetricSpecification struct {
 	PredefinedMetricType *string `json:"predefinedMetricType,omitempty"`
+}
+
+// Configuration for accessing hub content through presigned URLs, including
+// license agreement acceptance and URL validation settings.
+type PresignedURLAccessConfig struct {
+	AcceptEula    *bool   `json:"acceptEula,omitempty"`
+	ExpectedS3URL *string `json:"expectedS3URL,omitempty"`
 }
 
 // Configuration for the cluster used to run a processing job.
@@ -3958,8 +4298,11 @@ type ProcessingStoppingCondition struct {
 // to distribute traffic among the models by specifying variant weights. For
 // more information on production variants, check Production variants (https://docs.aws.amazon.com/sagemaker/latest/dg/model-ab-testing.html).
 type ProductionVariant struct {
-	AcceleratorType                             *string `json:"acceleratorType,omitempty"`
-	ContainerStartupHealthCheckTimeoutInSeconds *int64  `json:"containerStartupHealthCheckTimeoutInSeconds,omitempty"`
+	AcceleratorType *string `json:"acceleratorType,omitempty"`
+	// Settings for the capacity reservation for the compute instances that SageMaker
+	// AI reserves for an endpoint.
+	CapacityReservationConfig                   *ProductionVariantCapacityReservationConfig `json:"capacityReservationConfig,omitempty"`
+	ContainerStartupHealthCheckTimeoutInSeconds *int64                                      `json:"containerStartupHealthCheckTimeoutInSeconds,omitempty"`
 	// Specifies configuration for a core dump from the model container when the
 	// process crashes.
 	CoreDumpConfig       *ProductionVariantCoreDumpConfig `json:"coreDumpConfig,omitempty"`
@@ -3979,6 +4322,23 @@ type ProductionVariant struct {
 	ServerlessConfig *ProductionVariantServerlessConfig `json:"serverlessConfig,omitempty"`
 	VariantName      *string                            `json:"variantName,omitempty"`
 	VolumeSizeInGB   *int64                             `json:"volumeSizeInGB,omitempty"`
+}
+
+// Settings for the capacity reservation for the compute instances that SageMaker
+// AI reserves for an endpoint.
+type ProductionVariantCapacityReservationConfig struct {
+	CapacityReservationPreference *string `json:"capacityReservationPreference,omitempty"`
+	MlReservationARN              *string `json:"mlReservationARN,omitempty"`
+}
+
+// Details about an ML capacity reservation.
+type ProductionVariantCapacityReservationSummary struct {
+	AvailableInstanceCount        *int64                    `json:"availableInstanceCount,omitempty"`
+	CapacityReservationPreference *string                   `json:"capacityReservationPreference,omitempty"`
+	EC2CapacityReservations       []*EC2CapacityReservation `json:"ec2CapacityReservations,omitempty"`
+	MlReservationARN              *string                   `json:"mlReservationARN,omitempty"`
+	TotalInstanceCount            *int64                    `json:"totalInstanceCount,omitempty"`
+	UsedByCurrentEndpoint         *int64                    `json:"usedByCurrentEndpoint,omitempty"`
 }
 
 // Specifies configuration for a core dump from the model container when the
@@ -4028,7 +4388,9 @@ type ProductionVariantStatus struct {
 // API and the endpoint status is Updating, you get different desired and current
 // values.
 type ProductionVariantSummary struct {
-	CurrentInstanceCount *int64 `json:"currentInstanceCount,omitempty"`
+	// Details about an ML capacity reservation.
+	CapacityReservationConfig *ProductionVariantCapacityReservationSummary `json:"capacityReservationConfig,omitempty"`
+	CurrentInstanceCount      *int64                                       `json:"currentInstanceCount,omitempty"`
 	// Specifies the serverless configuration for an endpoint variant.
 	CurrentServerlessConfig *ProductionVariantServerlessConfig `json:"currentServerlessConfig,omitempty"`
 	CurrentWeight           *float64                           `json:"currentWeight,omitempty"`
@@ -4085,12 +4447,10 @@ type ProfilerRuleEvaluationStatus struct {
 
 // The properties of a project as returned by the Search API.
 type Project struct {
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	CreatedBy    *UserContext `json:"createdBy,omitempty"`
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	LastModifiedBy     *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime   *metav1.Time `json:"lastModifiedTime,omitempty"`
 	ProjectDescription *string      `json:"projectDescription,omitempty"`
@@ -4348,8 +4708,14 @@ type RStudioServerProAppSettings struct {
 // A collection of settings that configure the RStudioServerPro Domain-level
 // app.
 type RStudioServerProDomainSettings struct {
-	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
-	// the instance type that the version runs on.
+	// Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+	// and the instance type that the version runs on.
+	//
+	// When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+	// is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+	// already exists in the ResourceSpec because SageMakerImageVersionArn always
+	// takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+	// None as the value.
 	DefaultResourceSpec      *ResourceSpec `json:"defaultResourceSpec,omitempty"`
 	DomainExecutionRoleARN   *string       `json:"domainExecutionRoleARN,omitempty"`
 	RStudioConnectURL        *string       `json:"rStudioConnectURL,omitempty"`
@@ -4359,8 +4725,14 @@ type RStudioServerProDomainSettings struct {
 // A collection of settings that update the current configuration for the RStudioServerPro
 // Domain-level app.
 type RStudioServerProDomainSettingsForUpdate struct {
-	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
-	// the instance type that the version runs on.
+	// Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+	// and the instance type that the version runs on.
+	//
+	// When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+	// is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+	// already exists in the ResourceSpec because SageMakerImageVersionArn always
+	// takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+	// None as the value.
 	DefaultResourceSpec      *ResourceSpec `json:"defaultResourceSpec,omitempty"`
 	DomainExecutionRoleARN   *string       `json:"domainExecutionRoleARN,omitempty"`
 	RStudioConnectURL        *string       `json:"rStudioConnectURL,omitempty"`
@@ -4484,6 +4856,26 @@ type RepositoryAuthConfig struct {
 	RepositoryCredentialsProviderARN *string `json:"repositoryCredentialsProviderARN,omitempty"`
 }
 
+// Details about a reserved capacity offering for a training plan offering.
+//
+// For more information about how to reserve GPU capacity for your SageMaker
+// HyperPod clusters using Amazon SageMaker Training Plan, see CreateTrainingPlan
+// (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingPlan.html) .
+type ReservedCapacityOffering struct {
+	EndTime   *metav1.Time `json:"endTime,omitempty"`
+	StartTime *metav1.Time `json:"startTime,omitempty"`
+}
+
+// Details of a reserved capacity for the training plan.
+//
+// For more information about how to reserve GPU capacity for your SageMaker
+// HyperPod clusters using Amazon SageMaker Training Plan, see CreateTrainingPlan
+// (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingPlan.html) .
+type ReservedCapacitySummary struct {
+	EndTime   *metav1.Time `json:"endTime,omitempty"`
+	StartTime *metav1.Time `json:"startTime,omitempty"`
+}
+
 // A resource catalog containing all of the resources of a specific resource
 // type within a resource owner account. For an example on sharing the Amazon
 // SageMaker Feature Store DefaultFeatureGroupCatalog, see Share Amazon SageMaker
@@ -4498,7 +4890,10 @@ type ResourceCatalog struct {
 type ResourceConfig struct {
 	InstanceCount  *int64           `json:"instanceCount,omitempty"`
 	InstanceGroups []*InstanceGroup `json:"instanceGroups,omitempty"`
-	InstanceType   *string          `json:"instanceType,omitempty"`
+	// Configuration for how instances are placed and allocated within UltraServers.
+	// This is only applicable for UltraServer capacity.
+	InstancePlacementConfig *InstancePlacementConfig `json:"instancePlacementConfig,omitempty"`
+	InstanceType            *string                  `json:"instanceType,omitempty"`
 	// Optional. Customer requested period in seconds for which the Training cluster
 	// is kept alive after the job is finished.
 	KeepAlivePeriodInSeconds *int64  `json:"keepAlivePeriodInSeconds,omitempty"`
@@ -4521,8 +4916,14 @@ type ResourceLimits struct {
 	MaxParallelTrainingJobs *int64 `json:"maxParallelTrainingJobs,omitempty"`
 }
 
-// Specifies the ARN's of a SageMaker image and SageMaker image version, and
-// the instance type that the version runs on.
+// Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+// and the instance type that the version runs on.
+//
+// When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+// is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+// already exists in the ResourceSpec because SageMakerImageVersionArn always
+// takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+// None as the value.
 type ResourceSpec struct {
 	InstanceType               *string `json:"instanceType,omitempty"`
 	LifecycleConfigARN         *string `json:"lifecycleConfigARN,omitempty"`
@@ -4571,11 +4972,41 @@ type RollingUpdatePolicy struct {
 // Your input bucket must be in the same Amazon Web Services region as your
 // training job.
 type S3DataSource struct {
-	AttributeNames         []*string `json:"attributeNames,omitempty"`
-	InstanceGroupNames     []*string `json:"instanceGroupNames,omitempty"`
-	S3DataDistributionType *string   `json:"s3DataDistributionType,omitempty"`
-	S3DataType             *string   `json:"s3DataType,omitempty"`
-	S3URI                  *string   `json:"s3URI,omitempty"`
+	AttributeNames []*string `json:"attributeNames,omitempty"`
+	// The configuration for a private hub model reference that points to a public
+	// SageMaker JumpStart model.
+	//
+	// For more information about private hubs, see Private curated hubs for foundation
+	// model access control in JumpStart (https://docs.aws.amazon.com/sagemaker/latest/dg/jumpstart-curated-hubs.html).
+	HubAccessConfig    *HubAccessConfig `json:"hubAccessConfig,omitempty"`
+	InstanceGroupNames []*string        `json:"instanceGroupNames,omitempty"`
+	// The access configuration file to control access to the ML model. You can
+	// explicitly accept the model end-user license agreement (EULA) within the
+	// ModelAccessConfig.
+	//
+	//    * If you are a Jumpstart user, see the End-user license agreements (https://docs.aws.amazon.com/sagemaker/latest/dg/jumpstart-foundation-models-choose.html#jumpstart-foundation-models-choose-eula)
+	//    section for more details on accepting the EULA.
+	//
+	//    * If you are an AutoML user, see the Optional Parameters section of Create
+	//    an AutoML job to fine-tune text generation models using the API for details
+	//    on How to set the EULA acceptance when fine-tuning a model using the AutoML
+	//    API (https://docs.aws.amazon.com/sagemaker/latest/dg/autopilot-create-experiment-finetune-llms.html#autopilot-llms-finetuning-api-optional-params).
+	ModelAccessConfig      *ModelAccessConfig `json:"modelAccessConfig,omitempty"`
+	S3DataDistributionType *string            `json:"s3DataDistributionType,omitempty"`
+	S3DataType             *string            `json:"s3DataType,omitempty"`
+	S3URI                  *string            `json:"s3URI,omitempty"`
+}
+
+// A custom file system in Amazon S3. This is only supported in Amazon SageMaker
+// Unified Studio.
+type S3FileSystem struct {
+	S3URI *string `json:"s3URI,omitempty"`
+}
+
+// Configuration for the custom Amazon S3 file system.
+type S3FileSystemConfig struct {
+	MountPath *string `json:"mountPath,omitempty"`
+	S3URI     *string `json:"s3URI,omitempty"`
 }
 
 // Specifies the S3 location of ML model data to deploy.
@@ -4654,10 +5085,11 @@ type SelectiveExecutionResult struct {
 	SourcePipelineExecutionARN *string `json:"sourcePipelineExecutionARN,omitempty"`
 }
 
-// Specifies options for sharing Amazon SageMaker Studio notebooks. These settings
-// are specified as part of DefaultUserSettings when the CreateDomain API is
-// called, and as part of UserSettings when the CreateUserProfile API is called.
-// When SharingSettings is not specified, notebook sharing isn't allowed.
+// Specifies options for sharing Amazon SageMaker AI Studio notebooks. These
+// settings are specified as part of DefaultUserSettings when the CreateDomain
+// API is called, and as part of UserSettings when the CreateUserProfile API
+// is called. When SharingSettings is not specified, notebook sharing isn't
+// allowed.
 type SharingSettings struct {
 	NotebookOutputOption *string `json:"notebookOutputOption,omitempty"`
 	S3KMSKeyID           *string `json:"s3KMSKeyID,omitempty"`
@@ -4697,8 +5129,14 @@ type SourceAlgorithmSpecification struct {
 
 // The application settings for a Code Editor space.
 type SpaceCodeEditorAppSettings struct {
-	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
-	// the instance type that the version runs on.
+	// Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+	// and the instance type that the version runs on.
+	//
+	// When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+	// is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+	// already exists in the ResourceSpec because SageMakerImageVersionArn always
+	// takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+	// None as the value.
 	DefaultResourceSpec *ResourceSpec `json:"defaultResourceSpec,omitempty"`
 }
 
@@ -4711,8 +5149,14 @@ type SpaceDetails struct {
 
 // The settings for the JupyterLab application within a space.
 type SpaceJupyterLabAppSettings struct {
-	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
-	// the instance type that the version runs on.
+	// Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+	// and the instance type that the version runs on.
+	//
+	// When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+	// is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+	// already exists in the ResourceSpec because SageMakerImageVersionArn always
+	// takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+	// None as the value.
 	DefaultResourceSpec *ResourceSpec `json:"defaultResourceSpec,omitempty"`
 }
 
@@ -4723,11 +5167,14 @@ type SpaceSettings struct {
 	JupyterServerAppSettings *JupyterServerAppSettings `json:"jupyterServerAppSettings,omitempty"`
 	// The KernelGateway app settings.
 	KernelGatewayAppSettings *KernelGatewayAppSettings `json:"kernelGatewayAppSettings,omitempty"`
+	RemoteAccess             *string                   `json:"remoteAccess,omitempty"`
+	SpaceManagedResources    *string                   `json:"spaceManagedResources,omitempty"`
 }
 
 // Specifies summary information about the space settings.
 type SpaceSettingsSummary struct {
-	AppType *string `json:"appType,omitempty"`
+	AppType      *string `json:"appType,omitempty"`
+	RemoteAccess *string `json:"remoteAccess,omitempty"`
 }
 
 // Specifies a limit to how long a job can run. When the job reaches the time
@@ -4754,7 +5201,7 @@ type StoppingCondition struct {
 	MaxWaitTimeInSeconds    *int64 `json:"maxWaitTimeInSeconds,omitempty"`
 }
 
-// Details of the Amazon SageMaker Studio Lifecycle Configuration.
+// Details of the Amazon SageMaker AI Studio Lifecycle Configuration.
 type StudioLifecycleConfigDetails struct {
 	CreationTime             *metav1.Time `json:"creationTime,omitempty"`
 	LastModifiedTime         *metav1.Time `json:"lastModifiedTime,omitempty"`
@@ -4803,8 +5250,14 @@ type Tag struct {
 
 // The TensorBoard app settings.
 type TensorBoardAppSettings struct {
-	// Specifies the ARN's of a SageMaker image and SageMaker image version, and
-	// the instance type that the version runs on.
+	// Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,
+	// and the instance type that the version runs on.
+	//
+	// When both SageMakerImageVersionArn and SageMakerImageArn are passed, SageMakerImageVersionArn
+	// is used. Any updates to SageMakerImageArn will not take effect if SageMakerImageVersionArn
+	// already exists in the ResourceSpec because SageMakerImageVersionArn always
+	// takes precedence. To clear the value set for SageMakerImageVersionArn, pass
+	// None as the value.
 	DefaultResourceSpec *ResourceSpec `json:"defaultResourceSpec,omitempty"`
 }
 
@@ -5024,6 +5477,12 @@ type TrainingJob_SDK struct {
 	// Specifies the training algorithm to use in a CreateTrainingJob (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingJob.html)
 	// request.
 	//
+	// SageMaker uses its own SageMaker account credentials to pull and access built-in
+	// algorithms so built-in algorithms are universally accessible across all Amazon
+	// Web Services accounts. As a result, built-in algorithms have standard, unrestricted
+	// access. You cannot restrict built-in algorithms using IAM roles. Use custom
+	// algorithms if you require specific access controls.
+	//
 	// For more information about algorithms provided by SageMaker, see Algorithms
 	// (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html). For information
 	// about using your own algorithms, see Using Your Own Algorithms with Amazon
@@ -5122,6 +5581,28 @@ type TrainingJob_SDK struct {
 	// to and from your resources by configuring a VPC. For more information, see
 	// Give SageMaker Access to Resources in your Amazon VPC (https://docs.aws.amazon.com/sagemaker/latest/dg/infrastructure-give-access.html).
 	VPCConfig *VPCConfig `json:"vpcConfig,omitempty"`
+}
+
+// Details about a training plan offering.
+//
+// For more information about how to reserve GPU capacity for your SageMaker
+// HyperPod clusters using Amazon SageMaker Training Plan, see CreateTrainingPlan
+// (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingPlan.html) .
+type TrainingPlanOffering struct {
+	RequestedEndTimeBefore  *metav1.Time `json:"requestedEndTimeBefore,omitempty"`
+	RequestedStartTimeAfter *metav1.Time `json:"requestedStartTimeAfter,omitempty"`
+	UpfrontFee              *string      `json:"upfrontFee,omitempty"`
+}
+
+// Details of the training plan.
+//
+// For more information about how to reserve GPU capacity for your SageMaker
+// HyperPod clusters using Amazon SageMaker Training Plan, see CreateTrainingPlan
+// (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateTrainingPlan.html) .
+type TrainingPlanSummary struct {
+	EndTime    *metav1.Time `json:"endTime,omitempty"`
+	StartTime  *metav1.Time `json:"startTime,omitempty"`
+	UpfrontFee *string      `json:"upfrontFee,omitempty"`
 }
 
 // Defines how the algorithm is used for a training job.
@@ -5245,9 +5726,10 @@ type TransformOutput struct {
 // Describes the resources, including ML instance types and ML instance count,
 // to use for transform job.
 type TransformResources struct {
-	InstanceCount  *int64  `json:"instanceCount,omitempty"`
-	InstanceType   *string `json:"instanceType,omitempty"`
-	VolumeKMSKeyID *string `json:"volumeKMSKeyID,omitempty"`
+	InstanceCount       *int64  `json:"instanceCount,omitempty"`
+	InstanceType        *string `json:"instanceType,omitempty"`
+	TransformAMIVersion *string `json:"transformAMIVersion,omitempty"`
+	VolumeKMSKeyID      *string `json:"volumeKMSKeyID,omitempty"`
 }
 
 // Describes the S3 data source.
@@ -5259,14 +5741,12 @@ type TransformS3DataSource struct {
 // The properties of a trial as returned by the Search (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_Search.html)
 // API.
 type Trial struct {
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	CreatedBy      *UserContext `json:"createdBy,omitempty"`
 	CreationTime   *metav1.Time `json:"creationTime,omitempty"`
 	DisplayName    *string      `json:"displayName,omitempty"`
 	ExperimentName *string      `json:"experimentName,omitempty"`
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	// Metadata properties of the tracking entity, trial, or trial component.
@@ -5278,14 +5758,12 @@ type Trial struct {
 // The properties of a trial component as returned by the Search (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_Search.html)
 // API.
 type TrialComponent struct {
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	CreatedBy    *UserContext `json:"createdBy,omitempty"`
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	DisplayName  *string      `json:"displayName,omitempty"`
 	EndTime      *metav1.Time `json:"endTime,omitempty"`
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	LastModifiedBy   *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	// Metadata properties of the tracking entity, trial, or trial component.
@@ -5304,8 +5782,7 @@ type TrialComponentMetricSummary struct {
 
 // A short summary of a trial component.
 type TrialComponentSimpleSummary struct {
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	CreatedBy          *UserContext `json:"createdBy,omitempty"`
 	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
 	TrialComponentName *string      `json:"trialComponentName,omitempty"`
@@ -5315,14 +5792,12 @@ type TrialComponentSimpleSummary struct {
 // call the DescribeTrialComponent (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_DescribeTrialComponent.html)
 // API and provide the TrialComponentName.
 type TrialComponentSummary struct {
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	CreatedBy    *UserContext `json:"createdBy,omitempty"`
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	DisplayName  *string      `json:"displayName,omitempty"`
 	EndTime      *metav1.Time `json:"endTime,omitempty"`
-	// Information about the user who created or modified an experiment, trial,
-	// trial component, lineage group, project, or model card.
+	// Information about the user who created or modified a SageMaker resource.
 	LastModifiedBy     *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime   *metav1.Time `json:"lastModifiedTime,omitempty"`
 	StartTime          *metav1.Time `json:"startTime,omitempty"`
@@ -5337,6 +5812,13 @@ type TrialSummary struct {
 	DisplayName      *string      `json:"displayName,omitempty"`
 	LastModifiedTime *metav1.Time `json:"lastModifiedTime,omitempty"`
 	TrialName        *string      `json:"trialName,omitempty"`
+}
+
+// The Trusted Identity Propagation (TIP) settings for the SageMaker domain.
+// These settings determine how user identities from IAM Identity Center are
+// propagated through the domain to TIP enabled Amazon Web Services services.
+type TrustedIdentityPropagationSettings struct {
+	Status *string `json:"status,omitempty"`
 }
 
 // The job completion criteria.
@@ -5370,8 +5852,25 @@ type USD struct {
 	TenthFractionsOfACent *int64 `json:"tenthFractionsOfACent,omitempty"`
 }
 
-// Information about the user who created or modified an experiment, trial,
-// trial component, lineage group, project, or model card.
+// Contains information about the UltraServer object.
+type UltraServerInfo struct {
+	ID *string `json:"id,omitempty"`
+}
+
+// The settings that apply to an Amazon SageMaker AI domain when you use it
+// in Amazon SageMaker Unified Studio.
+type UnifiedStudioSettings struct {
+	DomainAccountID            *string `json:"domainAccountID,omitempty"`
+	DomainID                   *string `json:"domainID,omitempty"`
+	DomainRegion               *string `json:"domainRegion,omitempty"`
+	EnvironmentID              *string `json:"environmentID,omitempty"`
+	ProjectID                  *string `json:"projectID,omitempty"`
+	ProjectS3Path              *string `json:"projectS3Path,omitempty"`
+	SingleSignOnApplicationARN *string `json:"singleSignOnApplicationARN,omitempty"`
+	StudioWebPortalAccess      *string `json:"studioWebPortalAccess,omitempty"`
+}
+
+// Information about the user who created or modified a SageMaker resource.
 type UserContext struct {
 	DomainID *string `json:"domainID,omitempty"`
 	// The IAM Identity details associated with the user. These details are associated
@@ -5418,10 +5917,11 @@ type UserSettings struct {
 	// app.
 	RStudioServerProAppSettings *RStudioServerProAppSettings `json:"rStudioServerProAppSettings,omitempty"`
 	SecurityGroups              []*string                    `json:"securityGroups,omitempty"`
-	// Specifies options for sharing Amazon SageMaker Studio notebooks. These settings
-	// are specified as part of DefaultUserSettings when the CreateDomain API is
-	// called, and as part of UserSettings when the CreateUserProfile API is called.
-	// When SharingSettings is not specified, notebook sharing isn't allowed.
+	// Specifies options for sharing Amazon SageMaker AI Studio notebooks. These
+	// settings are specified as part of DefaultUserSettings when the CreateDomain
+	// API is called, and as part of UserSettings when the CreateUserProfile API
+	// is called. When SharingSettings is not specified, notebook sharing isn't
+	// allowed.
 	SharingSettings *SharingSettings `json:"sharingSettings,omitempty"`
 	// The default storage settings for a space.
 	SpaceStorageSettings *DefaultSpaceStorageSettings `json:"spaceStorageSettings,omitempty"`

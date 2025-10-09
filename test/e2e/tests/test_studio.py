@@ -10,23 +10,22 @@
 # on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
 # express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
-"""Integration tests for the SageMaker Studio.
-"""
+"""Integration tests for the SageMaker Studio."""
 
-import pytest
 import logging
+
 import boto3
-
-from acktest.resources import random_suffix_name
+import pytest
 from acktest.k8s import resource as k8s
-
-from e2e import (
-    create_sagemaker_resource,
-    delete_custom_resource,
-    wait_for_status,
-)
-from e2e.replacement_values import REPLACEMENT_VALUES
+from acktest.resources import random_suffix_name
+from e2e import create_sagemaker_resource, delete_custom_resource, wait_for_status
 from e2e.common import config as cfg
+from e2e.replacement_values import REPLACEMENT_VALUES
+from tests.test_feature_group import WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH
+
+STUDIO_WAIT_PERIOD = 150
+STUDIO_WAIT_LENGTH = 30
+STUDIO_STATUS_INSERVICE = "InService"
 
 
 def get_default_vpc():
@@ -115,21 +114,21 @@ def apply_app_yaml(domain_id, user_profile_name):
 
 
 def assert_domain_status_in_sync(domain_id, reference, expected_status):
-    sm_status = wait_for_status(expected_status, 10, 30, get_domain_sagemaker_status, domain_id)
-    k8s_status = wait_for_status(expected_status, 10, 30, get_k8s_resource_status, reference)
+    sm_status = wait_for_status(expected_status, WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH, get_domain_sagemaker_status, domain_id)
+    k8s_status = wait_for_status(expected_status, WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH, get_k8s_resource_status, reference)
     assert sm_status == k8s_status == expected_status
 
 
 def assert_user_profile_status_in_sync(domain_id, user_profile_name, reference, expected_status):
     sm_status = wait_for_status(
         expected_status,
-        10,
-        30,
+        WAIT_PERIOD_COUNT,
+        WAIT_PERIOD_LENGTH,
         get_user_profile_sagemaker_status,
         domain_id,
         user_profile_name,
     )
-    k8s_status = wait_for_status(expected_status, 10, 30, get_k8s_resource_status, reference)
+    k8s_status = wait_for_status(expected_status, WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH, get_k8s_resource_status, reference)
     assert sm_status == k8s_status == expected_status
 
 
@@ -138,15 +137,15 @@ def assert_app_status_in_sync(
 ):
     sm_status = wait_for_status(
         expected_status,
-        10,
-        30,
+        WAIT_PERIOD_COUNT,
+        WAIT_PERIOD_LENGTH,
         get_app_sagemaker_status,
         domain_id,
         user_profile_name,
         app_type,
         app_name,
     )
-    k8s_status = wait_for_status(expected_status, 10, 30, get_k8s_resource_status, reference)
+    k8s_status = wait_for_status(expected_status, WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH, get_k8s_resource_status, reference)
     assert sm_status == k8s_status == expected_status
 
 
@@ -209,11 +208,11 @@ def user_profile_fixture(domain_fixture):
     domain_id = domain_resource["status"].get("domainID", None)
     assert domain_id is not None
 
-    assert_domain_status_in_sync(domain_id, domain_reference, "InService")
+    assert_domain_status_in_sync(domain_id, domain_reference, STUDIO_STATUS_INSERVICE)
 
     domain_resource = patch_domain_kernel_instance(domain_reference, domain_spec, "ml.t3.large")
-    wait_for_status("ml.t3.large", 10, 30, get_domain_kernel_instance, domain_id)
-    assert_domain_status_in_sync(domain_id, domain_reference, "InService")
+    wait_for_status("ml.t3.large", WAIT_PERIOD_COUNT, WAIT_PERIOD_LENGTH, get_domain_kernel_instance, domain_id)
+    assert_domain_status_in_sync(domain_id, domain_reference, STUDIO_STATUS_INSERVICE)
 
     resource_name = random_suffix_name("profile", 15)
     (
@@ -261,7 +260,7 @@ def app_fixture(user_profile_fixture):
     domain_id = domain_resource["status"].get("domainID", None)
     user_profile_name = user_profile_resource["spec"]["userProfileName"]
     assert_user_profile_status_in_sync(
-        domain_id, user_profile_name, user_profile_reference, "InService"
+        domain_id, user_profile_name, user_profile_reference, STUDIO_STATUS_INSERVICE
     )
 
     user_profile_resource = patch_user_profile_kernel_instance(
@@ -269,14 +268,14 @@ def app_fixture(user_profile_fixture):
     )
     wait_for_status(
         "ml.t3.large",
-        10,
-        30,
+        WAIT_PERIOD_COUNT,
+        WAIT_PERIOD_LENGTH,
         get_user_profile_kernel_instance,
         domain_id,
         user_profile_name,
     )
     assert_user_profile_status_in_sync(
-        domain_id, user_profile_name, user_profile_reference, "InService"
+        domain_id, user_profile_name, user_profile_reference, STUDIO_STATUS_INSERVICE
     )
 
     (app_reference, app_resource, app_spec) = apply_app_yaml(domain_id, user_profile_name)
@@ -336,5 +335,5 @@ class TestDomain:
             app_type,
             app_name,
             app_reference,
-            "InService",
+            STUDIO_STATUS_INSERVICE,
         )
