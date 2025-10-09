@@ -873,11 +873,6 @@ type CustomFileSystemConfig struct {
 	// The settings for assigning a custom Amazon EFS file system to a user profile
 	// or space for an Amazon SageMaker AI Domain.
 	EFSFileSystemConfig *EFSFileSystemConfig `json:"efsFileSystemConfig,omitempty"`
-	// The settings for assigning a custom Amazon FSx for Lustre file system to
-	// a user profile or space for an Amazon SageMaker Domain.
-	FSxLustreFileSystemConfig *FSxLustreFileSystemConfig `json:"fSxLustreFileSystemConfig,omitempty"`
-	// Configuration for the custom Amazon S3 file system.
-	S3FileSystemConfig *S3FileSystemConfig `json:"s3FileSystemConfig,omitempty"`
 }
 
 // A custom SageMaker AI image. For more information, see Bring your own SageMaker
@@ -4997,16 +4992,9 @@ type S3DataSource struct {
 	S3URI                  *string            `json:"s3URI,omitempty"`
 }
 
-// A custom file system in Amazon S3. This is only supported in Amazon SageMaker
-// Unified Studio.
-type S3FileSystem struct {
-	S3URI *string `json:"s3URI,omitempty"`
-}
-
 // Configuration for the custom Amazon S3 file system.
 type S3FileSystemConfig struct {
 	MountPath *string `json:"mountPath,omitempty"`
-	S3URI     *string `json:"s3URI,omitempty"`
 }
 
 // Specifies the S3 location of ML model data to deploy.
