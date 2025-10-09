@@ -15,7 +15,6 @@ package pipeline_execution
 
 import (
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
-	"github.com/aws/aws-sdk-go-v2/aws"
 )
 
 // customSetDefaults sets the default fields for DirectInternetAccess and RootAccess.
@@ -23,9 +22,8 @@ func customSetDefaults(
 	a *resource,
 	b *resource,
 ) {
-	// PipelineVersion ID starts at 1.
-	DefaultPipelineVersionID := aws.Int64(1)
+	// PipelineVersion ID default if not specified.
 	if ackcompare.IsNil(a.ko.Spec.PipelineVersionID) && ackcompare.IsNotNil(b.ko.Spec.PipelineVersionID) {
-		a.ko.Spec.PipelineVersionID = DefaultPipelineVersionID
+		a.ko.Spec.PipelineVersionID = b.ko.Spec.PipelineVersionID
 	}
 }
