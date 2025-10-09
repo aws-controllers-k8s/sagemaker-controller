@@ -10,6 +10,7 @@
 // on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
 // express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
+
 package notebook_instance
 
 import (
@@ -35,6 +36,6 @@ func customSetDefaults(
 	// IPAddressType specify either dualstack ipv4/ipv6 or just ipv4
 	// The default value is ipv4
 	if ackcompare.IsNil(a.ko.Spec.IPAddressType) && ackcompare.IsNotNil(b.ko.Spec.IPAddressType) {
-		a.ko.Spec.RootAccess = b.ko.Spec.IPAddressType
+		a.ko.Spec.IPAddressType = b.ko.Spec.IPAddressType
 	}
 }
