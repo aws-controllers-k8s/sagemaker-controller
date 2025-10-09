@@ -22,10 +22,12 @@ func customSetDefaults(
 	a *resource,
 	b *resource,
 ) {
-	// Default is for ImageDigest to be generated automatically by Sagemaker if not specified
+	// Defaults for InferenceSpecification to be generated automatically by Sagemaker if not specified
 	if ackcompare.IsNotNil(a.ko.Spec.InferenceSpecification) && ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification) {
 		if ackcompare.IsNotNil(a.ko.Spec.InferenceSpecification.Containers) && ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification.Containers) {
 			for index := range a.ko.Spec.InferenceSpecification.Containers {
+
+				// ImageDigest default if not specified
 				if ackcompare.IsNil(a.ko.Spec.InferenceSpecification.Containers[index].ImageDigest) &&
 					ackcompare.IsNotNil(b.ko.Spec.InferenceSpecification.Containers[index].ImageDigest) {
 					a.ko.Spec.InferenceSpecification.Containers[index].ImageDigest =
@@ -34,11 +36,33 @@ func customSetDefaults(
 			}
 		}
 	}
+
+	// Defaults for AdditionalInferenceSpecifications
+	if ackcompare.IsNotNil(a.ko.Spec.AdditionalInferenceSpecifications) && ackcompare.IsNotNil(b.ko.Spec.AdditionalInferenceSpecifications) {
+		for index := range a.ko.Spec.AdditionalInferenceSpecifications {
+
+			if ackcompare.IsNotNil(a.ko.Spec.AdditionalInferenceSpecifications[index].Containers) &&
+				ackcompare.IsNotNil(b.ko.Spec.AdditionalInferenceSpecifications[index].Containers) {
+				for jIndex := range a.ko.Spec.AdditionalInferenceSpecifications[index].Containers {
+
+					// ImageDigest default if not specified
+					if ackcompare.IsNil(a.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ImageDigest) &&
+						ackcompare.IsNotNil(b.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ImageDigest) {
+						a.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ImageDigest =
+							b.ko.Spec.AdditionalInferenceSpecifications[index].Containers[jIndex].ImageDigest
+					}
+				}
+			}
+		}
+	}
+
 	// Default is for KMSKeyID to be ""
 	defaultKMSKeyID := aws.String("")
-
+	// Defaults for ValidationSpecification
 	if ackcompare.IsNotNil(a.ko.Spec.ValidationSpecification) && ackcompare.IsNotNil(b.ko.Spec.ValidationSpecification) {
 		for index := range a.ko.Spec.ValidationSpecification.ValidationProfiles {
+
+			// KMSKeyID default to empty string
 			if ackcompare.IsNil(a.ko.Spec.ValidationSpecification.ValidationProfiles[index].TransformJobDefinition.TransformOutput.KMSKeyID) &&
 				ackcompare.IsNotNil(b.ko.Spec.ValidationSpecification.ValidationProfiles[index].TransformJobDefinition.TransformOutput.KMSKeyID) {
 				a.ko.Spec.ValidationSpecification.ValidationProfiles[index].TransformJobDefinition.TransformOutput.KMSKeyID = defaultKMSKeyID
