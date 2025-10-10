@@ -528,6 +528,8 @@ func (rm *resourceManager) newCreateRequestPayload(
 						f5f1elemf0.FileSystemPath = f5f1iter.EFSFileSystemConfig.FileSystemPath
 					}
 					f5f1elemf0Parent.Value = *f5f1elemf0
+					f5f1elem = f5f1elemf0Parent
+					isInterfaceSet = true
 				}
 				f5f1 = append(f5f1, f5f1elem)
 			}
@@ -858,6 +860,8 @@ func (rm *resourceManager) newUpdateRequestPayload(
 						f2f1elemf0.FileSystemPath = f2f1iter.EFSFileSystemConfig.FileSystemPath
 					}
 					f2f1elemf0Parent.Value = *f2f1elemf0
+					f2f1elem = f2f1elemf0Parent
+					isInterfaceSet = true
 				}
 				f2f1 = append(f2f1, f2f1elem)
 			}
