@@ -19,7 +19,6 @@ import pytest
 from acktest.k8s import resource as k8s
 from acktest.resources import random_suffix_name
 from e2e import create_sagemaker_resource, delete_custom_resource, wait_for_status
-from e2e.common import config as cfg
 from e2e.replacement_values import REPLACEMENT_VALUES
 
 STUDIO_WAIT_PERIOD = 150
@@ -281,7 +280,7 @@ def domain_fixture():
     yield (reference, resource, spec)
 
     assert delete_custom_resource(
-        reference, cfg.JOB_DELETE_WAIT_PERIODS, cfg.JOB_DELETE_WAIT_LENGTH
+        reference, STUDIO_WAIT_PERIOD, STUDIO_WAIT_LENGTH
     )
 
 
@@ -325,8 +324,8 @@ def user_profile_fixture(domain_fixture):
 
     assert delete_custom_resource(
         user_profile_reference,
-        cfg.JOB_DELETE_WAIT_PERIODS,
-        cfg.JOB_DELETE_WAIT_LENGTH,
+        STUDIO_WAIT_PERIOD,
+        STUDIO_WAIT_LENGTH,
     )
 
 
@@ -386,8 +385,8 @@ def private_space_fixture(user_profile_fixture):
 
     assert delete_custom_resource(
         space_reference,
-        cfg.LONG_JOB_DELETE_WAIT_PERIODS,
-        cfg.LONG_JOB_DELETE_WAIT_LENGTH,
+        STUDIO_WAIT_PERIOD,
+        STUDIO_WAIT_LENGTH,
     )
 
 
@@ -435,8 +434,8 @@ def shared_space_fixture(user_profile_fixture):
 
     assert delete_custom_resource(
         space_reference,
-        cfg.LONG_JOB_DELETE_WAIT_PERIODS,
-        cfg.LONG_JOB_DELETE_WAIT_LENGTH,
+        STUDIO_WAIT_PERIOD,
+        STUDIO_WAIT_LENGTH,
     )
 
 
@@ -501,8 +500,8 @@ def app_user_profile_fixture(user_profile_fixture):
 
     assert delete_custom_resource(
         app_reference,
-        cfg.LONG_JOB_DELETE_WAIT_PERIODS,
-        cfg.LONG_JOB_DELETE_WAIT_LENGTH,
+        STUDIO_WAIT_PERIOD,
+        STUDIO_WAIT_LENGTH,
     )
 
 
@@ -550,8 +549,8 @@ def app_space_fixture(shared_space_fixture):
 
     assert delete_custom_resource(
         app_reference,
-        cfg.LONG_JOB_DELETE_WAIT_PERIODS,
-        cfg.LONG_JOB_DELETE_WAIT_LENGTH,
+        STUDIO_WAIT_PERIOD,
+        STUDIO_WAIT_LENGTH,
     )
 
 
