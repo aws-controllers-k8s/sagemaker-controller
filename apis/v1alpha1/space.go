@@ -29,6 +29,7 @@ type SpaceSpec struct {
 	// +kubebuilder:validation:Required
 	DomainID *string `json:"domainID"`
 	// A collection of ownership settings.
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="Value is immutable once set"
 	OwnershipSettings *OwnershipSettings `json:"ownershipSettings,omitempty"`
 	// The name of the space that appears in the SageMaker Studio UI.
 	//
@@ -42,6 +43,7 @@ type SpaceSpec struct {
 	// A collection of space settings.
 	SpaceSettings *SpaceSettings `json:"spaceSettings,omitempty"`
 	// A collection of space sharing settings.
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="Value is immutable once set"
 	SpaceSharingSettings *SpaceSharingSettings `json:"spaceSharingSettings,omitempty"`
 	// Tags to associated with the space. Each tag consists of a key and an optional
 	// value. Tag keys must be unique for each resource. Tags are searchable using

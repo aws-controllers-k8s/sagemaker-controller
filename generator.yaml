@@ -981,6 +981,10 @@ resources:
         from:
           operation: DescribeSpace
           path: Url
+      OwnershipSettings:
+        is_immutable: true
+      SpaceSharingSettings:
+        is_immutable: true
       Tags:
         compare:
           is_ignored: true

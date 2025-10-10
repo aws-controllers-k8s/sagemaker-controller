@@ -59,6 +59,9 @@ spec:
                   ownerUserProfileName:
                     type: string
                 type: object
+                x-kubernetes-validations:
+                - message: Value is immutable once set
+                  rule: self == oldSelf
               spaceDisplayName:
                 description: |-
                   The name of the space that appears in the SageMaker Studio UI.
@@ -308,6 +311,9 @@ spec:
                   sharingType:
                     type: string
                 type: object
+                x-kubernetes-validations:
+                - message: Value is immutable once set
+                  rule: self == oldSelf
               tags:
                 description: |-
                   Tags to associated with the space. Each tag consists of a key and an optional
