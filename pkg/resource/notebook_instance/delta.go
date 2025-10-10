@@ -79,6 +79,13 @@ func newResourceDelta(
 			delta.Add("Spec.InstanceType", a.ko.Spec.InstanceType, b.ko.Spec.InstanceType)
 		}
 	}
+	if ackcompare.HasNilDifference(a.ko.Spec.IPAddressType, b.ko.Spec.IPAddressType) {
+		delta.Add("Spec.IPAddressType", a.ko.Spec.IPAddressType, b.ko.Spec.IPAddressType)
+	} else if a.ko.Spec.IPAddressType != nil && b.ko.Spec.IPAddressType != nil {
+		if *a.ko.Spec.IPAddressType != *b.ko.Spec.IPAddressType {
+			delta.Add("Spec.IPAddressType", a.ko.Spec.IPAddressType, b.ko.Spec.IPAddressType)
+		}
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.KMSKeyID, b.ko.Spec.KMSKeyID) {
 		delta.Add("Spec.KMSKeyID", a.ko.Spec.KMSKeyID, b.ko.Spec.KMSKeyID)
 	} else if a.ko.Spec.KMSKeyID != nil && b.ko.Spec.KMSKeyID != nil {

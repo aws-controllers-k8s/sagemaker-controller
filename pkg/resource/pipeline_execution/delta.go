@@ -42,6 +42,7 @@ func newResourceDelta(
 		delta.Add("", a, b)
 		return delta
 	}
+	customSetDefaults(a, b)
 
 	if ackcompare.HasNilDifference(a.ko.Spec.ParallelismConfiguration, b.ko.Spec.ParallelismConfiguration) {
 		delta.Add("Spec.ParallelismConfiguration", a.ko.Spec.ParallelismConfiguration, b.ko.Spec.ParallelismConfiguration)
@@ -80,6 +81,13 @@ func newResourceDelta(
 	} else if len(a.ko.Spec.PipelineParameters) > 0 {
 		if !reflect.DeepEqual(a.ko.Spec.PipelineParameters, b.ko.Spec.PipelineParameters) {
 			delta.Add("Spec.PipelineParameters", a.ko.Spec.PipelineParameters, b.ko.Spec.PipelineParameters)
+		}
+	}
+	if ackcompare.HasNilDifference(a.ko.Spec.PipelineVersionID, b.ko.Spec.PipelineVersionID) {
+		delta.Add("Spec.PipelineVersionID", a.ko.Spec.PipelineVersionID, b.ko.Spec.PipelineVersionID)
+	} else if a.ko.Spec.PipelineVersionID != nil && b.ko.Spec.PipelineVersionID != nil {
+		if *a.ko.Spec.PipelineVersionID != *b.ko.Spec.PipelineVersionID {
+			delta.Add("Spec.PipelineVersionID", a.ko.Spec.PipelineVersionID, b.ko.Spec.PipelineVersionID)
 		}
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.SelectiveExecutionConfig, b.ko.Spec.SelectiveExecutionConfig) {

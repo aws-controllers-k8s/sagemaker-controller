@@ -316,8 +316,22 @@ func (rm *resourceManager) sdkFind(
 					if f17iter.DataSource.S3DataSource.AttributeNames != nil {
 						f17elemf3f1.AttributeNames = aws.StringSlice(f17iter.DataSource.S3DataSource.AttributeNames)
 					}
+					if f17iter.DataSource.S3DataSource.HubAccessConfig != nil {
+						f17elemf3f1f1 := &svcapitypes.HubAccessConfig{}
+						if f17iter.DataSource.S3DataSource.HubAccessConfig.HubContentArn != nil {
+							f17elemf3f1f1.HubContentARN = f17iter.DataSource.S3DataSource.HubAccessConfig.HubContentArn
+						}
+						f17elemf3f1.HubAccessConfig = f17elemf3f1f1
+					}
 					if f17iter.DataSource.S3DataSource.InstanceGroupNames != nil {
 						f17elemf3f1.InstanceGroupNames = aws.StringSlice(f17iter.DataSource.S3DataSource.InstanceGroupNames)
+					}
+					if f17iter.DataSource.S3DataSource.ModelAccessConfig != nil {
+						f17elemf3f1f3 := &svcapitypes.ModelAccessConfig{}
+						if f17iter.DataSource.S3DataSource.ModelAccessConfig.AcceptEula != nil {
+							f17elemf3f1f3.AcceptEula = f17iter.DataSource.S3DataSource.ModelAccessConfig.AcceptEula
+						}
+						f17elemf3f1.ModelAccessConfig = f17elemf3f1f3
 					}
 					if f17iter.DataSource.S3DataSource.S3DataDistributionType != "" {
 						f17elemf3f1.S3DataDistributionType = aws.String(string(f17iter.DataSource.S3DataSource.S3DataDistributionType))
@@ -489,6 +503,28 @@ func (rm *resourceManager) sdkFind(
 				f27f1 = append(f27f1, f27f1elem)
 			}
 			f27.InstanceGroups = f27f1
+		}
+		if resp.ResourceConfig.InstancePlacementConfig != nil {
+			f27f2 := &svcapitypes.InstancePlacementConfig{}
+			if resp.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs != nil {
+				f27f2.EnableMultipleJobs = resp.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs
+			}
+			if resp.ResourceConfig.InstancePlacementConfig.PlacementSpecifications != nil {
+				f27f2f1 := []*svcapitypes.PlacementSpecification{}
+				for _, f27f2f1iter := range resp.ResourceConfig.InstancePlacementConfig.PlacementSpecifications {
+					f27f2f1elem := &svcapitypes.PlacementSpecification{}
+					if f27f2f1iter.InstanceCount != nil {
+						instanceCountCopy := int64(*f27f2f1iter.InstanceCount)
+						f27f2f1elem.InstanceCount = &instanceCountCopy
+					}
+					if f27f2f1iter.UltraServerId != nil {
+						f27f2f1elem.UltraServerID = f27f2f1iter.UltraServerId
+					}
+					f27f2f1 = append(f27f2f1, f27f2f1elem)
+				}
+				f27f2.PlacementSpecifications = f27f2f1
+			}
+			f27.InstancePlacementConfig = f27f2
 		}
 		if resp.ResourceConfig.InstanceType != "" {
 			f27.InstanceType = aws.String(string(resp.ResourceConfig.InstanceType))
@@ -853,8 +889,22 @@ func (rm *resourceManager) newCreateRequestPayload(
 					if f11iter.DataSource.S3DataSource.AttributeNames != nil {
 						f11elemf3f1.AttributeNames = aws.ToStringSlice(f11iter.DataSource.S3DataSource.AttributeNames)
 					}
+					if f11iter.DataSource.S3DataSource.HubAccessConfig != nil {
+						f11elemf3f1f1 := &svcsdktypes.HubAccessConfig{}
+						if f11iter.DataSource.S3DataSource.HubAccessConfig.HubContentARN != nil {
+							f11elemf3f1f1.HubContentArn = f11iter.DataSource.S3DataSource.HubAccessConfig.HubContentARN
+						}
+						f11elemf3f1.HubAccessConfig = f11elemf3f1f1
+					}
 					if f11iter.DataSource.S3DataSource.InstanceGroupNames != nil {
 						f11elemf3f1.InstanceGroupNames = aws.ToStringSlice(f11iter.DataSource.S3DataSource.InstanceGroupNames)
+					}
+					if f11iter.DataSource.S3DataSource.ModelAccessConfig != nil {
+						f11elemf3f1f3 := &svcsdktypes.ModelAccessConfig{}
+						if f11iter.DataSource.S3DataSource.ModelAccessConfig.AcceptEula != nil {
+							f11elemf3f1f3.AcceptEula = f11iter.DataSource.S3DataSource.ModelAccessConfig.AcceptEula
+						}
+						f11elemf3f1.ModelAccessConfig = f11elemf3f1f3
 					}
 					if f11iter.DataSource.S3DataSource.S3DataDistributionType != nil {
 						f11elemf3f1.S3DataDistributionType = svcsdktypes.S3DataDistribution(*f11iter.DataSource.S3DataSource.S3DataDistributionType)
@@ -984,6 +1034,32 @@ func (rm *resourceManager) newCreateRequestPayload(
 				f16f1 = append(f16f1, *f16f1elem)
 			}
 			f16.InstanceGroups = f16f1
+		}
+		if r.ko.Spec.ResourceConfig.InstancePlacementConfig != nil {
+			f16f2 := &svcsdktypes.InstancePlacementConfig{}
+			if r.ko.Spec.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs != nil {
+				f16f2.EnableMultipleJobs = r.ko.Spec.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs
+			}
+			if r.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications != nil {
+				f16f2f1 := []svcsdktypes.PlacementSpecification{}
+				for _, f16f2f1iter := range r.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications {
+					f16f2f1elem := &svcsdktypes.PlacementSpecification{}
+					if f16f2f1iter.InstanceCount != nil {
+						instanceCountCopy0 := *f16f2f1iter.InstanceCount
+						if instanceCountCopy0 > math.MaxInt32 || instanceCountCopy0 < math.MinInt32 {
+							return nil, fmt.Errorf("error: field InstanceCount is of type int32")
+						}
+						instanceCountCopy := int32(instanceCountCopy0)
+						f16f2f1elem.InstanceCount = &instanceCountCopy
+					}
+					if f16f2f1iter.UltraServerID != nil {
+						f16f2f1elem.UltraServerId = f16f2f1iter.UltraServerID
+					}
+					f16f2f1 = append(f16f2f1, *f16f2f1elem)
+				}
+				f16f2.PlacementSpecifications = f16f2f1
+			}
+			f16.InstancePlacementConfig = f16f2
 		}
 		if r.ko.Spec.ResourceConfig.InstanceType != nil {
 			f16.InstanceType = svcsdktypes.TrainingInstanceType(*r.ko.Spec.ResourceConfig.InstanceType)

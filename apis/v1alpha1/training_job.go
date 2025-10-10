@@ -66,6 +66,12 @@ type TrainingJobSpec struct {
 	// access.
 	EnableNetworkIsolation *bool `json:"enableNetworkIsolation,omitempty"`
 	// The environment variables to set in the Docker container.
+	//
+	// Do not include any security-sensitive information including account access
+	// IDs, secrets, or tokens in any environment fields. As part of the shared
+	// responsibility model, you are responsible for any potential exposure, unauthorized
+	// access, or compromise of your sensitive data if caused by security-sensitive
+	// information included in the request environment variable or plain text fields.
 	Environment      map[string]*string `json:"environment,omitempty"`
 	ExperimentConfig *ExperimentConfig  `json:"experimentConfig,omitempty"`
 	// Algorithm-specific parameters that influence the quality of the model. You
@@ -78,9 +84,11 @@ type TrainingJobSpec struct {
 	// by the Length Constraint.
 	//
 	// Do not include any security-sensitive information including account access
-	// IDs, secrets or tokens in any hyperparameter field. If the use of security-sensitive
-	// credentials are detected, SageMaker will reject your training job request
-	// and return an exception error.
+	// IDs, secrets, or tokens in any hyperparameter fields. As part of the shared
+	// responsibility model, you are responsible for any potential exposure, unauthorized
+	// access, or compromise of your sensitive data if caused by any security-sensitive
+	// information included in the request hyperparameter variable or plain text
+	// fields.
 	HyperParameters map[string]*string `json:"hyperParameters,omitempty"`
 	// Contains information about the infrastructure health check configuration
 	// for the training job.
@@ -157,6 +165,12 @@ type TrainingJobSpec struct {
 	// Services resources in different ways, for example, by purpose, owner, or
 	// environment. For more information, see Tagging Amazon Web Services Resources
 	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
+	//
+	// Do not include any security-sensitive information including account access
+	// IDs, secrets, or tokens in any tags. As part of the shared responsibility
+	// model, you are responsible for any potential exposure, unauthorized access,
+	// or compromise of your sensitive data if caused by any security-sensitive
+	// information included in the request tag variable or plain text fields.
 	Tags                    []*Tag                   `json:"tags,omitempty"`
 	TensorBoardOutputConfig *TensorBoardOutputConfig `json:"tensorBoardOutputConfig,omitempty"`
 	// The name of the training job. The name must be unique within an Amazon Web

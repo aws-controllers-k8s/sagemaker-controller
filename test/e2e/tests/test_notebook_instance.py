@@ -32,7 +32,7 @@ from e2e import (
 from e2e.replacement_values import REPLACEMENT_VALUES
 
 
-DELETE_WAIT_PERIOD = 16
+DELETE_WAIT_PERIOD = 60
 DELETE_WAIT_LENGTH = 30
 
 
@@ -122,8 +122,8 @@ class TestNotebookInstance:
         notebook_instance_name,
         reference,
         expected_status,
-        wait_periods=40,
-        period_length=30,
+        wait_periods: int = 40,
+        period_length: int = 30,
     ):
         assert (
             self._wait_sagemaker_notebook_status(

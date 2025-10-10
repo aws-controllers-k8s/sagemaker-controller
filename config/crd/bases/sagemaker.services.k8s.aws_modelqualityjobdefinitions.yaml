@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.16.2
+    controller-gen.kubebuilder.io/version: v0.19.0
   name: modelqualityjobdefinitions.sagemaker.services.k8s.aws
 spec:
   group: sagemaker.services.k8s.aws
@@ -192,8 +192,8 @@ spec:
                 type: object
               roleARN:
                 description: |-
-                  The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
-                  to perform tasks on your behalf.
+                  The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker AI can
+                  assume to perform tasks on your behalf.
 
                   Regex Pattern: `^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$`
                 type: string

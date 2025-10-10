@@ -26,7 +26,7 @@ type DomainSpec struct {
 	// Specifies the VPC used for non-EFS traffic. The default value is PublicInternetOnly.
 	//
 	//   - PublicInternetOnly - Non-EFS traffic is through a VPC managed by Amazon
-	//     SageMaker, which allows direct internet access
+	//     SageMaker AI, which allows direct internet access
 	//
 	//   - VpcOnly - All traffic is through the specified VPC and subnets
 	AppNetworkAccessType *string `json:"appNetworkAccessType,omitempty"`
@@ -58,15 +58,17 @@ type DomainSpec struct {
 	//
 	// Regex Pattern: `^[a-zA-Z0-9:/_-]*$`
 	HomeEFSFileSystemKMSKeyID *string `json:"homeEFSFileSystemKMSKeyID,omitempty"`
-	// SageMaker uses Amazon Web Services KMS to encrypt EFS and EBS volumes attached
-	// to the domain with an Amazon Web Services managed key by default. For more
-	// control, specify a customer managed key.
+	// SageMaker AI uses Amazon Web Services KMS to encrypt EFS and EBS volumes
+	// attached to the domain with an Amazon Web Services managed key by default.
+	// For more control, specify a customer managed key.
 	//
 	// Regex Pattern: `^[a-zA-Z0-9:/_-]*$`
 	KMSKeyID *string `json:"kmsKeyID,omitempty"`
 	// The VPC subnets that the domain uses for communication.
-	// +kubebuilder:validation:Required
-	SubnetIDs []*string `json:"subnetIDs"`
+	//
+	// The field is optional when the AppNetworkAccessType parameter is set to PublicInternetOnly
+	// for domains created from Amazon SageMaker Unified Studio.
+	SubnetIDs []*string `json:"subnetIDs,omitempty"`
 	// Tags to associated with the Domain. Each tag consists of a key and an optional
 	// value. Tag keys must be unique per resource. Tags are searchable using the
 	// Search API.
@@ -77,9 +79,11 @@ type DomainSpec struct {
 	// The ID of the Amazon Virtual Private Cloud (VPC) that the domain uses for
 	// communication.
 	//
+	// The field is optional when the AppNetworkAccessType parameter is set to PublicInternetOnly
+	// for domains created from Amazon SageMaker Unified Studio.
+	//
 	// Regex Pattern: `^[-0-9a-zA-Z]+$`
-	// +kubebuilder:validation:Required
-	VPCID *string `json:"vpcID"`
+	VPCID *string `json:"vpcID,omitempty"`
 }
 
 // DomainStatus defines the observed state of Domain
@@ -111,6 +115,7 @@ type DomainStatus struct {
 // Domain is the Schema for the Domains API
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="DOMAIN-ID",type=string,priority=0,JSONPath=`.status.domainID`
 // +kubebuilder:printcolumn:name="DOMAIN-ID",type=string,priority=0,JSONPath=`.status.domainID`
 // +kubebuilder:printcolumn:name="STATUS",type=string,priority=0,JSONPath=`.status.status`
 type Domain struct {

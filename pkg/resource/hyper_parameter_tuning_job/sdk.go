@@ -501,8 +501,22 @@ func (rm *resourceManager) sdkFind(
 						if f13f7iter.DataSource.S3DataSource.AttributeNames != nil {
 							f13f7elemf3f1.AttributeNames = aws.StringSlice(f13f7iter.DataSource.S3DataSource.AttributeNames)
 						}
+						if f13f7iter.DataSource.S3DataSource.HubAccessConfig != nil {
+							f13f7elemf3f1f1 := &svcapitypes.HubAccessConfig{}
+							if f13f7iter.DataSource.S3DataSource.HubAccessConfig.HubContentArn != nil {
+								f13f7elemf3f1f1.HubContentARN = f13f7iter.DataSource.S3DataSource.HubAccessConfig.HubContentArn
+							}
+							f13f7elemf3f1.HubAccessConfig = f13f7elemf3f1f1
+						}
 						if f13f7iter.DataSource.S3DataSource.InstanceGroupNames != nil {
 							f13f7elemf3f1.InstanceGroupNames = aws.StringSlice(f13f7iter.DataSource.S3DataSource.InstanceGroupNames)
+						}
+						if f13f7iter.DataSource.S3DataSource.ModelAccessConfig != nil {
+							f13f7elemf3f1f3 := &svcapitypes.ModelAccessConfig{}
+							if f13f7iter.DataSource.S3DataSource.ModelAccessConfig.AcceptEula != nil {
+								f13f7elemf3f1f3.AcceptEula = f13f7iter.DataSource.S3DataSource.ModelAccessConfig.AcceptEula
+							}
+							f13f7elemf3f1.ModelAccessConfig = f13f7elemf3f1f3
 						}
 						if f13f7iter.DataSource.S3DataSource.S3DataDistributionType != "" {
 							f13f7elemf3f1.S3DataDistributionType = aws.String(string(f13f7iter.DataSource.S3DataSource.S3DataDistributionType))
@@ -570,6 +584,28 @@ func (rm *resourceManager) sdkFind(
 					f13f9f1 = append(f13f9f1, f13f9f1elem)
 				}
 				f13f9.InstanceGroups = f13f9f1
+			}
+			if resp.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig != nil {
+				f13f9f2 := &svcapitypes.InstancePlacementConfig{}
+				if resp.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs != nil {
+					f13f9f2.EnableMultipleJobs = resp.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs
+				}
+				if resp.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.PlacementSpecifications != nil {
+					f13f9f2f1 := []*svcapitypes.PlacementSpecification{}
+					for _, f13f9f2f1iter := range resp.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.PlacementSpecifications {
+						f13f9f2f1elem := &svcapitypes.PlacementSpecification{}
+						if f13f9f2f1iter.InstanceCount != nil {
+							instanceCountCopy := int64(*f13f9f2f1iter.InstanceCount)
+							f13f9f2f1elem.InstanceCount = &instanceCountCopy
+						}
+						if f13f9f2f1iter.UltraServerId != nil {
+							f13f9f2f1elem.UltraServerID = f13f9f2f1iter.UltraServerId
+						}
+						f13f9f2f1 = append(f13f9f2f1, f13f9f2f1elem)
+					}
+					f13f9f2.PlacementSpecifications = f13f9f2f1
+				}
+				f13f9.InstancePlacementConfig = f13f9f2
 			}
 			if resp.TrainingJobDefinition.ResourceConfig.InstanceType != "" {
 				f13f9.InstanceType = aws.String(string(resp.TrainingJobDefinition.ResourceConfig.InstanceType))
@@ -802,8 +838,22 @@ func (rm *resourceManager) sdkFind(
 							if f14elemf7iter.DataSource.S3DataSource.AttributeNames != nil {
 								f14elemf7elemf3f1.AttributeNames = aws.StringSlice(f14elemf7iter.DataSource.S3DataSource.AttributeNames)
 							}
+							if f14elemf7iter.DataSource.S3DataSource.HubAccessConfig != nil {
+								f14elemf7elemf3f1f1 := &svcapitypes.HubAccessConfig{}
+								if f14elemf7iter.DataSource.S3DataSource.HubAccessConfig.HubContentArn != nil {
+									f14elemf7elemf3f1f1.HubContentARN = f14elemf7iter.DataSource.S3DataSource.HubAccessConfig.HubContentArn
+								}
+								f14elemf7elemf3f1.HubAccessConfig = f14elemf7elemf3f1f1
+							}
 							if f14elemf7iter.DataSource.S3DataSource.InstanceGroupNames != nil {
 								f14elemf7elemf3f1.InstanceGroupNames = aws.StringSlice(f14elemf7iter.DataSource.S3DataSource.InstanceGroupNames)
+							}
+							if f14elemf7iter.DataSource.S3DataSource.ModelAccessConfig != nil {
+								f14elemf7elemf3f1f3 := &svcapitypes.ModelAccessConfig{}
+								if f14elemf7iter.DataSource.S3DataSource.ModelAccessConfig.AcceptEula != nil {
+									f14elemf7elemf3f1f3.AcceptEula = f14elemf7iter.DataSource.S3DataSource.ModelAccessConfig.AcceptEula
+								}
+								f14elemf7elemf3f1.ModelAccessConfig = f14elemf7elemf3f1f3
 							}
 							if f14elemf7iter.DataSource.S3DataSource.S3DataDistributionType != "" {
 								f14elemf7elemf3f1.S3DataDistributionType = aws.String(string(f14elemf7iter.DataSource.S3DataSource.S3DataDistributionType))
@@ -871,6 +921,28 @@ func (rm *resourceManager) sdkFind(
 						f14elemf9f1 = append(f14elemf9f1, f14elemf9f1elem)
 					}
 					f14elemf9.InstanceGroups = f14elemf9f1
+				}
+				if f14iter.ResourceConfig.InstancePlacementConfig != nil {
+					f14elemf9f2 := &svcapitypes.InstancePlacementConfig{}
+					if f14iter.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs != nil {
+						f14elemf9f2.EnableMultipleJobs = f14iter.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs
+					}
+					if f14iter.ResourceConfig.InstancePlacementConfig.PlacementSpecifications != nil {
+						f14elemf9f2f1 := []*svcapitypes.PlacementSpecification{}
+						for _, f14elemf9f2f1iter := range f14iter.ResourceConfig.InstancePlacementConfig.PlacementSpecifications {
+							f14elemf9f2f1elem := &svcapitypes.PlacementSpecification{}
+							if f14elemf9f2f1iter.InstanceCount != nil {
+								instanceCountCopy := int64(*f14elemf9f2f1iter.InstanceCount)
+								f14elemf9f2f1elem.InstanceCount = &instanceCountCopy
+							}
+							if f14elemf9f2f1iter.UltraServerId != nil {
+								f14elemf9f2f1elem.UltraServerID = f14elemf9f2f1iter.UltraServerId
+							}
+							f14elemf9f2f1 = append(f14elemf9f2f1, f14elemf9f2f1elem)
+						}
+						f14elemf9f2.PlacementSpecifications = f14elemf9f2f1
+					}
+					f14elemf9.InstancePlacementConfig = f14elemf9f2
 				}
 				if f14iter.ResourceConfig.InstanceType != "" {
 					f14elemf9.InstanceType = aws.String(string(f14iter.ResourceConfig.InstanceType))
@@ -1349,8 +1421,22 @@ func (rm *resourceManager) newCreateRequestPayload(
 						if f4f7iter.DataSource.S3DataSource.AttributeNames != nil {
 							f4f7elemf3f1.AttributeNames = aws.ToStringSlice(f4f7iter.DataSource.S3DataSource.AttributeNames)
 						}
+						if f4f7iter.DataSource.S3DataSource.HubAccessConfig != nil {
+							f4f7elemf3f1f1 := &svcsdktypes.HubAccessConfig{}
+							if f4f7iter.DataSource.S3DataSource.HubAccessConfig.HubContentARN != nil {
+								f4f7elemf3f1f1.HubContentArn = f4f7iter.DataSource.S3DataSource.HubAccessConfig.HubContentARN
+							}
+							f4f7elemf3f1.HubAccessConfig = f4f7elemf3f1f1
+						}
 						if f4f7iter.DataSource.S3DataSource.InstanceGroupNames != nil {
 							f4f7elemf3f1.InstanceGroupNames = aws.ToStringSlice(f4f7iter.DataSource.S3DataSource.InstanceGroupNames)
+						}
+						if f4f7iter.DataSource.S3DataSource.ModelAccessConfig != nil {
+							f4f7elemf3f1f3 := &svcsdktypes.ModelAccessConfig{}
+							if f4f7iter.DataSource.S3DataSource.ModelAccessConfig.AcceptEula != nil {
+								f4f7elemf3f1f3.AcceptEula = f4f7iter.DataSource.S3DataSource.ModelAccessConfig.AcceptEula
+							}
+							f4f7elemf3f1.ModelAccessConfig = f4f7elemf3f1f3
 						}
 						if f4f7iter.DataSource.S3DataSource.S3DataDistributionType != nil {
 							f4f7elemf3f1.S3DataDistributionType = svcsdktypes.S3DataDistribution(*f4f7iter.DataSource.S3DataSource.S3DataDistributionType)
@@ -1426,6 +1512,32 @@ func (rm *resourceManager) newCreateRequestPayload(
 					f4f9f1 = append(f4f9f1, *f4f9f1elem)
 				}
 				f4f9.InstanceGroups = f4f9f1
+			}
+			if r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig != nil {
+				f4f9f2 := &svcsdktypes.InstancePlacementConfig{}
+				if r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs != nil {
+					f4f9f2.EnableMultipleJobs = r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs
+				}
+				if r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.PlacementSpecifications != nil {
+					f4f9f2f1 := []svcsdktypes.PlacementSpecification{}
+					for _, f4f9f2f1iter := range r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstancePlacementConfig.PlacementSpecifications {
+						f4f9f2f1elem := &svcsdktypes.PlacementSpecification{}
+						if f4f9f2f1iter.InstanceCount != nil {
+							instanceCountCopy0 := *f4f9f2f1iter.InstanceCount
+							if instanceCountCopy0 > math.MaxInt32 || instanceCountCopy0 < math.MinInt32 {
+								return nil, fmt.Errorf("error: field InstanceCount is of type int32")
+							}
+							instanceCountCopy := int32(instanceCountCopy0)
+							f4f9f2f1elem.InstanceCount = &instanceCountCopy
+						}
+						if f4f9f2f1iter.UltraServerID != nil {
+							f4f9f2f1elem.UltraServerId = f4f9f2f1iter.UltraServerID
+						}
+						f4f9f2f1 = append(f4f9f2f1, *f4f9f2f1elem)
+					}
+					f4f9f2.PlacementSpecifications = f4f9f2f1
+				}
+				f4f9.InstancePlacementConfig = f4f9f2
 			}
 			if r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType != nil {
 				f4f9.InstanceType = svcsdktypes.TrainingInstanceType(*r.ko.Spec.TrainingJobDefinition.ResourceConfig.InstanceType)
@@ -1680,8 +1792,22 @@ func (rm *resourceManager) newCreateRequestPayload(
 							if f5elemf7iter.DataSource.S3DataSource.AttributeNames != nil {
 								f5elemf7elemf3f1.AttributeNames = aws.ToStringSlice(f5elemf7iter.DataSource.S3DataSource.AttributeNames)
 							}
+							if f5elemf7iter.DataSource.S3DataSource.HubAccessConfig != nil {
+								f5elemf7elemf3f1f1 := &svcsdktypes.HubAccessConfig{}
+								if f5elemf7iter.DataSource.S3DataSource.HubAccessConfig.HubContentARN != nil {
+									f5elemf7elemf3f1f1.HubContentArn = f5elemf7iter.DataSource.S3DataSource.HubAccessConfig.HubContentARN
+								}
+								f5elemf7elemf3f1.HubAccessConfig = f5elemf7elemf3f1f1
+							}
 							if f5elemf7iter.DataSource.S3DataSource.InstanceGroupNames != nil {
 								f5elemf7elemf3f1.InstanceGroupNames = aws.ToStringSlice(f5elemf7iter.DataSource.S3DataSource.InstanceGroupNames)
+							}
+							if f5elemf7iter.DataSource.S3DataSource.ModelAccessConfig != nil {
+								f5elemf7elemf3f1f3 := &svcsdktypes.ModelAccessConfig{}
+								if f5elemf7iter.DataSource.S3DataSource.ModelAccessConfig.AcceptEula != nil {
+									f5elemf7elemf3f1f3.AcceptEula = f5elemf7iter.DataSource.S3DataSource.ModelAccessConfig.AcceptEula
+								}
+								f5elemf7elemf3f1.ModelAccessConfig = f5elemf7elemf3f1f3
 							}
 							if f5elemf7iter.DataSource.S3DataSource.S3DataDistributionType != nil {
 								f5elemf7elemf3f1.S3DataDistributionType = svcsdktypes.S3DataDistribution(*f5elemf7iter.DataSource.S3DataSource.S3DataDistributionType)
@@ -1757,6 +1883,32 @@ func (rm *resourceManager) newCreateRequestPayload(
 						f5elemf9f1 = append(f5elemf9f1, *f5elemf9f1elem)
 					}
 					f5elemf9.InstanceGroups = f5elemf9f1
+				}
+				if f5iter.ResourceConfig.InstancePlacementConfig != nil {
+					f5elemf9f2 := &svcsdktypes.InstancePlacementConfig{}
+					if f5iter.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs != nil {
+						f5elemf9f2.EnableMultipleJobs = f5iter.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs
+					}
+					if f5iter.ResourceConfig.InstancePlacementConfig.PlacementSpecifications != nil {
+						f5elemf9f2f1 := []svcsdktypes.PlacementSpecification{}
+						for _, f5elemf9f2f1iter := range f5iter.ResourceConfig.InstancePlacementConfig.PlacementSpecifications {
+							f5elemf9f2f1elem := &svcsdktypes.PlacementSpecification{}
+							if f5elemf9f2f1iter.InstanceCount != nil {
+								instanceCountCopy0 := *f5elemf9f2f1iter.InstanceCount
+								if instanceCountCopy0 > math.MaxInt32 || instanceCountCopy0 < math.MinInt32 {
+									return nil, fmt.Errorf("error: field InstanceCount is of type int32")
+								}
+								instanceCountCopy := int32(instanceCountCopy0)
+								f5elemf9f2f1elem.InstanceCount = &instanceCountCopy
+							}
+							if f5elemf9f2f1iter.UltraServerID != nil {
+								f5elemf9f2f1elem.UltraServerId = f5elemf9f2f1iter.UltraServerID
+							}
+							f5elemf9f2f1 = append(f5elemf9f2f1, *f5elemf9f2f1elem)
+						}
+						f5elemf9f2.PlacementSpecifications = f5elemf9f2f1
+					}
+					f5elemf9.InstancePlacementConfig = f5elemf9f2
 				}
 				if f5iter.ResourceConfig.InstanceType != nil {
 					f5elemf9.InstanceType = svcsdktypes.TrainingInstanceType(*f5iter.ResourceConfig.InstanceType)

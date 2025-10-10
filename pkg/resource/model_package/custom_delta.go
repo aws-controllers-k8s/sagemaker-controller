@@ -34,11 +34,14 @@ func customSetDefaults(
 			}
 		}
 	}
+
 	// Default is for KMSKeyID to be ""
 	defaultKMSKeyID := aws.String("")
-
+	// Defaults for ValidationSpecification
 	if ackcompare.IsNotNil(a.ko.Spec.ValidationSpecification) && ackcompare.IsNotNil(b.ko.Spec.ValidationSpecification) {
 		for index := range a.ko.Spec.ValidationSpecification.ValidationProfiles {
+
+			// KMSKeyID default to empty string
 			if ackcompare.IsNil(a.ko.Spec.ValidationSpecification.ValidationProfiles[index].TransformJobDefinition.TransformOutput.KMSKeyID) &&
 				ackcompare.IsNotNil(b.ko.Spec.ValidationSpecification.ValidationProfiles[index].TransformJobDefinition.TransformOutput.KMSKeyID) {
 				a.ko.Spec.ValidationSpecification.ValidationProfiles[index].TransformJobDefinition.TransformOutput.KMSKeyID = defaultKMSKeyID

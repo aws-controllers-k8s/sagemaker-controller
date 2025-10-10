@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.16.2
+    controller-gen.kubebuilder.io/version: v0.19.0
   name: apps.sagemaker.services.k8s.aws
 spec:
   group: sagemaker.services.k8s.aws
@@ -58,10 +58,14 @@ spec:
 
                   Regex Pattern: `^d-(-*[a-z0-9]){1,61}$`
                 type: string
+              recoveryMode:
+                description: Indicates whether the application is launched in recovery
+                  mode.
+                type: boolean
               resourceSpec:
                 description: |-
-                  The instance type and the Amazon Resource Name (ARN) of the SageMaker image
-                  created on the instance.
+                  The instance type and the Amazon Resource Name (ARN) of the SageMaker AI
+                  image created on the instance.
 
                   The value of InstanceType passed as part of the ResourceSpec in the CreateApp
                   call overrides the value passed as part of the ResourceSpec configured for

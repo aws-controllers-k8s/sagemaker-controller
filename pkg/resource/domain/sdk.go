@@ -382,45 +382,86 @@ func (rm *resourceManager) sdkFind(
 			if resp.DomainSettings.DockerSettings.EnableDockerAccess != "" {
 				f8f0.EnableDockerAccess = aws.String(string(resp.DomainSettings.DockerSettings.EnableDockerAccess))
 			}
+			if resp.DomainSettings.DockerSettings.RootlessDocker != "" {
+				f8f0.RootlessDocker = aws.String(string(resp.DomainSettings.DockerSettings.RootlessDocker))
+			}
 			if resp.DomainSettings.DockerSettings.VpcOnlyTrustedAccounts != nil {
 				f8f0.VPCOnlyTrustedAccounts = aws.StringSlice(resp.DomainSettings.DockerSettings.VpcOnlyTrustedAccounts)
 			}
 			f8.DockerSettings = f8f0
 		}
+		if resp.DomainSettings.IpAddressType != "" {
+			f8.IPAddressType = aws.String(string(resp.DomainSettings.IpAddressType))
+		}
 		if resp.DomainSettings.RStudioServerProDomainSettings != nil {
-			f8f1 := &svcapitypes.RStudioServerProDomainSettings{}
+			f8f2 := &svcapitypes.RStudioServerProDomainSettings{}
 			if resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec != nil {
-				f8f1f0 := &svcapitypes.ResourceSpec{}
+				f8f2f0 := &svcapitypes.ResourceSpec{}
 				if resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType != "" {
-					f8f1f0.InstanceType = aws.String(string(resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType))
+					f8f2f0.InstanceType = aws.String(string(resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType))
 				}
 				if resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigArn != nil {
-					f8f1f0.LifecycleConfigARN = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigArn
+					f8f2f0.LifecycleConfigARN = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigArn
 				}
 				if resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageArn != nil {
-					f8f1f0.SageMakerImageARN = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageArn
+					f8f2f0.SageMakerImageARN = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageArn
 				}
 				if resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f8f1f0.SageMakerImageVersionAlias = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+					f8f2f0.SageMakerImageVersionAlias = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias
 				}
 				if resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionArn != nil {
-					f8f1f0.SageMakerImageVersionARN = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionArn
+					f8f2f0.SageMakerImageVersionARN = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionArn
 				}
-				f8f1.DefaultResourceSpec = f8f1f0
+				f8f2.DefaultResourceSpec = f8f2f0
 			}
 			if resp.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleArn != nil {
-				f8f1.DomainExecutionRoleARN = resp.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleArn
+				f8f2.DomainExecutionRoleARN = resp.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleArn
 			}
 			if resp.DomainSettings.RStudioServerProDomainSettings.RStudioConnectUrl != nil {
-				f8f1.RStudioConnectURL = resp.DomainSettings.RStudioServerProDomainSettings.RStudioConnectUrl
+				f8f2.RStudioConnectURL = resp.DomainSettings.RStudioServerProDomainSettings.RStudioConnectUrl
 			}
 			if resp.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerUrl != nil {
-				f8f1.RStudioPackageManagerURL = resp.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerUrl
+				f8f2.RStudioPackageManagerURL = resp.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerUrl
 			}
-			f8.RStudioServerProDomainSettings = f8f1
+			f8.RStudioServerProDomainSettings = f8f2
 		}
 		if resp.DomainSettings.SecurityGroupIds != nil {
 			f8.SecurityGroupIDs = aws.StringSlice(resp.DomainSettings.SecurityGroupIds)
+		}
+		if resp.DomainSettings.TrustedIdentityPropagationSettings != nil {
+			f8f4 := &svcapitypes.TrustedIdentityPropagationSettings{}
+			if resp.DomainSettings.TrustedIdentityPropagationSettings.Status != "" {
+				f8f4.Status = aws.String(string(resp.DomainSettings.TrustedIdentityPropagationSettings.Status))
+			}
+			f8.TrustedIdentityPropagationSettings = f8f4
+		}
+		if resp.DomainSettings.UnifiedStudioSettings != nil {
+			f8f5 := &svcapitypes.UnifiedStudioSettings{}
+			if resp.DomainSettings.UnifiedStudioSettings.DomainAccountId != nil {
+				f8f5.DomainAccountID = resp.DomainSettings.UnifiedStudioSettings.DomainAccountId
+			}
+			if resp.DomainSettings.UnifiedStudioSettings.DomainId != nil {
+				f8f5.DomainID = resp.DomainSettings.UnifiedStudioSettings.DomainId
+			}
+			if resp.DomainSettings.UnifiedStudioSettings.DomainRegion != nil {
+				f8f5.DomainRegion = resp.DomainSettings.UnifiedStudioSettings.DomainRegion
+			}
+			if resp.DomainSettings.UnifiedStudioSettings.EnvironmentId != nil {
+				f8f5.EnvironmentID = resp.DomainSettings.UnifiedStudioSettings.EnvironmentId
+			}
+			if resp.DomainSettings.UnifiedStudioSettings.ProjectId != nil {
+				f8f5.ProjectID = resp.DomainSettings.UnifiedStudioSettings.ProjectId
+			}
+			if resp.DomainSettings.UnifiedStudioSettings.ProjectS3Path != nil {
+				f8f5.ProjectS3Path = resp.DomainSettings.UnifiedStudioSettings.ProjectS3Path
+			}
+			if resp.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationArn != nil {
+				f8f5.SingleSignOnApplicationARN = resp.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationArn
+			}
+			if resp.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess != "" {
+				f8f5.StudioWebPortalAccess = aws.String(string(resp.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess))
+			}
+			f8.UnifiedStudioSettings = f8f5
 		}
 		ko.Spec.DomainSettings = f8
 	} else {
@@ -520,6 +561,11 @@ func (rm *resourceManager) sdkCreate(
 	if resp.DomainArn != nil {
 		arn := ackv1alpha1.AWSResourceName(*resp.DomainArn)
 		ko.Status.ACKResourceMetadata.ARN = &arn
+	}
+	if resp.DomainId != nil {
+		ko.Status.DomainID = resp.DomainId
+	} else {
+		ko.Status.DomainID = nil
 	}
 	if resp.Url != nil {
 		ko.Status.URL = resp.Url
@@ -830,45 +876,86 @@ func (rm *resourceManager) newCreateRequestPayload(
 			if r.ko.Spec.DomainSettings.DockerSettings.EnableDockerAccess != nil {
 				f5f0.EnableDockerAccess = svcsdktypes.FeatureStatus(*r.ko.Spec.DomainSettings.DockerSettings.EnableDockerAccess)
 			}
+			if r.ko.Spec.DomainSettings.DockerSettings.RootlessDocker != nil {
+				f5f0.RootlessDocker = svcsdktypes.FeatureStatus(*r.ko.Spec.DomainSettings.DockerSettings.RootlessDocker)
+			}
 			if r.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts != nil {
 				f5f0.VpcOnlyTrustedAccounts = aws.ToStringSlice(r.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts)
 			}
 			f5.DockerSettings = f5f0
 		}
+		if r.ko.Spec.DomainSettings.IPAddressType != nil {
+			f5.IpAddressType = svcsdktypes.IPAddressType(*r.ko.Spec.DomainSettings.IPAddressType)
+		}
 		if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings != nil {
-			f5f1 := &svcsdktypes.RStudioServerProDomainSettings{}
+			f5f2 := &svcsdktypes.RStudioServerProDomainSettings{}
 			if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec != nil {
-				f5f1f0 := &svcsdktypes.ResourceSpec{}
+				f5f2f0 := &svcsdktypes.ResourceSpec{}
 				if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType != nil {
-					f5f1f0.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType)
+					f5f2f0.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType)
 				}
 				if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
-					f5f1f0.LifecycleConfigArn = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN
+					f5f2f0.LifecycleConfigArn = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN
 				}
 				if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN != nil {
-					f5f1f0.SageMakerImageArn = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN
+					f5f2f0.SageMakerImageArn = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN
 				}
 				if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f5f1f0.SageMakerImageVersionAlias = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+					f5f2f0.SageMakerImageVersionAlias = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias
 				}
 				if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
-					f5f1f0.SageMakerImageVersionArn = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN
+					f5f2f0.SageMakerImageVersionArn = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN
 				}
-				f5f1.DefaultResourceSpec = f5f1f0
+				f5f2.DefaultResourceSpec = f5f2f0
 			}
 			if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN != nil {
-				f5f1.DomainExecutionRoleArn = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN
+				f5f2.DomainExecutionRoleArn = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN
 			}
 			if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL != nil {
-				f5f1.RStudioConnectUrl = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL
+				f5f2.RStudioConnectUrl = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL
 			}
 			if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL != nil {
-				f5f1.RStudioPackageManagerUrl = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL
+				f5f2.RStudioPackageManagerUrl = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL
 			}
-			f5.RStudioServerProDomainSettings = f5f1
+			f5.RStudioServerProDomainSettings = f5f2
 		}
 		if r.ko.Spec.DomainSettings.SecurityGroupIDs != nil {
 			f5.SecurityGroupIds = aws.ToStringSlice(r.ko.Spec.DomainSettings.SecurityGroupIDs)
+		}
+		if r.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings != nil {
+			f5f4 := &svcsdktypes.TrustedIdentityPropagationSettings{}
+			if r.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings.Status != nil {
+				f5f4.Status = svcsdktypes.FeatureStatus(*r.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings.Status)
+			}
+			f5.TrustedIdentityPropagationSettings = f5f4
+		}
+		if r.ko.Spec.DomainSettings.UnifiedStudioSettings != nil {
+			f5f5 := &svcsdktypes.UnifiedStudioSettings{}
+			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainAccountID != nil {
+				f5f5.DomainAccountId = r.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainAccountID
+			}
+			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainID != nil {
+				f5f5.DomainId = r.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainID
+			}
+			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainRegion != nil {
+				f5f5.DomainRegion = r.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainRegion
+			}
+			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.EnvironmentID != nil {
+				f5f5.EnvironmentId = r.ko.Spec.DomainSettings.UnifiedStudioSettings.EnvironmentID
+			}
+			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectID != nil {
+				f5f5.ProjectId = r.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectID
+			}
+			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectS3Path != nil {
+				f5f5.ProjectS3Path = r.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectS3Path
+			}
+			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationARN != nil {
+				f5f5.SingleSignOnApplicationArn = r.ko.Spec.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationARN
+			}
+			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess != nil {
+				f5f5.StudioWebPortalAccess = svcsdktypes.FeatureStatus(*r.ko.Spec.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess)
+			}
+			f5.UnifiedStudioSettings = f5f5
 		}
 		res.DomainSettings = f5
 	}
@@ -1392,7 +1479,8 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 		return false
 	}
 	switch terminalErr.ErrorCode() {
-	case "ResourceNotFound",
+	case "ValidationException",
+		"ResourceNotFound",
 		"InvalidParameterCombination",
 		"InvalidParameterValue",
 		"MissingParameter":

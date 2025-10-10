@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.16.2
+    controller-gen.kubebuilder.io/version: v0.19.0
   name: labelingjobs.sagemaker.services.k8s.aws
 spec:
   group: sagemaker.services.k8s.aws
@@ -393,13 +393,12 @@ spec:
 
                     - The name can't end with "-metadata".
 
-                    - If you are using one of the following built-in task types (https://docs.aws.amazon.com/sagemaker/latest/dg/sms-task-types.html),
-                      the attribute name must end with "-ref". If the task type you are using
-                      is not listed below, the attribute name must not end with "-ref". Image
-                      semantic segmentation (SemanticSegmentation), and adjustment (AdjustmentSemanticSegmentation)
-                      and verification (VerificationSemanticSegmentation) labeling jobs for
-                      this task type. Video frame object detection (VideoObjectDetection), and
-                      adjustment and verification (AdjustmentVideoObjectDetection) labeling
+                    - If you are using one of the built-in task types (https://docs.aws.amazon.com/sagemaker/latest/dg/sms-task-types.html)
+                      or one of the following, the attribute name must end with "-ref". Image
+                      semantic segmentation (SemanticSegmentation) and adjustment (AdjustmentSemanticSegmentation)
+                      labeling jobs for this task type. One exception is that verification (VerificationSemanticSegmentation)
+                      must not end with -"ref". Video frame object detection (VideoObjectDetection),
+                      and adjustment and verification (AdjustmentVideoObjectDetection) labeling
                       jobs for this task type. Video frame object tracking (VideoObjectTracking),
                       and adjustment and verification (AdjustmentVideoObjectTracking) labeling
                       jobs for this task type. 3D point cloud semantic segmentation (3DPointCloudSemanticSegmentation),
@@ -428,13 +427,9 @@ spec:
 
                   For named entity recognition jobs, in addition to "labels", you must provide
                   worker instructions in the label category configuration file using the "instructions"
-                  parameter: "instructions": {"shortInstruction":"
-                  Add header
-
-                  Add Instructions
-                  ", "fullInstruction":"
-                  Add additional instructions.
-                  "}. For details and an example, see Create a Named Entity Recognition Labeling
+                  parameter: "instructions": {"shortInstruction":"<h1>Add header</h1><p>Add
+                  Instructions</p>", "fullInstruction":"<p>Add additional instructions.</p>"}.
+                  For details and an example, see Create a Named Entity Recognition Labeling
                   Job (API) (https://docs.aws.amazon.com/sagemaker/latest/dg/sms-named-entity-recg.html#sms-creating-ner-api).
 
                   For all other built-in task types (https://docs.aws.amazon.com/sagemaker/latest/dg/sms-task-types.html)

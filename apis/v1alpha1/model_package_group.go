@@ -22,7 +22,7 @@ import (
 
 // ModelPackageGroupSpec defines the desired state of ModelPackageGroup.
 //
-// A group of versioned models in the model registry.
+// A group of versioned models in the Model Registry.
 type ModelPackageGroupSpec struct {
 
 	// A description for the model group.

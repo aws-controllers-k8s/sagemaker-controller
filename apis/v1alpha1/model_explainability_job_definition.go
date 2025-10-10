@@ -44,8 +44,8 @@ type ModelExplainabilityJobDefinitionSpec struct {
 	ModelExplainabilityJobOutputConfig *MonitoringOutputConfig `json:"modelExplainabilityJobOutputConfig"`
 	// Networking options for a model explainability job.
 	NetworkConfig *MonitoringNetworkConfig `json:"networkConfig,omitempty"`
-	// The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume
-	// to perform tasks on your behalf.
+	// The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker AI can
+	// assume to perform tasks on your behalf.
 	//
 	// Regex Pattern: `^arn:aws[a-z\-]*:iam::\d{12}:role/?[a-zA-Z_0-9+=,.@\-_/]+$`
 	// +kubebuilder:validation:Required

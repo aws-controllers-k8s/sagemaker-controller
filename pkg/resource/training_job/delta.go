@@ -296,6 +296,24 @@ func newResourceDelta(
 				delta.Add("Spec.ResourceConfig.InstanceGroups", a.ko.Spec.ResourceConfig.InstanceGroups, b.ko.Spec.ResourceConfig.InstanceGroups)
 			}
 		}
+		if ackcompare.HasNilDifference(a.ko.Spec.ResourceConfig.InstancePlacementConfig, b.ko.Spec.ResourceConfig.InstancePlacementConfig) {
+			delta.Add("Spec.ResourceConfig.InstancePlacementConfig", a.ko.Spec.ResourceConfig.InstancePlacementConfig, b.ko.Spec.ResourceConfig.InstancePlacementConfig)
+		} else if a.ko.Spec.ResourceConfig.InstancePlacementConfig != nil && b.ko.Spec.ResourceConfig.InstancePlacementConfig != nil {
+			if ackcompare.HasNilDifference(a.ko.Spec.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs, b.ko.Spec.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs) {
+				delta.Add("Spec.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs", a.ko.Spec.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs, b.ko.Spec.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs)
+			} else if a.ko.Spec.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs != nil && b.ko.Spec.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs != nil {
+				if *a.ko.Spec.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs != *b.ko.Spec.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs {
+					delta.Add("Spec.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs", a.ko.Spec.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs, b.ko.Spec.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs)
+				}
+			}
+			if len(a.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications) != len(b.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications) {
+				delta.Add("Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications", a.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications, b.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications)
+			} else if len(a.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications) > 0 {
+				if !reflect.DeepEqual(a.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications, b.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications) {
+					delta.Add("Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications", a.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications, b.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications)
+				}
+			}
+		}
 		if ackcompare.HasNilDifference(a.ko.Spec.ResourceConfig.InstanceType, b.ko.Spec.ResourceConfig.InstanceType) {
 			delta.Add("Spec.ResourceConfig.InstanceType", a.ko.Spec.ResourceConfig.InstanceType, b.ko.Spec.ResourceConfig.InstanceType)
 		} else if a.ko.Spec.ResourceConfig.InstanceType != nil && b.ko.Spec.ResourceConfig.InstanceType != nil {
