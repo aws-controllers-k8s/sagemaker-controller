@@ -83,8 +83,8 @@ resources:
         404:
           code: ResourceNotFound
       terminal_codes:
-        - ResourceNotFound
         - ValidationException
+        - ResourceNotFound
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
