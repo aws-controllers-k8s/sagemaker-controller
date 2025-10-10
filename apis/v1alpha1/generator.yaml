@@ -930,6 +930,60 @@ resources:
       Tags:
         compare:
           is_ignored: true
+  Space:
+    exceptions:
+      errors:
+        404:
+          code: ResourceNotFound
+      terminal_codes:
+        - ResourceNotFound
+        - ResourceLimitExceeded
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+    hooks:
+      sdk_read_one_post_set_output:
+        code: rm.customDescribeSpaceSetOutput(ko)
+      sdk_update_pre_build_request:
+        template_path: common/sdk_update_pre_build_request.go.tpl
+      sdk_delete_pre_build_request:
+        template_path: common/sdk_delete_pre_build_request.go.tpl
+      sdk_delete_post_request:
+        template_path: common/sdk_delete_post_request.go.tpl
+    fields:
+      Status:
+        is_read_only: true
+        print:
+          name: STATUS
+        from:
+          operation: DescribeSpace
+          path: Status
+      FailureReason:
+        is_read_only: true
+        print:
+          name: FAILURE-REASON
+          priority: 1
+        from:
+          operation: DescribeSpace
+          path: FailureReason
+      HomeEfsFileSystemUid:
+        is_read_only: true
+        from:
+          operation: DescribeSpace
+          path: HomeEfsFileSystemUid
+      CreationTime:
+        is_read_only: true
+        from:
+          operation: DescribeSpace
+          path: CreationTime
+      Url:
+        is_read_only: true
+        from:
+          operation: DescribeSpace
+          path: Url
+      Tags:
+        compare:
+          is_ignored: true
   TrainingJob:
     reconcile:
       requeue_on_success_seconds: 300
@@ -1180,7 +1234,7 @@ ignore:
     - PresignedMlflowTrackingServerUrl
     # - ProcessingJob
     - Project
-    - Space
+    # - Space
     - StudioLifecycleConfig
     # - TrainingJob
     - TrainingPlan
@@ -1204,10 +1258,7 @@ ignore:
     - DisableProfiler
     - BatchTransformInput_
     - MonitoringParquetDatasetFormat
-    - SpaceName
-    - DefaultSpaceSettings
     - BatchDataCaptureConfig
-    - CodeRepositories
     - TableFormat
     - RandomSeed
     - TrainingImageConfig
@@ -1253,5 +1304,3 @@ ignore:
     - AdditionalS3DataSource.ETag
     - ModelPackageContainerDefinition.ModelDataETag
     - SourceAlgorithm.ModelDataETag
-    - CustomFileSystemConfig.FSxLustreFileSystemConfig
-    - CustomFileSystemConfig.S3FileSystemConfig

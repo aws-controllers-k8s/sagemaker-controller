@@ -1,9 +1,0 @@
-apiVersion: sagemaker.services.k8s.aws/v1alpha1
-kind: App
-metadata:
-  name: default
-spec:
-  appName: default
-  appType: JupyterServer
-  userProfileName: $USER_PROFILE_NAME
-  domainID: $DOMAIN_ID
