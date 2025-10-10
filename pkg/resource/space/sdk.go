@@ -538,6 +538,8 @@ func (rm *resourceManager) newCreateRequestPayload(
 						f4f2elemf0.FileSystemId = f4f2iter.EFSFileSystem.FileSystemID
 					}
 					f4f2elemf0Parent.Value = *f4f2elemf0
+					f4f2elem = f4f2elemf0Parent
+					isInterfaceSet = true
 				}
 				if f4f2iter.FSxLustreFileSystem != nil {
 					if isInterfaceSet {
@@ -549,6 +551,8 @@ func (rm *resourceManager) newCreateRequestPayload(
 						f4f2elemf1.FileSystemId = f4f2iter.FSxLustreFileSystem.FileSystemID
 					}
 					f4f2elemf1Parent.Value = *f4f2elemf1
+					f4f2elem = f4f2elemf1Parent
+					isInterfaceSet = true
 				}
 				if f4f2iter.S3FileSystem != nil {
 					if isInterfaceSet {
@@ -560,6 +564,8 @@ func (rm *resourceManager) newCreateRequestPayload(
 						f4f2elemf2.S3Uri = f4f2iter.S3FileSystem.S3URI
 					}
 					f4f2elemf2Parent.Value = *f4f2elemf2
+					f4f2elem = f4f2elemf2Parent
+					isInterfaceSet = true
 				}
 				f4f2 = append(f4f2, f4f2elem)
 			}
@@ -870,6 +876,8 @@ func (rm *resourceManager) newUpdateRequestPayload(
 						f3f2elemf0.FileSystemId = f3f2iter.EFSFileSystem.FileSystemID
 					}
 					f3f2elemf0Parent.Value = *f3f2elemf0
+					f3f2elem = f3f2elemf0Parent
+					isInterfaceSet = true
 				}
 				if f3f2iter.FSxLustreFileSystem != nil {
 					if isInterfaceSet {
@@ -881,6 +889,8 @@ func (rm *resourceManager) newUpdateRequestPayload(
 						f3f2elemf1.FileSystemId = f3f2iter.FSxLustreFileSystem.FileSystemID
 					}
 					f3f2elemf1Parent.Value = *f3f2elemf1
+					f3f2elem = f3f2elemf1Parent
+					isInterfaceSet = true
 				}
 				if f3f2iter.S3FileSystem != nil {
 					if isInterfaceSet {
@@ -892,6 +902,8 @@ func (rm *resourceManager) newUpdateRequestPayload(
 						f3f2elemf2.S3Uri = f3f2iter.S3FileSystem.S3URI
 					}
 					f3f2elemf2Parent.Value = *f3f2elemf2
+					f3f2elem = f3f2elemf2Parent
+					isInterfaceSet = true
 				}
 				f3f2 = append(f3f2, f3f2elem)
 			}
