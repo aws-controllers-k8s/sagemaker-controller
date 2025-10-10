@@ -21,7 +21,7 @@ from acktest.resources import random_suffix_name
 from e2e import create_sagemaker_resource, delete_custom_resource, wait_for_status
 from e2e.replacement_values import REPLACEMENT_VALUES
 
-STUDIO_WAIT_PERIOD = 180
+STUDIO_WAIT_PERIOD = 120
 STUDIO_WAIT_LENGTH = 30
 STUDIO_STATUS_INSERVICE = "InService"
 
