@@ -191,7 +191,7 @@ resources:
       FailureReason:
         is_read_only: true
         print:
-          name: FAILURE-REASON
+          name: FAILURE_REASON
           priority: 1
         from:
           operation: DescribeEndpoint
@@ -244,7 +244,7 @@ resources:
       FailureReason:
         is_read_only: true
         print:
-          name: FAILURE-REASON
+          name: FAILURE_REASON
           priority: 1
         from:
           operation: DescribeFeatureGroup
@@ -296,7 +296,7 @@ resources:
       FailureReason:
         is_read_only: true
         print:
-          name: FAILURE-REASON
+          name: FAILURE_REASON
           priority: 1
         from:
           operation: DescribeHyperParameterTuningJob
@@ -366,7 +366,7 @@ resources:
       FailureReason:
         is_read_only: true
         print:
-          name: FAILURE-REASON
+          name: FAILURE_REASON
           priority: 1
         from:
           operation: DescribeInferenceComponent
@@ -437,7 +437,7 @@ resources:
       FailureReason:
         is_read_only: true
         print:
-          name: FAILURE-REASON
+          name: FAILURE_REASON
           priority: 1
         from:
           operation: DescribeLabelingJob
@@ -674,7 +674,7 @@ resources:
       FailureReason:
         is_read_only: true
         print:
-          name: FAILURE-REASON
+          name: FAILURE_REASON
           priority: 1
         from:
           operation: DescribeMonitoringSchedule
@@ -795,7 +795,7 @@ resources:
       FailureReason:
         is_read_only: true
         print:
-          name: FAILURE-REASON
+          name: FAILURE_REASON
           priority: 1
         from:
           operation: DescribeNotebookInstance
@@ -864,7 +864,7 @@ resources:
       FailureReason:
         is_read_only: true
         print:
-          name: FAILURE-REASON
+          name: FAILURE_REASON
           priority: 1
         from:
           operation: DescribePipelineExecution
@@ -923,7 +923,7 @@ resources:
       FailureReason:
         is_read_only: true
         print:
-          name: FAILURE-REASON
+          name: FAILURE_REASON
           priority: 1
         from:
           operation: DescribeProcessingJob
@@ -937,8 +937,6 @@ resources:
         404:
           code: ResourceNotFound
       terminal_codes:
-        - ResourceNotFound
-        - ResourceLimitExceeded
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
@@ -966,7 +964,7 @@ resources:
       FailureReason:
         is_read_only: true
         print:
-          name: FAILURE-REASON
+          name: FAILURE_REASON
           priority: 1
         from:
           operation: DescribeSpace
@@ -1051,7 +1049,7 @@ resources:
       FailureReason:
         is_read_only: true
         print:
-          name: FAILURE-REASON
+          name: FAILURE_REASON
           priority: 1
         from:
           operation: DescribeTrainingJob
@@ -1135,7 +1133,7 @@ resources:
       FailureReason:
         is_read_only: true
         print:
-          name: FAILURE-REASON
+          name: FAILURE_REASON
           priority: 1
         from:
           operation: DescribeTransformJob
