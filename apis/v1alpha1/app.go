@@ -47,6 +47,11 @@ type AppSpec struct {
 	// those three ResourceSpec values for a KernelGateway app, the CreateApp call
 	// fails with a request validation error.
 	ResourceSpec *ResourceSpec `json:"resourceSpec,omitempty"`
+	// The name of the space. If this value is not set, then UserProfileName must
+	// be set.
+	//
+	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$`
+	SpaceName *string `json:"spaceName,omitempty"`
 	// Each tag consists of a key and an optional value. Tag keys must be unique
 	// per resource.
 	Tags []*Tag `json:"tags,omitempty"`

@@ -3254,16 +3254,16 @@ const (
 	SpaceSortKey_LastModifiedTime SpaceSortKey = "LastModifiedTime"
 )
 
-type SpaceStatus string
+type SpaceStatus_SDK string
 
 const (
-	SpaceStatus_Delete_Failed SpaceStatus = "Delete_Failed"
-	SpaceStatus_Deleting      SpaceStatus = "Deleting"
-	SpaceStatus_Failed        SpaceStatus = "Failed"
-	SpaceStatus_InService     SpaceStatus = "InService"
-	SpaceStatus_Pending       SpaceStatus = "Pending"
-	SpaceStatus_Update_Failed SpaceStatus = "Update_Failed"
-	SpaceStatus_Updating      SpaceStatus = "Updating"
+	SpaceStatus_SDK_Delete_Failed SpaceStatus_SDK = "Delete_Failed"
+	SpaceStatus_SDK_Deleting      SpaceStatus_SDK = "Deleting"
+	SpaceStatus_SDK_Failed        SpaceStatus_SDK = "Failed"
+	SpaceStatus_SDK_InService     SpaceStatus_SDK = "InService"
+	SpaceStatus_SDK_Pending       SpaceStatus_SDK = "Pending"
+	SpaceStatus_SDK_Update_Failed SpaceStatus_SDK = "Update_Failed"
+	SpaceStatus_SDK_Updating      SpaceStatus_SDK = "Updating"
 )
 
 type SplitType string

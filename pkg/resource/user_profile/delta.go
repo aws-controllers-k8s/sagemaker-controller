@@ -166,6 +166,13 @@ func newResourceDelta(
 		if ackcompare.HasNilDifference(a.ko.Spec.UserSettings.JupyterLabAppSettings, b.ko.Spec.UserSettings.JupyterLabAppSettings) {
 			delta.Add("Spec.UserSettings.JupyterLabAppSettings", a.ko.Spec.UserSettings.JupyterLabAppSettings, b.ko.Spec.UserSettings.JupyterLabAppSettings)
 		} else if a.ko.Spec.UserSettings.JupyterLabAppSettings != nil && b.ko.Spec.UserSettings.JupyterLabAppSettings != nil {
+			if len(a.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories) != len(b.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories) {
+				delta.Add("Spec.UserSettings.JupyterLabAppSettings.CodeRepositories", a.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories, b.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories)
+			} else if len(a.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories) > 0 {
+				if !reflect.DeepEqual(a.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories, b.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories) {
+					delta.Add("Spec.UserSettings.JupyterLabAppSettings.CodeRepositories", a.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories, b.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories)
+				}
+			}
 			if len(a.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages) != len(b.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages) {
 				delta.Add("Spec.UserSettings.JupyterLabAppSettings.CustomImages", a.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages, b.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages)
 			} else if len(a.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages) > 0 {
@@ -223,6 +230,13 @@ func newResourceDelta(
 		if ackcompare.HasNilDifference(a.ko.Spec.UserSettings.JupyterServerAppSettings, b.ko.Spec.UserSettings.JupyterServerAppSettings) {
 			delta.Add("Spec.UserSettings.JupyterServerAppSettings", a.ko.Spec.UserSettings.JupyterServerAppSettings, b.ko.Spec.UserSettings.JupyterServerAppSettings)
 		} else if a.ko.Spec.UserSettings.JupyterServerAppSettings != nil && b.ko.Spec.UserSettings.JupyterServerAppSettings != nil {
+			if len(a.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories) != len(b.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories) {
+				delta.Add("Spec.UserSettings.JupyterServerAppSettings.CodeRepositories", a.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories, b.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories)
+			} else if len(a.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories) > 0 {
+				if !reflect.DeepEqual(a.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories, b.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories) {
+					delta.Add("Spec.UserSettings.JupyterServerAppSettings.CodeRepositories", a.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories, b.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories)
+				}
+			}
 			if ackcompare.HasNilDifference(a.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec, b.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec) {
 				delta.Add("Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec", a.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec, b.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec)
 			} else if a.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec != nil && b.ko.Spec.UserSettings.JupyterServerAppSettings.DefaultResourceSpec != nil {

@@ -3,9 +3,9 @@ kind: UserProfile
 metadata:
   name: $USER_PROFILE_NAME
 spec:
-  userProfileName: $USER_PROFILE_NAME
   domainID: $DOMAIN_ID
-  userSettings: 
-    kernelGatewayAppSettings: 
+  userProfileName: $USER_PROFILE_NAME
+  userSettings:
+    kernelGatewayAppSettings:
       defaultResourceSpec:
         instanceType: ml.t3.micro

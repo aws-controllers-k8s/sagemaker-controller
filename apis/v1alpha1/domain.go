@@ -39,6 +39,8 @@ type DomainSpec struct {
 	// The mode of authentication that members use to access the domain.
 	// +kubebuilder:validation:Required
 	AuthMode *string `json:"authMode"`
+	// The default settings for shared spaces that users create in the domain.
+	DefaultSpaceSettings *DefaultSpaceSettings `json:"defaultSpaceSettings,omitempty"`
 	// The default settings to use to create a user profile when UserSettings isn't
 	// specified in the call to the CreateUserProfile API.
 	//

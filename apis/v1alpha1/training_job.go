@@ -308,7 +308,7 @@ type TrainingJobStatus struct {
 // TrainingJob is the Schema for the TrainingJobs API
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:printcolumn:name="FAILURE-REASON",type=string,priority=1,JSONPath=`.status.failureReason`
+// +kubebuilder:printcolumn:name="FAILURE_REASON",type=string,priority=1,JSONPath=`.status.failureReason`
 // +kubebuilder:printcolumn:name="SECONDARY-STATUS",type=string,priority=0,JSONPath=`.status.secondaryStatus`
 // +kubebuilder:printcolumn:name="STATUS",type=string,priority=0,JSONPath=`.status.trainingJobStatus`
 type TrainingJob struct {

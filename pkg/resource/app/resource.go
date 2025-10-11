@@ -101,9 +101,13 @@ func (r *resource) SetIdentifiers(identifier *ackv1alpha1.AWSIdentifiers) error 
 	if f2ok {
 		r.ko.Spec.DomainID = aws.String(f2)
 	}
-	f3, f3ok := identifier.AdditionalKeys["userProfileName"]
+	f3, f3ok := identifier.AdditionalKeys["spaceName"]
 	if f3ok {
-		r.ko.Spec.UserProfileName = aws.String(f3)
+		r.ko.Spec.SpaceName = aws.String(f3)
+	}
+	f4, f4ok := identifier.AdditionalKeys["userProfileName"]
+	if f4ok {
+		r.ko.Spec.UserProfileName = aws.String(f4)
 	}
 
 	return nil
@@ -127,9 +131,13 @@ func (r *resource) PopulateResourceFromAnnotation(fields map[string]string) erro
 	}
 	r.ko.Spec.DomainID = &f2
 
-	f3, f3ok := fields["userProfileName"]
+	f3, f3ok := fields["spaceName"]
 	if f3ok {
-		r.ko.Spec.UserProfileName = aws.String(f3)
+		r.ko.Spec.SpaceName = aws.String(f3)
+	}
+	f4, f4ok := fields["userProfileName"]
+	if f4ok {
+		r.ko.Spec.UserProfileName = aws.String(f4)
 	}
 
 	return nil

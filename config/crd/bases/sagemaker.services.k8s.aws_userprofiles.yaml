@@ -155,6 +155,25 @@ spec:
                             fileSystemPath:
                               type: string
                           type: object
+                        fSxLustreFileSystemConfig:
+                          description: |-
+                            The settings for assigning a custom Amazon FSx for Lustre file system to
+                            a user profile or space for an Amazon SageMaker Domain.
+                          properties:
+                            fileSystemID:
+                              type: string
+                            fileSystemPath:
+                              type: string
+                          type: object
+                        s3FileSystemConfig:
+                          description: Configuration for the custom Amazon S3 file
+                            system.
+                          properties:
+                            mountPath:
+                              type: string
+                            s3URI:
+                              type: string
+                          type: object
                       type: object
                     type: array
                   customPosixUserConfig:
@@ -175,6 +194,16 @@ spec:
                   jupyterLabAppSettings:
                     description: The settings for the JupyterLab application.
                     properties:
+                      codeRepositories:
+                        items:
+                          description: |-
+                            A Git repository that SageMaker AI automatically displays to users for cloning
+                            in the JupyterServer application.
+                          properties:
+                            repositoryURL:
+                              type: string
+                          type: object
+                        type: array
                       customImages:
                         items:
                           description: |-
@@ -220,6 +249,16 @@ spec:
                   jupyterServerAppSettings:
                     description: The JupyterServer app settings.
                     properties:
+                      codeRepositories:
+                        items:
+                          description: |-
+                            A Git repository that SageMaker AI automatically displays to users for cloning
+                            in the JupyterServer application.
+                          properties:
+                            repositoryURL:
+                              type: string
+                          type: object
+                        type: array
                       defaultResourceSpec:
                         description: |-
                           Specifies the ARN's of a SageMaker AI image and SageMaker AI image version,

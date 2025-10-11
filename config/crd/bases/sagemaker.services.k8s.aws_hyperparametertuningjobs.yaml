@@ -16,7 +16,7 @@ spec:
   versions:
   - additionalPrinterColumns:
     - jsonPath: .status.failureReason
-      name: FAILURE-REASON
+      name: FAILURE_REASON
       priority: 1
       type: string
     - jsonPath: .status.hyperParameterTuningJobStatus

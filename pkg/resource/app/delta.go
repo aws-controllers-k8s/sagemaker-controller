@@ -110,6 +110,13 @@ func newResourceDelta(
 			}
 		}
 	}
+	if ackcompare.HasNilDifference(a.ko.Spec.SpaceName, b.ko.Spec.SpaceName) {
+		delta.Add("Spec.SpaceName", a.ko.Spec.SpaceName, b.ko.Spec.SpaceName)
+	} else if a.ko.Spec.SpaceName != nil && b.ko.Spec.SpaceName != nil {
+		if *a.ko.Spec.SpaceName != *b.ko.Spec.SpaceName {
+			delta.Add("Spec.SpaceName", a.ko.Spec.SpaceName, b.ko.Spec.SpaceName)
+		}
+	}
 	if ackcompare.HasNilDifference(a.ko.Spec.UserProfileName, b.ko.Spec.UserProfileName) {
 		delta.Add("Spec.UserProfileName", a.ko.Spec.UserProfileName, b.ko.Spec.UserProfileName)
 	} else if a.ko.Spec.UserProfileName != nil && b.ko.Spec.UserProfileName != nil {

@@ -356,6 +356,8 @@ func (rm *resourceManager) newCreateRequestPayload(
 						f2elemf0f0.Dimension = &dimensionCopy
 					}
 					f2elemf0f0Parent.Value = *f2elemf0f0
+					f2elemf0 = f2elemf0f0Parent
+					isInterfaceSet = true
 				}
 				f2elem.CollectionConfig = f2elemf0
 			}

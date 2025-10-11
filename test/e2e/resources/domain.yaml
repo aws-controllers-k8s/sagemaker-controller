@@ -5,9 +5,11 @@ metadata:
 spec:
   domainName: $DOMAIN_NAME
   authMode: IAM
-  defaultUserSettings: 
+  defaultSpaceSettings:
     executionRole: $SAGEMAKER_EXECUTION_ROLE_ARN
-    kernelGatewayAppSettings: 
+  defaultUserSettings:
+    executionRole: $SAGEMAKER_EXECUTION_ROLE_ARN
+    kernelGatewayAppSettings:
       defaultResourceSpec:
         instanceType: ml.t3.micro
   subnetIDs:
