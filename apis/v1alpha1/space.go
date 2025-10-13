@@ -98,7 +98,7 @@ type SpaceStatus struct {
 // Space is the Schema for the Spaces API
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:printcolumn:name="FAILURE_REASON",type=string,priority=1,JSONPath=`.status.failureReason`
+// +kubebuilder:printcolumn:name="FAILURE-REASON",type=string,priority=1,JSONPath=`.status.failureReason`
 // +kubebuilder:printcolumn:name="STATUS",type=string,priority=0,JSONPath=`.status.status`
 type Space struct {
 	metav1.TypeMeta   `json:",inline"`
