@@ -106,77 +106,164 @@ func (rm *resourceManager) sdkFind(
 	} else {
 		ko.Spec.AuthMode = nil
 	}
-	if resp.DefaultUserSettings != nil {
-		f4 := &svcapitypes.UserSettings{}
-		if resp.DefaultUserSettings.CodeEditorAppSettings != nil {
-			f4f0 := &svcapitypes.CodeEditorAppSettings{}
-			if resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec != nil {
-				f4f0f0 := &svcapitypes.ResourceSpec{}
-				if resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.InstanceType != "" {
-					f4f0f0.InstanceType = aws.String(string(resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.InstanceType))
-				}
-				if resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.LifecycleConfigArn != nil {
-					f4f0f0.LifecycleConfigARN = resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.LifecycleConfigArn
-				}
-				if resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageArn != nil {
-					f4f0f0.SageMakerImageARN = resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageArn
-				}
-				if resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f4f0f0.SageMakerImageVersionAlias = resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
-				}
-				if resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionArn != nil {
-					f4f0f0.SageMakerImageVersionARN = resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionArn
-				}
-				f4f0.DefaultResourceSpec = f4f0f0
-			}
-			if resp.DefaultUserSettings.CodeEditorAppSettings.LifecycleConfigArns != nil {
-				f4f0.LifecycleConfigARNs = aws.StringSlice(resp.DefaultUserSettings.CodeEditorAppSettings.LifecycleConfigArns)
-			}
-			f4.CodeEditorAppSettings = f4f0
-		}
-		if resp.DefaultUserSettings.CustomFileSystemConfigs != nil {
-			f4f1 := []*svcapitypes.CustomFileSystemConfig{}
-			for _, f4f1iter := range resp.DefaultUserSettings.CustomFileSystemConfigs {
-				f4f1elem := &svcapitypes.CustomFileSystemConfig{}
-				switch f4f1iter.(type) {
+	if resp.DefaultSpaceSettings != nil {
+		f4 := &svcapitypes.DefaultSpaceSettings{}
+		if resp.DefaultSpaceSettings.CustomFileSystemConfigs != nil {
+			f4f0 := []*svcapitypes.CustomFileSystemConfig{}
+			for _, f4f0iter := range resp.DefaultSpaceSettings.CustomFileSystemConfigs {
+				f4f0elem := &svcapitypes.CustomFileSystemConfig{}
+				switch f4f0iter.(type) {
 				case *svcsdktypes.CustomFileSystemConfigMemberEFSFileSystemConfig:
-					f4f1elemf0 := f4f1iter.(*svcsdktypes.CustomFileSystemConfigMemberEFSFileSystemConfig)
-					if f4f1elemf0 != nil {
-						f4f1elemf0f0 := &svcapitypes.EFSFileSystemConfig{}
-						if f4f1elemf0.Value.FileSystemId != nil {
-							f4f1elemf0f0.FileSystemID = f4f1elemf0.Value.FileSystemId
+					f4f0elemf0 := f4f0iter.(*svcsdktypes.CustomFileSystemConfigMemberEFSFileSystemConfig)
+					if f4f0elemf0 != nil {
+						f4f0elemf0f0 := &svcapitypes.EFSFileSystemConfig{}
+						if f4f0elemf0.Value.FileSystemId != nil {
+							f4f0elemf0f0.FileSystemID = f4f0elemf0.Value.FileSystemId
 						}
-						if f4f1elemf0.Value.FileSystemPath != nil {
-							f4f1elemf0f0.FileSystemPath = f4f1elemf0.Value.FileSystemPath
+						if f4f0elemf0.Value.FileSystemPath != nil {
+							f4f0elemf0f0.FileSystemPath = f4f0elemf0.Value.FileSystemPath
 						}
-						f4f1elem.EFSFileSystemConfig = f4f1elemf0f0
+						f4f0elem.EFSFileSystemConfig = f4f0elemf0f0
+					}
+				case *svcsdktypes.CustomFileSystemConfigMemberFSxLustreFileSystemConfig:
+					f4f0elemf1 := f4f0iter.(*svcsdktypes.CustomFileSystemConfigMemberFSxLustreFileSystemConfig)
+					if f4f0elemf1 != nil {
+						f4f0elemf1f1 := &svcapitypes.FSxLustreFileSystemConfig{}
+						if f4f0elemf1.Value.FileSystemId != nil {
+							f4f0elemf1f1.FileSystemID = f4f0elemf1.Value.FileSystemId
+						}
+						if f4f0elemf1.Value.FileSystemPath != nil {
+							f4f0elemf1f1.FileSystemPath = f4f0elemf1.Value.FileSystemPath
+						}
+						f4f0elem.FSxLustreFileSystemConfig = f4f0elemf1f1
+					}
+				case *svcsdktypes.CustomFileSystemConfigMemberS3FileSystemConfig:
+					f4f0elemf2 := f4f0iter.(*svcsdktypes.CustomFileSystemConfigMemberS3FileSystemConfig)
+					if f4f0elemf2 != nil {
+						f4f0elemf2f2 := &svcapitypes.S3FileSystemConfig{}
+						if f4f0elemf2.Value.MountPath != nil {
+							f4f0elemf2f2.MountPath = f4f0elemf2.Value.MountPath
+						}
+						if f4f0elemf2.Value.S3Uri != nil {
+							f4f0elemf2f2.S3URI = f4f0elemf2.Value.S3Uri
+						}
+						f4f0elem.S3FileSystemConfig = f4f0elemf2f2
 					}
 				}
-				f4f1 = append(f4f1, f4f1elem)
+				f4f0 = append(f4f0, f4f0elem)
 			}
-			f4.CustomFileSystemConfigs = f4f1
+			f4.CustomFileSystemConfigs = f4f0
 		}
-		if resp.DefaultUserSettings.CustomPosixUserConfig != nil {
-			f4f2 := &svcapitypes.CustomPosixUserConfig{}
-			if resp.DefaultUserSettings.CustomPosixUserConfig.Gid != nil {
-				f4f2.GID = resp.DefaultUserSettings.CustomPosixUserConfig.Gid
+		if resp.DefaultSpaceSettings.CustomPosixUserConfig != nil {
+			f4f1 := &svcapitypes.CustomPosixUserConfig{}
+			if resp.DefaultSpaceSettings.CustomPosixUserConfig.Gid != nil {
+				f4f1.GID = resp.DefaultSpaceSettings.CustomPosixUserConfig.Gid
 			}
-			if resp.DefaultUserSettings.CustomPosixUserConfig.Uid != nil {
-				f4f2.UID = resp.DefaultUserSettings.CustomPosixUserConfig.Uid
+			if resp.DefaultSpaceSettings.CustomPosixUserConfig.Uid != nil {
+				f4f1.UID = resp.DefaultSpaceSettings.CustomPosixUserConfig.Uid
 			}
-			f4.CustomPosixUserConfig = f4f2
+			f4.CustomPosixUserConfig = f4f1
 		}
-		if resp.DefaultUserSettings.DefaultLandingUri != nil {
-			f4.DefaultLandingURI = resp.DefaultUserSettings.DefaultLandingUri
+		if resp.DefaultSpaceSettings.ExecutionRole != nil {
+			f4.ExecutionRole = resp.DefaultSpaceSettings.ExecutionRole
 		}
-		if resp.DefaultUserSettings.ExecutionRole != nil {
-			f4.ExecutionRole = resp.DefaultUserSettings.ExecutionRole
+		if resp.DefaultSpaceSettings.JupyterLabAppSettings != nil {
+			f4f3 := &svcapitypes.JupyterLabAppSettings{}
+			if resp.DefaultSpaceSettings.JupyterLabAppSettings.CodeRepositories != nil {
+				f4f3f0 := []*svcapitypes.CodeRepository{}
+				for _, f4f3f0iter := range resp.DefaultSpaceSettings.JupyterLabAppSettings.CodeRepositories {
+					f4f3f0elem := &svcapitypes.CodeRepository{}
+					if f4f3f0iter.RepositoryUrl != nil {
+						f4f3f0elem.RepositoryURL = f4f3f0iter.RepositoryUrl
+					}
+					f4f3f0 = append(f4f3f0, f4f3f0elem)
+				}
+				f4f3.CodeRepositories = f4f3f0
+			}
+			if resp.DefaultSpaceSettings.JupyterLabAppSettings.CustomImages != nil {
+				f4f3f1 := []*svcapitypes.CustomImage{}
+				for _, f4f3f1iter := range resp.DefaultSpaceSettings.JupyterLabAppSettings.CustomImages {
+					f4f3f1elem := &svcapitypes.CustomImage{}
+					if f4f3f1iter.AppImageConfigName != nil {
+						f4f3f1elem.AppImageConfigName = f4f3f1iter.AppImageConfigName
+					}
+					if f4f3f1iter.ImageName != nil {
+						f4f3f1elem.ImageName = f4f3f1iter.ImageName
+					}
+					if f4f3f1iter.ImageVersionNumber != nil {
+						imageVersionNumberCopy := int64(*f4f3f1iter.ImageVersionNumber)
+						f4f3f1elem.ImageVersionNumber = &imageVersionNumberCopy
+					}
+					f4f3f1 = append(f4f3f1, f4f3f1elem)
+				}
+				f4f3.CustomImages = f4f3f1
+			}
+			if resp.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec != nil {
+				f4f3f2 := &svcapitypes.ResourceSpec{}
+				if resp.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType != "" {
+					f4f3f2.InstanceType = aws.String(string(resp.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType))
+				}
+				if resp.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigArn != nil {
+					f4f3f2.LifecycleConfigARN = resp.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigArn
+				}
+				if resp.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageArn != nil {
+					f4f3f2.SageMakerImageARN = resp.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageArn
+				}
+				if resp.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					f4f3f2.SageMakerImageVersionAlias = resp.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+				}
+				if resp.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionArn != nil {
+					f4f3f2.SageMakerImageVersionARN = resp.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionArn
+				}
+				f4f3.DefaultResourceSpec = f4f3f2
+			}
+			if resp.DefaultSpaceSettings.JupyterLabAppSettings.LifecycleConfigArns != nil {
+				f4f3.LifecycleConfigARNs = aws.StringSlice(resp.DefaultSpaceSettings.JupyterLabAppSettings.LifecycleConfigArns)
+			}
+			f4.JupyterLabAppSettings = f4f3
 		}
-		if resp.DefaultUserSettings.JupyterLabAppSettings != nil {
-			f4f5 := &svcapitypes.JupyterLabAppSettings{}
-			if resp.DefaultUserSettings.JupyterLabAppSettings.CustomImages != nil {
+		if resp.DefaultSpaceSettings.JupyterServerAppSettings != nil {
+			f4f4 := &svcapitypes.JupyterServerAppSettings{}
+			if resp.DefaultSpaceSettings.JupyterServerAppSettings.CodeRepositories != nil {
+				f4f4f0 := []*svcapitypes.CodeRepository{}
+				for _, f4f4f0iter := range resp.DefaultSpaceSettings.JupyterServerAppSettings.CodeRepositories {
+					f4f4f0elem := &svcapitypes.CodeRepository{}
+					if f4f4f0iter.RepositoryUrl != nil {
+						f4f4f0elem.RepositoryURL = f4f4f0iter.RepositoryUrl
+					}
+					f4f4f0 = append(f4f4f0, f4f4f0elem)
+				}
+				f4f4.CodeRepositories = f4f4f0
+			}
+			if resp.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec != nil {
+				f4f4f1 := &svcapitypes.ResourceSpec{}
+				if resp.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType != "" {
+					f4f4f1.InstanceType = aws.String(string(resp.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType))
+				}
+				if resp.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigArn != nil {
+					f4f4f1.LifecycleConfigARN = resp.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigArn
+				}
+				if resp.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageArn != nil {
+					f4f4f1.SageMakerImageARN = resp.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageArn
+				}
+				if resp.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					f4f4f1.SageMakerImageVersionAlias = resp.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+				}
+				if resp.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionArn != nil {
+					f4f4f1.SageMakerImageVersionARN = resp.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionArn
+				}
+				f4f4.DefaultResourceSpec = f4f4f1
+			}
+			if resp.DefaultSpaceSettings.JupyterServerAppSettings.LifecycleConfigArns != nil {
+				f4f4.LifecycleConfigARNs = aws.StringSlice(resp.DefaultSpaceSettings.JupyterServerAppSettings.LifecycleConfigArns)
+			}
+			f4.JupyterServerAppSettings = f4f4
+		}
+		if resp.DefaultSpaceSettings.KernelGatewayAppSettings != nil {
+			f4f5 := &svcapitypes.KernelGatewayAppSettings{}
+			if resp.DefaultSpaceSettings.KernelGatewayAppSettings.CustomImages != nil {
 				f4f5f0 := []*svcapitypes.CustomImage{}
-				for _, f4f5f0iter := range resp.DefaultUserSettings.JupyterLabAppSettings.CustomImages {
+				for _, f4f5f0iter := range resp.DefaultSpaceSettings.KernelGatewayAppSettings.CustomImages {
 					f4f5f0elem := &svcapitypes.CustomImage{}
 					if f4f5f0iter.AppImageConfigName != nil {
 						f4f5f0elem.AppImageConfigName = f4f5f0iter.AppImageConfigName
@@ -192,169 +279,348 @@ func (rm *resourceManager) sdkFind(
 				}
 				f4f5.CustomImages = f4f5f0
 			}
-			if resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec != nil {
+			if resp.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec != nil {
 				f4f5f1 := &svcapitypes.ResourceSpec{}
-				if resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType != "" {
-					f4f5f1.InstanceType = aws.String(string(resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType))
+				if resp.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.InstanceType != "" {
+					f4f5f1.InstanceType = aws.String(string(resp.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.InstanceType))
 				}
-				if resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigArn != nil {
-					f4f5f1.LifecycleConfigARN = resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigArn
+				if resp.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigArn != nil {
+					f4f5f1.LifecycleConfigARN = resp.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigArn
 				}
-				if resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageArn != nil {
-					f4f5f1.SageMakerImageARN = resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageArn
+				if resp.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageArn != nil {
+					f4f5f1.SageMakerImageARN = resp.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageArn
 				}
-				if resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f4f5f1.SageMakerImageVersionAlias = resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+				if resp.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					f4f5f1.SageMakerImageVersionAlias = resp.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
 				}
-				if resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionArn != nil {
-					f4f5f1.SageMakerImageVersionARN = resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionArn
+				if resp.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionArn != nil {
+					f4f5f1.SageMakerImageVersionARN = resp.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionArn
 				}
 				f4f5.DefaultResourceSpec = f4f5f1
 			}
-			if resp.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigArns != nil {
-				f4f5.LifecycleConfigARNs = aws.StringSlice(resp.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigArns)
+			if resp.DefaultSpaceSettings.KernelGatewayAppSettings.LifecycleConfigArns != nil {
+				f4f5.LifecycleConfigARNs = aws.StringSlice(resp.DefaultSpaceSettings.KernelGatewayAppSettings.LifecycleConfigArns)
 			}
-			f4.JupyterLabAppSettings = f4f5
+			f4.KernelGatewayAppSettings = f4f5
+		}
+		if resp.DefaultSpaceSettings.SecurityGroups != nil {
+			f4.SecurityGroups = aws.StringSlice(resp.DefaultSpaceSettings.SecurityGroups)
+		}
+		if resp.DefaultSpaceSettings.SpaceStorageSettings != nil {
+			f4f7 := &svcapitypes.DefaultSpaceStorageSettings{}
+			if resp.DefaultSpaceSettings.SpaceStorageSettings.DefaultEbsStorageSettings != nil {
+				f4f7f0 := &svcapitypes.DefaultEBSStorageSettings{}
+				if resp.DefaultSpaceSettings.SpaceStorageSettings.DefaultEbsStorageSettings.DefaultEbsVolumeSizeInGb != nil {
+					defaultEBSVolumeSizeInGbCopy := int64(*resp.DefaultSpaceSettings.SpaceStorageSettings.DefaultEbsStorageSettings.DefaultEbsVolumeSizeInGb)
+					f4f7f0.DefaultEBSVolumeSizeInGb = &defaultEBSVolumeSizeInGbCopy
+				}
+				if resp.DefaultSpaceSettings.SpaceStorageSettings.DefaultEbsStorageSettings.MaximumEbsVolumeSizeInGb != nil {
+					maximumEBSVolumeSizeInGbCopy := int64(*resp.DefaultSpaceSettings.SpaceStorageSettings.DefaultEbsStorageSettings.MaximumEbsVolumeSizeInGb)
+					f4f7f0.MaximumEBSVolumeSizeInGb = &maximumEBSVolumeSizeInGbCopy
+				}
+				f4f7.DefaultEBSStorageSettings = f4f7f0
+			}
+			f4.SpaceStorageSettings = f4f7
+		}
+		ko.Spec.DefaultSpaceSettings = f4
+	} else {
+		ko.Spec.DefaultSpaceSettings = nil
+	}
+	if resp.DefaultUserSettings != nil {
+		f5 := &svcapitypes.UserSettings{}
+		if resp.DefaultUserSettings.CodeEditorAppSettings != nil {
+			f5f0 := &svcapitypes.CodeEditorAppSettings{}
+			if resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec != nil {
+				f5f0f0 := &svcapitypes.ResourceSpec{}
+				if resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.InstanceType != "" {
+					f5f0f0.InstanceType = aws.String(string(resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.InstanceType))
+				}
+				if resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.LifecycleConfigArn != nil {
+					f5f0f0.LifecycleConfigARN = resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.LifecycleConfigArn
+				}
+				if resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageArn != nil {
+					f5f0f0.SageMakerImageARN = resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageArn
+				}
+				if resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					f5f0f0.SageMakerImageVersionAlias = resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+				}
+				if resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionArn != nil {
+					f5f0f0.SageMakerImageVersionARN = resp.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionArn
+				}
+				f5f0.DefaultResourceSpec = f5f0f0
+			}
+			if resp.DefaultUserSettings.CodeEditorAppSettings.LifecycleConfigArns != nil {
+				f5f0.LifecycleConfigARNs = aws.StringSlice(resp.DefaultUserSettings.CodeEditorAppSettings.LifecycleConfigArns)
+			}
+			f5.CodeEditorAppSettings = f5f0
+		}
+		if resp.DefaultUserSettings.CustomFileSystemConfigs != nil {
+			f5f1 := []*svcapitypes.CustomFileSystemConfig{}
+			for _, f5f1iter := range resp.DefaultUserSettings.CustomFileSystemConfigs {
+				f5f1elem := &svcapitypes.CustomFileSystemConfig{}
+				switch f5f1iter.(type) {
+				case *svcsdktypes.CustomFileSystemConfigMemberEFSFileSystemConfig:
+					f5f1elemf0 := f5f1iter.(*svcsdktypes.CustomFileSystemConfigMemberEFSFileSystemConfig)
+					if f5f1elemf0 != nil {
+						f5f1elemf0f0 := &svcapitypes.EFSFileSystemConfig{}
+						if f5f1elemf0.Value.FileSystemId != nil {
+							f5f1elemf0f0.FileSystemID = f5f1elemf0.Value.FileSystemId
+						}
+						if f5f1elemf0.Value.FileSystemPath != nil {
+							f5f1elemf0f0.FileSystemPath = f5f1elemf0.Value.FileSystemPath
+						}
+						f5f1elem.EFSFileSystemConfig = f5f1elemf0f0
+					}
+				case *svcsdktypes.CustomFileSystemConfigMemberFSxLustreFileSystemConfig:
+					f5f1elemf1 := f5f1iter.(*svcsdktypes.CustomFileSystemConfigMemberFSxLustreFileSystemConfig)
+					if f5f1elemf1 != nil {
+						f5f1elemf1f1 := &svcapitypes.FSxLustreFileSystemConfig{}
+						if f5f1elemf1.Value.FileSystemId != nil {
+							f5f1elemf1f1.FileSystemID = f5f1elemf1.Value.FileSystemId
+						}
+						if f5f1elemf1.Value.FileSystemPath != nil {
+							f5f1elemf1f1.FileSystemPath = f5f1elemf1.Value.FileSystemPath
+						}
+						f5f1elem.FSxLustreFileSystemConfig = f5f1elemf1f1
+					}
+				case *svcsdktypes.CustomFileSystemConfigMemberS3FileSystemConfig:
+					f5f1elemf2 := f5f1iter.(*svcsdktypes.CustomFileSystemConfigMemberS3FileSystemConfig)
+					if f5f1elemf2 != nil {
+						f5f1elemf2f2 := &svcapitypes.S3FileSystemConfig{}
+						if f5f1elemf2.Value.MountPath != nil {
+							f5f1elemf2f2.MountPath = f5f1elemf2.Value.MountPath
+						}
+						if f5f1elemf2.Value.S3Uri != nil {
+							f5f1elemf2f2.S3URI = f5f1elemf2.Value.S3Uri
+						}
+						f5f1elem.S3FileSystemConfig = f5f1elemf2f2
+					}
+				}
+				f5f1 = append(f5f1, f5f1elem)
+			}
+			f5.CustomFileSystemConfigs = f5f1
+		}
+		if resp.DefaultUserSettings.CustomPosixUserConfig != nil {
+			f5f2 := &svcapitypes.CustomPosixUserConfig{}
+			if resp.DefaultUserSettings.CustomPosixUserConfig.Gid != nil {
+				f5f2.GID = resp.DefaultUserSettings.CustomPosixUserConfig.Gid
+			}
+			if resp.DefaultUserSettings.CustomPosixUserConfig.Uid != nil {
+				f5f2.UID = resp.DefaultUserSettings.CustomPosixUserConfig.Uid
+			}
+			f5.CustomPosixUserConfig = f5f2
+		}
+		if resp.DefaultUserSettings.DefaultLandingUri != nil {
+			f5.DefaultLandingURI = resp.DefaultUserSettings.DefaultLandingUri
+		}
+		if resp.DefaultUserSettings.ExecutionRole != nil {
+			f5.ExecutionRole = resp.DefaultUserSettings.ExecutionRole
+		}
+		if resp.DefaultUserSettings.JupyterLabAppSettings != nil {
+			f5f5 := &svcapitypes.JupyterLabAppSettings{}
+			if resp.DefaultUserSettings.JupyterLabAppSettings.CodeRepositories != nil {
+				f5f5f0 := []*svcapitypes.CodeRepository{}
+				for _, f5f5f0iter := range resp.DefaultUserSettings.JupyterLabAppSettings.CodeRepositories {
+					f5f5f0elem := &svcapitypes.CodeRepository{}
+					if f5f5f0iter.RepositoryUrl != nil {
+						f5f5f0elem.RepositoryURL = f5f5f0iter.RepositoryUrl
+					}
+					f5f5f0 = append(f5f5f0, f5f5f0elem)
+				}
+				f5f5.CodeRepositories = f5f5f0
+			}
+			if resp.DefaultUserSettings.JupyterLabAppSettings.CustomImages != nil {
+				f5f5f1 := []*svcapitypes.CustomImage{}
+				for _, f5f5f1iter := range resp.DefaultUserSettings.JupyterLabAppSettings.CustomImages {
+					f5f5f1elem := &svcapitypes.CustomImage{}
+					if f5f5f1iter.AppImageConfigName != nil {
+						f5f5f1elem.AppImageConfigName = f5f5f1iter.AppImageConfigName
+					}
+					if f5f5f1iter.ImageName != nil {
+						f5f5f1elem.ImageName = f5f5f1iter.ImageName
+					}
+					if f5f5f1iter.ImageVersionNumber != nil {
+						imageVersionNumberCopy := int64(*f5f5f1iter.ImageVersionNumber)
+						f5f5f1elem.ImageVersionNumber = &imageVersionNumberCopy
+					}
+					f5f5f1 = append(f5f5f1, f5f5f1elem)
+				}
+				f5f5.CustomImages = f5f5f1
+			}
+			if resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec != nil {
+				f5f5f2 := &svcapitypes.ResourceSpec{}
+				if resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType != "" {
+					f5f5f2.InstanceType = aws.String(string(resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType))
+				}
+				if resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigArn != nil {
+					f5f5f2.LifecycleConfigARN = resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigArn
+				}
+				if resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageArn != nil {
+					f5f5f2.SageMakerImageARN = resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageArn
+				}
+				if resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					f5f5f2.SageMakerImageVersionAlias = resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+				}
+				if resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionArn != nil {
+					f5f5f2.SageMakerImageVersionARN = resp.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionArn
+				}
+				f5f5.DefaultResourceSpec = f5f5f2
+			}
+			if resp.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigArns != nil {
+				f5f5.LifecycleConfigARNs = aws.StringSlice(resp.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigArns)
+			}
+			f5.JupyterLabAppSettings = f5f5
 		}
 		if resp.DefaultUserSettings.JupyterServerAppSettings != nil {
-			f4f6 := &svcapitypes.JupyterServerAppSettings{}
+			f5f6 := &svcapitypes.JupyterServerAppSettings{}
+			if resp.DefaultUserSettings.JupyterServerAppSettings.CodeRepositories != nil {
+				f5f6f0 := []*svcapitypes.CodeRepository{}
+				for _, f5f6f0iter := range resp.DefaultUserSettings.JupyterServerAppSettings.CodeRepositories {
+					f5f6f0elem := &svcapitypes.CodeRepository{}
+					if f5f6f0iter.RepositoryUrl != nil {
+						f5f6f0elem.RepositoryURL = f5f6f0iter.RepositoryUrl
+					}
+					f5f6f0 = append(f5f6f0, f5f6f0elem)
+				}
+				f5f6.CodeRepositories = f5f6f0
+			}
 			if resp.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec != nil {
-				f4f6f0 := &svcapitypes.ResourceSpec{}
+				f5f6f1 := &svcapitypes.ResourceSpec{}
 				if resp.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType != "" {
-					f4f6f0.InstanceType = aws.String(string(resp.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType))
+					f5f6f1.InstanceType = aws.String(string(resp.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType))
 				}
 				if resp.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigArn != nil {
-					f4f6f0.LifecycleConfigARN = resp.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigArn
+					f5f6f1.LifecycleConfigARN = resp.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigArn
 				}
 				if resp.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageArn != nil {
-					f4f6f0.SageMakerImageARN = resp.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageArn
+					f5f6f1.SageMakerImageARN = resp.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageArn
 				}
 				if resp.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f4f6f0.SageMakerImageVersionAlias = resp.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+					f5f6f1.SageMakerImageVersionAlias = resp.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
 				}
 				if resp.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionArn != nil {
-					f4f6f0.SageMakerImageVersionARN = resp.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionArn
+					f5f6f1.SageMakerImageVersionARN = resp.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionArn
 				}
-				f4f6.DefaultResourceSpec = f4f6f0
+				f5f6.DefaultResourceSpec = f5f6f1
 			}
 			if resp.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigArns != nil {
-				f4f6.LifecycleConfigARNs = aws.StringSlice(resp.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigArns)
+				f5f6.LifecycleConfigARNs = aws.StringSlice(resp.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigArns)
 			}
-			f4.JupyterServerAppSettings = f4f6
+			f5.JupyterServerAppSettings = f5f6
 		}
 		if resp.DefaultUserSettings.KernelGatewayAppSettings != nil {
-			f4f7 := &svcapitypes.KernelGatewayAppSettings{}
+			f5f7 := &svcapitypes.KernelGatewayAppSettings{}
 			if resp.DefaultUserSettings.KernelGatewayAppSettings.CustomImages != nil {
-				f4f7f0 := []*svcapitypes.CustomImage{}
-				for _, f4f7f0iter := range resp.DefaultUserSettings.KernelGatewayAppSettings.CustomImages {
-					f4f7f0elem := &svcapitypes.CustomImage{}
-					if f4f7f0iter.AppImageConfigName != nil {
-						f4f7f0elem.AppImageConfigName = f4f7f0iter.AppImageConfigName
+				f5f7f0 := []*svcapitypes.CustomImage{}
+				for _, f5f7f0iter := range resp.DefaultUserSettings.KernelGatewayAppSettings.CustomImages {
+					f5f7f0elem := &svcapitypes.CustomImage{}
+					if f5f7f0iter.AppImageConfigName != nil {
+						f5f7f0elem.AppImageConfigName = f5f7f0iter.AppImageConfigName
 					}
-					if f4f7f0iter.ImageName != nil {
-						f4f7f0elem.ImageName = f4f7f0iter.ImageName
+					if f5f7f0iter.ImageName != nil {
+						f5f7f0elem.ImageName = f5f7f0iter.ImageName
 					}
-					if f4f7f0iter.ImageVersionNumber != nil {
-						imageVersionNumberCopy := int64(*f4f7f0iter.ImageVersionNumber)
-						f4f7f0elem.ImageVersionNumber = &imageVersionNumberCopy
+					if f5f7f0iter.ImageVersionNumber != nil {
+						imageVersionNumberCopy := int64(*f5f7f0iter.ImageVersionNumber)
+						f5f7f0elem.ImageVersionNumber = &imageVersionNumberCopy
 					}
-					f4f7f0 = append(f4f7f0, f4f7f0elem)
+					f5f7f0 = append(f5f7f0, f5f7f0elem)
 				}
-				f4f7.CustomImages = f4f7f0
+				f5f7.CustomImages = f5f7f0
 			}
 			if resp.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec != nil {
-				f4f7f1 := &svcapitypes.ResourceSpec{}
+				f5f7f1 := &svcapitypes.ResourceSpec{}
 				if resp.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.InstanceType != "" {
-					f4f7f1.InstanceType = aws.String(string(resp.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.InstanceType))
+					f5f7f1.InstanceType = aws.String(string(resp.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.InstanceType))
 				}
 				if resp.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigArn != nil {
-					f4f7f1.LifecycleConfigARN = resp.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigArn
+					f5f7f1.LifecycleConfigARN = resp.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigArn
 				}
 				if resp.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageArn != nil {
-					f4f7f1.SageMakerImageARN = resp.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageArn
+					f5f7f1.SageMakerImageARN = resp.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageArn
 				}
 				if resp.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f4f7f1.SageMakerImageVersionAlias = resp.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+					f5f7f1.SageMakerImageVersionAlias = resp.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
 				}
 				if resp.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionArn != nil {
-					f4f7f1.SageMakerImageVersionARN = resp.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionArn
+					f5f7f1.SageMakerImageVersionARN = resp.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionArn
 				}
-				f4f7.DefaultResourceSpec = f4f7f1
+				f5f7.DefaultResourceSpec = f5f7f1
 			}
 			if resp.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigArns != nil {
-				f4f7.LifecycleConfigARNs = aws.StringSlice(resp.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigArns)
+				f5f7.LifecycleConfigARNs = aws.StringSlice(resp.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigArns)
 			}
-			f4.KernelGatewayAppSettings = f4f7
+			f5.KernelGatewayAppSettings = f5f7
 		}
 		if resp.DefaultUserSettings.RStudioServerProAppSettings != nil {
-			f4f8 := &svcapitypes.RStudioServerProAppSettings{}
+			f5f8 := &svcapitypes.RStudioServerProAppSettings{}
 			if resp.DefaultUserSettings.RStudioServerProAppSettings.AccessStatus != "" {
-				f4f8.AccessStatus = aws.String(string(resp.DefaultUserSettings.RStudioServerProAppSettings.AccessStatus))
+				f5f8.AccessStatus = aws.String(string(resp.DefaultUserSettings.RStudioServerProAppSettings.AccessStatus))
 			}
 			if resp.DefaultUserSettings.RStudioServerProAppSettings.UserGroup != "" {
-				f4f8.UserGroup = aws.String(string(resp.DefaultUserSettings.RStudioServerProAppSettings.UserGroup))
+				f5f8.UserGroup = aws.String(string(resp.DefaultUserSettings.RStudioServerProAppSettings.UserGroup))
 			}
-			f4.RStudioServerProAppSettings = f4f8
+			f5.RStudioServerProAppSettings = f5f8
 		}
 		if resp.DefaultUserSettings.SecurityGroups != nil {
-			f4.SecurityGroups = aws.StringSlice(resp.DefaultUserSettings.SecurityGroups)
+			f5.SecurityGroups = aws.StringSlice(resp.DefaultUserSettings.SecurityGroups)
 		}
 		if resp.DefaultUserSettings.SharingSettings != nil {
-			f4f10 := &svcapitypes.SharingSettings{}
+			f5f10 := &svcapitypes.SharingSettings{}
 			if resp.DefaultUserSettings.SharingSettings.NotebookOutputOption != "" {
-				f4f10.NotebookOutputOption = aws.String(string(resp.DefaultUserSettings.SharingSettings.NotebookOutputOption))
+				f5f10.NotebookOutputOption = aws.String(string(resp.DefaultUserSettings.SharingSettings.NotebookOutputOption))
 			}
 			if resp.DefaultUserSettings.SharingSettings.S3KmsKeyId != nil {
-				f4f10.S3KMSKeyID = resp.DefaultUserSettings.SharingSettings.S3KmsKeyId
+				f5f10.S3KMSKeyID = resp.DefaultUserSettings.SharingSettings.S3KmsKeyId
 			}
 			if resp.DefaultUserSettings.SharingSettings.S3OutputPath != nil {
-				f4f10.S3OutputPath = resp.DefaultUserSettings.SharingSettings.S3OutputPath
+				f5f10.S3OutputPath = resp.DefaultUserSettings.SharingSettings.S3OutputPath
 			}
-			f4.SharingSettings = f4f10
+			f5.SharingSettings = f5f10
 		}
 		if resp.DefaultUserSettings.SpaceStorageSettings != nil {
-			f4f11 := &svcapitypes.DefaultSpaceStorageSettings{}
+			f5f11 := &svcapitypes.DefaultSpaceStorageSettings{}
 			if resp.DefaultUserSettings.SpaceStorageSettings.DefaultEbsStorageSettings != nil {
-				f4f11f0 := &svcapitypes.DefaultEBSStorageSettings{}
+				f5f11f0 := &svcapitypes.DefaultEBSStorageSettings{}
 				if resp.DefaultUserSettings.SpaceStorageSettings.DefaultEbsStorageSettings.DefaultEbsVolumeSizeInGb != nil {
 					defaultEBSVolumeSizeInGbCopy := int64(*resp.DefaultUserSettings.SpaceStorageSettings.DefaultEbsStorageSettings.DefaultEbsVolumeSizeInGb)
-					f4f11f0.DefaultEBSVolumeSizeInGb = &defaultEBSVolumeSizeInGbCopy
+					f5f11f0.DefaultEBSVolumeSizeInGb = &defaultEBSVolumeSizeInGbCopy
 				}
 				if resp.DefaultUserSettings.SpaceStorageSettings.DefaultEbsStorageSettings.MaximumEbsVolumeSizeInGb != nil {
 					maximumEBSVolumeSizeInGbCopy := int64(*resp.DefaultUserSettings.SpaceStorageSettings.DefaultEbsStorageSettings.MaximumEbsVolumeSizeInGb)
-					f4f11f0.MaximumEBSVolumeSizeInGb = &maximumEBSVolumeSizeInGbCopy
+					f5f11f0.MaximumEBSVolumeSizeInGb = &maximumEBSVolumeSizeInGbCopy
 				}
-				f4f11.DefaultEBSStorageSettings = f4f11f0
+				f5f11.DefaultEBSStorageSettings = f5f11f0
 			}
-			f4.SpaceStorageSettings = f4f11
+			f5.SpaceStorageSettings = f5f11
 		}
 		if resp.DefaultUserSettings.StudioWebPortal != "" {
-			f4.StudioWebPortal = aws.String(string(resp.DefaultUserSettings.StudioWebPortal))
+			f5.StudioWebPortal = aws.String(string(resp.DefaultUserSettings.StudioWebPortal))
 		}
 		if resp.DefaultUserSettings.TensorBoardAppSettings != nil {
-			f4f13 := &svcapitypes.TensorBoardAppSettings{}
+			f5f13 := &svcapitypes.TensorBoardAppSettings{}
 			if resp.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec != nil {
-				f4f13f0 := &svcapitypes.ResourceSpec{}
+				f5f13f0 := &svcapitypes.ResourceSpec{}
 				if resp.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.InstanceType != "" {
-					f4f13f0.InstanceType = aws.String(string(resp.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.InstanceType))
+					f5f13f0.InstanceType = aws.String(string(resp.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.InstanceType))
 				}
 				if resp.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.LifecycleConfigArn != nil {
-					f4f13f0.LifecycleConfigARN = resp.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.LifecycleConfigArn
+					f5f13f0.LifecycleConfigARN = resp.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.LifecycleConfigArn
 				}
 				if resp.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageArn != nil {
-					f4f13f0.SageMakerImageARN = resp.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageArn
+					f5f13f0.SageMakerImageARN = resp.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageArn
 				}
 				if resp.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f4f13f0.SageMakerImageVersionAlias = resp.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+					f5f13f0.SageMakerImageVersionAlias = resp.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
 				}
 				if resp.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionArn != nil {
-					f4f13f0.SageMakerImageVersionARN = resp.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionArn
+					f5f13f0.SageMakerImageVersionARN = resp.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionArn
 				}
-				f4f13.DefaultResourceSpec = f4f13f0
+				f5f13.DefaultResourceSpec = f5f13f0
 			}
-			f4.TensorBoardAppSettings = f4f13
+			f5.TensorBoardAppSettings = f5f13
 		}
-		ko.Spec.DefaultUserSettings = f4
+		ko.Spec.DefaultUserSettings = f5
 	} else {
 		ko.Spec.DefaultUserSettings = nil
 	}
@@ -376,94 +642,94 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.DomainName = nil
 	}
 	if resp.DomainSettings != nil {
-		f8 := &svcapitypes.DomainSettings{}
+		f9 := &svcapitypes.DomainSettings{}
 		if resp.DomainSettings.DockerSettings != nil {
-			f8f0 := &svcapitypes.DockerSettings{}
+			f9f0 := &svcapitypes.DockerSettings{}
 			if resp.DomainSettings.DockerSettings.EnableDockerAccess != "" {
-				f8f0.EnableDockerAccess = aws.String(string(resp.DomainSettings.DockerSettings.EnableDockerAccess))
+				f9f0.EnableDockerAccess = aws.String(string(resp.DomainSettings.DockerSettings.EnableDockerAccess))
 			}
 			if resp.DomainSettings.DockerSettings.RootlessDocker != "" {
-				f8f0.RootlessDocker = aws.String(string(resp.DomainSettings.DockerSettings.RootlessDocker))
+				f9f0.RootlessDocker = aws.String(string(resp.DomainSettings.DockerSettings.RootlessDocker))
 			}
 			if resp.DomainSettings.DockerSettings.VpcOnlyTrustedAccounts != nil {
-				f8f0.VPCOnlyTrustedAccounts = aws.StringSlice(resp.DomainSettings.DockerSettings.VpcOnlyTrustedAccounts)
+				f9f0.VPCOnlyTrustedAccounts = aws.StringSlice(resp.DomainSettings.DockerSettings.VpcOnlyTrustedAccounts)
 			}
-			f8.DockerSettings = f8f0
+			f9.DockerSettings = f9f0
 		}
 		if resp.DomainSettings.IpAddressType != "" {
-			f8.IPAddressType = aws.String(string(resp.DomainSettings.IpAddressType))
+			f9.IPAddressType = aws.String(string(resp.DomainSettings.IpAddressType))
 		}
 		if resp.DomainSettings.RStudioServerProDomainSettings != nil {
-			f8f2 := &svcapitypes.RStudioServerProDomainSettings{}
+			f9f2 := &svcapitypes.RStudioServerProDomainSettings{}
 			if resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec != nil {
-				f8f2f0 := &svcapitypes.ResourceSpec{}
+				f9f2f0 := &svcapitypes.ResourceSpec{}
 				if resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType != "" {
-					f8f2f0.InstanceType = aws.String(string(resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType))
+					f9f2f0.InstanceType = aws.String(string(resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType))
 				}
 				if resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigArn != nil {
-					f8f2f0.LifecycleConfigARN = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigArn
+					f9f2f0.LifecycleConfigARN = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigArn
 				}
 				if resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageArn != nil {
-					f8f2f0.SageMakerImageARN = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageArn
+					f9f2f0.SageMakerImageARN = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageArn
 				}
 				if resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f8f2f0.SageMakerImageVersionAlias = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+					f9f2f0.SageMakerImageVersionAlias = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias
 				}
 				if resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionArn != nil {
-					f8f2f0.SageMakerImageVersionARN = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionArn
+					f9f2f0.SageMakerImageVersionARN = resp.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionArn
 				}
-				f8f2.DefaultResourceSpec = f8f2f0
+				f9f2.DefaultResourceSpec = f9f2f0
 			}
 			if resp.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleArn != nil {
-				f8f2.DomainExecutionRoleARN = resp.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleArn
+				f9f2.DomainExecutionRoleARN = resp.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleArn
 			}
 			if resp.DomainSettings.RStudioServerProDomainSettings.RStudioConnectUrl != nil {
-				f8f2.RStudioConnectURL = resp.DomainSettings.RStudioServerProDomainSettings.RStudioConnectUrl
+				f9f2.RStudioConnectURL = resp.DomainSettings.RStudioServerProDomainSettings.RStudioConnectUrl
 			}
 			if resp.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerUrl != nil {
-				f8f2.RStudioPackageManagerURL = resp.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerUrl
+				f9f2.RStudioPackageManagerURL = resp.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerUrl
 			}
-			f8.RStudioServerProDomainSettings = f8f2
+			f9.RStudioServerProDomainSettings = f9f2
 		}
 		if resp.DomainSettings.SecurityGroupIds != nil {
-			f8.SecurityGroupIDs = aws.StringSlice(resp.DomainSettings.SecurityGroupIds)
+			f9.SecurityGroupIDs = aws.StringSlice(resp.DomainSettings.SecurityGroupIds)
 		}
 		if resp.DomainSettings.TrustedIdentityPropagationSettings != nil {
-			f8f4 := &svcapitypes.TrustedIdentityPropagationSettings{}
+			f9f4 := &svcapitypes.TrustedIdentityPropagationSettings{}
 			if resp.DomainSettings.TrustedIdentityPropagationSettings.Status != "" {
-				f8f4.Status = aws.String(string(resp.DomainSettings.TrustedIdentityPropagationSettings.Status))
+				f9f4.Status = aws.String(string(resp.DomainSettings.TrustedIdentityPropagationSettings.Status))
 			}
-			f8.TrustedIdentityPropagationSettings = f8f4
+			f9.TrustedIdentityPropagationSettings = f9f4
 		}
 		if resp.DomainSettings.UnifiedStudioSettings != nil {
-			f8f5 := &svcapitypes.UnifiedStudioSettings{}
+			f9f5 := &svcapitypes.UnifiedStudioSettings{}
 			if resp.DomainSettings.UnifiedStudioSettings.DomainAccountId != nil {
-				f8f5.DomainAccountID = resp.DomainSettings.UnifiedStudioSettings.DomainAccountId
+				f9f5.DomainAccountID = resp.DomainSettings.UnifiedStudioSettings.DomainAccountId
 			}
 			if resp.DomainSettings.UnifiedStudioSettings.DomainId != nil {
-				f8f5.DomainID = resp.DomainSettings.UnifiedStudioSettings.DomainId
+				f9f5.DomainID = resp.DomainSettings.UnifiedStudioSettings.DomainId
 			}
 			if resp.DomainSettings.UnifiedStudioSettings.DomainRegion != nil {
-				f8f5.DomainRegion = resp.DomainSettings.UnifiedStudioSettings.DomainRegion
+				f9f5.DomainRegion = resp.DomainSettings.UnifiedStudioSettings.DomainRegion
 			}
 			if resp.DomainSettings.UnifiedStudioSettings.EnvironmentId != nil {
-				f8f5.EnvironmentID = resp.DomainSettings.UnifiedStudioSettings.EnvironmentId
+				f9f5.EnvironmentID = resp.DomainSettings.UnifiedStudioSettings.EnvironmentId
 			}
 			if resp.DomainSettings.UnifiedStudioSettings.ProjectId != nil {
-				f8f5.ProjectID = resp.DomainSettings.UnifiedStudioSettings.ProjectId
+				f9f5.ProjectID = resp.DomainSettings.UnifiedStudioSettings.ProjectId
 			}
 			if resp.DomainSettings.UnifiedStudioSettings.ProjectS3Path != nil {
-				f8f5.ProjectS3Path = resp.DomainSettings.UnifiedStudioSettings.ProjectS3Path
+				f9f5.ProjectS3Path = resp.DomainSettings.UnifiedStudioSettings.ProjectS3Path
 			}
 			if resp.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationArn != nil {
-				f8f5.SingleSignOnApplicationARN = resp.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationArn
+				f9f5.SingleSignOnApplicationARN = resp.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationArn
 			}
 			if resp.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess != "" {
-				f8f5.StudioWebPortalAccess = aws.String(string(resp.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess))
+				f9f5.StudioWebPortalAccess = aws.String(string(resp.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess))
 			}
-			f8.UnifiedStudioSettings = f8f5
+			f9.UnifiedStudioSettings = f9f5
 		}
-		ko.Spec.DomainSettings = f8
+		ko.Spec.DomainSettings = f9
 	} else {
 		ko.Spec.DomainSettings = nil
 	}
@@ -599,6 +865,1001 @@ func (rm *resourceManager) newCreateRequestPayload(
 	if r.ko.Spec.AuthMode != nil {
 		res.AuthMode = svcsdktypes.AuthMode(*r.ko.Spec.AuthMode)
 	}
+	if r.ko.Spec.DefaultSpaceSettings != nil {
+		f3 := &svcsdktypes.DefaultSpaceSettings{}
+		if r.ko.Spec.DefaultSpaceSettings.CustomFileSystemConfigs != nil {
+			f3f0 := []svcsdktypes.CustomFileSystemConfig{}
+			for _, f3f0iter := range r.ko.Spec.DefaultSpaceSettings.CustomFileSystemConfigs {
+				var f3f0elem svcsdktypes.CustomFileSystemConfig
+				isInterfaceSet := false
+				if f3f0iter.EFSFileSystemConfig != nil {
+					if isInterfaceSet {
+						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for EFSFileSystemConfig"))
+					}
+					f3f0elemf0Parent := &svcsdktypes.CustomFileSystemConfigMemberEFSFileSystemConfig{}
+					f3f0elemf0 := &svcsdktypes.EFSFileSystemConfig{}
+					if f3f0iter.EFSFileSystemConfig.FileSystemID != nil {
+						f3f0elemf0.FileSystemId = f3f0iter.EFSFileSystemConfig.FileSystemID
+					}
+					if f3f0iter.EFSFileSystemConfig.FileSystemPath != nil {
+						f3f0elemf0.FileSystemPath = f3f0iter.EFSFileSystemConfig.FileSystemPath
+					}
+					f3f0elemf0Parent.Value = *f3f0elemf0
+					f3f0elem = f3f0elemf0Parent
+					isInterfaceSet = true
+				}
+				if f3f0iter.FSxLustreFileSystemConfig != nil {
+					if isInterfaceSet {
+						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for FSxLustreFileSystemConfig"))
+					}
+					f3f0elemf1Parent := &svcsdktypes.CustomFileSystemConfigMemberFSxLustreFileSystemConfig{}
+					f3f0elemf1 := &svcsdktypes.FSxLustreFileSystemConfig{}
+					if f3f0iter.FSxLustreFileSystemConfig.FileSystemID != nil {
+						f3f0elemf1.FileSystemId = f3f0iter.FSxLustreFileSystemConfig.FileSystemID
+					}
+					if f3f0iter.FSxLustreFileSystemConfig.FileSystemPath != nil {
+						f3f0elemf1.FileSystemPath = f3f0iter.FSxLustreFileSystemConfig.FileSystemPath
+					}
+					f3f0elemf1Parent.Value = *f3f0elemf1
+					f3f0elem = f3f0elemf1Parent
+					isInterfaceSet = true
+				}
+				if f3f0iter.S3FileSystemConfig != nil {
+					if isInterfaceSet {
+						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for S3FileSystemConfig"))
+					}
+					f3f0elemf2Parent := &svcsdktypes.CustomFileSystemConfigMemberS3FileSystemConfig{}
+					f3f0elemf2 := &svcsdktypes.S3FileSystemConfig{}
+					if f3f0iter.S3FileSystemConfig.MountPath != nil {
+						f3f0elemf2.MountPath = f3f0iter.S3FileSystemConfig.MountPath
+					}
+					if f3f0iter.S3FileSystemConfig.S3URI != nil {
+						f3f0elemf2.S3Uri = f3f0iter.S3FileSystemConfig.S3URI
+					}
+					f3f0elemf2Parent.Value = *f3f0elemf2
+					f3f0elem = f3f0elemf2Parent
+					isInterfaceSet = true
+				}
+				f3f0 = append(f3f0, f3f0elem)
+			}
+			f3.CustomFileSystemConfigs = f3f0
+		}
+		if r.ko.Spec.DefaultSpaceSettings.CustomPosixUserConfig != nil {
+			f3f1 := &svcsdktypes.CustomPosixUserConfig{}
+			if r.ko.Spec.DefaultSpaceSettings.CustomPosixUserConfig.GID != nil {
+				f3f1.Gid = r.ko.Spec.DefaultSpaceSettings.CustomPosixUserConfig.GID
+			}
+			if r.ko.Spec.DefaultSpaceSettings.CustomPosixUserConfig.UID != nil {
+				f3f1.Uid = r.ko.Spec.DefaultSpaceSettings.CustomPosixUserConfig.UID
+			}
+			f3.CustomPosixUserConfig = f3f1
+		}
+		if r.ko.Spec.DefaultSpaceSettings.ExecutionRole != nil {
+			f3.ExecutionRole = r.ko.Spec.DefaultSpaceSettings.ExecutionRole
+		}
+		if r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings != nil {
+			f3f3 := &svcsdktypes.JupyterLabAppSettings{}
+			if r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.CodeRepositories != nil {
+				f3f3f0 := []svcsdktypes.CodeRepository{}
+				for _, f3f3f0iter := range r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.CodeRepositories {
+					f3f3f0elem := &svcsdktypes.CodeRepository{}
+					if f3f3f0iter.RepositoryURL != nil {
+						f3f3f0elem.RepositoryUrl = f3f3f0iter.RepositoryURL
+					}
+					f3f3f0 = append(f3f3f0, *f3f3f0elem)
+				}
+				f3f3.CodeRepositories = f3f3f0
+			}
+			if r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.CustomImages != nil {
+				f3f3f1 := []svcsdktypes.CustomImage{}
+				for _, f3f3f1iter := range r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.CustomImages {
+					f3f3f1elem := &svcsdktypes.CustomImage{}
+					if f3f3f1iter.AppImageConfigName != nil {
+						f3f3f1elem.AppImageConfigName = f3f3f1iter.AppImageConfigName
+					}
+					if f3f3f1iter.ImageName != nil {
+						f3f3f1elem.ImageName = f3f3f1iter.ImageName
+					}
+					if f3f3f1iter.ImageVersionNumber != nil {
+						imageVersionNumberCopy0 := *f3f3f1iter.ImageVersionNumber
+						if imageVersionNumberCopy0 > math.MaxInt32 || imageVersionNumberCopy0 < math.MinInt32 {
+							return nil, fmt.Errorf("error: field ImageVersionNumber is of type int32")
+						}
+						imageVersionNumberCopy := int32(imageVersionNumberCopy0)
+						f3f3f1elem.ImageVersionNumber = &imageVersionNumberCopy
+					}
+					f3f3f1 = append(f3f3f1, *f3f3f1elem)
+				}
+				f3f3.CustomImages = f3f3f1
+			}
+			if r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec != nil {
+				f3f3f2 := &svcsdktypes.ResourceSpec{}
+				if r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType != nil {
+					f3f3f2.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType)
+				}
+				if r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
+					f3f3f2.LifecycleConfigArn = r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN
+				}
+				if r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
+					f3f3f2.SageMakerImageArn = r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN
+				}
+				if r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					f3f3f2.SageMakerImageVersionAlias = r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+				}
+				if r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
+					f3f3f2.SageMakerImageVersionArn = r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
+				}
+				f3f3.DefaultResourceSpec = f3f3f2
+			}
+			if r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.LifecycleConfigARNs != nil {
+				f3f3.LifecycleConfigArns = aws.ToStringSlice(r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.LifecycleConfigARNs)
+			}
+			f3.JupyterLabAppSettings = f3f3
+		}
+		if r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings != nil {
+			f3f4 := &svcsdktypes.JupyterServerAppSettings{}
+			if r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.CodeRepositories != nil {
+				f3f4f0 := []svcsdktypes.CodeRepository{}
+				for _, f3f4f0iter := range r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.CodeRepositories {
+					f3f4f0elem := &svcsdktypes.CodeRepository{}
+					if f3f4f0iter.RepositoryURL != nil {
+						f3f4f0elem.RepositoryUrl = f3f4f0iter.RepositoryURL
+					}
+					f3f4f0 = append(f3f4f0, *f3f4f0elem)
+				}
+				f3f4.CodeRepositories = f3f4f0
+			}
+			if r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec != nil {
+				f3f4f1 := &svcsdktypes.ResourceSpec{}
+				if r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType != nil {
+					f3f4f1.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType)
+				}
+				if r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
+					f3f4f1.LifecycleConfigArn = r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN
+				}
+				if r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
+					f3f4f1.SageMakerImageArn = r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN
+				}
+				if r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					f3f4f1.SageMakerImageVersionAlias = r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+				}
+				if r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
+					f3f4f1.SageMakerImageVersionArn = r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
+				}
+				f3f4.DefaultResourceSpec = f3f4f1
+			}
+			if r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.LifecycleConfigARNs != nil {
+				f3f4.LifecycleConfigArns = aws.ToStringSlice(r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.LifecycleConfigARNs)
+			}
+			f3.JupyterServerAppSettings = f3f4
+		}
+		if r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings != nil {
+			f3f5 := &svcsdktypes.KernelGatewayAppSettings{}
+			if r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.CustomImages != nil {
+				f3f5f0 := []svcsdktypes.CustomImage{}
+				for _, f3f5f0iter := range r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.CustomImages {
+					f3f5f0elem := &svcsdktypes.CustomImage{}
+					if f3f5f0iter.AppImageConfigName != nil {
+						f3f5f0elem.AppImageConfigName = f3f5f0iter.AppImageConfigName
+					}
+					if f3f5f0iter.ImageName != nil {
+						f3f5f0elem.ImageName = f3f5f0iter.ImageName
+					}
+					if f3f5f0iter.ImageVersionNumber != nil {
+						imageVersionNumberCopy0 := *f3f5f0iter.ImageVersionNumber
+						if imageVersionNumberCopy0 > math.MaxInt32 || imageVersionNumberCopy0 < math.MinInt32 {
+							return nil, fmt.Errorf("error: field ImageVersionNumber is of type int32")
+						}
+						imageVersionNumberCopy := int32(imageVersionNumberCopy0)
+						f3f5f0elem.ImageVersionNumber = &imageVersionNumberCopy
+					}
+					f3f5f0 = append(f3f5f0, *f3f5f0elem)
+				}
+				f3f5.CustomImages = f3f5f0
+			}
+			if r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec != nil {
+				f3f5f1 := &svcsdktypes.ResourceSpec{}
+				if r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.InstanceType != nil {
+					f3f5f1.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.InstanceType)
+				}
+				if r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
+					f3f5f1.LifecycleConfigArn = r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigARN
+				}
+				if r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
+					f3f5f1.SageMakerImageArn = r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN
+				}
+				if r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					f3f5f1.SageMakerImageVersionAlias = r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+				}
+				if r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
+					f3f5f1.SageMakerImageVersionArn = r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
+				}
+				f3f5.DefaultResourceSpec = f3f5f1
+			}
+			if r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.LifecycleConfigARNs != nil {
+				f3f5.LifecycleConfigArns = aws.ToStringSlice(r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.LifecycleConfigARNs)
+			}
+			f3.KernelGatewayAppSettings = f3f5
+		}
+		if r.ko.Spec.DefaultSpaceSettings.SecurityGroups != nil {
+			f3.SecurityGroups = aws.ToStringSlice(r.ko.Spec.DefaultSpaceSettings.SecurityGroups)
+		}
+		if r.ko.Spec.DefaultSpaceSettings.SpaceStorageSettings != nil {
+			f3f7 := &svcsdktypes.DefaultSpaceStorageSettings{}
+			if r.ko.Spec.DefaultSpaceSettings.SpaceStorageSettings.DefaultEBSStorageSettings != nil {
+				f3f7f0 := &svcsdktypes.DefaultEbsStorageSettings{}
+				if r.ko.Spec.DefaultSpaceSettings.SpaceStorageSettings.DefaultEBSStorageSettings.DefaultEBSVolumeSizeInGb != nil {
+					defaultEBSVolumeSizeInGbCopy0 := *r.ko.Spec.DefaultSpaceSettings.SpaceStorageSettings.DefaultEBSStorageSettings.DefaultEBSVolumeSizeInGb
+					if defaultEBSVolumeSizeInGbCopy0 > math.MaxInt32 || defaultEBSVolumeSizeInGbCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field DefaultEbsVolumeSizeInGb is of type int32")
+					}
+					defaultEBSVolumeSizeInGbCopy := int32(defaultEBSVolumeSizeInGbCopy0)
+					f3f7f0.DefaultEbsVolumeSizeInGb = &defaultEBSVolumeSizeInGbCopy
+				}
+				if r.ko.Spec.DefaultSpaceSettings.SpaceStorageSettings.DefaultEBSStorageSettings.MaximumEBSVolumeSizeInGb != nil {
+					maximumEBSVolumeSizeInGbCopy0 := *r.ko.Spec.DefaultSpaceSettings.SpaceStorageSettings.DefaultEBSStorageSettings.MaximumEBSVolumeSizeInGb
+					if maximumEBSVolumeSizeInGbCopy0 > math.MaxInt32 || maximumEBSVolumeSizeInGbCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field MaximumEbsVolumeSizeInGb is of type int32")
+					}
+					maximumEBSVolumeSizeInGbCopy := int32(maximumEBSVolumeSizeInGbCopy0)
+					f3f7f0.MaximumEbsVolumeSizeInGb = &maximumEBSVolumeSizeInGbCopy
+				}
+				f3f7.DefaultEbsStorageSettings = f3f7f0
+			}
+			f3.SpaceStorageSettings = f3f7
+		}
+		res.DefaultSpaceSettings = f3
+	}
+	if r.ko.Spec.DefaultUserSettings != nil {
+		f4 := &svcsdktypes.UserSettings{}
+		if r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings != nil {
+			f4f0 := &svcsdktypes.CodeEditorAppSettings{}
+			if r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec != nil {
+				f4f0f0 := &svcsdktypes.ResourceSpec{}
+				if r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.InstanceType != nil {
+					f4f0f0.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.InstanceType)
+				}
+				if r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
+					f4f0f0.LifecycleConfigArn = r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.LifecycleConfigARN
+				}
+				if r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
+					f4f0f0.SageMakerImageArn = r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageARN
+				}
+				if r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					f4f0f0.SageMakerImageVersionAlias = r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+				}
+				if r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
+					f4f0f0.SageMakerImageVersionArn = r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
+				}
+				f4f0.DefaultResourceSpec = f4f0f0
+			}
+			if r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.LifecycleConfigARNs != nil {
+				f4f0.LifecycleConfigArns = aws.ToStringSlice(r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.LifecycleConfigARNs)
+			}
+			f4.CodeEditorAppSettings = f4f0
+		}
+		if r.ko.Spec.DefaultUserSettings.CustomFileSystemConfigs != nil {
+			f4f1 := []svcsdktypes.CustomFileSystemConfig{}
+			for _, f4f1iter := range r.ko.Spec.DefaultUserSettings.CustomFileSystemConfigs {
+				var f4f1elem svcsdktypes.CustomFileSystemConfig
+				isInterfaceSet := false
+				if f4f1iter.EFSFileSystemConfig != nil {
+					if isInterfaceSet {
+						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for EFSFileSystemConfig"))
+					}
+					f4f1elemf0Parent := &svcsdktypes.CustomFileSystemConfigMemberEFSFileSystemConfig{}
+					f4f1elemf0 := &svcsdktypes.EFSFileSystemConfig{}
+					if f4f1iter.EFSFileSystemConfig.FileSystemID != nil {
+						f4f1elemf0.FileSystemId = f4f1iter.EFSFileSystemConfig.FileSystemID
+					}
+					if f4f1iter.EFSFileSystemConfig.FileSystemPath != nil {
+						f4f1elemf0.FileSystemPath = f4f1iter.EFSFileSystemConfig.FileSystemPath
+					}
+					f4f1elemf0Parent.Value = *f4f1elemf0
+					f4f1elem = f4f1elemf0Parent
+					isInterfaceSet = true
+				}
+				if f4f1iter.FSxLustreFileSystemConfig != nil {
+					if isInterfaceSet {
+						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for FSxLustreFileSystemConfig"))
+					}
+					f4f1elemf1Parent := &svcsdktypes.CustomFileSystemConfigMemberFSxLustreFileSystemConfig{}
+					f4f1elemf1 := &svcsdktypes.FSxLustreFileSystemConfig{}
+					if f4f1iter.FSxLustreFileSystemConfig.FileSystemID != nil {
+						f4f1elemf1.FileSystemId = f4f1iter.FSxLustreFileSystemConfig.FileSystemID
+					}
+					if f4f1iter.FSxLustreFileSystemConfig.FileSystemPath != nil {
+						f4f1elemf1.FileSystemPath = f4f1iter.FSxLustreFileSystemConfig.FileSystemPath
+					}
+					f4f1elemf1Parent.Value = *f4f1elemf1
+					f4f1elem = f4f1elemf1Parent
+					isInterfaceSet = true
+				}
+				if f4f1iter.S3FileSystemConfig != nil {
+					if isInterfaceSet {
+						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for S3FileSystemConfig"))
+					}
+					f4f1elemf2Parent := &svcsdktypes.CustomFileSystemConfigMemberS3FileSystemConfig{}
+					f4f1elemf2 := &svcsdktypes.S3FileSystemConfig{}
+					if f4f1iter.S3FileSystemConfig.MountPath != nil {
+						f4f1elemf2.MountPath = f4f1iter.S3FileSystemConfig.MountPath
+					}
+					if f4f1iter.S3FileSystemConfig.S3URI != nil {
+						f4f1elemf2.S3Uri = f4f1iter.S3FileSystemConfig.S3URI
+					}
+					f4f1elemf2Parent.Value = *f4f1elemf2
+					f4f1elem = f4f1elemf2Parent
+					isInterfaceSet = true
+				}
+				f4f1 = append(f4f1, f4f1elem)
+			}
+			f4.CustomFileSystemConfigs = f4f1
+		}
+		if r.ko.Spec.DefaultUserSettings.CustomPosixUserConfig != nil {
+			f4f2 := &svcsdktypes.CustomPosixUserConfig{}
+			if r.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.GID != nil {
+				f4f2.Gid = r.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.GID
+			}
+			if r.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.UID != nil {
+				f4f2.Uid = r.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.UID
+			}
+			f4.CustomPosixUserConfig = f4f2
+		}
+		if r.ko.Spec.DefaultUserSettings.DefaultLandingURI != nil {
+			f4.DefaultLandingUri = r.ko.Spec.DefaultUserSettings.DefaultLandingURI
+		}
+		if r.ko.Spec.DefaultUserSettings.ExecutionRole != nil {
+			f4.ExecutionRole = r.ko.Spec.DefaultUserSettings.ExecutionRole
+		}
+		if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings != nil {
+			f4f5 := &svcsdktypes.JupyterLabAppSettings{}
+			if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.CodeRepositories != nil {
+				f4f5f0 := []svcsdktypes.CodeRepository{}
+				for _, f4f5f0iter := range r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.CodeRepositories {
+					f4f5f0elem := &svcsdktypes.CodeRepository{}
+					if f4f5f0iter.RepositoryURL != nil {
+						f4f5f0elem.RepositoryUrl = f4f5f0iter.RepositoryURL
+					}
+					f4f5f0 = append(f4f5f0, *f4f5f0elem)
+				}
+				f4f5.CodeRepositories = f4f5f0
+			}
+			if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.CustomImages != nil {
+				f4f5f1 := []svcsdktypes.CustomImage{}
+				for _, f4f5f1iter := range r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.CustomImages {
+					f4f5f1elem := &svcsdktypes.CustomImage{}
+					if f4f5f1iter.AppImageConfigName != nil {
+						f4f5f1elem.AppImageConfigName = f4f5f1iter.AppImageConfigName
+					}
+					if f4f5f1iter.ImageName != nil {
+						f4f5f1elem.ImageName = f4f5f1iter.ImageName
+					}
+					if f4f5f1iter.ImageVersionNumber != nil {
+						imageVersionNumberCopy0 := *f4f5f1iter.ImageVersionNumber
+						if imageVersionNumberCopy0 > math.MaxInt32 || imageVersionNumberCopy0 < math.MinInt32 {
+							return nil, fmt.Errorf("error: field ImageVersionNumber is of type int32")
+						}
+						imageVersionNumberCopy := int32(imageVersionNumberCopy0)
+						f4f5f1elem.ImageVersionNumber = &imageVersionNumberCopy
+					}
+					f4f5f1 = append(f4f5f1, *f4f5f1elem)
+				}
+				f4f5.CustomImages = f4f5f1
+			}
+			if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec != nil {
+				f4f5f2 := &svcsdktypes.ResourceSpec{}
+				if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType != nil {
+					f4f5f2.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType)
+				}
+				if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
+					f4f5f2.LifecycleConfigArn = r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN
+				}
+				if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
+					f4f5f2.SageMakerImageArn = r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN
+				}
+				if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					f4f5f2.SageMakerImageVersionAlias = r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+				}
+				if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
+					f4f5f2.SageMakerImageVersionArn = r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
+				}
+				f4f5.DefaultResourceSpec = f4f5f2
+			}
+			if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigARNs != nil {
+				f4f5.LifecycleConfigArns = aws.ToStringSlice(r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigARNs)
+			}
+			f4.JupyterLabAppSettings = f4f5
+		}
+		if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings != nil {
+			f4f6 := &svcsdktypes.JupyterServerAppSettings{}
+			if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.CodeRepositories != nil {
+				f4f6f0 := []svcsdktypes.CodeRepository{}
+				for _, f4f6f0iter := range r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.CodeRepositories {
+					f4f6f0elem := &svcsdktypes.CodeRepository{}
+					if f4f6f0iter.RepositoryURL != nil {
+						f4f6f0elem.RepositoryUrl = f4f6f0iter.RepositoryURL
+					}
+					f4f6f0 = append(f4f6f0, *f4f6f0elem)
+				}
+				f4f6.CodeRepositories = f4f6f0
+			}
+			if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec != nil {
+				f4f6f1 := &svcsdktypes.ResourceSpec{}
+				if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType != nil {
+					f4f6f1.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType)
+				}
+				if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
+					f4f6f1.LifecycleConfigArn = r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN
+				}
+				if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
+					f4f6f1.SageMakerImageArn = r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN
+				}
+				if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					f4f6f1.SageMakerImageVersionAlias = r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+				}
+				if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
+					f4f6f1.SageMakerImageVersionArn = r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
+				}
+				f4f6.DefaultResourceSpec = f4f6f1
+			}
+			if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs != nil {
+				f4f6.LifecycleConfigArns = aws.ToStringSlice(r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs)
+			}
+			f4.JupyterServerAppSettings = f4f6
+		}
+		if r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings != nil {
+			f4f7 := &svcsdktypes.KernelGatewayAppSettings{}
+			if r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.CustomImages != nil {
+				f4f7f0 := []svcsdktypes.CustomImage{}
+				for _, f4f7f0iter := range r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.CustomImages {
+					f4f7f0elem := &svcsdktypes.CustomImage{}
+					if f4f7f0iter.AppImageConfigName != nil {
+						f4f7f0elem.AppImageConfigName = f4f7f0iter.AppImageConfigName
+					}
+					if f4f7f0iter.ImageName != nil {
+						f4f7f0elem.ImageName = f4f7f0iter.ImageName
+					}
+					if f4f7f0iter.ImageVersionNumber != nil {
+						imageVersionNumberCopy0 := *f4f7f0iter.ImageVersionNumber
+						if imageVersionNumberCopy0 > math.MaxInt32 || imageVersionNumberCopy0 < math.MinInt32 {
+							return nil, fmt.Errorf("error: field ImageVersionNumber is of type int32")
+						}
+						imageVersionNumberCopy := int32(imageVersionNumberCopy0)
+						f4f7f0elem.ImageVersionNumber = &imageVersionNumberCopy
+					}
+					f4f7f0 = append(f4f7f0, *f4f7f0elem)
+				}
+				f4f7.CustomImages = f4f7f0
+			}
+			if r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec != nil {
+				f4f7f1 := &svcsdktypes.ResourceSpec{}
+				if r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.InstanceType != nil {
+					f4f7f1.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.InstanceType)
+				}
+				if r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
+					f4f7f1.LifecycleConfigArn = r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigARN
+				}
+				if r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
+					f4f7f1.SageMakerImageArn = r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN
+				}
+				if r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					f4f7f1.SageMakerImageVersionAlias = r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+				}
+				if r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
+					f4f7f1.SageMakerImageVersionArn = r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
+				}
+				f4f7.DefaultResourceSpec = f4f7f1
+			}
+			if r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs != nil {
+				f4f7.LifecycleConfigArns = aws.ToStringSlice(r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs)
+			}
+			f4.KernelGatewayAppSettings = f4f7
+		}
+		if r.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings != nil {
+			f4f8 := &svcsdktypes.RStudioServerProAppSettings{}
+			if r.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.AccessStatus != nil {
+				f4f8.AccessStatus = svcsdktypes.RStudioServerProAccessStatus(*r.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.AccessStatus)
+			}
+			if r.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.UserGroup != nil {
+				f4f8.UserGroup = svcsdktypes.RStudioServerProUserGroup(*r.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.UserGroup)
+			}
+			f4.RStudioServerProAppSettings = f4f8
+		}
+		if r.ko.Spec.DefaultUserSettings.SecurityGroups != nil {
+			f4.SecurityGroups = aws.ToStringSlice(r.ko.Spec.DefaultUserSettings.SecurityGroups)
+		}
+		if r.ko.Spec.DefaultUserSettings.SharingSettings != nil {
+			f4f10 := &svcsdktypes.SharingSettings{}
+			if r.ko.Spec.DefaultUserSettings.SharingSettings.NotebookOutputOption != nil {
+				f4f10.NotebookOutputOption = svcsdktypes.NotebookOutputOption(*r.ko.Spec.DefaultUserSettings.SharingSettings.NotebookOutputOption)
+			}
+			if r.ko.Spec.DefaultUserSettings.SharingSettings.S3KMSKeyID != nil {
+				f4f10.S3KmsKeyId = r.ko.Spec.DefaultUserSettings.SharingSettings.S3KMSKeyID
+			}
+			if r.ko.Spec.DefaultUserSettings.SharingSettings.S3OutputPath != nil {
+				f4f10.S3OutputPath = r.ko.Spec.DefaultUserSettings.SharingSettings.S3OutputPath
+			}
+			f4.SharingSettings = f4f10
+		}
+		if r.ko.Spec.DefaultUserSettings.SpaceStorageSettings != nil {
+			f4f11 := &svcsdktypes.DefaultSpaceStorageSettings{}
+			if r.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings != nil {
+				f4f11f0 := &svcsdktypes.DefaultEbsStorageSettings{}
+				if r.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.DefaultEBSVolumeSizeInGb != nil {
+					defaultEBSVolumeSizeInGbCopy0 := *r.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.DefaultEBSVolumeSizeInGb
+					if defaultEBSVolumeSizeInGbCopy0 > math.MaxInt32 || defaultEBSVolumeSizeInGbCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field DefaultEbsVolumeSizeInGb is of type int32")
+					}
+					defaultEBSVolumeSizeInGbCopy := int32(defaultEBSVolumeSizeInGbCopy0)
+					f4f11f0.DefaultEbsVolumeSizeInGb = &defaultEBSVolumeSizeInGbCopy
+				}
+				if r.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.MaximumEBSVolumeSizeInGb != nil {
+					maximumEBSVolumeSizeInGbCopy0 := *r.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.MaximumEBSVolumeSizeInGb
+					if maximumEBSVolumeSizeInGbCopy0 > math.MaxInt32 || maximumEBSVolumeSizeInGbCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field MaximumEbsVolumeSizeInGb is of type int32")
+					}
+					maximumEBSVolumeSizeInGbCopy := int32(maximumEBSVolumeSizeInGbCopy0)
+					f4f11f0.MaximumEbsVolumeSizeInGb = &maximumEBSVolumeSizeInGbCopy
+				}
+				f4f11.DefaultEbsStorageSettings = f4f11f0
+			}
+			f4.SpaceStorageSettings = f4f11
+		}
+		if r.ko.Spec.DefaultUserSettings.StudioWebPortal != nil {
+			f4.StudioWebPortal = svcsdktypes.StudioWebPortal(*r.ko.Spec.DefaultUserSettings.StudioWebPortal)
+		}
+		if r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings != nil {
+			f4f13 := &svcsdktypes.TensorBoardAppSettings{}
+			if r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec != nil {
+				f4f13f0 := &svcsdktypes.ResourceSpec{}
+				if r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.InstanceType != nil {
+					f4f13f0.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.InstanceType)
+				}
+				if r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
+					f4f13f0.LifecycleConfigArn = r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.LifecycleConfigARN
+				}
+				if r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
+					f4f13f0.SageMakerImageArn = r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageARN
+				}
+				if r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					f4f13f0.SageMakerImageVersionAlias = r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+				}
+				if r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
+					f4f13f0.SageMakerImageVersionArn = r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
+				}
+				f4f13.DefaultResourceSpec = f4f13f0
+			}
+			f4.TensorBoardAppSettings = f4f13
+		}
+		res.DefaultUserSettings = f4
+	}
+	if r.ko.Spec.DomainName != nil {
+		res.DomainName = r.ko.Spec.DomainName
+	}
+	if r.ko.Spec.DomainSettings != nil {
+		f6 := &svcsdktypes.DomainSettings{}
+		if r.ko.Spec.DomainSettings.DockerSettings != nil {
+			f6f0 := &svcsdktypes.DockerSettings{}
+			if r.ko.Spec.DomainSettings.DockerSettings.EnableDockerAccess != nil {
+				f6f0.EnableDockerAccess = svcsdktypes.FeatureStatus(*r.ko.Spec.DomainSettings.DockerSettings.EnableDockerAccess)
+			}
+			if r.ko.Spec.DomainSettings.DockerSettings.RootlessDocker != nil {
+				f6f0.RootlessDocker = svcsdktypes.FeatureStatus(*r.ko.Spec.DomainSettings.DockerSettings.RootlessDocker)
+			}
+			if r.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts != nil {
+				f6f0.VpcOnlyTrustedAccounts = aws.ToStringSlice(r.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts)
+			}
+			f6.DockerSettings = f6f0
+		}
+		if r.ko.Spec.DomainSettings.IPAddressType != nil {
+			f6.IpAddressType = svcsdktypes.IPAddressType(*r.ko.Spec.DomainSettings.IPAddressType)
+		}
+		if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings != nil {
+			f6f2 := &svcsdktypes.RStudioServerProDomainSettings{}
+			if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec != nil {
+				f6f2f0 := &svcsdktypes.ResourceSpec{}
+				if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType != nil {
+					f6f2f0.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType)
+				}
+				if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
+					f6f2f0.LifecycleConfigArn = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN
+				}
+				if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN != nil {
+					f6f2f0.SageMakerImageArn = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN
+				}
+				if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					f6f2f0.SageMakerImageVersionAlias = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+				}
+				if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
+					f6f2f0.SageMakerImageVersionArn = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN
+				}
+				f6f2.DefaultResourceSpec = f6f2f0
+			}
+			if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN != nil {
+				f6f2.DomainExecutionRoleArn = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN
+			}
+			if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL != nil {
+				f6f2.RStudioConnectUrl = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL
+			}
+			if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL != nil {
+				f6f2.RStudioPackageManagerUrl = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL
+			}
+			f6.RStudioServerProDomainSettings = f6f2
+		}
+		if r.ko.Spec.DomainSettings.SecurityGroupIDs != nil {
+			f6.SecurityGroupIds = aws.ToStringSlice(r.ko.Spec.DomainSettings.SecurityGroupIDs)
+		}
+		if r.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings != nil {
+			f6f4 := &svcsdktypes.TrustedIdentityPropagationSettings{}
+			if r.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings.Status != nil {
+				f6f4.Status = svcsdktypes.FeatureStatus(*r.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings.Status)
+			}
+			f6.TrustedIdentityPropagationSettings = f6f4
+		}
+		if r.ko.Spec.DomainSettings.UnifiedStudioSettings != nil {
+			f6f5 := &svcsdktypes.UnifiedStudioSettings{}
+			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainAccountID != nil {
+				f6f5.DomainAccountId = r.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainAccountID
+			}
+			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainID != nil {
+				f6f5.DomainId = r.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainID
+			}
+			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainRegion != nil {
+				f6f5.DomainRegion = r.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainRegion
+			}
+			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.EnvironmentID != nil {
+				f6f5.EnvironmentId = r.ko.Spec.DomainSettings.UnifiedStudioSettings.EnvironmentID
+			}
+			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectID != nil {
+				f6f5.ProjectId = r.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectID
+			}
+			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectS3Path != nil {
+				f6f5.ProjectS3Path = r.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectS3Path
+			}
+			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationARN != nil {
+				f6f5.SingleSignOnApplicationArn = r.ko.Spec.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationARN
+			}
+			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess != nil {
+				f6f5.StudioWebPortalAccess = svcsdktypes.FeatureStatus(*r.ko.Spec.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess)
+			}
+			f6.UnifiedStudioSettings = f6f5
+		}
+		res.DomainSettings = f6
+	}
+	if r.ko.Spec.HomeEFSFileSystemKMSKeyID != nil {
+		res.HomeEfsFileSystemKmsKeyId = r.ko.Spec.HomeEFSFileSystemKMSKeyID
+	}
+	if r.ko.Spec.KMSKeyID != nil {
+		res.KmsKeyId = r.ko.Spec.KMSKeyID
+	}
+	if r.ko.Spec.SubnetIDs != nil {
+		res.SubnetIds = aws.ToStringSlice(r.ko.Spec.SubnetIDs)
+	}
+	if r.ko.Spec.Tags != nil {
+		f10 := []svcsdktypes.Tag{}
+		for _, f10iter := range r.ko.Spec.Tags {
+			f10elem := &svcsdktypes.Tag{}
+			if f10iter.Key != nil {
+				f10elem.Key = f10iter.Key
+			}
+			if f10iter.Value != nil {
+				f10elem.Value = f10iter.Value
+			}
+			f10 = append(f10, *f10elem)
+		}
+		res.Tags = f10
+	}
+	if r.ko.Spec.VPCID != nil {
+		res.VpcId = r.ko.Spec.VPCID
+	}
+
+	return res, nil
+}
+
+// sdkUpdate patches the supplied resource in the backend AWS service API and
+// returns a new resource with updated fields.
+func (rm *resourceManager) sdkUpdate(
+	ctx context.Context,
+	desired *resource,
+	latest *resource,
+	delta *ackcompare.Delta,
+) (updated *resource, err error) {
+	rlog := ackrtlog.FromContext(ctx)
+	exit := rlog.Trace("rm.sdkUpdate")
+	defer func() {
+		exit(err)
+	}()
+	if err = rm.requeueUntilCanModify(ctx, latest); err != nil {
+		return nil, err
+	}
+	input, err := rm.newUpdateRequestPayload(ctx, desired, delta)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp *svcsdk.UpdateDomainOutput
+	_ = resp
+	resp, err = rm.sdkapi.UpdateDomain(ctx, input)
+	rm.metrics.RecordAPICall("UPDATE", "UpdateDomain", err)
+	if err != nil {
+		return nil, err
+	}
+	// Merge in the information we read from the API call above to the copy of
+	// the original Kubernetes object we passed to the function
+	ko := desired.ko.DeepCopy()
+
+	if ko.Status.ACKResourceMetadata == nil {
+		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
+	}
+	if resp.DomainArn != nil {
+		arn := ackv1alpha1.AWSResourceName(*resp.DomainArn)
+		ko.Status.ACKResourceMetadata.ARN = &arn
+	}
+
+	rm.setStatusDefaults(ko)
+	return &resource{ko}, nil
+}
+
+// newUpdateRequestPayload returns an SDK-specific struct for the HTTP request
+// payload of the Update API call for the resource
+func (rm *resourceManager) newUpdateRequestPayload(
+	ctx context.Context,
+	r *resource,
+	delta *ackcompare.Delta,
+) (*svcsdk.UpdateDomainInput, error) {
+	res := &svcsdk.UpdateDomainInput{}
+
+	if r.ko.Spec.AppNetworkAccessType != nil {
+		res.AppNetworkAccessType = svcsdktypes.AppNetworkAccessType(*r.ko.Spec.AppNetworkAccessType)
+	}
+	if r.ko.Spec.AppSecurityGroupManagement != nil {
+		res.AppSecurityGroupManagement = svcsdktypes.AppSecurityGroupManagement(*r.ko.Spec.AppSecurityGroupManagement)
+	}
+	if r.ko.Spec.DefaultSpaceSettings != nil {
+		f2 := &svcsdktypes.DefaultSpaceSettings{}
+		if r.ko.Spec.DefaultSpaceSettings.CustomFileSystemConfigs != nil {
+			f2f0 := []svcsdktypes.CustomFileSystemConfig{}
+			for _, f2f0iter := range r.ko.Spec.DefaultSpaceSettings.CustomFileSystemConfigs {
+				var f2f0elem svcsdktypes.CustomFileSystemConfig
+				isInterfaceSet := false
+				if f2f0iter.EFSFileSystemConfig != nil {
+					if isInterfaceSet {
+						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for EFSFileSystemConfig"))
+					}
+					f2f0elemf0Parent := &svcsdktypes.CustomFileSystemConfigMemberEFSFileSystemConfig{}
+					f2f0elemf0 := &svcsdktypes.EFSFileSystemConfig{}
+					if f2f0iter.EFSFileSystemConfig.FileSystemID != nil {
+						f2f0elemf0.FileSystemId = f2f0iter.EFSFileSystemConfig.FileSystemID
+					}
+					if f2f0iter.EFSFileSystemConfig.FileSystemPath != nil {
+						f2f0elemf0.FileSystemPath = f2f0iter.EFSFileSystemConfig.FileSystemPath
+					}
+					f2f0elemf0Parent.Value = *f2f0elemf0
+					f2f0elem = f2f0elemf0Parent
+					isInterfaceSet = true
+				}
+				if f2f0iter.FSxLustreFileSystemConfig != nil {
+					if isInterfaceSet {
+						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for FSxLustreFileSystemConfig"))
+					}
+					f2f0elemf1Parent := &svcsdktypes.CustomFileSystemConfigMemberFSxLustreFileSystemConfig{}
+					f2f0elemf1 := &svcsdktypes.FSxLustreFileSystemConfig{}
+					if f2f0iter.FSxLustreFileSystemConfig.FileSystemID != nil {
+						f2f0elemf1.FileSystemId = f2f0iter.FSxLustreFileSystemConfig.FileSystemID
+					}
+					if f2f0iter.FSxLustreFileSystemConfig.FileSystemPath != nil {
+						f2f0elemf1.FileSystemPath = f2f0iter.FSxLustreFileSystemConfig.FileSystemPath
+					}
+					f2f0elemf1Parent.Value = *f2f0elemf1
+					f2f0elem = f2f0elemf1Parent
+					isInterfaceSet = true
+				}
+				if f2f0iter.S3FileSystemConfig != nil {
+					if isInterfaceSet {
+						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for S3FileSystemConfig"))
+					}
+					f2f0elemf2Parent := &svcsdktypes.CustomFileSystemConfigMemberS3FileSystemConfig{}
+					f2f0elemf2 := &svcsdktypes.S3FileSystemConfig{}
+					if f2f0iter.S3FileSystemConfig.MountPath != nil {
+						f2f0elemf2.MountPath = f2f0iter.S3FileSystemConfig.MountPath
+					}
+					if f2f0iter.S3FileSystemConfig.S3URI != nil {
+						f2f0elemf2.S3Uri = f2f0iter.S3FileSystemConfig.S3URI
+					}
+					f2f0elemf2Parent.Value = *f2f0elemf2
+					f2f0elem = f2f0elemf2Parent
+					isInterfaceSet = true
+				}
+				f2f0 = append(f2f0, f2f0elem)
+			}
+			f2.CustomFileSystemConfigs = f2f0
+		}
+		if r.ko.Spec.DefaultSpaceSettings.CustomPosixUserConfig != nil {
+			f2f1 := &svcsdktypes.CustomPosixUserConfig{}
+			if r.ko.Spec.DefaultSpaceSettings.CustomPosixUserConfig.GID != nil {
+				f2f1.Gid = r.ko.Spec.DefaultSpaceSettings.CustomPosixUserConfig.GID
+			}
+			if r.ko.Spec.DefaultSpaceSettings.CustomPosixUserConfig.UID != nil {
+				f2f1.Uid = r.ko.Spec.DefaultSpaceSettings.CustomPosixUserConfig.UID
+			}
+			f2.CustomPosixUserConfig = f2f1
+		}
+		if r.ko.Spec.DefaultSpaceSettings.ExecutionRole != nil {
+			f2.ExecutionRole = r.ko.Spec.DefaultSpaceSettings.ExecutionRole
+		}
+		if r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings != nil {
+			f2f3 := &svcsdktypes.JupyterLabAppSettings{}
+			if r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.CodeRepositories != nil {
+				f2f3f0 := []svcsdktypes.CodeRepository{}
+				for _, f2f3f0iter := range r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.CodeRepositories {
+					f2f3f0elem := &svcsdktypes.CodeRepository{}
+					if f2f3f0iter.RepositoryURL != nil {
+						f2f3f0elem.RepositoryUrl = f2f3f0iter.RepositoryURL
+					}
+					f2f3f0 = append(f2f3f0, *f2f3f0elem)
+				}
+				f2f3.CodeRepositories = f2f3f0
+			}
+			if r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.CustomImages != nil {
+				f2f3f1 := []svcsdktypes.CustomImage{}
+				for _, f2f3f1iter := range r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.CustomImages {
+					f2f3f1elem := &svcsdktypes.CustomImage{}
+					if f2f3f1iter.AppImageConfigName != nil {
+						f2f3f1elem.AppImageConfigName = f2f3f1iter.AppImageConfigName
+					}
+					if f2f3f1iter.ImageName != nil {
+						f2f3f1elem.ImageName = f2f3f1iter.ImageName
+					}
+					if f2f3f1iter.ImageVersionNumber != nil {
+						imageVersionNumberCopy0 := *f2f3f1iter.ImageVersionNumber
+						if imageVersionNumberCopy0 > math.MaxInt32 || imageVersionNumberCopy0 < math.MinInt32 {
+							return nil, fmt.Errorf("error: field ImageVersionNumber is of type int32")
+						}
+						imageVersionNumberCopy := int32(imageVersionNumberCopy0)
+						f2f3f1elem.ImageVersionNumber = &imageVersionNumberCopy
+					}
+					f2f3f1 = append(f2f3f1, *f2f3f1elem)
+				}
+				f2f3.CustomImages = f2f3f1
+			}
+			if r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec != nil {
+				f2f3f2 := &svcsdktypes.ResourceSpec{}
+				if r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType != nil {
+					f2f3f2.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType)
+				}
+				if r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
+					f2f3f2.LifecycleConfigArn = r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN
+				}
+				if r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
+					f2f3f2.SageMakerImageArn = r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN
+				}
+				if r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					f2f3f2.SageMakerImageVersionAlias = r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+				}
+				if r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
+					f2f3f2.SageMakerImageVersionArn = r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
+				}
+				f2f3.DefaultResourceSpec = f2f3f2
+			}
+			if r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.LifecycleConfigARNs != nil {
+				f2f3.LifecycleConfigArns = aws.ToStringSlice(r.ko.Spec.DefaultSpaceSettings.JupyterLabAppSettings.LifecycleConfigARNs)
+			}
+			f2.JupyterLabAppSettings = f2f3
+		}
+		if r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings != nil {
+			f2f4 := &svcsdktypes.JupyterServerAppSettings{}
+			if r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.CodeRepositories != nil {
+				f2f4f0 := []svcsdktypes.CodeRepository{}
+				for _, f2f4f0iter := range r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.CodeRepositories {
+					f2f4f0elem := &svcsdktypes.CodeRepository{}
+					if f2f4f0iter.RepositoryURL != nil {
+						f2f4f0elem.RepositoryUrl = f2f4f0iter.RepositoryURL
+					}
+					f2f4f0 = append(f2f4f0, *f2f4f0elem)
+				}
+				f2f4.CodeRepositories = f2f4f0
+			}
+			if r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec != nil {
+				f2f4f1 := &svcsdktypes.ResourceSpec{}
+				if r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType != nil {
+					f2f4f1.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType)
+				}
+				if r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
+					f2f4f1.LifecycleConfigArn = r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN
+				}
+				if r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
+					f2f4f1.SageMakerImageArn = r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN
+				}
+				if r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					f2f4f1.SageMakerImageVersionAlias = r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+				}
+				if r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
+					f2f4f1.SageMakerImageVersionArn = r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
+				}
+				f2f4.DefaultResourceSpec = f2f4f1
+			}
+			if r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.LifecycleConfigARNs != nil {
+				f2f4.LifecycleConfigArns = aws.ToStringSlice(r.ko.Spec.DefaultSpaceSettings.JupyterServerAppSettings.LifecycleConfigARNs)
+			}
+			f2.JupyterServerAppSettings = f2f4
+		}
+		if r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings != nil {
+			f2f5 := &svcsdktypes.KernelGatewayAppSettings{}
+			if r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.CustomImages != nil {
+				f2f5f0 := []svcsdktypes.CustomImage{}
+				for _, f2f5f0iter := range r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.CustomImages {
+					f2f5f0elem := &svcsdktypes.CustomImage{}
+					if f2f5f0iter.AppImageConfigName != nil {
+						f2f5f0elem.AppImageConfigName = f2f5f0iter.AppImageConfigName
+					}
+					if f2f5f0iter.ImageName != nil {
+						f2f5f0elem.ImageName = f2f5f0iter.ImageName
+					}
+					if f2f5f0iter.ImageVersionNumber != nil {
+						imageVersionNumberCopy0 := *f2f5f0iter.ImageVersionNumber
+						if imageVersionNumberCopy0 > math.MaxInt32 || imageVersionNumberCopy0 < math.MinInt32 {
+							return nil, fmt.Errorf("error: field ImageVersionNumber is of type int32")
+						}
+						imageVersionNumberCopy := int32(imageVersionNumberCopy0)
+						f2f5f0elem.ImageVersionNumber = &imageVersionNumberCopy
+					}
+					f2f5f0 = append(f2f5f0, *f2f5f0elem)
+				}
+				f2f5.CustomImages = f2f5f0
+			}
+			if r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec != nil {
+				f2f5f1 := &svcsdktypes.ResourceSpec{}
+				if r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.InstanceType != nil {
+					f2f5f1.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.InstanceType)
+				}
+				if r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
+					f2f5f1.LifecycleConfigArn = r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigARN
+				}
+				if r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
+					f2f5f1.SageMakerImageArn = r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN
+				}
+				if r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
+					f2f5f1.SageMakerImageVersionAlias = r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+				}
+				if r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
+					f2f5f1.SageMakerImageVersionArn = r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
+				}
+				f2f5.DefaultResourceSpec = f2f5f1
+			}
+			if r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.LifecycleConfigARNs != nil {
+				f2f5.LifecycleConfigArns = aws.ToStringSlice(r.ko.Spec.DefaultSpaceSettings.KernelGatewayAppSettings.LifecycleConfigARNs)
+			}
+			f2.KernelGatewayAppSettings = f2f5
+		}
+		if r.ko.Spec.DefaultSpaceSettings.SecurityGroups != nil {
+			f2.SecurityGroups = aws.ToStringSlice(r.ko.Spec.DefaultSpaceSettings.SecurityGroups)
+		}
+		if r.ko.Spec.DefaultSpaceSettings.SpaceStorageSettings != nil {
+			f2f7 := &svcsdktypes.DefaultSpaceStorageSettings{}
+			if r.ko.Spec.DefaultSpaceSettings.SpaceStorageSettings.DefaultEBSStorageSettings != nil {
+				f2f7f0 := &svcsdktypes.DefaultEbsStorageSettings{}
+				if r.ko.Spec.DefaultSpaceSettings.SpaceStorageSettings.DefaultEBSStorageSettings.DefaultEBSVolumeSizeInGb != nil {
+					defaultEBSVolumeSizeInGbCopy0 := *r.ko.Spec.DefaultSpaceSettings.SpaceStorageSettings.DefaultEBSStorageSettings.DefaultEBSVolumeSizeInGb
+					if defaultEBSVolumeSizeInGbCopy0 > math.MaxInt32 || defaultEBSVolumeSizeInGbCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field DefaultEbsVolumeSizeInGb is of type int32")
+					}
+					defaultEBSVolumeSizeInGbCopy := int32(defaultEBSVolumeSizeInGbCopy0)
+					f2f7f0.DefaultEbsVolumeSizeInGb = &defaultEBSVolumeSizeInGbCopy
+				}
+				if r.ko.Spec.DefaultSpaceSettings.SpaceStorageSettings.DefaultEBSStorageSettings.MaximumEBSVolumeSizeInGb != nil {
+					maximumEBSVolumeSizeInGbCopy0 := *r.ko.Spec.DefaultSpaceSettings.SpaceStorageSettings.DefaultEBSStorageSettings.MaximumEBSVolumeSizeInGb
+					if maximumEBSVolumeSizeInGbCopy0 > math.MaxInt32 || maximumEBSVolumeSizeInGbCopy0 < math.MinInt32 {
+						return nil, fmt.Errorf("error: field MaximumEbsVolumeSizeInGb is of type int32")
+					}
+					maximumEBSVolumeSizeInGbCopy := int32(maximumEBSVolumeSizeInGbCopy0)
+					f2f7f0.MaximumEbsVolumeSizeInGb = &maximumEBSVolumeSizeInGbCopy
+				}
+				f2f7.DefaultEbsStorageSettings = f2f7f0
+			}
+			f2.SpaceStorageSettings = f2f7
+		}
+		res.DefaultSpaceSettings = f2
+	}
 	if r.ko.Spec.DefaultUserSettings != nil {
 		f3 := &svcsdktypes.UserSettings{}
 		if r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings != nil {
@@ -645,6 +1906,40 @@ func (rm *resourceManager) newCreateRequestPayload(
 						f3f1elemf0.FileSystemPath = f3f1iter.EFSFileSystemConfig.FileSystemPath
 					}
 					f3f1elemf0Parent.Value = *f3f1elemf0
+					f3f1elem = f3f1elemf0Parent
+					isInterfaceSet = true
+				}
+				if f3f1iter.FSxLustreFileSystemConfig != nil {
+					if isInterfaceSet {
+						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for FSxLustreFileSystemConfig"))
+					}
+					f3f1elemf1Parent := &svcsdktypes.CustomFileSystemConfigMemberFSxLustreFileSystemConfig{}
+					f3f1elemf1 := &svcsdktypes.FSxLustreFileSystemConfig{}
+					if f3f1iter.FSxLustreFileSystemConfig.FileSystemID != nil {
+						f3f1elemf1.FileSystemId = f3f1iter.FSxLustreFileSystemConfig.FileSystemID
+					}
+					if f3f1iter.FSxLustreFileSystemConfig.FileSystemPath != nil {
+						f3f1elemf1.FileSystemPath = f3f1iter.FSxLustreFileSystemConfig.FileSystemPath
+					}
+					f3f1elemf1Parent.Value = *f3f1elemf1
+					f3f1elem = f3f1elemf1Parent
+					isInterfaceSet = true
+				}
+				if f3f1iter.S3FileSystemConfig != nil {
+					if isInterfaceSet {
+						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for S3FileSystemConfig"))
+					}
+					f3f1elemf2Parent := &svcsdktypes.CustomFileSystemConfigMemberS3FileSystemConfig{}
+					f3f1elemf2 := &svcsdktypes.S3FileSystemConfig{}
+					if f3f1iter.S3FileSystemConfig.MountPath != nil {
+						f3f1elemf2.MountPath = f3f1iter.S3FileSystemConfig.MountPath
+					}
+					if f3f1iter.S3FileSystemConfig.S3URI != nil {
+						f3f1elemf2.S3Uri = f3f1iter.S3FileSystemConfig.S3URI
+					}
+					f3f1elemf2Parent.Value = *f3f1elemf2
+					f3f1elem = f3f1elemf2Parent
+					isInterfaceSet = true
 				}
 				f3f1 = append(f3f1, f3f1elem)
 			}
@@ -668,46 +1963,57 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings != nil {
 			f3f5 := &svcsdktypes.JupyterLabAppSettings{}
+			if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.CodeRepositories != nil {
+				f3f5f0 := []svcsdktypes.CodeRepository{}
+				for _, f3f5f0iter := range r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.CodeRepositories {
+					f3f5f0elem := &svcsdktypes.CodeRepository{}
+					if f3f5f0iter.RepositoryURL != nil {
+						f3f5f0elem.RepositoryUrl = f3f5f0iter.RepositoryURL
+					}
+					f3f5f0 = append(f3f5f0, *f3f5f0elem)
+				}
+				f3f5.CodeRepositories = f3f5f0
+			}
 			if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.CustomImages != nil {
-				f3f5f0 := []svcsdktypes.CustomImage{}
-				for _, f3f5f0iter := range r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.CustomImages {
-					f3f5f0elem := &svcsdktypes.CustomImage{}
-					if f3f5f0iter.AppImageConfigName != nil {
-						f3f5f0elem.AppImageConfigName = f3f5f0iter.AppImageConfigName
+				f3f5f1 := []svcsdktypes.CustomImage{}
+				for _, f3f5f1iter := range r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.CustomImages {
+					f3f5f1elem := &svcsdktypes.CustomImage{}
+					if f3f5f1iter.AppImageConfigName != nil {
+						f3f5f1elem.AppImageConfigName = f3f5f1iter.AppImageConfigName
 					}
-					if f3f5f0iter.ImageName != nil {
-						f3f5f0elem.ImageName = f3f5f0iter.ImageName
+					if f3f5f1iter.ImageName != nil {
+						f3f5f1elem.ImageName = f3f5f1iter.ImageName
 					}
-					if f3f5f0iter.ImageVersionNumber != nil {
-						imageVersionNumberCopy0 := *f3f5f0iter.ImageVersionNumber
+					if f3f5f1iter.ImageVersionNumber != nil {
+						imageVersionNumberCopy0 := *f3f5f1iter.ImageVersionNumber
 						if imageVersionNumberCopy0 > math.MaxInt32 || imageVersionNumberCopy0 < math.MinInt32 {
 							return nil, fmt.Errorf("error: field ImageVersionNumber is of type int32")
 						}
 						imageVersionNumberCopy := int32(imageVersionNumberCopy0)
-						f3f5f0elem.ImageVersionNumber = &imageVersionNumberCopy
+						f3f5f1elem.ImageVersionNumber = &imageVersionNumberCopy
 					}
-					f3f5f0 = append(f3f5f0, *f3f5f0elem)
+					f3f5f1 = append(f3f5f1, *f3f5f1elem)
 				}
-				f3f5.CustomImages = f3f5f0
+				f3f5.CustomImages = f3f5f1
 			}
 			if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec != nil {
-				f3f5f1 := &svcsdktypes.ResourceSpec{}
+				f3f5f2 := &svcsdktypes.ResourceSpec{}
 				if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType != nil {
-					f3f5f1.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType)
+					f3f5f2.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType)
 				}
 				if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
-					f3f5f1.LifecycleConfigArn = r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN
+					f3f5f2.LifecycleConfigArn = r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN
 				}
 				if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
-					f3f5f1.SageMakerImageArn = r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN
+					f3f5f2.SageMakerImageArn = r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN
 				}
 				if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f3f5f1.SageMakerImageVersionAlias = r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+					f3f5f2.SageMakerImageVersionAlias = r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
 				}
 				if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
-					f3f5f1.SageMakerImageVersionArn = r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
+					f3f5f2.SageMakerImageVersionArn = r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
 				}
-				f3f5.DefaultResourceSpec = f3f5f1
+				f3f5.DefaultResourceSpec = f3f5f2
 			}
 			if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigARNs != nil {
 				f3f5.LifecycleConfigArns = aws.ToStringSlice(r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigARNs)
@@ -716,24 +2022,35 @@ func (rm *resourceManager) newCreateRequestPayload(
 		}
 		if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings != nil {
 			f3f6 := &svcsdktypes.JupyterServerAppSettings{}
+			if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.CodeRepositories != nil {
+				f3f6f0 := []svcsdktypes.CodeRepository{}
+				for _, f3f6f0iter := range r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.CodeRepositories {
+					f3f6f0elem := &svcsdktypes.CodeRepository{}
+					if f3f6f0iter.RepositoryURL != nil {
+						f3f6f0elem.RepositoryUrl = f3f6f0iter.RepositoryURL
+					}
+					f3f6f0 = append(f3f6f0, *f3f6f0elem)
+				}
+				f3f6.CodeRepositories = f3f6f0
+			}
 			if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec != nil {
-				f3f6f0 := &svcsdktypes.ResourceSpec{}
+				f3f6f1 := &svcsdktypes.ResourceSpec{}
 				if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType != nil {
-					f3f6f0.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType)
+					f3f6f1.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType)
 				}
 				if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
-					f3f6f0.LifecycleConfigArn = r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN
+					f3f6f1.LifecycleConfigArn = r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN
 				}
 				if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
-					f3f6f0.SageMakerImageArn = r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN
+					f3f6f1.SageMakerImageArn = r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN
 				}
 				if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f3f6f0.SageMakerImageVersionAlias = r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
+					f3f6f1.SageMakerImageVersionAlias = r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
 				}
 				if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
-					f3f6f0.SageMakerImageVersionArn = r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
+					f3f6f1.SageMakerImageVersionArn = r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
 				}
-				f3f6.DefaultResourceSpec = f3f6f0
+				f3f6.DefaultResourceSpec = f3f6f1
 			}
 			if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs != nil {
 				f3f6.LifecycleConfigArns = aws.ToStringSlice(r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs)
@@ -865,455 +2182,6 @@ func (rm *resourceManager) newCreateRequestPayload(
 			f3.TensorBoardAppSettings = f3f13
 		}
 		res.DefaultUserSettings = f3
-	}
-	if r.ko.Spec.DomainName != nil {
-		res.DomainName = r.ko.Spec.DomainName
-	}
-	if r.ko.Spec.DomainSettings != nil {
-		f5 := &svcsdktypes.DomainSettings{}
-		if r.ko.Spec.DomainSettings.DockerSettings != nil {
-			f5f0 := &svcsdktypes.DockerSettings{}
-			if r.ko.Spec.DomainSettings.DockerSettings.EnableDockerAccess != nil {
-				f5f0.EnableDockerAccess = svcsdktypes.FeatureStatus(*r.ko.Spec.DomainSettings.DockerSettings.EnableDockerAccess)
-			}
-			if r.ko.Spec.DomainSettings.DockerSettings.RootlessDocker != nil {
-				f5f0.RootlessDocker = svcsdktypes.FeatureStatus(*r.ko.Spec.DomainSettings.DockerSettings.RootlessDocker)
-			}
-			if r.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts != nil {
-				f5f0.VpcOnlyTrustedAccounts = aws.ToStringSlice(r.ko.Spec.DomainSettings.DockerSettings.VPCOnlyTrustedAccounts)
-			}
-			f5.DockerSettings = f5f0
-		}
-		if r.ko.Spec.DomainSettings.IPAddressType != nil {
-			f5.IpAddressType = svcsdktypes.IPAddressType(*r.ko.Spec.DomainSettings.IPAddressType)
-		}
-		if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings != nil {
-			f5f2 := &svcsdktypes.RStudioServerProDomainSettings{}
-			if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec != nil {
-				f5f2f0 := &svcsdktypes.ResourceSpec{}
-				if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType != nil {
-					f5f2f0.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.InstanceType)
-				}
-				if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
-					f5f2f0.LifecycleConfigArn = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.LifecycleConfigARN
-				}
-				if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN != nil {
-					f5f2f0.SageMakerImageArn = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageARN
-				}
-				if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f5f2f0.SageMakerImageVersionAlias = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionAlias
-				}
-				if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
-					f5f2f0.SageMakerImageVersionArn = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DefaultResourceSpec.SageMakerImageVersionARN
-				}
-				f5f2.DefaultResourceSpec = f5f2f0
-			}
-			if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN != nil {
-				f5f2.DomainExecutionRoleArn = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleARN
-			}
-			if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL != nil {
-				f5f2.RStudioConnectUrl = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioConnectURL
-			}
-			if r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL != nil {
-				f5f2.RStudioPackageManagerUrl = r.ko.Spec.DomainSettings.RStudioServerProDomainSettings.RStudioPackageManagerURL
-			}
-			f5.RStudioServerProDomainSettings = f5f2
-		}
-		if r.ko.Spec.DomainSettings.SecurityGroupIDs != nil {
-			f5.SecurityGroupIds = aws.ToStringSlice(r.ko.Spec.DomainSettings.SecurityGroupIDs)
-		}
-		if r.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings != nil {
-			f5f4 := &svcsdktypes.TrustedIdentityPropagationSettings{}
-			if r.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings.Status != nil {
-				f5f4.Status = svcsdktypes.FeatureStatus(*r.ko.Spec.DomainSettings.TrustedIdentityPropagationSettings.Status)
-			}
-			f5.TrustedIdentityPropagationSettings = f5f4
-		}
-		if r.ko.Spec.DomainSettings.UnifiedStudioSettings != nil {
-			f5f5 := &svcsdktypes.UnifiedStudioSettings{}
-			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainAccountID != nil {
-				f5f5.DomainAccountId = r.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainAccountID
-			}
-			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainID != nil {
-				f5f5.DomainId = r.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainID
-			}
-			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainRegion != nil {
-				f5f5.DomainRegion = r.ko.Spec.DomainSettings.UnifiedStudioSettings.DomainRegion
-			}
-			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.EnvironmentID != nil {
-				f5f5.EnvironmentId = r.ko.Spec.DomainSettings.UnifiedStudioSettings.EnvironmentID
-			}
-			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectID != nil {
-				f5f5.ProjectId = r.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectID
-			}
-			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectS3Path != nil {
-				f5f5.ProjectS3Path = r.ko.Spec.DomainSettings.UnifiedStudioSettings.ProjectS3Path
-			}
-			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationARN != nil {
-				f5f5.SingleSignOnApplicationArn = r.ko.Spec.DomainSettings.UnifiedStudioSettings.SingleSignOnApplicationARN
-			}
-			if r.ko.Spec.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess != nil {
-				f5f5.StudioWebPortalAccess = svcsdktypes.FeatureStatus(*r.ko.Spec.DomainSettings.UnifiedStudioSettings.StudioWebPortalAccess)
-			}
-			f5.UnifiedStudioSettings = f5f5
-		}
-		res.DomainSettings = f5
-	}
-	if r.ko.Spec.HomeEFSFileSystemKMSKeyID != nil {
-		res.HomeEfsFileSystemKmsKeyId = r.ko.Spec.HomeEFSFileSystemKMSKeyID
-	}
-	if r.ko.Spec.KMSKeyID != nil {
-		res.KmsKeyId = r.ko.Spec.KMSKeyID
-	}
-	if r.ko.Spec.SubnetIDs != nil {
-		res.SubnetIds = aws.ToStringSlice(r.ko.Spec.SubnetIDs)
-	}
-	if r.ko.Spec.Tags != nil {
-		f9 := []svcsdktypes.Tag{}
-		for _, f9iter := range r.ko.Spec.Tags {
-			f9elem := &svcsdktypes.Tag{}
-			if f9iter.Key != nil {
-				f9elem.Key = f9iter.Key
-			}
-			if f9iter.Value != nil {
-				f9elem.Value = f9iter.Value
-			}
-			f9 = append(f9, *f9elem)
-		}
-		res.Tags = f9
-	}
-	if r.ko.Spec.VPCID != nil {
-		res.VpcId = r.ko.Spec.VPCID
-	}
-
-	return res, nil
-}
-
-// sdkUpdate patches the supplied resource in the backend AWS service API and
-// returns a new resource with updated fields.
-func (rm *resourceManager) sdkUpdate(
-	ctx context.Context,
-	desired *resource,
-	latest *resource,
-	delta *ackcompare.Delta,
-) (updated *resource, err error) {
-	rlog := ackrtlog.FromContext(ctx)
-	exit := rlog.Trace("rm.sdkUpdate")
-	defer func() {
-		exit(err)
-	}()
-	if err = rm.requeueUntilCanModify(ctx, latest); err != nil {
-		return nil, err
-	}
-	input, err := rm.newUpdateRequestPayload(ctx, desired, delta)
-	if err != nil {
-		return nil, err
-	}
-
-	var resp *svcsdk.UpdateDomainOutput
-	_ = resp
-	resp, err = rm.sdkapi.UpdateDomain(ctx, input)
-	rm.metrics.RecordAPICall("UPDATE", "UpdateDomain", err)
-	if err != nil {
-		return nil, err
-	}
-	// Merge in the information we read from the API call above to the copy of
-	// the original Kubernetes object we passed to the function
-	ko := desired.ko.DeepCopy()
-
-	if ko.Status.ACKResourceMetadata == nil {
-		ko.Status.ACKResourceMetadata = &ackv1alpha1.ResourceMetadata{}
-	}
-	if resp.DomainArn != nil {
-		arn := ackv1alpha1.AWSResourceName(*resp.DomainArn)
-		ko.Status.ACKResourceMetadata.ARN = &arn
-	}
-
-	rm.setStatusDefaults(ko)
-	return &resource{ko}, nil
-}
-
-// newUpdateRequestPayload returns an SDK-specific struct for the HTTP request
-// payload of the Update API call for the resource
-func (rm *resourceManager) newUpdateRequestPayload(
-	ctx context.Context,
-	r *resource,
-	delta *ackcompare.Delta,
-) (*svcsdk.UpdateDomainInput, error) {
-	res := &svcsdk.UpdateDomainInput{}
-
-	if r.ko.Spec.AppNetworkAccessType != nil {
-		res.AppNetworkAccessType = svcsdktypes.AppNetworkAccessType(*r.ko.Spec.AppNetworkAccessType)
-	}
-	if r.ko.Spec.AppSecurityGroupManagement != nil {
-		res.AppSecurityGroupManagement = svcsdktypes.AppSecurityGroupManagement(*r.ko.Spec.AppSecurityGroupManagement)
-	}
-	if r.ko.Spec.DefaultUserSettings != nil {
-		f2 := &svcsdktypes.UserSettings{}
-		if r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings != nil {
-			f2f0 := &svcsdktypes.CodeEditorAppSettings{}
-			if r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec != nil {
-				f2f0f0 := &svcsdktypes.ResourceSpec{}
-				if r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.InstanceType != nil {
-					f2f0f0.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.InstanceType)
-				}
-				if r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
-					f2f0f0.LifecycleConfigArn = r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.LifecycleConfigARN
-				}
-				if r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
-					f2f0f0.SageMakerImageArn = r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageARN
-				}
-				if r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f2f0f0.SageMakerImageVersionAlias = r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
-				}
-				if r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
-					f2f0f0.SageMakerImageVersionArn = r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
-				}
-				f2f0.DefaultResourceSpec = f2f0f0
-			}
-			if r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.LifecycleConfigARNs != nil {
-				f2f0.LifecycleConfigArns = aws.ToStringSlice(r.ko.Spec.DefaultUserSettings.CodeEditorAppSettings.LifecycleConfigARNs)
-			}
-			f2.CodeEditorAppSettings = f2f0
-		}
-		if r.ko.Spec.DefaultUserSettings.CustomFileSystemConfigs != nil {
-			f2f1 := []svcsdktypes.CustomFileSystemConfig{}
-			for _, f2f1iter := range r.ko.Spec.DefaultUserSettings.CustomFileSystemConfigs {
-				var f2f1elem svcsdktypes.CustomFileSystemConfig
-				isInterfaceSet := false
-				if f2f1iter.EFSFileSystemConfig != nil {
-					if isInterfaceSet {
-						return nil, ackerr.NewTerminalError(fmt.Errorf("can only set one of the members for EFSFileSystemConfig"))
-					}
-					f2f1elemf0Parent := &svcsdktypes.CustomFileSystemConfigMemberEFSFileSystemConfig{}
-					f2f1elemf0 := &svcsdktypes.EFSFileSystemConfig{}
-					if f2f1iter.EFSFileSystemConfig.FileSystemID != nil {
-						f2f1elemf0.FileSystemId = f2f1iter.EFSFileSystemConfig.FileSystemID
-					}
-					if f2f1iter.EFSFileSystemConfig.FileSystemPath != nil {
-						f2f1elemf0.FileSystemPath = f2f1iter.EFSFileSystemConfig.FileSystemPath
-					}
-					f2f1elemf0Parent.Value = *f2f1elemf0
-				}
-				f2f1 = append(f2f1, f2f1elem)
-			}
-			f2.CustomFileSystemConfigs = f2f1
-		}
-		if r.ko.Spec.DefaultUserSettings.CustomPosixUserConfig != nil {
-			f2f2 := &svcsdktypes.CustomPosixUserConfig{}
-			if r.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.GID != nil {
-				f2f2.Gid = r.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.GID
-			}
-			if r.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.UID != nil {
-				f2f2.Uid = r.ko.Spec.DefaultUserSettings.CustomPosixUserConfig.UID
-			}
-			f2.CustomPosixUserConfig = f2f2
-		}
-		if r.ko.Spec.DefaultUserSettings.DefaultLandingURI != nil {
-			f2.DefaultLandingUri = r.ko.Spec.DefaultUserSettings.DefaultLandingURI
-		}
-		if r.ko.Spec.DefaultUserSettings.ExecutionRole != nil {
-			f2.ExecutionRole = r.ko.Spec.DefaultUserSettings.ExecutionRole
-		}
-		if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings != nil {
-			f2f5 := &svcsdktypes.JupyterLabAppSettings{}
-			if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.CustomImages != nil {
-				f2f5f0 := []svcsdktypes.CustomImage{}
-				for _, f2f5f0iter := range r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.CustomImages {
-					f2f5f0elem := &svcsdktypes.CustomImage{}
-					if f2f5f0iter.AppImageConfigName != nil {
-						f2f5f0elem.AppImageConfigName = f2f5f0iter.AppImageConfigName
-					}
-					if f2f5f0iter.ImageName != nil {
-						f2f5f0elem.ImageName = f2f5f0iter.ImageName
-					}
-					if f2f5f0iter.ImageVersionNumber != nil {
-						imageVersionNumberCopy0 := *f2f5f0iter.ImageVersionNumber
-						if imageVersionNumberCopy0 > math.MaxInt32 || imageVersionNumberCopy0 < math.MinInt32 {
-							return nil, fmt.Errorf("error: field ImageVersionNumber is of type int32")
-						}
-						imageVersionNumberCopy := int32(imageVersionNumberCopy0)
-						f2f5f0elem.ImageVersionNumber = &imageVersionNumberCopy
-					}
-					f2f5f0 = append(f2f5f0, *f2f5f0elem)
-				}
-				f2f5.CustomImages = f2f5f0
-			}
-			if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec != nil {
-				f2f5f1 := &svcsdktypes.ResourceSpec{}
-				if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType != nil {
-					f2f5f1.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.InstanceType)
-				}
-				if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
-					f2f5f1.LifecycleConfigArn = r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.LifecycleConfigARN
-				}
-				if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
-					f2f5f1.SageMakerImageArn = r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageARN
-				}
-				if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f2f5f1.SageMakerImageVersionAlias = r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
-				}
-				if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
-					f2f5f1.SageMakerImageVersionArn = r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
-				}
-				f2f5.DefaultResourceSpec = f2f5f1
-			}
-			if r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigARNs != nil {
-				f2f5.LifecycleConfigArns = aws.ToStringSlice(r.ko.Spec.DefaultUserSettings.JupyterLabAppSettings.LifecycleConfigARNs)
-			}
-			f2.JupyterLabAppSettings = f2f5
-		}
-		if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings != nil {
-			f2f6 := &svcsdktypes.JupyterServerAppSettings{}
-			if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec != nil {
-				f2f6f0 := &svcsdktypes.ResourceSpec{}
-				if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType != nil {
-					f2f6f0.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.InstanceType)
-				}
-				if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
-					f2f6f0.LifecycleConfigArn = r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.LifecycleConfigARN
-				}
-				if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
-					f2f6f0.SageMakerImageArn = r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageARN
-				}
-				if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f2f6f0.SageMakerImageVersionAlias = r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
-				}
-				if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
-					f2f6f0.SageMakerImageVersionArn = r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
-				}
-				f2f6.DefaultResourceSpec = f2f6f0
-			}
-			if r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs != nil {
-				f2f6.LifecycleConfigArns = aws.ToStringSlice(r.ko.Spec.DefaultUserSettings.JupyterServerAppSettings.LifecycleConfigARNs)
-			}
-			f2.JupyterServerAppSettings = f2f6
-		}
-		if r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings != nil {
-			f2f7 := &svcsdktypes.KernelGatewayAppSettings{}
-			if r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.CustomImages != nil {
-				f2f7f0 := []svcsdktypes.CustomImage{}
-				for _, f2f7f0iter := range r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.CustomImages {
-					f2f7f0elem := &svcsdktypes.CustomImage{}
-					if f2f7f0iter.AppImageConfigName != nil {
-						f2f7f0elem.AppImageConfigName = f2f7f0iter.AppImageConfigName
-					}
-					if f2f7f0iter.ImageName != nil {
-						f2f7f0elem.ImageName = f2f7f0iter.ImageName
-					}
-					if f2f7f0iter.ImageVersionNumber != nil {
-						imageVersionNumberCopy0 := *f2f7f0iter.ImageVersionNumber
-						if imageVersionNumberCopy0 > math.MaxInt32 || imageVersionNumberCopy0 < math.MinInt32 {
-							return nil, fmt.Errorf("error: field ImageVersionNumber is of type int32")
-						}
-						imageVersionNumberCopy := int32(imageVersionNumberCopy0)
-						f2f7f0elem.ImageVersionNumber = &imageVersionNumberCopy
-					}
-					f2f7f0 = append(f2f7f0, *f2f7f0elem)
-				}
-				f2f7.CustomImages = f2f7f0
-			}
-			if r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec != nil {
-				f2f7f1 := &svcsdktypes.ResourceSpec{}
-				if r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.InstanceType != nil {
-					f2f7f1.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.InstanceType)
-				}
-				if r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
-					f2f7f1.LifecycleConfigArn = r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.LifecycleConfigARN
-				}
-				if r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
-					f2f7f1.SageMakerImageArn = r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageARN
-				}
-				if r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f2f7f1.SageMakerImageVersionAlias = r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
-				}
-				if r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
-					f2f7f1.SageMakerImageVersionArn = r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
-				}
-				f2f7.DefaultResourceSpec = f2f7f1
-			}
-			if r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs != nil {
-				f2f7.LifecycleConfigArns = aws.ToStringSlice(r.ko.Spec.DefaultUserSettings.KernelGatewayAppSettings.LifecycleConfigARNs)
-			}
-			f2.KernelGatewayAppSettings = f2f7
-		}
-		if r.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings != nil {
-			f2f8 := &svcsdktypes.RStudioServerProAppSettings{}
-			if r.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.AccessStatus != nil {
-				f2f8.AccessStatus = svcsdktypes.RStudioServerProAccessStatus(*r.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.AccessStatus)
-			}
-			if r.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.UserGroup != nil {
-				f2f8.UserGroup = svcsdktypes.RStudioServerProUserGroup(*r.ko.Spec.DefaultUserSettings.RStudioServerProAppSettings.UserGroup)
-			}
-			f2.RStudioServerProAppSettings = f2f8
-		}
-		if r.ko.Spec.DefaultUserSettings.SecurityGroups != nil {
-			f2.SecurityGroups = aws.ToStringSlice(r.ko.Spec.DefaultUserSettings.SecurityGroups)
-		}
-		if r.ko.Spec.DefaultUserSettings.SharingSettings != nil {
-			f2f10 := &svcsdktypes.SharingSettings{}
-			if r.ko.Spec.DefaultUserSettings.SharingSettings.NotebookOutputOption != nil {
-				f2f10.NotebookOutputOption = svcsdktypes.NotebookOutputOption(*r.ko.Spec.DefaultUserSettings.SharingSettings.NotebookOutputOption)
-			}
-			if r.ko.Spec.DefaultUserSettings.SharingSettings.S3KMSKeyID != nil {
-				f2f10.S3KmsKeyId = r.ko.Spec.DefaultUserSettings.SharingSettings.S3KMSKeyID
-			}
-			if r.ko.Spec.DefaultUserSettings.SharingSettings.S3OutputPath != nil {
-				f2f10.S3OutputPath = r.ko.Spec.DefaultUserSettings.SharingSettings.S3OutputPath
-			}
-			f2.SharingSettings = f2f10
-		}
-		if r.ko.Spec.DefaultUserSettings.SpaceStorageSettings != nil {
-			f2f11 := &svcsdktypes.DefaultSpaceStorageSettings{}
-			if r.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings != nil {
-				f2f11f0 := &svcsdktypes.DefaultEbsStorageSettings{}
-				if r.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.DefaultEBSVolumeSizeInGb != nil {
-					defaultEBSVolumeSizeInGbCopy0 := *r.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.DefaultEBSVolumeSizeInGb
-					if defaultEBSVolumeSizeInGbCopy0 > math.MaxInt32 || defaultEBSVolumeSizeInGbCopy0 < math.MinInt32 {
-						return nil, fmt.Errorf("error: field DefaultEbsVolumeSizeInGb is of type int32")
-					}
-					defaultEBSVolumeSizeInGbCopy := int32(defaultEBSVolumeSizeInGbCopy0)
-					f2f11f0.DefaultEbsVolumeSizeInGb = &defaultEBSVolumeSizeInGbCopy
-				}
-				if r.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.MaximumEBSVolumeSizeInGb != nil {
-					maximumEBSVolumeSizeInGbCopy0 := *r.ko.Spec.DefaultUserSettings.SpaceStorageSettings.DefaultEBSStorageSettings.MaximumEBSVolumeSizeInGb
-					if maximumEBSVolumeSizeInGbCopy0 > math.MaxInt32 || maximumEBSVolumeSizeInGbCopy0 < math.MinInt32 {
-						return nil, fmt.Errorf("error: field MaximumEbsVolumeSizeInGb is of type int32")
-					}
-					maximumEBSVolumeSizeInGbCopy := int32(maximumEBSVolumeSizeInGbCopy0)
-					f2f11f0.MaximumEbsVolumeSizeInGb = &maximumEBSVolumeSizeInGbCopy
-				}
-				f2f11.DefaultEbsStorageSettings = f2f11f0
-			}
-			f2.SpaceStorageSettings = f2f11
-		}
-		if r.ko.Spec.DefaultUserSettings.StudioWebPortal != nil {
-			f2.StudioWebPortal = svcsdktypes.StudioWebPortal(*r.ko.Spec.DefaultUserSettings.StudioWebPortal)
-		}
-		if r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings != nil {
-			f2f13 := &svcsdktypes.TensorBoardAppSettings{}
-			if r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec != nil {
-				f2f13f0 := &svcsdktypes.ResourceSpec{}
-				if r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.InstanceType != nil {
-					f2f13f0.InstanceType = svcsdktypes.AppInstanceType(*r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.InstanceType)
-				}
-				if r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.LifecycleConfigARN != nil {
-					f2f13f0.LifecycleConfigArn = r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.LifecycleConfigARN
-				}
-				if r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageARN != nil {
-					f2f13f0.SageMakerImageArn = r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageARN
-				}
-				if r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias != nil {
-					f2f13f0.SageMakerImageVersionAlias = r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionAlias
-				}
-				if r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionARN != nil {
-					f2f13f0.SageMakerImageVersionArn = r.ko.Spec.DefaultUserSettings.TensorBoardAppSettings.DefaultResourceSpec.SageMakerImageVersionARN
-				}
-				f2f13.DefaultResourceSpec = f2f13f0
-			}
-			f2.TensorBoardAppSettings = f2f13
-		}
-		res.DefaultUserSettings = f2
 	}
 	if r.ko.Status.DomainID != nil {
 		res.DomainId = r.ko.Status.DomainID
