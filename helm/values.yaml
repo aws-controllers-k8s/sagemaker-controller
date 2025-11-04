@@ -166,6 +166,7 @@ reconcile:
     - Pipeline
     - PipelineExecution
     - ProcessingJob
+    - Project
     - Space
     - TrainingJob
     - TransformJob

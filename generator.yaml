@@ -931,6 +931,41 @@ resources:
       Tags:
         compare:
           is_ignored: true
+  Project:
+    exceptions:
+      errors:
+        404:
+          code: ResourceNotFound
+      terminal_codes:
+        - InvalidParameterCombination
+        - InvalidParameterValue
+        - MissingParameter
+    fields:
+      ProjectStatus:
+        is_read_only: true
+        print:
+          name: STATUS
+        from:
+          operation: DescribeProject
+          path: ProjectStatus
+      CreationTime:
+        is_read_only: true
+        from:
+          operation: DescribeProject
+          path: CreationTime
+      ServiceCatalogProvisionedProductDetails:
+        is_read_only: true
+        from:
+          operation: DescribeProject
+          path: ServiceCatalogProvisionedProductDetails
+      TemplateProviderDetails:
+        is_read_only: true
+        from:
+          operation: DescribeProject
+          path: TemplateProviderDetails
+      Tags:
+        compare:
+          is_ignored: true
   Space:
     exceptions:
       errors:
@@ -1236,7 +1271,7 @@ ignore:
     - PresignedNotebookInstanceUrl
     - PresignedMlflowTrackingServerUrl
     # - ProcessingJob
-    - Project
+    # - Project
     # - Space
     - StudioLifecycleConfig
     # - TrainingJob
