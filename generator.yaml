@@ -969,12 +969,6 @@ resources:
         from:
           operation: DescribeProject
           path: TemplateProviderDetails
-      # ServiceCatalogProvisioningDetails.ProductId:
-      #   is_immutable: true
-      # ServiceCatalogProvisioningDetails.PathId:
-      #   is_immutable: true
-      # TemplateProviders.CfnTemplateProvider.RoleARN:
-      #   is_immutable: true
       Tags:
         compare:
           is_ignored: true
