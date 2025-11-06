@@ -532,13 +532,54 @@ type CategoricalParameterRangeSpecification struct {
 // The CloudFormation template provider configuration for creating infrastructure
 // resources.
 type CfnCreateTemplateProvider struct {
-	RoleARN *string `json:"roleARN,omitempty"`
+	Parameters   []*CfnStackCreateParameter `json:"parameters,omitempty"`
+	RoleARN      *string                    `json:"roleARN,omitempty"`
+	TemplateName *string                    `json:"templateName,omitempty"`
+	TemplateURL  *string                    `json:"templateURL,omitempty"`
+}
+
+// A key-value pair that represents a parameter for the CloudFormation stack.
+type CfnStackCreateParameter struct {
+	Key   *string `json:"key,omitempty"`
+	Value *string `json:"value,omitempty"`
+}
+
+// Details about the CloudFormation stack.
+type CfnStackDetail struct {
+	ID            *string `json:"id,omitempty"`
+	Name          *string `json:"name,omitempty"`
+	StatusMessage *string `json:"statusMessage,omitempty"`
+}
+
+// A key-value pair representing a parameter used in the CloudFormation stack.
+type CfnStackParameter struct {
+	Key   *string `json:"key,omitempty"`
+	Value *string `json:"value,omitempty"`
+}
+
+// A key-value pair representing a parameter used in the CloudFormation stack.
+type CfnStackUpdateParameter struct {
+	Key   *string `json:"key,omitempty"`
+	Value *string `json:"value,omitempty"`
 }
 
 // Details about a CloudFormation template provider configuration and associated
 // provisioning information.
 type CfnTemplateProviderDetail struct {
-	RoleARN *string `json:"roleARN,omitempty"`
+	Parameters []*CfnStackParameter `json:"parameters,omitempty"`
+	RoleARN    *string              `json:"roleARN,omitempty"`
+	// Details about the CloudFormation stack.
+	StackDetail  *CfnStackDetail `json:"stackDetail,omitempty"`
+	TemplateName *string         `json:"templateName,omitempty"`
+	TemplateURL  *string         `json:"templateURL,omitempty"`
+}
+
+// Contains configuration details for updating an existing CloudFormation template
+// provider in the project.
+type CfnUpdateTemplateProvider struct {
+	Parameters   []*CfnStackUpdateParameter `json:"parameters,omitempty"`
+	TemplateName *string                    `json:"templateName,omitempty"`
+	TemplateURL  *string                    `json:"templateURL,omitempty"`
 }
 
 // A channel is a named input source that training algorithms can consume.
@@ -871,6 +912,14 @@ type ContinuousParameterRange struct {
 type ContinuousParameterRangeSpecification struct {
 	MaxValue *string `json:"maxValue,omitempty"`
 	MinValue *string `json:"minValue,omitempty"`
+}
+
+// Contains configuration details for a template provider. Only one type of
+// template provider can be specified.
+type CreateTemplateProvider struct {
+	// The CloudFormation template provider configuration for creating infrastructure
+	// resources.
+	CfnTemplateProvider *CfnCreateTemplateProvider `json:"cfnTemplateProvider,omitempty"`
 }
 
 // A file system, created by you, that you assign to a user profile or space
@@ -4502,22 +4551,44 @@ type ProfilerRuleEvaluationStatus struct {
 	StatusDetails         *string      `json:"statusDetails,omitempty"`
 }
 
+// Information about a project.
+type ProjectSummary struct {
+	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
+	ProjectARN         *string      `json:"projectARN,omitempty"`
+	ProjectDescription *string      `json:"projectDescription,omitempty"`
+	ProjectID          *string      `json:"projectID,omitempty"`
+	ProjectName        *string      `json:"projectName,omitempty"`
+	ProjectStatus      *string      `json:"projectStatus,omitempty"`
+}
+
 // The properties of a project as returned by the Search API.
-type Project struct {
+type Project_SDK struct {
 	// Information about the user who created or modified a SageMaker resource.
 	CreatedBy    *UserContext `json:"createdBy,omitempty"`
 	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 	// Information about the user who created or modified a SageMaker resource.
 	LastModifiedBy     *UserContext `json:"lastModifiedBy,omitempty"`
 	LastModifiedTime   *metav1.Time `json:"lastModifiedTime,omitempty"`
+	ProjectARN         *string      `json:"projectARN,omitempty"`
 	ProjectDescription *string      `json:"projectDescription,omitempty"`
-	Tags               []*Tag       `json:"tags,omitempty"`
+	ProjectID          *string      `json:"projectID,omitempty"`
+	ProjectName        *string      `json:"projectName,omitempty"`
+	ProjectStatus      *string      `json:"projectStatus,omitempty"`
+	// Details of a provisioned service catalog product. For information about service
+	// catalog, see What is Amazon Web Services Service Catalog (https://docs.aws.amazon.com/servicecatalog/latest/adminguide/introduction.html).
+	ServiceCatalogProvisionedProductDetails *ServiceCatalogProvisionedProductDetails `json:"serviceCatalogProvisionedProductDetails,omitempty"`
+	// Details that you specify to provision a service catalog product. For information
+	// about service catalog, see What is Amazon Web Services Service Catalog (https://docs.aws.amazon.com/servicecatalog/latest/adminguide/introduction.html).
+	ServiceCatalogProvisioningDetails *ServiceCatalogProvisioningDetails `json:"serviceCatalogProvisioningDetails,omitempty"`
+	Tags                              []*Tag                             `json:"tags,omitempty"`
+	TemplateProviderDetails           []*TemplateProviderDetail          `json:"templateProviderDetails,omitempty"`
 }
 
-// Information about a project.
-type ProjectSummary struct {
-	CreationTime       *metav1.Time `json:"creationTime,omitempty"`
-	ProjectDescription *string      `json:"projectDescription,omitempty"`
+// A key value pair used when you provision a project as a service catalog product.
+// For information, see What is Amazon Web Services Service Catalog (https://docs.aws.amazon.com/servicecatalog/latest/adminguide/introduction.html).
+type ProvisioningParameter struct {
+	Key   *string `json:"key,omitempty"`
+	Value *string `json:"value,omitempty"`
 }
 
 // Defines the amount of money paid to an Amazon Mechanical Turk worker for
@@ -5142,6 +5213,29 @@ type SelectiveExecutionResult struct {
 	SourcePipelineExecutionARN *string `json:"sourcePipelineExecutionARN,omitempty"`
 }
 
+// Details of a provisioned service catalog product. For information about service
+// catalog, see What is Amazon Web Services Service Catalog (https://docs.aws.amazon.com/servicecatalog/latest/adminguide/introduction.html).
+type ServiceCatalogProvisionedProductDetails struct {
+	ProvisionedProductID            *string `json:"provisionedProductID,omitempty"`
+	ProvisionedProductStatusMessage *string `json:"provisionedProductStatusMessage,omitempty"`
+}
+
+// Details that you specify to provision a service catalog product. For information
+// about service catalog, see What is Amazon Web Services Service Catalog (https://docs.aws.amazon.com/servicecatalog/latest/adminguide/introduction.html).
+type ServiceCatalogProvisioningDetails struct {
+	PathID                 *string                  `json:"pathID,omitempty"`
+	ProductID              *string                  `json:"productID,omitempty"`
+	ProvisioningArtifactID *string                  `json:"provisioningArtifactID,omitempty"`
+	ProvisioningParameters []*ProvisioningParameter `json:"provisioningParameters,omitempty"`
+}
+
+// Details that you specify to provision a service catalog product. For information
+// about service catalog, see What is Amazon Web Services Service Catalog (https://docs.aws.amazon.com/servicecatalog/latest/adminguide/introduction.html).
+type ServiceCatalogProvisioningUpdateDetails struct {
+	ProvisioningArtifactID *string                  `json:"provisioningArtifactID,omitempty"`
+	ProvisioningParameters []*ProvisioningParameter `json:"provisioningParameters,omitempty"`
+}
+
 // Specifies options for sharing Amazon SageMaker AI Studio notebooks. These
 // settings are specified as part of DefaultUserSettings when the CreateDomain
 // API is called, and as part of UserSettings when the CreateUserProfile API
@@ -5357,6 +5451,14 @@ type TabularJobConfig struct {
 type Tag struct {
 	Key   *string `json:"key,omitempty"`
 	Value *string `json:"value,omitempty"`
+}
+
+// Details about a template provider configuration and associated provisioning
+// information.
+type TemplateProviderDetail struct {
+	// Details about a CloudFormation template provider configuration and associated
+	// provisioning information.
+	CfnTemplateProviderDetail *CfnTemplateProviderDetail `json:"cfnTemplateProviderDetail,omitempty"`
 }
 
 // The TensorBoard app settings.
@@ -5979,6 +6081,14 @@ type UnifiedStudioSettings struct {
 	ProjectS3Path              *string `json:"projectS3Path,omitempty"`
 	SingleSignOnApplicationARN *string `json:"singleSignOnApplicationARN,omitempty"`
 	StudioWebPortalAccess      *string `json:"studioWebPortalAccess,omitempty"`
+}
+
+// Contains configuration details for updating an existing template provider
+// in the project.
+type UpdateTemplateProvider struct {
+	// Contains configuration details for updating an existing CloudFormation template
+	// provider in the project.
+	CfnTemplateProvider *CfnUpdateTemplateProvider `json:"cfnTemplateProvider,omitempty"`
 }
 
 // Information about the user who created or modified a SageMaker resource.

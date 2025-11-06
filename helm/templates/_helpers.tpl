@@ -93,6 +93,7 @@ rules:
   - pipelineexecutions
   - pipelines
   - processingjobs
+  - projects
   - spaces
   - trainingjobs
   - transformjobs
@@ -129,6 +130,7 @@ rules:
   - pipelineexecutions/status
   - pipelines/status
   - processingjobs/status
+  - projects/status
   - spaces/status
   - trainingjobs/status
   - transformjobs/status
