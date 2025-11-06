@@ -940,6 +940,12 @@ resources:
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter
+    renames:
+      operations:
+         UpdateProject:
+          input_fields:
+            ServiceCatalogProvisioningUpdateDetails: ServiceCatalogProvisioningDetails
+            TemplateProvidersToUpdate: TemplateProviders
     fields:
       ProjectStatus:
         is_read_only: true
@@ -963,6 +969,12 @@ resources:
         from:
           operation: DescribeProject
           path: TemplateProviderDetails
+      # ServiceCatalogProvisioningDetails.ProductId:
+      #   is_immutable: true
+      # ServiceCatalogProvisioningDetails.PathId:
+      #   is_immutable: true
+      # TemplateProviders.CfnTemplateProvider.RoleARN:
+      #   is_immutable: true
       Tags:
         compare:
           is_ignored: true

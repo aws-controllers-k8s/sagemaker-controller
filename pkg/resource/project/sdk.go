@@ -437,6 +437,27 @@ func (rm *resourceManager) newUpdateRequestPayload(
 	if r.ko.Spec.ProjectName != nil {
 		res.ProjectName = r.ko.Spec.ProjectName
 	}
+	if r.ko.Spec.ServiceCatalogProvisioningDetails != nil {
+		f2 := &svcsdktypes.ServiceCatalogProvisioningUpdateDetails{}
+		if r.ko.Spec.ServiceCatalogProvisioningDetails.ProvisioningArtifactID != nil {
+			f2.ProvisioningArtifactId = r.ko.Spec.ServiceCatalogProvisioningDetails.ProvisioningArtifactID
+		}
+		if r.ko.Spec.ServiceCatalogProvisioningDetails.ProvisioningParameters != nil {
+			f2f1 := []svcsdktypes.ProvisioningParameter{}
+			for _, f2f1iter := range r.ko.Spec.ServiceCatalogProvisioningDetails.ProvisioningParameters {
+				f2f1elem := &svcsdktypes.ProvisioningParameter{}
+				if f2f1iter.Key != nil {
+					f2f1elem.Key = f2f1iter.Key
+				}
+				if f2f1iter.Value != nil {
+					f2f1elem.Value = f2f1iter.Value
+				}
+				f2f1 = append(f2f1, *f2f1elem)
+			}
+			f2.ProvisioningParameters = f2f1
+		}
+		res.ServiceCatalogProvisioningUpdateDetails = f2
+	}
 	if r.ko.Spec.Tags != nil {
 		f3 := []svcsdktypes.Tag{}
 		for _, f3iter := range r.ko.Spec.Tags {
@@ -450,6 +471,38 @@ func (rm *resourceManager) newUpdateRequestPayload(
 			f3 = append(f3, *f3elem)
 		}
 		res.Tags = f3
+	}
+	if r.ko.Spec.TemplateProviders != nil {
+		f4 := []svcsdktypes.UpdateTemplateProvider{}
+		for _, f4iter := range r.ko.Spec.TemplateProviders {
+			f4elem := &svcsdktypes.UpdateTemplateProvider{}
+			if f4iter.CfnTemplateProvider != nil {
+				f4elemf0 := &svcsdktypes.CfnUpdateTemplateProvider{}
+				if f4iter.CfnTemplateProvider.Parameters != nil {
+					f4elemf0f0 := []svcsdktypes.CfnStackUpdateParameter{}
+					for _, f4elemf0f0iter := range f4iter.CfnTemplateProvider.Parameters {
+						f4elemf0f0elem := &svcsdktypes.CfnStackUpdateParameter{}
+						if f4elemf0f0iter.Key != nil {
+							f4elemf0f0elem.Key = f4elemf0f0iter.Key
+						}
+						if f4elemf0f0iter.Value != nil {
+							f4elemf0f0elem.Value = f4elemf0f0iter.Value
+						}
+						f4elemf0f0 = append(f4elemf0f0, *f4elemf0f0elem)
+					}
+					f4elemf0.Parameters = f4elemf0f0
+				}
+				if f4iter.CfnTemplateProvider.TemplateName != nil {
+					f4elemf0.TemplateName = f4iter.CfnTemplateProvider.TemplateName
+				}
+				if f4iter.CfnTemplateProvider.TemplateURL != nil {
+					f4elemf0.TemplateURL = f4iter.CfnTemplateProvider.TemplateURL
+				}
+				f4elem.CfnTemplateProvider = f4elemf0
+			}
+			f4 = append(f4, *f4elem)
+		}
+		res.TemplateProvidersToUpdate = f4
 	}
 
 	return res, nil
