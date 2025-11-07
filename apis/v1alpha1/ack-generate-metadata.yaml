@@ -1,7 +1,7 @@
 ack_generate_info:
-  build_date: "2025-10-16T19:00:35Z"
+  build_date: "2025-11-07T20:37:17Z"
   build_hash: eaabefb6bd7b2be8a1baf4478f22b3310e6921c8
-  go_version: go1.25.2
+  go_version: go1.25.0
   version: v0.52.0-6-geaabefb
 api_directory_checksum: cdae97bbaa2ee28d0f130fa6ce3a7dfbf6393d1b
 api_version: v1alpha1
