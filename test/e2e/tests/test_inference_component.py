@@ -244,10 +244,16 @@ class TestInferenceComponent:
         (_, faulty_model_resource) = faulty_model
         faulty_model_name = faulty_model_resource["spec"].get("modelName", None)
         spec["spec"]["specification"]["modelName"] = faulty_model_name
+        logging.info(
+            f"Updating faulty model for inference component {faulty_model_name}"
+        )
         resource = k8s.patch_custom_resource(reference, spec)
         resource = k8s.wait_resource_consumed_by_controller(reference)
         assert resource is not None
 
+        logging.info(
+            "Checking for faulty model status Updating in inference component"
+        )
         # inference component transitions Updating -> InService state
         assert_inference_component_status_in_sync(
             reference.name,
@@ -261,6 +267,9 @@ class TestInferenceComponent:
         assert k8s.get_resource_condition(reference, ack_condition.CONDITION_TYPE_TERMINAL) is None
         resource = k8s.get_resource(reference)
 
+        logging.info(
+            "Checking for faulty model status InService in inference component"
+        )
         assert_inference_component_status_in_sync(
             reference.name,
             reference,
