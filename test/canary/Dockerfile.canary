@@ -65,14 +65,10 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
 RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp && mv /tmp/eksctl /bin
 
 # Install Helm
-RUN curl -q -L "https://get.helm.sh/helm-v3.7.0-linux-amd64.tar.gz" | tar zxf - -C /usr/local/bin/ \
+RUN curl -q -L "https://get.helm.sh/helm-v4.0.0-linux-amd64.tar.gz" | tar zxf - -C /usr/local/bin/ \
  && mv /usr/local/bin/linux-amd64/helm /usr/local/bin/helm \
  && rm -r /usr/local/bin/linux-amd64 \
  && chmod +x /usr/local/bin/helm
-# RUN curl -q -L "https://get.helm.sh/helm-v3.19.2-linux-amd64.tar.gz" | tar zxf - -C /usr/local/bin/ \
-#  && mv /usr/local/bin/linux-amd64/helm /usr/local/bin/helm \
-#  && rm -r /usr/local/bin/linux-amd64 \
-#  && chmod +x /usr/local/bin/helm
 
 ENV SERVICE_REPO_PATH=/$SERVICE-controller
 COPY ./test/e2e/requirements.txt requirements.txt
