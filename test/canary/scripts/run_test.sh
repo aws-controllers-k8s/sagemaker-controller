@@ -47,7 +47,7 @@ function cleanup {
   kubectl delete modelbiasjobdefinitions --all
   kubectl delete modelexplainabilityjobdefinitions --all
   kubectl delete modelqualityjobdefinitions --all
-  kubectl delete adoptedresources --all
+  # kubectl delete adoptedresources --all
   kubectl delete featuregroups --all
   kubectl delete modelpackages --all
   kubectl delete modelpackagegroups --all
