@@ -44,6 +44,8 @@ RUN cd /tmp/ \
 ENV PATH="/usr/local/bin:${PATH}"
 
 RUN python -m pip install --upgrade pip --trusted-host pypi.org --trusted-host files.pythonhosted.org
+RUN pip install --no-cache-dir \
+    setuptools
 
 # Install awscli
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
