@@ -21,7 +21,8 @@ RUN apt-get update && apt-get install -y curl \
     jq \
     unzip \
     zlib1g-dev \
-    cmake
+    cmake \
+    libssl-dev
 
 # Install python
 RUN cd /tmp/ \
