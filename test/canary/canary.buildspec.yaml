@@ -8,7 +8,7 @@ phases:
 
       # Get cached test image
       - aws ecr get-login-password --region $CLUSTER_REGION | docker login --username AWS --password-stdin $ECR_CACHE_URI || true
-      - docker pull ${ECR_CACHE_URI}:latest --quiet || true
+      - docker pull ${ECR_CACHE_URI}:canary-release --quiet || true
 
       # Build test image
       - >
