@@ -191,7 +191,7 @@ def wait_resource_inference_component_status(
 def assert_inference_component_status_in_sync(inference_component_name, reference, expected_status):
     assert (
         wait_sagemaker_inference_component_status(inference_component_name, expected_status)
-        == wait_resource_inference_component_status(reference, expected_status, 2)
+        == wait_resource_inference_component_status(reference, expected_status)
         == expected_status
     )
 
