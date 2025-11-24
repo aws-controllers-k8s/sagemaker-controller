@@ -16,11 +16,12 @@ ENV PYTHONIOENCODING=UTF-8
 RUN apt-get update && apt-get install -y curl \
     wget \
     git \
-    python3-dev \
     vim \
     sudo \
     jq \
-    unzip
+    unzip \
+    zlib1g-dev \
+    cmake
 
 # Install python
 RUN cd /tmp/ \
