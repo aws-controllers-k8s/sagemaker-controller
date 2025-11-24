@@ -1,55 +1,22 @@
-FROM public.ecr.aws/ubuntu/ubuntu:22.04
+FROM public.ecr.aws/ubuntu/ubuntu:18.04
 
-# Build time parameters
+# Build time parameters 
 ARG SERVICE=sagemaker
-
-# Python parameters
-ARG PYTHON=python3
-ARG PYTHON_VERSION=3.12.8
-ARG PYTHON_SHORT_VERSION=3.12
-# Python won’t try to write .pyc or .pyo files on the import of source modules
-# Force stdin, stdout and stderr to be totally unbuffered. Good for logging
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONIOENCODING=UTF-8
 
 RUN apt-get update && apt-get install -y curl \
     wget \
     git \
+    python3.8 \
+    python3-pip \
+    python3.8-dev \
     vim \
     sudo \
     jq \
-    unzip \
-    zlib1g-dev \
-    cmake \
-    libssl-dev
-
-# Install python
-RUN cd /tmp/ \
-&& wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz \
-&& tar xzf Python-${PYTHON_VERSION}.tgz \
-&& cd Python-${PYTHON_VERSION} \
-&& ./configure --enable-optimizations --with-lto --with-computed-gotos --with-system-ffi \
-&& make -j "$(nproc)" \
-&& make altinstall \
-&& cd .. \
-&& rm -rf Python-${PYTHON_VERSION} \
-&& rm Python-${PYTHON_VERSION}.tgz \
-&& ln -s /usr/local/bin/python${PYTHON_SHORT_VERSION} /usr/local/bin/python \
-&& ln -s /usr/local/bin/python${PYTHON_SHORT_VERSION} /usr/local/bin/python3 \
-# This installation generate a .python_history file in the root directory leads sanity check to fail
-&& rm -f /root/.python_history
-
-# Python Path
-ENV PATH="/usr/local/bin:${PATH}"
-
-RUN python -m pip install --upgrade pip --trusted-host pypi.org --trusted-host files.pythonhosted.org
-RUN pip install --no-cache-dir \
-    setuptools
+    unzip
 
 # Install awscli
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
- && unzip awscliv2.zip \
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.6.3.zip" -o "awscliv2.zip" \
+ && unzip -qq awscliv2.zip \
  && ./aws/install
 
 # Add yq repository and install yq
@@ -58,21 +25,24 @@ RUN apt-get update && apt install -y software-properties-common \
  && apt update && apt install -y yq
 
 # Install kubectl
-RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
+RUN  curl -LO "https://dl.k8s.io/release/v1.24.0/bin/linux/amd64/kubectl" \
  && chmod +x ./kubectl \
  && cp ./kubectl /bin
 
 # Install eksctl
 RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp && mv /tmp/eksctl /bin
 
-# Install Helm
-RUN curl -q -L "https://get.helm.sh/helm-v3.19.2-linux-amd64.tar.gz" | tar zxf - -C /usr/local/bin/ \
+# Install Helm 
+RUN curl -q -L "https://get.helm.sh/helm-v3.7.0-linux-amd64.tar.gz" | tar zxf - -C /usr/local/bin/ \
  && mv /usr/local/bin/linux-amd64/helm /usr/local/bin/helm \
  && rm -r /usr/local/bin/linux-amd64 \
- && chmod +x /usr/local/bin/helm
+ && chmod +x /usr/local/bin/helm 
 
 ENV SERVICE_REPO_PATH=/$SERVICE-controller
 COPY ./test/e2e/requirements.txt requirements.txt
+
+RUN ln -s /usr/bin/python3.8 /usr/bin/python \
+ && python -m pip install --upgrade pip
 
 RUN python -m pip install -r requirements.txt
 
