@@ -79,7 +79,7 @@ create_oidc_role "$CLUSTER_NAME" "$CLUSTER_REGION" "$NAMESPACE"
 
 # Install service helm chart
 install_helm_chart $SERVICE $OIDC_ROLE_ARN $SERVICE_REGION $NAMESPACE
-cat $SERVICE_REPO_PATH/helm/values.yml
+cat $SERVICE_REPO_PATH/helm/values.yaml
 
 echo "Log helm charts are deployed properly"
 kubectl -n $NAMESPACE get pods
