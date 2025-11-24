@@ -244,6 +244,7 @@ class TestInferenceComponent:
         (_, faulty_model_resource) = faulty_model
         faulty_model_name = faulty_model_resource["spec"].get("modelName", None)
         spec["spec"]["specification"]["modelName"] = faulty_model_name
+        logging.info(f"Faulty model name: {faulty_model_name}")
         resource = k8s.patch_custom_resource(reference, spec)
         resource = k8s.wait_resource_consumed_by_controller(reference)
         assert resource is not None

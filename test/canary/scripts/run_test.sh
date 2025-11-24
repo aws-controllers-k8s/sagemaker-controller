@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# cleanup on EXIT regardles of error 
+# cleanup on EXIT regardles of error
 
 # Inputs to this file as environment variables
 # SERVICE
@@ -12,7 +12,7 @@
 
 set -euo pipefail
 export NAMESPACE=${NAMESPACE:-"ack-system"}
-export AWS_DEFAULT_REGION=$SERVICE_REGION 
+export AWS_DEFAULT_REGION=$SERVICE_REGION
 export E2E_DIR=$SERVICE_REPO_PATH/test/e2e/
 SCRIPTS_DIR=${SERVICE_REPO_PATH}/test/canary/scripts
 
@@ -65,7 +65,7 @@ function cleanup {
   kubectl delete namespace $NAMESPACE
 
   cd $E2E_DIR
-  export PYTHONPATH=.. 
+  export PYTHONPATH=..
   python service_cleanup.py
 
 }
@@ -80,6 +80,7 @@ create_oidc_role "$CLUSTER_NAME" "$CLUSTER_REGION" "$NAMESPACE"
 
 # Install service helm chart
 install_helm_chart $SERVICE $OIDC_ROLE_ARN $SERVICE_REGION $NAMESPACE
+cat $SERVICE_REPO_PATH/helm/values.yaml
 
 echo "Log helm charts are deployed properly"
 kubectl -n $NAMESPACE get pods
@@ -93,7 +94,7 @@ pushd $E2E_DIR
 
   # run tests
   echo "Run Tests"
-  pytest_args=( -n 15 --dist loadfile --log-cli-level INFO --junitxml ../canary/integration_tests.xml)
+  pytest_args=( -rA -n 15 --dist loadfile --log-cli-level INFO --junitxml ../canary/integration_tests.xml)
   declare pytest_marks
   if [[ $SERVICE_REGION =~ ^(eu-north-1|eu-west-3)$  ]]; then
     # If select_regions_1 true we run the notebook_instance test
