@@ -11,10 +11,10 @@ phases:
       # - docker pull ${ECR_CACHE_URI}:latest --quiet || true
 
       # Build test image
-      - >
-        docker build -f ./test/canary/Dockerfile.canary . -t ${ECR_CACHE_URI}:latest
-        --build-arg SERVICE="${SERVICE##*/}" --quiet
-        || echo "Docker Build Failed" || true
+      # - >
+      #   docker build -f ./test/canary/Dockerfile.canary . -t ${ECR_CACHE_URI}:latest
+      #   --build-arg SERVICE="${SERVICE##*/}" --quiet
+      #   || echo "Docker Build Failed" || true
   build:
     commands:
       # Run tests
