@@ -1,13 +1,16 @@
 # Default values for ack-sagemaker-controller.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+
 image:
   repository: public.ecr.aws/aws-controllers-k8s/sagemaker-controller
   tag: 1.5.1
   pullPolicy: IfNotPresent
   pullSecrets: []
+
 nameOverride: ""
 fullnameOverride: ""
+
 deployment:
   annotations: {}
   labels: {}
@@ -43,6 +46,7 @@ deployment:
   strategy: {}
   extraVolumes: []
   extraVolumeMounts: []
+
   # Additional server container environment variables
   #
   # You specify this manually like you would a raw deployment manifest.
@@ -59,9 +63,12 @@ deployment:
   #       name: mysecret
   #       key: username
   extraEnvVars: []
+
+
 # If "installScope: cluster" then these labels will be applied to ClusterRole
 role:
   labels: {}
+
 metrics:
   service:
     # Set to true to automatically create a Kubernetes Service resource for the
@@ -70,6 +77,7 @@ metrics:
     # Which Type to use for the Kubernetes Service?
     # See: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
     type: "ClusterIP"
+
 resources:
   requests:
     memory: "64Mi"
@@ -77,9 +85,10 @@ resources:
   limits:
     memory: "128Mi"
     cpu: "100m"
+
 aws:
   # If specified, use the AWS region for AWS API calls
-  region: "ap-south-1"
+  region: ""
   endpoint_url: ""
   credentials:
     # If specified, Secret with shared credentials file to use.
@@ -88,41 +97,50 @@ aws:
     secretKey: "credentials"
     # Profile used for AWS credentials
     profile: "default"
+
 # log level for the controller
 log:
-  enable_development_logging: true
-  level: debug
+  enable_development_logging: false
+  level: info
+
 # Set to "namespace" to install the controller in a namespaced scope, will only
 # watch for object creation in the namespace. By default installScope is
 # cluster wide.
 installScope: cluster
+
 # Set the value of the "namespace" to be watched by the controller
 # This value is only used when the `installScope` is set to "namespace". If left empty, the default value is the release namespace for the chart.
 # You can set multiple namespaces by providing a comma separated list of namespaces. e.g "namespace1,namespace2"
 watchNamespace: ""
+
 # Set the value of labelsSelectors to be used by the controller to filter the resources to watch.
 # You can set multiple labelsSelectors by providing a comma separated list of a=b arguments. e.g "label1=value1,label2=value2" 
 watchSelectors: ""
+
 resourceTags:
   # Configures the ACK service controller to always set key/value pairs tags on
   # resources that it manages.
   - services.k8s.aws/controller-version=%CONTROLLER_SERVICE%-%CONTROLLER_VERSION%
   - services.k8s.aws/namespace=%K8S_NAMESPACE%
+
 # Set to "retain" to keep all AWS resources intact even after the K8s resources
 # have been deleted. By default, the ACK controller will delete the AWS resource
 # before the K8s resource is removed.
 deletionPolicy: delete
+
 # controller reconciliation configurations
 reconcile:
   # The default duration, in seconds, to wait before resyncing desired state of custom resources.
   defaultResyncPeriod: 36000 # 10 Hours
   # An object representing the reconcile resync configuration for each specific resource.
   resourceResyncPeriods: {}
+
   # The default number of concurrent syncs that a reconciler can perform.
   defaultMaxConcurrentSyncs: 1
   # An object representing the reconcile max concurrent syncs configuration for each specific
   # resource.
   resourceMaxConcurrentSyncs: {}
+  
   # Set the value of resources to specify which resource kinds to reconcile.
   # If empty, all resources will be reconciled.
   # If specified, only the listed resource kinds will be reconciled.
@@ -152,13 +170,15 @@ reconcile:
     - TrainingJob
     - TransformJob
     - UserProfile
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
   # The name of the service account to use.
   name: ack-sagemaker-controller
-  annotations: {eks.amazonaws.com: 'arn:aws:iam::413021201131:role/ack-oidc-role-Non-Ephemeral-Cluster-10b-ack-system'}
-  # eks.amazonaws.com/role-arn: arn:aws:iam::AWS_ACCOUNT_ID:role/IAM_ROLE_NAME
+  annotations: {}
+    # eks.amazonaws.com/role-arn: arn:aws:iam::AWS_ACCOUNT_ID:role/IAM_ROLE_NAME
+
 # Configuration of the leader election. Required for running multiple instances of the
 # controller within the same cluster.
 # See https://kubernetes.io/docs/concepts/architecture/leases/#leader-election
@@ -170,8 +190,10 @@ leaderElection:
   # will attempt to use the namespace of the service account mounted to the Controller
   # pod.
   namespace: ""
+
 # Enable Cross Account Resource Management (default = true). Set this to false to disable cross account resource management.
 enableCARM: true
+
 # Configuration for feature gates.  These are optional controller features that
 # can be individually enabled ("true") or disabled ("false") by adding key/value
 # pairs below.
