@@ -11,20 +11,20 @@ phases:
       # - docker pull ${ECR_CACHE_URI}:latest --quiet || true
 
       # Build test image
-      # - >
-      #   docker build -f ./test/canary/Dockerfile.canary . -t ${ECR_CACHE_URI}:latest
-      #   --build-arg SERVICE="${SERVICE##*/}" --quiet
-      #   || echo "Docker Build Failed" || true
+      - >
+        docker build -f ./test/canary/Dockerfile.canary . -t ${ECR_CACHE_URI}:canary-release
+        --build-arg SERVICE="${SERVICE##*/}" --quiet
+        || echo "Docker Build Failed" || true
   build:
     commands:
       # Run tests
-      - docker run --name ack-canary $(env | cut -f1 -d= | sed 's/^/-e /') --mount type=bind,source="$(pwd)/",target="/${SERVICE}-controller/" ${ECR_CACHE_URI}:latest
+      - docker run --name ack-canary $(env | cut -f1 -d= | sed 's/^/-e /') --mount type=bind,source="$(pwd)/",target="/${SERVICE}-controller/" ${ECR_CACHE_URI}:canary-release
 
   post_build:
     commands:
       - docker cp ack-canary:/sagemaker-controller/test/canary/integration_tests.xml /tmp/results.xml || true
       # Push test image to cache ECR repo
-      - docker push ${ECR_CACHE_URI}:latest || true
+      - docker push ${ECR_CACHE_URI}:canary-release || true
 
 reports:
   IntegrationTestReport:
