@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# cleanup on EXIT regardles of error 
+# cleanup on EXIT regardles of error
 
 # Inputs to this file as environment variables
 # SERVICE
@@ -12,7 +12,7 @@
 
 set -euo pipefail
 export NAMESPACE=${NAMESPACE:-"ack-system"}
-export AWS_DEFAULT_REGION=$SERVICE_REGION 
+export AWS_DEFAULT_REGION=$SERVICE_REGION
 export E2E_DIR=$SERVICE_REPO_PATH/test/e2e/
 SCRIPTS_DIR=${SERVICE_REPO_PATH}/test/canary/scripts
 
@@ -47,7 +47,6 @@ function cleanup {
   kubectl delete modelbiasjobdefinitions --all
   kubectl delete modelexplainabilityjobdefinitions --all
   kubectl delete modelqualityjobdefinitions --all
-  kubectl delete adoptedresources --all
   kubectl delete featuregroups --all
   kubectl delete modelpackages --all
   kubectl delete modelpackagegroups --all
@@ -65,7 +64,7 @@ function cleanup {
   kubectl delete namespace $NAMESPACE
 
   cd $E2E_DIR
-  export PYTHONPATH=.. 
+  export PYTHONPATH=..
   python service_cleanup.py
 
 }
