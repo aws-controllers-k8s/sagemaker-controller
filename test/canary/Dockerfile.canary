@@ -37,7 +37,6 @@ RUN cd /tmp/ \
 && rm Python-${PYTHON_VERSION}.tgz \
 && ln -s /usr/local/bin/python${PYTHON_SHORT_VERSION} /usr/local/bin/python \
 && ln -s /usr/local/bin/python${PYTHON_SHORT_VERSION} /usr/local/bin/python3 \
-# This installation generate a .python_history file in the root directory leads sanity check to fail
 && rm -f /root/.python_history
 
 # Python Path
@@ -58,12 +57,9 @@ RUN apt-get update && apt install -y software-properties-common \
  && apt update && apt install -y yq
 
 # Install kubectl
-RUN  curl -LO "https://dl.k8s.io/release/v1.24.0/bin/linux/amd64/kubectl" \
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
  && chmod +x ./kubectl \
  && cp ./kubectl /bin
-# RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
-#  && chmod +x ./kubectl \
-#  && cp ./kubectl /bin
 
 # Install eksctl
 RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp && mv /tmp/eksctl /bin
