@@ -1,4 +1,4 @@
-acktest @ git+https://github.com/aws-controllers-k8s/test-infra.git@c91073f388b3b42192aac300762fca2542fa39f0
+acktest @ git+https://github.com/aws-controllers-k8s/test-infra.git@b9fd0d31598f7cc9e2952d9513501c6c2464b059
 pytest==8.0.2
 black>=24.3.0
 flaky==3.7.0
