@@ -1,5 +1,5 @@
-github.com/aws-controllers-k8s/runtime v0.53.1 h1:l9MkR1KfZW8H8icT5rrRK3pdnVVA4io/eINVe5aspWs=
-github.com/aws-controllers-k8s/runtime v0.53.1/go.mod h1:OkUJN+Ds799JLYZsMJrO2vDJ4snxUeHK2MgrQHbU+Qc=
+github.com/aws-controllers-k8s/runtime v0.56.0 h1:xT03K82QkY7EpdUDhVKvDY7hLddA+XnKY0xDAePALhM=
+github.com/aws-controllers-k8s/runtime v0.56.0/go.mod h1:OkUJN+Ds799JLYZsMJrO2vDJ4snxUeHK2MgrQHbU+Qc=
 github.com/aws/aws-sdk-go v1.55.6 h1:cSg4pvZ3m8dgYcgqB97MrcdjUmZ1BeMYKUxMMB89IPk=
 github.com/aws/aws-sdk-go v1.55.6/go.mod h1:eRwEWoyTWFMVYVQzKMNHWP5/RV4xIUGMQfXQHfHkpNU=
 github.com/aws/aws-sdk-go-v2 v1.39.2 h1:EJLg8IdbzgeD7xgvZ+I8M1e0fL0ptn/M47lianzth0I=
