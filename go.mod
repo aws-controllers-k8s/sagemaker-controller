@@ -5,7 +5,7 @@ go 1.24.0
 toolchain go1.24.1
 
 require (
-	github.com/aws-controllers-k8s/runtime v0.53.1
+	github.com/aws-controllers-k8s/runtime v0.56.0
 	github.com/aws/aws-sdk-go v1.55.6
 	github.com/aws/aws-sdk-go-v2 v1.39.2
 	github.com/aws/aws-sdk-go-v2/service/sagemaker v1.215.3
