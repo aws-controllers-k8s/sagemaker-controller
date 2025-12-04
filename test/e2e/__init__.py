@@ -28,7 +28,6 @@ from e2e.common import config as cfg
 
 SERVICE_NAME = "sagemaker"
 CRD_GROUP = "sagemaker.services.k8s.aws"
-ADOPTED_RESOURCE_CRD_GROUP = "services.k8s.aws"
 CRD_VERSION = "v1alpha1"
 
 # PyTest marker for the current service
@@ -71,25 +70,6 @@ def create_sagemaker_resource(
         namespace,
         wait_period,
         period_length,
-    )
-
-    return reference, spec, resource
-
-
-def create_adopted_resource(replacements, namespace="default", spec_file="adopted_resource_base"):
-    """
-    Wrapper around k8s.load_and_create_resource to create a Adopoted resource
-    """
-
-    reference, spec, resource = k8s.load_and_create_resource(
-        resource_directory,
-        ADOPTED_RESOURCE_CRD_GROUP,
-        CRD_VERSION,
-        "adoptedresources",
-        replacements["ADOPTED_RESOURCE_NAME"],
-        spec_file,
-        replacements,
-        namespace,
     )
 
     return reference, spec, resource
