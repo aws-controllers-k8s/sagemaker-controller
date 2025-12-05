@@ -215,6 +215,7 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	rm.setStatusDefaults(ko)
+	rm.customDescribeProjectSetOutput(ko)
 	return &resource{ko}, nil
 }
 
@@ -394,6 +395,9 @@ func (rm *resourceManager) sdkUpdate(
 	defer func() {
 		exit(err)
 	}()
+	if err = rm.requeueUntilCanModify(ctx, latest); err != nil {
+		return nil, err
+	}
 	input, err := rm.newUpdateRequestPayload(ctx, desired, delta)
 	if err != nil {
 		return nil, err
@@ -518,6 +522,15 @@ func (rm *resourceManager) sdkDelete(
 	defer func() {
 		exit(err)
 	}()
+	latestStatus := r.ko.Status.ProjectStatus
+	if latestStatus != nil && *latestStatus == string(svcsdktypes.ProjectStatusDeleteCompleted) {
+		return nil, nil
+	}
+
+	if err = rm.requeueUntilCanModify(ctx, r); err != nil {
+		return r, err
+	}
+
 	input, err := rm.newDeleteRequestPayload(r)
 	if err != nil {
 		return nil, err
@@ -526,6 +539,17 @@ func (rm *resourceManager) sdkDelete(
 	_ = resp
 	resp, err = rm.sdkapi.DeleteProject(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteProject", err)
+
+	if err == nil {
+		if observed, err := rm.sdkFind(ctx, r); err != ackerr.NotFound {
+			if err != nil {
+				return nil, err
+			}
+			r.SetStatus(observed)
+			return r, requeueWaitWhileDeleting
+		}
+	}
+
 	return nil, err
 }
 
