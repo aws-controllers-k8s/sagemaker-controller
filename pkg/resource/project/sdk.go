@@ -675,8 +675,7 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 		return false
 	}
 	switch terminalErr.ErrorCode() {
-	case "ResourceNotFound",
-		"InvalidParameterCombination",
+	case "InvalidParameterCombination",
 		"InvalidParameterValue",
 		"MissingParameter":
 		return true
