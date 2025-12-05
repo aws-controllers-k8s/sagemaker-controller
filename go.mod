@@ -9,7 +9,7 @@ require (
 	github.com/aws/aws-sdk-go v1.55.6
 	github.com/aws/aws-sdk-go-v2 v1.39.2
 	github.com/aws/aws-sdk-go-v2/service/sagemaker v1.215.3
-	github.com/aws/smithy-go v1.23.0
+	github.com/aws/smithy-go v1.24.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-logr/logr v1.4.2
 	github.com/spf13/pflag v1.0.5
