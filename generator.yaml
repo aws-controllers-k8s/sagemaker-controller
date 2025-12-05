@@ -935,8 +935,9 @@ resources:
     exceptions:
       errors:
         404:
-          code: ResourceNotFound
+          code: ValidationException
       terminal_codes:
+        - ResourceNotFound
         - InvalidParameterCombination
         - InvalidParameterValue
         - MissingParameter

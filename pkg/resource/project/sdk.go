@@ -80,7 +80,7 @@ func (rm *resourceManager) sdkFind(
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeProject", err)
 	if err != nil {
 		var awsErr smithy.APIError
-		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ResourceNotFound" {
+		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ValidationException" {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
@@ -675,7 +675,8 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 		return false
 	}
 	switch terminalErr.ErrorCode() {
-	case "InvalidParameterCombination",
+	case "ResourceNotFound",
+		"InvalidParameterCombination",
 		"InvalidParameterValue",
 		"MissingParameter":
 		return true
