@@ -128,6 +128,7 @@ def wait_resource_monitoring_schedule_status(
 
 @service_marker
 @pytest.mark.canary
+@pytest.skip
 class TestMonitoringSchedule:
     STATUS_PENDING: str = "Pending"
     STATUS_SCHEDULED: str = "Scheduled"

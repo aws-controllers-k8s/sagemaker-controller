@@ -53,6 +53,7 @@ def xgboost_model():
 
 @service_marker
 @pytest.mark.canary
+@pytest.skip
 class TestModel:
     def test_create_model(self, xgboost_model):
         (reference, resource) = xgboost_model

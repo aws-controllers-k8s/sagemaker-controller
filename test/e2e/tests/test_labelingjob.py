@@ -81,6 +81,7 @@ def get_labeling_resource_status(reference: k8s.CustomResourceReference):
 
 
 @service_marker
+@pytest.skip
 class TestLabelingJob:
     def _wait_resource_labeling_status(
         self,

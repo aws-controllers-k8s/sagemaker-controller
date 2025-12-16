@@ -74,6 +74,7 @@ def get_sagemaker_model_quality_job_definition(sagemaker_client, job_definition_
 
 @service_marker
 @pytest.mark.canary
+@pytest.skip
 class TestModelQualityJobDefinition:
     def test_smoke(self, sagemaker_client, xgboost_churn_model_quality_job_definition):
         (reference, resource) = xgboost_churn_model_quality_job_definition

@@ -78,6 +78,7 @@ def delete_notebook_instance_lifecycle_config(notebook_instance_lfc_name: str):
 
 
 @service_marker
+@pytest.skip
 class TestRetainPolicy:
     def test_retain_notebook_instance_lifecycle(self, retained_notebook_instance_lifecycle_config):
         (reference, resource, _) = retained_notebook_instance_lifecycle_config

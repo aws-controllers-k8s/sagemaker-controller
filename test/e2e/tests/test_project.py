@@ -16,11 +16,15 @@ import logging
 
 import boto3
 import pytest
-from acktest.k8s import condition as ack_condition
 from acktest.k8s import resource as k8s
 from acktest.resources import random_suffix_name
 
-from e2e import create_sagemaker_resource, delete_custom_resource, wait_for_status
+from e2e import (
+    create_sagemaker_resource,
+    delete_custom_resource,
+    service_marker,
+    wait_for_status,
+)
 from e2e.replacement_values import REPLACEMENT_VALUES
 
 PROJECT_WAIT_PERIOD = 120
@@ -115,6 +119,7 @@ def project_fixture():
     )
 
 
+@service_marker
 class TestProject:
     def create_failed_project(self, project_fixture):
         (reference, resource) = project_fixture
@@ -133,8 +138,16 @@ class TestProject:
         assert_project_status_message(reference, FAIL_CREATE_ERROR_MESSAGE)
 
         resource = k8s.get_resource(reference)
-        assert resource["status"].get("serviceCatalogProvisionedProductDetails", None) is not None
-        assert resource["status"]["serviceCatalogProvisionedProductDetails"].get("provisionedProductStatusMessage", None) is not None
+        assert (
+            resource["status"].get("serviceCatalogProvisionedProductDetails", None)
+            is not None
+        )
+        assert (
+            resource["status"]["serviceCatalogProvisionedProductDetails"].get(
+                "provisionedProductStatusMessage", None
+            )
+            is not None
+        )
 
     def test_driver(self, project_fixture):
         self.create_failed_project(project_fixture)

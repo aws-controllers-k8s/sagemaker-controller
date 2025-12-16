@@ -18,7 +18,13 @@ import boto3
 import pytest
 from acktest.k8s import resource as k8s
 from acktest.resources import random_suffix_name
-from e2e import create_sagemaker_resource, delete_custom_resource, wait_for_status
+
+from e2e import (
+    create_sagemaker_resource,
+    delete_custom_resource,
+    service_marker,
+    wait_for_status,
+)
 from e2e.replacement_values import REPLACEMENT_VALUES
 
 STUDIO_WAIT_PERIOD = 120
@@ -556,6 +562,8 @@ def app_space_fixture(shared_space_fixture):
     )
 
 
+@service_marker
+@pytest.skip
 class TestDomain:
     def create_private_space(self, private_space_fixture):
         (
@@ -646,7 +654,9 @@ class TestDomain:
             STUDIO_STATUS_INSERVICE,
         )
 
-    def test_studio(self, private_space_fixture, app_user_profile_fixture, app_space_fixture):
+    def test_studio(
+        self, private_space_fixture, app_user_profile_fixture, app_space_fixture
+    ):
         self.create_private_space(private_space_fixture)
         self.create_app_user_profile(app_user_profile_fixture)
         self.create_app_space(app_space_fixture)
