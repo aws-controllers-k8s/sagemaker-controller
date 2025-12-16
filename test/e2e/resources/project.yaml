@@ -1,0 +1,16 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: Project
+metadata:
+  name: $PROJECT_NAME
+spec:
+  projectName: $$PROJECT_NAME
+  projectDescription: Dummy project for expected failed test
+  serviceCatalogProvisioningDetails:
+    productID: prod-6sx3gpcyxek2y # MLOps template for model building and training with third-party Git using CodePipeline
+    provisioningParameters:
+      - key: ModelBuildCodeRepositoryBranch
+        value: main
+      - key: ModelBuildCodeRepositoryFullname
+        value: dummy-account/dummmy-repository
+      - key: CodeConnectionArn
+        value: arn:aws:codeconnections:us-west-2:108782066590:connection/a63dd9d5-8cc0-4df9-8851-8ff6ab190d1e
