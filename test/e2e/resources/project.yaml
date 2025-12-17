@@ -13,4 +13,4 @@ spec:
       - key: ModelBuildCodeRepositoryFullname
         value: dummy-account/dummmy-repository
       - key: CodeConnectionArn
-        value: arn:aws:codeconnections:us-west-2:108782066590:connection/a63dd9d5-8cc0-4df9-8851-8ff6ab190d1e
+        value: $DUMMY_CODE_CONNECTIONS_ARN
