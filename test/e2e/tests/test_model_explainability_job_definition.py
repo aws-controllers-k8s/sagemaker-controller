@@ -74,7 +74,7 @@ def get_sagemaker_model_explainability_job_definition(sagemaker_client, job_defi
 
 @service_marker
 @pytest.mark.canary
-@pytest.skip
+@pytest.skip("temp")
 class TestModelExplainabilityJobDefinition:
     def test_smoke(self, sagemaker_client, xgboost_churn_model_explainability_job_definition):
         (reference, resource) = xgboost_churn_model_explainability_job_definition

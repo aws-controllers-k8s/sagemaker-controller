@@ -86,7 +86,7 @@ def get_resource_feature_group_status(reference: k8s.CustomResourceReference):
 
 @service_marker
 @pytest.mark.canary
-@pytest.skip
+@pytest.skip("temp")
 class TestFeatureGroup:
     def _wait_feature_group_status(
         self,

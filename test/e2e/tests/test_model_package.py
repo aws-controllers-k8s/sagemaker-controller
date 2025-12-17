@@ -127,7 +127,7 @@ def get_model_package_resource_status(reference: k8s.CustomResourceReference):
 
 @pytest.mark.canary
 @service_marker
-@pytest.skip
+@pytest.skip("temp")
 class TestmodelPackage:
     def _wait_resource_model_package_status(
         self,

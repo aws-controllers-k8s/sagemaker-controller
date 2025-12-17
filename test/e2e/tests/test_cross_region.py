@@ -63,7 +63,7 @@ def get_cross_region():
 
 
 @service_marker
-@pytest.skip
+@pytest.skip("temp")
 class TestCrossRegionModel:
     def test_create_cross_region_model(self, cross_region_model):
         (reference, resource) = cross_region_model

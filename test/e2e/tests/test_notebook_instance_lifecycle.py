@@ -70,7 +70,7 @@ def get_notebook_instance_lifecycle_config(notebook_instance_lfc_name: str):
 
 @service_marker
 @pytest.mark.canary
-@pytest.skip
+@pytest.skip("temp")
 class TestNotebookInstanceLifecycleConfig:
     def wait_until_update(self, reference, previous_modified_time, wait_period=30, wait_time=5):
         for i in range(wait_period):

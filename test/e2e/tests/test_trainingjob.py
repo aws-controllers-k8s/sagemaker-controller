@@ -59,7 +59,7 @@ def xgboost_training_job():
 
 
 @service_marker
-@pytest.skip
+@pytest.skip("temp")
 class TestTrainingJob:
     def test_stopped(self, xgboost_training_job):
         (reference, resource) = xgboost_training_job

@@ -45,7 +45,7 @@ def describe_sagemaker_data_quality_job_definition(sagemaker_client, job_definit
 
 @service_marker
 @pytest.mark.canary
-@pytest.skip
+@pytest.skip("temp")
 class TestDataQualityJobDefinition:
     def test_smoke(self, sagemaker_client, xgboost_churn_data_quality_job_definition):
         (reference, resource) = xgboost_churn_data_quality_job_definition

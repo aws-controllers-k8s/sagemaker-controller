@@ -69,7 +69,7 @@ def get_training_rule_eval_resource_status(reference: k8s.CustomResourceReferenc
 
 
 @service_marker
-@pytest.skip
+@pytest.skip("temp")
 class TestTrainingDebuggerJob:
     def _wait_sagemaker_training_rule_eval_status(
         self,

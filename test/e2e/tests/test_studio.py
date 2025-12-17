@@ -563,7 +563,7 @@ def app_space_fixture(shared_space_fixture):
 
 
 @service_marker
-@pytest.skip
+@pytest.skip("temp")
 class TestDomain:
     def create_private_space(self, private_space_fixture):
         (

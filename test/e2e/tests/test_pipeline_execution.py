@@ -115,7 +115,7 @@ def get_pipeline_execution_resource_status(reference: k8s.CustomResourceReferenc
 
 @pytest.mark.canary
 @service_marker
-@pytest.skip
+@pytest.skip("temp")
 class TestPipelineExecution:
     def _wait_resource_pipeline_execution_status(
         self,
