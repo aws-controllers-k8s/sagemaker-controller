@@ -3,7 +3,7 @@ kind: Project
 metadata:
   name: $PROJECT_NAME
 spec:
-  projectName: $$PROJECT_NAME
+  projectName: $PROJECT_NAME
   projectDescription: Dummy project for expected failed test
   serviceCatalogProvisioningDetails:
     productID: prod-6sx3gpcyxek2y # MLOps template for model building and training with third-party Git using CodePipeline
