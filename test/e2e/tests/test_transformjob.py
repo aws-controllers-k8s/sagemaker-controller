@@ -119,7 +119,6 @@ def get_transform_resource_status(reference: k8s.CustomResourceReference):
 
 
 @service_marker
-@pytest.skip("temp")
 class TestTransformJob:
     def _wait_resource_transform_status(
         self,

@@ -85,7 +85,6 @@ def get_hpo_resource_status(reference: k8s.CustomResourceReference):
 
 
 @service_marker
-@pytest.skip("temp")
 class TestHPO:
     def _wait_resource_hpo_status(
         self,

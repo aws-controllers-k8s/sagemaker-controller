@@ -70,7 +70,6 @@ def single_variant_config():
 
 @service_marker
 @pytest.mark.canary
-@pytest.skip("temp")
 class TestEndpointConfig:
     def test_create_endpoint_config(self, single_variant_config):
         (reference, resource) = single_variant_config

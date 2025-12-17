@@ -84,7 +84,6 @@ def get_processing_resource_status(reference: k8s.CustomResourceReference):
 
 
 @service_marker
-@pytest.skip("temp")
 class TestProcessingJob:
     def _wait_resource_processing_status(
         self,

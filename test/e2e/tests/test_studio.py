@@ -563,7 +563,6 @@ def app_space_fixture(shared_space_fixture):
 
 
 @service_marker
-@pytest.skip("temp")
 class TestDomain:
     def create_private_space(self, private_space_fixture):
         (
@@ -654,9 +653,7 @@ class TestDomain:
             STUDIO_STATUS_INSERVICE,
         )
 
-    def test_studio(
-        self, private_space_fixture, app_user_profile_fixture, app_space_fixture
-    ):
+    def test_studio(self, private_space_fixture, app_user_profile_fixture, app_space_fixture):
         self.create_private_space(private_space_fixture)
         self.create_app_user_profile(app_user_profile_fixture)
         self.create_app_space(app_space_fixture)
