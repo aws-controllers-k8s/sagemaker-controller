@@ -27,7 +27,7 @@ from e2e import (
 )
 from e2e.replacement_values import REPLACEMENT_VALUES
 
-PROJECT_WAIT_PERIOD = 120
+PROJECT_WAIT_PERIOD = 30
 PROJECT_WAIT_LENGTH = 30
 PROJECT_STATUS_CREATE_FAILED = "CreateFailed"
 FAIL_CREATE_ERROR_MESSAGE = "Codebuild to checkin seedcode has status FAILED"
