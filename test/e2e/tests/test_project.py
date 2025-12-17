@@ -34,7 +34,7 @@ FAIL_CREATE_ERROR_MESSAGE = "Codebuild to checkin seedcode has status FAILED"
 
 
 def get_project_sagemaker_status(project_name):
-    response = boto3.client("sagemaker").describe_domain(ProjectName=project_name)
+    response = boto3.client("sagemaker").describe_project(ProjectName=project_name)
     return response["ProjectStatus"]
 
 
