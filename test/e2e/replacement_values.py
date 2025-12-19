@@ -250,4 +250,5 @@ REPLACEMENT_VALUES = {
     "NOTEBOOK_INSTANCE_INSTANCE_TYPES": NOTEBOOK_INSTANCE_INSTANCE_TYPES.get(
         get_region(), "ml.t3.medium"
     ),
+    "DUMMY_CODE_CONNECTIONS_ARN": "arn:aws:codeconnections:us-west-2:108782066590:connection/a63dd9d5-8cc0-4df9-8851-8ff6ab190d1e"
 }

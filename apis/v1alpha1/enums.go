@@ -2798,19 +2798,19 @@ const (
 	ProjectSortOrder_Descending ProjectSortOrder = "Descending"
 )
 
-type ProjectStatus string
+type ProjectStatus_SDK string
 
 const (
-	ProjectStatus_CreateCompleted  ProjectStatus = "CreateCompleted"
-	ProjectStatus_CreateFailed     ProjectStatus = "CreateFailed"
-	ProjectStatus_CreateInProgress ProjectStatus = "CreateInProgress"
-	ProjectStatus_DeleteCompleted  ProjectStatus = "DeleteCompleted"
-	ProjectStatus_DeleteFailed     ProjectStatus = "DeleteFailed"
-	ProjectStatus_DeleteInProgress ProjectStatus = "DeleteInProgress"
-	ProjectStatus_Pending          ProjectStatus = "Pending"
-	ProjectStatus_UpdateCompleted  ProjectStatus = "UpdateCompleted"
-	ProjectStatus_UpdateFailed     ProjectStatus = "UpdateFailed"
-	ProjectStatus_UpdateInProgress ProjectStatus = "UpdateInProgress"
+	ProjectStatus_SDK_CreateCompleted  ProjectStatus_SDK = "CreateCompleted"
+	ProjectStatus_SDK_CreateFailed     ProjectStatus_SDK = "CreateFailed"
+	ProjectStatus_SDK_CreateInProgress ProjectStatus_SDK = "CreateInProgress"
+	ProjectStatus_SDK_DeleteCompleted  ProjectStatus_SDK = "DeleteCompleted"
+	ProjectStatus_SDK_DeleteFailed     ProjectStatus_SDK = "DeleteFailed"
+	ProjectStatus_SDK_DeleteInProgress ProjectStatus_SDK = "DeleteInProgress"
+	ProjectStatus_SDK_Pending          ProjectStatus_SDK = "Pending"
+	ProjectStatus_SDK_UpdateCompleted  ProjectStatus_SDK = "UpdateCompleted"
+	ProjectStatus_SDK_UpdateFailed     ProjectStatus_SDK = "UpdateFailed"
+	ProjectStatus_SDK_UpdateInProgress ProjectStatus_SDK = "UpdateInProgress"
 )
 
 type RStudioServerProAccessStatus string
