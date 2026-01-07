@@ -17,16 +17,15 @@ package endpoint_config
 
 import (
 	"bytes"
-	"reflect"
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	acktags "github.com/aws-controllers-k8s/runtime/pkg/tags"
+	"k8s.io/apimachinery/pkg/api/equality"
 )
 
 // Hack to avoid import errors during build...
 var (
 	_ = &bytes.Buffer{}
-	_ = &reflect.Method{}
 	_ = &acktags.Tags{}
 )
 
@@ -133,7 +132,7 @@ func newResourceDelta(
 		if len(a.ko.Spec.DataCaptureConfig.CaptureOptions) != len(b.ko.Spec.DataCaptureConfig.CaptureOptions) {
 			delta.Add("Spec.DataCaptureConfig.CaptureOptions", a.ko.Spec.DataCaptureConfig.CaptureOptions, b.ko.Spec.DataCaptureConfig.CaptureOptions)
 		} else if len(a.ko.Spec.DataCaptureConfig.CaptureOptions) > 0 {
-			if !reflect.DeepEqual(a.ko.Spec.DataCaptureConfig.CaptureOptions, b.ko.Spec.DataCaptureConfig.CaptureOptions) {
+			if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.DataCaptureConfig.CaptureOptions, b.ko.Spec.DataCaptureConfig.CaptureOptions) {
 				delta.Add("Spec.DataCaptureConfig.CaptureOptions", a.ko.Spec.DataCaptureConfig.CaptureOptions, b.ko.Spec.DataCaptureConfig.CaptureOptions)
 			}
 		}
@@ -197,7 +196,7 @@ func newResourceDelta(
 	if len(a.ko.Spec.ProductionVariants) != len(b.ko.Spec.ProductionVariants) {
 		delta.Add("Spec.ProductionVariants", a.ko.Spec.ProductionVariants, b.ko.Spec.ProductionVariants)
 	} else if len(a.ko.Spec.ProductionVariants) > 0 {
-		if !reflect.DeepEqual(a.ko.Spec.ProductionVariants, b.ko.Spec.ProductionVariants) {
+		if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.ProductionVariants, b.ko.Spec.ProductionVariants) {
 			delta.Add("Spec.ProductionVariants", a.ko.Spec.ProductionVariants, b.ko.Spec.ProductionVariants)
 		}
 	}

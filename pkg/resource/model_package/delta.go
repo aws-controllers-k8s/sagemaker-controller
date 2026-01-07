@@ -17,16 +17,15 @@ package model_package
 
 import (
 	"bytes"
-	"reflect"
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	acktags "github.com/aws-controllers-k8s/runtime/pkg/tags"
+	"k8s.io/apimachinery/pkg/api/equality"
 )
 
 // Hack to avoid import errors during build...
 var (
 	_ = &bytes.Buffer{}
-	_ = &reflect.Method{}
 	_ = &acktags.Tags{}
 )
 
@@ -47,7 +46,7 @@ func newResourceDelta(
 	if len(a.ko.Spec.AdditionalInferenceSpecifications) != len(b.ko.Spec.AdditionalInferenceSpecifications) {
 		delta.Add("Spec.AdditionalInferenceSpecifications", a.ko.Spec.AdditionalInferenceSpecifications, b.ko.Spec.AdditionalInferenceSpecifications)
 	} else if len(a.ko.Spec.AdditionalInferenceSpecifications) > 0 {
-		if !reflect.DeepEqual(a.ko.Spec.AdditionalInferenceSpecifications, b.ko.Spec.AdditionalInferenceSpecifications) {
+		if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.AdditionalInferenceSpecifications, b.ko.Spec.AdditionalInferenceSpecifications) {
 			delta.Add("Spec.AdditionalInferenceSpecifications", a.ko.Spec.AdditionalInferenceSpecifications, b.ko.Spec.AdditionalInferenceSpecifications)
 		}
 	}
@@ -337,7 +336,7 @@ func newResourceDelta(
 		if len(a.ko.Spec.InferenceSpecification.Containers) != len(b.ko.Spec.InferenceSpecification.Containers) {
 			delta.Add("Spec.InferenceSpecification.Containers", a.ko.Spec.InferenceSpecification.Containers, b.ko.Spec.InferenceSpecification.Containers)
 		} else if len(a.ko.Spec.InferenceSpecification.Containers) > 0 {
-			if !reflect.DeepEqual(a.ko.Spec.InferenceSpecification.Containers, b.ko.Spec.InferenceSpecification.Containers) {
+			if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.InferenceSpecification.Containers, b.ko.Spec.InferenceSpecification.Containers) {
 				delta.Add("Spec.InferenceSpecification.Containers", a.ko.Spec.InferenceSpecification.Containers, b.ko.Spec.InferenceSpecification.Containers)
 			}
 		}
@@ -670,7 +669,7 @@ func newResourceDelta(
 		if len(a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms) != len(b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms) {
 			delta.Add("Spec.SourceAlgorithmSpecification.SourceAlgorithms", a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms, b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms)
 		} else if len(a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms) > 0 {
-			if !reflect.DeepEqual(a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms, b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms) {
+			if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms, b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms) {
 				delta.Add("Spec.SourceAlgorithmSpecification.SourceAlgorithms", a.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms, b.ko.Spec.SourceAlgorithmSpecification.SourceAlgorithms)
 			}
 		}
@@ -688,7 +687,7 @@ func newResourceDelta(
 		if len(a.ko.Spec.ValidationSpecification.ValidationProfiles) != len(b.ko.Spec.ValidationSpecification.ValidationProfiles) {
 			delta.Add("Spec.ValidationSpecification.ValidationProfiles", a.ko.Spec.ValidationSpecification.ValidationProfiles, b.ko.Spec.ValidationSpecification.ValidationProfiles)
 		} else if len(a.ko.Spec.ValidationSpecification.ValidationProfiles) > 0 {
-			if !reflect.DeepEqual(a.ko.Spec.ValidationSpecification.ValidationProfiles, b.ko.Spec.ValidationSpecification.ValidationProfiles) {
+			if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.ValidationSpecification.ValidationProfiles, b.ko.Spec.ValidationSpecification.ValidationProfiles) {
 				delta.Add("Spec.ValidationSpecification.ValidationProfiles", a.ko.Spec.ValidationSpecification.ValidationProfiles, b.ko.Spec.ValidationSpecification.ValidationProfiles)
 			}
 		}

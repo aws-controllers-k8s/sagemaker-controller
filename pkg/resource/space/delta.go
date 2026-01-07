@@ -17,16 +17,15 @@ package space
 
 import (
 	"bytes"
-	"reflect"
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	acktags "github.com/aws-controllers-k8s/runtime/pkg/tags"
+	"k8s.io/apimachinery/pkg/api/equality"
 )
 
 // Hack to avoid import errors during build...
 var (
 	_ = &bytes.Buffer{}
-	_ = &reflect.Method{}
 	_ = &acktags.Tags{}
 )
 
@@ -146,7 +145,7 @@ func newResourceDelta(
 		if len(a.ko.Spec.SpaceSettings.CustomFileSystems) != len(b.ko.Spec.SpaceSettings.CustomFileSystems) {
 			delta.Add("Spec.SpaceSettings.CustomFileSystems", a.ko.Spec.SpaceSettings.CustomFileSystems, b.ko.Spec.SpaceSettings.CustomFileSystems)
 		} else if len(a.ko.Spec.SpaceSettings.CustomFileSystems) > 0 {
-			if !reflect.DeepEqual(a.ko.Spec.SpaceSettings.CustomFileSystems, b.ko.Spec.SpaceSettings.CustomFileSystems) {
+			if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.SpaceSettings.CustomFileSystems, b.ko.Spec.SpaceSettings.CustomFileSystems) {
 				delta.Add("Spec.SpaceSettings.CustomFileSystems", a.ko.Spec.SpaceSettings.CustomFileSystems, b.ko.Spec.SpaceSettings.CustomFileSystems)
 			}
 		}
@@ -171,7 +170,7 @@ func newResourceDelta(
 			if len(a.ko.Spec.SpaceSettings.JupyterLabAppSettings.CodeRepositories) != len(b.ko.Spec.SpaceSettings.JupyterLabAppSettings.CodeRepositories) {
 				delta.Add("Spec.SpaceSettings.JupyterLabAppSettings.CodeRepositories", a.ko.Spec.SpaceSettings.JupyterLabAppSettings.CodeRepositories, b.ko.Spec.SpaceSettings.JupyterLabAppSettings.CodeRepositories)
 			} else if len(a.ko.Spec.SpaceSettings.JupyterLabAppSettings.CodeRepositories) > 0 {
-				if !reflect.DeepEqual(a.ko.Spec.SpaceSettings.JupyterLabAppSettings.CodeRepositories, b.ko.Spec.SpaceSettings.JupyterLabAppSettings.CodeRepositories) {
+				if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.SpaceSettings.JupyterLabAppSettings.CodeRepositories, b.ko.Spec.SpaceSettings.JupyterLabAppSettings.CodeRepositories) {
 					delta.Add("Spec.SpaceSettings.JupyterLabAppSettings.CodeRepositories", a.ko.Spec.SpaceSettings.JupyterLabAppSettings.CodeRepositories, b.ko.Spec.SpaceSettings.JupyterLabAppSettings.CodeRepositories)
 				}
 			}
@@ -221,7 +220,7 @@ func newResourceDelta(
 			if len(a.ko.Spec.SpaceSettings.JupyterServerAppSettings.CodeRepositories) != len(b.ko.Spec.SpaceSettings.JupyterServerAppSettings.CodeRepositories) {
 				delta.Add("Spec.SpaceSettings.JupyterServerAppSettings.CodeRepositories", a.ko.Spec.SpaceSettings.JupyterServerAppSettings.CodeRepositories, b.ko.Spec.SpaceSettings.JupyterServerAppSettings.CodeRepositories)
 			} else if len(a.ko.Spec.SpaceSettings.JupyterServerAppSettings.CodeRepositories) > 0 {
-				if !reflect.DeepEqual(a.ko.Spec.SpaceSettings.JupyterServerAppSettings.CodeRepositories, b.ko.Spec.SpaceSettings.JupyterServerAppSettings.CodeRepositories) {
+				if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.SpaceSettings.JupyterServerAppSettings.CodeRepositories, b.ko.Spec.SpaceSettings.JupyterServerAppSettings.CodeRepositories) {
 					delta.Add("Spec.SpaceSettings.JupyterServerAppSettings.CodeRepositories", a.ko.Spec.SpaceSettings.JupyterServerAppSettings.CodeRepositories, b.ko.Spec.SpaceSettings.JupyterServerAppSettings.CodeRepositories)
 				}
 			}
@@ -278,7 +277,7 @@ func newResourceDelta(
 			if len(a.ko.Spec.SpaceSettings.KernelGatewayAppSettings.CustomImages) != len(b.ko.Spec.SpaceSettings.KernelGatewayAppSettings.CustomImages) {
 				delta.Add("Spec.SpaceSettings.KernelGatewayAppSettings.CustomImages", a.ko.Spec.SpaceSettings.KernelGatewayAppSettings.CustomImages, b.ko.Spec.SpaceSettings.KernelGatewayAppSettings.CustomImages)
 			} else if len(a.ko.Spec.SpaceSettings.KernelGatewayAppSettings.CustomImages) > 0 {
-				if !reflect.DeepEqual(a.ko.Spec.SpaceSettings.KernelGatewayAppSettings.CustomImages, b.ko.Spec.SpaceSettings.KernelGatewayAppSettings.CustomImages) {
+				if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.SpaceSettings.KernelGatewayAppSettings.CustomImages, b.ko.Spec.SpaceSettings.KernelGatewayAppSettings.CustomImages) {
 					delta.Add("Spec.SpaceSettings.KernelGatewayAppSettings.CustomImages", a.ko.Spec.SpaceSettings.KernelGatewayAppSettings.CustomImages, b.ko.Spec.SpaceSettings.KernelGatewayAppSettings.CustomImages)
 				}
 			}

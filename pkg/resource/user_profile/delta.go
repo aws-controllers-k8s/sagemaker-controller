@@ -17,16 +17,15 @@ package user_profile
 
 import (
 	"bytes"
-	"reflect"
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	acktags "github.com/aws-controllers-k8s/runtime/pkg/tags"
+	"k8s.io/apimachinery/pkg/api/equality"
 )
 
 // Hack to avoid import errors during build...
 var (
 	_ = &bytes.Buffer{}
-	_ = &reflect.Method{}
 	_ = &acktags.Tags{}
 )
 
@@ -127,7 +126,7 @@ func newResourceDelta(
 		if len(a.ko.Spec.UserSettings.CustomFileSystemConfigs) != len(b.ko.Spec.UserSettings.CustomFileSystemConfigs) {
 			delta.Add("Spec.UserSettings.CustomFileSystemConfigs", a.ko.Spec.UserSettings.CustomFileSystemConfigs, b.ko.Spec.UserSettings.CustomFileSystemConfigs)
 		} else if len(a.ko.Spec.UserSettings.CustomFileSystemConfigs) > 0 {
-			if !reflect.DeepEqual(a.ko.Spec.UserSettings.CustomFileSystemConfigs, b.ko.Spec.UserSettings.CustomFileSystemConfigs) {
+			if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.UserSettings.CustomFileSystemConfigs, b.ko.Spec.UserSettings.CustomFileSystemConfigs) {
 				delta.Add("Spec.UserSettings.CustomFileSystemConfigs", a.ko.Spec.UserSettings.CustomFileSystemConfigs, b.ko.Spec.UserSettings.CustomFileSystemConfigs)
 			}
 		}
@@ -169,14 +168,14 @@ func newResourceDelta(
 			if len(a.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories) != len(b.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories) {
 				delta.Add("Spec.UserSettings.JupyterLabAppSettings.CodeRepositories", a.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories, b.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories)
 			} else if len(a.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories) > 0 {
-				if !reflect.DeepEqual(a.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories, b.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories) {
+				if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories, b.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories) {
 					delta.Add("Spec.UserSettings.JupyterLabAppSettings.CodeRepositories", a.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories, b.ko.Spec.UserSettings.JupyterLabAppSettings.CodeRepositories)
 				}
 			}
 			if len(a.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages) != len(b.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages) {
 				delta.Add("Spec.UserSettings.JupyterLabAppSettings.CustomImages", a.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages, b.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages)
 			} else if len(a.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages) > 0 {
-				if !reflect.DeepEqual(a.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages, b.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages) {
+				if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages, b.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages) {
 					delta.Add("Spec.UserSettings.JupyterLabAppSettings.CustomImages", a.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages, b.ko.Spec.UserSettings.JupyterLabAppSettings.CustomImages)
 				}
 			}
@@ -233,7 +232,7 @@ func newResourceDelta(
 			if len(a.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories) != len(b.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories) {
 				delta.Add("Spec.UserSettings.JupyterServerAppSettings.CodeRepositories", a.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories, b.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories)
 			} else if len(a.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories) > 0 {
-				if !reflect.DeepEqual(a.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories, b.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories) {
+				if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories, b.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories) {
 					delta.Add("Spec.UserSettings.JupyterServerAppSettings.CodeRepositories", a.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories, b.ko.Spec.UserSettings.JupyterServerAppSettings.CodeRepositories)
 				}
 			}
@@ -290,7 +289,7 @@ func newResourceDelta(
 			if len(a.ko.Spec.UserSettings.KernelGatewayAppSettings.CustomImages) != len(b.ko.Spec.UserSettings.KernelGatewayAppSettings.CustomImages) {
 				delta.Add("Spec.UserSettings.KernelGatewayAppSettings.CustomImages", a.ko.Spec.UserSettings.KernelGatewayAppSettings.CustomImages, b.ko.Spec.UserSettings.KernelGatewayAppSettings.CustomImages)
 			} else if len(a.ko.Spec.UserSettings.KernelGatewayAppSettings.CustomImages) > 0 {
-				if !reflect.DeepEqual(a.ko.Spec.UserSettings.KernelGatewayAppSettings.CustomImages, b.ko.Spec.UserSettings.KernelGatewayAppSettings.CustomImages) {
+				if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.UserSettings.KernelGatewayAppSettings.CustomImages, b.ko.Spec.UserSettings.KernelGatewayAppSettings.CustomImages) {
 					delta.Add("Spec.UserSettings.KernelGatewayAppSettings.CustomImages", a.ko.Spec.UserSettings.KernelGatewayAppSettings.CustomImages, b.ko.Spec.UserSettings.KernelGatewayAppSettings.CustomImages)
 				}
 			}

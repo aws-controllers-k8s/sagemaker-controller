@@ -17,16 +17,15 @@ package monitoring_schedule
 
 import (
 	"bytes"
-	"reflect"
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	acktags "github.com/aws-controllers-k8s/runtime/pkg/tags"
+	"k8s.io/apimachinery/pkg/api/equality"
 )
 
 // Hack to avoid import errors during build...
 var (
 	_ = &bytes.Buffer{}
-	_ = &reflect.Method{}
 	_ = &acktags.Tags{}
 )
 
@@ -131,7 +130,7 @@ func newResourceDelta(
 			if len(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs) != len(b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs) {
 				delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs)
 			} else if len(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs) > 0 {
-				if !reflect.DeepEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs) {
+				if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs) {
 					delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringInputs)
 				}
 			}
@@ -148,7 +147,7 @@ func newResourceDelta(
 				if len(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs) != len(b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs) {
 					delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs)
 				} else if len(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs) > 0 {
-					if !reflect.DeepEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs) {
+					if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs) {
 						delta.Add("Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs", a.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs, b.ko.Spec.MonitoringScheduleConfig.MonitoringJobDefinition.MonitoringOutputConfig.MonitoringOutputs)
 					}
 				}

@@ -17,16 +17,15 @@ package model_bias_job_definition
 
 import (
 	"bytes"
-	"reflect"
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	acktags "github.com/aws-controllers-k8s/runtime/pkg/tags"
+	"k8s.io/apimachinery/pkg/api/equality"
 )
 
 // Hack to avoid import errors during build...
 var (
 	_ = &bytes.Buffer{}
-	_ = &reflect.Method{}
 	_ = &acktags.Tags{}
 )
 
@@ -242,7 +241,7 @@ func newResourceDelta(
 		if len(a.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs) != len(b.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs) {
 			delta.Add("Spec.ModelBiasJobOutputConfig.MonitoringOutputs", a.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs, b.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs)
 		} else if len(a.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs) > 0 {
-			if !reflect.DeepEqual(a.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs, b.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs) {
+			if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs, b.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs) {
 				delta.Add("Spec.ModelBiasJobOutputConfig.MonitoringOutputs", a.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs, b.ko.Spec.ModelBiasJobOutputConfig.MonitoringOutputs)
 			}
 		}

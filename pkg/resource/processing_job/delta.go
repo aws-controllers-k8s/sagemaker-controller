@@ -17,16 +17,15 @@ package processing_job
 
 import (
 	"bytes"
-	"reflect"
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	acktags "github.com/aws-controllers-k8s/runtime/pkg/tags"
+	"k8s.io/apimachinery/pkg/api/equality"
 )
 
 // Hack to avoid import errors during build...
 var (
 	_ = &bytes.Buffer{}
-	_ = &reflect.Method{}
 	_ = &acktags.Tags{}
 )
 
@@ -140,7 +139,7 @@ func newResourceDelta(
 	if len(a.ko.Spec.ProcessingInputs) != len(b.ko.Spec.ProcessingInputs) {
 		delta.Add("Spec.ProcessingInputs", a.ko.Spec.ProcessingInputs, b.ko.Spec.ProcessingInputs)
 	} else if len(a.ko.Spec.ProcessingInputs) > 0 {
-		if !reflect.DeepEqual(a.ko.Spec.ProcessingInputs, b.ko.Spec.ProcessingInputs) {
+		if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.ProcessingInputs, b.ko.Spec.ProcessingInputs) {
 			delta.Add("Spec.ProcessingInputs", a.ko.Spec.ProcessingInputs, b.ko.Spec.ProcessingInputs)
 		}
 	}
@@ -164,7 +163,7 @@ func newResourceDelta(
 		if len(a.ko.Spec.ProcessingOutputConfig.Outputs) != len(b.ko.Spec.ProcessingOutputConfig.Outputs) {
 			delta.Add("Spec.ProcessingOutputConfig.Outputs", a.ko.Spec.ProcessingOutputConfig.Outputs, b.ko.Spec.ProcessingOutputConfig.Outputs)
 		} else if len(a.ko.Spec.ProcessingOutputConfig.Outputs) > 0 {
-			if !reflect.DeepEqual(a.ko.Spec.ProcessingOutputConfig.Outputs, b.ko.Spec.ProcessingOutputConfig.Outputs) {
+			if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.ProcessingOutputConfig.Outputs, b.ko.Spec.ProcessingOutputConfig.Outputs) {
 				delta.Add("Spec.ProcessingOutputConfig.Outputs", a.ko.Spec.ProcessingOutputConfig.Outputs, b.ko.Spec.ProcessingOutputConfig.Outputs)
 			}
 		}
