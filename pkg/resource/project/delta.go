@@ -17,16 +17,15 @@ package project
 
 import (
 	"bytes"
-	"reflect"
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	acktags "github.com/aws-controllers-k8s/runtime/pkg/tags"
+	"k8s.io/apimachinery/pkg/api/equality"
 )
 
 // Hack to avoid import errors during build...
 var (
 	_ = &bytes.Buffer{}
-	_ = &reflect.Method{}
 	_ = &acktags.Tags{}
 )
 
@@ -84,7 +83,7 @@ func newResourceDelta(
 		if len(a.ko.Spec.ServiceCatalogProvisioningDetails.ProvisioningParameters) != len(b.ko.Spec.ServiceCatalogProvisioningDetails.ProvisioningParameters) {
 			delta.Add("Spec.ServiceCatalogProvisioningDetails.ProvisioningParameters", a.ko.Spec.ServiceCatalogProvisioningDetails.ProvisioningParameters, b.ko.Spec.ServiceCatalogProvisioningDetails.ProvisioningParameters)
 		} else if len(a.ko.Spec.ServiceCatalogProvisioningDetails.ProvisioningParameters) > 0 {
-			if !reflect.DeepEqual(a.ko.Spec.ServiceCatalogProvisioningDetails.ProvisioningParameters, b.ko.Spec.ServiceCatalogProvisioningDetails.ProvisioningParameters) {
+			if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.ServiceCatalogProvisioningDetails.ProvisioningParameters, b.ko.Spec.ServiceCatalogProvisioningDetails.ProvisioningParameters) {
 				delta.Add("Spec.ServiceCatalogProvisioningDetails.ProvisioningParameters", a.ko.Spec.ServiceCatalogProvisioningDetails.ProvisioningParameters, b.ko.Spec.ServiceCatalogProvisioningDetails.ProvisioningParameters)
 			}
 		}
@@ -92,7 +91,7 @@ func newResourceDelta(
 	if len(a.ko.Spec.TemplateProviders) != len(b.ko.Spec.TemplateProviders) {
 		delta.Add("Spec.TemplateProviders", a.ko.Spec.TemplateProviders, b.ko.Spec.TemplateProviders)
 	} else if len(a.ko.Spec.TemplateProviders) > 0 {
-		if !reflect.DeepEqual(a.ko.Spec.TemplateProviders, b.ko.Spec.TemplateProviders) {
+		if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.TemplateProviders, b.ko.Spec.TemplateProviders) {
 			delta.Add("Spec.TemplateProviders", a.ko.Spec.TemplateProviders, b.ko.Spec.TemplateProviders)
 		}
 	}

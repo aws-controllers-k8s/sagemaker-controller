@@ -17,16 +17,15 @@ package pipeline_execution
 
 import (
 	"bytes"
-	"reflect"
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	acktags "github.com/aws-controllers-k8s/runtime/pkg/tags"
+	"k8s.io/apimachinery/pkg/api/equality"
 )
 
 // Hack to avoid import errors during build...
 var (
 	_ = &bytes.Buffer{}
-	_ = &reflect.Method{}
 	_ = &acktags.Tags{}
 )
 
@@ -79,7 +78,7 @@ func newResourceDelta(
 	if len(a.ko.Spec.PipelineParameters) != len(b.ko.Spec.PipelineParameters) {
 		delta.Add("Spec.PipelineParameters", a.ko.Spec.PipelineParameters, b.ko.Spec.PipelineParameters)
 	} else if len(a.ko.Spec.PipelineParameters) > 0 {
-		if !reflect.DeepEqual(a.ko.Spec.PipelineParameters, b.ko.Spec.PipelineParameters) {
+		if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.PipelineParameters, b.ko.Spec.PipelineParameters) {
 			delta.Add("Spec.PipelineParameters", a.ko.Spec.PipelineParameters, b.ko.Spec.PipelineParameters)
 		}
 	}
@@ -96,7 +95,7 @@ func newResourceDelta(
 		if len(a.ko.Spec.SelectiveExecutionConfig.SelectedSteps) != len(b.ko.Spec.SelectiveExecutionConfig.SelectedSteps) {
 			delta.Add("Spec.SelectiveExecutionConfig.SelectedSteps", a.ko.Spec.SelectiveExecutionConfig.SelectedSteps, b.ko.Spec.SelectiveExecutionConfig.SelectedSteps)
 		} else if len(a.ko.Spec.SelectiveExecutionConfig.SelectedSteps) > 0 {
-			if !reflect.DeepEqual(a.ko.Spec.SelectiveExecutionConfig.SelectedSteps, b.ko.Spec.SelectiveExecutionConfig.SelectedSteps) {
+			if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.SelectiveExecutionConfig.SelectedSteps, b.ko.Spec.SelectiveExecutionConfig.SelectedSteps) {
 				delta.Add("Spec.SelectiveExecutionConfig.SelectedSteps", a.ko.Spec.SelectiveExecutionConfig.SelectedSteps, b.ko.Spec.SelectiveExecutionConfig.SelectedSteps)
 			}
 		}

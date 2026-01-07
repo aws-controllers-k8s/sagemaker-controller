@@ -17,16 +17,15 @@ package model_explainability_job_definition
 
 import (
 	"bytes"
-	"reflect"
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	acktags "github.com/aws-controllers-k8s/runtime/pkg/tags"
+	"k8s.io/apimachinery/pkg/api/equality"
 )
 
 // Hack to avoid import errors during build...
 var (
 	_ = &bytes.Buffer{}
-	_ = &reflect.Method{}
 	_ = &acktags.Tags{}
 )
 
@@ -231,7 +230,7 @@ func newResourceDelta(
 		if len(a.ko.Spec.ModelExplainabilityJobOutputConfig.MonitoringOutputs) != len(b.ko.Spec.ModelExplainabilityJobOutputConfig.MonitoringOutputs) {
 			delta.Add("Spec.ModelExplainabilityJobOutputConfig.MonitoringOutputs", a.ko.Spec.ModelExplainabilityJobOutputConfig.MonitoringOutputs, b.ko.Spec.ModelExplainabilityJobOutputConfig.MonitoringOutputs)
 		} else if len(a.ko.Spec.ModelExplainabilityJobOutputConfig.MonitoringOutputs) > 0 {
-			if !reflect.DeepEqual(a.ko.Spec.ModelExplainabilityJobOutputConfig.MonitoringOutputs, b.ko.Spec.ModelExplainabilityJobOutputConfig.MonitoringOutputs) {
+			if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.ModelExplainabilityJobOutputConfig.MonitoringOutputs, b.ko.Spec.ModelExplainabilityJobOutputConfig.MonitoringOutputs) {
 				delta.Add("Spec.ModelExplainabilityJobOutputConfig.MonitoringOutputs", a.ko.Spec.ModelExplainabilityJobOutputConfig.MonitoringOutputs, b.ko.Spec.ModelExplainabilityJobOutputConfig.MonitoringOutputs)
 			}
 		}

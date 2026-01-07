@@ -17,16 +17,15 @@ package training_job
 
 import (
 	"bytes"
-	"reflect"
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	acktags "github.com/aws-controllers-k8s/runtime/pkg/tags"
+	"k8s.io/apimachinery/pkg/api/equality"
 )
 
 // Hack to avoid import errors during build...
 var (
 	_ = &bytes.Buffer{}
-	_ = &reflect.Method{}
 	_ = &acktags.Tags{}
 )
 
@@ -100,7 +99,7 @@ func newResourceDelta(
 		if len(a.ko.Spec.DebugHookConfig.CollectionConfigurations) != len(b.ko.Spec.DebugHookConfig.CollectionConfigurations) {
 			delta.Add("Spec.DebugHookConfig.CollectionConfigurations", a.ko.Spec.DebugHookConfig.CollectionConfigurations, b.ko.Spec.DebugHookConfig.CollectionConfigurations)
 		} else if len(a.ko.Spec.DebugHookConfig.CollectionConfigurations) > 0 {
-			if !reflect.DeepEqual(a.ko.Spec.DebugHookConfig.CollectionConfigurations, b.ko.Spec.DebugHookConfig.CollectionConfigurations) {
+			if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.DebugHookConfig.CollectionConfigurations, b.ko.Spec.DebugHookConfig.CollectionConfigurations) {
 				delta.Add("Spec.DebugHookConfig.CollectionConfigurations", a.ko.Spec.DebugHookConfig.CollectionConfigurations, b.ko.Spec.DebugHookConfig.CollectionConfigurations)
 			}
 		}
@@ -129,7 +128,7 @@ func newResourceDelta(
 	if len(a.ko.Spec.DebugRuleConfigurations) != len(b.ko.Spec.DebugRuleConfigurations) {
 		delta.Add("Spec.DebugRuleConfigurations", a.ko.Spec.DebugRuleConfigurations, b.ko.Spec.DebugRuleConfigurations)
 	} else if len(a.ko.Spec.DebugRuleConfigurations) > 0 {
-		if !reflect.DeepEqual(a.ko.Spec.DebugRuleConfigurations, b.ko.Spec.DebugRuleConfigurations) {
+		if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.DebugRuleConfigurations, b.ko.Spec.DebugRuleConfigurations) {
 			delta.Add("Spec.DebugRuleConfigurations", a.ko.Spec.DebugRuleConfigurations, b.ko.Spec.DebugRuleConfigurations)
 		}
 	}
@@ -207,7 +206,7 @@ func newResourceDelta(
 	if len(a.ko.Spec.InputDataConfig) != len(b.ko.Spec.InputDataConfig) {
 		delta.Add("Spec.InputDataConfig", a.ko.Spec.InputDataConfig, b.ko.Spec.InputDataConfig)
 	} else if len(a.ko.Spec.InputDataConfig) > 0 {
-		if !reflect.DeepEqual(a.ko.Spec.InputDataConfig, b.ko.Spec.InputDataConfig) {
+		if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.InputDataConfig, b.ko.Spec.InputDataConfig) {
 			delta.Add("Spec.InputDataConfig", a.ko.Spec.InputDataConfig, b.ko.Spec.InputDataConfig)
 		}
 	}
@@ -264,7 +263,7 @@ func newResourceDelta(
 	if len(a.ko.Spec.ProfilerRuleConfigurations) != len(b.ko.Spec.ProfilerRuleConfigurations) {
 		delta.Add("Spec.ProfilerRuleConfigurations", a.ko.Spec.ProfilerRuleConfigurations, b.ko.Spec.ProfilerRuleConfigurations)
 	} else if len(a.ko.Spec.ProfilerRuleConfigurations) > 0 {
-		if !reflect.DeepEqual(a.ko.Spec.ProfilerRuleConfigurations, b.ko.Spec.ProfilerRuleConfigurations) {
+		if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.ProfilerRuleConfigurations, b.ko.Spec.ProfilerRuleConfigurations) {
 			delta.Add("Spec.ProfilerRuleConfigurations", a.ko.Spec.ProfilerRuleConfigurations, b.ko.Spec.ProfilerRuleConfigurations)
 		}
 	}
@@ -292,7 +291,7 @@ func newResourceDelta(
 		if len(a.ko.Spec.ResourceConfig.InstanceGroups) != len(b.ko.Spec.ResourceConfig.InstanceGroups) {
 			delta.Add("Spec.ResourceConfig.InstanceGroups", a.ko.Spec.ResourceConfig.InstanceGroups, b.ko.Spec.ResourceConfig.InstanceGroups)
 		} else if len(a.ko.Spec.ResourceConfig.InstanceGroups) > 0 {
-			if !reflect.DeepEqual(a.ko.Spec.ResourceConfig.InstanceGroups, b.ko.Spec.ResourceConfig.InstanceGroups) {
+			if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.ResourceConfig.InstanceGroups, b.ko.Spec.ResourceConfig.InstanceGroups) {
 				delta.Add("Spec.ResourceConfig.InstanceGroups", a.ko.Spec.ResourceConfig.InstanceGroups, b.ko.Spec.ResourceConfig.InstanceGroups)
 			}
 		}
@@ -309,7 +308,7 @@ func newResourceDelta(
 			if len(a.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications) != len(b.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications) {
 				delta.Add("Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications", a.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications, b.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications)
 			} else if len(a.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications) > 0 {
-				if !reflect.DeepEqual(a.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications, b.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications) {
+				if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications, b.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications) {
 					delta.Add("Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications", a.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications, b.ko.Spec.ResourceConfig.InstancePlacementConfig.PlacementSpecifications)
 				}
 			}
