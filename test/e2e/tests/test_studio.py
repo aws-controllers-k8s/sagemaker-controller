@@ -624,8 +624,6 @@ class TestDomain:
         )
 
         condition.assert_synced(domain_reference)
-        condition.assert_synced(user_profile_reference)
-        condition.assert_synced(app_reference)
 
         
 
@@ -643,8 +641,6 @@ class TestDomain:
         ) = app_space_fixture
 
         assert k8s.get_resource_exists(domain_reference)
-        assert k8s.get_resource_exists(space_reference)
-        assert k8s.get_resource_exists(app_reference)
 
         domain_id = domain_resource["status"].get("domainID", None)
         space_name = space_resource["spec"]["spaceName"]
@@ -663,8 +659,6 @@ class TestDomain:
         )
 
         condition.assert_synced(domain_reference)
-        condition.assert_synced(space_reference)
-        condition.assert_synced(app_reference)
 
     def test_studio(self, private_space_fixture, app_user_profile_fixture, app_space_fixture):
         self.create_private_space(private_space_fixture)

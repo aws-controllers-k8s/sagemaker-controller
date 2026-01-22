@@ -50,7 +50,7 @@ var (
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=domains,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=domains/status,verbs=get;update;patch
 
-var lateInitializeFieldNames = []string{"AppNetworkAccessType", "DefaultUserSettings.DefaultLandingURI", "DefaultUserSettings.SpaceStorageSettings", "DefaultUserSettings.StudioWebPortal"}
+var lateInitializeFieldNames = []string{"AppNetworkAccessType", "DefaultUserSettings.CodeEditorAppSettings", "DefaultUserSettings.CustomFileSystemConfigs", "DefaultUserSettings.CustomPosixUserConfig", "DefaultUserSettings.DefaultLandingURI", "DefaultUserSettings.JupyterLabAppSettings", "DefaultUserSettings.JupyterServerAppSettings", "DefaultUserSettings.KernelGatewayAppSettings", "DefaultUserSettings.RStudioServerProAppSettings", "DefaultUserSettings.SecurityGroups", "DefaultUserSettings.SharingSettings", "DefaultUserSettings.SpaceStorageSettings", "DefaultUserSettings.StudioWebPortal", "DefaultUserSettings.TensorBoardAppSettings"}
 
 // resourceManager is responsible for providing a consistent way to perform
 // CRUD operations in a backend AWS service API for Book custom resources.
@@ -258,11 +258,6 @@ func (rm *resourceManager) incompleteLateInitialization(
 		}
 	}
 	if ko.Spec.DefaultUserSettings != nil {
-		if ko.Spec.DefaultUserSettings.SpaceStorageSettings == nil {
-			return true
-		}
-	}
-	if ko.Spec.DefaultUserSettings != nil {
 		if ko.Spec.DefaultUserSettings.StudioWebPortal == nil {
 			return true
 		}
@@ -282,8 +277,53 @@ func (rm *resourceManager) lateInitializeFromReadOneOutput(
 		latestKo.Spec.AppNetworkAccessType = observedKo.Spec.AppNetworkAccessType
 	}
 	if observedKo.Spec.DefaultUserSettings != nil && latestKo.Spec.DefaultUserSettings != nil {
+		if observedKo.Spec.DefaultUserSettings.CodeEditorAppSettings != nil && latestKo.Spec.DefaultUserSettings.CodeEditorAppSettings == nil {
+			latestKo.Spec.DefaultUserSettings.CodeEditorAppSettings = observedKo.Spec.DefaultUserSettings.CodeEditorAppSettings
+		}
+	}
+	if observedKo.Spec.DefaultUserSettings != nil && latestKo.Spec.DefaultUserSettings != nil {
+		if observedKo.Spec.DefaultUserSettings.CustomFileSystemConfigs != nil && latestKo.Spec.DefaultUserSettings.CustomFileSystemConfigs == nil {
+			latestKo.Spec.DefaultUserSettings.CustomFileSystemConfigs = observedKo.Spec.DefaultUserSettings.CustomFileSystemConfigs
+		}
+	}
+	if observedKo.Spec.DefaultUserSettings != nil && latestKo.Spec.DefaultUserSettings != nil {
+		if observedKo.Spec.DefaultUserSettings.CustomPosixUserConfig != nil && latestKo.Spec.DefaultUserSettings.CustomPosixUserConfig == nil {
+			latestKo.Spec.DefaultUserSettings.CustomPosixUserConfig = observedKo.Spec.DefaultUserSettings.CustomPosixUserConfig
+		}
+	}
+	if observedKo.Spec.DefaultUserSettings != nil && latestKo.Spec.DefaultUserSettings != nil {
 		if observedKo.Spec.DefaultUserSettings.DefaultLandingURI != nil && latestKo.Spec.DefaultUserSettings.DefaultLandingURI == nil {
 			latestKo.Spec.DefaultUserSettings.DefaultLandingURI = observedKo.Spec.DefaultUserSettings.DefaultLandingURI
+		}
+	}
+	if observedKo.Spec.DefaultUserSettings != nil && latestKo.Spec.DefaultUserSettings != nil {
+		if observedKo.Spec.DefaultUserSettings.JupyterLabAppSettings != nil && latestKo.Spec.DefaultUserSettings.JupyterLabAppSettings == nil {
+			latestKo.Spec.DefaultUserSettings.JupyterLabAppSettings = observedKo.Spec.DefaultUserSettings.JupyterLabAppSettings
+		}
+	}
+	if observedKo.Spec.DefaultUserSettings != nil && latestKo.Spec.DefaultUserSettings != nil {
+		if observedKo.Spec.DefaultUserSettings.JupyterServerAppSettings != nil && latestKo.Spec.DefaultUserSettings.JupyterServerAppSettings == nil {
+			latestKo.Spec.DefaultUserSettings.JupyterServerAppSettings = observedKo.Spec.DefaultUserSettings.JupyterServerAppSettings
+		}
+	}
+	if observedKo.Spec.DefaultUserSettings != nil && latestKo.Spec.DefaultUserSettings != nil {
+		if observedKo.Spec.DefaultUserSettings.KernelGatewayAppSettings != nil && latestKo.Spec.DefaultUserSettings.KernelGatewayAppSettings == nil {
+			latestKo.Spec.DefaultUserSettings.KernelGatewayAppSettings = observedKo.Spec.DefaultUserSettings.KernelGatewayAppSettings
+		}
+	}
+	if observedKo.Spec.DefaultUserSettings != nil && latestKo.Spec.DefaultUserSettings != nil {
+		if observedKo.Spec.DefaultUserSettings.RStudioServerProAppSettings != nil && latestKo.Spec.DefaultUserSettings.RStudioServerProAppSettings == nil {
+			latestKo.Spec.DefaultUserSettings.RStudioServerProAppSettings = observedKo.Spec.DefaultUserSettings.RStudioServerProAppSettings
+		}
+	}
+	if observedKo.Spec.DefaultUserSettings != nil && latestKo.Spec.DefaultUserSettings != nil {
+		if observedKo.Spec.DefaultUserSettings.SecurityGroups != nil && latestKo.Spec.DefaultUserSettings.SecurityGroups == nil {
+			latestKo.Spec.DefaultUserSettings.SecurityGroups = observedKo.Spec.DefaultUserSettings.SecurityGroups
+		}
+	}
+	if observedKo.Spec.DefaultUserSettings != nil && latestKo.Spec.DefaultUserSettings != nil {
+		if observedKo.Spec.DefaultUserSettings.SharingSettings != nil && latestKo.Spec.DefaultUserSettings.SharingSettings == nil {
+			latestKo.Spec.DefaultUserSettings.SharingSettings = observedKo.Spec.DefaultUserSettings.SharingSettings
 		}
 	}
 	if observedKo.Spec.DefaultUserSettings != nil && latestKo.Spec.DefaultUserSettings != nil {
@@ -294,6 +334,11 @@ func (rm *resourceManager) lateInitializeFromReadOneOutput(
 	if observedKo.Spec.DefaultUserSettings != nil && latestKo.Spec.DefaultUserSettings != nil {
 		if observedKo.Spec.DefaultUserSettings.StudioWebPortal != nil && latestKo.Spec.DefaultUserSettings.StudioWebPortal == nil {
 			latestKo.Spec.DefaultUserSettings.StudioWebPortal = observedKo.Spec.DefaultUserSettings.StudioWebPortal
+		}
+	}
+	if observedKo.Spec.DefaultUserSettings != nil && latestKo.Spec.DefaultUserSettings != nil {
+		if observedKo.Spec.DefaultUserSettings.TensorBoardAppSettings != nil && latestKo.Spec.DefaultUserSettings.TensorBoardAppSettings == nil {
+			latestKo.Spec.DefaultUserSettings.TensorBoardAppSettings = observedKo.Spec.DefaultUserSettings.TensorBoardAppSettings
 		}
 	}
 	return &resource{latestKo}
