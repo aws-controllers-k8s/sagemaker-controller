@@ -16,7 +16,7 @@ import logging
 
 import boto3
 import pytest
-from acktest.k8s import resource as k8s
+from acktest.k8s import resource as k8s, condition
 from acktest.resources import random_suffix_name
 
 from e2e import (
@@ -587,6 +587,9 @@ class TestDomain:
             STUDIO_STATUS_INSERVICE,
         )
 
+        condition.assert_synced(domain_reference)
+        condition.assert_synced(space_reference)
+
     def create_app_user_profile(self, app_user_profile_fixture):
         (
             domain_reference,
@@ -620,6 +623,12 @@ class TestDomain:
             STUDIO_STATUS_INSERVICE,
         )
 
+        condition.assert_synced(domain_reference)
+        condition.assert_synced(user_profile_reference)
+        condition.assert_synced(app_reference)
+
+        
+
     def create_app_space(self, app_space_fixture):
         (
             domain_reference,
@@ -652,6 +661,10 @@ class TestDomain:
             app_reference,
             STUDIO_STATUS_INSERVICE,
         )
+
+        condition.assert_synced(domain_reference)
+        condition.assert_synced(space_reference)
+        condition.assert_synced(app_reference)
 
     def test_studio(self, private_space_fixture, app_user_profile_fixture, app_space_fixture):
         self.create_private_space(private_space_fixture)
