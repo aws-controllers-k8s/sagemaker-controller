@@ -117,15 +117,56 @@ resources:
       AppNetworkAccessType:
         late_initialize:
           min_backoff_seconds: 5
+      DefaultUserSettings.CodeEditorAppSettings:
+        late_initialize:
+          min_backoff_seconds: 5
+          skip_incomplete_check: {}
+      DefaultUserSettings.CustomFileSystemConfigs:
+        late_initialize:
+          min_backoff_seconds: 5
+          skip_incomplete_check: {}
+      DefaultUserSettings.CustomPosixUserConfig:
+        late_initialize:
+          min_backoff_seconds: 5
+          skip_incomplete_check: {}
       DefaultUserSettings.DefaultLandingURI:
         late_initialize:
           min_backoff_seconds: 5
+      DefaultUserSettings.JupyterLabAppSettings:
+        late_initialize:
+          min_backoff_seconds: 5
+          skip_incomplete_check: {}
+      DefaultUserSettings.JupyterServerAppSettings:
+        late_initialize:
+          min_backoff_seconds: 5
+          skip_incomplete_check: {}
+      DefaultUserSettings.KernelGatewayAppSettings:
+        late_initialize:
+          min_backoff_seconds: 5
+          skip_incomplete_check: {}
+      DefaultUserSettings.RStudioServerProAppSettings:
+        late_initialize:
+          min_backoff_seconds: 5
+          skip_incomplete_check: {}
+      DefaultUserSettings.SecurityGroups:
+        late_initialize:
+          min_backoff_seconds: 5
+          skip_incomplete_check: {}
+      DefaultUserSettings.SharingSettings:
+        late_initialize:
+          min_backoff_seconds: 5
+          skip_incomplete_check: {}
       DefaultUserSettings.SpaceStorageSettings:
         late_initialize:
           min_backoff_seconds: 5
+          skip_incomplete_check: {}
       DefaultUserSettings.StudioWebPortal:
         late_initialize:
           min_backoff_seconds: 5
+      DefaultUserSettings.TensorBoardAppSettings:
+        late_initialize:
+          min_backoff_seconds: 5
+          skip_incomplete_check: {}
       Tags:
         compare:
           is_ignored: true
