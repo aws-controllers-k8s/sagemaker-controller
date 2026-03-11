@@ -72,7 +72,6 @@ resources:
       JobDefinitionArn:
         is_arn: true
       JobDefinitionName:
-        is_name: true
         is_primary_key: true
       Tags:
         compare:
@@ -536,7 +535,6 @@ resources:
       JobDefinitionArn:
         is_arn: true
       JobDefinitionName:
-        is_name: true
         is_primary_key: true
       Tags:
         compare:
@@ -556,7 +554,6 @@ resources:
       JobDefinitionArn:
         is_arn: true
       JobDefinitionName:
-        is_name: true
         is_primary_key: true
       Tags:
         compare:
@@ -674,7 +671,6 @@ resources:
       JobDefinitionArn:
         is_arn: true
       JobDefinitionName:
-        is_name: true
         is_primary_key: true
       Tags:
         compare:
