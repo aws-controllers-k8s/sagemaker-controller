@@ -5,3 +5,4 @@ approvers:
 
 reviewers:
   - core-ack-reviewers
+  - sagemaker-ack-team
