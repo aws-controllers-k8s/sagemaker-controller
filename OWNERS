@@ -2,5 +2,6 @@
 
 approvers:
   - core-ack-team
+
 reviewers:
-  - sagemaker-ack-team
+  - core-ack-reviewers
