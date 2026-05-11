@@ -50,7 +50,7 @@ var (
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=featuregroups,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=featuregroups/status,verbs=get;update;patch
 
-var lateInitializeFieldNames = []string{"OfflineStoreConfig.DisableGlueTableCreation", "OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3URI"}
+var lateInitializeFieldNames = []string{"OfflineStoreConfig.DisableGlueTableCreation", "OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3URI", "ThroughputConfig"}
 
 // resourceManager is responsible for providing a consistent way to perform
 // CRUD operations in a backend AWS service API for Book custom resources.
@@ -283,6 +283,9 @@ func (rm *resourceManager) lateInitializeFromReadOneOutput(
 				latestKo.Spec.OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3URI = observedKo.Spec.OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3URI
 			}
 		}
+	}
+	if observedKo.Spec.ThroughputConfig != nil && latestKo.Spec.ThroughputConfig == nil {
+		latestKo.Spec.ThroughputConfig = observedKo.Spec.ThroughputConfig
 	}
 	return &resource{latestKo}
 }

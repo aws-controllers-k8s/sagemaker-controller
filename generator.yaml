@@ -302,6 +302,9 @@ resources:
       OfflineStoreConfig.S3StorageConfig.ResolvedOutputS3URI:
         late_initialize:
           min_backoff_seconds: 5
+      ThroughputConfig:
+        late_initialize:
+          skip_incomplete_check: {}
       Tags:
         compare:
           is_ignored: true
