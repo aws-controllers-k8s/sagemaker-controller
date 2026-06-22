@@ -50,7 +50,7 @@ var (
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=domains,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=domains/status,verbs=get;update;patch
 
-var lateInitializeFieldNames = []string{"AppNetworkAccessType", "DefaultUserSettings.CodeEditorAppSettings", "DefaultUserSettings.CustomFileSystemConfigs", "DefaultUserSettings.CustomPosixUserConfig", "DefaultUserSettings.DefaultLandingURI", "DefaultUserSettings.JupyterLabAppSettings", "DefaultUserSettings.JupyterServerAppSettings", "DefaultUserSettings.KernelGatewayAppSettings", "DefaultUserSettings.RStudioServerProAppSettings", "DefaultUserSettings.SecurityGroups", "DefaultUserSettings.SharingSettings", "DefaultUserSettings.SpaceStorageSettings", "DefaultUserSettings.StudioWebPortal", "DefaultUserSettings.TensorBoardAppSettings"}
+var lateInitializeFieldNames = []string{"AppNetworkAccessType", "CodeEditorAppSettings", "CustomFileSystemConfigs", "CustomPosixUserConfig", "DefaultLandingURI", "JupyterLabAppSettings", "JupyterServerAppSettings", "KernelGatewayAppSettings", "RStudioServerProAppSettings", "SecurityGroups", "SharingSettings", "SpaceStorageSettings", "StudioWebPortal", "TensorBoardAppSettings"}
 
 // resourceManager is responsible for providing a consistent way to perform
 // CRUD operations in a backend AWS service API for Book custom resources.
