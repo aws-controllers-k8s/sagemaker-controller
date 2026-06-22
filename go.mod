@@ -3,7 +3,7 @@ module github.com/aws-controllers-k8s/sagemaker-controller
 go 1.25.0
 
 require (
-	github.com/aws-controllers-k8s/runtime v0.59.1
+	github.com/aws-controllers-k8s/runtime v0.59.2-0.20260617181621-38bd4c967a01
 	github.com/aws/aws-sdk-go v1.55.6
 	github.com/aws/aws-sdk-go-v2 v1.39.2
 	github.com/aws/aws-sdk-go-v2/service/sagemaker v1.215.3

@@ -50,7 +50,7 @@ var (
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=hyperparametertuningjobs,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=hyperparametertuningjobs/status,verbs=get;update;patch
 
-var lateInitializeFieldNames = []string{"TrainingJobDefinition.AlgorithmSpecification.MetricDefinitions", "TrainingJobDefinition.EnableInterContainerTrafficEncryption", "TrainingJobDefinition.EnableManagedSpotTraining", "TrainingJobDefinition.EnableNetworkIsolation", "TrainingJobDefinition.ResourceConfig.InstanceCount"}
+var lateInitializeFieldNames = []string{"MetricDefinitions", "EnableInterContainerTrafficEncryption", "EnableManagedSpotTraining", "EnableNetworkIsolation", "InstanceCount"}
 
 // resourceManager is responsible for providing a consistent way to perform
 // CRUD operations in a backend AWS service API for Book custom resources.
