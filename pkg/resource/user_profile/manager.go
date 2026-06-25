@@ -50,7 +50,7 @@ var (
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=userprofiles,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=sagemaker.services.k8s.aws,resources=userprofiles/status,verbs=get;update;patch
 
-var lateInitializeFieldNames = []string{"UserSettings.SpaceStorageSettings"}
+var lateInitializeFieldNames = []string{"SpaceStorageSettings"}
 
 // resourceManager is responsible for providing a consistent way to perform
 // CRUD operations in a backend AWS service API for Book custom resources.
