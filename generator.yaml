@@ -845,6 +845,8 @@ resources:
           is_ignored: true
   Pipeline:
     fields:
+      PipelineDefinition:
+        is_document: true
       PipelineStatus:
         is_read_only: true
         print:
