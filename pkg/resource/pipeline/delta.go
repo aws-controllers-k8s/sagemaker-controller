@@ -55,7 +55,7 @@ func newResourceDelta(
 	if ackcompare.HasNilDifference(a.ko.Spec.PipelineDefinition, b.ko.Spec.PipelineDefinition) {
 		delta.Add("Spec.PipelineDefinition", a.ko.Spec.PipelineDefinition, b.ko.Spec.PipelineDefinition)
 	} else if a.ko.Spec.PipelineDefinition != nil && b.ko.Spec.PipelineDefinition != nil {
-		if *a.ko.Spec.PipelineDefinition != *b.ko.Spec.PipelineDefinition {
+		if equal, err := ackcompare.DocumentEqual(*a.ko.Spec.PipelineDefinition, *b.ko.Spec.PipelineDefinition); err != nil || !equal {
 			delta.Add("Spec.PipelineDefinition", a.ko.Spec.PipelineDefinition, b.ko.Spec.PipelineDefinition)
 		}
 	}

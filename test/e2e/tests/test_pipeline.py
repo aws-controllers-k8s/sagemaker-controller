@@ -163,6 +163,16 @@ class TestPipeline:
         assert old_pipeline_last_modified_time != pipeline_desc["LastModifiedTime"]
         assert resource["status"].get("lastModifiedTime") != old_pipeline_last_modified_time
 
+        # Update pipelineDefinition to verify is_document comparison works
+        new_definition = '{"Version":"2020-12-01","Metadata":{},"Parameters":[],"Steps":[{"Name":"MyPassStep","Type":"Pass","Arguments":{}}]}'
+        spec["spec"]["pipelineDefinition"] = new_definition
+        resource = k8s.patch_custom_resource(reference, spec)
+        resource = k8s.wait_resource_consumed_by_controller(reference)
+        assert resource is not None
+        assert k8s.wait_on_condition(
+            reference, ack_condition.CONDITION_TYPE_RESOURCE_SYNCED, "True"
+        )
+
         resource_tags = resource["spec"].get("tags", None)
         assert_tags_in_sync(pipeline_arn, resource_tags)
 
