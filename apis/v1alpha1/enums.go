@@ -15,11 +15,110 @@
 
 package v1alpha1
 
+type AIBenchmarkJobStatus string
+
+const (
+	AIBenchmarkJobStatus_Completed  AIBenchmarkJobStatus = "Completed"
+	AIBenchmarkJobStatus_Failed     AIBenchmarkJobStatus = "Failed"
+	AIBenchmarkJobStatus_InProgress AIBenchmarkJobStatus = "InProgress"
+	AIBenchmarkJobStatus_Stopped    AIBenchmarkJobStatus = "Stopped"
+	AIBenchmarkJobStatus_Stopping   AIBenchmarkJobStatus = "Stopping"
+)
+
+type AICapacityReservationPreference string
+
+const (
+	AICapacityReservationPreference_capacity_reservations_only AICapacityReservationPreference = "capacity-reservations-only"
+)
+
+type AIRecommendationInferenceFramework string
+
+const (
+	AIRecommendationInferenceFramework_LMI  AIRecommendationInferenceFramework = "LMI"
+	AIRecommendationInferenceFramework_VLLM AIRecommendationInferenceFramework = "VLLM"
+)
+
+type AIRecommendationInstanceType string
+
+const (
+	AIRecommendationInstanceType_ml_g5_12xlarge   AIRecommendationInstanceType = "ml.g5.12xlarge"
+	AIRecommendationInstanceType_ml_g5_16xlarge   AIRecommendationInstanceType = "ml.g5.16xlarge"
+	AIRecommendationInstanceType_ml_g5_24xlarge   AIRecommendationInstanceType = "ml.g5.24xlarge"
+	AIRecommendationInstanceType_ml_g5_2xlarge    AIRecommendationInstanceType = "ml.g5.2xlarge"
+	AIRecommendationInstanceType_ml_g5_48xlarge   AIRecommendationInstanceType = "ml.g5.48xlarge"
+	AIRecommendationInstanceType_ml_g5_4xlarge    AIRecommendationInstanceType = "ml.g5.4xlarge"
+	AIRecommendationInstanceType_ml_g5_8xlarge    AIRecommendationInstanceType = "ml.g5.8xlarge"
+	AIRecommendationInstanceType_ml_g5_xlarge     AIRecommendationInstanceType = "ml.g5.xlarge"
+	AIRecommendationInstanceType_ml_g6_12xlarge   AIRecommendationInstanceType = "ml.g6.12xlarge"
+	AIRecommendationInstanceType_ml_g6_16xlarge   AIRecommendationInstanceType = "ml.g6.16xlarge"
+	AIRecommendationInstanceType_ml_g6_24xlarge   AIRecommendationInstanceType = "ml.g6.24xlarge"
+	AIRecommendationInstanceType_ml_g6_2xlarge    AIRecommendationInstanceType = "ml.g6.2xlarge"
+	AIRecommendationInstanceType_ml_g6_48xlarge   AIRecommendationInstanceType = "ml.g6.48xlarge"
+	AIRecommendationInstanceType_ml_g6_4xlarge    AIRecommendationInstanceType = "ml.g6.4xlarge"
+	AIRecommendationInstanceType_ml_g6_8xlarge    AIRecommendationInstanceType = "ml.g6.8xlarge"
+	AIRecommendationInstanceType_ml_g6_xlarge     AIRecommendationInstanceType = "ml.g6.xlarge"
+	AIRecommendationInstanceType_ml_g6e_12xlarge  AIRecommendationInstanceType = "ml.g6e.12xlarge"
+	AIRecommendationInstanceType_ml_g6e_16xlarge  AIRecommendationInstanceType = "ml.g6e.16xlarge"
+	AIRecommendationInstanceType_ml_g6e_24xlarge  AIRecommendationInstanceType = "ml.g6e.24xlarge"
+	AIRecommendationInstanceType_ml_g6e_2xlarge   AIRecommendationInstanceType = "ml.g6e.2xlarge"
+	AIRecommendationInstanceType_ml_g6e_48xlarge  AIRecommendationInstanceType = "ml.g6e.48xlarge"
+	AIRecommendationInstanceType_ml_g6e_4xlarge   AIRecommendationInstanceType = "ml.g6e.4xlarge"
+	AIRecommendationInstanceType_ml_g6e_8xlarge   AIRecommendationInstanceType = "ml.g6e.8xlarge"
+	AIRecommendationInstanceType_ml_g6e_xlarge    AIRecommendationInstanceType = "ml.g6e.xlarge"
+	AIRecommendationInstanceType_ml_g7e_12xlarge  AIRecommendationInstanceType = "ml.g7e.12xlarge"
+	AIRecommendationInstanceType_ml_g7e_24xlarge  AIRecommendationInstanceType = "ml.g7e.24xlarge"
+	AIRecommendationInstanceType_ml_g7e_2xlarge   AIRecommendationInstanceType = "ml.g7e.2xlarge"
+	AIRecommendationInstanceType_ml_g7e_48xlarge  AIRecommendationInstanceType = "ml.g7e.48xlarge"
+	AIRecommendationInstanceType_ml_g7e_4xlarge   AIRecommendationInstanceType = "ml.g7e.4xlarge"
+	AIRecommendationInstanceType_ml_g7e_8xlarge   AIRecommendationInstanceType = "ml.g7e.8xlarge"
+	AIRecommendationInstanceType_ml_p3_16xlarge   AIRecommendationInstanceType = "ml.p3.16xlarge"
+	AIRecommendationInstanceType_ml_p3_2xlarge    AIRecommendationInstanceType = "ml.p3.2xlarge"
+	AIRecommendationInstanceType_ml_p3_8xlarge    AIRecommendationInstanceType = "ml.p3.8xlarge"
+	AIRecommendationInstanceType_ml_p4d_24xlarge  AIRecommendationInstanceType = "ml.p4d.24xlarge"
+	AIRecommendationInstanceType_ml_p4de_24xlarge AIRecommendationInstanceType = "ml.p4de.24xlarge"
+	AIRecommendationInstanceType_ml_p5_48xlarge   AIRecommendationInstanceType = "ml.p5.48xlarge"
+	AIRecommendationInstanceType_ml_p5_4xlarge    AIRecommendationInstanceType = "ml.p5.4xlarge"
+	AIRecommendationInstanceType_ml_p5e_48xlarge  AIRecommendationInstanceType = "ml.p5e.48xlarge"
+	AIRecommendationInstanceType_ml_p5en_48xlarge AIRecommendationInstanceType = "ml.p5en.48xlarge"
+)
+
+type AIRecommendationJobStatus string
+
+const (
+	AIRecommendationJobStatus_Completed  AIRecommendationJobStatus = "Completed"
+	AIRecommendationJobStatus_Failed     AIRecommendationJobStatus = "Failed"
+	AIRecommendationJobStatus_InProgress AIRecommendationJobStatus = "InProgress"
+	AIRecommendationJobStatus_Stopped    AIRecommendationJobStatus = "Stopped"
+	AIRecommendationJobStatus_Stopping   AIRecommendationJobStatus = "Stopping"
+)
+
+type AIRecommendationMetric string
+
+const (
+	AIRecommendationMetric_cost       AIRecommendationMetric = "cost"
+	AIRecommendationMetric_throughput AIRecommendationMetric = "throughput"
+	AIRecommendationMetric_ttft_ms    AIRecommendationMetric = "ttft-ms"
+)
+
+type AIRecommendationOptimizationType string
+
+const (
+	AIRecommendationOptimizationType_KernelTuning        AIRecommendationOptimizationType = "KernelTuning"
+	AIRecommendationOptimizationType_SpeculativeDecoding AIRecommendationOptimizationType = "SpeculativeDecoding"
+)
+
 type AWSManagedHumanLoopRequestSource string
 
 const (
 	AWSManagedHumanLoopRequestSource_AWS_Rekognition_DetectModerationLabels_Image_V3 AWSManagedHumanLoopRequestSource = "AWS/Rekognition/DetectModerationLabels/Image/V3"
 	AWSManagedHumanLoopRequestSource_AWS_Textract_AnalyzeDocument_Forms_V1           AWSManagedHumanLoopRequestSource = "AWS/Textract/AnalyzeDocument/Forms/V1"
+)
+
+type AccountDefaultStatus string
+
+const (
+	AccountDefaultStatus_DISABLED AccountDefaultStatus = "DISABLED"
+	AccountDefaultStatus_ENABLED  AccountDefaultStatus = "ENABLED"
 )
 
 type ActionStatus string
@@ -38,6 +137,12 @@ type ActivationState string
 const (
 	ActivationState_Disabled ActivationState = "Disabled"
 	ActivationState_Enabled  ActivationState = "Enabled"
+)
+
+type ActiveClusterOperationName string
+
+const (
+	ActiveClusterOperationName_Scaling ActiveClusterOperationName = "Scaling"
 )
 
 type AdditionalS3DataSourceDataType string
@@ -535,11 +640,19 @@ const (
 	AutotuneMode_Enabled AutotuneMode = "Enabled"
 )
 
+type AvailabilityZoneBalanceEnforcementMode string
+
+const (
+	AvailabilityZoneBalanceEnforcementMode_PERMISSIVE AvailabilityZoneBalanceEnforcementMode = "PERMISSIVE"
+)
+
 type BatchAddClusterNodesErrorCode string
 
 const (
-	BatchAddClusterNodesErrorCode_InstanceGroupNotFound      BatchAddClusterNodesErrorCode = "InstanceGroupNotFound"
-	BatchAddClusterNodesErrorCode_InvalidInstanceGroupStatus BatchAddClusterNodesErrorCode = "InvalidInstanceGroupStatus"
+	BatchAddClusterNodesErrorCode_IncompatibleAvailabilityZones BatchAddClusterNodesErrorCode = "IncompatibleAvailabilityZones"
+	BatchAddClusterNodesErrorCode_IncompatibleInstanceTypes     BatchAddClusterNodesErrorCode = "IncompatibleInstanceTypes"
+	BatchAddClusterNodesErrorCode_InstanceGroupNotFound         BatchAddClusterNodesErrorCode = "InstanceGroupNotFound"
+	BatchAddClusterNodesErrorCode_InvalidInstanceGroupStatus    BatchAddClusterNodesErrorCode = "InvalidInstanceGroupStatus"
 )
 
 type BatchDeleteClusterNodesErrorCode string
@@ -548,6 +661,24 @@ const (
 	BatchDeleteClusterNodesErrorCode_InvalidNodeStatus BatchDeleteClusterNodesErrorCode = "InvalidNodeStatus"
 	BatchDeleteClusterNodesErrorCode_NodeIdInUse       BatchDeleteClusterNodesErrorCode = "NodeIdInUse"
 	BatchDeleteClusterNodesErrorCode_NodeIdNotFound    BatchDeleteClusterNodesErrorCode = "NodeIdNotFound"
+)
+
+type BatchRebootClusterNodesErrorCode string
+
+const (
+	BatchRebootClusterNodesErrorCode_InstanceIdInUse       BatchRebootClusterNodesErrorCode = "InstanceIdInUse"
+	BatchRebootClusterNodesErrorCode_InstanceIdNotFound    BatchRebootClusterNodesErrorCode = "InstanceIdNotFound"
+	BatchRebootClusterNodesErrorCode_InternalServerError   BatchRebootClusterNodesErrorCode = "InternalServerError"
+	BatchRebootClusterNodesErrorCode_InvalidInstanceStatus BatchRebootClusterNodesErrorCode = "InvalidInstanceStatus"
+)
+
+type BatchReplaceClusterNodesErrorCode string
+
+const (
+	BatchReplaceClusterNodesErrorCode_InstanceIdInUse       BatchReplaceClusterNodesErrorCode = "InstanceIdInUse"
+	BatchReplaceClusterNodesErrorCode_InstanceIdNotFound    BatchReplaceClusterNodesErrorCode = "InstanceIdNotFound"
+	BatchReplaceClusterNodesErrorCode_InternalServerError   BatchReplaceClusterNodesErrorCode = "InternalServerError"
+	BatchReplaceClusterNodesErrorCode_InvalidInstanceStatus BatchReplaceClusterNodesErrorCode = "InvalidInstanceStatus"
 )
 
 type BatchStrategy string
@@ -728,6 +859,13 @@ const (
 	ClusterAutoScalingStatus_InService ClusterAutoScalingStatus = "InService"
 )
 
+type ClusterCapacityType string
+
+const (
+	ClusterCapacityType_OnDemand ClusterCapacityType = "OnDemand"
+	ClusterCapacityType_Spot     ClusterCapacityType = "Spot"
+)
+
 type ClusterConfigMode string
 
 const (
@@ -804,6 +942,12 @@ const (
 	ClusterInstanceType_ml_g6e_4xlarge        ClusterInstanceType = "ml.g6e.4xlarge"
 	ClusterInstanceType_ml_g6e_8xlarge        ClusterInstanceType = "ml.g6e.8xlarge"
 	ClusterInstanceType_ml_g6e_xlarge         ClusterInstanceType = "ml.g6e.xlarge"
+	ClusterInstanceType_ml_g7e_12xlarge       ClusterInstanceType = "ml.g7e.12xlarge"
+	ClusterInstanceType_ml_g7e_24xlarge       ClusterInstanceType = "ml.g7e.24xlarge"
+	ClusterInstanceType_ml_g7e_2xlarge        ClusterInstanceType = "ml.g7e.2xlarge"
+	ClusterInstanceType_ml_g7e_48xlarge       ClusterInstanceType = "ml.g7e.48xlarge"
+	ClusterInstanceType_ml_g7e_4xlarge        ClusterInstanceType = "ml.g7e.4xlarge"
+	ClusterInstanceType_ml_g7e_8xlarge        ClusterInstanceType = "ml.g7e.8xlarge"
 	ClusterInstanceType_ml_gr6_4xlarge        ClusterInstanceType = "ml.gr6.4xlarge"
 	ClusterInstanceType_ml_gr6_8xlarge        ClusterInstanceType = "ml.gr6.8xlarge"
 	ClusterInstanceType_ml_i3en_12xlarge      ClusterInstanceType = "ml.i3en.12xlarge"
@@ -842,10 +986,13 @@ const (
 	ClusterInstanceType_ml_p4d_24xlarge       ClusterInstanceType = "ml.p4d.24xlarge"
 	ClusterInstanceType_ml_p4de_24xlarge      ClusterInstanceType = "ml.p4de.24xlarge"
 	ClusterInstanceType_ml_p5_48xlarge        ClusterInstanceType = "ml.p5.48xlarge"
+	ClusterInstanceType_ml_p5_4xlarge         ClusterInstanceType = "ml.p5.4xlarge"
 	ClusterInstanceType_ml_p5e_48xlarge       ClusterInstanceType = "ml.p5e.48xlarge"
 	ClusterInstanceType_ml_p5en_48xlarge      ClusterInstanceType = "ml.p5en.48xlarge"
 	ClusterInstanceType_ml_p6_b200_48xlarge   ClusterInstanceType = "ml.p6-b200.48xlarge"
+	ClusterInstanceType_ml_p6_b300_48xlarge   ClusterInstanceType = "ml.p6-b300.48xlarge"
 	ClusterInstanceType_ml_p6e_gb200_36xlarge ClusterInstanceType = "ml.p6e-gb200.36xlarge"
+	ClusterInstanceType_ml_r5d_16xlarge       ClusterInstanceType = "ml.r5d.16xlarge"
 	ClusterInstanceType_ml_r6i_12xlarge       ClusterInstanceType = "ml.r6i.12xlarge"
 	ClusterInstanceType_ml_r6i_16xlarge       ClusterInstanceType = "ml.r6i.16xlarge"
 	ClusterInstanceType_ml_r6i_24xlarge       ClusterInstanceType = "ml.r6i.24xlarge"
@@ -870,7 +1017,23 @@ const (
 	ClusterInstanceType_ml_t3_xlarge          ClusterInstanceType = "ml.t3.xlarge"
 	ClusterInstanceType_ml_trn1_32xlarge      ClusterInstanceType = "ml.trn1.32xlarge"
 	ClusterInstanceType_ml_trn1n_32xlarge     ClusterInstanceType = "ml.trn1n.32xlarge"
+	ClusterInstanceType_ml_trn2_3xlarge       ClusterInstanceType = "ml.trn2.3xlarge"
 	ClusterInstanceType_ml_trn2_48xlarge      ClusterInstanceType = "ml.trn2.48xlarge"
+)
+
+type ClusterInterfaceType string
+
+const (
+	ClusterInterfaceType_efa      ClusterInterfaceType = "efa"
+	ClusterInterfaceType_efa_only ClusterInterfaceType = "efa-only"
+)
+
+type ClusterKubernetesTaintEffect string
+
+const (
+	ClusterKubernetesTaintEffect_NoExecute        ClusterKubernetesTaintEffect = "NoExecute"
+	ClusterKubernetesTaintEffect_NoSchedule       ClusterKubernetesTaintEffect = "NoSchedule"
+	ClusterKubernetesTaintEffect_PreferNoSchedule ClusterKubernetesTaintEffect = "PreferNoSchedule"
 )
 
 type ClusterNodeProvisioningMode string
@@ -884,6 +1047,22 @@ type ClusterNodeRecovery string
 const (
 	ClusterNodeRecovery_Automatic ClusterNodeRecovery = "Automatic"
 	ClusterNodeRecovery_None      ClusterNodeRecovery = "None"
+)
+
+type ClusterSlurmConfigStrategy string
+
+const (
+	ClusterSlurmConfigStrategy_Managed   ClusterSlurmConfigStrategy = "Managed"
+	ClusterSlurmConfigStrategy_Merge     ClusterSlurmConfigStrategy = "Merge"
+	ClusterSlurmConfigStrategy_Overwrite ClusterSlurmConfigStrategy = "Overwrite"
+)
+
+type ClusterSlurmNodeType string
+
+const (
+	ClusterSlurmNodeType_Compute    ClusterSlurmNodeType = "Compute"
+	ClusterSlurmNodeType_Controller ClusterSlurmNodeType = "Controller"
+	ClusterSlurmNodeType_Login      ClusterSlurmNodeType = "Login"
 )
 
 type ClusterSortBy string
@@ -979,6 +1158,15 @@ type CrossAccountFilterOption string
 const (
 	CrossAccountFilterOption_CrossAccount CrossAccountFilterOption = "CrossAccount"
 	CrossAccountFilterOption_SameAccount  CrossAccountFilterOption = "SameAccount"
+)
+
+type CustomizationTechnique string
+
+const (
+	CustomizationTechnique_DPO   CustomizationTechnique = "DPO"
+	CustomizationTechnique_RLAIF CustomizationTechnique = "RLAIF"
+	CustomizationTechnique_RLVR  CustomizationTechnique = "RLVR"
+	CustomizationTechnique_SFT   CustomizationTechnique = "SFT"
 )
 
 type DataDistributionType string
@@ -1126,6 +1314,14 @@ const (
 	EndpointStatus_SDK_Updating             EndpointStatus_SDK = "Updating"
 )
 
+type EvaluationType string
+
+const (
+	EvaluationType_BenchmarkEvaluation    EvaluationType = "BenchmarkEvaluation"
+	EvaluationType_CustomScorerEvaluation EvaluationType = "CustomScorerEvaluation"
+	EvaluationType_LLMAJEvaluation        EvaluationType = "LLMAJEvaluation"
+)
+
 type EventSortBy string
 
 const (
@@ -1267,11 +1463,13 @@ const (
 type HubContentStatus string
 
 const (
-	HubContentStatus_Available    HubContentStatus = "Available"
-	HubContentStatus_DeleteFailed HubContentStatus = "DeleteFailed"
-	HubContentStatus_Deleting     HubContentStatus = "Deleting"
-	HubContentStatus_ImportFailed HubContentStatus = "ImportFailed"
-	HubContentStatus_Importing    HubContentStatus = "Importing"
+	HubContentStatus_Available     HubContentStatus = "Available"
+	HubContentStatus_DeleteFailed  HubContentStatus = "DeleteFailed"
+	HubContentStatus_Deleting      HubContentStatus = "Deleting"
+	HubContentStatus_ImportFailed  HubContentStatus = "ImportFailed"
+	HubContentStatus_Importing     HubContentStatus = "Importing"
+	HubContentStatus_PendingDelete HubContentStatus = "PendingDelete"
+	HubContentStatus_PendingImport HubContentStatus = "PendingImport"
 )
 
 type HubContentSupportStatus string
@@ -1285,6 +1483,8 @@ const (
 type HubContentType string
 
 const (
+	HubContentType_DataSet        HubContentType = "DataSet"
+	HubContentType_JsonDoc        HubContentType = "JsonDoc"
 	HubContentType_Model          HubContentType = "Model"
 	HubContentType_ModelReference HubContentType = "ModelReference"
 	HubContentType_Notebook       HubContentType = "Notebook"
@@ -1383,6 +1583,13 @@ const (
 	IPAddressType_ipv4      IPAddressType = "ipv4"
 )
 
+type IdleResourceSharing string
+
+const (
+	IdleResourceSharing_Disabled IdleResourceSharing = "Disabled"
+	IdleResourceSharing_Enabled  IdleResourceSharing = "Enabled"
+)
+
 type ImageSortBy string
 
 const (
@@ -1440,6 +1647,13 @@ type InferenceComponentCapacitySizeType string
 const (
 	InferenceComponentCapacitySizeType_CAPACITY_PERCENT InferenceComponentCapacitySizeType = "CAPACITY_PERCENT"
 	InferenceComponentCapacitySizeType_COPY_COUNT       InferenceComponentCapacitySizeType = "COPY_COUNT"
+)
+
+type InferenceComponentPlacementStrategy string
+
+const (
+	InferenceComponentPlacementStrategy_BINPACK InferenceComponentPlacementStrategy = "BINPACK"
+	InferenceComponentPlacementStrategy_SPREAD  InferenceComponentPlacementStrategy = "SPREAD"
 )
 
 type InferenceComponentSortKey string
@@ -1747,6 +1961,29 @@ const (
 	LineageType_TrialComponent LineageType = "TrialComponent"
 )
 
+type ListAIBenchmarkJobsSortBy string
+
+const (
+	ListAIBenchmarkJobsSortBy_CreationTime ListAIBenchmarkJobsSortBy = "CreationTime"
+	ListAIBenchmarkJobsSortBy_Name         ListAIBenchmarkJobsSortBy = "Name"
+	ListAIBenchmarkJobsSortBy_Status       ListAIBenchmarkJobsSortBy = "Status"
+)
+
+type ListAIRecommendationJobsSortBy string
+
+const (
+	ListAIRecommendationJobsSortBy_CreationTime ListAIRecommendationJobsSortBy = "CreationTime"
+	ListAIRecommendationJobsSortBy_Name         ListAIRecommendationJobsSortBy = "Name"
+	ListAIRecommendationJobsSortBy_Status       ListAIRecommendationJobsSortBy = "Status"
+)
+
+type ListAIWorkloadConfigsSortBy string
+
+const (
+	ListAIWorkloadConfigsSortBy_CreationTime ListAIWorkloadConfigsSortBy = "CreationTime"
+	ListAIWorkloadConfigsSortBy_Name         ListAIWorkloadConfigsSortBy = "Name"
+)
+
 type ListCompilationJobsSortBy string
 
 const (
@@ -1818,6 +2055,54 @@ const (
 	ListWorkteamsSortByOptions_Name       ListWorkteamsSortByOptions = "Name"
 )
 
+type MIGProfileType string
+
+const (
+	MIGProfileType_mig_1g_10gb  MIGProfileType = "mig-1g.10gb"
+	MIGProfileType_mig_1g_18gb  MIGProfileType = "mig-1g.18gb"
+	MIGProfileType_mig_1g_20gb  MIGProfileType = "mig-1g.20gb"
+	MIGProfileType_mig_1g_23gb  MIGProfileType = "mig-1g.23gb"
+	MIGProfileType_mig_1g_35gb  MIGProfileType = "mig-1g.35gb"
+	MIGProfileType_mig_1g_45gb  MIGProfileType = "mig-1g.45gb"
+	MIGProfileType_mig_1g_47gb  MIGProfileType = "mig-1g.47gb"
+	MIGProfileType_mig_1g_5gb   MIGProfileType = "mig-1g.5gb"
+	MIGProfileType_mig_2g_10gb  MIGProfileType = "mig-2g.10gb"
+	MIGProfileType_mig_2g_20gb  MIGProfileType = "mig-2g.20gb"
+	MIGProfileType_mig_2g_35gb  MIGProfileType = "mig-2g.35gb"
+	MIGProfileType_mig_2g_45gb  MIGProfileType = "mig-2g.45gb"
+	MIGProfileType_mig_2g_47gb  MIGProfileType = "mig-2g.47gb"
+	MIGProfileType_mig_3g_20gb  MIGProfileType = "mig-3g.20gb"
+	MIGProfileType_mig_3g_40gb  MIGProfileType = "mig-3g.40gb"
+	MIGProfileType_mig_3g_71gb  MIGProfileType = "mig-3g.71gb"
+	MIGProfileType_mig_3g_90gb  MIGProfileType = "mig-3g.90gb"
+	MIGProfileType_mig_3g_93gb  MIGProfileType = "mig-3g.93gb"
+	MIGProfileType_mig_4g_20gb  MIGProfileType = "mig-4g.20gb"
+	MIGProfileType_mig_4g_40gb  MIGProfileType = "mig-4g.40gb"
+	MIGProfileType_mig_4g_71gb  MIGProfileType = "mig-4g.71gb"
+	MIGProfileType_mig_4g_90gb  MIGProfileType = "mig-4g.90gb"
+	MIGProfileType_mig_4g_93gb  MIGProfileType = "mig-4g.93gb"
+	MIGProfileType_mig_7g_141gb MIGProfileType = "mig-7g.141gb"
+	MIGProfileType_mig_7g_180gb MIGProfileType = "mig-7g.180gb"
+	MIGProfileType_mig_7g_186gb MIGProfileType = "mig-7g.186gb"
+	MIGProfileType_mig_7g_40gb  MIGProfileType = "mig-7g.40gb"
+	MIGProfileType_mig_7g_80gb  MIGProfileType = "mig-7g.80gb"
+)
+
+type MaintenanceStatus string
+
+const (
+	MaintenanceStatus_MaintenanceComplete   MaintenanceStatus = "MaintenanceComplete"
+	MaintenanceStatus_MaintenanceFailed     MaintenanceStatus = "MaintenanceFailed"
+	MaintenanceStatus_MaintenanceInProgress MaintenanceStatus = "MaintenanceInProgress"
+)
+
+type ManagedInstanceScalingScaleInStrategy string
+
+const (
+	ManagedInstanceScalingScaleInStrategy_CONSOLIDATION ManagedInstanceScalingScaleInStrategy = "CONSOLIDATION"
+	ManagedInstanceScalingScaleInStrategy_IDLE_RELEASE  ManagedInstanceScalingScaleInStrategy = "IDLE_RELEASE"
+)
+
 type ManagedInstanceScalingStatus string
 
 const (
@@ -1839,9 +2124,11 @@ const (
 	MlTools_AutoMl                  MlTools = "AutoMl"
 	MlTools_Comet                   MlTools = "Comet"
 	MlTools_DataWrangler            MlTools = "DataWrangler"
+	MlTools_Datasets                MlTools = "Datasets"
 	MlTools_DeepchecksLLMEvaluation MlTools = "DeepchecksLLMEvaluation"
 	MlTools_EmrClusters             MlTools = "EmrClusters"
 	MlTools_Endpoints               MlTools = "Endpoints"
+	MlTools_Evaluators              MlTools = "Evaluators"
 	MlTools_Experiments             MlTools = "Experiments"
 	MlTools_FeatureStore            MlTools = "FeatureStore"
 	MlTools_Fiddler                 MlTools = "Fiddler"
@@ -1855,7 +2142,22 @@ const (
 	MlTools_PerformanceEvaluation   MlTools = "PerformanceEvaluation"
 	MlTools_Pipelines               MlTools = "Pipelines"
 	MlTools_Projects                MlTools = "Projects"
+	MlTools_RunningInstances        MlTools = "RunningInstances"
 	MlTools_Training                MlTools = "Training"
+)
+
+type MlflowAppStatus string
+
+const (
+	MlflowAppStatus_CreateFailed MlflowAppStatus = "CreateFailed"
+	MlflowAppStatus_Created      MlflowAppStatus = "Created"
+	MlflowAppStatus_Creating     MlflowAppStatus = "Creating"
+	MlflowAppStatus_DeleteFailed MlflowAppStatus = "DeleteFailed"
+	MlflowAppStatus_Deleted      MlflowAppStatus = "Deleted"
+	MlflowAppStatus_Deleting     MlflowAppStatus = "Deleting"
+	MlflowAppStatus_UpdateFailed MlflowAppStatus = "UpdateFailed"
+	MlflowAppStatus_Updated      MlflowAppStatus = "Updated"
+	MlflowAppStatus_Updating     MlflowAppStatus = "Updating"
 )
 
 type ModelApprovalStatus string
@@ -1976,6 +2278,13 @@ const (
 	ModelPackageGroupStatus_SDK_Pending      ModelPackageGroupStatus_SDK = "Pending"
 )
 
+type ModelPackageRegistrationType string
+
+const (
+	ModelPackageRegistrationType_Logged     ModelPackageRegistrationType = "Logged"
+	ModelPackageRegistrationType_Registered ModelPackageRegistrationType = "Registered"
+)
+
 type ModelPackageSortBy string
 
 const (
@@ -2001,11 +2310,31 @@ const (
 	ModelPackageType_Versioned   ModelPackageType = "Versioned"
 )
 
+type ModelRegistrationMode string
+
+const (
+	ModelRegistrationMode_AutoModelRegistrationDisabled ModelRegistrationMode = "AutoModelRegistrationDisabled"
+	ModelRegistrationMode_AutoModelRegistrationEnabled  ModelRegistrationMode = "AutoModelRegistrationEnabled"
+)
+
 type ModelSortKey string
 
 const (
 	ModelSortKey_CreationTime ModelSortKey = "CreationTime"
 	ModelSortKey_Name         ModelSortKey = "Name"
+)
+
+type ModelSpeculativeDecodingS3DataType string
+
+const (
+	ModelSpeculativeDecodingS3DataType_ManifestFile ModelSpeculativeDecodingS3DataType = "ManifestFile"
+	ModelSpeculativeDecodingS3DataType_S3Prefix     ModelSpeculativeDecodingS3DataType = "S3Prefix"
+)
+
+type ModelSpeculativeDecodingTechnique string
+
+const (
+	ModelSpeculativeDecodingTechnique_EAGLE ModelSpeculativeDecodingTechnique = "EAGLE"
 )
 
 type ModelVariantAction string
@@ -2181,6 +2510,12 @@ const (
 type OptimizationJobDeploymentInstanceType string
 
 const (
+	OptimizationJobDeploymentInstanceType_ml_g4dn_12xlarge  OptimizationJobDeploymentInstanceType = "ml.g4dn.12xlarge"
+	OptimizationJobDeploymentInstanceType_ml_g4dn_16xlarge  OptimizationJobDeploymentInstanceType = "ml.g4dn.16xlarge"
+	OptimizationJobDeploymentInstanceType_ml_g4dn_2xlarge   OptimizationJobDeploymentInstanceType = "ml.g4dn.2xlarge"
+	OptimizationJobDeploymentInstanceType_ml_g4dn_4xlarge   OptimizationJobDeploymentInstanceType = "ml.g4dn.4xlarge"
+	OptimizationJobDeploymentInstanceType_ml_g4dn_8xlarge   OptimizationJobDeploymentInstanceType = "ml.g4dn.8xlarge"
+	OptimizationJobDeploymentInstanceType_ml_g4dn_xlarge    OptimizationJobDeploymentInstanceType = "ml.g4dn.xlarge"
 	OptimizationJobDeploymentInstanceType_ml_g5_12xlarge    OptimizationJobDeploymentInstanceType = "ml.g5.12xlarge"
 	OptimizationJobDeploymentInstanceType_ml_g5_16xlarge    OptimizationJobDeploymentInstanceType = "ml.g5.16xlarge"
 	OptimizationJobDeploymentInstanceType_ml_g5_24xlarge    OptimizationJobDeploymentInstanceType = "ml.g5.24xlarge"
@@ -2212,6 +2547,8 @@ const (
 	OptimizationJobDeploymentInstanceType_ml_p4d_24xlarge   OptimizationJobDeploymentInstanceType = "ml.p4d.24xlarge"
 	OptimizationJobDeploymentInstanceType_ml_p4de_24xlarge  OptimizationJobDeploymentInstanceType = "ml.p4de.24xlarge"
 	OptimizationJobDeploymentInstanceType_ml_p5_48xlarge    OptimizationJobDeploymentInstanceType = "ml.p5.48xlarge"
+	OptimizationJobDeploymentInstanceType_ml_p5e_48xlarge   OptimizationJobDeploymentInstanceType = "ml.p5e.48xlarge"
+	OptimizationJobDeploymentInstanceType_ml_p5en_48xlarge  OptimizationJobDeploymentInstanceType = "ml.p5en.48xlarge"
 	OptimizationJobDeploymentInstanceType_ml_trn1_2xlarge   OptimizationJobDeploymentInstanceType = "ml.trn1.2xlarge"
 	OptimizationJobDeploymentInstanceType_ml_trn1_32xlarge  OptimizationJobDeploymentInstanceType = "ml.trn1.32xlarge"
 	OptimizationJobDeploymentInstanceType_ml_trn1n_32xlarge OptimizationJobDeploymentInstanceType = "ml.trn1n.32xlarge"
@@ -2276,6 +2613,12 @@ const (
 	PartnerAppType_deepchecks_llm_evaluation PartnerAppType = "deepchecks-llm-evaluation"
 	PartnerAppType_fiddler                   PartnerAppType = "fiddler"
 	PartnerAppType_lakera_guard              PartnerAppType = "lakera-guard"
+)
+
+type Peft string
+
+const (
+	Peft_LORA Peft = "LORA"
 )
 
 type PipelineExecutionStatus_SDK string
@@ -2369,6 +2712,12 @@ const (
 	ProcessingInstanceType_ml_g6e_4xlarge   ProcessingInstanceType = "ml.g6e.4xlarge"
 	ProcessingInstanceType_ml_g6e_8xlarge   ProcessingInstanceType = "ml.g6e.8xlarge"
 	ProcessingInstanceType_ml_g6e_xlarge    ProcessingInstanceType = "ml.g6e.xlarge"
+	ProcessingInstanceType_ml_g7e_12xlarge  ProcessingInstanceType = "ml.g7e.12xlarge"
+	ProcessingInstanceType_ml_g7e_24xlarge  ProcessingInstanceType = "ml.g7e.24xlarge"
+	ProcessingInstanceType_ml_g7e_2xlarge   ProcessingInstanceType = "ml.g7e.2xlarge"
+	ProcessingInstanceType_ml_g7e_48xlarge  ProcessingInstanceType = "ml.g7e.48xlarge"
+	ProcessingInstanceType_ml_g7e_4xlarge   ProcessingInstanceType = "ml.g7e.4xlarge"
+	ProcessingInstanceType_ml_g7e_8xlarge   ProcessingInstanceType = "ml.g7e.8xlarge"
 	ProcessingInstanceType_ml_m4_10xlarge   ProcessingInstanceType = "ml.m4.10xlarge"
 	ProcessingInstanceType_ml_m4_16xlarge   ProcessingInstanceType = "ml.m4.16xlarge"
 	ProcessingInstanceType_ml_m4_2xlarge    ProcessingInstanceType = "ml.m4.2xlarge"
@@ -2502,10 +2851,11 @@ const (
 type ProductionVariantInferenceAMIVersion string
 
 const (
-	ProductionVariantInferenceAMIVersion_al2_ami_sagemaker_inference_gpu_2    ProductionVariantInferenceAMIVersion = "al2-ami-sagemaker-inference-gpu-2"
-	ProductionVariantInferenceAMIVersion_al2_ami_sagemaker_inference_gpu_2_1  ProductionVariantInferenceAMIVersion = "al2-ami-sagemaker-inference-gpu-2-1"
-	ProductionVariantInferenceAMIVersion_al2_ami_sagemaker_inference_gpu_3_1  ProductionVariantInferenceAMIVersion = "al2-ami-sagemaker-inference-gpu-3-1"
-	ProductionVariantInferenceAMIVersion_al2_ami_sagemaker_inference_neuron_2 ProductionVariantInferenceAMIVersion = "al2-ami-sagemaker-inference-neuron-2"
+	ProductionVariantInferenceAMIVersion_al2_ami_sagemaker_inference_gpu_2      ProductionVariantInferenceAMIVersion = "al2-ami-sagemaker-inference-gpu-2"
+	ProductionVariantInferenceAMIVersion_al2_ami_sagemaker_inference_gpu_2_1    ProductionVariantInferenceAMIVersion = "al2-ami-sagemaker-inference-gpu-2-1"
+	ProductionVariantInferenceAMIVersion_al2_ami_sagemaker_inference_gpu_3_1    ProductionVariantInferenceAMIVersion = "al2-ami-sagemaker-inference-gpu-3-1"
+	ProductionVariantInferenceAMIVersion_al2_ami_sagemaker_inference_neuron_2   ProductionVariantInferenceAMIVersion = "al2-ami-sagemaker-inference-neuron-2"
+	ProductionVariantInferenceAMIVersion_al2023_ami_sagemaker_inference_gpu_4_1 ProductionVariantInferenceAMIVersion = "al2023-ami-sagemaker-inference-gpu-4-1"
 )
 
 type ProductionVariantInstanceType string
@@ -2624,6 +2974,12 @@ const (
 	ProductionVariantInstanceType_ml_g6e_4xlarge        ProductionVariantInstanceType = "ml.g6e.4xlarge"
 	ProductionVariantInstanceType_ml_g6e_8xlarge        ProductionVariantInstanceType = "ml.g6e.8xlarge"
 	ProductionVariantInstanceType_ml_g6e_xlarge         ProductionVariantInstanceType = "ml.g6e.xlarge"
+	ProductionVariantInstanceType_ml_g7e_12xlarge       ProductionVariantInstanceType = "ml.g7e.12xlarge"
+	ProductionVariantInstanceType_ml_g7e_24xlarge       ProductionVariantInstanceType = "ml.g7e.24xlarge"
+	ProductionVariantInstanceType_ml_g7e_2xlarge        ProductionVariantInstanceType = "ml.g7e.2xlarge"
+	ProductionVariantInstanceType_ml_g7e_48xlarge       ProductionVariantInstanceType = "ml.g7e.48xlarge"
+	ProductionVariantInstanceType_ml_g7e_4xlarge        ProductionVariantInstanceType = "ml.g7e.4xlarge"
+	ProductionVariantInstanceType_ml_g7e_8xlarge        ProductionVariantInstanceType = "ml.g7e.8xlarge"
 	ProductionVariantInstanceType_ml_inf1_24xlarge      ProductionVariantInstanceType = "ml.inf1.24xlarge"
 	ProductionVariantInstanceType_ml_inf1_2xlarge       ProductionVariantInstanceType = "ml.inf1.2xlarge"
 	ProductionVariantInstanceType_ml_inf1_6xlarge       ProductionVariantInstanceType = "ml.inf1.6xlarge"
@@ -2704,6 +3060,7 @@ const (
 	ProductionVariantInstanceType_ml_p5e_48xlarge       ProductionVariantInstanceType = "ml.p5e.48xlarge"
 	ProductionVariantInstanceType_ml_p5en_48xlarge      ProductionVariantInstanceType = "ml.p5en.48xlarge"
 	ProductionVariantInstanceType_ml_p6_b200_48xlarge   ProductionVariantInstanceType = "ml.p6-b200.48xlarge"
+	ProductionVariantInstanceType_ml_p6_b300_48xlarge   ProductionVariantInstanceType = "ml.p6-b300.48xlarge"
 	ProductionVariantInstanceType_ml_p6e_gb200_36xlarge ProductionVariantInstanceType = "ml.p6e-gb200.36xlarge"
 	ProductionVariantInstanceType_ml_r5_12xlarge        ProductionVariantInstanceType = "ml.r5.12xlarge"
 	ProductionVariantInstanceType_ml_r5_24xlarge        ProductionVariantInstanceType = "ml.r5.24xlarge"
@@ -2917,6 +3274,7 @@ const (
 	ReservedCapacityInstanceType_ml_p5e_48xlarge       ReservedCapacityInstanceType = "ml.p5e.48xlarge"
 	ReservedCapacityInstanceType_ml_p5en_48xlarge      ReservedCapacityInstanceType = "ml.p5en.48xlarge"
 	ReservedCapacityInstanceType_ml_p6_b200_48xlarge   ReservedCapacityInstanceType = "ml.p6-b200.48xlarge"
+	ReservedCapacityInstanceType_ml_p6_b300_48xlarge   ReservedCapacityInstanceType = "ml.p6-b300.48xlarge"
 	ReservedCapacityInstanceType_ml_p6e_gb200_36xlarge ReservedCapacityInstanceType = "ml.p6e-gb200.36xlarge"
 	ReservedCapacityInstanceType_ml_trn1_32xlarge      ReservedCapacityInstanceType = "ml.trn1.32xlarge"
 	ReservedCapacityInstanceType_ml_trn2_48xlarge      ReservedCapacityInstanceType = "ml.trn2.48xlarge"
@@ -3047,6 +3405,7 @@ const (
 type SageMakerResourceName string
 
 const (
+	SageMakerResourceName_endpoint         SageMakerResourceName = "endpoint"
 	SageMakerResourceName_hyperpod_cluster SageMakerResourceName = "hyperpod-cluster"
 	SageMakerResourceName_training_job     SageMakerResourceName = "training-job"
 )
@@ -3065,6 +3424,14 @@ const (
 	ScheduleStatus_Pending   ScheduleStatus = "Pending"
 	ScheduleStatus_Scheduled ScheduleStatus = "Scheduled"
 	ScheduleStatus_Stopped   ScheduleStatus = "Stopped"
+)
+
+type SchedulerConfigComponent string
+
+const (
+	SchedulerConfigComponent_FairShare           SchedulerConfigComponent = "FairShare"
+	SchedulerConfigComponent_IdleResourceSharing SchedulerConfigComponent = "IdleResourceSharing"
+	SchedulerConfigComponent_PriorityClasses     SchedulerConfigComponent = "PriorityClasses"
 )
 
 type SchedulerResourceStatus string
@@ -3113,6 +3480,13 @@ const (
 	SecondaryStatus_Uploading                SecondaryStatus = "Uploading"
 )
 
+type ServerlessJobType string
+
+const (
+	ServerlessJobType_Evaluation ServerlessJobType = "Evaluation"
+	ServerlessJobType_FineTuning ServerlessJobType = "FineTuning"
+)
+
 type SharingType string
 
 const (
@@ -3125,6 +3499,17 @@ type SkipModelValidation string
 const (
 	SkipModelValidation_All  SkipModelValidation = "All"
 	SkipModelValidation_None SkipModelValidation = "None"
+)
+
+type SoftwareUpdateStatus string
+
+const (
+	SoftwareUpdateStatus_Failed             SoftwareUpdateStatus = "Failed"
+	SoftwareUpdateStatus_InProgress         SoftwareUpdateStatus = "InProgress"
+	SoftwareUpdateStatus_Pending            SoftwareUpdateStatus = "Pending"
+	SoftwareUpdateStatus_RollbackComplete   SoftwareUpdateStatus = "RollbackComplete"
+	SoftwareUpdateStatus_RollbackInProgress SoftwareUpdateStatus = "RollbackInProgress"
+	SoftwareUpdateStatus_Succeeded          SoftwareUpdateStatus = "Succeeded"
 )
 
 type SortActionsBy string
@@ -3193,6 +3578,14 @@ type SortLineageGroupsBy string
 const (
 	SortLineageGroupsBy_CreationTime SortLineageGroupsBy = "CreationTime"
 	SortLineageGroupsBy_Name         SortLineageGroupsBy = "Name"
+)
+
+type SortMlflowAppBy string
+
+const (
+	SortMlflowAppBy_CreationTime SortMlflowAppBy = "CreationTime"
+	SortMlflowAppBy_Name         SortMlflowAppBy = "Name"
+	SortMlflowAppBy_Status       SortMlflowAppBy = "Status"
 )
 
 type SortOrder string
@@ -3557,6 +3950,12 @@ const (
 	TrainingInstanceType_ml_g6e_4xlarge        TrainingInstanceType = "ml.g6e.4xlarge"
 	TrainingInstanceType_ml_g6e_8xlarge        TrainingInstanceType = "ml.g6e.8xlarge"
 	TrainingInstanceType_ml_g6e_xlarge         TrainingInstanceType = "ml.g6e.xlarge"
+	TrainingInstanceType_ml_g7e_12xlarge       TrainingInstanceType = "ml.g7e.12xlarge"
+	TrainingInstanceType_ml_g7e_24xlarge       TrainingInstanceType = "ml.g7e.24xlarge"
+	TrainingInstanceType_ml_g7e_2xlarge        TrainingInstanceType = "ml.g7e.2xlarge"
+	TrainingInstanceType_ml_g7e_48xlarge       TrainingInstanceType = "ml.g7e.48xlarge"
+	TrainingInstanceType_ml_g7e_4xlarge        TrainingInstanceType = "ml.g7e.4xlarge"
+	TrainingInstanceType_ml_g7e_8xlarge        TrainingInstanceType = "ml.g7e.8xlarge"
 	TrainingInstanceType_ml_m4_10xlarge        TrainingInstanceType = "ml.m4.10xlarge"
 	TrainingInstanceType_ml_m4_16xlarge        TrainingInstanceType = "ml.m4.16xlarge"
 	TrainingInstanceType_ml_m4_2xlarge         TrainingInstanceType = "ml.m4.2xlarge"
@@ -3600,6 +3999,7 @@ const (
 	TrainingInstanceType_ml_p5e_48xlarge       TrainingInstanceType = "ml.p5e.48xlarge"
 	TrainingInstanceType_ml_p5en_48xlarge      TrainingInstanceType = "ml.p5en.48xlarge"
 	TrainingInstanceType_ml_p6_b200_48xlarge   TrainingInstanceType = "ml.p6-b200.48xlarge"
+	TrainingInstanceType_ml_p6_b300_48xlarge   TrainingInstanceType = "ml.p6-b300.48xlarge"
 	TrainingInstanceType_ml_p6e_gb200_36xlarge TrainingInstanceType = "ml.p6e-gb200.36xlarge"
 	TrainingInstanceType_ml_r5_12xlarge        TrainingInstanceType = "ml.r5.12xlarge"
 	TrainingInstanceType_ml_r5_16xlarge        TrainingInstanceType = "ml.r5.16xlarge"
@@ -3656,6 +4056,7 @@ type TrainingJobStatus_SDK string
 
 const (
 	TrainingJobStatus_SDK_Completed  TrainingJobStatus_SDK = "Completed"
+	TrainingJobStatus_SDK_Deleting   TrainingJobStatus_SDK = "Deleting"
 	TrainingJobStatus_SDK_Failed     TrainingJobStatus_SDK = "Failed"
 	TrainingJobStatus_SDK_InProgress TrainingJobStatus_SDK = "InProgress"
 	TrainingJobStatus_SDK_Stopped    TrainingJobStatus_SDK = "Stopped"
@@ -3744,6 +4145,14 @@ const (
 	TransformInstanceType_ml_g5_4xlarge    TransformInstanceType = "ml.g5.4xlarge"
 	TransformInstanceType_ml_g5_8xlarge    TransformInstanceType = "ml.g5.8xlarge"
 	TransformInstanceType_ml_g5_xlarge     TransformInstanceType = "ml.g5.xlarge"
+	TransformInstanceType_ml_g6_12xlarge   TransformInstanceType = "ml.g6.12xlarge"
+	TransformInstanceType_ml_g6_16xlarge   TransformInstanceType = "ml.g6.16xlarge"
+	TransformInstanceType_ml_g6_24xlarge   TransformInstanceType = "ml.g6.24xlarge"
+	TransformInstanceType_ml_g6_2xlarge    TransformInstanceType = "ml.g6.2xlarge"
+	TransformInstanceType_ml_g6_48xlarge   TransformInstanceType = "ml.g6.48xlarge"
+	TransformInstanceType_ml_g6_4xlarge    TransformInstanceType = "ml.g6.4xlarge"
+	TransformInstanceType_ml_g6_8xlarge    TransformInstanceType = "ml.g6.8xlarge"
+	TransformInstanceType_ml_g6_xlarge     TransformInstanceType = "ml.g6.xlarge"
 	TransformInstanceType_ml_inf2_24xlarge TransformInstanceType = "ml.inf2.24xlarge"
 	TransformInstanceType_ml_inf2_48xlarge TransformInstanceType = "ml.inf2.48xlarge"
 	TransformInstanceType_ml_inf2_8xlarge  TransformInstanceType = "ml.inf2.8xlarge"

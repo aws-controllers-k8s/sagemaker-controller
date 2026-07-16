@@ -424,6 +424,19 @@ spec:
                           type: object
                         desiredWeight:
                           type: number
+                        instancePools:
+                          items:
+                            description: |-
+                              A summary of an instance pool for a production variant, including the instance
+                              type and the current number of instances.
+                            properties:
+                              currentInstanceCount:
+                                format: int64
+                                type: integer
+                              instanceType:
+                                type: string
+                            type: object
+                          type: array
                         instanceType:
                           type: string
                         managedInstanceScaling:
@@ -575,6 +588,19 @@ spec:
                       type: object
                     desiredWeight:
                       type: number
+                    instancePools:
+                      items:
+                        description: |-
+                          A summary of an instance pool for a production variant, including the instance
+                          type and the current number of instances.
+                        properties:
+                          currentInstanceCount:
+                            format: int64
+                            type: integer
+                          instanceType:
+                            type: string
+                        type: object
+                      type: array
                     managedInstanceScaling:
                       description: |-
                         Settings that control the range in the number of instances that the endpoint

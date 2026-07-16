@@ -2189,6 +2189,9 @@ func (rm *resourceManager) newUpdateRequestPayload(
 	if r.ko.Spec.SubnetIDs != nil {
 		res.SubnetIds = aws.ToStringSlice(r.ko.Spec.SubnetIDs)
 	}
+	if r.ko.Spec.VPCID != nil {
+		res.VpcId = r.ko.Spec.VPCID
+	}
 
 	return res, nil
 }

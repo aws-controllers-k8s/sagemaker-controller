@@ -439,6 +439,9 @@ func (rm *resourceManager) newUpdateRequestPayload(
 	if r.ko.Spec.NotebookInstanceName != nil {
 		res.NotebookInstanceName = r.ko.Spec.NotebookInstanceName
 	}
+	if r.ko.Spec.PlatformIdentifier != nil {
+		res.PlatformIdentifier = r.ko.Spec.PlatformIdentifier
+	}
 	if r.ko.Spec.RoleARN != nil {
 		res.RoleArn = r.ko.Spec.RoleARN
 	}

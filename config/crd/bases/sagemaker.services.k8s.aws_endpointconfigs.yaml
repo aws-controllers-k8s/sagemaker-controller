@@ -223,6 +223,23 @@ spec:
                       type: integer
                     initialVariantWeight:
                       type: number
+                    instancePools:
+                      items:
+                        description: |-
+                          Specifies an instance type and its priority for a heterogeneous endpoint.
+                          Use instance pools to configure a production variant with multiple instance
+                          types, enabling the endpoint to provision instances across different types
+                          based on priority.
+                        properties:
+                          instanceType:
+                            type: string
+                          modelNameOverride:
+                            type: string
+                          priority:
+                            format: int64
+                            type: integer
+                        type: object
+                      type: array
                     instanceType:
                       type: string
                     managedInstanceScaling:
