@@ -37,8 +37,7 @@ type InferenceComponentSpec struct {
 	RuntimeConfig *InferenceComponentRuntimeConfig `json:"runtimeConfig,omitempty"`
 	// Details about the resources to deploy with this inference component, including
 	// the model, container, and compute resources.
-	// +kubebuilder:validation:Required
-	Specification *InferenceComponentSpecification `json:"specification"`
+	Specification *InferenceComponentSpecification `json:"specification,omitempty"`
 	// A list of key-value pairs associated with the model. For more information,
 	// see Tagging Amazon Web Services resources (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html)
 	// in the Amazon Web Services General Reference.

@@ -686,11 +686,8 @@ spec:
                     type: array
                 type: object
             required:
-            - algorithmSpecification
             - outputDataConfig
-            - resourceConfig
             - roleARN
-            - stoppingCondition
             - trainingJobName
             type: object
           status:
@@ -840,6 +837,9 @@ spec:
                   InProgress
 
                      * Starting - Starting the training job.
+
+                     * Pending - The training job is waiting for compute capacity or compute
+                     resource provision.
 
                      * Downloading - An optional stage for algorithms that support File training
                      input mode. It indicates that data is being downloaded to the ML storage

@@ -1275,6 +1275,9 @@ resources:
 ignore:
   resource_names:
     - Algorithm
+    - AIBenchmarkJob
+    - AIRecommendationJob
+    - AIWorkloadConfig
     # - App
     - AutoMLJob
     - AutoMLJobV2
@@ -1309,6 +1312,7 @@ ignore:
     - InferenceExperiment
     # - LabelingJob
     # - Model
+    - MlflowApp
     - MlflowTrackingServer
     - ModelCard
     - ModelCardExportJob
@@ -1326,6 +1330,7 @@ ignore:
     # - Pipeline
     - PresignedDomainUrl
     - PresignedNotebookInstanceUrl
+    - PresignedMlflowAppUrl
     - PresignedMlflowTrackingServerUrl
     # - ProcessingJob
     # - Project
@@ -1399,3 +1404,34 @@ ignore:
     - AdditionalS3DataSource.ETag
     - ModelPackageContainerDefinition.ModelDataETag
     - SourceAlgorithm.ModelDataETag
+    # Fields introduced by the v1.244.0 SDK bump that are out of scope for the
+    # InstancePools change. Ignored on both the Create input and Describe output
+    # shapes so they are excluded from Spec and Status rather than being moved to
+    # Status (which would happen if only the input path were ignored). Shape-level
+    # paths (e.g. ProductionVariant.X) cover the field wherever the shape is used.
+    - CreateEndpointConfigInput.MetricsConfig
+    - DescribeEndpointConfigOutput.MetricsConfig
+    - ProductionVariant.VariantInstanceProvisionTimeoutInSeconds
+    - ProductionVariantManagedInstanceScaling.ScaleInPolicy
+    - CreateInferenceComponentInput.Specifications
+    - DescribeInferenceComponentOutput.Specifications
+    - InferenceComponentSpecification.DataCacheConfig
+    - InferenceComponentSpecification.InstanceType
+    - InferenceComponentSpecification.SchedulingConfig
+    - InferenceComponentSpecificationSummary.DataCacheConfig
+    - InferenceComponentSpecificationSummary.InstanceType
+    - InferenceComponentSpecificationSummary.SchedulingConfig
+    - CreateModelPackageInput.ModelPackageRegistrationType
+    - DescribeModelPackageOutput.ModelPackageRegistrationType
+    - ModelPackageContainerDefinition.AdditionalModelDataSources
+    - ModelPackageContainerDefinition.BaseModel
+    - ModelPackageContainerDefinition.IsCheckpoint
+    - DataSource.DatasetSource
+    - StartPipelineExecutionInput.MlflowExperimentName
+    - CreateTrainingJobInput.MlflowConfig
+    - DescribeTrainingJobOutput.MlflowConfig
+    - CreateTrainingJobInput.ModelPackageConfig
+    - DescribeTrainingJobOutput.ModelPackageConfig
+    - TrainingJob.OutputModelPackageArn
+    - CreateTrainingJobInput.ServerlessJobConfig
+    - DescribeTrainingJobOutput.ServerlessJobConfig

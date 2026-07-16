@@ -108,12 +108,12 @@ func (rm *resourceManager) sdkFind(
 		ko.Status.LastModifiedTime = nil
 	}
 	if resp.ParallelismConfiguration != nil {
-		f5 := &svcapitypes.ParallelismConfiguration{}
+		f6 := &svcapitypes.ParallelismConfiguration{}
 		if resp.ParallelismConfiguration.MaxParallelExecutionSteps != nil {
 			maxParallelExecutionStepsCopy := int64(*resp.ParallelismConfiguration.MaxParallelExecutionSteps)
-			f5.MaxParallelExecutionSteps = &maxParallelExecutionStepsCopy
+			f6.MaxParallelExecutionSteps = &maxParallelExecutionStepsCopy
 		}
-		ko.Spec.ParallelismConfiguration = f5
+		ko.Spec.ParallelismConfiguration = f6
 	} else {
 		ko.Spec.ParallelismConfiguration = nil
 	}
@@ -145,22 +145,22 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.PipelineVersionID = nil
 	}
 	if resp.SelectiveExecutionConfig != nil {
-		f13 := &svcapitypes.SelectiveExecutionConfig{}
+		f14 := &svcapitypes.SelectiveExecutionConfig{}
 		if resp.SelectiveExecutionConfig.SelectedSteps != nil {
-			f13f0 := []*svcapitypes.SelectedStep{}
-			for _, f13f0iter := range resp.SelectiveExecutionConfig.SelectedSteps {
-				f13f0elem := &svcapitypes.SelectedStep{}
-				if f13f0iter.StepName != nil {
-					f13f0elem.StepName = f13f0iter.StepName
+			f14f0 := []*svcapitypes.SelectedStep{}
+			for _, f14f0iter := range resp.SelectiveExecutionConfig.SelectedSteps {
+				f14f0elem := &svcapitypes.SelectedStep{}
+				if f14f0iter.StepName != nil {
+					f14f0elem.StepName = f14f0iter.StepName
 				}
-				f13f0 = append(f13f0, f13f0elem)
+				f14f0 = append(f14f0, f14f0elem)
 			}
-			f13.SelectedSteps = f13f0
+			f14.SelectedSteps = f14f0
 		}
 		if resp.SelectiveExecutionConfig.SourcePipelineExecutionArn != nil {
-			f13.SourcePipelineExecutionARN = resp.SelectiveExecutionConfig.SourcePipelineExecutionArn
+			f14.SourcePipelineExecutionARN = resp.SelectiveExecutionConfig.SourcePipelineExecutionArn
 		}
-		ko.Spec.SelectiveExecutionConfig = f13
+		ko.Spec.SelectiveExecutionConfig = f14
 	} else {
 		ko.Spec.SelectiveExecutionConfig = nil
 	}

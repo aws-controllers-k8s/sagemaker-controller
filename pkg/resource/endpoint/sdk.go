@@ -229,297 +229,327 @@ func (rm *resourceManager) sdkFind(
 		ko.Status.LastModifiedTime = nil
 	}
 	if resp.PendingDeploymentSummary != nil {
-		f10 := &svcapitypes.PendingDeploymentSummary{}
+		f11 := &svcapitypes.PendingDeploymentSummary{}
 		if resp.PendingDeploymentSummary.EndpointConfigName != nil {
-			f10.EndpointConfigName = resp.PendingDeploymentSummary.EndpointConfigName
+			f11.EndpointConfigName = resp.PendingDeploymentSummary.EndpointConfigName
 		}
 		if resp.PendingDeploymentSummary.ProductionVariants != nil {
-			f10f1 := []*svcapitypes.PendingProductionVariantSummary{}
-			for _, f10f1iter := range resp.PendingDeploymentSummary.ProductionVariants {
-				f10f1elem := &svcapitypes.PendingProductionVariantSummary{}
-				if f10f1iter.AcceleratorType != "" {
-					f10f1elem.AcceleratorType = aws.String(string(f10f1iter.AcceleratorType))
+			f11f1 := []*svcapitypes.PendingProductionVariantSummary{}
+			for _, f11f1iter := range resp.PendingDeploymentSummary.ProductionVariants {
+				f11f1elem := &svcapitypes.PendingProductionVariantSummary{}
+				if f11f1iter.AcceleratorType != "" {
+					f11f1elem.AcceleratorType = aws.String(string(f11f1iter.AcceleratorType))
 				}
-				if f10f1iter.CurrentInstanceCount != nil {
-					currentInstanceCountCopy := int64(*f10f1iter.CurrentInstanceCount)
-					f10f1elem.CurrentInstanceCount = &currentInstanceCountCopy
+				if f11f1iter.CurrentInstanceCount != nil {
+					currentInstanceCountCopy := int64(*f11f1iter.CurrentInstanceCount)
+					f11f1elem.CurrentInstanceCount = &currentInstanceCountCopy
 				}
-				if f10f1iter.CurrentServerlessConfig != nil {
-					f10f1elemf2 := &svcapitypes.ProductionVariantServerlessConfig{}
-					if f10f1iter.CurrentServerlessConfig.MaxConcurrency != nil {
-						maxConcurrencyCopy := int64(*f10f1iter.CurrentServerlessConfig.MaxConcurrency)
-						f10f1elemf2.MaxConcurrency = &maxConcurrencyCopy
+				if f11f1iter.CurrentServerlessConfig != nil {
+					f11f1elemf2 := &svcapitypes.ProductionVariantServerlessConfig{}
+					if f11f1iter.CurrentServerlessConfig.MaxConcurrency != nil {
+						maxConcurrencyCopy := int64(*f11f1iter.CurrentServerlessConfig.MaxConcurrency)
+						f11f1elemf2.MaxConcurrency = &maxConcurrencyCopy
 					}
-					if f10f1iter.CurrentServerlessConfig.MemorySizeInMB != nil {
-						memorySizeInMBCopy := int64(*f10f1iter.CurrentServerlessConfig.MemorySizeInMB)
-						f10f1elemf2.MemorySizeInMB = &memorySizeInMBCopy
+					if f11f1iter.CurrentServerlessConfig.MemorySizeInMB != nil {
+						memorySizeInMBCopy := int64(*f11f1iter.CurrentServerlessConfig.MemorySizeInMB)
+						f11f1elemf2.MemorySizeInMB = &memorySizeInMBCopy
 					}
-					if f10f1iter.CurrentServerlessConfig.ProvisionedConcurrency != nil {
-						provisionedConcurrencyCopy := int64(*f10f1iter.CurrentServerlessConfig.ProvisionedConcurrency)
-						f10f1elemf2.ProvisionedConcurrency = &provisionedConcurrencyCopy
+					if f11f1iter.CurrentServerlessConfig.ProvisionedConcurrency != nil {
+						provisionedConcurrencyCopy := int64(*f11f1iter.CurrentServerlessConfig.ProvisionedConcurrency)
+						f11f1elemf2.ProvisionedConcurrency = &provisionedConcurrencyCopy
 					}
-					f10f1elem.CurrentServerlessConfig = f10f1elemf2
+					f11f1elem.CurrentServerlessConfig = f11f1elemf2
 				}
-				if f10f1iter.CurrentWeight != nil {
-					currentWeightCopy := float64(*f10f1iter.CurrentWeight)
-					f10f1elem.CurrentWeight = &currentWeightCopy
+				if f11f1iter.CurrentWeight != nil {
+					currentWeightCopy := float64(*f11f1iter.CurrentWeight)
+					f11f1elem.CurrentWeight = &currentWeightCopy
 				}
-				if f10f1iter.DeployedImages != nil {
-					f10f1elemf4 := []*svcapitypes.DeployedImage{}
-					for _, f10f1elemf4iter := range f10f1iter.DeployedImages {
-						f10f1elemf4elem := &svcapitypes.DeployedImage{}
-						if f10f1elemf4iter.ResolutionTime != nil {
-							f10f1elemf4elem.ResolutionTime = &metav1.Time{*f10f1elemf4iter.ResolutionTime}
+				if f11f1iter.DeployedImages != nil {
+					f11f1elemf4 := []*svcapitypes.DeployedImage{}
+					for _, f11f1elemf4iter := range f11f1iter.DeployedImages {
+						f11f1elemf4elem := &svcapitypes.DeployedImage{}
+						if f11f1elemf4iter.ResolutionTime != nil {
+							f11f1elemf4elem.ResolutionTime = &metav1.Time{*f11f1elemf4iter.ResolutionTime}
 						}
-						if f10f1elemf4iter.ResolvedImage != nil {
-							f10f1elemf4elem.ResolvedImage = f10f1elemf4iter.ResolvedImage
+						if f11f1elemf4iter.ResolvedImage != nil {
+							f11f1elemf4elem.ResolvedImage = f11f1elemf4iter.ResolvedImage
 						}
-						if f10f1elemf4iter.SpecifiedImage != nil {
-							f10f1elemf4elem.SpecifiedImage = f10f1elemf4iter.SpecifiedImage
+						if f11f1elemf4iter.SpecifiedImage != nil {
+							f11f1elemf4elem.SpecifiedImage = f11f1elemf4iter.SpecifiedImage
 						}
-						f10f1elemf4 = append(f10f1elemf4, f10f1elemf4elem)
+						f11f1elemf4 = append(f11f1elemf4, f11f1elemf4elem)
 					}
-					f10f1elem.DeployedImages = f10f1elemf4
+					f11f1elem.DeployedImages = f11f1elemf4
 				}
-				if f10f1iter.DesiredInstanceCount != nil {
-					desiredInstanceCountCopy := int64(*f10f1iter.DesiredInstanceCount)
-					f10f1elem.DesiredInstanceCount = &desiredInstanceCountCopy
+				if f11f1iter.DesiredInstanceCount != nil {
+					desiredInstanceCountCopy := int64(*f11f1iter.DesiredInstanceCount)
+					f11f1elem.DesiredInstanceCount = &desiredInstanceCountCopy
 				}
-				if f10f1iter.DesiredServerlessConfig != nil {
-					f10f1elemf6 := &svcapitypes.ProductionVariantServerlessConfig{}
-					if f10f1iter.DesiredServerlessConfig.MaxConcurrency != nil {
-						maxConcurrencyCopy := int64(*f10f1iter.DesiredServerlessConfig.MaxConcurrency)
-						f10f1elemf6.MaxConcurrency = &maxConcurrencyCopy
+				if f11f1iter.DesiredServerlessConfig != nil {
+					f11f1elemf6 := &svcapitypes.ProductionVariantServerlessConfig{}
+					if f11f1iter.DesiredServerlessConfig.MaxConcurrency != nil {
+						maxConcurrencyCopy := int64(*f11f1iter.DesiredServerlessConfig.MaxConcurrency)
+						f11f1elemf6.MaxConcurrency = &maxConcurrencyCopy
 					}
-					if f10f1iter.DesiredServerlessConfig.MemorySizeInMB != nil {
-						memorySizeInMBCopy := int64(*f10f1iter.DesiredServerlessConfig.MemorySizeInMB)
-						f10f1elemf6.MemorySizeInMB = &memorySizeInMBCopy
+					if f11f1iter.DesiredServerlessConfig.MemorySizeInMB != nil {
+						memorySizeInMBCopy := int64(*f11f1iter.DesiredServerlessConfig.MemorySizeInMB)
+						f11f1elemf6.MemorySizeInMB = &memorySizeInMBCopy
 					}
-					if f10f1iter.DesiredServerlessConfig.ProvisionedConcurrency != nil {
-						provisionedConcurrencyCopy := int64(*f10f1iter.DesiredServerlessConfig.ProvisionedConcurrency)
-						f10f1elemf6.ProvisionedConcurrency = &provisionedConcurrencyCopy
+					if f11f1iter.DesiredServerlessConfig.ProvisionedConcurrency != nil {
+						provisionedConcurrencyCopy := int64(*f11f1iter.DesiredServerlessConfig.ProvisionedConcurrency)
+						f11f1elemf6.ProvisionedConcurrency = &provisionedConcurrencyCopy
 					}
-					f10f1elem.DesiredServerlessConfig = f10f1elemf6
+					f11f1elem.DesiredServerlessConfig = f11f1elemf6
 				}
-				if f10f1iter.DesiredWeight != nil {
-					desiredWeightCopy := float64(*f10f1iter.DesiredWeight)
-					f10f1elem.DesiredWeight = &desiredWeightCopy
+				if f11f1iter.DesiredWeight != nil {
+					desiredWeightCopy := float64(*f11f1iter.DesiredWeight)
+					f11f1elem.DesiredWeight = &desiredWeightCopy
 				}
-				if f10f1iter.InstanceType != "" {
-					f10f1elem.InstanceType = aws.String(string(f10f1iter.InstanceType))
-				}
-				if f10f1iter.ManagedInstanceScaling != nil {
-					f10f1elemf9 := &svcapitypes.ProductionVariantManagedInstanceScaling{}
-					if f10f1iter.ManagedInstanceScaling.MaxInstanceCount != nil {
-						maxInstanceCountCopy := int64(*f10f1iter.ManagedInstanceScaling.MaxInstanceCount)
-						f10f1elemf9.MaxInstanceCount = &maxInstanceCountCopy
-					}
-					if f10f1iter.ManagedInstanceScaling.MinInstanceCount != nil {
-						minInstanceCountCopy := int64(*f10f1iter.ManagedInstanceScaling.MinInstanceCount)
-						f10f1elemf9.MinInstanceCount = &minInstanceCountCopy
-					}
-					if f10f1iter.ManagedInstanceScaling.Status != "" {
-						f10f1elemf9.Status = aws.String(string(f10f1iter.ManagedInstanceScaling.Status))
-					}
-					f10f1elem.ManagedInstanceScaling = f10f1elemf9
-				}
-				if f10f1iter.RoutingConfig != nil {
-					f10f1elemf10 := &svcapitypes.ProductionVariantRoutingConfig{}
-					if f10f1iter.RoutingConfig.RoutingStrategy != "" {
-						f10f1elemf10.RoutingStrategy = aws.String(string(f10f1iter.RoutingConfig.RoutingStrategy))
-					}
-					f10f1elem.RoutingConfig = f10f1elemf10
-				}
-				if f10f1iter.VariantName != nil {
-					f10f1elem.VariantName = f10f1iter.VariantName
-				}
-				if f10f1iter.VariantStatus != nil {
-					f10f1elemf12 := []*svcapitypes.ProductionVariantStatus{}
-					for _, f10f1elemf12iter := range f10f1iter.VariantStatus {
-						f10f1elemf12elem := &svcapitypes.ProductionVariantStatus{}
-						if f10f1elemf12iter.StartTime != nil {
-							f10f1elemf12elem.StartTime = &metav1.Time{*f10f1elemf12iter.StartTime}
+				if f11f1iter.InstancePools != nil {
+					f11f1elemf8 := []*svcapitypes.InstancePoolSummary{}
+					for _, f11f1elemf8iter := range f11f1iter.InstancePools {
+						f11f1elemf8elem := &svcapitypes.InstancePoolSummary{}
+						if f11f1elemf8iter.CurrentInstanceCount != nil {
+							currentInstanceCountCopy := int64(*f11f1elemf8iter.CurrentInstanceCount)
+							f11f1elemf8elem.CurrentInstanceCount = &currentInstanceCountCopy
 						}
-						if f10f1elemf12iter.Status != "" {
-							f10f1elemf12elem.Status = aws.String(string(f10f1elemf12iter.Status))
+						if f11f1elemf8iter.InstanceType != "" {
+							f11f1elemf8elem.InstanceType = aws.String(string(f11f1elemf8iter.InstanceType))
 						}
-						if f10f1elemf12iter.StatusMessage != nil {
-							f10f1elemf12elem.StatusMessage = f10f1elemf12iter.StatusMessage
-						}
-						f10f1elemf12 = append(f10f1elemf12, f10f1elemf12elem)
+						f11f1elemf8 = append(f11f1elemf8, f11f1elemf8elem)
 					}
-					f10f1elem.VariantStatus = f10f1elemf12
+					f11f1elem.InstancePools = f11f1elemf8
 				}
-				f10f1 = append(f10f1, f10f1elem)
+				if f11f1iter.InstanceType != "" {
+					f11f1elem.InstanceType = aws.String(string(f11f1iter.InstanceType))
+				}
+				if f11f1iter.ManagedInstanceScaling != nil {
+					f11f1elemf10 := &svcapitypes.ProductionVariantManagedInstanceScaling{}
+					if f11f1iter.ManagedInstanceScaling.MaxInstanceCount != nil {
+						maxInstanceCountCopy := int64(*f11f1iter.ManagedInstanceScaling.MaxInstanceCount)
+						f11f1elemf10.MaxInstanceCount = &maxInstanceCountCopy
+					}
+					if f11f1iter.ManagedInstanceScaling.MinInstanceCount != nil {
+						minInstanceCountCopy := int64(*f11f1iter.ManagedInstanceScaling.MinInstanceCount)
+						f11f1elemf10.MinInstanceCount = &minInstanceCountCopy
+					}
+					if f11f1iter.ManagedInstanceScaling.Status != "" {
+						f11f1elemf10.Status = aws.String(string(f11f1iter.ManagedInstanceScaling.Status))
+					}
+					f11f1elem.ManagedInstanceScaling = f11f1elemf10
+				}
+				if f11f1iter.RoutingConfig != nil {
+					f11f1elemf11 := &svcapitypes.ProductionVariantRoutingConfig{}
+					if f11f1iter.RoutingConfig.RoutingStrategy != "" {
+						f11f1elemf11.RoutingStrategy = aws.String(string(f11f1iter.RoutingConfig.RoutingStrategy))
+					}
+					f11f1elem.RoutingConfig = f11f1elemf11
+				}
+				if f11f1iter.VariantName != nil {
+					f11f1elem.VariantName = f11f1iter.VariantName
+				}
+				if f11f1iter.VariantStatus != nil {
+					f11f1elemf13 := []*svcapitypes.ProductionVariantStatus{}
+					for _, f11f1elemf13iter := range f11f1iter.VariantStatus {
+						f11f1elemf13elem := &svcapitypes.ProductionVariantStatus{}
+						if f11f1elemf13iter.StartTime != nil {
+							f11f1elemf13elem.StartTime = &metav1.Time{*f11f1elemf13iter.StartTime}
+						}
+						if f11f1elemf13iter.Status != "" {
+							f11f1elemf13elem.Status = aws.String(string(f11f1elemf13iter.Status))
+						}
+						if f11f1elemf13iter.StatusMessage != nil {
+							f11f1elemf13elem.StatusMessage = f11f1elemf13iter.StatusMessage
+						}
+						f11f1elemf13 = append(f11f1elemf13, f11f1elemf13elem)
+					}
+					f11f1elem.VariantStatus = f11f1elemf13
+				}
+				f11f1 = append(f11f1, f11f1elem)
 			}
-			f10.ProductionVariants = f10f1
+			f11.ProductionVariants = f11f1
 		}
 		if resp.PendingDeploymentSummary.StartTime != nil {
-			f10.StartTime = &metav1.Time{*resp.PendingDeploymentSummary.StartTime}
+			f11.StartTime = &metav1.Time{*resp.PendingDeploymentSummary.StartTime}
 		}
-		ko.Status.PendingDeploymentSummary = f10
+		ko.Status.PendingDeploymentSummary = f11
 	} else {
 		ko.Status.PendingDeploymentSummary = nil
 	}
 	if resp.ProductionVariants != nil {
-		f11 := []*svcapitypes.ProductionVariantSummary{}
-		for _, f11iter := range resp.ProductionVariants {
-			f11elem := &svcapitypes.ProductionVariantSummary{}
-			if f11iter.CapacityReservationConfig != nil {
-				f11elemf0 := &svcapitypes.ProductionVariantCapacityReservationSummary{}
-				if f11iter.CapacityReservationConfig.AvailableInstanceCount != nil {
-					availableInstanceCountCopy := int64(*f11iter.CapacityReservationConfig.AvailableInstanceCount)
-					f11elemf0.AvailableInstanceCount = &availableInstanceCountCopy
+		f12 := []*svcapitypes.ProductionVariantSummary{}
+		for _, f12iter := range resp.ProductionVariants {
+			f12elem := &svcapitypes.ProductionVariantSummary{}
+			if f12iter.CapacityReservationConfig != nil {
+				f12elemf0 := &svcapitypes.ProductionVariantCapacityReservationSummary{}
+				if f12iter.CapacityReservationConfig.AvailableInstanceCount != nil {
+					availableInstanceCountCopy := int64(*f12iter.CapacityReservationConfig.AvailableInstanceCount)
+					f12elemf0.AvailableInstanceCount = &availableInstanceCountCopy
 				}
-				if f11iter.CapacityReservationConfig.CapacityReservationPreference != "" {
-					f11elemf0.CapacityReservationPreference = aws.String(string(f11iter.CapacityReservationConfig.CapacityReservationPreference))
+				if f12iter.CapacityReservationConfig.CapacityReservationPreference != "" {
+					f12elemf0.CapacityReservationPreference = aws.String(string(f12iter.CapacityReservationConfig.CapacityReservationPreference))
 				}
-				if f11iter.CapacityReservationConfig.Ec2CapacityReservations != nil {
-					f11elemf0f2 := []*svcapitypes.EC2CapacityReservation{}
-					for _, f11elemf0f2iter := range f11iter.CapacityReservationConfig.Ec2CapacityReservations {
-						f11elemf0f2elem := &svcapitypes.EC2CapacityReservation{}
-						if f11elemf0f2iter.AvailableInstanceCount != nil {
-							availableInstanceCountCopy := int64(*f11elemf0f2iter.AvailableInstanceCount)
-							f11elemf0f2elem.AvailableInstanceCount = &availableInstanceCountCopy
+				if f12iter.CapacityReservationConfig.Ec2CapacityReservations != nil {
+					f12elemf0f2 := []*svcapitypes.EC2CapacityReservation{}
+					for _, f12elemf0f2iter := range f12iter.CapacityReservationConfig.Ec2CapacityReservations {
+						f12elemf0f2elem := &svcapitypes.EC2CapacityReservation{}
+						if f12elemf0f2iter.AvailableInstanceCount != nil {
+							availableInstanceCountCopy := int64(*f12elemf0f2iter.AvailableInstanceCount)
+							f12elemf0f2elem.AvailableInstanceCount = &availableInstanceCountCopy
 						}
-						if f11elemf0f2iter.Ec2CapacityReservationId != nil {
-							f11elemf0f2elem.EC2CapacityReservationID = f11elemf0f2iter.Ec2CapacityReservationId
+						if f12elemf0f2iter.Ec2CapacityReservationId != nil {
+							f12elemf0f2elem.EC2CapacityReservationID = f12elemf0f2iter.Ec2CapacityReservationId
 						}
-						if f11elemf0f2iter.TotalInstanceCount != nil {
-							totalInstanceCountCopy := int64(*f11elemf0f2iter.TotalInstanceCount)
-							f11elemf0f2elem.TotalInstanceCount = &totalInstanceCountCopy
+						if f12elemf0f2iter.TotalInstanceCount != nil {
+							totalInstanceCountCopy := int64(*f12elemf0f2iter.TotalInstanceCount)
+							f12elemf0f2elem.TotalInstanceCount = &totalInstanceCountCopy
 						}
-						if f11elemf0f2iter.UsedByCurrentEndpoint != nil {
-							usedByCurrentEndpointCopy := int64(*f11elemf0f2iter.UsedByCurrentEndpoint)
-							f11elemf0f2elem.UsedByCurrentEndpoint = &usedByCurrentEndpointCopy
+						if f12elemf0f2iter.UsedByCurrentEndpoint != nil {
+							usedByCurrentEndpointCopy := int64(*f12elemf0f2iter.UsedByCurrentEndpoint)
+							f12elemf0f2elem.UsedByCurrentEndpoint = &usedByCurrentEndpointCopy
 						}
-						f11elemf0f2 = append(f11elemf0f2, f11elemf0f2elem)
+						f12elemf0f2 = append(f12elemf0f2, f12elemf0f2elem)
 					}
-					f11elemf0.EC2CapacityReservations = f11elemf0f2
+					f12elemf0.EC2CapacityReservations = f12elemf0f2
 				}
-				if f11iter.CapacityReservationConfig.MlReservationArn != nil {
-					f11elemf0.MlReservationARN = f11iter.CapacityReservationConfig.MlReservationArn
+				if f12iter.CapacityReservationConfig.MlReservationArn != nil {
+					f12elemf0.MlReservationARN = f12iter.CapacityReservationConfig.MlReservationArn
 				}
-				if f11iter.CapacityReservationConfig.TotalInstanceCount != nil {
-					totalInstanceCountCopy := int64(*f11iter.CapacityReservationConfig.TotalInstanceCount)
-					f11elemf0.TotalInstanceCount = &totalInstanceCountCopy
+				if f12iter.CapacityReservationConfig.TotalInstanceCount != nil {
+					totalInstanceCountCopy := int64(*f12iter.CapacityReservationConfig.TotalInstanceCount)
+					f12elemf0.TotalInstanceCount = &totalInstanceCountCopy
 				}
-				if f11iter.CapacityReservationConfig.UsedByCurrentEndpoint != nil {
-					usedByCurrentEndpointCopy := int64(*f11iter.CapacityReservationConfig.UsedByCurrentEndpoint)
-					f11elemf0.UsedByCurrentEndpoint = &usedByCurrentEndpointCopy
+				if f12iter.CapacityReservationConfig.UsedByCurrentEndpoint != nil {
+					usedByCurrentEndpointCopy := int64(*f12iter.CapacityReservationConfig.UsedByCurrentEndpoint)
+					f12elemf0.UsedByCurrentEndpoint = &usedByCurrentEndpointCopy
 				}
-				f11elem.CapacityReservationConfig = f11elemf0
+				f12elem.CapacityReservationConfig = f12elemf0
 			}
-			if f11iter.CurrentInstanceCount != nil {
-				currentInstanceCountCopy := int64(*f11iter.CurrentInstanceCount)
-				f11elem.CurrentInstanceCount = &currentInstanceCountCopy
+			if f12iter.CurrentInstanceCount != nil {
+				currentInstanceCountCopy := int64(*f12iter.CurrentInstanceCount)
+				f12elem.CurrentInstanceCount = &currentInstanceCountCopy
 			}
-			if f11iter.CurrentServerlessConfig != nil {
-				f11elemf2 := &svcapitypes.ProductionVariantServerlessConfig{}
-				if f11iter.CurrentServerlessConfig.MaxConcurrency != nil {
-					maxConcurrencyCopy := int64(*f11iter.CurrentServerlessConfig.MaxConcurrency)
-					f11elemf2.MaxConcurrency = &maxConcurrencyCopy
+			if f12iter.CurrentServerlessConfig != nil {
+				f12elemf2 := &svcapitypes.ProductionVariantServerlessConfig{}
+				if f12iter.CurrentServerlessConfig.MaxConcurrency != nil {
+					maxConcurrencyCopy := int64(*f12iter.CurrentServerlessConfig.MaxConcurrency)
+					f12elemf2.MaxConcurrency = &maxConcurrencyCopy
 				}
-				if f11iter.CurrentServerlessConfig.MemorySizeInMB != nil {
-					memorySizeInMBCopy := int64(*f11iter.CurrentServerlessConfig.MemorySizeInMB)
-					f11elemf2.MemorySizeInMB = &memorySizeInMBCopy
+				if f12iter.CurrentServerlessConfig.MemorySizeInMB != nil {
+					memorySizeInMBCopy := int64(*f12iter.CurrentServerlessConfig.MemorySizeInMB)
+					f12elemf2.MemorySizeInMB = &memorySizeInMBCopy
 				}
-				if f11iter.CurrentServerlessConfig.ProvisionedConcurrency != nil {
-					provisionedConcurrencyCopy := int64(*f11iter.CurrentServerlessConfig.ProvisionedConcurrency)
-					f11elemf2.ProvisionedConcurrency = &provisionedConcurrencyCopy
+				if f12iter.CurrentServerlessConfig.ProvisionedConcurrency != nil {
+					provisionedConcurrencyCopy := int64(*f12iter.CurrentServerlessConfig.ProvisionedConcurrency)
+					f12elemf2.ProvisionedConcurrency = &provisionedConcurrencyCopy
 				}
-				f11elem.CurrentServerlessConfig = f11elemf2
+				f12elem.CurrentServerlessConfig = f12elemf2
 			}
-			if f11iter.CurrentWeight != nil {
-				currentWeightCopy := float64(*f11iter.CurrentWeight)
-				f11elem.CurrentWeight = &currentWeightCopy
+			if f12iter.CurrentWeight != nil {
+				currentWeightCopy := float64(*f12iter.CurrentWeight)
+				f12elem.CurrentWeight = &currentWeightCopy
 			}
-			if f11iter.DeployedImages != nil {
-				f11elemf4 := []*svcapitypes.DeployedImage{}
-				for _, f11elemf4iter := range f11iter.DeployedImages {
-					f11elemf4elem := &svcapitypes.DeployedImage{}
-					if f11elemf4iter.ResolutionTime != nil {
-						f11elemf4elem.ResolutionTime = &metav1.Time{*f11elemf4iter.ResolutionTime}
+			if f12iter.DeployedImages != nil {
+				f12elemf4 := []*svcapitypes.DeployedImage{}
+				for _, f12elemf4iter := range f12iter.DeployedImages {
+					f12elemf4elem := &svcapitypes.DeployedImage{}
+					if f12elemf4iter.ResolutionTime != nil {
+						f12elemf4elem.ResolutionTime = &metav1.Time{*f12elemf4iter.ResolutionTime}
 					}
-					if f11elemf4iter.ResolvedImage != nil {
-						f11elemf4elem.ResolvedImage = f11elemf4iter.ResolvedImage
+					if f12elemf4iter.ResolvedImage != nil {
+						f12elemf4elem.ResolvedImage = f12elemf4iter.ResolvedImage
 					}
-					if f11elemf4iter.SpecifiedImage != nil {
-						f11elemf4elem.SpecifiedImage = f11elemf4iter.SpecifiedImage
+					if f12elemf4iter.SpecifiedImage != nil {
+						f12elemf4elem.SpecifiedImage = f12elemf4iter.SpecifiedImage
 					}
-					f11elemf4 = append(f11elemf4, f11elemf4elem)
+					f12elemf4 = append(f12elemf4, f12elemf4elem)
 				}
-				f11elem.DeployedImages = f11elemf4
+				f12elem.DeployedImages = f12elemf4
 			}
-			if f11iter.DesiredInstanceCount != nil {
-				desiredInstanceCountCopy := int64(*f11iter.DesiredInstanceCount)
-				f11elem.DesiredInstanceCount = &desiredInstanceCountCopy
+			if f12iter.DesiredInstanceCount != nil {
+				desiredInstanceCountCopy := int64(*f12iter.DesiredInstanceCount)
+				f12elem.DesiredInstanceCount = &desiredInstanceCountCopy
 			}
-			if f11iter.DesiredServerlessConfig != nil {
-				f11elemf6 := &svcapitypes.ProductionVariantServerlessConfig{}
-				if f11iter.DesiredServerlessConfig.MaxConcurrency != nil {
-					maxConcurrencyCopy := int64(*f11iter.DesiredServerlessConfig.MaxConcurrency)
-					f11elemf6.MaxConcurrency = &maxConcurrencyCopy
+			if f12iter.DesiredServerlessConfig != nil {
+				f12elemf6 := &svcapitypes.ProductionVariantServerlessConfig{}
+				if f12iter.DesiredServerlessConfig.MaxConcurrency != nil {
+					maxConcurrencyCopy := int64(*f12iter.DesiredServerlessConfig.MaxConcurrency)
+					f12elemf6.MaxConcurrency = &maxConcurrencyCopy
 				}
-				if f11iter.DesiredServerlessConfig.MemorySizeInMB != nil {
-					memorySizeInMBCopy := int64(*f11iter.DesiredServerlessConfig.MemorySizeInMB)
-					f11elemf6.MemorySizeInMB = &memorySizeInMBCopy
+				if f12iter.DesiredServerlessConfig.MemorySizeInMB != nil {
+					memorySizeInMBCopy := int64(*f12iter.DesiredServerlessConfig.MemorySizeInMB)
+					f12elemf6.MemorySizeInMB = &memorySizeInMBCopy
 				}
-				if f11iter.DesiredServerlessConfig.ProvisionedConcurrency != nil {
-					provisionedConcurrencyCopy := int64(*f11iter.DesiredServerlessConfig.ProvisionedConcurrency)
-					f11elemf6.ProvisionedConcurrency = &provisionedConcurrencyCopy
+				if f12iter.DesiredServerlessConfig.ProvisionedConcurrency != nil {
+					provisionedConcurrencyCopy := int64(*f12iter.DesiredServerlessConfig.ProvisionedConcurrency)
+					f12elemf6.ProvisionedConcurrency = &provisionedConcurrencyCopy
 				}
-				f11elem.DesiredServerlessConfig = f11elemf6
+				f12elem.DesiredServerlessConfig = f12elemf6
 			}
-			if f11iter.DesiredWeight != nil {
-				desiredWeightCopy := float64(*f11iter.DesiredWeight)
-				f11elem.DesiredWeight = &desiredWeightCopy
+			if f12iter.DesiredWeight != nil {
+				desiredWeightCopy := float64(*f12iter.DesiredWeight)
+				f12elem.DesiredWeight = &desiredWeightCopy
 			}
-			if f11iter.ManagedInstanceScaling != nil {
-				f11elemf8 := &svcapitypes.ProductionVariantManagedInstanceScaling{}
-				if f11iter.ManagedInstanceScaling.MaxInstanceCount != nil {
-					maxInstanceCountCopy := int64(*f11iter.ManagedInstanceScaling.MaxInstanceCount)
-					f11elemf8.MaxInstanceCount = &maxInstanceCountCopy
-				}
-				if f11iter.ManagedInstanceScaling.MinInstanceCount != nil {
-					minInstanceCountCopy := int64(*f11iter.ManagedInstanceScaling.MinInstanceCount)
-					f11elemf8.MinInstanceCount = &minInstanceCountCopy
-				}
-				if f11iter.ManagedInstanceScaling.Status != "" {
-					f11elemf8.Status = aws.String(string(f11iter.ManagedInstanceScaling.Status))
-				}
-				f11elem.ManagedInstanceScaling = f11elemf8
-			}
-			if f11iter.RoutingConfig != nil {
-				f11elemf9 := &svcapitypes.ProductionVariantRoutingConfig{}
-				if f11iter.RoutingConfig.RoutingStrategy != "" {
-					f11elemf9.RoutingStrategy = aws.String(string(f11iter.RoutingConfig.RoutingStrategy))
-				}
-				f11elem.RoutingConfig = f11elemf9
-			}
-			if f11iter.VariantName != nil {
-				f11elem.VariantName = f11iter.VariantName
-			}
-			if f11iter.VariantStatus != nil {
-				f11elemf11 := []*svcapitypes.ProductionVariantStatus{}
-				for _, f11elemf11iter := range f11iter.VariantStatus {
-					f11elemf11elem := &svcapitypes.ProductionVariantStatus{}
-					if f11elemf11iter.StartTime != nil {
-						f11elemf11elem.StartTime = &metav1.Time{*f11elemf11iter.StartTime}
+			if f12iter.InstancePools != nil {
+				f12elemf8 := []*svcapitypes.InstancePoolSummary{}
+				for _, f12elemf8iter := range f12iter.InstancePools {
+					f12elemf8elem := &svcapitypes.InstancePoolSummary{}
+					if f12elemf8iter.CurrentInstanceCount != nil {
+						currentInstanceCountCopy := int64(*f12elemf8iter.CurrentInstanceCount)
+						f12elemf8elem.CurrentInstanceCount = &currentInstanceCountCopy
 					}
-					if f11elemf11iter.Status != "" {
-						f11elemf11elem.Status = aws.String(string(f11elemf11iter.Status))
+					if f12elemf8iter.InstanceType != "" {
+						f12elemf8elem.InstanceType = aws.String(string(f12elemf8iter.InstanceType))
 					}
-					if f11elemf11iter.StatusMessage != nil {
-						f11elemf11elem.StatusMessage = f11elemf11iter.StatusMessage
-					}
-					f11elemf11 = append(f11elemf11, f11elemf11elem)
+					f12elemf8 = append(f12elemf8, f12elemf8elem)
 				}
-				f11elem.VariantStatus = f11elemf11
+				f12elem.InstancePools = f12elemf8
 			}
-			f11 = append(f11, f11elem)
+			if f12iter.ManagedInstanceScaling != nil {
+				f12elemf9 := &svcapitypes.ProductionVariantManagedInstanceScaling{}
+				if f12iter.ManagedInstanceScaling.MaxInstanceCount != nil {
+					maxInstanceCountCopy := int64(*f12iter.ManagedInstanceScaling.MaxInstanceCount)
+					f12elemf9.MaxInstanceCount = &maxInstanceCountCopy
+				}
+				if f12iter.ManagedInstanceScaling.MinInstanceCount != nil {
+					minInstanceCountCopy := int64(*f12iter.ManagedInstanceScaling.MinInstanceCount)
+					f12elemf9.MinInstanceCount = &minInstanceCountCopy
+				}
+				if f12iter.ManagedInstanceScaling.Status != "" {
+					f12elemf9.Status = aws.String(string(f12iter.ManagedInstanceScaling.Status))
+				}
+				f12elem.ManagedInstanceScaling = f12elemf9
+			}
+			if f12iter.RoutingConfig != nil {
+				f12elemf10 := &svcapitypes.ProductionVariantRoutingConfig{}
+				if f12iter.RoutingConfig.RoutingStrategy != "" {
+					f12elemf10.RoutingStrategy = aws.String(string(f12iter.RoutingConfig.RoutingStrategy))
+				}
+				f12elem.RoutingConfig = f12elemf10
+			}
+			if f12iter.VariantName != nil {
+				f12elem.VariantName = f12iter.VariantName
+			}
+			if f12iter.VariantStatus != nil {
+				f12elemf12 := []*svcapitypes.ProductionVariantStatus{}
+				for _, f12elemf12iter := range f12iter.VariantStatus {
+					f12elemf12elem := &svcapitypes.ProductionVariantStatus{}
+					if f12elemf12iter.StartTime != nil {
+						f12elemf12elem.StartTime = &metav1.Time{*f12elemf12iter.StartTime}
+					}
+					if f12elemf12iter.Status != "" {
+						f12elemf12elem.Status = aws.String(string(f12elemf12iter.Status))
+					}
+					if f12elemf12iter.StatusMessage != nil {
+						f12elemf12elem.StatusMessage = f12elemf12iter.StatusMessage
+					}
+					f12elemf12 = append(f12elemf12, f12elemf12elem)
+				}
+				f12elem.VariantStatus = f12elemf12
+			}
+			f12 = append(f12, f12elem)
 		}
-		ko.Status.ProductionVariants = f11
+		ko.Status.ProductionVariants = f12
 	} else {
 		ko.Status.ProductionVariants = nil
 	}
