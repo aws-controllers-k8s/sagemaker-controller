@@ -124,14 +124,14 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.AlgorithmSpecification = nil
 	}
 	if resp.CheckpointConfig != nil {
-		f3 := &svcapitypes.CheckpointConfig{}
+		f4 := &svcapitypes.CheckpointConfig{}
 		if resp.CheckpointConfig.LocalPath != nil {
-			f3.LocalPath = resp.CheckpointConfig.LocalPath
+			f4.LocalPath = resp.CheckpointConfig.LocalPath
 		}
 		if resp.CheckpointConfig.S3Uri != nil {
-			f3.S3URI = resp.CheckpointConfig.S3Uri
+			f4.S3URI = resp.CheckpointConfig.S3Uri
 		}
-		ko.Spec.CheckpointConfig = f3
+		ko.Spec.CheckpointConfig = f4
 	} else {
 		ko.Spec.CheckpointConfig = nil
 	}
@@ -141,88 +141,88 @@ func (rm *resourceManager) sdkFind(
 		ko.Status.CreationTime = nil
 	}
 	if resp.DebugHookConfig != nil {
-		f5 := &svcapitypes.DebugHookConfig{}
+		f6 := &svcapitypes.DebugHookConfig{}
 		if resp.DebugHookConfig.CollectionConfigurations != nil {
-			f5f0 := []*svcapitypes.CollectionConfiguration{}
-			for _, f5f0iter := range resp.DebugHookConfig.CollectionConfigurations {
-				f5f0elem := &svcapitypes.CollectionConfiguration{}
-				if f5f0iter.CollectionName != nil {
-					f5f0elem.CollectionName = f5f0iter.CollectionName
+			f6f0 := []*svcapitypes.CollectionConfiguration{}
+			for _, f6f0iter := range resp.DebugHookConfig.CollectionConfigurations {
+				f6f0elem := &svcapitypes.CollectionConfiguration{}
+				if f6f0iter.CollectionName != nil {
+					f6f0elem.CollectionName = f6f0iter.CollectionName
 				}
-				if f5f0iter.CollectionParameters != nil {
-					f5f0elem.CollectionParameters = aws.StringMap(f5f0iter.CollectionParameters)
+				if f6f0iter.CollectionParameters != nil {
+					f6f0elem.CollectionParameters = aws.StringMap(f6f0iter.CollectionParameters)
 				}
-				f5f0 = append(f5f0, f5f0elem)
+				f6f0 = append(f6f0, f6f0elem)
 			}
-			f5.CollectionConfigurations = f5f0
+			f6.CollectionConfigurations = f6f0
 		}
 		if resp.DebugHookConfig.HookParameters != nil {
-			f5.HookParameters = aws.StringMap(resp.DebugHookConfig.HookParameters)
+			f6.HookParameters = aws.StringMap(resp.DebugHookConfig.HookParameters)
 		}
 		if resp.DebugHookConfig.LocalPath != nil {
-			f5.LocalPath = resp.DebugHookConfig.LocalPath
+			f6.LocalPath = resp.DebugHookConfig.LocalPath
 		}
 		if resp.DebugHookConfig.S3OutputPath != nil {
-			f5.S3OutputPath = resp.DebugHookConfig.S3OutputPath
+			f6.S3OutputPath = resp.DebugHookConfig.S3OutputPath
 		}
-		ko.Spec.DebugHookConfig = f5
+		ko.Spec.DebugHookConfig = f6
 	} else {
 		ko.Spec.DebugHookConfig = nil
 	}
 	if resp.DebugRuleConfigurations != nil {
-		f6 := []*svcapitypes.DebugRuleConfiguration{}
-		for _, f6iter := range resp.DebugRuleConfigurations {
-			f6elem := &svcapitypes.DebugRuleConfiguration{}
-			if f6iter.InstanceType != "" {
-				f6elem.InstanceType = aws.String(string(f6iter.InstanceType))
+		f7 := []*svcapitypes.DebugRuleConfiguration{}
+		for _, f7iter := range resp.DebugRuleConfigurations {
+			f7elem := &svcapitypes.DebugRuleConfiguration{}
+			if f7iter.InstanceType != "" {
+				f7elem.InstanceType = aws.String(string(f7iter.InstanceType))
 			}
-			if f6iter.LocalPath != nil {
-				f6elem.LocalPath = f6iter.LocalPath
-			}
-			if f6iter.RuleConfigurationName != nil {
-				f6elem.RuleConfigurationName = f6iter.RuleConfigurationName
-			}
-			if f6iter.RuleEvaluatorImage != nil {
-				f6elem.RuleEvaluatorImage = f6iter.RuleEvaluatorImage
-			}
-			if f6iter.RuleParameters != nil {
-				f6elem.RuleParameters = aws.StringMap(f6iter.RuleParameters)
-			}
-			if f6iter.S3OutputPath != nil {
-				f6elem.S3OutputPath = f6iter.S3OutputPath
-			}
-			if f6iter.VolumeSizeInGB != nil {
-				volumeSizeInGBCopy := int64(*f6iter.VolumeSizeInGB)
-				f6elem.VolumeSizeInGB = &volumeSizeInGBCopy
-			}
-			f6 = append(f6, f6elem)
-		}
-		ko.Spec.DebugRuleConfigurations = f6
-	} else {
-		ko.Spec.DebugRuleConfigurations = nil
-	}
-	if resp.DebugRuleEvaluationStatuses != nil {
-		f7 := []*svcapitypes.DebugRuleEvaluationStatus{}
-		for _, f7iter := range resp.DebugRuleEvaluationStatuses {
-			f7elem := &svcapitypes.DebugRuleEvaluationStatus{}
-			if f7iter.LastModifiedTime != nil {
-				f7elem.LastModifiedTime = &metav1.Time{*f7iter.LastModifiedTime}
+			if f7iter.LocalPath != nil {
+				f7elem.LocalPath = f7iter.LocalPath
 			}
 			if f7iter.RuleConfigurationName != nil {
 				f7elem.RuleConfigurationName = f7iter.RuleConfigurationName
 			}
-			if f7iter.RuleEvaluationJobArn != nil {
-				f7elem.RuleEvaluationJobARN = f7iter.RuleEvaluationJobArn
+			if f7iter.RuleEvaluatorImage != nil {
+				f7elem.RuleEvaluatorImage = f7iter.RuleEvaluatorImage
 			}
-			if f7iter.RuleEvaluationStatus != "" {
-				f7elem.RuleEvaluationStatus = aws.String(string(f7iter.RuleEvaluationStatus))
+			if f7iter.RuleParameters != nil {
+				f7elem.RuleParameters = aws.StringMap(f7iter.RuleParameters)
 			}
-			if f7iter.StatusDetails != nil {
-				f7elem.StatusDetails = f7iter.StatusDetails
+			if f7iter.S3OutputPath != nil {
+				f7elem.S3OutputPath = f7iter.S3OutputPath
+			}
+			if f7iter.VolumeSizeInGB != nil {
+				volumeSizeInGBCopy := int64(*f7iter.VolumeSizeInGB)
+				f7elem.VolumeSizeInGB = &volumeSizeInGBCopy
 			}
 			f7 = append(f7, f7elem)
 		}
-		ko.Status.DebugRuleEvaluationStatuses = f7
+		ko.Spec.DebugRuleConfigurations = f7
+	} else {
+		ko.Spec.DebugRuleConfigurations = nil
+	}
+	if resp.DebugRuleEvaluationStatuses != nil {
+		f8 := []*svcapitypes.DebugRuleEvaluationStatus{}
+		for _, f8iter := range resp.DebugRuleEvaluationStatuses {
+			f8elem := &svcapitypes.DebugRuleEvaluationStatus{}
+			if f8iter.LastModifiedTime != nil {
+				f8elem.LastModifiedTime = &metav1.Time{*f8iter.LastModifiedTime}
+			}
+			if f8iter.RuleConfigurationName != nil {
+				f8elem.RuleConfigurationName = f8iter.RuleConfigurationName
+			}
+			if f8iter.RuleEvaluationJobArn != nil {
+				f8elem.RuleEvaluationJobARN = f8iter.RuleEvaluationJobArn
+			}
+			if f8iter.RuleEvaluationStatus != "" {
+				f8elem.RuleEvaluationStatus = aws.String(string(f8iter.RuleEvaluationStatus))
+			}
+			if f8iter.StatusDetails != nil {
+				f8elem.StatusDetails = f8iter.StatusDetails
+			}
+			f8 = append(f8, f8elem)
+		}
+		ko.Status.DebugRuleEvaluationStatuses = f8
 	} else {
 		ko.Status.DebugRuleEvaluationStatuses = nil
 	}
@@ -247,17 +247,17 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.Environment = nil
 	}
 	if resp.ExperimentConfig != nil {
-		f12 := &svcapitypes.ExperimentConfig{}
+		f13 := &svcapitypes.ExperimentConfig{}
 		if resp.ExperimentConfig.ExperimentName != nil {
-			f12.ExperimentName = resp.ExperimentConfig.ExperimentName
+			f13.ExperimentName = resp.ExperimentConfig.ExperimentName
 		}
 		if resp.ExperimentConfig.TrialComponentDisplayName != nil {
-			f12.TrialComponentDisplayName = resp.ExperimentConfig.TrialComponentDisplayName
+			f13.TrialComponentDisplayName = resp.ExperimentConfig.TrialComponentDisplayName
 		}
 		if resp.ExperimentConfig.TrialName != nil {
-			f12.TrialName = resp.ExperimentConfig.TrialName
+			f13.TrialName = resp.ExperimentConfig.TrialName
 		}
-		ko.Spec.ExperimentConfig = f12
+		ko.Spec.ExperimentConfig = f13
 	} else {
 		ko.Spec.ExperimentConfig = nil
 	}
@@ -272,96 +272,96 @@ func (rm *resourceManager) sdkFind(
 		ko.Spec.HyperParameters = nil
 	}
 	if resp.InfraCheckConfig != nil {
-		f16 := &svcapitypes.InfraCheckConfig{}
+		f17 := &svcapitypes.InfraCheckConfig{}
 		if resp.InfraCheckConfig.EnableInfraCheck != nil {
-			f16.EnableInfraCheck = resp.InfraCheckConfig.EnableInfraCheck
+			f17.EnableInfraCheck = resp.InfraCheckConfig.EnableInfraCheck
 		}
-		ko.Spec.InfraCheckConfig = f16
+		ko.Spec.InfraCheckConfig = f17
 	} else {
 		ko.Spec.InfraCheckConfig = nil
 	}
 	if resp.InputDataConfig != nil {
-		f17 := []*svcapitypes.Channel{}
-		for _, f17iter := range resp.InputDataConfig {
-			f17elem := &svcapitypes.Channel{}
-			if f17iter.ChannelName != nil {
-				f17elem.ChannelName = f17iter.ChannelName
+		f18 := []*svcapitypes.Channel{}
+		for _, f18iter := range resp.InputDataConfig {
+			f18elem := &svcapitypes.Channel{}
+			if f18iter.ChannelName != nil {
+				f18elem.ChannelName = f18iter.ChannelName
 			}
-			if f17iter.CompressionType != "" {
-				f17elem.CompressionType = aws.String(string(f17iter.CompressionType))
+			if f18iter.CompressionType != "" {
+				f18elem.CompressionType = aws.String(string(f18iter.CompressionType))
 			}
-			if f17iter.ContentType != nil {
-				f17elem.ContentType = f17iter.ContentType
+			if f18iter.ContentType != nil {
+				f18elem.ContentType = f18iter.ContentType
 			}
-			if f17iter.DataSource != nil {
-				f17elemf3 := &svcapitypes.DataSource{}
-				if f17iter.DataSource.FileSystemDataSource != nil {
-					f17elemf3f0 := &svcapitypes.FileSystemDataSource{}
-					if f17iter.DataSource.FileSystemDataSource.DirectoryPath != nil {
-						f17elemf3f0.DirectoryPath = f17iter.DataSource.FileSystemDataSource.DirectoryPath
+			if f18iter.DataSource != nil {
+				f18elemf3 := &svcapitypes.DataSource{}
+				if f18iter.DataSource.FileSystemDataSource != nil {
+					f18elemf3f0 := &svcapitypes.FileSystemDataSource{}
+					if f18iter.DataSource.FileSystemDataSource.DirectoryPath != nil {
+						f18elemf3f0.DirectoryPath = f18iter.DataSource.FileSystemDataSource.DirectoryPath
 					}
-					if f17iter.DataSource.FileSystemDataSource.FileSystemAccessMode != "" {
-						f17elemf3f0.FileSystemAccessMode = aws.String(string(f17iter.DataSource.FileSystemDataSource.FileSystemAccessMode))
+					if f18iter.DataSource.FileSystemDataSource.FileSystemAccessMode != "" {
+						f18elemf3f0.FileSystemAccessMode = aws.String(string(f18iter.DataSource.FileSystemDataSource.FileSystemAccessMode))
 					}
-					if f17iter.DataSource.FileSystemDataSource.FileSystemId != nil {
-						f17elemf3f0.FileSystemID = f17iter.DataSource.FileSystemDataSource.FileSystemId
+					if f18iter.DataSource.FileSystemDataSource.FileSystemId != nil {
+						f18elemf3f0.FileSystemID = f18iter.DataSource.FileSystemDataSource.FileSystemId
 					}
-					if f17iter.DataSource.FileSystemDataSource.FileSystemType != "" {
-						f17elemf3f0.FileSystemType = aws.String(string(f17iter.DataSource.FileSystemDataSource.FileSystemType))
+					if f18iter.DataSource.FileSystemDataSource.FileSystemType != "" {
+						f18elemf3f0.FileSystemType = aws.String(string(f18iter.DataSource.FileSystemDataSource.FileSystemType))
 					}
-					f17elemf3.FileSystemDataSource = f17elemf3f0
+					f18elemf3.FileSystemDataSource = f18elemf3f0
 				}
-				if f17iter.DataSource.S3DataSource != nil {
-					f17elemf3f1 := &svcapitypes.S3DataSource{}
-					if f17iter.DataSource.S3DataSource.AttributeNames != nil {
-						f17elemf3f1.AttributeNames = aws.StringSlice(f17iter.DataSource.S3DataSource.AttributeNames)
+				if f18iter.DataSource.S3DataSource != nil {
+					f18elemf3f1 := &svcapitypes.S3DataSource{}
+					if f18iter.DataSource.S3DataSource.AttributeNames != nil {
+						f18elemf3f1.AttributeNames = aws.StringSlice(f18iter.DataSource.S3DataSource.AttributeNames)
 					}
-					if f17iter.DataSource.S3DataSource.HubAccessConfig != nil {
-						f17elemf3f1f1 := &svcapitypes.HubAccessConfig{}
-						if f17iter.DataSource.S3DataSource.HubAccessConfig.HubContentArn != nil {
-							f17elemf3f1f1.HubContentARN = f17iter.DataSource.S3DataSource.HubAccessConfig.HubContentArn
+					if f18iter.DataSource.S3DataSource.HubAccessConfig != nil {
+						f18elemf3f1f1 := &svcapitypes.HubAccessConfig{}
+						if f18iter.DataSource.S3DataSource.HubAccessConfig.HubContentArn != nil {
+							f18elemf3f1f1.HubContentARN = f18iter.DataSource.S3DataSource.HubAccessConfig.HubContentArn
 						}
-						f17elemf3f1.HubAccessConfig = f17elemf3f1f1
+						f18elemf3f1.HubAccessConfig = f18elemf3f1f1
 					}
-					if f17iter.DataSource.S3DataSource.InstanceGroupNames != nil {
-						f17elemf3f1.InstanceGroupNames = aws.StringSlice(f17iter.DataSource.S3DataSource.InstanceGroupNames)
+					if f18iter.DataSource.S3DataSource.InstanceGroupNames != nil {
+						f18elemf3f1.InstanceGroupNames = aws.StringSlice(f18iter.DataSource.S3DataSource.InstanceGroupNames)
 					}
-					if f17iter.DataSource.S3DataSource.ModelAccessConfig != nil {
-						f17elemf3f1f3 := &svcapitypes.ModelAccessConfig{}
-						if f17iter.DataSource.S3DataSource.ModelAccessConfig.AcceptEula != nil {
-							f17elemf3f1f3.AcceptEula = f17iter.DataSource.S3DataSource.ModelAccessConfig.AcceptEula
+					if f18iter.DataSource.S3DataSource.ModelAccessConfig != nil {
+						f18elemf3f1f3 := &svcapitypes.ModelAccessConfig{}
+						if f18iter.DataSource.S3DataSource.ModelAccessConfig.AcceptEula != nil {
+							f18elemf3f1f3.AcceptEula = f18iter.DataSource.S3DataSource.ModelAccessConfig.AcceptEula
 						}
-						f17elemf3f1.ModelAccessConfig = f17elemf3f1f3
+						f18elemf3f1.ModelAccessConfig = f18elemf3f1f3
 					}
-					if f17iter.DataSource.S3DataSource.S3DataDistributionType != "" {
-						f17elemf3f1.S3DataDistributionType = aws.String(string(f17iter.DataSource.S3DataSource.S3DataDistributionType))
+					if f18iter.DataSource.S3DataSource.S3DataDistributionType != "" {
+						f18elemf3f1.S3DataDistributionType = aws.String(string(f18iter.DataSource.S3DataSource.S3DataDistributionType))
 					}
-					if f17iter.DataSource.S3DataSource.S3DataType != "" {
-						f17elemf3f1.S3DataType = aws.String(string(f17iter.DataSource.S3DataSource.S3DataType))
+					if f18iter.DataSource.S3DataSource.S3DataType != "" {
+						f18elemf3f1.S3DataType = aws.String(string(f18iter.DataSource.S3DataSource.S3DataType))
 					}
-					if f17iter.DataSource.S3DataSource.S3Uri != nil {
-						f17elemf3f1.S3URI = f17iter.DataSource.S3DataSource.S3Uri
+					if f18iter.DataSource.S3DataSource.S3Uri != nil {
+						f18elemf3f1.S3URI = f18iter.DataSource.S3DataSource.S3Uri
 					}
-					f17elemf3.S3DataSource = f17elemf3f1
+					f18elemf3.S3DataSource = f18elemf3f1
 				}
-				f17elem.DataSource = f17elemf3
+				f18elem.DataSource = f18elemf3
 			}
-			if f17iter.InputMode != "" {
-				f17elem.InputMode = aws.String(string(f17iter.InputMode))
+			if f18iter.InputMode != "" {
+				f18elem.InputMode = aws.String(string(f18iter.InputMode))
 			}
-			if f17iter.RecordWrapperType != "" {
-				f17elem.RecordWrapperType = aws.String(string(f17iter.RecordWrapperType))
+			if f18iter.RecordWrapperType != "" {
+				f18elem.RecordWrapperType = aws.String(string(f18iter.RecordWrapperType))
 			}
-			if f17iter.ShuffleConfig != nil {
-				f17elemf6 := &svcapitypes.ShuffleConfig{}
-				if f17iter.ShuffleConfig.Seed != nil {
-					f17elemf6.Seed = f17iter.ShuffleConfig.Seed
+			if f18iter.ShuffleConfig != nil {
+				f18elemf6 := &svcapitypes.ShuffleConfig{}
+				if f18iter.ShuffleConfig.Seed != nil {
+					f18elemf6.Seed = f18iter.ShuffleConfig.Seed
 				}
-				f17elem.ShuffleConfig = f17elemf6
+				f18elem.ShuffleConfig = f18elemf6
 			}
-			f17 = append(f17, f17elem)
+			f18 = append(f18, f18elem)
 		}
-		ko.Spec.InputDataConfig = f17
+		ko.Spec.InputDataConfig = f18
 	} else {
 		ko.Spec.InputDataConfig = nil
 	}
@@ -371,98 +371,98 @@ func (rm *resourceManager) sdkFind(
 		ko.Status.LastModifiedTime = nil
 	}
 	if resp.ModelArtifacts != nil {
-		f20 := &svcapitypes.ModelArtifacts{}
+		f22 := &svcapitypes.ModelArtifacts{}
 		if resp.ModelArtifacts.S3ModelArtifacts != nil {
-			f20.S3ModelArtifacts = resp.ModelArtifacts.S3ModelArtifacts
+			f22.S3ModelArtifacts = resp.ModelArtifacts.S3ModelArtifacts
 		}
-		ko.Status.ModelArtifacts = f20
+		ko.Status.ModelArtifacts = f22
 	} else {
 		ko.Status.ModelArtifacts = nil
 	}
 	if resp.OutputDataConfig != nil {
-		f21 := &svcapitypes.OutputDataConfig{}
+		f23 := &svcapitypes.OutputDataConfig{}
 		if resp.OutputDataConfig.CompressionType != "" {
-			f21.CompressionType = aws.String(string(resp.OutputDataConfig.CompressionType))
+			f23.CompressionType = aws.String(string(resp.OutputDataConfig.CompressionType))
 		}
 		if resp.OutputDataConfig.KmsKeyId != nil {
-			f21.KMSKeyID = resp.OutputDataConfig.KmsKeyId
+			f23.KMSKeyID = resp.OutputDataConfig.KmsKeyId
 		}
 		if resp.OutputDataConfig.S3OutputPath != nil {
-			f21.S3OutputPath = resp.OutputDataConfig.S3OutputPath
+			f23.S3OutputPath = resp.OutputDataConfig.S3OutputPath
 		}
-		ko.Spec.OutputDataConfig = f21
+		ko.Spec.OutputDataConfig = f23
 	} else {
 		ko.Spec.OutputDataConfig = nil
 	}
 	if resp.ProfilerConfig != nil {
-		f22 := &svcapitypes.ProfilerConfig{}
+		f25 := &svcapitypes.ProfilerConfig{}
 		if resp.ProfilerConfig.ProfilingIntervalInMilliseconds != nil {
-			f22.ProfilingIntervalInMilliseconds = resp.ProfilerConfig.ProfilingIntervalInMilliseconds
+			f25.ProfilingIntervalInMilliseconds = resp.ProfilerConfig.ProfilingIntervalInMilliseconds
 		}
 		if resp.ProfilerConfig.ProfilingParameters != nil {
-			f22.ProfilingParameters = aws.StringMap(resp.ProfilerConfig.ProfilingParameters)
+			f25.ProfilingParameters = aws.StringMap(resp.ProfilerConfig.ProfilingParameters)
 		}
 		if resp.ProfilerConfig.S3OutputPath != nil {
-			f22.S3OutputPath = resp.ProfilerConfig.S3OutputPath
+			f25.S3OutputPath = resp.ProfilerConfig.S3OutputPath
 		}
-		ko.Spec.ProfilerConfig = f22
+		ko.Spec.ProfilerConfig = f25
 	} else {
 		ko.Spec.ProfilerConfig = nil
 	}
 	if resp.ProfilerRuleConfigurations != nil {
-		f23 := []*svcapitypes.ProfilerRuleConfiguration{}
-		for _, f23iter := range resp.ProfilerRuleConfigurations {
-			f23elem := &svcapitypes.ProfilerRuleConfiguration{}
-			if f23iter.InstanceType != "" {
-				f23elem.InstanceType = aws.String(string(f23iter.InstanceType))
+		f26 := []*svcapitypes.ProfilerRuleConfiguration{}
+		for _, f26iter := range resp.ProfilerRuleConfigurations {
+			f26elem := &svcapitypes.ProfilerRuleConfiguration{}
+			if f26iter.InstanceType != "" {
+				f26elem.InstanceType = aws.String(string(f26iter.InstanceType))
 			}
-			if f23iter.LocalPath != nil {
-				f23elem.LocalPath = f23iter.LocalPath
+			if f26iter.LocalPath != nil {
+				f26elem.LocalPath = f26iter.LocalPath
 			}
-			if f23iter.RuleConfigurationName != nil {
-				f23elem.RuleConfigurationName = f23iter.RuleConfigurationName
+			if f26iter.RuleConfigurationName != nil {
+				f26elem.RuleConfigurationName = f26iter.RuleConfigurationName
 			}
-			if f23iter.RuleEvaluatorImage != nil {
-				f23elem.RuleEvaluatorImage = f23iter.RuleEvaluatorImage
+			if f26iter.RuleEvaluatorImage != nil {
+				f26elem.RuleEvaluatorImage = f26iter.RuleEvaluatorImage
 			}
-			if f23iter.RuleParameters != nil {
-				f23elem.RuleParameters = aws.StringMap(f23iter.RuleParameters)
+			if f26iter.RuleParameters != nil {
+				f26elem.RuleParameters = aws.StringMap(f26iter.RuleParameters)
 			}
-			if f23iter.S3OutputPath != nil {
-				f23elem.S3OutputPath = f23iter.S3OutputPath
+			if f26iter.S3OutputPath != nil {
+				f26elem.S3OutputPath = f26iter.S3OutputPath
 			}
-			if f23iter.VolumeSizeInGB != nil {
-				volumeSizeInGBCopy := int64(*f23iter.VolumeSizeInGB)
-				f23elem.VolumeSizeInGB = &volumeSizeInGBCopy
+			if f26iter.VolumeSizeInGB != nil {
+				volumeSizeInGBCopy := int64(*f26iter.VolumeSizeInGB)
+				f26elem.VolumeSizeInGB = &volumeSizeInGBCopy
 			}
-			f23 = append(f23, f23elem)
+			f26 = append(f26, f26elem)
 		}
-		ko.Spec.ProfilerRuleConfigurations = f23
+		ko.Spec.ProfilerRuleConfigurations = f26
 	} else {
 		ko.Spec.ProfilerRuleConfigurations = nil
 	}
 	if resp.ProfilerRuleEvaluationStatuses != nil {
-		f24 := []*svcapitypes.ProfilerRuleEvaluationStatus{}
-		for _, f24iter := range resp.ProfilerRuleEvaluationStatuses {
-			f24elem := &svcapitypes.ProfilerRuleEvaluationStatus{}
-			if f24iter.LastModifiedTime != nil {
-				f24elem.LastModifiedTime = &metav1.Time{*f24iter.LastModifiedTime}
+		f27 := []*svcapitypes.ProfilerRuleEvaluationStatus{}
+		for _, f27iter := range resp.ProfilerRuleEvaluationStatuses {
+			f27elem := &svcapitypes.ProfilerRuleEvaluationStatus{}
+			if f27iter.LastModifiedTime != nil {
+				f27elem.LastModifiedTime = &metav1.Time{*f27iter.LastModifiedTime}
 			}
-			if f24iter.RuleConfigurationName != nil {
-				f24elem.RuleConfigurationName = f24iter.RuleConfigurationName
+			if f27iter.RuleConfigurationName != nil {
+				f27elem.RuleConfigurationName = f27iter.RuleConfigurationName
 			}
-			if f24iter.RuleEvaluationJobArn != nil {
-				f24elem.RuleEvaluationJobARN = f24iter.RuleEvaluationJobArn
+			if f27iter.RuleEvaluationJobArn != nil {
+				f27elem.RuleEvaluationJobARN = f27iter.RuleEvaluationJobArn
 			}
-			if f24iter.RuleEvaluationStatus != "" {
-				f24elem.RuleEvaluationStatus = aws.String(string(f24iter.RuleEvaluationStatus))
+			if f27iter.RuleEvaluationStatus != "" {
+				f27elem.RuleEvaluationStatus = aws.String(string(f27iter.RuleEvaluationStatus))
 			}
-			if f24iter.StatusDetails != nil {
-				f24elem.StatusDetails = f24iter.StatusDetails
+			if f27iter.StatusDetails != nil {
+				f27elem.StatusDetails = f27iter.StatusDetails
 			}
-			f24 = append(f24, f24elem)
+			f27 = append(f27, f27elem)
 		}
-		ko.Status.ProfilerRuleEvaluationStatuses = f24
+		ko.Status.ProfilerRuleEvaluationStatuses = f27
 	} else {
 		ko.Status.ProfilerRuleEvaluationStatuses = nil
 	}
@@ -472,85 +472,85 @@ func (rm *resourceManager) sdkFind(
 		ko.Status.ProfilingStatus = nil
 	}
 	if resp.RemoteDebugConfig != nil {
-		f26 := &svcapitypes.RemoteDebugConfig{}
+		f30 := &svcapitypes.RemoteDebugConfig{}
 		if resp.RemoteDebugConfig.EnableRemoteDebug != nil {
-			f26.EnableRemoteDebug = resp.RemoteDebugConfig.EnableRemoteDebug
+			f30.EnableRemoteDebug = resp.RemoteDebugConfig.EnableRemoteDebug
 		}
-		ko.Spec.RemoteDebugConfig = f26
+		ko.Spec.RemoteDebugConfig = f30
 	} else {
 		ko.Spec.RemoteDebugConfig = nil
 	}
 	if resp.ResourceConfig != nil {
-		f27 := &svcapitypes.ResourceConfig{}
+		f31 := &svcapitypes.ResourceConfig{}
 		if resp.ResourceConfig.InstanceCount != nil {
 			instanceCountCopy := int64(*resp.ResourceConfig.InstanceCount)
-			f27.InstanceCount = &instanceCountCopy
+			f31.InstanceCount = &instanceCountCopy
 		}
 		if resp.ResourceConfig.InstanceGroups != nil {
-			f27f1 := []*svcapitypes.InstanceGroup{}
-			for _, f27f1iter := range resp.ResourceConfig.InstanceGroups {
-				f27f1elem := &svcapitypes.InstanceGroup{}
-				if f27f1iter.InstanceCount != nil {
-					instanceCountCopy := int64(*f27f1iter.InstanceCount)
-					f27f1elem.InstanceCount = &instanceCountCopy
+			f31f1 := []*svcapitypes.InstanceGroup{}
+			for _, f31f1iter := range resp.ResourceConfig.InstanceGroups {
+				f31f1elem := &svcapitypes.InstanceGroup{}
+				if f31f1iter.InstanceCount != nil {
+					instanceCountCopy := int64(*f31f1iter.InstanceCount)
+					f31f1elem.InstanceCount = &instanceCountCopy
 				}
-				if f27f1iter.InstanceGroupName != nil {
-					f27f1elem.InstanceGroupName = f27f1iter.InstanceGroupName
+				if f31f1iter.InstanceGroupName != nil {
+					f31f1elem.InstanceGroupName = f31f1iter.InstanceGroupName
 				}
-				if f27f1iter.InstanceType != "" {
-					f27f1elem.InstanceType = aws.String(string(f27f1iter.InstanceType))
+				if f31f1iter.InstanceType != "" {
+					f31f1elem.InstanceType = aws.String(string(f31f1iter.InstanceType))
 				}
-				f27f1 = append(f27f1, f27f1elem)
+				f31f1 = append(f31f1, f31f1elem)
 			}
-			f27.InstanceGroups = f27f1
+			f31.InstanceGroups = f31f1
 		}
 		if resp.ResourceConfig.InstancePlacementConfig != nil {
-			f27f2 := &svcapitypes.InstancePlacementConfig{}
+			f31f2 := &svcapitypes.InstancePlacementConfig{}
 			if resp.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs != nil {
-				f27f2.EnableMultipleJobs = resp.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs
+				f31f2.EnableMultipleJobs = resp.ResourceConfig.InstancePlacementConfig.EnableMultipleJobs
 			}
 			if resp.ResourceConfig.InstancePlacementConfig.PlacementSpecifications != nil {
-				f27f2f1 := []*svcapitypes.PlacementSpecification{}
-				for _, f27f2f1iter := range resp.ResourceConfig.InstancePlacementConfig.PlacementSpecifications {
-					f27f2f1elem := &svcapitypes.PlacementSpecification{}
-					if f27f2f1iter.InstanceCount != nil {
-						instanceCountCopy := int64(*f27f2f1iter.InstanceCount)
-						f27f2f1elem.InstanceCount = &instanceCountCopy
+				f31f2f1 := []*svcapitypes.PlacementSpecification{}
+				for _, f31f2f1iter := range resp.ResourceConfig.InstancePlacementConfig.PlacementSpecifications {
+					f31f2f1elem := &svcapitypes.PlacementSpecification{}
+					if f31f2f1iter.InstanceCount != nil {
+						instanceCountCopy := int64(*f31f2f1iter.InstanceCount)
+						f31f2f1elem.InstanceCount = &instanceCountCopy
 					}
-					if f27f2f1iter.UltraServerId != nil {
-						f27f2f1elem.UltraServerID = f27f2f1iter.UltraServerId
+					if f31f2f1iter.UltraServerId != nil {
+						f31f2f1elem.UltraServerID = f31f2f1iter.UltraServerId
 					}
-					f27f2f1 = append(f27f2f1, f27f2f1elem)
+					f31f2f1 = append(f31f2f1, f31f2f1elem)
 				}
-				f27f2.PlacementSpecifications = f27f2f1
+				f31f2.PlacementSpecifications = f31f2f1
 			}
-			f27.InstancePlacementConfig = f27f2
+			f31.InstancePlacementConfig = f31f2
 		}
 		if resp.ResourceConfig.InstanceType != "" {
-			f27.InstanceType = aws.String(string(resp.ResourceConfig.InstanceType))
+			f31.InstanceType = aws.String(string(resp.ResourceConfig.InstanceType))
 		}
 		if resp.ResourceConfig.KeepAlivePeriodInSeconds != nil {
 			keepAlivePeriodInSecondsCopy := int64(*resp.ResourceConfig.KeepAlivePeriodInSeconds)
-			f27.KeepAlivePeriodInSeconds = &keepAlivePeriodInSecondsCopy
+			f31.KeepAlivePeriodInSeconds = &keepAlivePeriodInSecondsCopy
 		}
 		if resp.ResourceConfig.VolumeKmsKeyId != nil {
-			f27.VolumeKMSKeyID = resp.ResourceConfig.VolumeKmsKeyId
+			f31.VolumeKMSKeyID = resp.ResourceConfig.VolumeKmsKeyId
 		}
 		if resp.ResourceConfig.VolumeSizeInGB != nil {
 			volumeSizeInGBCopy := int64(*resp.ResourceConfig.VolumeSizeInGB)
-			f27.VolumeSizeInGB = &volumeSizeInGBCopy
+			f31.VolumeSizeInGB = &volumeSizeInGBCopy
 		}
-		ko.Spec.ResourceConfig = f27
+		ko.Spec.ResourceConfig = f31
 	} else {
 		ko.Spec.ResourceConfig = nil
 	}
 	if resp.RetryStrategy != nil {
-		f28 := &svcapitypes.RetryStrategy{}
+		f32 := &svcapitypes.RetryStrategy{}
 		if resp.RetryStrategy.MaximumRetryAttempts != nil {
 			maximumRetryAttemptsCopy := int64(*resp.RetryStrategy.MaximumRetryAttempts)
-			f28.MaximumRetryAttempts = &maximumRetryAttemptsCopy
+			f32.MaximumRetryAttempts = &maximumRetryAttemptsCopy
 		}
-		ko.Spec.RetryStrategy = f28
+		ko.Spec.RetryStrategy = f32
 	} else {
 		ko.Spec.RetryStrategy = nil
 	}
@@ -565,32 +565,32 @@ func (rm *resourceManager) sdkFind(
 		ko.Status.SecondaryStatus = nil
 	}
 	if resp.StoppingCondition != nil {
-		f32 := &svcapitypes.StoppingCondition{}
+		f36 := &svcapitypes.StoppingCondition{}
 		if resp.StoppingCondition.MaxPendingTimeInSeconds != nil {
 			maxPendingTimeInSecondsCopy := int64(*resp.StoppingCondition.MaxPendingTimeInSeconds)
-			f32.MaxPendingTimeInSeconds = &maxPendingTimeInSecondsCopy
+			f36.MaxPendingTimeInSeconds = &maxPendingTimeInSecondsCopy
 		}
 		if resp.StoppingCondition.MaxRuntimeInSeconds != nil {
 			maxRuntimeInSecondsCopy := int64(*resp.StoppingCondition.MaxRuntimeInSeconds)
-			f32.MaxRuntimeInSeconds = &maxRuntimeInSecondsCopy
+			f36.MaxRuntimeInSeconds = &maxRuntimeInSecondsCopy
 		}
 		if resp.StoppingCondition.MaxWaitTimeInSeconds != nil {
 			maxWaitTimeInSecondsCopy := int64(*resp.StoppingCondition.MaxWaitTimeInSeconds)
-			f32.MaxWaitTimeInSeconds = &maxWaitTimeInSecondsCopy
+			f36.MaxWaitTimeInSeconds = &maxWaitTimeInSecondsCopy
 		}
-		ko.Spec.StoppingCondition = f32
+		ko.Spec.StoppingCondition = f36
 	} else {
 		ko.Spec.StoppingCondition = nil
 	}
 	if resp.TensorBoardOutputConfig != nil {
-		f33 := &svcapitypes.TensorBoardOutputConfig{}
+		f37 := &svcapitypes.TensorBoardOutputConfig{}
 		if resp.TensorBoardOutputConfig.LocalPath != nil {
-			f33.LocalPath = resp.TensorBoardOutputConfig.LocalPath
+			f37.LocalPath = resp.TensorBoardOutputConfig.LocalPath
 		}
 		if resp.TensorBoardOutputConfig.S3OutputPath != nil {
-			f33.S3OutputPath = resp.TensorBoardOutputConfig.S3OutputPath
+			f37.S3OutputPath = resp.TensorBoardOutputConfig.S3OutputPath
 		}
-		ko.Spec.TensorBoardOutputConfig = f33
+		ko.Spec.TensorBoardOutputConfig = f37
 	} else {
 		ko.Spec.TensorBoardOutputConfig = nil
 	}
@@ -612,30 +612,30 @@ func (rm *resourceManager) sdkFind(
 		ko.Status.TrainingJobStatus = nil
 	}
 	if resp.VpcConfig != nil {
-		f41 := &svcapitypes.VPCConfig{}
+		f45 := &svcapitypes.VPCConfig{}
 		if resp.VpcConfig.SecurityGroupIds != nil {
-			f41.SecurityGroupIDs = aws.StringSlice(resp.VpcConfig.SecurityGroupIds)
+			f45.SecurityGroupIDs = aws.StringSlice(resp.VpcConfig.SecurityGroupIds)
 		}
 		if resp.VpcConfig.Subnets != nil {
-			f41.Subnets = aws.StringSlice(resp.VpcConfig.Subnets)
+			f45.Subnets = aws.StringSlice(resp.VpcConfig.Subnets)
 		}
-		ko.Spec.VPCConfig = f41
+		ko.Spec.VPCConfig = f45
 	} else {
 		ko.Spec.VPCConfig = nil
 	}
 	if resp.WarmPoolStatus != nil {
-		f42 := &svcapitypes.WarmPoolStatus{}
+		f46 := &svcapitypes.WarmPoolStatus{}
 		if resp.WarmPoolStatus.ResourceRetainedBillableTimeInSeconds != nil {
 			resourceRetainedBillableTimeInSecondsCopy := int64(*resp.WarmPoolStatus.ResourceRetainedBillableTimeInSeconds)
-			f42.ResourceRetainedBillableTimeInSeconds = &resourceRetainedBillableTimeInSecondsCopy
+			f46.ResourceRetainedBillableTimeInSeconds = &resourceRetainedBillableTimeInSecondsCopy
 		}
 		if resp.WarmPoolStatus.ReusedByJob != nil {
-			f42.ReusedByJob = resp.WarmPoolStatus.ReusedByJob
+			f46.ReusedByJob = resp.WarmPoolStatus.ReusedByJob
 		}
 		if resp.WarmPoolStatus.Status != "" {
-			f42.Status = aws.String(string(resp.WarmPoolStatus.Status))
+			f46.Status = aws.String(string(resp.WarmPoolStatus.Status))
 		}
-		ko.Status.WarmPoolStatus = f42
+		ko.Status.WarmPoolStatus = f46
 	} else {
 		ko.Status.WarmPoolStatus = nil
 	}

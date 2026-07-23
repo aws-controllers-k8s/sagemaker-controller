@@ -1,0 +1,22 @@
+apiVersion: sagemaker.services.k8s.aws/v1alpha1
+kind: EndpointConfig
+metadata:
+  name: $ENDPOINT_CONFIG_NAME
+spec:
+  endpointConfigName: $ENDPOINT_CONFIG_NAME
+  productionVariants:
+    - variantName: variant-1
+      modelName: $MODEL_NAME
+      initialVariantWeight: 1
+      instancePools:
+        - instanceType: ml.c5.large
+          priority: 1
+        - instanceType: ml.m5.large
+          priority: 2
+  tags:
+    - key: confidentiality
+      value: public
+    - key: environment
+      value: testing
+    - key: customer
+      value: test-user

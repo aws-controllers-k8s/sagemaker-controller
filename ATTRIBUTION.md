@@ -1562,9 +1562,7 @@ Subdependencies:
 * `github.com/aws/aws-sdk-go-v2/internal/endpoints/v2`
 * `github.com/aws/smithy-go`
 
-### github.com/aws/smithy-go
 
-License Identifier: Apache-2.0
 
 ### github.com/ghodss/yaml
 

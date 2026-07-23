@@ -246,23 +246,41 @@ func (rm *resourceManager) sdkFind(
 				initialVariantWeightCopy := float64(*f8iter.InitialVariantWeight)
 				f8elem.InitialVariantWeight = &initialVariantWeightCopy
 			}
+			if f8iter.InstancePools != nil {
+				f8elemf7 := []*svcapitypes.InstancePool{}
+				for _, f8elemf7iter := range f8iter.InstancePools {
+					f8elemf7elem := &svcapitypes.InstancePool{}
+					if f8elemf7iter.InstanceType != "" {
+						f8elemf7elem.InstanceType = aws.String(string(f8elemf7iter.InstanceType))
+					}
+					if f8elemf7iter.ModelNameOverride != nil {
+						f8elemf7elem.ModelNameOverride = f8elemf7iter.ModelNameOverride
+					}
+					if f8elemf7iter.Priority != nil {
+						priorityCopy := int64(*f8elemf7iter.Priority)
+						f8elemf7elem.Priority = &priorityCopy
+					}
+					f8elemf7 = append(f8elemf7, f8elemf7elem)
+				}
+				f8elem.InstancePools = f8elemf7
+			}
 			if f8iter.InstanceType != "" {
 				f8elem.InstanceType = aws.String(string(f8iter.InstanceType))
 			}
 			if f8iter.ManagedInstanceScaling != nil {
-				f8elemf8 := &svcapitypes.ProductionVariantManagedInstanceScaling{}
+				f8elemf9 := &svcapitypes.ProductionVariantManagedInstanceScaling{}
 				if f8iter.ManagedInstanceScaling.MaxInstanceCount != nil {
 					maxInstanceCountCopy := int64(*f8iter.ManagedInstanceScaling.MaxInstanceCount)
-					f8elemf8.MaxInstanceCount = &maxInstanceCountCopy
+					f8elemf9.MaxInstanceCount = &maxInstanceCountCopy
 				}
 				if f8iter.ManagedInstanceScaling.MinInstanceCount != nil {
 					minInstanceCountCopy := int64(*f8iter.ManagedInstanceScaling.MinInstanceCount)
-					f8elemf8.MinInstanceCount = &minInstanceCountCopy
+					f8elemf9.MinInstanceCount = &minInstanceCountCopy
 				}
 				if f8iter.ManagedInstanceScaling.Status != "" {
-					f8elemf8.Status = aws.String(string(f8iter.ManagedInstanceScaling.Status))
+					f8elemf9.Status = aws.String(string(f8iter.ManagedInstanceScaling.Status))
 				}
-				f8elem.ManagedInstanceScaling = f8elemf8
+				f8elem.ManagedInstanceScaling = f8elemf9
 			}
 			if f8iter.ModelDataDownloadTimeoutInSeconds != nil {
 				modelDataDownloadTimeoutInSecondsCopy := int64(*f8iter.ModelDataDownloadTimeoutInSeconds)
@@ -272,27 +290,27 @@ func (rm *resourceManager) sdkFind(
 				f8elem.ModelName = f8iter.ModelName
 			}
 			if f8iter.RoutingConfig != nil {
-				f8elemf11 := &svcapitypes.ProductionVariantRoutingConfig{}
+				f8elemf12 := &svcapitypes.ProductionVariantRoutingConfig{}
 				if f8iter.RoutingConfig.RoutingStrategy != "" {
-					f8elemf11.RoutingStrategy = aws.String(string(f8iter.RoutingConfig.RoutingStrategy))
+					f8elemf12.RoutingStrategy = aws.String(string(f8iter.RoutingConfig.RoutingStrategy))
 				}
-				f8elem.RoutingConfig = f8elemf11
+				f8elem.RoutingConfig = f8elemf12
 			}
 			if f8iter.ServerlessConfig != nil {
-				f8elemf12 := &svcapitypes.ProductionVariantServerlessConfig{}
+				f8elemf13 := &svcapitypes.ProductionVariantServerlessConfig{}
 				if f8iter.ServerlessConfig.MaxConcurrency != nil {
 					maxConcurrencyCopy := int64(*f8iter.ServerlessConfig.MaxConcurrency)
-					f8elemf12.MaxConcurrency = &maxConcurrencyCopy
+					f8elemf13.MaxConcurrency = &maxConcurrencyCopy
 				}
 				if f8iter.ServerlessConfig.MemorySizeInMB != nil {
 					memorySizeInMBCopy := int64(*f8iter.ServerlessConfig.MemorySizeInMB)
-					f8elemf12.MemorySizeInMB = &memorySizeInMBCopy
+					f8elemf13.MemorySizeInMB = &memorySizeInMBCopy
 				}
 				if f8iter.ServerlessConfig.ProvisionedConcurrency != nil {
 					provisionedConcurrencyCopy := int64(*f8iter.ServerlessConfig.ProvisionedConcurrency)
-					f8elemf12.ProvisionedConcurrency = &provisionedConcurrencyCopy
+					f8elemf13.ProvisionedConcurrency = &provisionedConcurrencyCopy
 				}
-				f8elem.ServerlessConfig = f8elemf12
+				f8elem.ServerlessConfig = f8elemf13
 			}
 			if f8iter.VariantName != nil {
 				f8elem.VariantName = f8iter.VariantName
@@ -552,18 +570,40 @@ func (rm *resourceManager) newCreateRequestPayload(
 				initialVariantWeightCopy := float32(initialVariantWeightCopy0)
 				f6elem.InitialVariantWeight = &initialVariantWeightCopy
 			}
+			if f6iter.InstancePools != nil {
+				f6elemf7 := []svcsdktypes.InstancePool{}
+				for _, f6elemf7iter := range f6iter.InstancePools {
+					f6elemf7elem := &svcsdktypes.InstancePool{}
+					if f6elemf7iter.InstanceType != nil {
+						f6elemf7elem.InstanceType = svcsdktypes.ProductionVariantInstanceType(*f6elemf7iter.InstanceType)
+					}
+					if f6elemf7iter.ModelNameOverride != nil {
+						f6elemf7elem.ModelNameOverride = f6elemf7iter.ModelNameOverride
+					}
+					if f6elemf7iter.Priority != nil {
+						priorityCopy0 := *f6elemf7iter.Priority
+						if priorityCopy0 > math.MaxInt32 || priorityCopy0 < math.MinInt32 {
+							return nil, fmt.Errorf("error: field Priority is of type int32")
+						}
+						priorityCopy := int32(priorityCopy0)
+						f6elemf7elem.Priority = &priorityCopy
+					}
+					f6elemf7 = append(f6elemf7, *f6elemf7elem)
+				}
+				f6elem.InstancePools = f6elemf7
+			}
 			if f6iter.InstanceType != nil {
 				f6elem.InstanceType = svcsdktypes.ProductionVariantInstanceType(*f6iter.InstanceType)
 			}
 			if f6iter.ManagedInstanceScaling != nil {
-				f6elemf8 := &svcsdktypes.ProductionVariantManagedInstanceScaling{}
+				f6elemf9 := &svcsdktypes.ProductionVariantManagedInstanceScaling{}
 				if f6iter.ManagedInstanceScaling.MaxInstanceCount != nil {
 					maxInstanceCountCopy0 := *f6iter.ManagedInstanceScaling.MaxInstanceCount
 					if maxInstanceCountCopy0 > math.MaxInt32 || maxInstanceCountCopy0 < math.MinInt32 {
 						return nil, fmt.Errorf("error: field MaxInstanceCount is of type int32")
 					}
 					maxInstanceCountCopy := int32(maxInstanceCountCopy0)
-					f6elemf8.MaxInstanceCount = &maxInstanceCountCopy
+					f6elemf9.MaxInstanceCount = &maxInstanceCountCopy
 				}
 				if f6iter.ManagedInstanceScaling.MinInstanceCount != nil {
 					minInstanceCountCopy0 := *f6iter.ManagedInstanceScaling.MinInstanceCount
@@ -571,12 +611,12 @@ func (rm *resourceManager) newCreateRequestPayload(
 						return nil, fmt.Errorf("error: field MinInstanceCount is of type int32")
 					}
 					minInstanceCountCopy := int32(minInstanceCountCopy0)
-					f6elemf8.MinInstanceCount = &minInstanceCountCopy
+					f6elemf9.MinInstanceCount = &minInstanceCountCopy
 				}
 				if f6iter.ManagedInstanceScaling.Status != nil {
-					f6elemf8.Status = svcsdktypes.ManagedInstanceScalingStatus(*f6iter.ManagedInstanceScaling.Status)
+					f6elemf9.Status = svcsdktypes.ManagedInstanceScalingStatus(*f6iter.ManagedInstanceScaling.Status)
 				}
-				f6elem.ManagedInstanceScaling = f6elemf8
+				f6elem.ManagedInstanceScaling = f6elemf9
 			}
 			if f6iter.ModelDataDownloadTimeoutInSeconds != nil {
 				modelDataDownloadTimeoutInSecondsCopy0 := *f6iter.ModelDataDownloadTimeoutInSeconds
@@ -590,21 +630,21 @@ func (rm *resourceManager) newCreateRequestPayload(
 				f6elem.ModelName = f6iter.ModelName
 			}
 			if f6iter.RoutingConfig != nil {
-				f6elemf11 := &svcsdktypes.ProductionVariantRoutingConfig{}
+				f6elemf12 := &svcsdktypes.ProductionVariantRoutingConfig{}
 				if f6iter.RoutingConfig.RoutingStrategy != nil {
-					f6elemf11.RoutingStrategy = svcsdktypes.RoutingStrategy(*f6iter.RoutingConfig.RoutingStrategy)
+					f6elemf12.RoutingStrategy = svcsdktypes.RoutingStrategy(*f6iter.RoutingConfig.RoutingStrategy)
 				}
-				f6elem.RoutingConfig = f6elemf11
+				f6elem.RoutingConfig = f6elemf12
 			}
 			if f6iter.ServerlessConfig != nil {
-				f6elemf12 := &svcsdktypes.ProductionVariantServerlessConfig{}
+				f6elemf13 := &svcsdktypes.ProductionVariantServerlessConfig{}
 				if f6iter.ServerlessConfig.MaxConcurrency != nil {
 					maxConcurrencyCopy0 := *f6iter.ServerlessConfig.MaxConcurrency
 					if maxConcurrencyCopy0 > math.MaxInt32 || maxConcurrencyCopy0 < math.MinInt32 {
 						return nil, fmt.Errorf("error: field MaxConcurrency is of type int32")
 					}
 					maxConcurrencyCopy := int32(maxConcurrencyCopy0)
-					f6elemf12.MaxConcurrency = &maxConcurrencyCopy
+					f6elemf13.MaxConcurrency = &maxConcurrencyCopy
 				}
 				if f6iter.ServerlessConfig.MemorySizeInMB != nil {
 					memorySizeInMBCopy0 := *f6iter.ServerlessConfig.MemorySizeInMB
@@ -612,7 +652,7 @@ func (rm *resourceManager) newCreateRequestPayload(
 						return nil, fmt.Errorf("error: field MemorySizeInMB is of type int32")
 					}
 					memorySizeInMBCopy := int32(memorySizeInMBCopy0)
-					f6elemf12.MemorySizeInMB = &memorySizeInMBCopy
+					f6elemf13.MemorySizeInMB = &memorySizeInMBCopy
 				}
 				if f6iter.ServerlessConfig.ProvisionedConcurrency != nil {
 					provisionedConcurrencyCopy0 := *f6iter.ServerlessConfig.ProvisionedConcurrency
@@ -620,9 +660,9 @@ func (rm *resourceManager) newCreateRequestPayload(
 						return nil, fmt.Errorf("error: field ProvisionedConcurrency is of type int32")
 					}
 					provisionedConcurrencyCopy := int32(provisionedConcurrencyCopy0)
-					f6elemf12.ProvisionedConcurrency = &provisionedConcurrencyCopy
+					f6elemf13.ProvisionedConcurrency = &provisionedConcurrencyCopy
 				}
-				f6elem.ServerlessConfig = f6elemf12
+				f6elem.ServerlessConfig = f6elemf13
 			}
 			if f6iter.VariantName != nil {
 				f6elem.VariantName = f6iter.VariantName

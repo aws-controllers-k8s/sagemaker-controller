@@ -154,7 +154,6 @@ spec:
             required:
             - endpointName
             - inferenceComponentName
-            - specification
             type: object
           status:
             description: InferenceComponentStatus defines the observed state of InferenceComponent

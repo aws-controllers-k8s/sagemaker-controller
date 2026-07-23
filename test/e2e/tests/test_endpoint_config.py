@@ -68,6 +68,38 @@ def single_variant_config():
     assert delete_custom_resource(config_reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
 
 
+@pytest.fixture(scope="module")
+def instance_pools_config():
+    config_resource_name = random_suffix_name("instance-pools-config", 32)
+    model_resource_name = config_resource_name + "-model"
+
+    replacements = REPLACEMENT_VALUES.copy()
+    replacements["ENDPOINT_CONFIG_NAME"] = config_resource_name
+    replacements["MODEL_NAME"] = model_resource_name
+
+    model_reference, model_spec, model_resource = create_sagemaker_resource(
+        resource_plural=cfg.MODEL_RESOURCE_PLURAL,
+        resource_name=model_resource_name,
+        spec_file="xgboost_model",
+        replacements=replacements,
+    )
+    assert model_resource is not None
+    assert k8s.get_resource_arn(model_resource) is not None
+
+    config_reference, config_spec, config_resource = create_sagemaker_resource(
+        resource_plural=cfg.ENDPOINT_CONFIG_RESOURCE_PLURAL,
+        resource_name=config_resource_name,
+        spec_file="endpoint_config_instance_pools",
+        replacements=replacements,
+    )
+    assert config_resource is not None
+
+    yield (config_reference, config_resource)
+
+    k8s.delete_custom_resource(model_reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
+    assert delete_custom_resource(config_reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
+
+
 @service_marker
 @pytest.mark.canary
 class TestEndpointConfig:
@@ -87,4 +119,20 @@ class TestEndpointConfig:
         # Delete the k8s resource.
         assert delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
 
+        assert get_sagemaker_endpoint_config(config_name) is None
+
+    def test_create_endpoint_config_with_instance_pools(self, instance_pools_config):
+        (reference, resource) = instance_pools_config
+        assert k8s.get_resource_exists(reference)
+
+        config_name = resource["spec"].get("endpointConfigName", None)
+        endpoint_config_desc = get_sagemaker_endpoint_config(config_name)
+        assert k8s.get_resource_arn(resource) == endpoint_config_desc["EndpointConfigArn"]
+
+        instance_pools = endpoint_config_desc["ProductionVariants"][0]["InstancePools"]
+        assert len(instance_pools) == 2
+        assert instance_pools[0]["Priority"] == 1
+        assert instance_pools[1]["Priority"] == 2
+
+        assert delete_custom_resource(reference, cfg.DELETE_WAIT_PERIOD, cfg.DELETE_WAIT_LENGTH)
         assert get_sagemaker_endpoint_config(config_name) is None
