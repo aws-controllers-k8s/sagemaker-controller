@@ -32,14 +32,14 @@ type LabelingJobSpec struct {
 	//
 	// You must specify at least one of the following: S3DataSource or SnsDataSource.
 	//
-	//   - Use SnsDataSource to specify an SNS input topic for a streaming labeling
-	//     job. If you do not specify and SNS input topic ARN, Ground Truth will
-	//     create a one-time labeling job that stops after all data objects in the
-	//     input manifest file have been labeled.
+	//    * Use SnsDataSource to specify an SNS input topic for a streaming labeling
+	//    job. If you do not specify and SNS input topic ARN, Ground Truth will
+	//    create a one-time labeling job that stops after all data objects in the
+	//    input manifest file have been labeled.
 	//
-	//   - Use S3DataSource to specify an input manifest file for both streaming
-	//     and one-time labeling jobs. Adding an S3DataSource is optional if you
-	//     use SnsDataSource to create a streaming labeling job.
+	//    * Use S3DataSource to specify an input manifest file for both streaming
+	//    and one-time labeling jobs. Adding an S3DataSource is optional if you
+	//    use SnsDataSource to create a streaming labeling job.
 	//
 	// If you use the Amazon Mechanical Turk workforce, your input data should not
 	// include confidential information, personal information or protected health
@@ -51,21 +51,21 @@ type LabelingJobSpec struct {
 	// is the key for the key/value pair formed with the label that a worker assigns
 	// to the object. The LabelAttributeName must meet the following requirements.
 	//
-	//   - The name can't end with "-metadata".
+	//    * The name can't end with "-metadata".
 	//
-	//   - If you are using one of the built-in task types (https://docs.aws.amazon.com/sagemaker/latest/dg/sms-task-types.html)
-	//     or one of the following, the attribute name must end with "-ref". Image
-	//     semantic segmentation (SemanticSegmentation) and adjustment (AdjustmentSemanticSegmentation)
-	//     labeling jobs for this task type. One exception is that verification (VerificationSemanticSegmentation)
-	//     must not end with -"ref". Video frame object detection (VideoObjectDetection),
-	//     and adjustment and verification (AdjustmentVideoObjectDetection) labeling
-	//     jobs for this task type. Video frame object tracking (VideoObjectTracking),
-	//     and adjustment and verification (AdjustmentVideoObjectTracking) labeling
-	//     jobs for this task type. 3D point cloud semantic segmentation (3DPointCloudSemanticSegmentation),
-	//     and adjustment and verification (Adjustment3DPointCloudSemanticSegmentation)
-	//     labeling jobs for this task type. 3D point cloud object tracking (3DPointCloudObjectTracking),
-	//     and adjustment and verification (Adjustment3DPointCloudObjectTracking)
-	//     labeling jobs for this task type.
+	//    * If you are using one of the built-in task types (https://docs.aws.amazon.com/sagemaker/latest/dg/sms-task-types.html)
+	//    or one of the following, the attribute name must end with "-ref". Image
+	//    semantic segmentation (SemanticSegmentation) and adjustment (AdjustmentSemanticSegmentation)
+	//    labeling jobs for this task type. One exception is that verification (VerificationSemanticSegmentation)
+	//    must not end with -"ref". Video frame object detection (VideoObjectDetection),
+	//    and adjustment and verification (AdjustmentVideoObjectDetection) labeling
+	//    jobs for this task type. Video frame object tracking (VideoObjectTracking),
+	//    and adjustment and verification (AdjustmentVideoObjectTracking) labeling
+	//    jobs for this task type. 3D point cloud semantic segmentation (3DPointCloudSemanticSegmentation),
+	//    and adjustment and verification (Adjustment3DPointCloudSemanticSegmentation)
+	//    labeling jobs for this task type. 3D point cloud object tracking (3DPointCloudObjectTracking),
+	//    and adjustment and verification (Adjustment3DPointCloudObjectTracking)
+	//    labeling jobs for this task type.
 	//
 	// If you are creating an adjustment or verification labeling job, you must
 	// use a different LabelAttributeName than the one used in the original labeling
@@ -107,17 +107,17 @@ type LabelingJobSpec struct {
 	//
 	// Note the following about the label category configuration file:
 	//
-	//   - For image classification and text classification (single and multi-label)
-	//     you must specify at least two label categories. For all other task types,
-	//     the minimum number of label categories required is one.
+	//    * For image classification and text classification (single and multi-label)
+	//    you must specify at least two label categories. For all other task types,
+	//    the minimum number of label categories required is one.
 	//
-	//   - Each label category must be unique, you cannot specify duplicate label
-	//     categories.
+	//    * Each label category must be unique, you cannot specify duplicate label
+	//    categories.
 	//
-	//   - If you create a 3D point cloud or video frame adjustment or verification
-	//     labeling job, you must include auditLabelAttributeName in the label category
-	//     configuration. Use this parameter to enter the LabelAttributeName (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateLabelingJob.html#sagemaker-CreateLabelingJob-request-LabelAttributeName)
-	//     of the labeling job you want to adjust or verify annotations of.
+	//    * If you create a 3D point cloud or video frame adjustment or verification
+	//    labeling job, you must include auditLabelAttributeName in the label category
+	//    configuration. Use this parameter to enter the LabelAttributeName (https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateLabelingJob.html#sagemaker-CreateLabelingJob-request-LabelAttributeName)
+	//    of the labeling job you want to adjust or verify annotations of.
 	//
 	// Regex Pattern: `^(https|s3)://([^/]+)/?(.*)$`
 	LabelCategoryConfigS3URI *string `json:"labelCategoryConfigS3URI,omitempty"`
