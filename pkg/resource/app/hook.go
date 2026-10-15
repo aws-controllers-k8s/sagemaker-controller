@@ -18,7 +18,6 @@ import (
 	"errors"
 
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
-	svcapitypes "github.com/aws-controllers-k8s/sagemaker-controller/apis/v1alpha1"
 	svccommon "github.com/aws-controllers-k8s/sagemaker-controller/pkg/common"
 	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/sagemaker/types"
 )
@@ -43,9 +42,4 @@ var (
 func (rm *resourceManager) requeueUntilCanModify(ctx context.Context, r *resource) error {
 	latestStatus := r.ko.Status.Status
 	return svccommon.RequeueIfModifying(latestStatus, &resourceName, &modifyingStatuses)
-}
-
-// Sets the ResourceSynced condition to False if resource is being modified by AWS
-func (rm *resourceManager) customDescribeAppSetOutput(ko *svcapitypes.App) {
-	svccommon.SetSyncedCondition(&resource{ko}, ko.Status.Status, &resourceName, &modifyingStatuses)
 }

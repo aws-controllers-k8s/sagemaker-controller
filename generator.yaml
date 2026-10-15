@@ -27,6 +27,17 @@ operations:
       RetainAllVariantProperties: aws.Bool(true)
 resources:
   App:
+    # An App transitions Pending -> InService asynchronously and has no Update
+    # API. Mark the resource synced only once it reaches a stable status so the
+    # runtime keeps requeueing (and refreshing the CR status) while it is still
+    # Pending, instead of treating a freshly-created App as synced and backing
+    # off to the long resync period.
+    synced:
+      when:
+        - path: Status.Status
+          in:
+            - InService
+            - Failed
     exceptions:
       errors:
         404:
@@ -37,8 +48,6 @@ resources:
         - InvalidParameterValue
         - MissingParameter
     hooks:
-      sdk_read_one_post_set_output:
-        code: rm.customDescribeAppSetOutput(ko)
       sdk_delete_pre_build_request:
         template_path: app/sdk_delete_pre_build_request.go.tpl
       sdk_delete_post_request:
