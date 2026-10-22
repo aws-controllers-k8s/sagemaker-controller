@@ -84,7 +84,8 @@ type NotebookInstanceSpec struct {
 	// Regex Pattern: `^[a-zA-Z0-9](-*[a-zA-Z0-9])*$`
 	// +kubebuilder:validation:Required
 	NotebookInstanceName *string `json:"notebookInstanceName"`
-	// The platform identifier of the notebook instance runtime environment.
+	// The platform identifier of the notebook instance runtime environment. The
+	// default value is notebook-al2-v2.
 	//
 	// Regex Pattern: `^(notebook-al1-v1|notebook-al2-v1|notebook-al2-v2|notebook-al2-v3|notebook-al2023-v1)$`
 	PlatformIdentifier *string `json:"platformIdentifier,omitempty"`

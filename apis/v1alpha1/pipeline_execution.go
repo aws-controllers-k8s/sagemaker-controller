@@ -38,7 +38,7 @@ type PipelineExecutionSpec struct {
 	PipelineExecutionDisplayName *string `json:"pipelineExecutionDisplayName,omitempty"`
 	// The name or Amazon Resource Name (ARN) of the pipeline.
 	//
-	// Regex Pattern: `^(arn:aws[a-z\-]*:sagemaker:[a-z0-9\-]*:[0-9]{12}:pipeline/.*)?([a-zA-Z0-9](-*[a-zA-Z0-9]){0,255})$`
+	// Regex Pattern: `^(arn:aws[a-z\-]*:sagemaker:[a-z0-9\-]*:([0-9]{12}|aws):pipeline/.*)?([a-zA-Z0-9](-*[a-zA-Z0-9]){0,255})$`
 	// +kubebuilder:validation:Required
 	PipelineName *string `json:"pipelineName"`
 	// Contains a list of pipeline parameters. This list can be empty.
