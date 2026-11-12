@@ -30,8 +30,7 @@ type TrainingJobSpec struct {
 	// about algorithms provided by SageMaker, see Algorithms (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html).
 	// For information about providing your own algorithms, see Using Your Own Algorithms
 	// with Amazon SageMaker (https://docs.aws.amazon.com/sagemaker/latest/dg/your-algorithms.html).
-	// +kubebuilder:validation:Required
-	AlgorithmSpecification *AlgorithmSpecification `json:"algorithmSpecification"`
+	AlgorithmSpecification *AlgorithmSpecification `json:"algorithmSpecification,omitempty"`
 	// Contains information about the output location for managed spot training
 	// checkpoint data.
 	CheckpointConfig *CheckpointConfig `json:"checkpointConfig,omitempty"`
@@ -132,8 +131,7 @@ type TrainingJobSpec struct {
 	// SageMaker to use the ML storage volume to store the training data, choose
 	// File as the TrainingInputMode in the algorithm specification. For distributed
 	// training algorithms, specify an instance count greater than 1.
-	// +kubebuilder:validation:Required
-	ResourceConfig *ResourceConfig `json:"resourceConfig"`
+	ResourceConfig *ResourceConfig `json:"resourceConfig,omitempty"`
 	// The number of times to retry the job when the job fails due to an InternalServerError.
 	RetryStrategy *RetryStrategy `json:"retryStrategy,omitempty"`
 	// The Amazon Resource Name (ARN) of an IAM role that SageMaker can assume to
@@ -159,8 +157,7 @@ type TrainingJobSpec struct {
 	// To stop a job, SageMaker sends the algorithm the SIGTERM signal, which delays
 	// job termination for 120 seconds. Algorithms can use this 120-second window
 	// to save the model artifacts, so the results of training are not lost.
-	// +kubebuilder:validation:Required
-	StoppingCondition *StoppingCondition `json:"stoppingCondition"`
+	StoppingCondition *StoppingCondition `json:"stoppingCondition,omitempty"`
 	// An array of key-value pairs. You can use tags to categorize your Amazon Web
 	// Services resources in different ways, for example, by purpose, owner, or
 	// environment. For more information, see Tagging Amazon Web Services Resources
@@ -234,6 +231,9 @@ type TrainingJobStatus struct {
 	// InProgress
 	//
 	//    * Starting - Starting the training job.
+	//
+	//    * Pending - The training job is waiting for compute capacity or compute
+	//    resource provision.
 	//
 	//    * Downloading - An optional stage for algorithms that support File training
 	//    input mode. It indicates that data is being downloaded to the ML storage
